@@ -1,0 +1,52 @@
+# Multi Device Viewer Agent Guide
+
+## Product Goal
+Build a fully local Chrome MV3 extension that helps users test websites across realistic phone, tablet, laptop, desktop, watch, and TV viewports. The extension must work after install without any backend, account, subscription, telemetry, payment flow, API key, or hosted configuration.
+
+## Core Rules
+- Chrome MV3 only for v1.
+- WXT + React + TypeScript + Tailwind.
+- All extension data lives in packaged assets or Chrome local storage.
+- No paid tiers, no ads, no server dependency.
+- Compare mode supports up to four simultaneous device previews.
+- Screenshot and annotation ship in v1; GIF/MP4/microphone/camera capture are v2.
+- Device mockup PNGs are packaged locally for personal-use builds.
+
+## Architecture
+- `src/domain/device`: device catalog types, local catalog data, search/filter helpers, device math.
+- `src/domain/simulator`: preview slot state, orientation, zoom, URL normalization, iframe-blocked helpers.
+- `src/domain/capture`: screenshot and annotation model.
+- `src/infrastructure/storage`: Chrome storage adapter with localStorage fallback for browser dev.
+- `src/app`: React providers and extension bootstrap helpers.
+- `src/ui`: app shell, simulator, popup, icons, and shared visual primitives.
+
+## Feature Matrix
+- Popup opens or focuses the simulator page with the active tab URL.
+- Simulator has single mode and compare grid mode.
+- Users can search devices, filter by type/brand, favorite devices, use recents, and create custom devices.
+- Each preview can rotate, zoom, fit to available space, reload, and capture.
+- Right panel shows Features, Report, Free transparent PNG, and Info.
+- Display settings toggle status bar, fake battery, browser URL bar, and presentation mode.
+- Capture supports viewport-only, framed mockup, and comparison board PNG export.
+- Annotation supports arrow, rectangle, pen, text, blur/cover, undo, redo, and download.
+
+## Device Data Process
+Each device is one JSON-like object with:
+`id`, `name`, `brand`, `family`, `year`, `type`, `os`, `cssViewport`, `pixelRatio`, `manufacturerResolution`, `mockupAssets`, `updatedAt`.
+
+Adding a device should not require simulator code changes. Add catalog metadata and optional mockup asset metadata only.
+
+## Asset Process
+Mockups are stored in `public/mockups`. Runtime must use local packaged assets only and must not render source links.
+
+Run `npm run generate:icons` to generate original raster Chrome icons at 16, 32, 48, and 128 px.
+
+## Release Steps
+1. `npm install`
+2. `npm run generate:icons`
+3. `npm run import:mockups`
+4. `npm run compile`
+5. `npm run build`
+6. Load `.output/chrome-mv3` in Chrome Extensions developer mode.
+7. Run manual QA on URL loading, compare mode, screenshots, annotation, and offline packaged assets.
+8. `npm run zip` for store/manual distribution.

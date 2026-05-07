@@ -1,0 +1,366 @@
+{
+  "importedAt": "2026-05-06T16:24:11.332Z",
+  "count": 60,
+  "assets": [
+    {
+      "id": "apple-imac-24-inch-2021",
+      "localPath": "/mockups/apple-imac-24-inch-2021.png",
+      "file": "apple-imac-24-inch-2021.png",
+      "bytes": 241755
+    },
+    {
+      "id": "apple-ipad-air-4",
+      "localPath": "/mockups/apple-ipad-air-4.png",
+      "file": "apple-ipad-air-4.png",
+      "bytes": 40207
+    },
+    {
+      "id": "apple-ipad-mini",
+      "localPath": "/mockups/apple-ipad-mini.png",
+      "file": "apple-ipad-mini.png",
+      "bytes": 31629
+    },
+    {
+      "id": "apple-ipad-pro-11-2018",
+      "localPath": "/mockups/apple-ipad-pro-11-2018.png",
+      "file": "apple-ipad-pro-11-2018.png",
+      "bytes": 45333
+    },
+    {
+      "id": "apple-iphone-11-pro-max",
+      "localPath": "/mockups/apple-iphone-11-pro-max.png",
+      "file": "apple-iphone-11-pro-max.png",
+      "bytes": 42918
+    },
+    {
+      "id": "apple-iphone-11-pro",
+      "localPath": "/mockups/apple-iphone-11-pro.png",
+      "file": "apple-iphone-11-pro.png",
+      "bytes": 49895
+    },
+    {
+      "id": "apple-iphone-11",
+      "localPath": "/mockups/apple-iphone-11.png",
+      "file": "apple-iphone-11.png",
+      "bytes": 78900
+    },
+    {
+      "id": "apple-iphone-12-mini",
+      "localPath": "/mockups/apple-iphone-12-mini.png",
+      "file": "apple-iphone-12-mini.png",
+      "bytes": 46312
+    },
+    {
+      "id": "apple-iphone-12-pro-max",
+      "localPath": "/mockups/apple-iphone-12-pro-max.png",
+      "file": "apple-iphone-12-pro-max.png",
+      "bytes": 57547
+    },
+    {
+      "id": "apple-iphone-12-pro",
+      "localPath": "/mockups/apple-iphone-12-pro.png",
+      "file": "apple-iphone-12-pro.png",
+      "bytes": 47683
+    },
+    {
+      "id": "apple-iphone-12",
+      "localPath": "/mockups/apple-iphone-12.png",
+      "file": "apple-iphone-12.png",
+      "bytes": 47752
+    },
+    {
+      "id": "apple-iphone-13-2021",
+      "localPath": "/mockups/apple-iphone-13-2021.png",
+      "file": "apple-iphone-13-2021.png",
+      "bytes": 64073
+    },
+    {
+      "id": "apple-iphone-13-mini-2021",
+      "localPath": "/mockups/apple-iphone-13-mini-2021.png",
+      "file": "apple-iphone-13-mini-2021.png",
+      "bytes": 68235
+    },
+    {
+      "id": "apple-iphone-13-pro-2021",
+      "localPath": "/mockups/apple-iphone-13-pro-2021.png",
+      "file": "apple-iphone-13-pro-2021.png",
+      "bytes": 46886
+    },
+    {
+      "id": "apple-iphone-13-pro-max-2021",
+      "localPath": "/mockups/apple-iphone-13-pro-max-2021.png",
+      "file": "apple-iphone-13-pro-max-2021.png",
+      "bytes": 53886
+    },
+    {
+      "id": "apple-iphone-14-2022",
+      "localPath": "/mockups/apple-iphone-14-2022.jpg",
+      "file": "apple-iphone-14-2022.jpg",
+      "bytes": 59826
+    },
+    {
+      "id": "apple-iphone-14-max-2022",
+      "localPath": "/mockups/apple-iphone-14-max-2022.jpg",
+      "file": "apple-iphone-14-max-2022.jpg",
+      "bytes": 59664
+    },
+    {
+      "id": "apple-iphone-14-pro-2022",
+      "localPath": "/mockups/apple-iphone-14-pro-2022.png",
+      "file": "apple-iphone-14-pro-2022.png",
+      "bytes": 59534
+    },
+    {
+      "id": "apple-iphone-14-pro-max-2022",
+      "localPath": "/mockups/apple-iphone-14-pro-max-2022.png",
+      "file": "apple-iphone-14-pro-max-2022.png",
+      "bytes": 66988
+    },
+    {
+      "id": "apple-iphone-15-2023",
+      "localPath": "/mockups/apple-iphone-15-2023.png",
+      "file": "apple-iphone-15-2023.png",
+      "bytes": 61141
+    },
+    {
+      "id": "apple-iphone-15-plus-2023",
+      "localPath": "/mockups/apple-iphone-15-plus-2023.png",
+      "file": "apple-iphone-15-plus-2023.png",
+      "bytes": 67366
+    },
+    {
+      "id": "apple-iphone-15-pro-2023",
+      "localPath": "/mockups/apple-iphone-15-pro-2023.png",
+      "file": "apple-iphone-15-pro-2023.png",
+      "bytes": 70326
+    },
+    {
+      "id": "apple-iphone-15-pro-max-2023",
+      "localPath": "/mockups/apple-iphone-15-pro-max-2023.png",
+      "file": "apple-iphone-15-pro-max-2023.png",
+      "bytes": 73325
+    },
+    {
+      "id": "apple-iphone-16-2024",
+      "localPath": "/mockups/apple-iphone-16-2024.png",
+      "file": "apple-iphone-16-2024.png",
+      "bytes": 70560
+    },
+    {
+      "id": "apple-iphone-16-plus-2024",
+      "localPath": "/mockups/apple-iphone-16-plus-2024.png",
+      "file": "apple-iphone-16-plus-2024.png",
+      "bytes": 88818
+    },
+    {
+      "id": "apple-iphone-16-pro-max-2024",
+      "localPath": "/mockups/apple-iphone-16-pro-max-2024.png",
+      "file": "apple-iphone-16-pro-max-2024.png",
+      "bytes": 75517
+    },
+    {
+      "id": "apple-iphone-17-2025",
+      "localPath": "/mockups/apple-iphone-17-2025.png",
+      "file": "apple-iphone-17-2025.png",
+      "bytes": 70142
+    },
+    {
+      "id": "apple-iphone-17-pro-2025",
+      "localPath": "/mockups/apple-iphone-17-pro-2025.png",
+      "file": "apple-iphone-17-pro-2025.png",
+      "bytes": 71538
+    },
+    {
+      "id": "apple-iphone-17-pro-max-2025",
+      "localPath": "/mockups/apple-iphone-17-pro-max-2025.png",
+      "file": "apple-iphone-17-pro-max-2025.png",
+      "bytes": 77383
+    },
+    {
+      "id": "apple-iphone-5",
+      "localPath": "/mockups/apple-iphone-5.png",
+      "file": "apple-iphone-5.png",
+      "bytes": 59057
+    },
+    {
+      "id": "apple-iphone-air-2025",
+      "localPath": "/mockups/apple-iphone-air-2025.png",
+      "file": "apple-iphone-air-2025.png",
+      "bytes": 61218
+    },
+    {
+      "id": "apple-iphone-se",
+      "localPath": "/mockups/apple-iphone-se.png",
+      "file": "apple-iphone-se.png",
+      "bytes": 58948
+    },
+    {
+      "id": "apple-iphone-x",
+      "localPath": "/mockups/apple-iphone-x.png",
+      "file": "apple-iphone-x.png",
+      "bytes": 87025
+    },
+    {
+      "id": "apple-iphone-xr",
+      "localPath": "/mockups/apple-iphone-xr.png",
+      "file": "apple-iphone-xr.png",
+      "bytes": 70242
+    },
+    {
+      "id": "apple-macbook-pro-16-2021",
+      "localPath": "/mockups/apple-macbook-pro-16-2021.png",
+      "file": "apple-macbook-pro-16-2021.png",
+      "bytes": 70093
+    },
+    {
+      "id": "apple-watch-serie-6",
+      "localPath": "/mockups/apple-watch-serie-6.png",
+      "file": "apple-watch-serie-6.png",
+      "bytes": 162840
+    },
+    {
+      "id": "dell-latitude-14-3420",
+      "localPath": "/mockups/dell-latitude-14-3420.png",
+      "file": "dell-latitude-14-3420.png",
+      "bytes": 181807
+    },
+    {
+      "id": "generic-device-android",
+      "localPath": "/mockups/generic-device-android.png",
+      "file": "generic-device-android.png",
+      "bytes": 54368
+    },
+    {
+      "id": "google-pixel-5",
+      "localPath": "/mockups/google-pixel-5.png",
+      "file": "google-pixel-5.png",
+      "bytes": 52430
+    },
+    {
+      "id": "google-pixel-6-pro",
+      "localPath": "/mockups/google-pixel-6-pro.png",
+      "file": "google-pixel-6-pro.png",
+      "bytes": 59112
+    },
+    {
+      "id": "huawei-p30-pro",
+      "localPath": "/mockups/huawei-p30-pro.png",
+      "file": "huawei-p30-pro.png",
+      "bytes": 31400
+    },
+    {
+      "id": "macbook-air",
+      "localPath": "/mockups/macbook-air.png",
+      "file": "macbook-air.png",
+      "bytes": 48806
+    },
+    {
+      "id": "microsoft-surface-duo",
+      "localPath": "/mockups/microsoft-surface-duo.png",
+      "file": "microsoft-surface-duo.png",
+      "bytes": 26635
+    },
+    {
+      "id": "oneplus-nord-2",
+      "localPath": "/mockups/oneplus-nord-2.png",
+      "file": "oneplus-nord-2.png",
+      "bytes": 53032
+    },
+    {
+      "id": "oppo-find-x3-pro",
+      "localPath": "/mockups/oppo-find-x3-pro.png",
+      "file": "oppo-find-x3-pro.png",
+      "bytes": 35550
+    },
+    {
+      "id": "samsung-galaxy-a12-2021",
+      "localPath": "/mockups/samsung-galaxy-a12-2021.png",
+      "file": "samsung-galaxy-a12-2021.png",
+      "bytes": 58769
+    },
+    {
+      "id": "samsung-galaxy-fold2",
+      "localPath": "/mockups/samsung-galaxy-fold2.png",
+      "file": "samsung-galaxy-fold2.png",
+      "bytes": 52959
+    },
+    {
+      "id": "samsung-galaxy-note20-ultra",
+      "localPath": "/mockups/samsung-galaxy-note20-ultra.png",
+      "file": "samsung-galaxy-note20-ultra.png",
+      "bytes": 30565
+    },
+    {
+      "id": "samsung-galaxy-s20",
+      "localPath": "/mockups/samsung-galaxy-s20.png",
+      "file": "samsung-galaxy-s20.png",
+      "bytes": 37482
+    },
+    {
+      "id": "samsung-galaxy-s21-ultra",
+      "localPath": "/mockups/samsung-galaxy-s21-ultra.png",
+      "file": "samsung-galaxy-s21-ultra.png",
+      "bytes": 45575
+    },
+    {
+      "id": "samsung-galaxy-s22-2022",
+      "localPath": "/mockups/samsung-galaxy-s22-2022.png",
+      "file": "samsung-galaxy-s22-2022.png",
+      "bytes": 59730
+    },
+    {
+      "id": "samsung-galaxy-s22-plus-2022",
+      "localPath": "/mockups/samsung-galaxy-s22-plus-2022.png",
+      "file": "samsung-galaxy-s22-plus-2022.png",
+      "bytes": 52272
+    },
+    {
+      "id": "samsung-galaxy-s22-ultra-2022",
+      "localPath": "/mockups/samsung-galaxy-s22-ultra-2022.png",
+      "file": "samsung-galaxy-s22-ultra-2022.png",
+      "bytes": 32733
+    },
+    {
+      "id": "samsung-galaxy-s24-2024",
+      "localPath": "/mockups/samsung-galaxy-s24-2024.png",
+      "file": "samsung-galaxy-s24-2024.png",
+      "bytes": 58238
+    },
+    {
+      "id": "samsung-galaxy-s24-ultra-2024",
+      "localPath": "/mockups/samsung-galaxy-s24-ultra-2024.png",
+      "file": "samsung-galaxy-s24-ultra-2024.png",
+      "bytes": 87333
+    },
+    {
+      "id": "samsung-galaxy-tab-s7",
+      "localPath": "/mockups/samsung-galaxy-tab-s7.png",
+      "file": "samsung-galaxy-tab-s7.png",
+      "bytes": 35167
+    },
+    {
+      "id": "samsung-galaxy-z-flip3-2021",
+      "localPath": "/mockups/samsung-galaxy-z-flip3-2021.png",
+      "file": "samsung-galaxy-z-flip3-2021.png",
+      "bytes": 61046
+    },
+    {
+      "id": "samsung-smart-tv",
+      "localPath": "/mockups/samsung-smart-tv.png",
+      "file": "samsung-smart-tv.png",
+      "bytes": 37742
+    },
+    {
+      "id": "xiaomi-12-2022",
+      "localPath": "/mockups/xiaomi-12-2022.png",
+      "file": "xiaomi-12-2022.png",
+      "bytes": 63604
+    },
+    {
+      "id": "xiaomi-mi-11i",
+      "localPath": "/mockups/xiaomi-mi-11i.png",
+      "file": "xiaomi-mi-11i.png",
+      "bytes": 36085
+    }
+  ]
+}

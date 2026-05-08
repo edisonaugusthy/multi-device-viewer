@@ -1,5 +1,5 @@
 import { Camera, HelpCircle, Info, Layers, Library, PanelsTopLeft, RefreshCw, Settings, Share2, X } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { captureNodeToPng, downloadDataUrl, screenshotFilename } from "../../domain/capture/capture-service";
@@ -21,8 +21,21 @@ export function SimulatorApp() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const gridClass = slots.length === 1 ? "grid-cols-1" : "grid-cols-1 xl:grid-cols-2";
+  const gridClass =
+    slots.length === 1
+      ? "grid-cols-1"
+      : slots.length === 2
+        ? "grid-cols-1 xl:grid-cols-2"
+        : slots.length === 3
+          ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+          : "grid-cols-1 md:grid-cols-2 xl:grid-cols-4";
+  const panelOpen = settingsOpen || libraryOpen || infoOpen;
   const activeSlot = slots.find((slot) => slot.id === activeSlotId) ?? slots[0];
+  const activeDevice = findDevice(activeSlot.deviceId);
+  const selectableDevices = useMemo(() => {
+    if (visibleDevices.some((device) => device.id === activeDevice.id)) return visibleDevices;
+    return [activeDevice, ...visibleDevices];
+  }, [activeDevice, visibleDevices]);
 
   useEffect(() => {
     setUrlDraft(activeSlot.url);
@@ -54,10 +67,40 @@ export function SimulatorApp() {
     setAnnotationOpen(true);
   }
 
+  function openLibraryPanel() {
+    setLibraryOpen(true);
+    setInfoOpen(false);
+    setSettingsOpen(false);
+  }
+
+  function openInfoPanel() {
+    setInfoOpen(true);
+    setLibraryOpen(false);
+    setSettingsOpen(false);
+  }
+
+  function openSettingsPanel() {
+    setSettingsOpen(true);
+    setLibraryOpen(false);
+    setInfoOpen(false);
+  }
+
+  function addComparisonSlot() {
+    if (slots.length === 1) {
+      addSlot(activeSlot.deviceId);
+    } else {
+      duplicateActiveSlot(activeSlot.deviceId);
+    }
+    openLibraryPanel();
+  }
+
   return (
     <div className="h-screen overflow-hidden bg-[#fbfbfa] text-slate-950">
       <main className="h-screen overflow-auto bg-[#fbfbfa]">
-        <div data-capture-board className={`grid min-h-full content-center justify-items-center gap-x-10 gap-y-14 px-6 py-10 pr-24 lg:px-20 ${settingsOpen || libraryOpen || infoOpen ? "lg:pr-[460px]" : "lg:pr-28"} ${gridClass}`}>
+        <div
+          data-capture-board
+          className={`grid min-h-screen auto-rows-[minmax(360px,calc(100vh-128px))] items-center justify-items-stretch gap-x-6 gap-y-8 px-4 py-16 pr-20 sm:px-8 lg:px-12 ${panelOpen ? "sm:pr-[460px]" : "lg:pr-24"} ${gridClass}`}
+        >
             {slots.map((slot) => (
               <PreviewCard
                 key={slot.id}
@@ -77,10 +120,10 @@ export function SimulatorApp() {
             <X size={22} />
           </RailButton>
           <RailDivider />
-          <RailButton label="Devices" onClick={() => setLibraryOpen(true)}>
+          <RailButton label="Devices" onClick={openLibraryPanel}>
             <Library size={22} />
           </RailButton>
-          <RailButton label="Controls" onClick={() => setSettingsOpen(true)}>
+          <RailButton label="Controls" onClick={openSettingsPanel}>
             <Info size={22} />
           </RailButton>
           <RailButton label="Screenshot" onClick={() => void captureComparison(true)}>
@@ -91,13 +134,13 @@ export function SimulatorApp() {
           </RailButton>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <RailButton label="Add comparison device" onClick={() => (slots.length === 1 ? addSlot() : duplicateActiveSlot())}>
+          <RailButton label="Add comparison device" onClick={addComparisonSlot}>
             <PanelsTopLeft size={22} />
           </RailButton>
-          <RailButton label="Help">
+          <RailButton label="Help" onClick={openInfoPanel}>
             <HelpCircle size={22} />
           </RailButton>
-          <RailButton label="Settings" onClick={() => setSettingsOpen(true)}>
+          <RailButton label="Settings" onClick={openSettingsPanel}>
             <Settings size={22} />
           </RailButton>
         </div>
@@ -116,7 +159,7 @@ export function SimulatorApp() {
       {settingsOpen && (
         <ControlsPanel
           activeDeviceId={activeSlot.deviceId}
-          devices={visibleDevices}
+          devices={selectableDevices}
           display={display}
           urlDraft={urlDraft}
           onClose={() => setSettingsOpen(false)}
@@ -159,7 +202,9 @@ function Drawer({ side, children, onClose }: { side: "left" | "right"; children:
   return (
     <div className="fixed inset-0 z-40 bg-slate-950/5 backdrop-blur-[1px]" onClick={onClose}>
       <div
-        className={`absolute top-4 h-[calc(100%-32px)] overflow-hidden rounded-[18px] border border-white/70 bg-white/78 shadow-[0_24px_80px_rgb(15_23_42/0.18)] backdrop-blur-2xl ${side === "left" ? "left-4" : "right-20"}`}
+        className={`absolute top-4 h-[calc(100%-32px)] overflow-hidden rounded-[18px] border border-white/70 bg-white/78 shadow-[0_24px_80px_rgb(15_23_42/0.18)] backdrop-blur-2xl ${
+          side === "left" ? "left-4 right-20 sm:right-auto" : "left-4 right-20 sm:left-auto"
+        }`}
         onClick={(event) => event.stopPropagation()}
       >
         {children}
@@ -192,7 +237,7 @@ function ControlsPanel({
   onUrlLoad: () => void;
 }) {
   return (
-    <aside className="fixed right-20 top-6 z-50 max-h-[calc(100vh-48px)] w-[360px] overflow-y-auto rounded-[18px] border border-white/70 bg-white/72 p-4 shadow-[0_20px_70px_rgb(15_23_42/0.18)] ring-1 ring-slate-900/5 backdrop-blur-2xl">
+    <aside className="fixed left-4 right-20 top-6 z-50 max-h-[calc(100vh-48px)] overflow-y-auto rounded-[18px] border border-white/70 bg-white/72 p-4 shadow-[0_20px_70px_rgb(15_23_42/0.18)] ring-1 ring-slate-900/5 backdrop-blur-2xl sm:left-auto sm:w-[360px]">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-sm font-black text-slate-950">Simulator</h2>

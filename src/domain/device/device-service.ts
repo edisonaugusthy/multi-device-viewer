@@ -8,6 +8,34 @@ export function toLandscapeAwareSize(size: Size, orientation: Orientation): Size
   return { width, height };
 }
 
+export function supportsOrientation(device: Device): boolean {
+  return device.type === "phone" || device.type === "tablet";
+}
+
+export function presentationSizeFor(device: Device, orientation: Orientation): Size {
+  if (device.type === "phone") {
+    return orientation === "landscape" ? { width: 520, height: 300 } : { width: 300, height: 620 };
+  }
+
+  if (device.type === "tablet") {
+    return orientation === "landscape" ? { width: 680, height: 470 } : { width: 460, height: 660 };
+  }
+
+  if (device.type === "laptop" || device.type === "desktop") {
+    return { width: 780, height: 500 };
+  }
+
+  if (device.type === "tv") {
+    return { width: 760, height: 440 };
+  }
+
+  if (device.type === "watch") {
+    return { width: 210, height: 260 };
+  }
+
+  return { width: 360, height: 520 };
+}
+
 export function mediaQueryFor(device: Device, orientation: Orientation): string {
   const size = toLandscapeAwareSize(device.cssViewport, orientation);
   return `@media (width: ${size.width}px) and (height: ${size.height}px) and (orientation: ${orientation})`;

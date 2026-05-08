@@ -16,7 +16,7 @@ export function DeviceLibrary() {
   const activeDeviceId = slots.find((slot) => slot.id === activeSlotId)?.deviceId;
 
   return (
-    <aside className="flex h-full min-h-0 w-[620px] shrink-0 flex-col bg-white/82">
+    <aside className="flex h-full min-h-0 w-full shrink-0 flex-col bg-white/82 sm:w-[620px]">
       <div className="border-b border-slate-200 px-4 py-3">
         <div className="mb-3">
           <h2 className="text-sm font-black text-slate-950">Devices</h2>
@@ -71,7 +71,7 @@ function DeviceSections({
             {section.icon}
             {section.label}
           </h3>
-          <div className="grid grid-cols-6 gap-2">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
             {section.devices.map((device) => (
               <DeviceTile
                 key={device.id}
@@ -102,30 +102,37 @@ function DeviceTile({
   onFavorite: (id: string) => void;
   onPick: (id: string) => void;
 }) {
+  const dimensions = `${device.cssViewport.width} x ${device.cssViewport.height}`;
+
   return (
-    <button
-      type="button"
-      className={`relative flex h-[82px] flex-col items-center justify-center rounded-[7px] border bg-white px-1.5 text-center transition ${
+    <div
+      className={`relative h-[88px] rounded-lg border bg-white transition ${
         active ? "border-blue-500 shadow-[0_0_0_2px_rgb(59_130_246/0.18)]" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
       }`}
-      onClick={() => onPick(device.id)}
-      title={`${device.name} · ${device.cssViewport.width} x ${device.cssViewport.height}`}
+      title={`${device.name} · ${dimensions}`}
     >
-      <span
-        role="button"
-        tabIndex={0}
-        className={`absolute right-1 top-1 rounded-full p-1 ${favorite ? "text-red-500" : "text-slate-300"}`}
+      <button
+        type="button"
+        aria-label={`Select ${device.name}`}
+        className="flex h-full w-full flex-col items-center justify-center px-1.5 text-center"
+        onClick={() => onPick(device.id)}
+      >
+        <DeviceGlyph device={device} />
+        <span className="mt-1.5 line-clamp-2 text-[10.5px] font-bold leading-[12px] text-slate-700">{shortDeviceName(device.name)}</span>
+        <span className={`mt-1 text-[9.5px] font-black leading-none ${active ? "text-blue-600" : "text-slate-400"}`}>{dimensions}</span>
+      </button>
+      <button
+        type="button"
+        aria-label={favorite ? `Remove ${device.name} from favorites` : `Add ${device.name} to favorites`}
+        className={`absolute right-1 top-1 rounded-full p-1 transition hover:bg-slate-100 ${favorite ? "text-red-500" : "text-slate-300 hover:text-slate-500"}`}
         onClick={(event) => {
           event.stopPropagation();
           onFavorite(device.id);
         }}
       >
         <Heart size={11} fill={favorite ? "currentColor" : "none"} />
-      </span>
-      <DeviceGlyph device={device} />
-      <span className="mt-1.5 line-clamp-2 text-[10.5px] font-bold leading-[12px] text-slate-700">{shortDeviceName(device.name)}</span>
-      {active && <span className="absolute -bottom-7 rounded bg-slate-900 px-2 py-1 text-[11px] font-black text-white shadow-lg">{device.cssViewport.width} x {device.cssViewport.height}</span>}
-    </button>
+      </button>
+    </div>
   );
 }
 

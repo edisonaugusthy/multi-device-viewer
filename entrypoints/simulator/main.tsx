@@ -9,5 +9,5 @@ createRoot(document.getElementById("root")!).render(
     <AppProviders>
       <SimulatorApp />
     </AppProviders>
-  </StrictMode>
+  </StrictMode>,
 );

@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { defaultDeviceIds } from "../domain/device/device-catalog";
+import { defaultDeviceIds, devices } from "../domain/device/device-catalog";
+import { supportsOrientation } from "../domain/device/device-service";
 import { createPreviewSlot, maxPreviewSlots, nextZoom, normalizeUrl } from "../domain/simulator/simulator-service";
 import type { DisplaySettings, PreviewSlot, SimulatorState } from "../domain/simulator/simulator.types";
 
@@ -52,7 +53,19 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setSlotDevice = useCallback((slotId: string, deviceId: string) => {
-    updateSlot(slotId, (slot) => ({ ...slot, deviceId }));
+    updateSlot(slotId, (slot) => {
+      const currentDevice = devices.find((device) => device.id === slot.deviceId);
+      const nextDevice = devices.find((device) => device.id === deviceId);
+      const canPreserveOrientation = currentDevice && nextDevice && supportsOrientation(currentDevice) && supportsOrientation(nextDevice);
+
+      return {
+        ...slot,
+        deviceId,
+        orientation: canPreserveOrientation ? slot.orientation : "portrait",
+        zoom: 0.58,
+        zoomMode: "fit"
+      };
+    });
     setActiveSlot(slotId);
   }, [setActiveSlot, updateSlot]);
 
@@ -61,7 +74,11 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, [updateSlot]);
 
   const rotateSlot = useCallback((slotId: string) => {
-    updateSlot(slotId, (slot) => ({ ...slot, orientation: slot.orientation === "portrait" ? "landscape" : "portrait" }));
+    updateSlot(slotId, (slot) => {
+      const device = devices.find((item) => item.id === slot.deviceId);
+      if (!device || !supportsOrientation(device)) return slot;
+      return { ...slot, orientation: slot.orientation === "portrait" ? "landscape" : "portrait" };
+    });
   }, [updateSlot]);
 
   const zoomSlot = useCallback((slotId: string, direction: "in" | "out") => {
@@ -102,7 +119,13 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setSlots((current) => {
       if (current.length >= maxPreviewSlots) return current;
       const source = current.find((slot) => slot.id === activeSlotId) ?? current[0];
-      const nextSlot = { ...source, id: `slot-${Date.now()}-${current.length}`, deviceId: deviceId ?? source.deviceId };
+      const nextSlot = {
+        ...source,
+        id: `slot-${Date.now()}-${current.length}`,
+        deviceId: deviceId ?? source.deviceId,
+        zoom: 0.58,
+        zoomMode: "fit" as const
+      };
       const next = [...current, nextSlot];
       setActiveSlotId(nextSlot.id);
       return next;

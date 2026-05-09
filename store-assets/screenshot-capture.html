@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multi Device Viewer Store Screenshots</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #f7faf9;
+        color: #0f172a;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .shot {
+        position: relative;
+        display: none;
+        width: 1280px;
+        height: 800px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 78% 10%, rgba(20, 184, 166, 0.2), transparent 28%),
+          linear-gradient(135deg, #f8fffc 0%, #eef7f5 100%);
+      }
+
+      .shot.active {
+        display: block;
+      }
+
+      .topbar {
+        position: absolute;
+        top: 28px;
+        left: 36px;
+        right: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 24px;
+        font-weight: 760;
+      }
+
+      .brand img {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.18);
+      }
+
+      .pill {
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.82);
+        padding: 10px 16px;
+        color: #334155;
+        font-size: 15px;
+        font-weight: 650;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      }
+
+      .headline {
+        position: absolute;
+        top: 118px;
+        left: 52px;
+        width: 460px;
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        font-size: 48px;
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .sub {
+        margin: 0;
+        color: #475569;
+        font-size: 20px;
+        line-height: 1.45;
+      }
+
+      .workspace {
+        position: absolute;
+        right: 42px;
+        bottom: 52px;
+        width: 720px;
+        height: 590px;
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 30px 90px rgba(15, 23, 42, 0.16);
+        backdrop-filter: blur(18px);
+      }
+
+      .browserbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 56px;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        padding: 0 20px;
+      }
+
+      .dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #94a3b8;
+      }
+
+      .url {
+        flex: 1;
+        border-radius: 999px;
+        background: #eef6f4;
+        padding: 9px 15px;
+        color: #64748b;
+        font-size: 14px;
+      }
+
+      .frames {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        padding: 26px;
+      }
+
+      .device-card {
+        min-height: 226px;
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        border-radius: 18px;
+        background: #fbfffd;
+        padding: 16px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+      }
+
+      .device-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        color: #0f172a;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .viewport {
+        position: relative;
+        overflow: hidden;
+        height: 166px;
+        border-radius: 15px;
+        background:
+          linear-gradient(180deg, rgba(8, 47, 73, 0.92), rgba(15, 118, 110, 0.92)),
+          #0f766e;
+      }
+
+      .site {
+        position: absolute;
+        inset: 14px;
+        border-radius: 12px;
+        background: #f8fafc;
+        padding: 14px;
+      }
+
+      .site h2 {
+        width: 66%;
+        height: 18px;
+        margin: 0 0 12px;
+        border-radius: 999px;
+        background: #0f172a;
+      }
+
+      .site p,
+      .site span {
+        display: block;
+        height: 9px;
+        margin: 8px 0;
+        border-radius: 999px;
+        background: #cbd5e1;
+      }
+
+      .site .accent {
+        width: 44%;
+        height: 30px;
+        margin-top: 16px;
+        background: #14b8a6;
+      }
+
+      .library {
+        position: absolute;
+        right: 34px;
+        top: 108px;
+        width: 370px;
+        height: 604px;
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 22px;
+        box-shadow: 0 30px 90px rgba(15, 23, 42, 0.18);
+      }
+
+      .search {
+        border-radius: 14px;
+        background: #eef6f4;
+        padding: 14px 16px;
+        color: #64748b;
+        font-weight: 650;
+      }
+
+      .device-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 18px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 16px;
+        background: #ffffff;
+        padding: 14px;
+      }
+
+      .device-row img {
+        width: 42px;
+        max-height: 58px;
+        object-fit: contain;
+      }
+
+      .device-row strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .device-row small {
+        display: block;
+        color: #64748b;
+        margin-top: 3px;
+      }
+
+      .canvas {
+        position: absolute;
+        left: 72px;
+        bottom: 70px;
+        width: 690px;
+        height: 472px;
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        border-radius: 26px;
+        background: #ffffff;
+        box-shadow: 0 30px 90px rgba(15, 23, 42, 0.16);
+        padding: 26px;
+      }
+
+      .annotation {
+        position: absolute;
+        border: 4px solid #f59e0b;
+        border-radius: 22px;
+      }
+
+      .annotation.one {
+        left: 96px;
+        top: 108px;
+        width: 260px;
+        height: 168px;
+      }
+
+      .annotation.two {
+        right: 74px;
+        bottom: 82px;
+        width: 210px;
+        height: 112px;
+      }
+
+      .note {
+        position: absolute;
+        right: 78px;
+        top: 154px;
+        width: 320px;
+        border-radius: 18px;
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 18px 20px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.24);
+      }
+
+      .note strong {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .note p {
+        margin: 0;
+        color: #cbd5e1;
+        line-height: 1.42;
+      }
+
+      .toolbar {
+        position: absolute;
+        left: 110px;
+        bottom: 82px;
+        display: flex;
+        gap: 12px;
+      }
+
+      .tool {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        background: #ecfeff;
+        border: 1px solid rgba(14, 116, 144, 0.12);
+      }
+
+      .feature-list {
+        position: absolute;
+        left: 60px;
+        top: 392px;
+        display: grid;
+        gap: 12px;
+        width: 390px;
+      }
+
+      .feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.76);
+        padding: 14px 16px;
+        color: #334155;
+        font-weight: 690;
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+      }
+
+      .check {
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border-radius: 50%;
+        background: #14b8a6;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="shot-1" class="shot active">
+      <div class="topbar">
+        <div class="brand"><img src="../public/icons/icon-128.png" alt="" />Multi Device Viewer</div>
+        <div class="pill">Local-first responsive testing for Chrome</div>
+      </div>
+      <div class="headline">
+        <h1>Compare real device viewports side by side.</h1>
+        <p class="sub">Preview pages across phones, tablets, laptops, desktops, watches, and TVs from one dedicated simulator tab.</p>
+      </div>
+      <div class="feature-list">
+        <div class="feature"><span class="check">✓</span>Up to four previews at once</div>
+        <div class="feature"><span class="check">✓</span>Orientation, zoom, reload, and fit controls</div>
+        <div class="feature"><span class="check">✓</span>Private screenshots stored on your device</div>
+      </div>
+      <div class="workspace">
+        <div class="browserbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">https://example.com/product</div></div>
+        <div class="frames">
+          <div class="device-card"><div class="device-title">iPhone 15 Pro <span>393 x 852</span></div><div class="viewport"><div class="site"><h2></h2><p></p><p style="width:74%"></p><span class="accent"></span></div></div></div>
+          <div class="device-card"><div class="device-title">Pixel 6 Pro <span>412 x 915</span></div><div class="viewport"><div class="site"><h2></h2><p></p><p style="width:58%"></p><span class="accent"></span></div></div></div>
+          <div class="device-card"><div class="device-title">iPad Air <span>820 x 1180</span></div><div class="viewport"><div class="site"><h2 style="width:52%"></h2><p></p><p style="width:86%"></p><span class="accent" style="width:32%"></span></div></div></div>
+          <div class="device-card"><div class="device-title">MacBook Pro <span>1440 x 900</span></div><div class="viewport"><div class="site"><h2 style="width:42%"></h2><p></p><p style="width:64%"></p><span class="accent" style="width:24%"></span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="shot-2" class="shot">
+      <div class="topbar">
+        <div class="brand"><img src="../public/icons/icon-128.png" alt="" />Multi Device Viewer</div>
+        <div class="pill">Device library, favorites, recents, and custom sizes</div>
+      </div>
+      <div class="headline">
+        <h1>Pick the right viewport without leaving the workflow.</h1>
+        <p class="sub">Search the device catalog, save frequent targets, and switch profiles while your preview stays visible.</p>
+      </div>
+      <div class="canvas" style="left: 52px; bottom: 52px; width: 690px; height: 350px">
+        <div class="browserbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">Simulator preview</div></div>
+        <div class="frames" style="grid-template-columns: 1fr 1fr; padding: 18px 0 0">
+          <div class="device-card"><div class="device-title">Mobile portrait</div><div class="viewport"></div></div>
+          <div class="device-card"><div class="device-title">Desktop wide</div><div class="viewport"></div></div>
+        </div>
+      </div>
+      <div class="library">
+        <h1 style="font-size:30px;margin-bottom:16px">Device Library</h1>
+        <div class="search">Search phones, tablets, laptops...</div>
+        <div class="device-row"><img src="../public/mockups/apple-iphone-15-pro-2023.png" alt="" /><div><strong>iPhone 15 Pro</strong><small>393 x 852 · mobile</small></div></div>
+        <div class="device-row"><img src="../public/mockups/google-pixel-6-pro.png" alt="" /><div><strong>Pixel 6 Pro</strong><small>412 x 915 · Android</small></div></div>
+        <div class="device-row"><img src="../public/mockups/apple-ipad-air-4.png" alt="" /><div><strong>iPad Air</strong><small>820 x 1180 · tablet</small></div></div>
+        <div class="device-row"><img src="../public/mockups/apple-macbook-pro-16-2021.png" alt="" /><div><strong>MacBook Pro</strong><small>1440 x 900 · laptop</small></div></div>
+        <div class="device-row"><img src="../public/mockups/samsung-smart-tv.png" alt="" /><div><strong>Smart TV</strong><small>1920 x 1080 · TV</small></div></div>
+      </div>
+    </section>
+
+    <section id="shot-3" class="shot">
+      <div class="topbar">
+        <div class="brand"><img src="../public/icons/icon-128.png" alt="" />Multi Device Viewer</div>
+        <div class="pill">Screenshot export and annotation board</div>
+      </div>
+      <div class="headline">
+        <h1>Capture responsive issues and mark them up locally.</h1>
+        <p class="sub">Export screenshots, annotate layout problems, and keep review artifacts on your own machine.</p>
+      </div>
+      <div class="canvas" style="left: 505px; width: 690px">
+        <div class="browserbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">Comparison screenshot</div></div>
+        <div class="frames" style="grid-template-columns: 1fr 1fr; padding: 26px 0 0">
+          <div class="device-card"><div class="viewport"><div class="site"><h2></h2><p></p><p></p><span class="accent"></span></div></div></div>
+          <div class="device-card"><div class="viewport"><div class="site"><h2></h2><p></p><p style="width:52%"></p><span class="accent"></span></div></div></div>
+        </div>
+        <div class="annotation one"></div>
+        <div class="annotation two"></div>
+      </div>
+      <div class="note">
+        <strong>Review-ready captures</strong>
+        <p>Highlight spacing, breakpoint, and overflow issues before sharing the screenshot with your team.</p>
+      </div>
+      <div class="toolbar">
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+      </div>
+    </section>
+    <script>
+      const id = new URLSearchParams(location.search).get("shot") || "1";
+      for (const shot of document.querySelectorAll(".shot")) shot.classList.remove("active");
+      document.getElementById(`shot-${id}`).classList.add("active");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,83 @@
+name: Chrome Web Store Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      extension_id:
+        description: Chrome Web Store item ID
+        required: true
+        default: jfcnekmenjickfihkniaoaklehjmdhdb
+      publisher_id:
+        description: Chrome Web Store publisher ID
+        required: true
+        default: 45e2a939-d058-4406-91fc-34ee27bef98a
+      submit_for_review:
+        description: Submit the uploaded package for review
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Build and release
+    runs-on: ubuntu-latest
+    environment: chrome-web-store
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate extension icons
+        run: npm run generate:icons
+
+      - name: Type-check extension
+        run: npm run compile
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Package extension zip
+        run: npm run zip
+
+      - name: Locate package
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          zip_path="$(find .output -maxdepth 2 -type f -name '*chrome*.zip' | sort | tail -n 1)"
+          if [[ -z "$zip_path" ]]; then
+            echo "No Chrome extension zip found in .output" >&2
+            exit 1
+          fi
+          echo "zip_path=$zip_path" >> "$GITHUB_OUTPUT"
+          ls -lh "$zip_path"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-package
+          path: ${{ steps.package.outputs.zip_path }}
+          if-no-files-found: error
+
+      - name: Upload to Chrome Web Store
+        env:
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_EXTENSION_ID: ${{ inputs.extension_id }}
+          CHROME_PUBLISHER_ID: ${{ inputs.publisher_id }}
+          EXTENSION_ZIP: ${{ steps.package.outputs.zip_path }}
+          SUBMIT_FOR_REVIEW: ${{ inputs.submit_for_review }}
+        run: node scripts/chrome-web-store-release.mjs

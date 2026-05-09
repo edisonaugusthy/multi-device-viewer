@@ -9,7 +9,7 @@ export default defineConfig({
     name: "Multi Device Viewer",
     short_name: "Device Viewer",
     description:
-      "Test websites across multiple local device viewports with screenshots, annotations, and mockups.",
+      "Preview and compare websites across local device viewports with screenshots, annotations, and realistic mockups.",
     version: "0.1.0",
     permissions: ["activeTab", "downloads", "storage", "tabs"],
     host_permissions: ["<all_urls>"],

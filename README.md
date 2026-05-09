@@ -31,6 +31,10 @@ npm run build
 npm run zip
 ```
 
+## Chrome Web Store Release
+
+Manual Chrome Web Store releases are handled by the `Chrome Web Store Release` GitHub Actions workflow. See [docs/chrome-web-store.md](docs/chrome-web-store.md) for the listing copy, required GitHub secrets, OAuth setup, and release checklist.
+
 ## Local-Only Policy
 
 The extension ships all catalog data and supported mockups as packaged assets. It does not require a backend. Network activity is limited to the website URL the user chooses to preview.

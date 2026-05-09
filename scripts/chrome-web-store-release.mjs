@@ -1,4 +1,8 @@
 import { readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 const {
   CHROME_CLIENT_ID,
@@ -91,6 +95,19 @@ async function waitForUpload(accessToken) {
   throw new Error("Timed out waiting for Chrome Web Store upload processing to finish.");
 }
 
+async function validatePackage(zipPath) {
+  const { stdout } = await execFileAsync("unzip", ["-Z1", zipPath]);
+  const files = stdout.split(/\r?\n/).filter(Boolean);
+  const manifests = files.filter((file) => file.endsWith("manifest.json"));
+
+  if (manifests.length !== 1 || manifests[0] !== "manifest.json") {
+    throw new Error(
+      `Chrome Web Store packages must contain exactly one root manifest.json. Found: ${manifests.join(", ")}`
+    );
+  }
+}
+
+await validatePackage(EXTENSION_ZIP);
 const accessToken = await getAccessToken();
 const zip = await readFile(EXTENSION_ZIP);
 

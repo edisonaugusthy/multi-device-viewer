@@ -1,4 +1,4 @@
-import { readdirSync, statSync, writeFileSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
 const outDir = join(process.cwd(), "public", "mockups");
@@ -13,18 +13,5 @@ const assets = readdirSync(outDir)
     file,
     bytes: statSync(join(outDir, file)).size
   }));
-
-writeFileSync(
-  join(outDir, "manifest.json"),
-  JSON.stringify(
-    {
-      importedAt: new Date().toISOString(),
-      count: assets.length,
-      assets
-    },
-    null,
-    2
-  )
-);
 
 console.log(`Indexed ${assets.length} local mockups.`);

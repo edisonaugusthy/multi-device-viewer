@@ -64,6 +64,9 @@ jobs:
           echo "zip_path=$zip_path" >> "$GITHUB_OUTPUT"
           ls -lh "$zip_path"
 
+      - name: Validate Chrome package
+        run: npm run validate:chrome-zip -- "${{ steps.package.outputs.zip_path }}"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:

@@ -8,6 +8,7 @@
     "build": "wxt build",
     "zip": "wxt zip",
     "compile": "tsc --noEmit",
+    "validate:chrome-zip": "node scripts/validate-chrome-extension-package.mjs",
     "generate:icons": "node scripts/generate-icons.mjs",
     "import:mockups": "node scripts/import-mockups.mjs",
     "clean:mockups": "node scripts/clean-mockup-transparency.mjs"

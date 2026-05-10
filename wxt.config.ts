@@ -35,6 +35,21 @@ export default defineConfig({
       }
     ]
   },
+  hooks: {
+    "build:publicAssets": (_, files) => {
+      const publicManifestIndexes = files
+        .map((file, index) => ({ file, index }))
+        .filter(({ file }) => file.relativeDest.split("/").at(-1) === "manifest.json")
+        .map(({ index }) => index);
+
+      for (const index of publicManifestIndexes.reverse()) {
+        files.splice(index, 1);
+      }
+    }
+  },
+  zip: {
+    exclude: ["mockups/manifest.json"]
+  },
   vite: () => ({
     plugins: [tailwindcss()],
     resolve: {

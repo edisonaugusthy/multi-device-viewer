@@ -68,22 +68,13 @@ export function PreviewCard({ slot, device, display, removable }: PreviewCardPro
       onFocus={() => setActiveSlot(slot.id)}
     >
       {/* ── Per-card header ── */}
-      <div className="flex h-10 shrink-0 items-center gap-1.5 border-b border-black/[0.06] bg-white px-2">
-        {/* Device switcher */}
-        <DeviceSwitcher
-          currentDevice={device}
-          onSwitch={(id) => setSlotDevice(slot.id, id)}
-        />
-
-        <span className="mx-1 h-4 w-px shrink-0 bg-slate-200" />
-
-        {/* Viewport dims */}
-        <span className="shrink-0 text-[12px] font-medium tabular-nums text-slate-500">
-          {viewportSize.width}×{viewportSize.height}
-        </span>
-
-        <div className="flex-1" />
-
+      <div className="flex h-10 shrink-0 items-center gap-1 border-b border-black/[0.06] bg-white px-2">
+        {/* Action buttons — shrink-0 so they're always visible */}
+        {removable && (
+          <CardBtn label="Remove" onClick={() => removeSlot(slot.id)}>
+            <X size={14} />
+          </CardBtn>
+        )}
         {canRotate && (
           <CardBtn label="Rotate" onClick={() => rotateSlot(slot.id)}>
             <RotateCw size={14} />
@@ -95,11 +86,17 @@ export function PreviewCard({ slot, device, display, removable }: PreviewCardPro
         <CardBtn label="Zoom in" onClick={() => zoomSlot(slot.id, "in")}>
           <Plus size={14} />
         </CardBtn>
-        {removable && (
-          <CardBtn label="Remove" onClick={() => removeSlot(slot.id)}>
-            <X size={14} />
-          </CardBtn>
-        )}
+
+        <span className="mx-0.5 h-4 w-px shrink-0 bg-slate-200" />
+
+        {/* Device switcher — takes remaining space and clips */}
+        <div className="min-w-0 flex-1">
+          <DeviceSwitcher
+            currentDevice={device}
+            onSwitch={(id) => setSlotDevice(slot.id, id)}
+            viewportSize={viewportSize}
+          />
+        </div>
       </div>
 
       {/* ── Canvas ── */}
@@ -160,7 +157,7 @@ const TYPE_LABEL: Record<string, string> = {
   desktop: "Desktops", tv: "TV", watch: "Watch",
 };
 
-function DeviceSwitcher({ currentDevice, onSwitch }: { currentDevice: Device; onSwitch: (id: string) => void }) {
+function DeviceSwitcher({ currentDevice, onSwitch, viewportSize }: { currentDevice: Device; onSwitch: (id: string) => void; viewportSize: Size }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
@@ -222,10 +219,11 @@ function DeviceSwitcher({ currentDevice, onSwitch }: { currentDevice: Device; on
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
-        className="flex h-7 items-center gap-1 rounded-md pl-2 pr-1.5 text-[13px] font-semibold text-slate-800 transition hover:bg-slate-100"
+        className="flex w-full h-7 items-center gap-1 rounded-md pl-1.5 pr-1 text-[12px] font-semibold text-slate-800 transition hover:bg-slate-100"
       >
-        <span className="max-w-[150px] truncate">{shortName(currentDevice.name)}</span>
-        <ChevronDown size={13} className="shrink-0 text-slate-500" />
+        <span className="min-w-0 flex-1 truncate">{shortName(currentDevice.name)}</span>
+        <span className="shrink-0 text-[11px] font-normal tabular-nums text-slate-400">{viewportSize.width}×{viewportSize.height}</span>
+        <ChevronDown size={12} className="shrink-0 text-slate-400" />
       </button>
 
       {open && (

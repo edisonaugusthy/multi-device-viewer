@@ -37,6 +37,7 @@ export function AnnotationOverlay({ imageUrl, onClose }: { imageUrl?: string; on
   const [marks,     setMarks]     = useState<Mark[]>([]);
   const [draft,     setDraft]     = useState<Mark | null>(null);
   const [textPos,   setTextPos]   = useState<Pt | null>(null);
+  const [textInput, setTextInput] = useState("");
   const [copied,    setCopied]    = useState(false);
   const [imgReady,  setImgReady]  = useState(false);
   // Crop

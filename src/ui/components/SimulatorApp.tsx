@@ -1,8 +1,8 @@
-import { Camera, PanelsTopLeft, RotateCw, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { Camera, PanelLeftClose, PanelLeftOpen, PanelsTopLeft, RotateCw, X } from "lucide-react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
-import { captureNodeToPng, downloadDataUrl, screenshotFilename } from "../../domain/capture/capture-service";
+import { captureTabWithOverlay } from "../../domain/capture/capture-service";
 import { PreviewCard } from "./PreviewCard";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 
@@ -11,25 +11,19 @@ export function SimulatorApp() {
   const { slots, display, activeSlotId, addSlot, reloadAllSlots, updateDisplay } = useSimulator();
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
+  const [capturing, setCapturing] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
-
-
-  async function captureComparison(download = true) {
-    const board = document.querySelector("[data-capture-board]") as HTMLElement | null;
-    if (!board) return undefined;
+  async function takeScreenshot() {
+    if (capturing) return;
+    setCapturing(true);
     try {
-      const dataUrl = await captureNodeToPng(board);
-      if (download) await downloadDataUrl(dataUrl, screenshotFilename("comparison-board"));
-      return dataUrl;
-    } catch {
-      return undefined;
+      const dataUrl = await captureTabWithOverlay();
+      setAnnotationImage(dataUrl ?? undefined);
+      setAnnotationOpen(true);
+    } finally {
+      setCapturing(false);
     }
-  }
-
-  async function openAnnotation() {
-    const dataUrl = await captureComparison(false);
-    setAnnotationImage(dataUrl);
-    setAnnotationOpen(true);
   }
 
   // ── Resizable panel widths (percentages, always sum to 100) ──────────────
@@ -80,13 +74,25 @@ export function SimulatorApp() {
     <div className="flex h-screen overflow-hidden bg-[#f5f5f3]">
 
       {/* ── Left sidebar ── */}
-      <aside className="flex w-52 shrink-0 flex-col border-r border-black/[0.07] bg-white">
-        {/* Logo / brand */}
-        <div className="flex h-11 items-center border-b border-slate-100 px-4">
-          <span className="text-[12px] font-black tracking-tight text-slate-800">Device Viewer</span>
+      <aside
+        className={`flex shrink-0 flex-col border-r border-black/[0.07] bg-white transition-all duration-200 ${sidebarOpen ? "w-52" : "w-9"}`}
+      >
+        {/* Logo / brand + toggle */}
+        <div className="flex h-11 shrink-0 items-center border-b border-slate-100 px-2 gap-1">
+          {sidebarOpen && (
+            <span className="flex-1 text-[12px] font-black tracking-tight text-slate-800 pl-2">Device Viewer</span>
+          )}
+          <button
+            type="button"
+            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+            onClick={() => setSidebarOpen((v) => !v)}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          >
+            {sidebarOpen ? <PanelLeftClose size={15} /> : <PanelLeftOpen size={15} />}
+          </button>
         </div>
 
-        <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-3 pb-0">
+        <div className={`flex flex-1 flex-col gap-5 overflow-y-auto p-3 pb-0 ${sidebarOpen ? "" : "hidden"}`}>
           {/* Display */}
           <div>
             <Label>Display</Label>
@@ -128,15 +134,15 @@ export function SimulatorApp() {
           <div>
             <Label>Capture</Label>
             <div className="mt-1.5 flex flex-col gap-1">
-              <SidebarBtn icon={<Camera size={14} />} onClick={() => void captureComparison(true)}>
-                Screenshot all
+              <SidebarBtn icon={<Camera size={14} />} onClick={() => void takeScreenshot()} disabled={capturing}>
+                {capturing ? "Capturing…" : "Capture & Annotate"}
               </SidebarBtn>
             </div>
           </div>
         </div>
 
         {/* Close button — at the bottom of the sidebar */}
-        <div className="shrink-0 border-t border-slate-100 p-3">
+        <div className={`shrink-0 border-t border-slate-100 p-3 ${sidebarOpen ? "" : "hidden"}`}>
           <button
             type="button"
             onClick={() => window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*")}
@@ -166,7 +172,6 @@ export function SimulatorApp() {
                 device={findDevice(slot.deviceId)}
                 display={display}
                 removable={slots.length > 1}
-                onAnnotate={() => void openAnnotation()}
               />
               {/* Drag handle — rendered on the right edge of every panel except the last */}
               {i < slots.length - 1 && (
@@ -204,16 +209,19 @@ function SidebarBtn({
   icon,
   children,
   onClick,
+  disabled,
 }: {
   icon: ReactNode;
   children: ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+      disabled={disabled}
+      className="flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <span className="shrink-0 text-slate-500">{icon}</span>
       {children}

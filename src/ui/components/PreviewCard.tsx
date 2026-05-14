@@ -1,6 +1,5 @@
-import { Camera, ChevronDown, Minus, Plus, RotateCw, X } from "lucide-react";
+import { ChevronDown, Minus, Plus, RotateCw, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { captureNodeToPng, downloadDataUrl, screenshotFilename } from "../../domain/capture/capture-service";
 import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
 import { devices as allDevices } from "../../domain/device/device-catalog";
 import type { Device, Size } from "../../domain/device/device.types";
@@ -15,12 +14,10 @@ interface PreviewCardProps {
   device: Device;
   display: DisplaySettings;
   removable: boolean;
-  onAnnotate: () => void;
 }
 
-export function PreviewCard({ slot, device, display, removable, onAnnotate: _onAnnotate }: PreviewCardProps) {
+export function PreviewCard({ slot, device, display, removable }: PreviewCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const captureRef = useRef<HTMLDivElement | null>(null);
   const [containerSize, setContainerSize] = useState<Size>({ width: 0, height: 0 });
   const [blocked, setBlocked] = useState(false);
   const { setActiveSlot, removeSlot, rotateSlot, zoomSlot, setSlotDevice } = useSimulator();
@@ -63,12 +60,6 @@ export function PreviewCard({ slot, device, display, removable, onAnnotate: _onA
     setBlocked(false);
   }, [device.id, slot.reloadToken, slot.url]);
 
-  async function capture() {
-    if (!captureRef.current) return;
-    const dataUrl = await captureNodeToPng(captureRef.current);
-    await downloadDataUrl(dataUrl, screenshotFilename(device.name));
-  }
-
   return (
     <section
       className="flex h-full flex-col overflow-hidden"
@@ -104,9 +95,6 @@ export function PreviewCard({ slot, device, display, removable, onAnnotate: _onA
         <CardBtn label="Zoom in" onClick={() => zoomSlot(slot.id, "in")}>
           <Plus size={14} />
         </CardBtn>
-        <CardBtn label="Screenshot" onClick={() => void capture()}>
-          <Camera size={14} />
-        </CardBtn>
         {removable && (
           <CardBtn label="Remove" onClick={() => removeSlot(slot.id)}>
             <X size={14} />
@@ -121,7 +109,6 @@ export function PreviewCard({ slot, device, display, removable, onAnnotate: _onA
       >
         {containerSize.width > 0 && (
           <div
-            ref={captureRef}
             className="origin-center"
             style={{
               width: frameSize.width,

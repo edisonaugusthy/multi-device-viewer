@@ -11,7 +11,7 @@ export default defineConfig({
     description:
       "Preview and compare websites across local device viewports with screenshots, annotations, and realistic mockups.",
     version: "0.1.0",
-    permissions: ["activeTab", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
+    permissions: ["activeTab", "debugger", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
     declarative_net_request: {
       rule_resources: [
         {

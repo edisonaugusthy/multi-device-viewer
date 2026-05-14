@@ -10,7 +10,7 @@ export default defineConfig({
     short_name: "Device Viewer",
     description:
       "Preview and compare websites across local device viewports with screenshots, annotations, and realistic mockups.",
-    version: "0.1.0",
+    version: "0.1.1",
     permissions: ["activeTab", "debugger", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
     declarative_net_request: {
       rule_resources: [

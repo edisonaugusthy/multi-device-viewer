@@ -46,18 +46,26 @@ export default defineConfig({
   },
   hooks: {
     "build:publicAssets": (_, files) => {
-      const publicManifestIndexes = files
+      // Prevent any manifest.json nested inside a subdirectory of public/ from
+      // being copied into the output. The Chrome Web Store rejects packages that
+      // contain more than one manifest.json (e.g. public/mockups/manifest.json).
+      const nestedManifestIndexes = files
         .map((file, index) => ({ file, index }))
-        .filter(({ file }) => file.relativeDest.split("/").at(-1) === "manifest.json")
+        .filter(({ file }) => {
+          const parts = file.relativeDest.split("/");
+          return parts.length > 1 && parts.at(-1) === "manifest.json";
+        })
         .map(({ index }) => index);
 
-      for (const index of publicManifestIndexes.reverse()) {
+      for (const index of nestedManifestIndexes.reverse()) {
         files.splice(index, 1);
       }
     }
   },
   zip: {
-    exclude: ["mockups/manifest.json"]
+    // Belt-and-suspenders: also exclude from the zip in case the file
+    // somehow makes it into the output directory through another path.
+    exclude: ["**/manifest.json", "!manifest.json"],
   },
   vite: () => ({
     plugins: [tailwindcss()],

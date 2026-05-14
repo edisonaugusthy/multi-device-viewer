@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { defaultDeviceIds, devices } from "../domain/device/device-catalog";
 import { supportsOrientation } from "../domain/device/device-service";
 import { createPreviewSlot, maxPreviewSlots, nextZoom, normalizeUrl } from "../domain/simulator/simulator-service";
@@ -12,6 +12,7 @@ interface SimulatorContextValue extends SimulatorState {
   zoomSlot: (slotId: string, direction: "in" | "out") => void;
   setSlotZoomMode: (slotId: string, zoomMode: PreviewSlot["zoomMode"]) => void;
   reloadSlot: (slotId: string) => void;
+  reloadAllSlots: () => void;
   addSlot: (deviceId?: string) => void;
   removeSlot: (slotId: string) => void;
   duplicateActiveSlot: (deviceId?: string) => void;
@@ -33,8 +34,16 @@ function initialUrlFromSearch() {
   return normalizeUrl(new URLSearchParams(window.location.search).get("url") ?? "https://example.com");
 }
 
+const defaultSlotDeviceIds = [
+  "apple-iphone-air-2025",   // latest Apple mobile
+  "macbook-air-2020-13",     // latest Apple laptop
+];
+
 export function SimulatorProvider({ children }: { children: ReactNode }) {
-  const [slots, setSlots] = useState<PreviewSlot[]>(() => [createPreviewSlot(defaultDeviceIds[0], initialUrlFromSearch(), 0)]);
+  const [slots, setSlots] = useState<PreviewSlot[]>(() => {
+    const url = initialUrlFromSearch();
+    return defaultSlotDeviceIds.map((deviceId, i) => createPreviewSlot(deviceId, url, i));
+  });
   const [activeSlotId, setActiveSlotId] = useState(slots[0].id);
   const [display, setDisplay] = useState(defaultDisplay);
 
@@ -97,6 +106,10 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     updateSlot(slotId, (slot) => ({ ...slot, reloadToken: slot.reloadToken + 1 }));
   }, [updateSlot]);
 
+  const reloadAllSlots = useCallback(() => {
+    setSlots((current) => current.map((slot) => ({ ...slot, reloadToken: slot.reloadToken + 1 })));
+  }, []);
+
   const addSlot = useCallback((deviceId = defaultDeviceIds[0]) => {
     setSlots((current) => {
       if (current.length >= maxPreviewSlots) return current;
@@ -136,6 +149,38 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setDisplay(nextDisplay);
   }, []);
 
+  // Keep a stable ref to the current activeSlotId so the message listener
+  // below doesn't need to be re-registered every time the active slot changes.
+  const activeSlotIdRef = useRef(activeSlotId);
+  useEffect(() => {
+    activeSlotIdRef.current = activeSlotId;
+  }, [activeSlotId]);
+
+  // Listen for LOAD_URL messages sent by the background service worker when the
+  // extension icon is clicked while a simulator tab is already open. Using
+  // message passing avoids the unreliable "navigate-existing-tab + page reload"
+  // approach and lets the React state update without a full page reload.
+  useEffect(() => {
+    if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
+
+    const listener = (message: unknown) => {
+      if (
+        message !== null &&
+        typeof message === "object" &&
+        (message as Record<string, unknown>).type === "LOAD_URL" &&
+        typeof (message as Record<string, unknown>).url === "string"
+      ) {
+        const newUrl = (message as Record<string, unknown>).url as string;
+        setSlotUrl(activeSlotIdRef.current, newUrl);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(listener);
+    return () => {
+      chrome.runtime.onMessage.removeListener(listener);
+    };
+  }, [setSlotUrl]);
+
   const value = useMemo<SimulatorContextValue>(
     () => ({
       slots,
@@ -148,6 +193,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       zoomSlot,
       setSlotZoomMode,
       reloadSlot,
+      reloadAllSlots,
       addSlot,
       removeSlot,
       duplicateActiveSlot,
@@ -158,6 +204,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       addSlot,
       display,
       duplicateActiveSlot,
+      reloadAllSlots,
       reloadSlot,
       removeSlot,
       rotateSlot,

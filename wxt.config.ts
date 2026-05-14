@@ -11,7 +11,16 @@ export default defineConfig({
     description:
       "Preview and compare websites across local device viewports with screenshots, annotations, and realistic mockups.",
     version: "0.1.0",
-    permissions: ["activeTab", "downloads", "storage", "tabs"],
+    permissions: ["activeTab", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
+    declarative_net_request: {
+      rule_resources: [
+        {
+          id: "frame-headers",
+          enabled: true,
+          path: "rules/frame-headers.json"
+        }
+      ]
+    },
     host_permissions: ["<all_urls>"],
     icons: {
       16: "/icons/icon-16.png",
@@ -30,7 +39,7 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        resources: ["mockups/*", "icons/*"],
+        resources: ["mockups/*", "icons/*", "simulator.html", "chunks/*", "assets/*"],
         matches: ["<all_urls>"]
       }
     ]

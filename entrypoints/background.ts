@@ -6,26 +6,26 @@ export default defineBackground(() => {
   });
 
   chrome.action.onClicked.addListener((tab) => {
-    void openOrFocusSimulator(tab.url);
+    if (!tab.id) return;
+
+    // Send a message to the content script already running on the page.
+    // The content script will toggle the simulator overlay in place — the user
+    // never leaves the current tab.
+    const url =
+      tab.url && /^https?:\/\//i.test(tab.url) ? tab.url : undefined;
+
+    chrome.tabs.sendMessage(tab.id, { type: "OPEN_SIMULATOR", url }).catch(() => {
+      // Content script not yet injected (e.g. a page that was open before the
+      // extension was installed/updated). Inject it programmatically then retry.
+      chrome.scripting
+        .executeScript({
+          target: { tabId: tab.id! },
+          files: ["content-scripts/content.js"],
+        })
+        .then(() => {
+          chrome.tabs.sendMessage(tab.id!, { type: "OPEN_SIMULATOR", url });
+        })
+        .catch(console.error);
+    });
   });
 });
-
-async function openOrFocusSimulator(tabUrl?: string) {
-  const simulatorUrl = chrome.runtime.getURL("/simulator.html");
-  const url = new URL(simulatorUrl);
-
-  if (tabUrl && /^https?:\/\//i.test(tabUrl)) {
-    url.searchParams.set("url", tabUrl);
-  }
-
-  const tabs = await chrome.tabs.query({});
-  const existing = tabs.find((candidate) => candidate.url?.startsWith(simulatorUrl));
-
-  if (existing?.id) {
-    await chrome.tabs.update(existing.id, { active: true, url: url.toString() });
-    if (existing.windowId) await chrome.windows.update(existing.windowId, { focused: true });
-    return;
-  }
-
-  await chrome.tabs.create({ url: url.toString() });
-}

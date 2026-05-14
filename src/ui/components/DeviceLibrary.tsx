@@ -1,155 +1,138 @@
-import { Heart, Laptop, Monitor, Smartphone, Tablet, Tv, Watch } from "lucide-react";
-import { useMemo, type ReactNode } from "react";
+import { Search } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
 import type { Device } from "../../domain/device/device.types";
 
-export function DeviceLibrary() {
-  const { devices, setSelectedDeviceId, toggleFavorite, isFavorite } = useDeviceCatalog();
+const TYPE_ORDER = ["phone", "tablet", "laptop", "desktop", "tv", "watch"];
+const TYPE_LABEL: Record<string, string> = {
+  phone: "Phones",
+  tablet: "Tablets",
+  laptop: "Laptops",
+  desktop: "Desktops",
+  tv: "TV",
+  watch: "Watch",
+};
+
+export function DeviceLibrary({ onPick }: { onPick?: () => void }) {
+  const { devices } = useDeviceCatalog();
   const { activeSlotId, slots, setSlotDevice } = useSimulator();
+  const [query, setQuery] = useState("");
+
+  const activeDeviceId = slots.find((s) => s.id === activeSlotId)?.deviceId;
 
   function pickDevice(deviceId: string) {
-    setSelectedDeviceId(deviceId);
     setSlotDevice(activeSlotId, deviceId);
+    onPick?.();
   }
 
-  const activeDeviceId = slots.find((slot) => slot.id === activeSlotId)?.deviceId;
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return devices;
+    return devices.filter((d) =>
+      [d.name, d.brand, d.family, d.os, d.type, `${d.cssViewport.width}x${d.cssViewport.height}`]
+        .join(" ")
+        .toLowerCase()
+        .includes(q)
+    );
+  }, [devices, query]);
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, Device[]>();
+    for (const type of TYPE_ORDER) map.set(type, []);
+    for (const d of filtered) {
+      const bucket = map.get(d.type) ?? map.get("phone")!;
+      bucket.push(d);
+    }
+    return Array.from(map.entries()).filter(([, list]) => list.length > 0);
+  }, [filtered]);
 
   return (
-    <aside className="flex h-full min-h-0 w-full shrink-0 flex-col bg-white/82 sm:w-[620px]">
-      <div className="border-b border-slate-200 px-4 py-3">
-        <div className="mb-3">
-          <h2 className="text-sm font-black text-slate-950">Devices</h2>
-          <p className="mt-1 text-xs font-semibold text-slate-500">Select a tile to replace the active preview.</p>
+    <div className="flex flex-col gap-0">
+      {/* Search */}
+      <div className="sticky top-0 z-10 bg-white px-3 pb-2 pt-2">
+        <div className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 focus-within:border-blue-400 focus-within:bg-white">
+          <Search size={12} className="shrink-0 text-slate-400" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search devices…"
+            className="min-w-0 flex-1 bg-transparent text-[12px] font-medium text-slate-800 outline-none placeholder:text-slate-400"
+          />
+          {query && (
+            <button onClick={() => setQuery("")} className="text-slate-400 hover:text-slate-600">
+              <span className="text-[11px]">✕</span>
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-4">
-        <p className="mb-3 text-xs font-bold uppercase tracking-[0.08em] text-slate-400">{devices.length} devices</p>
-        <DeviceSections
-          activeDeviceId={activeDeviceId}
-          devices={devices}
-          isFavorite={isFavorite}
-          onFavorite={toggleFavorite}
-          onPick={pickDevice}
-        />
-      </div>
-    </aside>
-  );
-}
-
-function DeviceSections({
-  activeDeviceId,
-  devices,
-  isFavorite,
-  onFavorite,
-  onPick
-}: {
-  activeDeviceId?: string;
-  devices: Device[];
-  isFavorite: (id: string) => boolean;
-  onFavorite: (id: string) => void;
-  onPick: (id: string) => void;
-}) {
-  const sections = useMemo(() => {
-    const rows: Array<{ key: string; label: string; devices: Device[]; icon: ReactNode }> = [
-      { key: "android", label: "Android Phones", devices: devices.filter((device) => device.type === "phone" && /android/i.test(device.os)), icon: <Smartphone size={17} /> },
-      { key: "apple", label: "Apple Phones", devices: devices.filter((device) => device.type === "phone" && /ios/i.test(device.os)), icon: <Smartphone size={17} /> },
-      { key: "tablet", label: "Tablets", devices: devices.filter((device) => device.type === "tablet"), icon: <Tablet size={17} /> },
-      { key: "desktop", label: "Desktop & Laptop", devices: devices.filter((device) => device.type === "desktop" || device.type === "laptop"), icon: <Laptop size={17} /> },
-      { key: "special", label: "Specials", devices: devices.filter((device) => device.type === "watch" || device.type === "tv" || device.type === "custom"), icon: <Watch size={17} /> }
-    ];
-
-    return rows.filter((row) => row.devices.length > 0);
-  }, [devices]);
-
-  return (
-    <div className="space-y-5">
-      {sections.map((section) => (
-        <section key={section.key}>
-          <h3 className="mb-2 flex items-center gap-2 text-[14px] font-black text-slate-700">
-            {section.icon}
-            {section.label}
-          </h3>
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-            {section.devices.map((device) => (
-              <DeviceTile
-                key={device.id}
-                active={activeDeviceId === device.id}
-                device={device}
-                favorite={isFavorite(device.id)}
-                onFavorite={onFavorite}
-                onPick={onPick}
-              />
-            ))}
+      {/* Device list */}
+      <div className="px-2 pb-4">
+        {grouped.map(([type, list]) => (
+          <div key={type} className="mb-3">
+            <p className="px-1 pb-1 pt-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
+              {TYPE_LABEL[type] ?? type}
+            </p>
+            <div className="flex flex-col gap-0.5">
+              {list.map((device) => (
+                <DeviceRow
+                  key={device.id}
+                  device={device}
+                  active={activeDeviceId === device.id}
+                  onPick={pickDevice}
+                />
+              ))}
+            </div>
           </div>
-        </section>
-      ))}
+        ))}
+        {grouped.length === 0 && (
+          <p className="px-2 py-6 text-center text-[12px] text-slate-400">No devices match.</p>
+        )}
+      </div>
     </div>
   );
 }
 
-function DeviceTile({
-  active,
-  device,
-  favorite,
-  onFavorite,
-  onPick
-}: {
-  active: boolean;
-  device: Device;
-  favorite: boolean;
-  onFavorite: (id: string) => void;
-  onPick: (id: string) => void;
-}) {
-  const dimensions = `${device.cssViewport.width} x ${device.cssViewport.height}`;
-
+function DeviceRow({ device, active, onPick }: { device: Device; active: boolean; onPick: (id: string) => void }) {
+  const dims = `${device.cssViewport.width}×${device.cssViewport.height}`;
   return (
-    <div
-      className={`relative h-[88px] rounded-lg border bg-white transition ${
-        active ? "border-blue-500 shadow-[0_0_0_2px_rgb(59_130_246/0.18)]" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+    <button
+      type="button"
+      onClick={() => onPick(device.id)}
+      className={`flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left transition ${
+        active
+          ? "bg-slate-900 text-white"
+          : "text-slate-700 hover:bg-slate-100"
       }`}
-      title={`${device.name} · ${dimensions}`}
     >
-      <button
-        type="button"
-        aria-label={`Select ${device.name}`}
-        className="flex h-full w-full flex-col items-center justify-center px-1.5 text-center"
-        onClick={() => onPick(device.id)}
-      >
-        <DeviceGlyph device={device} />
-        <span className="mt-1.5 line-clamp-2 text-[10.5px] font-bold leading-[12px] text-slate-700">{shortDeviceName(device.name)}</span>
-        <span className={`mt-1 text-[9.5px] font-black leading-none ${active ? "text-blue-600" : "text-slate-400"}`}>{dimensions}</span>
-      </button>
-      <button
-        type="button"
-        aria-label={favorite ? `Remove ${device.name} from favorites` : `Add ${device.name} to favorites`}
-        className={`absolute right-1 top-1 rounded-full p-1 transition hover:bg-slate-100 ${favorite ? "text-red-500" : "text-slate-300 hover:text-slate-500"}`}
-        onClick={(event) => {
-          event.stopPropagation();
-          onFavorite(device.id);
-        }}
-      >
-        <Heart size={11} fill={favorite ? "currentColor" : "none"} />
-      </button>
-    </div>
+      <DeviceGlyph type={device.type} active={active} />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[12px] font-semibold leading-tight">
+          {shortName(device.name)}
+        </span>
+        <span className={`text-[10.5px] font-medium ${active ? "text-white/60" : "text-slate-400"}`}>
+          {dims}
+        </span>
+      </span>
+    </button>
   );
 }
 
-function DeviceGlyph({ device }: { device: Device }) {
-  const mockup = device.mockupAssets.find((asset) => asset.localPath);
-  if (mockup?.localPath) {
-    return <img src={mockup.localPath} alt="" className="h-8 w-9 object-contain" loading="lazy" />;
-  }
-  if (device.type === "desktop" || device.type === "laptop") return <Laptop className="text-slate-800" size={29} />;
-  if (device.type === "tablet") return <Tablet className="text-slate-800" size={31} />;
-  if (device.type === "watch") return <Watch className="text-slate-800" size={27} />;
-  if (device.type === "tv") return <Tv className="text-slate-800" size={31} />;
-  if (device.type === "custom") return <Monitor className="text-slate-800" size={29} />;
-  return <Smartphone className="text-slate-800" size={28} />;
+function DeviceGlyph({ type, active }: { type: string; active: boolean }) {
+  const cls = `shrink-0 ${active ? "text-white/70" : "text-slate-400"}`;
+  if (type === "tablet")
+    return <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>;
+  if (type === "laptop" || type === "desktop")
+    return <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>;
+  if (type === "watch")
+    return <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="7"/></svg>;
+  if (type === "tv")
+    return <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8M12 18v2"/></svg>;
+  return <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>;
 }
 
-function shortDeviceName(name: string) {
+function shortName(name: string) {
   return name
     .replace(/^Apple\s+/i, "")
     .replace(/^Samsung\s+/i, "")

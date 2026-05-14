@@ -3,438 +3,1080 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Multi Device Viewer Store Screenshots</title>
+    <title>Multi Device Viewer — Store Screenshots</title>
     <style>
-      * {
-        box-sizing: border-box;
-      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       body {
-        margin: 0;
-        background: #f7faf9;
-        color: #0f172a;
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #0f172a;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: #f1f5f9;
       }
 
+      /* ─── navigation ─────────────────────────────────── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        gap: 8px;
+        padding: 12px 20px;
+        background: #1e293b;
+        border-bottom: 1px solid #334155;
+      }
+      nav button {
+        padding: 6px 14px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+        background: #0f172a;
+        color: #94a3b8;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      nav button.active { background: #14b8a6; border-color: #14b8a6; color: #fff; }
+
+      /* ─── shot container ─────────────────────────────── */
       .shot {
-        position: relative;
         display: none;
         width: 1280px;
         height: 800px;
+        position: relative;
         overflow: hidden;
-        background:
-          radial-gradient(circle at 78% 10%, rgba(20, 184, 166, 0.2), transparent 28%),
-          linear-gradient(135deg, #f8fffc 0%, #eef7f5 100%);
+      }
+      .shot.active { display: block; }
+
+      /* ════════════════════════════════════════════════════
+         SHARED DESIGN TOKENS
+      ════════════════════════════════════════════════════ */
+      :root {
+        --teal:   #14b8a6;
+        --teal2:  #0d9488;
+        --slate0: #f8fafc;
+        --slate1: #f1f5f9;
+        --slate2: #e2e8f0;
+        --slate3: #cbd5e1;
+        --slate4: #94a3b8;
+        --slate5: #64748b;
+        --slate6: #475569;
+        --slate7: #334155;
+        --slate8: #1e293b;
+        --slate9: #0f172a;
+        --card-bg: #ffffff;
+        --card-border: rgba(15,23,42,.10);
+        --shadow-sm: 0 2px 8px rgba(15,23,42,.08);
+        --shadow-md: 0 8px 24px rgba(15,23,42,.12);
+        --shadow-lg: 0 24px 64px rgba(15,23,42,.20);
       }
 
-      .shot.active {
-        display: block;
-      }
-
-      .topbar {
-        position: absolute;
-        top: 28px;
-        left: 36px;
-        right: 36px;
-        display: flex;
+      /* ─── pill badge ─────────────────────────────────── */
+      .badge {
+        display: inline-flex;
         align-items: center;
-        justify-content: space-between;
+        gap: 6px;
+        border: 1px solid rgba(20,184,166,.3);
+        border-radius: 999px;
+        background: rgba(20,184,166,.08);
+        color: var(--teal);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 5px 14px;
+        letter-spacing: .01em;
+      }
+      .badge::before {
+        content: '';
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--teal);
       }
 
+      /* ─── brand row ──────────────────────────────────── */
       .brand {
         display: flex;
         align-items: center;
-        gap: 14px;
-        font-size: 24px;
-        font-weight: 760;
-      }
-
-      .brand img {
-        width: 54px;
-        height: 54px;
-        border-radius: 14px;
-        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.18);
-      }
-
-      .pill {
-        border: 1px solid rgba(15, 23, 42, 0.1);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.82);
-        padding: 10px 16px;
-        color: #334155;
-        font-size: 15px;
-        font-weight: 650;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-      }
-
-      .headline {
-        position: absolute;
-        top: 118px;
-        left: 52px;
-        width: 460px;
-      }
-
-      h1 {
-        margin: 0 0 16px;
-        font-size: 48px;
-        line-height: 1.02;
-        letter-spacing: 0;
-      }
-
-      .sub {
-        margin: 0;
-        color: #475569;
-        font-size: 20px;
-        line-height: 1.45;
-      }
-
-      .workspace {
-        position: absolute;
-        right: 42px;
-        bottom: 52px;
-        width: 720px;
-        height: 590px;
-        border: 1px solid rgba(15, 23, 42, 0.1);
-        border-radius: 24px;
-        background: rgba(255, 255, 255, 0.78);
-        box-shadow: 0 30px 90px rgba(15, 23, 42, 0.16);
-        backdrop-filter: blur(18px);
-      }
-
-      .browserbar {
-        display: flex;
-        align-items: center;
         gap: 10px;
-        height: 56px;
-        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-        padding: 0 20px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--slate9);
+        letter-spacing: -.01em;
+      }
+      .brand img {
+        width: 36px; height: 36px;
+        border-radius: 9px;
+        box-shadow: var(--shadow-md);
       }
 
-      .dot {
-        width: 11px;
-        height: 11px;
-        border-radius: 50%;
-        background: #94a3b8;
+      /* ─── sidebar shell ──────────────────────────────── */
+      .sidebar {
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 208px;
+        background: var(--slate8);
+        border-right: 1px solid var(--slate7);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
       }
-
-      .url {
-        flex: 1;
-        border-radius: 999px;
-        background: #eef6f4;
-        padding: 9px 15px;
-        color: #64748b;
-        font-size: 14px;
-      }
-
-      .frames {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 22px;
-        padding: 26px;
-      }
-
-      .device-card {
-        min-height: 226px;
-        border: 1px solid rgba(15, 23, 42, 0.1);
-        border-radius: 18px;
-        background: #fbfffd;
-        padding: 16px;
-        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
-      }
-
-      .device-title {
+      .sidebar-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 12px;
-        color: #0f172a;
-        font-size: 14px;
-        font-weight: 760;
+        padding: 14px 14px 12px;
+        border-bottom: 1px solid var(--slate7);
+      }
+      .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #f1f5f9;
+      }
+      .sidebar-brand img {
+        width: 28px; height: 28px;
+        border-radius: 7px;
+      }
+      .icon-btn {
+        width: 28px; height: 28px;
+        border-radius: 7px;
+        background: var(--slate7);
+        display: grid; place-items: center;
+        color: var(--slate4);
+        font-size: 12px;
+      }
+      .sidebar-body { padding: 14px 12px; display: flex; flex-direction: column; gap: 8px; }
+      .sidebar-btn {
+        width: 100%;
+        padding: 9px 12px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+      .sidebar-btn.primary {
+        background: var(--teal);
+        color: #fff;
+      }
+      .sidebar-btn.secondary {
+        background: var(--slate7);
+        color: var(--slate3);
+      }
+      .sidebar-btn .btn-icon { font-size: 14px; }
+      .sidebar-section {
+        margin-top: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--slate5);
+        padding: 0 2px 6px;
+        border-bottom: 1px solid var(--slate7);
+      }
+      .sidebar-stat {
+        padding: 4px 2px;
+        font-size: 12px;
+        color: var(--slate4);
+        display: flex;
+        justify-content: space-between;
+      }
+      .sidebar-stat span { color: var(--slate2); font-weight: 600; }
+
+      /* ─── main canvas area ───────────────────────────── */
+      .main-area {
+        position: absolute;
+        left: 208px; top: 0; right: 0; bottom: 0;
+        background:
+          radial-gradient(circle at 80% 20%, rgba(20,184,166,.06) 0%, transparent 40%),
+          #f8fafc;
+        display: flex;
+        align-items: stretch;
       }
 
-      .viewport {
+      /* ─── device card ────────────────────────────────── */
+      .device-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        box-shadow: var(--shadow-md);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--card-border);
+        background: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--slate9);
+        flex-shrink: 0;
+      }
+      .card-header .dims {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--slate5);
+        margin-left: auto;
+      }
+      .card-header .ctrl {
+        width: 22px; height: 22px;
+        border-radius: 5px;
+        background: var(--slate1);
+        display: grid; place-items: center;
+        font-size: 11px;
+        color: var(--slate5);
+      }
+      .card-viewport {
+        flex: 1;
         position: relative;
         overflow: hidden;
-        height: 166px;
-        border-radius: 15px;
-        background:
-          linear-gradient(180deg, rgba(8, 47, 73, 0.92), rgba(15, 118, 110, 0.92)),
-          #0f766e;
+        background: var(--slate1);
       }
 
-      .site {
+      /* ─── faux website inside viewport ──────────────── */
+      .faux-site {
         position: absolute;
-        inset: 14px;
-        border-radius: 12px;
-        background: #f8fafc;
-        padding: 14px;
+        inset: 0;
+        background: #ffffff;
+        padding: 12px;
+        overflow: hidden;
       }
-
-      .site h2 {
-        width: 66%;
-        height: 18px;
-        margin: 0 0 12px;
-        border-radius: 999px;
-        background: #0f172a;
-      }
-
-      .site p,
-      .site span {
-        display: block;
-        height: 9px;
-        margin: 8px 0;
-        border-radius: 999px;
-        background: #cbd5e1;
-      }
-
-      .site .accent {
-        width: 44%;
-        height: 30px;
-        margin-top: 16px;
-        background: #14b8a6;
-      }
-
-      .library {
-        position: absolute;
-        right: 34px;
-        top: 108px;
-        width: 370px;
-        height: 604px;
-        border: 1px solid rgba(15, 23, 42, 0.1);
-        border-radius: 24px;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 22px;
-        box-shadow: 0 30px 90px rgba(15, 23, 42, 0.18);
-      }
-
-      .search {
-        border-radius: 14px;
-        background: #eef6f4;
-        padding: 14px 16px;
-        color: #64748b;
-        font-weight: 650;
-      }
-
-      .device-row {
+      .faux-nav {
+        height: 28px;
+        border-radius: 6px;
+        background: var(--slate9);
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
-        gap: 14px;
-        margin-top: 18px;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 16px;
-        background: #ffffff;
-        padding: 14px;
+        padding: 0 10px;
+        gap: 6px;
       }
-
-      .device-row img {
-        width: 42px;
-        max-height: 58px;
-        object-fit: contain;
-      }
-
-      .device-row strong {
-        display: block;
-        font-size: 15px;
-      }
-
-      .device-row small {
-        display: block;
-        color: #64748b;
-        margin-top: 3px;
-      }
-
-      .canvas {
-        position: absolute;
-        left: 72px;
-        bottom: 70px;
-        width: 690px;
-        height: 472px;
-        border: 1px solid rgba(15, 23, 42, 0.1);
-        border-radius: 26px;
-        background: #ffffff;
-        box-shadow: 0 30px 90px rgba(15, 23, 42, 0.16);
-        padding: 26px;
-      }
-
-      .annotation {
-        position: absolute;
-        border: 4px solid #f59e0b;
-        border-radius: 22px;
-      }
-
-      .annotation.one {
-        left: 96px;
-        top: 108px;
-        width: 260px;
-        height: 168px;
-      }
-
-      .annotation.two {
-        right: 74px;
-        bottom: 82px;
-        width: 210px;
-        height: 112px;
-      }
-
-      .note {
-        position: absolute;
-        right: 78px;
-        top: 154px;
-        width: 320px;
-        border-radius: 18px;
-        background: #0f172a;
-        color: #f8fafc;
-        padding: 18px 20px;
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.24);
-      }
-
-      .note strong {
-        display: block;
+      .faux-nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--slate5); }
+      .faux-hero {
+        height: 52px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--teal), var(--teal2));
         margin-bottom: 8px;
-      }
-
-      .note p {
-        margin: 0;
-        color: #cbd5e1;
-        line-height: 1.42;
-      }
-
-      .toolbar {
-        position: absolute;
-        left: 110px;
-        bottom: 82px;
-        display: flex;
-        gap: 12px;
-      }
-
-      .tool {
-        width: 46px;
-        height: 46px;
-        border-radius: 13px;
-        background: #ecfeff;
-        border: 1px solid rgba(14, 116, 144, 0.12);
-      }
-
-      .feature-list {
-        position: absolute;
-        left: 60px;
-        top: 392px;
-        display: grid;
-        gap: 12px;
-        width: 390px;
-      }
-
-      .feature {
         display: flex;
         align-items: center;
-        gap: 12px;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.76);
-        padding: 14px 16px;
-        color: #334155;
-        font-weight: 690;
-        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+        padding: 0 10px;
+      }
+      .faux-hero-text { width: 55%; height: 8px; border-radius: 4px; background: rgba(255,255,255,.5); }
+      .faux-line { height: 7px; border-radius: 4px; background: var(--slate2); margin-bottom: 5px; }
+      .faux-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .faux-card-sm {
+        height: 36px;
+        border-radius: 7px;
+        background: var(--slate1);
+        border: 1px solid var(--slate2);
       }
 
-      .check {
-        display: grid;
-        width: 24px;
-        height: 24px;
-        place-items: center;
+      /* ─── phone frame shell ──────────────────────────── */
+      .phone-shell {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+      .phone-outer {
+        position: relative;
+        border-radius: 28px;
+        border: 8px solid var(--slate8);
+        background: var(--slate8);
+        box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset, var(--shadow-md);
+      }
+      .phone-screen {
+        border-radius: 20px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .phone-notch {
+        position: absolute;
+        top: -1px; left: 50%; transform: translateX(-50%);
+        width: 60px; height: 10px;
+        background: var(--slate8);
+        border-radius: 0 0 10px 10px;
+        z-index: 2;
+      }
+
+      /* ─── laptop frame shell ─────────────────────────── */
+      .laptop-shell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+      .laptop-lid {
+        border: 8px solid var(--slate7);
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+        background: var(--slate7);
+        overflow: hidden;
+      }
+      .laptop-screen { border-radius: 3px; overflow: hidden; background: #fff; }
+      .laptop-base {
+        width: 110%;
+        height: 9px;
+        background: var(--slate6);
+        border-radius: 0 0 6px 6px;
+      }
+
+      /* ─── resize handle ──────────────────────────────── */
+      .resize-handle {
+        width: 4px;
+        background: var(--slate2);
+        position: relative;
+        flex-shrink: 0;
+        cursor: col-resize;
+      }
+      .resize-handle::after {
+        content: '⋮';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%,-50%);
+        color: var(--slate4);
+        font-size: 16px;
+        line-height: 1;
+        background: var(--slate2);
+        border-radius: 3px;
+        padding: 4px 2px;
+      }
+
+      /* ─── dropdown ───────────────────────────────────── */
+      .dropdown {
+        position: absolute;
+        top: 42px; left: 14px;
+        width: 220px;
+        background: #fff;
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        z-index: 50;
+        overflow: hidden;
+      }
+      .dd-search {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--slate2);
+        font-size: 12px;
+        color: var(--slate5);
+        background: var(--slate1);
+      }
+      .dd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        font-size: 12px;
+        color: var(--slate9);
+        border-bottom: 1px solid var(--slate2);
+      }
+      .dd-item:last-child { border-bottom: none; }
+      .dd-item.active { background: rgba(20,184,166,.06); }
+      .dd-item .dd-icon { font-size: 14px; }
+      .dd-item .dd-dims { font-size: 11px; color: var(--slate5); margin-left: auto; }
+
+      /* ─── annotation overlay ─────────────────────────── */
+      .annotator {
+        position: absolute;
+        inset: 0;
+        background: rgba(15,23,42,.92);
+        display: flex;
+        flex-direction: column;
+      }
+      .ann-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: var(--slate8);
+        border-bottom: 1px solid var(--slate7);
+        flex-shrink: 0;
+      }
+      .ann-tool {
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        display: grid; place-items: center;
+        font-size: 14px;
+        background: var(--slate7);
+        color: var(--slate3);
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .ann-tool.active { background: var(--teal); color: #fff; }
+      .ann-sep { width: 1px; height: 24px; background: var(--slate7); margin: 0 2px; }
+      .ann-color {
+        width: 18px; height: 18px;
         border-radius: 50%;
-        background: #14b8a6;
-        color: white;
+        border: 2px solid transparent;
+        cursor: pointer;
+      }
+      .ann-color.active { border-color: #fff; }
+      .ann-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 6px;
+      }
+      .ann-btn {
+        padding: 5px 12px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .ann-btn.ghost { background: var(--slate7); color: var(--slate3); }
+      .ann-btn.primary { background: var(--teal); color: #fff; }
+      .ann-canvas {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* drawn annotation marks on canvas */
+      .ann-rect {
+        position: absolute;
+        border-radius: 6px;
+        border: 3px solid;
+        pointer-events: none;
+      }
+      .ann-arrow {
+        position: absolute;
+        pointer-events: none;
+        font-size: 20px;
+      }
+      .ann-text-label {
+        position: absolute;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 5px;
+        pointer-events: none;
+      }
+
+      /* crop selection */
+      .crop-selection {
+        position: absolute;
+        border: 2px dashed #f59e0b;
+        background: rgba(245,158,11,.06);
+        pointer-events: none;
+      }
+      .crop-handle {
+        position: absolute;
+        width: 10px; height: 10px;
+        border-radius: 2px;
+        background: #f59e0b;
+        transform: translate(-50%,-50%);
+      }
+      .crop-bar {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 40px;
+        background: rgba(245,158,11,.12);
+        border-top: 1px solid rgba(245,158,11,.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #f59e0b;
+      }
+
+      /* ─── feature pill list ──────────────────────────── */
+      .feat-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 12px;
+        background: rgba(255,255,255,.04);
+        padding: 12px 16px;
+        font-size: 14px;
+        color: #f1f5f9;
+      }
+      .feat-check {
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        background: rgba(20,184,166,.2);
+        color: var(--teal);
+        display: grid; place-items: center;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      /* ─── topbar strip (for hero / marketing shots) ──── */
+      .topbar {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 52px;
+        background: rgba(255,255,255,.96);
+        border-bottom: 1px solid var(--slate2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        z-index: 10;
       }
     </style>
   </head>
   <body>
+    <nav>
+      <button class="active" onclick="show(1)">1 · Hero</button>
+      <button onclick="show(2)">2 · Four devices</button>
+      <button onclick="show(3)">3 · Device switcher</button>
+      <button onclick="show(4)">4 · Annotator</button>
+      <button onclick="show(5)">5 · Privacy-first</button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHOT 1 — Hero: overlay on page, sidebar + 2 device panels
+    ════════════════════════════════════════════════════════════ -->
     <section id="shot-1" class="shot active">
-      <div class="topbar">
-        <div class="brand"><img src="../public/icons/icon-128.png" alt="" />Multi Device Viewer</div>
-        <div class="pill">Local-first responsive testing for Chrome</div>
-      </div>
-      <div class="headline">
-        <h1>Compare real device viewports side by side.</h1>
-        <p class="sub">Preview pages across phones, tablets, laptops, desktops, watches, and TVs from one dedicated simulator tab.</p>
-      </div>
-      <div class="feature-list">
-        <div class="feature"><span class="check">✓</span>Up to four previews at once</div>
-        <div class="feature"><span class="check">✓</span>Orientation, zoom, reload, and fit controls</div>
-        <div class="feature"><span class="check">✓</span>Private screenshots stored on your device</div>
-      </div>
-      <div class="workspace">
-        <div class="browserbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">https://example.com/product</div></div>
-        <div class="frames">
-          <div class="device-card"><div class="device-title">iPhone 15 Pro <span>393 x 852</span></div><div class="viewport"><div class="site"><h2></h2><p></p><p style="width:74%"></p><span class="accent"></span></div></div></div>
-          <div class="device-card"><div class="device-title">Pixel 6 Pro <span>412 x 915</span></div><div class="viewport"><div class="site"><h2></h2><p></p><p style="width:58%"></p><span class="accent"></span></div></div></div>
-          <div class="device-card"><div class="device-title">iPad Air <span>820 x 1180</span></div><div class="viewport"><div class="site"><h2 style="width:52%"></h2><p></p><p style="width:86%"></p><span class="accent" style="width:32%"></span></div></div></div>
-          <div class="device-card"><div class="device-title">MacBook Pro <span>1440 x 900</span></div><div class="viewport"><div class="site"><h2 style="width:42%"></h2><p></p><p style="width:64%"></p><span class="accent" style="width:24%"></span></div></div></div>
+      <!-- underlying page blurred -->
+      <div style="position:absolute;inset:0;background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf4 100%);opacity:.6;filter:blur(1px)"></div>
+
+      <!-- overlay iframe sim -->
+      <div style="position:absolute;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:stretch;">
+
+        <!-- sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-header">
+            <div class="sidebar-brand">
+              <img src="../public/icons/icon-128.png" alt="" />
+              Multi Device Viewer
+            </div>
+            <div class="icon-btn">◀</div>
+          </div>
+          <div class="sidebar-body">
+            <div class="sidebar-btn primary"><span class="btn-icon">📷</span> Capture &amp; Annotate</div>
+            <div class="sidebar-btn secondary"><span class="btn-icon">＋</span> Add device</div>
+            <div class="sidebar-btn secondary"><span class="btn-icon">↺</span> Reload all</div>
+            <div class="sidebar-section" style="margin-top:12px">Layout</div>
+            <div class="sidebar-stat">Panels <span>2</span></div>
+            <div class="sidebar-stat">Zoom <span>100%</span></div>
+            <div class="sidebar-section" style="margin-top:8px">Active devices</div>
+            <div class="sidebar-stat">iPhone Air 2025 <span>390px</span></div>
+            <div class="sidebar-stat">MacBook Air 13 <span>1280px</span></div>
+          </div>
         </div>
+
+        <!-- panels -->
+        <div style="flex:1;display:flex;gap:0;align-items:stretch;padding:20px 20px 20px 8px;">
+          <!-- phone panel -->
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:0;">
+            <div class="device-card" style="flex:1">
+              <div class="card-header">
+                <span>iPhone Air 2025</span>
+                <span class="dims">390 × 844</span>
+                <div class="ctrl">⟳</div>
+                <div class="ctrl">⤢</div>
+                <div class="ctrl">✕</div>
+              </div>
+              <div class="card-viewport">
+                <div class="phone-shell">
+                  <div class="phone-outer" style="width:140px;">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen" style="width:124px;height:260px;">
+                      <div class="faux-site" style="padding:8px;">
+                        <div class="faux-nav" style="height:20px;margin-bottom:7px;"></div>
+                        <div class="faux-hero" style="height:38px;margin-bottom:6px;"><div class="faux-hero-text"></div></div>
+                        <div class="faux-line" style="width:90%"></div>
+                        <div class="faux-line" style="width:70%"></div>
+                        <div class="faux-line" style="width:80%"></div>
+                        <div class="faux-grid"><div class="faux-card-sm"></div><div class="faux-card-sm"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="resize-handle" style="margin:20px 0;align-self:stretch;"></div>
+
+          <!-- laptop panel -->
+          <div style="flex:2;min-width:0;display:flex;flex-direction:column;">
+            <div class="device-card" style="flex:1">
+              <div class="card-header">
+                <span>MacBook Air 13 2020</span>
+                <span class="dims">1280 × 800</span>
+                <div class="ctrl">⟳</div>
+                <div class="ctrl">⤢</div>
+                <div class="ctrl">✕</div>
+              </div>
+              <div class="card-viewport">
+                <div class="laptop-shell">
+                  <div class="laptop-lid" style="width:480px;">
+                    <div class="laptop-screen" style="width:464px;height:290px;">
+                      <div class="faux-site" style="padding:10px;">
+                        <div class="faux-nav" style="height:24px;margin-bottom:10px;"><div class="faux-nav-dot"></div><div class="faux-nav-dot"></div><div class="faux-nav-dot"></div></div>
+                        <div class="faux-hero" style="height:60px;margin-bottom:10px;"><div class="faux-hero-text" style="width:40%;height:10px;"></div></div>
+                        <div class="faux-line" style="width:95%"></div>
+                        <div class="faux-line" style="width:78%"></div>
+                        <div class="faux-grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:10px;">
+                          <div class="faux-card-sm" style="height:48px;"></div>
+                          <div class="faux-card-sm" style="height:48px;"></div>
+                          <div class="faux-card-sm" style="height:48px;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="laptop-base" style="width:530px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- bottom label -->
+      <div style="position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:12px;">
+        <div class="badge">Overlay on the current tab</div>
+        <div class="badge">No navigation · No new tabs</div>
       </div>
     </section>
 
+    <!-- ═══════════════════════════════════════════════════════════
+         SHOT 2 — Four devices side by side, resize handles
+    ════════════════════════════════════════════════════════════ -->
     <section id="shot-2" class="shot">
-      <div class="topbar">
-        <div class="brand"><img src="../public/icons/icon-128.png" alt="" />Multi Device Viewer</div>
-        <div class="pill">Device library, favorites, recents, and custom sizes</div>
-      </div>
-      <div class="headline">
-        <h1>Pick the right viewport without leaving the workflow.</h1>
-        <p class="sub">Search the device catalog, save frequent targets, and switch profiles while your preview stays visible.</p>
-      </div>
-      <div class="canvas" style="left: 52px; bottom: 52px; width: 690px; height: 350px">
-        <div class="browserbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">Simulator preview</div></div>
-        <div class="frames" style="grid-template-columns: 1fr 1fr; padding: 18px 0 0">
-          <div class="device-card"><div class="device-title">Mobile portrait</div><div class="viewport"></div></div>
-          <div class="device-card"><div class="device-title">Desktop wide</div><div class="viewport"></div></div>
+      <!-- bg page -->
+      <div style="position:absolute;inset:0;background:linear-gradient(150deg,#f0fdf4,#e0f2fe);opacity:.5"></div>
+      <div style="position:absolute;inset:0;background:rgba(15,23,42,.6);">
+
+        <!-- topbar of the overlay -->
+        <div style="position:absolute;top:0;left:0;right:0;height:48px;background:var(--slate8);border-bottom:1px solid var(--slate7);display:flex;align-items:center;gap:14px;padding:0 18px;">
+          <img src="../public/icons/icon-128.png" style="width:24px;height:24px;border-radius:6px;" alt="" />
+          <span style="font-size:14px;font-weight:700;color:#f1f5f9;">Multi Device Viewer</span>
+          <div style="margin-left:auto;display:flex;gap:8px;">
+            <div style="padding:5px 10px;border-radius:7px;background:var(--teal);color:#fff;font-size:12px;font-weight:600;">📷 Capture &amp; Annotate</div>
+            <div style="padding:5px 10px;border-radius:7px;background:var(--slate7);color:var(--slate3);font-size:12px;font-weight:600;">＋ Add</div>
+            <div style="padding:5px 10px;border-radius:7px;background:var(--slate7);color:var(--slate3);font-size:12px;font-weight:600;">↺</div>
+            <div style="padding:5px 10px;border-radius:7px;background:var(--slate7);color:var(--slate3);font-size:12px;font-weight:600;">✕</div>
+          </div>
+        </div>
+
+        <!-- four panels -->
+        <div style="position:absolute;top:48px;left:0;right:0;bottom:0;display:flex;padding:16px;gap:0;">
+
+          <!-- card 1: phone portrait -->
+          <div style="flex:1;min-width:0;padding-right:4px;">
+            <div class="device-card" style="height:100%;">
+              <div class="card-header">
+                <span>iPhone Air 2025</span><span class="dims">390 × 844</span>
+                <div class="ctrl">⟳</div><div class="ctrl">✕</div>
+              </div>
+              <div class="card-viewport">
+                <div class="phone-shell">
+                  <div class="phone-outer" style="width:110px;">
+                    <div class="phone-notch" style="width:48px;height:8px;"></div>
+                    <div class="phone-screen" style="width:94px;height:195px;">
+                      <div class="faux-site" style="padding:6px;">
+                        <div class="faux-nav" style="height:16px;margin-bottom:5px;"></div>
+                        <div class="faux-hero" style="height:30px;margin-bottom:5px;"><div class="faux-hero-text" style="width:50%;height:6px;"></div></div>
+                        <div class="faux-line" style="width:95%"></div>
+                        <div class="faux-line" style="width:68%"></div>
+                        <div class="faux-grid"><div class="faux-card-sm" style="height:26px;"></div><div class="faux-card-sm" style="height:26px;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="resize-handle" style="margin:10px 0;"></div>
+
+          <!-- card 2: pixel landscape -->
+          <div style="flex:1.2;min-width:0;padding:0 4px;">
+            <div class="device-card" style="height:100%;">
+              <div class="card-header">
+                <span>Pixel 9 Pro</span><span class="dims">412 × 915</span>
+                <div class="ctrl">⟳</div><div class="ctrl">✕</div>
+              </div>
+              <div class="card-viewport">
+                <div class="phone-shell">
+                  <div class="phone-outer" style="width:115px;border-radius:22px;">
+                    <div class="phone-notch" style="width:50px;height:8px;"></div>
+                    <div class="phone-screen" style="width:99px;height:205px;border-radius:16px;">
+                      <div class="faux-site" style="padding:6px;">
+                        <div class="faux-nav" style="height:16px;margin-bottom:5px;background:#1a1a2e;"></div>
+                        <div class="faux-hero" style="height:30px;margin-bottom:5px;background:linear-gradient(135deg,#3b82f6,#6366f1);"><div class="faux-hero-text" style="width:45%;height:6px;"></div></div>
+                        <div class="faux-line" style="width:90%"></div>
+                        <div class="faux-line" style="width:75%"></div>
+                        <div class="faux-grid"><div class="faux-card-sm" style="height:26px;"></div><div class="faux-card-sm" style="height:26px;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="resize-handle" style="margin:10px 0;"></div>
+
+          <!-- card 3: iPad -->
+          <div style="flex:1.4;min-width:0;padding:0 4px;">
+            <div class="device-card" style="height:100%;">
+              <div class="card-header">
+                <span>iPad Air 2024</span><span class="dims">820 × 1180</span>
+                <div class="ctrl">⟳</div><div class="ctrl">✕</div>
+              </div>
+              <div class="card-viewport" style="display:flex;align-items:center;justify-content:center;padding:16px;">
+                <div style="border:10px solid var(--slate8);border-radius:18px;background:var(--slate8);box-shadow:var(--shadow-md);width:170px;height:230px;">
+                  <div style="border-radius:10px;overflow:hidden;width:150px;height:210px;background:#fff;">
+                    <div class="faux-site" style="padding:8px;">
+                      <div class="faux-nav" style="height:18px;margin-bottom:6px;"></div>
+                      <div class="faux-hero" style="height:36px;margin-bottom:6px;"><div class="faux-hero-text" style="width:50%;height:7px;"></div></div>
+                      <div class="faux-line" style="width:95%"></div>
+                      <div class="faux-line" style="width:80%"></div>
+                      <div class="faux-grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:8px;">
+                        <div class="faux-card-sm" style="height:36px;"></div>
+                        <div class="faux-card-sm" style="height:36px;"></div>
+                        <div class="faux-card-sm" style="height:36px;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="resize-handle" style="margin:10px 0;"></div>
+
+          <!-- card 4: desktop -->
+          <div style="flex:2;min-width:0;padding-left:4px;">
+            <div class="device-card" style="height:100%;">
+              <div class="card-header">
+                <span>MacBook Air 13 2020</span><span class="dims">1280 × 800</span>
+                <div class="ctrl">⟳</div><div class="ctrl">✕</div>
+              </div>
+              <div class="card-viewport">
+                <div class="laptop-shell">
+                  <div class="laptop-lid" style="width:320px;">
+                    <div class="laptop-screen" style="width:304px;height:190px;">
+                      <div class="faux-site" style="padding:8px;">
+                        <div class="faux-nav" style="height:18px;margin-bottom:8px;"><div class="faux-nav-dot"></div><div class="faux-nav-dot"></div><div class="faux-nav-dot"></div></div>
+                        <div class="faux-hero" style="height:44px;margin-bottom:8px;"><div class="faux-hero-text" style="width:38%;height:8px;"></div></div>
+                        <div class="faux-line" style="width:92%"></div>
+                        <div class="faux-line" style="width:76%"></div>
+                        <div class="faux-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;margin-top:8px;">
+                          <div class="faux-card-sm" style="height:38px;"></div>
+                          <div class="faux-card-sm" style="height:38px;"></div>
+                          <div class="faux-card-sm" style="height:38px;"></div>
+                          <div class="faux-card-sm" style="height:38px;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="laptop-base" style="width:352px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-      <div class="library">
-        <h1 style="font-size:30px;margin-bottom:16px">Device Library</h1>
-        <div class="search">Search phones, tablets, laptops...</div>
-        <div class="device-row"><img src="../public/mockups/apple-iphone-15-pro-2023.png" alt="" /><div><strong>iPhone 15 Pro</strong><small>393 x 852 · mobile</small></div></div>
-        <div class="device-row"><img src="../public/mockups/google-pixel-6-pro.png" alt="" /><div><strong>Pixel 6 Pro</strong><small>412 x 915 · Android</small></div></div>
-        <div class="device-row"><img src="../public/mockups/apple-ipad-air-4.png" alt="" /><div><strong>iPad Air</strong><small>820 x 1180 · tablet</small></div></div>
-        <div class="device-row"><img src="../public/mockups/apple-macbook-pro-16-2021.png" alt="" /><div><strong>MacBook Pro</strong><small>1440 x 900 · laptop</small></div></div>
-        <div class="device-row"><img src="../public/mockups/samsung-smart-tv.png" alt="" /><div><strong>Smart TV</strong><small>1920 x 1080 · TV</small></div></div>
+
+      <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:12px;">
+        <div class="badge">Up to four devices at once</div>
+        <div class="badge">Drag to resize panels</div>
       </div>
     </section>
 
+    <!-- ═══════════════════════════════════════════════════════════
+         SHOT 3 — Device switcher dropdown open on a card
+    ════════════════════════════════════════════════════════════ -->
     <section id="shot-3" class="shot">
-      <div class="topbar">
-        <div class="brand"><img src="../public/icons/icon-128.png" alt="" />Multi Device Viewer</div>
-        <div class="pill">Screenshot export and annotation board</div>
-      </div>
-      <div class="headline">
-        <h1>Capture responsive issues and mark them up locally.</h1>
-        <p class="sub">Export screenshots, annotate layout problems, and keep review artifacts on your own machine.</p>
-      </div>
-      <div class="canvas" style="left: 505px; width: 690px">
-        <div class="browserbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">Comparison screenshot</div></div>
-        <div class="frames" style="grid-template-columns: 1fr 1fr; padding: 26px 0 0">
-          <div class="device-card"><div class="viewport"><div class="site"><h2></h2><p></p><p></p><span class="accent"></span></div></div></div>
-          <div class="device-card"><div class="viewport"><div class="site"><h2></h2><p></p><p style="width:52%"></p><span class="accent"></span></div></div></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(150deg,#f0fdf4,#e0f2fe);opacity:.4"></div>
+      <div style="position:absolute;inset:0;background:rgba(15,23,42,.65);">
+
+        <!-- minimal topbar -->
+        <div style="position:absolute;top:0;left:0;right:0;height:48px;background:var(--slate8);border-bottom:1px solid var(--slate7);display:flex;align-items:center;gap:14px;padding:0 18px;">
+          <img src="../public/icons/icon-128.png" style="width:24px;height:24px;border-radius:6px;" alt="" />
+          <span style="font-size:14px;font-weight:700;color:#f1f5f9;">Multi Device Viewer</span>
         </div>
-        <div class="annotation one"></div>
-        <div class="annotation two"></div>
+
+        <div style="position:absolute;top:48px;left:0;right:0;bottom:0;display:flex;padding:20px;gap:0;">
+
+          <!-- left phone panel — dropdown open -->
+          <div style="flex:1;min-width:0;position:relative;">
+            <div class="device-card" style="height:100%;opacity:.5;pointer-events:none;">
+              <div class="card-header">
+                <span>iPhone Air 2025</span><span class="dims">390 × 844</span>
+              </div>
+              <div class="card-viewport"></div>
+            </div>
+
+            <!-- Dropdown open on this card -->
+            <div class="dropdown" style="top:48px;left:14px;width:240px;">
+              <div class="dd-search">🔍  Search devices…</div>
+              <div style="padding:6px 12px;font-size:10px;font-weight:700;color:var(--slate5);text-transform:uppercase;letter-spacing:.08em;background:var(--slate1);">Phones</div>
+              <div class="dd-item active">
+                <span class="dd-icon">📱</span>
+                <div>
+                  <div style="font-weight:600;">iPhone Air 2025</div>
+                  <div style="font-size:11px;color:var(--slate5);">iOS · portrait</div>
+                </div>
+                <span class="dd-dims">390×844</span>
+              </div>
+              <div class="dd-item">
+                <span class="dd-icon">📱</span>
+                <div>
+                  <div style="font-weight:600;">iPhone 16 Pro</div>
+                  <div style="font-size:11px;color:var(--slate5);">iOS · portrait</div>
+                </div>
+                <span class="dd-dims">393×852</span>
+              </div>
+              <div class="dd-item">
+                <span class="dd-icon">📱</span>
+                <div>
+                  <div style="font-weight:600;">Pixel 9 Pro</div>
+                  <div style="font-size:11px;color:var(--slate5);">Android · portrait</div>
+                </div>
+                <span class="dd-dims">412×915</span>
+              </div>
+              <div style="padding:6px 12px;font-size:10px;font-weight:700;color:var(--slate5);text-transform:uppercase;letter-spacing:.08em;background:var(--slate1);">Tablets</div>
+              <div class="dd-item">
+                <span class="dd-icon">⬜</span>
+                <div>
+                  <div style="font-weight:600;">iPad Air 2024</div>
+                  <div style="font-size:11px;color:var(--slate5);">iPadOS · portrait</div>
+                </div>
+                <span class="dd-dims">820×1180</span>
+              </div>
+              <div style="padding:6px 12px;font-size:10px;font-weight:700;color:var(--slate5);text-transform:uppercase;letter-spacing:.08em;background:var(--slate1);">Laptops</div>
+              <div class="dd-item">
+                <span class="dd-icon">💻</span>
+                <div>
+                  <div style="font-weight:600;">MacBook Air 13</div>
+                  <div style="font-size:11px;color:var(--slate5);">macOS</div>
+                </div>
+                <span class="dd-dims">1280×800</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="resize-handle" style="margin:0;align-self:stretch;"></div>
+
+          <!-- right panel: laptop, normal state -->
+          <div style="flex:2;min-width:0;padding-left:8px;">
+            <div class="device-card" style="height:100%;">
+              <div class="card-header">
+                <span>MacBook Air 13 2020</span><span class="dims">1280 × 800</span>
+                <div class="ctrl">⟳</div><div class="ctrl">⤢</div><div class="ctrl">✕</div>
+              </div>
+              <div class="card-viewport">
+                <div class="laptop-shell">
+                  <div class="laptop-lid" style="width:420px;">
+                    <div class="laptop-screen" style="width:404px;height:252px;">
+                      <div class="faux-site" style="padding:10px;">
+                        <div class="faux-nav" style="height:22px;margin-bottom:10px;"><div class="faux-nav-dot"></div><div class="faux-nav-dot"></div><div class="faux-nav-dot"></div></div>
+                        <div class="faux-hero" style="height:54px;margin-bottom:10px;"><div class="faux-hero-text" style="width:42%;height:9px;"></div></div>
+                        <div class="faux-line" style="width:90%"></div>
+                        <div class="faux-line" style="width:74%"></div>
+                        <div class="faux-grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:10px;">
+                          <div class="faux-card-sm" style="height:44px;"></div>
+                          <div class="faux-card-sm" style="height:44px;"></div>
+                          <div class="faux-card-sm" style="height:44px;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="laptop-base" style="width:462px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="note">
-        <strong>Review-ready captures</strong>
-        <p>Highlight spacing, breakpoint, and overflow issues before sharing the screenshot with your team.</p>
-      </div>
-      <div class="toolbar">
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
+
+      <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:12px;">
+        <div class="badge">Per-card device switcher</div>
+        <div class="badge">100+ device profiles</div>
       </div>
     </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHOT 4 — Capture & Annotate editor open
+    ════════════════════════════════════════════════════════════ -->
+    <section id="shot-4" class="shot">
+      <!-- background screenshot of the sim (faux) -->
+      <div style="position:absolute;inset:0;background:var(--slate8);"></div>
+
+      <!-- annotator full screen -->
+      <div class="annotator">
+        <!-- toolbar -->
+        <div class="ann-toolbar">
+          <span style="font-size:13px;font-weight:700;color:#f1f5f9;margin-right:4px;">Annotate</span>
+          <div class="ann-sep"></div>
+          <!-- tools -->
+          <div class="ann-tool active" title="Pen">✏️</div>
+          <div class="ann-tool" title="Rectangle">▭</div>
+          <div class="ann-tool" title="Arrow">↗</div>
+          <div class="ann-tool" title="Text">T</div>
+          <div class="ann-tool" title="Crop">⬚</div>
+          <div class="ann-sep"></div>
+          <!-- colors -->
+          <div class="ann-color active" style="background:#ef4444;"></div>
+          <div class="ann-color" style="background:#f59e0b;"></div>
+          <div class="ann-color" style="background:#22c55e;"></div>
+          <div class="ann-color" style="background:#3b82f6;"></div>
+          <div class="ann-color" style="background:#a855f7;"></div>
+          <div class="ann-color" style="background:#ffffff;"></div>
+          <div class="ann-sep"></div>
+          <!-- widths -->
+          <div style="display:flex;gap:5px;align-items:center;">
+            <div style="width:16px;height:2px;background:var(--slate3);border-radius:2px;cursor:pointer;"></div>
+            <div style="width:16px;height:4px;background:#f1f5f9;border-radius:2px;cursor:pointer;outline:2px solid var(--teal);outline-offset:2px;"></div>
+            <div style="width:16px;height:7px;background:var(--slate3);border-radius:2px;cursor:pointer;"></div>
+          </div>
+          <!-- undo / actions -->
+          <div class="ann-actions">
+            <div class="ann-btn ghost">↩ Undo</div>
+            <div class="ann-btn ghost">⬇ Download</div>
+            <div class="ann-btn primary">⧉ Copy</div>
+          </div>
+        </div>
+
+        <!-- canvas area -->
+        <div class="ann-canvas">
+          <!-- faux screenshot content inside annotator -->
+          <div style="position:absolute;inset:0;display:flex;gap:0;background:var(--slate9);">
+
+            <!-- sidebar (dimmed) -->
+            <div style="width:180px;background:var(--slate8);border-right:1px solid var(--slate7);opacity:.6;flex-shrink:0;"></div>
+
+            <!-- panels -->
+            <div style="flex:1;display:flex;gap:8px;padding:16px;background:#f8fafc;">
+              <!-- phone faux -->
+              <div class="device-card" style="flex:1;min-width:0;">
+                <div class="card-header" style="font-size:11px;">iPhone Air 2025 <span class="dims">390×844</span></div>
+                <div class="card-viewport">
+                  <div class="phone-shell" style="transform:scale(.7);transform-origin:top center;margin-top:-20px;">
+                    <div class="phone-outer" style="width:140px;">
+                      <div class="phone-notch"></div>
+                      <div class="phone-screen" style="width:124px;height:250px;">
+                        <div class="faux-site" style="padding:7px;">
+                          <div class="faux-nav" style="height:18px;margin-bottom:6px;"></div>
+                          <div class="faux-hero" style="height:36px;margin-bottom:6px;"><div class="faux-hero-text"></div></div>
+                          <div class="faux-line" style="width:90%"></div>
+                          <div class="faux-line" style="width:68%"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- laptop faux -->
+              <div class="device-card" style="flex:2;min-width:0;">
+                <div class="card-header" style="font-size:11px;">MacBook Air 13 <span class="dims">1280×800</span></div>
+                <div class="card-viewport">
+                  <div class="laptop-shell">
+                    <div class="laptop-lid" style="width:340px;">
+                      <div class="laptop-screen" style="width:324px;height:202px;">
+                        <div class="faux-site" style="padding:9px;">
+                          <div class="faux-nav" style="height:20px;margin-bottom:8px;"><div class="faux-nav-dot"></div><div class="faux-nav-dot"></div></div>
+                          <div class="faux-hero" style="height:48px;margin-bottom:8px;"><div class="faux-hero-text" style="width:40%;height:8px;"></div></div>
+                          <div class="faux-line" style="width:90%"></div>
+                          <div class="faux-line" style="width:72%"></div>
+                          <div class="faux-grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:8px;">
+                            <div class="faux-card-sm" style="height:40px;"></div>
+                            <div class="faux-card-sm" style="height:40px;"></div>
+                            <div class="faux-card-sm" style="height:40px;"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="laptop-base" style="width:374px;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- annotation marks -->
+          <div class="ann-rect" style="left:230px;top:80px;width:200px;height:140px;border-color:#ef4444;"></div>
+          <div class="ann-rect" style="left:560px;top:110px;width:330px;height:200px;border-color:#3b82f6;"></div>
+          <div class="ann-text-label" style="left:238px;top:62px;background:#ef4444;color:#fff;">Nav overflow</div>
+          <div class="ann-text-label" style="left:568px;top:92px;background:#3b82f6;color:#fff;">Hero CTA</div>
+          <div class="ann-arrow" style="left:440px;top:120px;color:#f59e0b;transform:rotate(30deg);">↗</div>
+        </div>
+      </div>
+
+      <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:12px;">
+        <div class="badge">Pen · Rect · Arrow · Text · Crop</div>
+        <div class="badge">Copy to clipboard or download</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHOT 5 — Privacy-first feature overview
+    ════════════════════════════════════════════════════════════ -->
+    <section id="shot-5" class="shot">
+      <div style="position:absolute;inset:0;background:linear-gradient(145deg,#0f172a 0%,#0d2a22 50%,#0f172a 100%);"></div>
+      <!-- subtle grid -->
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(20,184,166,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,.04) 1px,transparent 1px);background-size:40px 40px;"></div>
+
+      <!-- glow -->
+      <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(circle,rgba(20,184,166,.12),transparent 70%);pointer-events:none;"></div>
+
+      <!-- content -->
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;padding:48px;">
+
+        <!-- header -->
+        <div style="text-align:center;">
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;">
+            <img src="../public/icons/icon-128.png" style="width:48px;height:48px;border-radius:12px;box-shadow:0 12px 32px rgba(20,184,166,.3);" alt="" />
+            <span style="font-size:28px;font-weight:800;color:#f1f5f9;letter-spacing:-.02em;">Multi Device Viewer</span>
+          </div>
+          <div class="badge" style="font-size:14px;">Local-first · No account · No backend · No telemetry</div>
+          <p style="margin-top:14px;color:var(--slate4);font-size:17px;line-height:1.5;max-width:560px;">Responsive testing that stays entirely on your machine. Your pages, screenshots, and annotations never leave the browser.</p>
+        </div>
+
+        <!-- feature grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:760px;">
+          <div class="feat-pill"><div class="feat-check">✓</div>Overlay on the current tab — no new tab opened</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>Up to 4 device previews side by side</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>100+ real device viewport profiles</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>Per-device orientation, zoom, fit &amp; reload</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>Capture &amp; annotate the full simulator view</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>Pen, rect, arrow, text, and crop tools</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>Screenshots saved locally — nothing uploaded</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>Favorites, recents, and custom viewport sizes</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>No login · No subscription · No server pricing</div>
+          <div class="feat-pill"><div class="feat-check">✓</div>Realistic device frame shells</div>
+        </div>
+
+        <!-- bottom tags -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <div class="badge">Chrome MV3</div>
+          <div class="badge">Developer Tools</div>
+          <div class="badge">Free</div>
+        </div>
+      </div>
+    </section>
+
     <script>
-      const id = new URLSearchParams(location.search).get("shot") || "1";
-      for (const shot of document.querySelectorAll(".shot")) shot.classList.remove("active");
-      document.getElementById(`shot-${id}`).classList.add("active");
+      function show(n) {
+        document.querySelectorAll('.shot').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach((b,i) => b.classList.toggle('active', i === n-1));
+        document.getElementById(`shot-${n}`).classList.add('active');
+      }
+      // init from ?shot=N query param
+      const p = new URLSearchParams(location.search).get('shot');
+      if (p) show(parseInt(p));
     </script>
   </body>
 </html>

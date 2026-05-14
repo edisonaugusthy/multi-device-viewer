@@ -11,7 +11,16 @@ export default defineConfig({
     description:
       "Preview and compare websites across local device viewports with screenshots, annotations, and realistic mockups.",
     version: "0.1.0",
-    permissions: ["activeTab", "downloads", "storage", "tabs"],
+    permissions: ["activeTab", "debugger", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
+    declarative_net_request: {
+      rule_resources: [
+        {
+          id: "frame-headers",
+          enabled: true,
+          path: "rules/frame-headers.json"
+        }
+      ]
+    },
     host_permissions: ["<all_urls>"],
     icons: {
       16: "/icons/icon-16.png",
@@ -30,25 +39,33 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        resources: ["mockups/*", "icons/*"],
+        resources: ["mockups/*", "icons/*", "simulator.html", "chunks/*", "assets/*"],
         matches: ["<all_urls>"]
       }
     ]
   },
   hooks: {
     "build:publicAssets": (_, files) => {
-      const publicManifestIndexes = files
+      // Prevent any manifest.json nested inside a subdirectory of public/ from
+      // being copied into the output. The Chrome Web Store rejects packages that
+      // contain more than one manifest.json (e.g. public/mockups/manifest.json).
+      const nestedManifestIndexes = files
         .map((file, index) => ({ file, index }))
-        .filter(({ file }) => file.relativeDest.split("/").at(-1) === "manifest.json")
+        .filter(({ file }) => {
+          const parts = file.relativeDest.split("/");
+          return parts.length > 1 && parts.at(-1) === "manifest.json";
+        })
         .map(({ index }) => index);
 
-      for (const index of publicManifestIndexes.reverse()) {
+      for (const index of nestedManifestIndexes.reverse()) {
         files.splice(index, 1);
       }
     }
   },
   zip: {
-    exclude: ["mockups/manifest.json"]
+    // Belt-and-suspenders: also exclude from the zip in case the file
+    // somehow makes it into the output directory through another path.
+    exclude: ["**/manifest.json", "!manifest.json"],
   },
   vite: () => ({
     plugins: [tailwindcss()],

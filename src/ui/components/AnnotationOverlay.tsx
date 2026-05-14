@@ -1,416 +1,554 @@
-import { ArrowUpRight, Check, Copy, Download, Image as ImageIcon, MessageSquareText, Pencil, Square, Undo2, X } from "lucide-react";
-import { useMemo, useRef, useState, type PointerEvent, type ReactNode } from "react";
+import { ArrowUpRight, Check, Clipboard, Crop, Download, Pencil, Square, Type, Undo2, X } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { downloadDataUrl, screenshotFilename } from "../../domain/capture/capture-service";
 
-type AnnotationTool = "pen" | "rect" | "arrow";
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-interface Point {
-  x: number;
-  y: number;
-}
+type Tool = "pen" | "rect" | "arrow" | "text" | "crop";
 
-interface BaseMark {
-  id: string;
-  tool: AnnotationTool;
-}
+interface Pt { x: number; y: number; }
 
-interface PenMark extends BaseMark {
-  tool: "pen";
-  points: Point[];
-}
+interface PenMark   { kind: "pen";   color: string; width: number; points: Pt[]; }
+interface RectMark  { kind: "rect";  color: string; width: number; start: Pt; end: Pt; }
+interface ArrowMark { kind: "arrow"; color: string; width: number; start: Pt; end: Pt; }
+interface TextMark  { kind: "text";  color: string; size: number;  pos: Pt; text: string; }
 
-interface ShapeMark extends BaseMark {
-  tool: "rect" | "arrow";
-  start: Point;
-  end: Point;
-}
+type Mark = PenMark | RectMark | ArrowMark | TextMark;
 
-type Mark = PenMark | ShapeMark;
+interface CropRect { x: number; y: number; w: number; h: number; } // normalised 0-1
 
-export function AnnotationOverlay({
-  imageUrl,
-  onClose
-}: {
-  imageUrl?: string;
-  onClose: () => void;
-}) {
-  const imageRef = useRef<HTMLImageElement | null>(null);
-  const [note, setNote] = useState("Please review this responsive layout.");
-  const [copied, setCopied] = useState<"note" | "image" | null>(null);
-  const [tool, setTool] = useState<AnnotationTool>("pen");
-  const [marks, setMarks] = useState<Mark[]>([]);
-  const [draft, setDraft] = useState<Mark | null>(null);
+const COLORS = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#a855f7", "#111827", "#ffffff"];
+const WIDTHS = [2, 4, 7];
+const FONT_SIZES = [12, 16, 20, 28, 40];
 
-  const shareText = useMemo(() => {
-    return [
-      "Multi Device Viewer annotation",
-      "",
-      note.trim(),
-      "",
-      "The attached capture was generated locally from the simulator."
-    ].join("\n");
-  }, [note]);
+// ─── Component ────────────────────────────────────────────────────────────────
 
-  async function copyNote() {
-    await navigator.clipboard.writeText(shareText);
-    setCopied("note");
-    window.setTimeout(() => setCopied(null), 1400);
+export function AnnotationOverlay({ imageUrl, onClose }: { imageUrl?: string; onClose: () => void }) {
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const imgRef       = useRef<HTMLImageElement | null>(null);
+  const textareaRef  = useRef<HTMLTextAreaElement>(null);
+  const marksRef     = useRef<Mark[]>([]);
+  const draftRef     = useRef<Mark | null>(null);
+
+  const [tool,      setTool]      = useState<Tool>("pen");
+  const [color,     setColor]     = useState(COLORS[4]);
+  const [lineWidth, setLineWidth] = useState(WIDTHS[1]);
+  const [fontSize,  setFontSize]  = useState(FONT_SIZES[1]);
+  const [marks,     setMarks]     = useState<Mark[]>([]);
+  const [draft,     setDraft]     = useState<Mark | null>(null);
+  const [textPos,   setTextPos]   = useState<Pt | null>(null);
+  const [copied,    setCopied]    = useState(false);
+  const [imgReady,  setImgReady]  = useState(false);
+  // Crop
+  const [cropDraft, setCropDraft] = useState<{ start: Pt; end: Pt } | null>(null);
+  const [cropRect,  setCropRect]  = useState<CropRect | null>(null);
+  const cropDraftRef = useRef<{ start: Pt; end: Pt } | null>(null);
+  const cropRectRef  = useRef<CropRect | null>(null);
+  useEffect(() => { cropDraftRef.current = cropDraft; }, [cropDraft]);
+  useEffect(() => { cropRectRef.current  = cropRect;  }, [cropRect]);
+
+  // Keep refs in sync for use inside event handlers without stale closures
+  useEffect(() => { marksRef.current = marks; }, [marks]);
+  useEffect(() => { draftRef.current = draft; }, [draft]);
+
+  // ── Load image ─────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!imageUrl) return;
+    setImgReady(false);
+    const img = new Image();
+    img.onload = () => {
+      imgRef.current = img;
+      // Size the canvas to natural image pixels immediately
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width  = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+      }
+      setImgReady(true);
+    };
+    img.src = imageUrl;
+  }, [imageUrl]);
+
+  // ── Redraw whenever image / marks / draft / crop change ───────────────────
+  useEffect(() => {
+    redraw();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imgReady, marks, draft, cropDraft, cropRect]);
+
+  function redraw() {
+    const canvas = canvasRef.current;
+    const img = imgRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d")!;
+    const W = canvas.width;
+    const H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#f5f5f3";
+    ctx.fillRect(0, 0, W, H);
+    if (img) ctx.drawImage(img, 0, 0, W, H);
+    for (const m of marksRef.current) paintMark(ctx, m, W, H);
+    if (draftRef.current) paintMark(ctx, draftRef.current, W, H);
+
+    // Draw crop overlay: dim outside, dashed border inside
+    const cd = cropDraftRef.current;
+    const cr = cropRectRef.current;
+    const sel = cd
+      ? normRect(cd.start, cd.end)
+      : cr ? cr : null;
+    if (sel) {
+      const sx = sel.x * W, sy = sel.y * H, sw = sel.w * W, sh = sel.h * H;
+      // Dim outside
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.fillRect(0,  0,  W,  sy);           // top
+      ctx.fillRect(0,  sy, sx, sh);           // left
+      ctx.fillRect(sx + sw, sy, W - sx - sw, sh); // right
+      ctx.fillRect(0,  sy + sh, W, H - sy - sh);  // bottom
+      // Selection border
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth   = 2;
+      ctx.setLineDash([6, 4]);
+      ctx.strokeRect(sx, sy, sw, sh);
+      ctx.setLineDash([]);
+      // Corner handles
+      const hs = 6;
+      ctx.fillStyle = "#fff";
+      [[sx, sy], [sx + sw, sy], [sx, sy + sh], [sx + sw, sy + sh]].forEach(([hx, hy]) => {
+        ctx.fillRect(hx - hs / 2, hy - hs / 2, hs, hs);
+      });
+    }
   }
 
-  async function copyImage() {
-    if (!imageUrl || typeof ClipboardItem === "undefined") return;
-    const dataUrl = await renderAnnotatedImage();
-    if (!dataUrl) return;
-    const blob = await (await fetch(dataUrl)).blob();
-    await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-    setCopied("image");
-    window.setTimeout(() => setCopied(null), 1400);
-  }
-
-  async function downloadAnnotatedImage() {
-    const dataUrl = await renderAnnotatedImage();
-    if (dataUrl) await downloadDataUrl(dataUrl, screenshotFilename("annotated-capture"));
-  }
-
-  function pointFromEvent(event: PointerEvent) {
-    const image = imageRef.current;
-    if (!image) return null;
-    const rect = image.getBoundingClientRect();
+  function normRect(a: Pt, b: Pt): CropRect {
     return {
-      x: Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)),
-      y: Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height))
+      x: Math.min(a.x, b.x),
+      y: Math.min(a.y, b.y),
+      w: Math.abs(b.x - a.x),
+      h: Math.abs(b.y - a.y),
     };
   }
 
-  function startMark(event: PointerEvent) {
-    if (!imageUrl) return;
-    const point = pointFromEvent(event);
-    if (!point) return;
-    event.currentTarget.setPointerCapture(event.pointerId);
-    const id = `mark-${Date.now()}`;
-    setDraft(tool === "pen" ? { id, tool, points: [point] } : { id, tool, start: point, end: point });
+  // ── Focus textarea when text pos is set ───────────────────────────────────
+  useEffect(() => {
+    if (textPos) setTimeout(() => textareaRef.current?.focus(), 0);
+  }, [textPos]);
+
+  // ── Pointer helpers ────────────────────────────────────────────────────────
+  function toPt(e: React.PointerEvent): Pt {
+    const r = canvasRef.current!.getBoundingClientRect();
+    return {
+      x: (e.clientX - r.left) / r.width,
+      y: (e.clientY - r.top)  / r.height,
+    };
   }
 
-  function updateMark(event: PointerEvent) {
-    const point = pointFromEvent(event);
-    if (!point || !draft) return;
-    if (draft.tool === "pen") {
-      setDraft({ ...draft, points: [...draft.points, point] });
+  function onPointerDown(e: React.PointerEvent) {
+    if (tool === "text") {
+      if (textPos && textInput.trim()) commitText();
+      setTextPos(toPt(e));
+      setTextInput("");
       return;
     }
-    setDraft({ ...draft, end: point });
+    if (tool === "crop") {
+      e.currentTarget.setPointerCapture(e.pointerId);
+      const pt = toPt(e);
+      setCropDraft({ start: pt, end: pt });
+      setCropRect(null);
+      return;
+    }
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const pt = toPt(e);
+    const newDraft: Mark =
+      tool === "pen"   ? { kind: "pen",   color, width: lineWidth, points: [pt] } :
+      tool === "rect"  ? { kind: "rect",  color, width: lineWidth, start: pt, end: pt } :
+                         { kind: "arrow", color, width: lineWidth, start: pt, end: pt };
+    setDraft(newDraft);
   }
 
-  function finishMark() {
+  function onPointerMove(e: React.PointerEvent) {
+    if (tool === "crop" && cropDraft) {
+      setCropDraft((d) => d ? { ...d, end: toPt(e) } : d);
+      return;
+    }
     if (!draft) return;
-    setMarks((current) => [...current, draft]);
+    const pt = toPt(e);
+    if (draft.kind === "pen")                    setDraft({ ...draft, points: [...draft.points, pt] });
+    if (draft.kind === "rect" || draft.kind === "arrow") setDraft({ ...draft, end: pt });
+  }
+
+  function onPointerUp() {
+    if (tool === "crop" && cropDraft) {
+      const r = normRect(cropDraft.start, cropDraft.end);
+      if (r.w > 0.01 && r.h > 0.01) setCropRect(r);
+      setCropDraft(null);
+      return;
+    }
+    if (!draft) return;
+    if (draft.kind === "pen" && draft.points.length < 2) { setDraft(null); return; }
+    setMarks((prev) => [...prev, draft]);
     setDraft(null);
   }
 
-  async function renderAnnotatedImage() {
-    if (!imageUrl) return undefined;
-    const image = await loadImage(imageUrl);
-    const canvas = document.createElement("canvas");
-    canvas.width = image.naturalWidth || image.width;
-    canvas.height = image.naturalHeight || image.height;
-    const context = canvas.getContext("2d");
-    if (!context) return undefined;
-
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    drawMarks(context, [...marks, ...(draft ? [draft] : [])], canvas.width, canvas.height);
-    if (note.trim()) drawNote(context, note.trim(), canvas.width);
-    return canvas.toDataURL("image/png");
+  function commitText() {
+    if (!textPos || !textInput.trim()) { setTextPos(null); setTextInput(""); return; }
+    setMarks((prev) => [...prev, { kind: "text", color, size: fontSize, pos: textPos, text: textInput.trim() }]);
+    setTextPos(null);
+    setTextInput("");
   }
 
+  function undo() {
+    if (textPos) { setTextPos(null); setTextInput(""); return; }
+    if (cropRect) { setCropRect(null); return; }
+    setMarks((prev) => prev.slice(0, -1));
+  }
+
+  function applyCrop() {
+    if (!cropRect || !imgReady) return;
+    const canvas = canvasRef.current!;
+    const W = canvas.width;
+    const H = canvas.height;
+    const sx = Math.round(cropRect.x * W);
+    const sy = Math.round(cropRect.y * H);
+    const sw = Math.round(cropRect.w * W);
+    const sh = Math.round(cropRect.h * H);
+
+    // 1. Composite current canvas (image + marks) into a temp canvas at crop size
+    const tmp = document.createElement("canvas");
+    tmp.width  = sw;
+    tmp.height = sh;
+    tmp.getContext("2d")!.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+
+    // 2. Get the cropped dataUrl synchronously
+    const croppedDataUrl = tmp.toDataURL("image/png");
+
+    // 3. Update imgRef SYNCHRONOUSLY before any state change triggers redraw.
+    //    A data: URL image is already decoded — assign src then set the ref
+    //    immediately so the next redraw uses the correct image.
+    const newImg = new Image();
+    newImg.src = croppedDataUrl;
+    imgRef.current = newImg; // set immediately — data URL is available at once
+
+    // 4. Resize the main canvas and draw the cropped result
+    canvas.width  = sw;
+    canvas.height = sh;
+    canvas.getContext("2d")!.drawImage(tmp, 0, 0);
+
+    // 5. Reset state — these trigger redraw(), which now uses the updated imgRef
+    marksRef.current = [];
+    cropRectRef.current  = null;
+    cropDraftRef.current = null;
+    setCropRect(null);
+    setCropDraft(null);
+    setMarks([]);
+    setTool("pen");
+  }
+
+  function cancelCrop() {
+    setCropRect(null);
+    setCropDraft(null);
+  }
+
+  // ── Export ────────────────────────────────────────────────────────────────
+  function exportPng(): string {
+    return canvasRef.current!.toDataURL("image/png");
+  }
+
+  async function copyImage() {
+    if (!imgReady) return;
+    const dataUrl = exportPng();
+
+    // The Clipboard API is blocked by Permissions Policy inside the extension
+    // iframe. Route the write through the content script (page context) via
+    // postMessage, which has clipboard access.
+    const ok = await new Promise<boolean>((resolve) => {
+      const onResult = (e: MessageEvent) => {
+        if (e.data?.type === "COPY_IMAGE_RESULT") {
+          window.removeEventListener("message", onResult);
+          resolve(!!e.data.ok);
+        }
+      };
+      window.addEventListener("message", onResult);
+      // Post to parent content script
+      window.parent.postMessage({ type: "COPY_IMAGE", dataUrl }, "*");
+      // Timeout fallback after 4s
+      setTimeout(() => {
+        window.removeEventListener("message", onResult);
+        resolve(false);
+      }, 4000);
+    });
+
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } else {
+      // Clipboard failed — fall back to download so the user still gets the image
+      await downloadDataUrl(dataUrl, screenshotFilename("annotated"));
+    }
+  }
+
+  async function downloadImage() {
+    if (!imgReady) return;
+    await downloadDataUrl(exportPng(), screenshotFilename("annotated"));
+  }
+
+  const cursor =
+    tool === "text" ? "text" :
+    tool === "crop" ? "crosshair" : "crosshair";
+
   return (
-    <div className="fixed inset-0 z-[70] bg-white">
-      <button
-        className="fixed right-5 top-5 z-20 grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-500 hover:text-slate-900"
-        onClick={onClose}
-        title="Close"
-      >
-        <X size={24} />
-      </button>
+    <div className="fixed inset-0 z-[70] flex flex-col bg-[#f5f5f3]">
 
-      <div className="grid h-full grid-cols-[minmax(0,1fr)_380px]">
-        <main className="flex min-w-0 items-center justify-center bg-[#f7f8fb] p-10">
-          <div className="relative max-h-full max-w-full rounded-[18px] bg-white p-3 shadow-[0_24px_80px_rgb(15_23_42/0.16)] ring-1 ring-slate-200">
-            {imageUrl ? (
-              <div
-                className="relative inline-block touch-none select-none"
-                onPointerDown={startMark}
-                onPointerMove={updateMark}
-                onPointerUp={finishMark}
-                onPointerCancel={() => setDraft(null)}
-              >
-                <img ref={imageRef} src={imageUrl} alt="Current simulator capture" className="block max-h-[calc(100vh-96px)] max-w-full rounded-[12px] object-contain" draggable={false} />
-                <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible rounded-[12px]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <defs>
-                    <marker id="annotation-arrow" markerHeight="10" markerWidth="10" orient="auto" refX="9" refY="3">
-                      <path d="M0,0 L0,6 L9,3 z" fill="#2563eb" />
-                    </marker>
-                  </defs>
-                  {[...marks, ...(draft ? [draft] : [])].map((mark) => (
-                    <AnnotationMark key={mark.id} mark={mark} />
-                  ))}
-                </svg>
-              </div>
-            ) : (
-              <div className="flex h-[520px] w-[720px] max-w-full flex-col items-center justify-center rounded-[12px] border border-dashed border-slate-300 bg-white text-center">
-                <ImageIcon size={42} className="text-slate-300" />
-                <p className="mt-4 text-lg font-black text-slate-900">Capture preview unavailable</p>
-                <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">
-                  Some embedded pages cannot be captured by browser security rules. You can still write and copy the annotation text.
-                </p>
-              </div>
-            )}
-            {note.trim() && (
-              <div className="absolute left-8 top-8 max-w-[360px] rounded-[14px] bg-white/95 p-4 shadow-lg ring-1 ring-slate-200 backdrop-blur">
-                <p className="text-xs font-black uppercase tracking-[0.1em] text-blue-500">Annotation</p>
-                <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-800">{note}</p>
-              </div>
-            )}
-          </div>
-        </main>
+      {/* ── Toolbar ── */}
+      <div className="flex h-12 shrink-0 items-center gap-2.5 border-b border-black/[0.07] bg-white px-4 shadow-sm">
 
-        <aside className="flex min-h-0 flex-col border-l border-slate-200 bg-white">
-          <div className="border-b border-slate-200 p-5">
-            <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-[10px] bg-blue-50 text-blue-500">
-                <MessageSquareText size={22} />
-              </span>
-              <div>
-                <h2 className="text-lg font-black text-slate-950">Annotate & share</h2>
-                <p className="text-sm font-medium text-slate-500">Write a note, copy it, or download the capture.</p>
-              </div>
-            </div>
-          </div>
+        {/* Tools */}
+        <div className="flex items-center gap-0.5">
+          <ToolBtn active={tool === "pen"}   title="Pen"   onClick={() => { setTool("pen");   cancelCrop(); }}><Pencil size={14} /></ToolBtn>
+          <ToolBtn active={tool === "rect"}  title="Box"   onClick={() => { setTool("rect");  cancelCrop(); }}><Square size={14} /></ToolBtn>
+          <ToolBtn active={tool === "arrow"} title="Arrow" onClick={() => { setTool("arrow"); cancelCrop(); }}><ArrowUpRight size={14} /></ToolBtn>
+          <ToolBtn active={tool === "text"}  title="Text"  onClick={() => { setTool("text");  cancelCrop(); }}><Type size={14} /></ToolBtn>
+          <ToolBtn active={tool === "crop"}  title="Crop"  onClick={() => { setTool("crop");  setCropRect(null); }}><Crop size={14} /></ToolBtn>
+        </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto p-5">
-            <div className="mb-5 grid grid-cols-4 gap-2">
-              <ToolButton active={tool === "pen"} label="Pen" onClick={() => setTool("pen")}>
-                <Pencil size={17} />
-              </ToolButton>
-              <ToolButton active={tool === "rect"} label="Box" onClick={() => setTool("rect")}>
-                <Square size={17} />
-              </ToolButton>
-              <ToolButton active={tool === "arrow"} label="Arrow" onClick={() => setTool("arrow")}>
-                <ArrowUpRight size={17} />
-              </ToolButton>
-              <ToolButton active={false} label="Undo" onClick={() => setMarks((current) => current.slice(0, -1))} disabled={marks.length === 0}>
-                <Undo2 size={17} />
-              </ToolButton>
-            </div>
+        <div className="h-5 w-px bg-slate-200" />
 
-            <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-400">Message</label>
-            <textarea
-              value={note}
-              onChange={(event) => setNote(event.target.value)}
-              className="mt-2 h-44 w-full resize-none rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm font-semibold leading-6 text-slate-800 outline-none focus:border-blue-500 focus:bg-white"
-              placeholder="Write what needs to be checked..."
+        {/* Color swatches */}
+        <div className="flex items-center gap-1">
+          {COLORS.map((c) => (
+            <button
+              key={c}
+              title={c}
+              onClick={() => setColor(c)}
+              className="h-[18px] w-[18px] shrink-0 rounded-full transition-transform hover:scale-110"
+              style={{
+                background: c,
+                outline: color === c ? "2px solid #3b82f6" : "2px solid transparent",
+                outlineOffset: "1.5px",
+                boxShadow: c === "#ffffff" ? "inset 0 0 0 1px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.08)" : undefined,
+              }}
             />
+          ))}
+        </div>
 
-            <div className="mt-4 space-y-2">
-              <ActionButton onClick={copyNote}>
-                {copied === "note" ? <Check size={17} /> : <Copy size={17} />} {copied === "note" ? "Copied note" : "Copy note"}
-              </ActionButton>
-              <ActionButton onClick={copyImage} disabled={!imageUrl || typeof ClipboardItem === "undefined"}>
-                {copied === "image" ? <Check size={17} /> : <ImageIcon size={17} />} {copied === "image" ? "Copied image" : "Copy image"}
-              </ActionButton>
-              <ActionButton onClick={downloadAnnotatedImage} disabled={!imageUrl}>
-                <Download size={17} /> Download PNG
-              </ActionButton>
-            </div>
+        <div className="h-5 w-px bg-slate-200" />
 
-            <div className="mt-5 rounded-[12px] border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-black uppercase tracking-[0.1em] text-slate-400">Share text</p>
-              <pre className="mt-2 whitespace-pre-wrap text-xs font-semibold leading-5 text-slate-600">{shareText}</pre>
+        {/* Stroke width */}
+        <div className="flex items-center gap-1">
+          {WIDTHS.map((w) => (
+            <button
+              key={w}
+              title={`Size ${w}`}
+              onClick={() => setLineWidth(w)}
+              className={`flex h-7 w-7 items-center justify-center rounded-md transition ${lineWidth === w ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100"}`}
+            >
+              <span className="rounded-full bg-current" style={{ width: w * 2.2, height: w * 2.2, display: "block" }} />
+            </button>
+          ))}
+        </div>
+
+        {/* Font size — only when text tool is active */}
+        {tool === "text" && (
+          <>
+            <div className="h-5 w-px bg-slate-200" />
+            <div className="flex items-center gap-1">
+              <span className="text-[11px] font-medium text-slate-400 select-none pr-0.5">A</span>
+              {FONT_SIZES.map((s) => (
+                <button
+                  key={s}
+                  title={`Font size ${s}`}
+                  onClick={() => setFontSize(s)}
+                  className={`flex h-7 min-w-[28px] items-center justify-center rounded-md px-1 text-[11px] font-semibold transition ${fontSize === s ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100"}`}
+                >
+                  {s}
+                </button>
+              ))}
             </div>
-          </div>
-        </aside>
+          </>
+        )}
+
+        <div className="h-5 w-px bg-slate-200" />
+
+        {/* Undo */}
+        <button
+          title="Undo"
+          onClick={undo}
+          disabled={marks.length === 0 && !textPos}
+          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 disabled:opacity-30"
+        >
+          <Undo2 size={14} />
+        </button>
+
+        <div className="flex-1" />
+
+        {/* Copy & Download */}
+        <button
+          onClick={() => void copyImage()}
+          disabled={!imgReady}
+          className="flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+        >
+          {copied ? <Check size={13} className="text-green-500" /> : <Clipboard size={13} />}
+          {copied ? "Copied!" : "Copy"}
+        </button>
+        <button
+          onClick={() => void downloadImage()}
+          disabled={!imgReady}
+          className="flex h-8 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-[12px] font-semibold text-white transition hover:bg-slate-700 disabled:opacity-40"
+        >
+          <Download size={13} />
+          Download
+        </button>
+
+        <div className="h-5 w-px bg-slate-200" />
+
+        <button onClick={onClose} title="Close" className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-800">
+          <X size={15} />
+        </button>
+      </div>
+
+      {/* ── Crop confirm bar ── */}
+      {tool === "crop" && cropRect && (
+        <div className="flex h-10 shrink-0 items-center justify-center gap-2 border-b border-black/[0.07] bg-amber-50">
+          <span className="text-[12px] font-medium text-amber-700">Crop to selection?</span>
+          <button
+            onClick={applyCrop}
+            className="flex h-7 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-[12px] font-semibold text-white transition hover:bg-slate-700"
+          >
+            <Check size={12} /> Apply crop
+          </button>
+          <button
+            onClick={cancelCrop}
+            className="flex h-7 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-50"
+          >
+            <X size={12} /> Cancel
+          </button>
+        </div>
+      )}
+
+      {/* ── Canvas area ── */}
+      <div className="relative flex flex-1 items-center justify-center overflow-auto p-8">
+        <div className="relative inline-block rounded-xl shadow-[0_4px_40px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.06]">
+          <canvas
+            ref={canvasRef}
+            style={{
+              display: "block",
+              maxWidth: "100%",
+              maxHeight: "calc(100vh - 120px)",
+              cursor,
+              borderRadius: 12,
+            }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={() => setDraft(null)}
+          />
+
+          {/* Floating textarea for text tool */}
+          {tool === "text" && textPos && (
+            <textarea
+              ref={textareaRef}
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commitText(); }
+                if (e.key === "Escape") { setTextPos(null); setTextInput(""); }
+              }}
+              onBlur={commitText}
+              placeholder="Type here…"
+              rows={1}
+              style={{
+                position: "absolute",
+                left: `${textPos.x * 100}%`,
+                top:  `${textPos.y * 100}%`,
+                color,
+                fontSize,
+                background: "rgba(255,255,255,0.85)",
+                border: `2px dashed ${color}`,
+                borderRadius: 4,
+                padding: "2px 6px",
+                minWidth: 100,
+                resize: "none",
+                outline: "none",
+                lineHeight: 1.4,
+                fontWeight: 600,
+                backdropFilter: "blur(4px)",
+              }}
+            />
+          )}
+
+          {!imgReady && !imageUrl && (
+            <div className="flex h-[500px] w-[800px] items-center justify-center rounded-xl bg-white text-slate-400">
+              <span className="text-sm">No screenshot available</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-function AnnotationMark({ mark }: { mark: Mark }) {
-  if (mark.tool === "pen") {
-    const points = mark.points.map((point) => `${point.x * 100},${point.y * 100}`).join(" ");
-    return <polyline points={points} fill="none" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.75" vectorEffect="non-scaling-stroke" />;
-  }
+// ─── Toolbar button ───────────────────────────────────────────────────────────
 
-  if (mark.tool === "rect") {
-    const x = Math.min(mark.start.x, mark.end.x) * 100;
-    const y = Math.min(mark.start.y, mark.end.y) * 100;
-    const width = Math.abs(mark.end.x - mark.start.x) * 100;
-    const height = Math.abs(mark.end.y - mark.start.y) * 100;
-    return <rect x={x} y={y} width={width} height={height} fill="rgba(37,99,235,0.08)" stroke="#2563eb" strokeWidth="0.7" rx="1.4" vectorEffect="non-scaling-stroke" />;
-  }
-
-  return (
-    <line
-      x1={mark.start.x * 100}
-      y1={mark.start.y * 100}
-      x2={mark.end.x * 100}
-      y2={mark.end.y * 100}
-      stroke="#2563eb"
-      strokeLinecap="round"
-      strokeWidth="0.75"
-      markerEnd="url(#annotation-arrow)"
-      vectorEffect="non-scaling-stroke"
-    />
-  );
-}
-
-function ToolButton({
-  active,
-  children,
-  disabled,
-  label,
-  onClick
-}: {
-  active: boolean;
-  children: ReactNode;
-  disabled?: boolean;
-  label: string;
-  onClick: () => void;
-}) {
+function ToolBtn({ active, title, onClick, children }: { active: boolean; title: string; onClick: () => void; children: ReactNode }) {
   return (
     <button
-      className={`flex h-10 items-center justify-center gap-1 rounded-[10px] text-xs font-black transition disabled:cursor-not-allowed disabled:opacity-40 ${active ? "bg-blue-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
-      disabled={disabled}
+      title={title}
       onClick={onClick}
-      title={label}
-      type="button"
+      className={`flex h-7 w-7 items-center justify-center rounded-md transition ${active ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"}`}
     >
       {children}
     </button>
   );
 }
 
-function ActionButton({
-  children,
-  disabled,
-  onClick
-}: {
-  children: ReactNode;
-  disabled?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      className="flex h-11 w-full items-center justify-center gap-2 rounded-[10px] bg-slate-950 px-4 text-sm font-black text-white transition hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400"
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-}
+// ─── Canvas paint ─────────────────────────────────────────────────────────────
 
-function loadImage(src: string) {
-  return new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = src;
-  });
-}
-
-function drawMarks(context: CanvasRenderingContext2D, marks: Mark[], width: number, height: number) {
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  context.strokeStyle = "#2563eb";
-  context.fillStyle = "rgba(37,99,235,0.08)";
-  context.lineWidth = Math.max(4, Math.round(width * 0.006));
-
-  for (const mark of marks) {
-    if (mark.tool === "pen") {
-      context.beginPath();
-      mark.points.forEach((point, index) => {
-        const x = point.x * width;
-        const y = point.y * height;
-        if (index === 0) context.moveTo(x, y);
-        else context.lineTo(x, y);
-      });
-      context.stroke();
-      continue;
-    }
-
-    const startX = mark.start.x * width;
-    const startY = mark.start.y * height;
-    const endX = mark.end.x * width;
-    const endY = mark.end.y * height;
-
-    if (mark.tool === "rect") {
-      context.strokeRect(startX, startY, endX - startX, endY - startY);
-      context.fillRect(startX, startY, endX - startX, endY - startY);
-      continue;
-    }
-
-    drawArrow(context, startX, startY, endX, endY, width);
+function paintMark(ctx: CanvasRenderingContext2D, mark: Mark, W: number, H: number) {
+  if (mark.kind === "text") {
+    ctx.save();
+    ctx.fillStyle = mark.color;
+    ctx.font = `600 ${mark.size}px -apple-system, system-ui, sans-serif`;
+    ctx.fillText(mark.text, mark.pos.x * W, mark.pos.y * H);
+    ctx.restore();
+    return;
   }
-}
 
-function drawArrow(context: CanvasRenderingContext2D, startX: number, startY: number, endX: number, endY: number, width: number) {
-  const angle = Math.atan2(endY - startY, endX - startX);
-  const head = Math.max(18, width * 0.025);
-  context.beginPath();
-  context.moveTo(startX, startY);
-  context.lineTo(endX, endY);
-  context.stroke();
-  context.beginPath();
-  context.moveTo(endX, endY);
-  context.lineTo(endX - head * Math.cos(angle - Math.PI / 6), endY - head * Math.sin(angle - Math.PI / 6));
-  context.lineTo(endX - head * Math.cos(angle + Math.PI / 6), endY - head * Math.sin(angle + Math.PI / 6));
-  context.closePath();
-  context.fillStyle = "#2563eb";
-  context.fill();
-}
+  ctx.save();
+  ctx.strokeStyle = mark.color;
+  ctx.lineWidth   = mark.width;
+  ctx.lineCap     = "round";
+  ctx.lineJoin    = "round";
 
-function drawNote(context: CanvasRenderingContext2D, note: string, width: number) {
-  const padding = Math.round(width * 0.018);
-  const x = Math.round(width * 0.025);
-  const y = Math.round(width * 0.025);
-  const boxWidth = Math.min(Math.round(width * 0.35), 520);
-  const lines = wrapText(context, note, boxWidth - padding * 2);
-  const lineHeight = Math.round(width * 0.018);
-  const boxHeight = padding * 2 + lineHeight * (lines.length + 1);
-
-  context.fillStyle = "rgba(255,255,255,0.94)";
-  roundRect(context, x, y, boxWidth, boxHeight, 18);
-  context.fill();
-  context.fillStyle = "#2563eb";
-  context.font = `700 ${Math.max(14, Math.round(width * 0.012))}px sans-serif`;
-  context.fillText("Annotation", x + padding, y + padding + lineHeight * 0.7);
-  context.fillStyle = "#1e293b";
-  context.font = `600 ${Math.max(16, Math.round(width * 0.014))}px sans-serif`;
-  lines.forEach((line, index) => context.fillText(line, x + padding, y + padding + lineHeight * (index + 1.9)));
-}
-
-function wrapText(context: CanvasRenderingContext2D, text: string, maxWidth: number) {
-  const words = text.split(/\s+/);
-  const lines: string[] = [];
-  let line = "";
-  for (const word of words) {
-    const next = line ? `${line} ${word}` : word;
-    if (context.measureText(next).width > maxWidth && line) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = next;
-    }
+  if (mark.kind === "pen") {
+    ctx.beginPath();
+    mark.points.forEach((p, i) => {
+      const x = p.x * W, y = p.y * H;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  } else if (mark.kind === "rect") {
+    const x = Math.min(mark.start.x, mark.end.x) * W;
+    const y = Math.min(mark.start.y, mark.end.y) * H;
+    const w = Math.abs(mark.end.x - mark.start.x) * W;
+    const h = Math.abs(mark.end.y - mark.start.y) * H;
+    ctx.fillStyle = mark.color + "22";
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeRect(x, y, w, h);
+  } else if (mark.kind === "arrow") {
+    const x1 = mark.start.x * W, y1 = mark.start.y * H;
+    const x2 = mark.end.x   * W, y2 = mark.end.y   * H;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const head  = Math.max(12, mark.width * 5);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - head * Math.cos(angle - Math.PI / 6), y2 - head * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(x2 - head * Math.cos(angle + Math.PI / 6), y2 - head * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fillStyle = mark.color;
+    ctx.fill();
   }
-  if (line) lines.push(line);
-  return lines.slice(0, 8);
-}
 
-function roundRect(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
-  context.beginPath();
-  context.moveTo(x + radius, y);
-  context.arcTo(x + width, y, x + width, y + height, radius);
-  context.arcTo(x + width, y + height, x, y + height, radius);
-  context.arcTo(x, y + height, x, y, radius);
-  context.arcTo(x, y, x + width, y, radius);
-  context.closePath();
+  ctx.restore();
 }

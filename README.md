@@ -1,40 +1,45 @@
 # Multi Device Viewer
 
-A local-first Chrome MV3 extension for testing websites across multiple device viewports. It is designed as a free alternative workflow for responsive testing: no backend, no login, no subscription, no telemetry, and no server pricing.
+A local-first Chrome MV3 extension for testing websites across multiple device viewports without leaving the current tab.
+
+Click the extension icon on any page and a full-screen overlay simulator opens on top — no new tabs, no navigation away. Close it and the page is exactly as you left it.
 
 ## Features
 
-- Dedicated simulator tab launched from the extension popup.
-- Single preview and compare mode with up to four devices.
-- Device catalog for phones, tablets, laptops, desktops, watches, and TVs.
+- Full-screen overlay on the current tab — stays on the same page.
+- Up to four device previews side by side with resizable panels.
+- Collapsible left sidebar with controls; per-card device switcher.
+- Device catalog covering phones, tablets, laptops, desktops, watches, and TVs.
 - Device search, filters, favorites, recents, and custom viewport creation.
-- Per-device orientation, zoom, fit, reload, and screenshot controls.
-- Right-side device panel with Features, Report, Free transparent PNG, and Info sections.
-- Local screenshot export and annotation board.
-- Packaged mockup asset support for transparent PNG device frames.
+- Per-device orientation, zoom, fit, and reload controls.
+- Realistic device frame shells (phone, tablet, laptop, desktop, watch).
+- "Capture & Annotate" — captures the full simulator view and opens a built-in annotation editor.
+- Annotation tools: pen, rectangle, arrow, text (with font size picker), and crop.
+- Crop bakes annotations into a new canvas; copy to clipboard or download locally.
+- All screenshots and annotations stay on your machine — nothing leaves the browser.
 
 ## Development
 
 ```bash
 npm install
-npm run generate:icons
 npm run dev
 ```
 
-Load the development extension from `.output/chrome-mv3` in Chrome developer mode.
+Load the unpacked extension from `.output/chrome-mv3/` in Chrome developer mode (`chrome://extensions`).
 
 ## Build
 
 ```bash
-npm run compile
 npm run build
 npm run zip
 ```
 
-## Chrome Web Store Release
+The production zip lands in `.output/`.
 
-Manual Chrome Web Store releases are handled by the `Chrome Web Store Release` GitHub Actions workflow. See [docs/chrome-web-store.md](docs/chrome-web-store.md) for the listing copy, required GitHub secrets, OAuth setup, and release checklist.
+## Release
 
-## Local-Only Policy
+Manual Chrome Web Store releases use the `Chrome Web Store Release` GitHub Actions workflow. See [docs/chrome-web-store.md](docs/chrome-web-store.md) for listing copy, required GitHub secrets, OAuth setup, and the release checklist.
 
-The extension ships all catalog data and supported mockups as packaged assets. It does not require a backend. Network activity is limited to the website URL the user chooses to preview.
+## Privacy
+
+The extension is entirely local. It does not collect data, contact a backend, or use analytics. See [docs/privacy-policy.md](docs/privacy-policy.md) for the full policy.

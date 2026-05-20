@@ -9,10 +9,15 @@ Click the extension icon on any page and a full-screen overlay simulator opens o
 - Full-screen overlay on the current tab — stays on the same page.
 - Up to four device previews side by side with resizable panels.
 - Collapsible left sidebar with controls; per-card device switcher.
-- Device catalog covering phones, tablets, laptops, desktops, watches, and TVs.
+- Device catalog covering phones, tablets, laptops, desktops, watches, and TVs, including newer 2025 iPhone profiles.
 - Device search, filters, favorites, recents, and custom viewport creation.
+- Built-in layout presets plus saved custom presets with JSON import/export.
 - Per-device orientation, zoom, fit, and reload controls.
+- Global URL bar to send a new page to every active device preview.
+- Inspect mode for quick responsive QA overlays.
+- Dark mode for low-glare testing.
 - Realistic device frame shells (phone, tablet, laptop, desktop, watch).
+- Chrome context-menu shortcut to open the current tab directly in Multi Device Viewer.
 - "Capture & Annotate" — captures the full simulator view and opens a built-in annotation editor.
 - Annotation tools: pen, rectangle, arrow, text (with font size picker), and crop.
 - Crop bakes annotations into a new canvas; copy to clipboard or download locally.

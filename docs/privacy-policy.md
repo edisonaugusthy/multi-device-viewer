@@ -1,6 +1,6 @@
 # Multi Device Viewer — Privacy Policy
 
-Last updated: May 14, 2026
+Last updated: May 20, 2026
 
 ## Overview
 
@@ -18,20 +18,26 @@ The extension uses Chrome's local storage (`chrome.storage`) to persist preferen
 
 - Selected device profiles and slot layout.
 - Favorite and recently used devices.
+- Saved layout presets and imported preset JSON.
 - Custom viewport dimensions.
 - Extension UI state (sidebar open/closed, zoom levels, etc.).
+- Local usage counters and dismissed review prompts.
 
 No storage data is transmitted outside your device.
 
 ## Website Access
 
-When you activate the extension, it injects an overlay iframe into the current tab so you can preview that page across device viewports. The URL of the active tab is used only to load the page inside the simulator frames. It is not transmitted to any external server.
+When you activate the extension from the toolbar or Chrome context menu, it injects an overlay iframe into the current tab so you can preview that page across device viewports. The URL of the active tab is used only to load the page inside the simulator frames. It is not transmitted to any external server.
 
 The extension uses declarative network rules (`declarativeNetRequest`) to remove `X-Frame-Options` and `Content-Security-Policy` headers on sub-frame requests so previewed pages can load inside the simulator. These rules execute entirely within Chrome and do not send data anywhere.
 
 ## Screenshots and Annotations
 
 Screenshots are captured locally using Chrome's `tabs.captureVisibleTab` API and processed entirely in the browser. Annotations are drawn on a local canvas. Exports are saved to your device via Chrome's `downloads` API only when you explicitly choose to download them. Nothing is uploaded.
+
+## Presets and Imports
+
+Saved device presets are stored locally in Chrome storage. If you import a preset JSON file, the file is read in your browser and merged into local storage. Preset files are not uploaded or transmitted.
 
 ## Clipboard
 
@@ -45,12 +51,12 @@ Multi Device Viewer does not execute remotely hosted JavaScript or WebAssembly. 
 
 | Permission | Purpose |
 |---|---|
-| `activeTab` | Inject the simulator overlay into the current tab when the extension icon is clicked. |
+| `activeTab` | Inject the simulator overlay into the current tab when the extension icon or context menu is used. |
 | `contextMenus` | Add a local Chrome menu shortcut for opening the current tab in the simulator. |
 | `scripting` | Run the content script that injects and manages the overlay iframe. |
 | `tabs` | Read the active tab URL and title; capture visible tab screenshots. |
 | `declarativeNetRequest` / `declarativeNetRequestWithHostAccess` | Strip `X-Frame-Options` and `CSP` headers on sub-frame requests so previewed pages load inside the simulator. |
-| `storage` | Save local preferences (devices, favorites, layout) to Chrome's local storage. |
+| `storage` | Save local preferences, presets, favorites, layout, review-prompt state, and usage counters to Chrome's local storage. |
 | `downloads` | Save exported screenshots to the user's device. |
 | `debugger` | Available for advanced viewport emulation; not used in the default capture flow. |
 

@@ -14,17 +14,24 @@ Multi Device Viewer
 
 ### Short description (132 chars max)
 
-Preview any page across real device viewports in a full-screen overlay — no new tab, no login, no backend.
+Preview responsive pages across realistic device frames with presets, inspect mode, screenshots, and local annotations.
 
 ### Detailed description
 
-Multi Device Viewer opens a full-screen simulator overlay on the page you are already on. Click the extension icon, and the current site immediately appears inside realistic device frames without navigating away or opening a new tab. Close the overlay and the page is exactly as you left it.
+Multi Device Viewer opens a full-screen responsive testing overlay on the page you are already on. Click the extension icon or use the Chrome context menu, and the current site immediately appears inside realistic device frames without navigating away or opening a new tab. Close the overlay and the page is exactly as you left it.
 
 **Preview across devices**
 - Compare up to four device viewports side by side in resizable panels.
-- Choose from a built-in catalog of phones, tablets, laptops, desktops, watches, and TVs.
+- Choose from a built-in catalog of phones, tablets, laptops, desktops, watches, and TVs, including newer iPhone profiles.
 - Switch orientation, zoom, fit mode, and reload each panel independently.
+- Use the global URL bar to send a page to every active preview.
 - Save favorites, browse recents, or create a custom viewport size.
+- Turn on dark mode or inspect mode for focused responsive QA.
+
+**Presets for repeat QA**
+- Start from built-in layouts like Mobile vs Tablet, iOS vs Android, and Android + Tablet + Laptop.
+- Save your own named device layouts.
+- Import or export preset JSON for reuse across local browser profiles.
 
 **Realistic device shells**
 - Accurate frame profiles for every device category.
@@ -42,7 +49,7 @@ Multi Device Viewer opens a full-screen simulator overlay on the page you are al
 - No backend service.
 - No analytics, telemetry, or remote logging.
 - Screenshots, URLs, annotations, and settings never leave your browser.
-- Preferences saved locally in Chrome storage.
+- Preferences, presets, recents, custom devices, and UI state are saved locally in Chrome storage.
 
 ### Category
 
@@ -57,7 +64,7 @@ English
 ## Privacy Tab Answers
 
 **Single purpose**
-Responsive website preview and screenshot annotation across multiple device viewport profiles, operating as an overlay on the current tab.
+Responsive website preview, preset-based device comparison, inspect mode, and screenshot annotation across multiple device viewport profiles, operating as an overlay on the current tab.
 
 **Data usage certification**
 The extension does not sell, transfer, or use user data for any purpose outside its single stated purpose.
@@ -80,12 +87,12 @@ The extension does not sell, transfer, or use user data for any purpose outside 
 
 | Permission | Justification |
 |---|---|
-| `activeTab` | Inject the simulator overlay into the current tab when the user clicks the extension action. |
+| `activeTab` | Inject the simulator overlay into the current tab when the user clicks the extension action or context menu shortcut. |
 | `contextMenus` | Add the "Open this tab in Device Simulator" shortcut to Chrome's page and extension-action context menus. |
 | `scripting` | Execute the content script that creates and manages the full-screen overlay iframe. |
 | `tabs` | Read the active tab URL and title to load the page in the simulator; capture visible tab screenshots. |
 | `declarativeNetRequest` / `declarativeNetRequestWithHostAccess` | Remove `X-Frame-Options` and `Content-Security-Policy` response headers on sub-frame requests so that pages can load inside the simulator iframe. Rules execute entirely within Chrome; no data is transmitted. |
-| `storage` | Persist local preferences: selected devices, favorites, recents, custom viewport sizes, and UI state. |
+| `storage` | Persist local preferences: selected devices, saved presets, favorites, recents, custom viewport sizes, review-prompt state, use counters, and UI state. |
 | `downloads` | Save exported screenshots to the user's chosen download location. |
 | `debugger` | Available for advanced per-viewport screenshot emulation. Not used in the default capture flow. |
 

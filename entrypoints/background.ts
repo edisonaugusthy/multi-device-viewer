@@ -1,11 +1,46 @@
 import { defineBackground } from "wxt/utils/define-background";
 
+const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
+
 export default defineBackground(() => {
-  chrome.runtime.onInstalled.addListener(() => {
-    void chrome.storage.local.set({ installedAt: new Date().toISOString() });
-  });
+  createContextMenu();
 
   chrome.action.onClicked.addListener((tab) => {
+    openSimulatorForTab(tab);
+  });
+
+  chrome.runtime.onInstalled.addListener(() => {
+    void chrome.storage.local.set({ installedAt: new Date().toISOString() });
+    createContextMenu();
+  });
+
+  chrome.runtime.onStartup.addListener(() => {
+    createContextMenu();
+  });
+
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId !== OPEN_SIMULATOR_MENU_ID || !tab) return;
+    openSimulatorForTab(tab);
+  });
+
+  function createContextMenu() {
+    chrome.contextMenus.create({
+      id: OPEN_SIMULATOR_MENU_ID,
+      title: "Open this tab in Multi Device Viewer",
+      contexts: ["page", "action"],
+    }, () => {
+      if (!chrome.runtime.lastError) return;
+
+      chrome.contextMenus.update(OPEN_SIMULATOR_MENU_ID, {
+        title: "Open this tab in Multi Device Viewer",
+        contexts: ["page", "action"],
+      }, () => {
+        void chrome.runtime.lastError;
+      });
+    });
+  }
+
+  function openSimulatorForTab(tab: chrome.tabs.Tab) {
     if (!tab.id) return;
 
     const url =
@@ -22,7 +57,7 @@ export default defineBackground(() => {
         })
         .catch(console.error);
     });
-  });
+  }
 
   // ── Helper: hide overlay, wait, run fn, restore overlay ─────────────────────
   function withHiddenOverlay<T>(tabId: number, fn: () => Promise<T>): Promise<T> {
@@ -51,6 +86,19 @@ export default defineBackground(() => {
   }
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.type === "OPEN_ACTIVE_TAB_IN_VIEWER") {
+      chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+        const tab = tabs[0];
+        if (!tab?.id) {
+          sendResponse({ ok: false, error: "No active tab" });
+          return;
+        }
+        openSimulatorForTab(tab);
+        sendResponse({ ok: true });
+      });
+      return true;
+    }
+
     // ── CAPTURE_TAB_WITH_OVERLAY: capture the visible tab AS-IS (overlay stays visible) ──
     if (message?.type === "CAPTURE_TAB_WITH_OVERLAY") {
       chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {

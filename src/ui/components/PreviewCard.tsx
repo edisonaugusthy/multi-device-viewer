@@ -1,26 +1,77 @@
-import { ChevronDown, Minus, Plus, RotateCw, X } from "lucide-react";
+import {
+  Camera,
+  ChevronDown,
+  ExternalLink,
+  Info,
+  Minus,
+  Plus,
+  RefreshCw,
+  RotateCw,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
-import { devices as allDevices } from "../../domain/device/device-catalog";
+import {
+  mediaQueryFor,
+  supportsOrientation,
+  toLandscapeAwareSize,
+} from "../../domain/device/device-service";
 import type { Device, Size } from "../../domain/device/device.types";
-import type { DisplaySettings, PreviewSlot } from "../../domain/simulator/simulator.types";
+import type {
+  DisplaySettings,
+  PreviewSlot,
+} from "../../domain/simulator/simulator.types";
 import { useSimulator } from "../../app/SimulatorProvider";
+import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { DeviceFrame, estimateDeviceFrameSize } from "./DeviceFrame";
 
 const CARD_PAD = 32;
+interface ScrollSyncPayload {
+  slotId: string;
+  xRatio: number;
+  yRatio: number;
+  scrollHeight?: number;
+  scrollWidth?: number;
+  viewportHeight?: number;
+  viewportWidth?: number;
+}
 
 interface PreviewCardProps {
   slot: PreviewSlot;
   device: Device;
   display: DisplaySettings;
   removable: boolean;
+  onCapture: () => void;
 }
 
-export function PreviewCard({ slot, device, display, removable }: PreviewCardProps) {
+type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
+
+export function PreviewCard({
+  slot,
+  device,
+  display,
+  removable,
+  onCapture,
+}: PreviewCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [containerSize, setContainerSize] = useState<Size>({ width: 0, height: 0 });
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const bridgeStatusTimer = useRef<number | undefined>(undefined);
+  const bridgeStatusRef = useRef<BridgeStatus>("checking");
+  const [containerSize, setContainerSize] = useState<Size>({
+    width: 0,
+    height: 0,
+  });
   const [blocked, setBlocked] = useState(false);
-  const { setActiveSlot, removeSlot, rotateSlot, zoomSlot, setSlotDevice } = useSimulator();
+  const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("checking");
+  const [scrollMeta, setScrollMeta] = useState<ScrollSyncPayload | null>(null);
+  const [inspectOpen, setInspectOpen] = useState(false);
+  const {
+    setActiveSlot,
+    removeSlot,
+    rotateSlot,
+    zoomSlot,
+    setSlotDevice,
+    reloadSlot,
+  } = useSimulator();
 
   const canRotate = supportsOrientation(device);
   const viewportSize = canRotate
@@ -37,11 +88,17 @@ export function PreviewCard({ slot, device, display, removable }: PreviewCardPro
 
   const availW = Math.max(80, containerSize.width - CARD_PAD);
   const availH = Math.max(80, containerSize.height - CARD_PAD);
-  const fitScale = Math.min(1, availW / frameSize.width, availH / frameSize.height);
+  const fitScale = Math.min(
+    1,
+    availW / frameSize.width,
+    availH / frameSize.height,
+  );
   const scale =
-    slot.zoomMode === "actual" ? 1
-    : slot.zoomMode === "fit" ? fitScale
-    : fitScale * (slot.zoom / 0.58);
+    slot.zoomMode === "actual"
+      ? 1
+      : slot.zoomMode === "fit"
+        ? fitScale
+        : fitScale * (slot.zoom / 0.58);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -58,7 +115,93 @@ export function PreviewCard({ slot, device, display, removable }: PreviewCardPro
 
   useEffect(() => {
     setBlocked(false);
+    setBridgeStatus("checking");
+    setScrollMeta(null);
   }, [device.id, slot.reloadToken, slot.url]);
+
+  useEffect(() => {
+    bridgeStatusRef.current = bridgeStatus;
+  }, [bridgeStatus]);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    const register = () => {
+      setBridgeStatus("checking");
+      iframe.contentWindow?.postMessage(
+        { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
+        "*",
+      );
+      window.clearTimeout(bridgeStatusTimer.current);
+      bridgeStatusTimer.current = window.setTimeout(() => {
+        if (bridgeStatusRef.current === "checking") {
+          setBlocked(true);
+          setBridgeStatus("unavailable");
+        }
+      }, 6000);
+    };
+
+    iframe.addEventListener("load", register);
+    register();
+
+    return () => {
+      iframe.removeEventListener("load", register);
+      window.clearTimeout(bridgeStatusTimer.current);
+    };
+  }, [slot.id, slot.reloadToken, slot.url]);
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.source !== iframeRef.current?.contentWindow) return;
+      const data = event.data;
+      if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
+
+      if (data.type === "MDV_PREVIEW_READY") {
+        setBridgeStatus("ready");
+        setBlocked(false);
+        setScrollMeta(data as ScrollSyncPayload);
+        return;
+      }
+
+      if (data.type === "MDV_PREVIEW_BLOCKED_OR_UNAVAILABLE") {
+        setBridgeStatus("blocked");
+        setBlocked(true);
+        return;
+      }
+
+      if (data.type === "MDV_SCROLL_SYNC_EVENT") {
+        setBridgeStatus("ready");
+        setScrollMeta(data as ScrollSyncPayload);
+        if (!display.scrollSync) return;
+        broadcastScrollSync(data as ScrollSyncPayload);
+      }
+    };
+
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [display.scrollSync, slot.id]);
+
+  useEffect(() => {
+    if (!display.scrollSync || blocked) return;
+
+    const onSync = (event: Event) => {
+      const detail = (event as CustomEvent<ScrollSyncPayload>).detail;
+      if (!detail || detail.slotId === slot.id) return;
+      iframeRef.current?.contentWindow?.postMessage(
+        {
+          type: "MDV_APPLY_SCROLL_SYNC",
+          slotId: slot.id,
+          xRatio: detail.xRatio,
+          yRatio: detail.yRatio,
+        },
+        "*",
+      );
+    };
+
+    window.addEventListener("MDV_SCROLL_SYNC_EVENT", onSync);
+    return () => window.removeEventListener("MDV_SCROLL_SYNC_EVENT", onSync);
+  }, [blocked, display.scrollSync, slot.id]);
 
   return (
     <section
@@ -68,41 +211,90 @@ export function PreviewCard({ slot, device, display, removable }: PreviewCardPro
       onFocus={() => setActiveSlot(slot.id)}
     >
       {/* ── Per-card header ── */}
-      <div className="flex h-10 shrink-0 items-center gap-1 border-b border-black/[0.06] bg-white px-2">
-        {/* Action buttons — shrink-0 so they're always visible */}
-        {removable && (
-          <CardBtn label="Remove" onClick={() => removeSlot(slot.id)}>
-            <X size={14} />
-          </CardBtn>
-        )}
+      <div
+        className={`flex min-h-12 shrink-0 flex-wrap items-center gap-2 border-b px-2 py-1.5 transition-colors ${
+          display.darkMode
+            ? "border-white/10 bg-[#151922]"
+            : "border-black/[0.06] bg-white"
+        }`}
+      >
+        {/* Device switcher */}
+        <DeviceSwitcher
+          currentDevice={device}
+          dark={display.darkMode}
+          onSwitch={(id) => setSlotDevice(slot.id, id)}
+        />
+
+        <span
+          className={`mx-1 h-4 w-px shrink-0 ${display.darkMode ? "bg-white/10" : "bg-slate-200"}`}
+        />
+
+        {/* Viewport dims */}
+        <span
+          className={`shrink-0 text-[12px] font-medium tabular-nums ${display.darkMode ? "text-slate-400" : "text-slate-500"}`}
+        >
+          {viewportSize.width}×{viewportSize.height}
+        </span>
+
+        <div className="min-w-3 flex-1" />
+
         {canRotate && (
-          <CardBtn label="Rotate" onClick={() => rotateSlot(slot.id)}>
+          <CardBtn
+            dark={display.darkMode}
+            label="Rotate"
+            onClick={() => rotateSlot(slot.id)}
+          >
             <RotateCw size={14} />
           </CardBtn>
         )}
-        <CardBtn label="Zoom out" onClick={() => zoomSlot(slot.id, "out")}>
+        <CardBtn
+          dark={display.darkMode}
+          label="Zoom out"
+          onClick={() => zoomSlot(slot.id, "out")}
+        >
           <Minus size={14} />
         </CardBtn>
-        <CardBtn label="Zoom in" onClick={() => zoomSlot(slot.id, "in")}>
+        <CardBtn
+          dark={display.darkMode}
+          label="Zoom in"
+          onClick={() => zoomSlot(slot.id, "in")}
+        >
           <Plus size={14} />
         </CardBtn>
-
-        <span className="mx-0.5 h-4 w-px shrink-0 bg-slate-200" />
-
-        {/* Device switcher — takes remaining space and clips */}
-        <div className="min-w-0 flex-1">
-          <DeviceSwitcher
-            currentDevice={device}
-            onSwitch={(id) => setSlotDevice(slot.id, id)}
-            viewportSize={viewportSize}
-          />
-        </div>
+        <CardBtn
+          dark={display.darkMode}
+          label="Inspect viewport"
+          onClick={() => setInspectOpen((value) => !value)}
+        >
+          <Info size={14} />
+        </CardBtn>
+        {removable && (
+          <CardBtn
+            dark={display.darkMode}
+            label="Remove"
+            onClick={() => removeSlot(slot.id)}
+          >
+            <X size={14} />
+          </CardBtn>
+        )}
       </div>
+
+      {inspectOpen && (
+        <InspectPanel
+          device={device}
+          display={display}
+          slot={slot}
+          viewportSize={viewportSize}
+          bridgeStatus={bridgeStatus}
+          scrollMeta={scrollMeta}
+          dark={display.darkMode}
+        />
+      )}
 
       {/* ── Canvas ── */}
       <div
         ref={containerRef}
-        className="flex flex-1 items-center justify-center overflow-hidden bg-[#f5f5f3]"
+        className={`flex flex-1 items-center justify-center overflow-hidden transition-colors ${display.darkMode ? "bg-[#101217]" : "bg-[#f5f5f3]"}`}
       >
         {containerSize.width > 0 && (
           <div
@@ -123,19 +315,37 @@ export function PreviewCard({ slot, device, display, removable }: PreviewCardPro
               showStatusBar={display.showStatusBar}
               showBattery={display.showBattery}
               showUrlBar={display.showUrlBar}
+              darkMode={display.darkMode}
               url={slot.url}
               viewportSize={viewportSize}
               orientation={slot.orientation}
             >
-              <div style={{ width: viewportSize.width, height: viewportSize.height }}>
+              <div
+                style={{
+                  width: viewportSize.width,
+                  height: viewportSize.height,
+                }}
+              >
                 {blocked ? (
-                  <BlockedView url={slot.url} />
+                  <BlockedView
+                    url={slot.url}
+                    onCapture={onCapture}
+                    onReload={() => reloadSlot(slot.id)}
+                  />
                 ) : (
                   <iframe
+                    ref={iframeRef}
                     key={`${slot.id}-${slot.reloadToken}`}
                     title={`${device.name} preview`}
                     src={slot.url}
-                    className="h-full w-full border-0 bg-white"
+                    className={`h-full w-full border-0 ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
+                    style={{
+                      backgroundColor: display.darkMode ? "#0f172a" : "#ffffff",
+                      colorScheme: display.darkMode ? "dark" : "light",
+                      filter: display.darkMode
+                        ? "invert(1) hue-rotate(180deg)"
+                        : undefined,
+                    }}
                     sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
                     onError={() => setBlocked(true)}
                   />
@@ -149,27 +359,62 @@ export function PreviewCard({ slot, device, display, removable }: PreviewCardPro
   );
 }
 
+function broadcastScrollSync(detail: ScrollSyncPayload) {
+  window.dispatchEvent(
+    new CustomEvent<ScrollSyncPayload>("MDV_SCROLL_SYNC_EVENT", { detail }),
+  );
+}
+
 // ─── Device switcher ──────────────────────────────────────────────────────────
 
-const TYPE_ORDER = ["phone", "tablet", "laptop", "desktop", "tv", "watch"] as const;
+const TYPE_ORDER = [
+  "phone",
+  "tablet",
+  "laptop",
+  "desktop",
+  "tv",
+  "watch",
+] as const;
 const TYPE_LABEL: Record<string, string> = {
-  phone: "Phones", tablet: "Tablets", laptop: "Laptops",
-  desktop: "Desktops", tv: "TV", watch: "Watch",
+  phone: "Phones",
+  tablet: "Tablets",
+  laptop: "Laptops",
+  desktop: "Desktops",
+  tv: "TV",
+  watch: "Watch",
 };
+const POPULAR_DEVICE_IDS = [
+  "apple-iphone-14-pro-max-2022",
+  "apple-iphone-16-pro-max-2024",
+  "samsung-galaxy-s24",
+  "samsung-galaxy-s24-ultra",
+  "apple-ipad-air-4",
+  "macbook-air",
+];
 
-function DeviceSwitcher({ currentDevice, onSwitch, viewportSize }: { currentDevice: Device; onSwitch: (id: string) => void; viewportSize: Size }) {
+function DeviceSwitcher({
+  currentDevice,
+  dark,
+  onSwitch,
+}: {
+  currentDevice: Device;
+  dark: boolean;
+  onSwitch: (id: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
+  const { devices, favorites, recents, addRecent } = useDeviceCatalog();
 
   // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -201,78 +446,137 @@ function DeviceSwitcher({ currentDevice, onSwitch, viewportSize }: { currentDevi
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return allDevices;
-    return allDevices.filter((d) =>
-      [d.name, d.brand, d.family, d.type].join(" ").toLowerCase().includes(q)
+    if (!q) return devices;
+    return devices.filter((d) =>
+      [d.name, d.brand, d.family, d.type].join(" ").toLowerCase().includes(q),
     );
-  }, [query]);
+  }, [devices, query]);
 
   const grouped = useMemo(() => {
-    const map = new Map<string, Device[]>();
-    for (const t of TYPE_ORDER) map.set(t, []);
-    for (const d of filtered) map.get(d.type)?.push(d);
-    return Array.from(map.entries()).filter(([, list]) => list.length > 0);
-  }, [filtered]);
+    const used = new Set<string>();
+    const sections: Array<[string, Device[]]> = [];
+    const q = query.trim();
+
+    const addSection = (label: string, ids: string[]) => {
+      const list = ids
+        .map((id) => filtered.find((device) => device.id === id))
+        .filter((device): device is Device => !!device && !used.has(device.id));
+      if (list.length === 0) return;
+      list.forEach((device) => used.add(device.id));
+      sections.push([label, list]);
+    };
+
+    if (!q) {
+      addSection("Popular", POPULAR_DEVICE_IDS);
+      addSection("Recent", recents);
+      addSection("Favorites", favorites);
+    }
+
+    for (const t of TYPE_ORDER) {
+      const list = filtered.filter(
+        (device) => device.type === t && !used.has(device.id),
+      );
+      if (list.length > 0) sections.push([TYPE_LABEL[t], list]);
+    }
+
+    return sections;
+  }, [favorites, filtered, query, recents]);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative min-w-[190px] flex-1">
       <button
         type="button"
-        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
-        className="flex w-full h-7 items-center gap-1 rounded-md pl-1.5 pr-1 text-[12px] font-semibold text-slate-800 transition hover:bg-slate-100"
+        data-testid="device-switcher-button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((v) => !v);
+        }}
+        className={`flex h-9 w-full min-w-0 items-center gap-2 rounded-[8px] border px-2.5 text-[13px] font-semibold transition ${
+          dark
+            ? "border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]"
+            : "border-slate-200 bg-slate-50 text-slate-800 hover:bg-slate-100"
+        }`}
       >
-        <span className="min-w-0 flex-1 truncate">{shortName(currentDevice.name)}</span>
-        <span className="shrink-0 text-[11px] font-normal tabular-nums text-slate-400">{viewportSize.width}×{viewportSize.height}</span>
-        <ChevronDown size={12} className="shrink-0 text-slate-400" />
+        <span className="min-w-0 flex-1 truncate">
+          {shortName(currentDevice.name)}
+        </span>
+        <ChevronDown
+          size={14}
+          className={`shrink-0 ${dark ? "text-slate-400" : "text-slate-500"}`}
+        />
       </button>
 
       {open && (
         <div
-          className="absolute left-0 top-full z-50 mt-1 flex w-56 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_8px_32px_rgba(0,0,0,0.14)]"
+          data-testid="device-switcher-panel"
+          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(360px,calc(100vw-24px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
+            dark ? "border-white/10 bg-[#171b24]" : "border-slate-200 bg-white"
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Search */}
-          <div className="border-b border-slate-100 px-2.5 py-2">
+          <div
+            className={`border-b px-3 py-2.5 ${dark ? "border-white/10" : "border-slate-100"}`}
+          >
             <input
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search…"
-              className="w-full bg-transparent text-[12px] font-medium text-slate-800 outline-none placeholder:text-slate-400"
+              className={`w-full bg-transparent text-[13px] font-medium outline-none placeholder:text-slate-400 ${dark ? "text-white" : "text-slate-800"}`}
             />
           </div>
 
           {/* List */}
-          <div ref={listRef} className="max-h-72 overflow-y-auto py-1">
+          <div ref={listRef} className="max-h-[420px] overflow-y-auto py-2">
             {grouped.map(([type, list]) => (
               <div key={type}>
-                <p className="px-3 pb-0.5 pt-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  {TYPE_LABEL[type]}
+                <p
+                  className={`px-3 pb-1 pt-2 text-[10px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}
+                >
+                  {type}
                 </p>
-                {list.map((d) => (
-                  <button
-                    key={d.id}
-                    ref={d.id === currentDevice.id ? activeItemRef : undefined}
-                    type="button"
-                    className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-left transition hover:bg-slate-50 ${
-                      d.id === currentDevice.id ? "bg-slate-900 text-white hover:bg-slate-800" : "text-slate-700"
-                    }`}
-                    onClick={() => { onSwitch(d.id); setOpen(false); }}
-                  >
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[12px] font-semibold leading-tight">
-                        {shortName(d.name)}
+                <div className="grid grid-cols-1 gap-1 px-2 min-[420px]:grid-cols-2">
+                  {list.map((d) => (
+                    <button
+                      key={d.id}
+                      ref={
+                        d.id === currentDevice.id ? activeItemRef : undefined
+                      }
+                      type="button"
+                      className={`flex min-h-12 w-full items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-left transition ${
+                        d.id === currentDevice.id
+                          ? "bg-slate-900 text-white hover:bg-slate-800"
+                          : dark
+                            ? "text-slate-200 hover:bg-white/[0.07]"
+                            : "text-slate-700 hover:bg-slate-50"
+                      }`}
+                      onClick={() => {
+                        addRecent(d.id);
+                        onSwitch(d.id);
+                        setOpen(false);
+                      }}
+                    >
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[12px] font-semibold leading-tight">
+                          {shortName(d.name)}
+                        </span>
+                        <span
+                          className={`mt-0.5 block text-[10px] ${d.id === currentDevice.id ? "text-white/60" : dark ? "text-slate-500" : "text-slate-400"}`}
+                        >
+                          {d.cssViewport.width}×{d.cssViewport.height} ·{" "}
+                          {d.brand}
+                        </span>
                       </span>
-                      <span className={`text-[10px] ${d.id === currentDevice.id ? "text-white/50" : "text-slate-400"}`}>
-                        {d.cssViewport.width}×{d.cssViewport.height}
-                      </span>
-                    </span>
-                  </button>
-                ))}
+                    </button>
+                  ))}
+                </div>
               </div>
             ))}
             {grouped.length === 0 && (
-              <p className="px-3 py-4 text-center text-[11px] text-slate-400">No results</p>
+              <p className="px-3 py-4 text-center text-[11px] text-slate-400">
+                No results
+              </p>
             )}
           </div>
         </div>
@@ -283,31 +587,186 @@ function DeviceSwitcher({ currentDevice, onSwitch, viewportSize }: { currentDevi
 
 // ─── Small helpers ────────────────────────────────────────────────────────────
 
-function BlockedView({ url }: { url: string }) {
+function InspectPanel({
+  bridgeStatus,
+  dark,
+  device,
+  display,
+  scrollMeta,
+  slot,
+  viewportSize,
+}: {
+  bridgeStatus: BridgeStatus;
+  dark: boolean;
+  device: Device;
+  display: DisplaySettings;
+  scrollMeta: ScrollSyncPayload | null;
+  slot: PreviewSlot;
+  viewportSize: Size;
+}) {
+  const scrollPercent = scrollMeta
+    ? `${Math.round(scrollMeta.yRatio * 100)}%`
+    : "Unknown";
+  const statusText =
+    bridgeStatus === "ready"
+      ? "Ready"
+      : bridgeStatus === "checking"
+        ? "Checking"
+        : bridgeStatus === "blocked"
+          ? "Blocked"
+          : "Unavailable";
+
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 bg-slate-50 p-6 text-center">
-      <p className="text-sm font-bold text-slate-800">Can't preview this site</p>
-      <p className="max-w-[220px] text-xs leading-5 text-slate-500">
-        This site blocks embedding. Open it in a real tab then use screenshots here.
-      </p>
-      <button
-        className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white"
-        onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+    <div
+      className={`grid shrink-0 gap-2 border-b px-3 py-2 text-[11px] ${
+        dark
+          ? "border-white/10 bg-[#111827] text-slate-300"
+          : "border-slate-200 bg-slate-50 text-slate-600"
+      }`}
+    >
+      <div className="grid grid-cols-2 gap-2 min-[920px]:grid-cols-4">
+        <InspectMetric
+          label="Device"
+          value={shortName(device.name)}
+          dark={dark}
+        />
+        <InspectMetric
+          label="Viewport"
+          value={`${viewportSize.width}×${viewportSize.height}`}
+          dark={dark}
+        />
+        <InspectMetric
+          label="DPR"
+          value={`${device.pixelRatio}x`}
+          dark={dark}
+        />
+        <InspectMetric
+          label="Orientation"
+          value={slot.orientation}
+          dark={dark}
+        />
+        <InspectMetric
+          label="Chrome"
+          value={display.showUrlBar ? "Visible" : "Hidden"}
+          dark={dark}
+        />
+        <InspectMetric
+          label="Frame"
+          value={slot.showFrame ? "Visible" : "Hidden"}
+          dark={dark}
+        />
+        <InspectMetric label="Sync bridge" value={statusText} dark={dark} />
+        <InspectMetric label="Scroll" value={scrollPercent} dark={dark} />
+      </div>
+      <code
+        className={`block truncate rounded px-2 py-1 font-semibold ${
+          dark ? "bg-white/5 text-slate-300" : "bg-white text-slate-600"
+        }`}
       >
-        Open in tab
-      </button>
+        {mediaQueryFor(device, slot.orientation)}
+      </code>
+      <p className="truncate font-medium">{slot.url}</p>
     </div>
   );
 }
 
-function CardBtn({ label, children, onClick }: { label: string; children: ReactNode; onClick: () => void }) {
+function InspectMetric({
+  dark,
+  label,
+  value,
+}: {
+  dark: boolean;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div
+      className={`rounded-md border px-2 py-1.5 ${
+        dark ? "border-white/10 bg-white/[0.03]" : "border-slate-200 bg-white"
+      }`}
+    >
+      <p className="font-black uppercase tracking-[0.08em] text-slate-400">
+        {label}
+      </p>
+      <p
+        className={`mt-0.5 truncate font-bold ${dark ? "text-slate-100" : "text-slate-900"}`}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function BlockedView({
+  onCapture,
+  onReload,
+  url,
+}: {
+  onCapture: () => void;
+  onReload: () => void;
+  url: string;
+}) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-3 bg-slate-50 p-6 text-center">
+      <p className="text-sm font-black text-slate-900">
+        This site blocks iframe preview.
+      </p>
+      <p className="max-w-[250px] break-all text-[11px] font-semibold leading-5 text-slate-500">
+        {url}
+      </p>
+      <p className="max-w-[260px] text-xs leading-5 text-slate-500">
+        The page likely keeps frame protection, uses a restricted browser URL,
+        or prevented the preview bridge from loading.
+      </p>
+      <div className="grid w-full max-w-[240px] gap-2">
+        <button
+          className="flex items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white"
+          onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+        >
+          <ExternalLink size={13} /> Open in tab
+        </button>
+        <button
+          className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
+          onClick={onReload}
+        >
+          <RefreshCw size={13} /> Reload preview
+        </button>
+        <button
+          className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
+          onClick={onCapture}
+        >
+          <Camera size={13} /> Capture current tab instead
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CardBtn({
+  dark,
+  label,
+  children,
+  onClick,
+}: {
+  dark: boolean;
+  label: string;
+  children: ReactNode;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"
       title={label}
       aria-label={label}
-      className="grid h-7 w-7 shrink-0 place-items-center rounded text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
-      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      className={`grid h-8 w-8 shrink-0 place-items-center rounded-md transition ${
+        dark
+          ? "text-slate-400 hover:bg-white/10 hover:text-white"
+          : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+      }`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
     >
       {children}
     </button>

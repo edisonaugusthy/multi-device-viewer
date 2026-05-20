@@ -23,25 +23,25 @@ export function DisplaySettingsBar() {
           active={display.showStatusBar}
           icon={<MonitorUp size={15} />}
           label="Status"
-          onClick={() => updateDisplay({ ...display, showStatusBar: !display.showStatusBar })}
+          onClick={() => updateDisplay((current) => ({ ...current, showStatusBar: !current.showStatusBar }))}
         />
         <Toggle
           active={display.showUrlBar}
           icon={<RectangleHorizontal size={15} />}
           label="URL bar"
-          onClick={() => updateDisplay({ ...display, showUrlBar: !display.showUrlBar })}
+          onClick={() => updateDisplay((current) => ({ ...current, showUrlBar: !current.showUrlBar }))}
         />
         <Toggle
           active={display.presentationMode}
           icon={<ScreenShare size={15} />}
           label="Present"
-          onClick={() => updateDisplay({ ...display, presentationMode: !display.presentationMode })}
+          onClick={() => updateDisplay((current) => ({ ...current, presentationMode: !current.presentationMode }))}
         />
         <Toggle
           active={display.hideChrome}
           icon={<EyeOff size={15} />}
           label="Focus"
-          onClick={() => updateDisplay({ ...display, hideChrome: !display.hideChrome })}
+          onClick={() => updateDisplay((current) => ({ ...current, hideChrome: !current.hideChrome }))}
         />
       </div>
     </div>

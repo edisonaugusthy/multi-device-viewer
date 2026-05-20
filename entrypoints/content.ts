@@ -4,23 +4,104 @@ const OVERLAY_ID = "multi-device-viewer-overlay";
 
 export default defineContentScript({
   matches: ["https://*/*", "http://*/*"],
+  allFrames: true,
   runAt: "document_idle",
   main() {
-    chrome.runtime.onMessage.addListener((message) => {
-      if (message !== null && typeof message === "object") {
-        if (message.type === "OPEN_SIMULATOR") {
-          toggleSimulator(typeof message.url === "string" ? message.url : undefined);
-        } else if (message.type === "HIDE_OVERLAY") {
-          const el = document.getElementById(OVERLAY_ID);
-          if (el) el.style.visibility = "hidden";
-        } else if (message.type === "SHOW_OVERLAY") {
-          const el = document.getElementById(OVERLAY_ID);
-          if (el) el.style.visibility = "visible";
+    setupPreviewBridge();
+
+    if (window.top === window) {
+      chrome.runtime.onMessage.addListener((message) => {
+        if (message !== null && typeof message === "object") {
+          if (message.type === "OPEN_SIMULATOR") {
+            toggleSimulator(typeof message.url === "string" ? message.url : undefined);
+          } else if (message.type === "HIDE_OVERLAY") {
+            const el = document.getElementById(OVERLAY_ID);
+            if (el) el.style.visibility = "hidden";
+          } else if (message.type === "SHOW_OVERLAY") {
+            const el = document.getElementById(OVERLAY_ID);
+            if (el) el.style.visibility = "visible";
+          }
         }
-      }
-    });
+      });
+    }
   },
 });
+
+function setupPreviewBridge() {
+  let slotId: string | undefined;
+  let programmaticScroll = false;
+  let resetTimer: number | undefined;
+
+  const root = () => document.scrollingElement ?? document.documentElement;
+  const scrollRatios = () => {
+    const el = root();
+    const maxX = Math.max(1, el.scrollWidth - window.innerWidth);
+    const maxY = Math.max(1, el.scrollHeight - window.innerHeight);
+    return {
+      xRatio: el.scrollLeft / maxX,
+      yRatio: el.scrollTop / maxY,
+      scrollHeight: el.scrollHeight,
+      scrollWidth: el.scrollWidth,
+      viewportHeight: window.innerHeight,
+      viewportWidth: window.innerWidth
+    };
+  };
+
+  const announceReady = () => {
+    if (!slotId) return;
+    window.parent.postMessage({
+      type: "MDV_PREVIEW_READY",
+      slotId,
+      url: window.location.href,
+      ...scrollRatios()
+    }, "*");
+  };
+
+  window.addEventListener("message", (event) => {
+    const data = event.data;
+    if (!data || typeof data !== "object") return;
+
+    if (data.type === "MDV_PREVIEW_REGISTER" && typeof data.slotId === "string") {
+      slotId = data.slotId;
+      announceReady();
+      return;
+    }
+
+    if (data.type === "MDV_APPLY_SCROLL_SYNC" && typeof data.slotId === "string" && data.slotId === slotId) {
+      const el = root();
+      const maxX = Math.max(0, el.scrollWidth - window.innerWidth);
+      const maxY = Math.max(0, el.scrollHeight - window.innerHeight);
+      programmaticScroll = true;
+      window.scrollTo({
+        left: maxX * Number(data.xRatio ?? 0),
+        top: maxY * Number(data.yRatio ?? 0),
+        behavior: "auto"
+      });
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        programmaticScroll = false;
+      }, 120);
+    }
+  });
+
+  window.addEventListener("scroll", () => {
+    if (!slotId || programmaticScroll) return;
+    window.parent.postMessage({
+      type: "MDV_SCROLL_SYNC_EVENT",
+      slotId,
+      ...scrollRatios()
+    }, "*");
+  }, { passive: true });
+
+  window.addEventListener("error", () => {
+    if (!slotId) return;
+    window.parent.postMessage({
+      type: "MDV_PREVIEW_BLOCKED_OR_UNAVAILABLE",
+      slotId,
+      url: window.location.href
+    }, "*");
+  });
+}
 
 function toggleSimulator(targetUrl?: string) {
   // If overlay is already open, close it (toggle behaviour).

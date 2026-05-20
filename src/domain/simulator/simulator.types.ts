@@ -17,6 +17,8 @@ export interface DisplaySettings {
   showStatusBar: boolean;
   showBattery: boolean;
   showUrlBar: boolean;
+  scrollSync: boolean;
+  darkMode: boolean;
   presentationMode: boolean;
   hideChrome: boolean;
 }

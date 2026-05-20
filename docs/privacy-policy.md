@@ -46,6 +46,7 @@ Multi Device Viewer does not execute remotely hosted JavaScript or WebAssembly. 
 | Permission | Purpose |
 |---|---|
 | `activeTab` | Inject the simulator overlay into the current tab when the extension icon is clicked. |
+| `contextMenus` | Add a local Chrome menu shortcut for opening the current tab in the simulator. |
 | `scripting` | Run the content script that injects and manages the overlay iframe. |
 | `tabs` | Read the active tab URL and title; capture visible tab screenshots. |
 | `declarativeNetRequest` / `declarativeNetRequestWithHostAccess` | Strip `X-Frame-Options` and `CSP` headers on sub-frame requests so previewed pages load inside the simulator. |

@@ -16,6 +16,11 @@ interface TextMark  { kind: "text";  color: string; size: number;  pos: Pt; text
 type Mark = PenMark | RectMark | ArrowMark | TextMark;
 
 interface CropRect { x: number; y: number; w: number; h: number; } // normalised 0-1
+interface CaptureMeta {
+  title: string;
+  url: string;
+  devices: string[];
+}
 
 const COLORS = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#a855f7", "#111827", "#ffffff"];
 const WIDTHS = [2, 4, 7];
@@ -23,7 +28,7 @@ const FONT_SIZES = [12, 16, 20, 28, 40];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function AnnotationOverlay({ imageUrl, onClose }: { imageUrl?: string; onClose: () => void }) {
+export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: string; meta?: CaptureMeta; onClose: () => void }) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const imgRef       = useRef<HTMLImageElement | null>(null);
   const textareaRef  = useRef<HTMLTextAreaElement>(null);
@@ -250,7 +255,46 @@ export function AnnotationOverlay({ imageUrl, onClose }: { imageUrl?: string; on
 
   // ── Export ────────────────────────────────────────────────────────────────
   function exportPng(): string {
-    return canvasRef.current!.toDataURL("image/png");
+    const source = canvasRef.current!;
+    if (!meta) return source.toDataURL("image/png");
+
+    const headerH = 112;
+    const pad = 28;
+    const output = document.createElement("canvas");
+    output.width = source.width;
+    output.height = source.height + headerH;
+    const ctx = output.getContext("2d")!;
+
+    ctx.fillStyle = "#f8fafc";
+    ctx.fillRect(0, 0, output.width, output.height);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, output.width, headerH);
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, headerH - 0.5);
+    ctx.lineTo(output.width, headerH - 0.5);
+    ctx.stroke();
+
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "700 22px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+    ctx.fillText(meta.title, pad, 36);
+
+    ctx.fillStyle = "#475569";
+    ctx.font = "500 13px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+    ctx.fillText(truncateText(ctx, meta.url, output.width - pad * 2), pad, 62);
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "600 12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+    const deviceText = meta.devices.join("  |  ");
+    ctx.fillText(truncateText(ctx, deviceText, output.width - pad * 2), pad, 88);
+
+    ctx.textAlign = "right";
+    ctx.fillText(new Date().toLocaleString(), output.width - pad, 36);
+    ctx.textAlign = "left";
+
+    ctx.drawImage(source, 0, headerH);
+    return output.toDataURL("image/png");
   }
 
   async function copyImage() {
@@ -498,6 +542,15 @@ function ToolBtn({ active, title, onClick, children }: { active: boolean; title:
       {children}
     </button>
   );
+}
+
+function truncateText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number) {
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  let next = text;
+  while (next.length > 8 && ctx.measureText(`${next}...`).width > maxWidth) {
+    next = next.slice(0, -8);
+  }
+  return `${next.trim()}...`;
 }
 
 // ─── Canvas paint ─────────────────────────────────────────────────────────────

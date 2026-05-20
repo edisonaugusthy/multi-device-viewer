@@ -14,9 +14,10 @@ interface SimulatorContextValue extends SimulatorState {
   reloadSlot: (slotId: string) => void;
   reloadAllSlots: () => void;
   addSlot: (deviceId?: string) => void;
+  applyDevicePreset: (deviceIds: string[]) => void;
   removeSlot: (slotId: string) => void;
   duplicateActiveSlot: (deviceId?: string) => void;
-  updateDisplay: (display: DisplaySettings) => void;
+  updateDisplay: (display: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => void;
 }
 
 const SimulatorContext = createContext<SimulatorContextValue | null>(null);
@@ -25,6 +26,8 @@ const defaultDisplay: DisplaySettings = {
   showStatusBar: true,
   showBattery: true,
   showUrlBar: true,
+  scrollSync: false,
+  darkMode: false,
   presentationMode: false,
   hideChrome: false
 };
@@ -119,6 +122,15 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const applyDevicePreset = useCallback((deviceIds: string[]) => {
+    setSlots((current) => {
+      const url = current[0]?.url ?? initialUrlFromSearch();
+      const next = deviceIds.slice(0, 4).map((deviceId, index) => createPreviewSlot(deviceId, url, index));
+      setActiveSlotId(next[0]?.id ?? activeSlotId);
+      return next.length > 0 ? next : current;
+    });
+  }, [activeSlotId]);
+
   const removeSlot = useCallback((slotId: string) => {
     setSlots((current) => {
       if (current.length === 1) return current;
@@ -145,7 +157,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     });
   }, [activeSlotId]);
 
-  const updateDisplay = useCallback((nextDisplay: DisplaySettings) => {
+  const updateDisplay = useCallback((nextDisplay: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => {
     setDisplay(nextDisplay);
   }, []);
 
@@ -195,6 +207,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       reloadSlot,
       reloadAllSlots,
       addSlot,
+      applyDevicePreset,
       removeSlot,
       duplicateActiveSlot,
       updateDisplay
@@ -202,6 +215,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     [
       activeSlotId,
       addSlot,
+      applyDevicePreset,
       display,
       duplicateActiveSlot,
       reloadAllSlots,

@@ -81,6 +81,7 @@ The extension does not sell, transfer, or use user data for any purpose outside 
 | Permission | Justification |
 |---|---|
 | `activeTab` | Inject the simulator overlay into the current tab when the user clicks the extension action. |
+| `contextMenus` | Add the "Open this tab in Device Simulator" shortcut to Chrome's page and extension-action context menus. |
 | `scripting` | Execute the content script that creates and manages the full-screen overlay iframe. |
 | `tabs` | Read the active tab URL and title to load the page in the simulator; capture visible tab screenshots. |
 | `declarativeNetRequest` / `declarativeNetRequestWithHostAccess` | Remove `X-Frame-Options` and `Content-Security-Policy` response headers on sub-frame requests so that pages can load inside the simulator iframe. Rules execute entirely within Chrome; no data is transmitted. |

@@ -1,8 +1,8 @@
 # Multi Device Viewer
 
-A local-first Chrome MV3 extension for testing websites across multiple device viewports without leaving the current tab.
+A local-first Chrome MV3 extension for responsive website testing across mobile, tablet, laptop, desktop, watch, and TV viewports without leaving the current tab.
 
-Click the extension icon on any page and a full-screen overlay simulator opens on top — no new tabs, no navigation away. Close it and the page is exactly as you left it.
+Click the extension icon on any page and a full-screen mobile preview and device simulator opens on top — no new tabs, no navigation away. Close it and the page is exactly as you left it.
 
 ## Features
 

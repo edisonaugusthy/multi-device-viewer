@@ -6,10 +6,10 @@ export default defineConfig({
   manifestVersion: 3,
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    name: "Multi Device Viewer",
+    name: "Responsive Device Viewer & Mobile Tester",
     short_name: "Device Viewer",
     description:
-      "Preview responsive pages across realistic devices with presets, inspect mode, screenshots, and local annotations.",
+      "Responsive website tester for mobile, tablet, desktop, and laptop previews with screenshots, mockups, and annotations.",
     version: "0.1.2",
     permissions: ["activeTab", "contextMenus", "debugger", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
     declarative_net_request: {

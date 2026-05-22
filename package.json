@@ -1,7 +1,7 @@
 {
   "name": "multi-device-viewer",
   "version": "0.1.2",
-  "description": "A local-first Chrome extension for testing websites across multiple device viewports.",
+  "description": "A local-first Chrome extension for responsive website testing across mobile, tablet, desktop, and laptop viewports.",
   "type": "module",
   "scripts": {
     "dev": "wxt",

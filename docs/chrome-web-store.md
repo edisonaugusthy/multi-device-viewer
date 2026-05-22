@@ -10,17 +10,19 @@
 
 ### Extension name
 
-Multi Device Viewer
+Responsive Device Viewer & Mobile Tester
 
 ### Short description (132 chars max)
 
-Preview responsive pages across realistic device frames with presets, inspect mode, screenshots, and local annotations.
+Preview responsive websites on mobile, tablet, desktop, and laptop viewports side by side. Capture screenshots and mockups.
 
 ### Detailed description
 
-Multi Device Viewer opens a full-screen responsive testing overlay on the page you are already on. Click the extension icon or use the Chrome context menu, and the current site immediately appears inside realistic device frames without navigating away or opening a new tab. Close the overlay and the page is exactly as you left it.
+Multi Device Viewer is a responsive testing and mobile preview extension for checking how websites look across phones, tablets, laptops, desktops, watches, and TVs. Open the extension on any page to compare multiple device viewports side by side without leaving the site.
 
-**Preview across devices**
+Click the extension icon or use the Chrome context menu, and the current site immediately appears inside realistic device frames without navigating away or opening a new tab. Close the overlay and the page is exactly as you left it.
+
+**Responsive Website Testing**
 - Compare up to four device viewports side by side in resizable panels.
 - Choose from a built-in catalog of phones, tablets, laptops, desktops, watches, and TVs, including newer iPhone profiles.
 - Switch orientation, zoom, fit mode, and reload each panel independently.
@@ -28,16 +30,17 @@ Multi Device Viewer opens a full-screen responsive testing overlay on the page y
 - Save favorites, browse recents, or create a custom viewport size.
 - Turn on dark mode or inspect mode for focused responsive QA.
 
+**Mobile, Tablet, Desktop, and Laptop Preview**
+- Test mobile view, tablet layouts, laptop breakpoints, desktop screens, watch layouts, and TV previews in one workspace.
+- Use realistic device shells for phone, tablet, laptop, desktop, and watch previews.
+- Move quickly between common responsive design breakpoints and exact custom viewport sizes.
+
 **Presets for repeat QA**
 - Start from built-in layouts like Mobile vs Tablet, iOS vs Android, and Android + Tablet + Laptop.
 - Save your own named device layouts.
 - Import or export preset JSON for reuse across local browser profiles.
 
-**Realistic device shells**
-- Accurate frame profiles for every device category.
-- Phone, tablet, laptop, desktop, and watch shell renderings.
-
-**Capture & Annotate**
+**Screenshots, Mockups, and Annotations**
 - One click in the sidebar captures the entire simulator view as-is.
 - Built-in annotation editor: pen, rectangle, arrow, text, and crop tools.
 - Eight-color palette, three stroke widths, font size picker.

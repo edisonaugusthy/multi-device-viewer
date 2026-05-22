@@ -10,7 +10,7 @@ export default defineConfig({
     short_name: "Device Viewer",
     description:
       "Responsive website tester for mobile, tablet, desktop, and laptop previews with screenshots, mockups, and annotations.",
-    version: "0.1.2",
+    version: "0.1.3",
     permissions: ["activeTab", "contextMenus", "debugger", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
     declarative_net_request: {
       rule_resources: [

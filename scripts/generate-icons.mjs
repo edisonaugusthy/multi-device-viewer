@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 const sizes = [16, 32, 48, 128];
 const outDir = join(process.cwd(), "public", "icons");
-const source = join(process.cwd(), "store-assets", "icon-source", "multi-device-dashboard-icon-source.png");
+const source = join(process.cwd(), "store-assets", "icon-source", "multi-device-dashboard-icon-128.png");
 
 if (!existsSync(source)) {
   throw new Error(`Icon source image not found: ${source}`);

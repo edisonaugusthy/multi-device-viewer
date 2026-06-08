@@ -28,8 +28,10 @@ import { ElementInspectOverlay, type InspectData } from "./ElementInspectOverlay
 const CARD_PAD = 32;
 interface ScrollSyncPayload {
   slotId: string;
-  xRatio: number;
-  yRatio: number;
+  scrollLeft: number;
+  scrollTop: number;
+  deltaLeft: number;
+  deltaTop: number;
   scrollHeight?: number;
   scrollWidth?: number;
   viewportHeight?: number;
@@ -42,6 +44,10 @@ interface PreviewCardProps {
   display: DisplaySettings;
   removable: boolean;
   onCapture: () => void;
+  compareTargetSlotId?: string;
+  compareSelector?: string;
+  onInspectData?: (slotId: string, data: InspectData) => void;
+  onInspectLockChange?: (slotId: string, locked: boolean, data: InspectData | null) => void;
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -52,6 +58,10 @@ export function PreviewCard({
   display,
   removable,
   onCapture,
+  compareTargetSlotId,
+  compareSelector,
+  onInspectData,
+  onInspectLockChange,
 }: PreviewCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -67,6 +77,7 @@ export function PreviewCard({
   const [inspectOpen, setInspectOpen] = useState(false);
   const [inspectData, setInspectData] = useState<InspectData | null>(null);
   const [inspectLocked, setInspectLocked] = useState(false);
+  const [inspectSuppressed, setInspectSuppressed] = useState(false);
   const inspectLockedRef = useRef(false);
   // Direct DOM ref for the highlight box — updated imperatively on every MDV_INSPECT_MOVE
   // to avoid React re-renders on every mousemove frame.
@@ -124,7 +135,21 @@ export function PreviewCard({
     setBlocked(false);
     setBridgeStatus("checking");
     setScrollMeta(null);
+    setInspectOpen(false);
+    setInspectData(null);
+    setInspectLocked(false);
+    setInspectSuppressed(false);
+    inspectLockedRef.current = false;
+    if (highlightRef.current) highlightRef.current.style.display = "none";
   }, [device.id, slot.reloadToken, slot.url]);
+
+  useEffect(() => {
+    if (!compareSelector || compareTargetSlotId !== slot.id) return;
+    iframeRef.current?.contentWindow?.postMessage(
+      { type: "MDV_INSPECT_QUERY", slotId: slot.id, selector: compareSelector },
+      "*",
+    );
+  }, [compareSelector, compareTargetSlotId, slot.id]);
 
   useEffect(() => {
     bridgeStatusRef.current = bridgeStatus;
@@ -199,8 +224,10 @@ export function PreviewCard({
         {
           type: "MDV_APPLY_SCROLL_SYNC",
           slotId: slot.id,
-          xRatio: detail.xRatio,
-          yRatio: detail.yRatio,
+          scrollLeft: detail.scrollLeft,
+          scrollTop: detail.scrollTop,
+          deltaLeft: detail.deltaLeft,
+          deltaTop: detail.deltaTop,
         },
         "*",
       );
@@ -213,9 +240,12 @@ export function PreviewCard({
   // ── Inspect mode bridge ───────────────────────────────────────────────────
   useEffect(() => {
     if (!iframeRef.current) return;
+    if (!display.inspectMode) {
+      setInspectSuppressed(false);
+    }
     iframeRef.current.contentWindow?.postMessage(
       {
-        type: display.inspectMode ? "MDV_INSPECT_ENABLE" : "MDV_INSPECT_DISABLE",
+        type: display.inspectMode && !inspectSuppressed ? "MDV_INSPECT_ENABLE" : "MDV_INSPECT_DISABLE",
         slotId: slot.id,
       },
       "*",
@@ -226,7 +256,18 @@ export function PreviewCard({
       setInspectLocked(false);
       if (highlightRef.current) highlightRef.current.style.display = "none";
     }
-  }, [display.inspectMode, slot.id]);
+  }, [display.inspectMode, inspectSuppressed, slot.id]);
+
+  useEffect(() => {
+    if (display.inspectMode) {
+      setInspectOpen(false);
+      setInspectData(null);
+      inspectLockedRef.current = false;
+      setInspectLocked(false);
+      setInspectSuppressed(true);
+      if (highlightRef.current) highlightRef.current.style.display = "none";
+    }
+  }, [device.id]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -241,6 +282,10 @@ export function PreviewCard({
         const container = containerRef.current;
         const iframe = iframeRef.current;
         if (!h || !container || !iframe) return;
+        if (msg.hidden) {
+          h.style.display = "none";
+          return;
+        }
         const cr = container.getBoundingClientRect();
         const ir = iframe.getBoundingClientRect();
         const ox = ir.left - cr.left;
@@ -258,7 +303,9 @@ export function PreviewCard({
       // ── Element changed: update tooltip panel via React state ──
       if (msg.type === "MDV_INSPECT_DATA") {
         if (!inspectLockedRef.current) {
-          setInspectData(msg as unknown as InspectData);
+          const data = msg as unknown as InspectData;
+          onInspectData?.(slot.id, data);
+          setInspectData(data);
         }
         return;
       }
@@ -267,10 +314,13 @@ export function PreviewCard({
         if (inspectLockedRef.current) {
           inspectLockedRef.current = false;
           setInspectLocked(false);
+          onInspectLockChange?.(slot.id, false, null);
         } else {
-          setInspectData(msg as unknown as InspectData);
+          const data = msg as unknown as InspectData;
+          setInspectData(data);
           inspectLockedRef.current = true;
           setInspectLocked(true);
+          onInspectLockChange?.(slot.id, true, data);
         }
         return;
       }
@@ -289,7 +339,7 @@ export function PreviewCard({
     >
       {/* ── Per-card header ── */}
       <div
-        className={`flex min-h-12 shrink-0 flex-wrap items-center gap-2 border-b px-2 py-1.5 transition-colors ${
+        className={`flex min-h-11 shrink-0 flex-nowrap items-center gap-1 border-b px-1 py-1 transition-colors ${
           display.darkMode
             ? "border-white/10 bg-[#151922]"
             : "border-black/[0.06] bg-white"
@@ -303,17 +353,17 @@ export function PreviewCard({
         />
 
         <span
-          className={`mx-1 h-4 w-px shrink-0 ${display.darkMode ? "bg-white/10" : "bg-slate-200"}`}
+          className={`mx-0.5 h-4 w-px shrink-0 ${display.darkMode ? "bg-white/10" : "bg-slate-200"}`}
         />
 
         {/* Viewport dims */}
         <span
-          className={`shrink-0 text-[12px] font-medium tabular-nums ${display.darkMode ? "text-slate-400" : "text-slate-500"}`}
+          className={`shrink-0 whitespace-nowrap text-[10px] font-medium tabular-nums tracking-tight ${display.darkMode ? "text-slate-400" : "text-slate-500"}`}
         >
           {viewportSize.width}×{viewportSize.height}
         </span>
 
-        <div className="min-w-3 flex-1" />
+        <div className="min-w-0 flex-1" />
 
         {canRotate && (
           <CardBtn
@@ -341,6 +391,7 @@ export function PreviewCard({
         <CardBtn
           dark={display.darkMode}
           label="Inspect viewport"
+          disabled={inspectSuppressed}
           onClick={() => setInspectOpen((value) => !value)}
         >
           <Info size={14} />
@@ -586,7 +637,7 @@ function DeviceSwitcher({
   }, [favorites, filtered, query, recents]);
 
   return (
-    <div ref={ref} className="relative min-w-[190px] flex-1">
+    <div ref={ref} className="relative min-w-0 flex-[1.45]">
       <button
         type="button"
         data-testid="device-switcher-button"
@@ -594,7 +645,7 @@ function DeviceSwitcher({
           e.stopPropagation();
           setOpen((v) => !v);
         }}
-        className={`flex h-9 w-full min-w-0 items-center gap-2 rounded-[8px] border px-2.5 text-[13px] font-semibold transition ${
+        className={`flex h-8 w-full min-w-0 items-center gap-1 whitespace-nowrap rounded-[8px] border px-1.5 text-[12px] font-semibold transition ${
           dark
             ? "border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]"
             : "border-slate-200 bg-slate-50 text-slate-800 hover:bg-slate-100"
@@ -612,14 +663,14 @@ function DeviceSwitcher({
       {open && (
         <div
           data-testid="device-switcher-panel"
-          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(360px,calc(100vw-24px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
+          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(300px,calc(100vw-16px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
             dark ? "border-white/10 bg-[#171b24]" : "border-slate-200 bg-white"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Search */}
           <div
-            className={`border-b px-3 py-2.5 ${dark ? "border-white/10" : "border-slate-100"}`}
+            className={`border-b px-2 py-1.5 ${dark ? "border-white/10" : "border-slate-100"}`}
           >
             <input
               ref={inputRef}
@@ -631,15 +682,15 @@ function DeviceSwitcher({
           </div>
 
           {/* List */}
-          <div ref={listRef} className="max-h-[420px] overflow-y-auto py-2">
+          <div ref={listRef} className="max-h-[420px] overflow-y-auto py-1">
             {grouped.map(([type, list]) => (
               <div key={type}>
                 <p
-                  className={`px-3 pb-1 pt-2 text-[10px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}
+                  className={`px-2 pb-1 pt-1.5 text-[9px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}
                 >
                   {type}
                 </p>
-                <div className="grid grid-cols-1 gap-1 px-2 min-[420px]:grid-cols-2">
+                <div className="grid grid-cols-1 gap-1 px-1 min-[420px]:grid-cols-2">
                   {list.map((d) => (
                     <button
                       key={d.id}
@@ -647,7 +698,7 @@ function DeviceSwitcher({
                         d.id === currentDevice.id ? activeItemRef : undefined
                       }
                       type="button"
-                      className={`flex min-h-12 w-full items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-left transition ${
+                      className={`flex min-h-10 w-full min-w-0 items-center gap-1.5 rounded-[8px] px-1.5 py-1.25 text-left transition ${
                         d.id === currentDevice.id
                           ? "bg-slate-900 text-white hover:bg-slate-800"
                           : dark
@@ -661,11 +712,11 @@ function DeviceSwitcher({
                       }}
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[12px] font-semibold leading-tight">
+                        <span className="block truncate text-[11px] font-semibold leading-tight">
                           {shortName(d.name)}
                         </span>
                         <span
-                          className={`mt-0.5 block text-[10px] ${d.id === currentDevice.id ? "text-white/60" : dark ? "text-slate-500" : "text-slate-400"}`}
+                          className={`mt-0.5 block truncate text-[8px] ${d.id === currentDevice.id ? "text-white/60" : dark ? "text-slate-500" : "text-slate-400"}`}
                         >
                           {d.cssViewport.width}×{d.cssViewport.height} ·{" "}
                           {d.brand}
@@ -708,7 +759,7 @@ function InspectPanel({
   viewportSize: Size;
 }) {
   const scrollPercent = scrollMeta
-    ? `${Math.round(scrollMeta.yRatio * 100)}%`
+    ? `${Math.round((scrollMeta.scrollTop / Math.max(1, (scrollMeta.scrollHeight ?? viewportSize.height) - viewportSize.height)) * 100)}%`
     : "Unknown";
   const statusText =
     bridgeStatus === "ready"
@@ -850,23 +901,27 @@ function CardBtn({
   label,
   children,
   onClick,
+  disabled = false,
 }: {
   dark: boolean;
   label: string;
   children: ReactNode;
   onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       title={label}
       aria-label={label}
+      disabled={disabled}
       className={`grid h-8 w-8 shrink-0 place-items-center rounded-md transition ${
         dark
           ? "text-slate-400 hover:bg-white/10 hover:text-white"
           : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
-      }`}
+      } ${disabled ? "cursor-not-allowed opacity-35 hover:bg-transparent hover:text-current" : ""}`}
       onClick={(e) => {
+        if (disabled) return;
         e.stopPropagation();
         onClick();
       }}

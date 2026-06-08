@@ -31,21 +31,27 @@ function setupPreviewBridge() {
   let slotId: string | undefined;
   let programmaticScroll = false;
   let resetTimer: number | undefined;
+  let scrollRafPending = false;
+  let lastScrollLeft = 0;
+  let lastScrollTop = 0;
   let inspectEnabled = false;
   let inspectRafPending = false;
   let inspectPendingX = -1;
   let inspectPendingY = -1;
   // Track the last element we inspected so we only run getComputedStyle when it changes
   let lastInspectedEl: Element | null = null;
+  let currentTheme: "light" | "dark" = "light";
 
   const root = () => document.scrollingElement ?? document.documentElement;
   const scrollRatios = () => {
     const el = root();
-    const maxX = Math.max(1, el.scrollWidth - window.innerWidth);
-    const maxY = Math.max(1, el.scrollHeight - window.innerHeight);
+    const scrollLeft = el.scrollLeft;
+    const scrollTop = el.scrollTop;
     return {
-      xRatio: el.scrollLeft / maxX,
-      yRatio: el.scrollTop / maxY,
+      scrollLeft,
+      scrollTop,
+      deltaLeft: scrollLeft - lastScrollLeft,
+      deltaTop: scrollTop - lastScrollTop,
       scrollHeight: el.scrollHeight,
       scrollWidth: el.scrollWidth,
       viewportHeight: window.innerHeight,
@@ -62,6 +68,24 @@ function setupPreviewBridge() {
       ...scrollRatios()
     }, "*");
   };
+
+  function applyTheme(theme: "light" | "dark") {
+    currentTheme = theme;
+    const rootEl = document.documentElement;
+    rootEl.style.colorScheme = theme;
+    rootEl.dataset.mdvTheme = theme;
+
+    let style = document.getElementById("mdv-theme-style") as HTMLStyleElement | null;
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "mdv-theme-style";
+      document.head.appendChild(style);
+    }
+    style.textContent = `
+      :root { color-scheme: ${theme}; }
+      html[data-mdv-theme="${theme}"] { color-scheme: ${theme}; }
+    `;
+  }
 
   function rgbToHex(rgb: string): string {
     const match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
@@ -85,10 +109,25 @@ function setupPreviewBridge() {
     return parts.join(" > ");
   }
 
+  function buildSelector(el: Element): string {
+    const id = el.id.trim();
+    if (id) return `#${CSS.escape(id)}`;
+    const classes = Array.from(el.classList).slice(0, 3).map((value) => `.${CSS.escape(value)}`).join("");
+    const tag = el.tagName.toLowerCase();
+    return `${tag}${classes}`;
+  }
+
   function collectInspectData(el: Element, x: number, y: number) {
     const rect = el.getBoundingClientRect();
     const cs = window.getComputedStyle(el);
     const classes = Array.from(el.classList);
+    const isVisibleInViewport =
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= window.innerHeight &&
+      rect.right <= window.innerWidth;
+    const isClippedByViewport = !isVisibleInViewport;
+    const visibilityReason = isVisibleInViewport ? "fully-visible" : "outside-viewport";
 
     // Flex/Grid context props
     const isFlexItem = cs.display === "flex" || cs.display === "inline-flex";
@@ -122,6 +161,10 @@ function setupPreviewBridge() {
       window.parent.postMessage({
         type,
         slotId,
+        selector: buildSelector(el),
+        isVisibleInViewport,
+        isClippedByViewport,
+        visibilityReason,
         tagName: el.tagName,
         id: el.id,
         classes,
@@ -195,12 +238,20 @@ function setupPreviewBridge() {
     if (!el) return;
 
     const rect = el.getBoundingClientRect();
+    const fullyVisible =
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= window.innerHeight &&
+      rect.right <= window.innerWidth;
 
-    // Always post the lightweight rect message — drives the highlight box via direct DOM, no React re-render
+    // Only show the highlight when the element is fully inside the viewport.
     window.parent.postMessage({
       type: "MDV_INSPECT_MOVE",
       slotId,
-      rect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height },
+      hidden: !fullyVisible,
+      rect: fullyVisible
+        ? { top: rect.top, left: rect.left, width: rect.width, height: rect.height }
+        : undefined,
     }, "*");
 
     // Only run getComputedStyle (expensive) when the element has changed
@@ -238,20 +289,32 @@ function setupPreviewBridge() {
 
     if (data.type === "MDV_PREVIEW_REGISTER" && typeof data.slotId === "string") {
       slotId = data.slotId;
+      lastScrollLeft = root().scrollLeft;
+      lastScrollTop = root().scrollTop;
       announceReady();
       return;
     }
 
     if (data.type === "MDV_APPLY_SCROLL_SYNC" && typeof data.slotId === "string" && data.slotId === slotId) {
       const el = root();
-      const maxX = Math.max(0, el.scrollWidth - window.innerWidth);
-      const maxY = Math.max(0, el.scrollHeight - window.innerHeight);
       programmaticScroll = true;
-      window.scrollTo({
-        left: maxX * Number(data.xRatio ?? 0),
-        top: maxY * Number(data.yRatio ?? 0),
-        behavior: "auto"
-      });
+      const deltaLeft = Number(data.deltaLeft ?? 0);
+      const deltaTop = Number(data.deltaTop ?? 0);
+      if (deltaLeft !== 0 || deltaTop !== 0) {
+        el.scrollBy({
+          left: deltaLeft,
+          top: deltaTop,
+          behavior: "auto"
+        });
+      } else {
+        el.scrollTo({
+          left: Number(data.scrollLeft ?? el.scrollLeft),
+          top: Number(data.scrollTop ?? el.scrollTop),
+          behavior: "auto"
+        });
+      }
+      lastScrollLeft = el.scrollLeft;
+      lastScrollTop = el.scrollTop;
       window.clearTimeout(resetTimer);
       resetTimer = window.setTimeout(() => {
         programmaticScroll = false;
@@ -271,16 +334,41 @@ function setupPreviewBridge() {
       inspectRafPending = false;
       lastInspectedEl = null;
     }
+
+    if (data.type === "MDV_INSPECT_QUERY" && typeof data.selector === "string") {
+      const el = document.querySelector(data.selector);
+      if (!el) return;
+      const post = collectInspectData(el, el.getBoundingClientRect().left, el.getBoundingClientRect().top);
+      post("MDV_INSPECT_DATA");
+    }
+
+    if (data.type === "MDV_THEME" && (data.theme === "light" || data.theme === "dark")) {
+      applyTheme(data.theme);
+    }
   });
 
-  window.addEventListener("scroll", () => {
+  const postScroll = () => {
     if (!slotId || programmaticScroll) return;
-    window.parent.postMessage({
-      type: "MDV_SCROLL_SYNC_EVENT",
-      slotId,
-      ...scrollRatios()
-    }, "*");
-  }, { passive: true });
+    if (scrollRafPending) return;
+    scrollRafPending = true;
+    requestAnimationFrame(() => {
+      scrollRafPending = false;
+      if (!slotId || programmaticScroll) return;
+      const payload = scrollRatios();
+      lastScrollLeft = payload.scrollLeft;
+      lastScrollTop = payload.scrollTop;
+      window.parent.postMessage({
+        type: "MDV_SCROLL_SYNC_EVENT",
+        slotId,
+        ...payload
+      }, "*");
+    });
+  };
+
+  window.addEventListener("scroll", postScroll, { passive: true });
+  document.addEventListener("scroll", postScroll, true);
+  window.addEventListener("wheel", postScroll, { passive: true });
+  window.addEventListener("touchmove", postScroll, { passive: true });
 
   window.addEventListener("error", () => {
     if (!slotId) return;

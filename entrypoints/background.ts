@@ -1,6 +1,7 @@
 import { defineBackground } from "wxt/utils/define-background";
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
+const UPDATE_BADGE_TEXT = "!";
 
 export default defineBackground(() => {
   createContextMenu();
@@ -9,9 +10,10 @@ export default defineBackground(() => {
     openSimulatorForTab(tab);
   });
 
-  chrome.runtime.onInstalled.addListener(() => {
+  chrome.runtime.onInstalled.addListener((details) => {
     void chrome.storage.local.set({ installedAt: new Date().toISOString() });
     createContextMenu();
+    if (details.reason === "update") syncUpdateIndicator();
   });
 
   chrome.runtime.onStartup.addListener(() => {
@@ -41,6 +43,7 @@ export default defineBackground(() => {
   }
 
   function openSimulatorForTab(tab: chrome.tabs.Tab) {
+    clearUpdateIndicator();
     if (!tab.id) return;
 
     const url =
@@ -57,6 +60,15 @@ export default defineBackground(() => {
         })
         .catch(console.error);
     });
+  }
+
+  function syncUpdateIndicator() {
+    chrome.action.setBadgeBackgroundColor({ color: "#dc2626" });
+    chrome.action.setBadgeText({ text: UPDATE_BADGE_TEXT });
+  }
+
+  function clearUpdateIndicator() {
+    chrome.action.setBadgeText({ text: "" });
   }
 
   // ── Helper: hide overlay, wait, run fn, restore overlay ─────────────────────

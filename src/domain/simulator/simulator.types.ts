@@ -11,6 +11,15 @@ export interface PreviewSlot {
   zoomMode: ZoomMode;
   reloadToken: number;
   showFrame: boolean;
+  inspectEnabled: boolean;
+  inspectLocked: boolean;
+}
+
+export interface WorkbenchIssue {
+  note: string;
+  compareSlotId: string;
+  lastCapturedAt: string | null;
+  lastCaptureLabel: string;
 }
 
 export interface DisplaySettings {
@@ -28,4 +37,5 @@ export interface SimulatorState {
   slots: PreviewSlot[];
   activeSlotId: string;
   display: DisplaySettings;
+  workbenchIssue: WorkbenchIssue;
 }

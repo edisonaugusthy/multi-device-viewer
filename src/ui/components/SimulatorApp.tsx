@@ -2,6 +2,7 @@ import {
   Camera,
   Check,
   Crosshair,
+  ChevronDown,
   LayoutGrid,
   Link2,
   Moon,
@@ -21,6 +22,7 @@ import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { captureTabWithOverlay } from "../../domain/capture/capture-service";
 import { normalizeUrl } from "../../domain/simulator/simulator-service";
+import type { InspectData } from "./ElementInspectOverlay";
 import { PreviewCard } from "./PreviewCard";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CustomDeviceModal } from "./CustomDeviceModal";
@@ -32,10 +34,12 @@ export function SimulatorApp() {
     slots,
     display,
     activeSlotId,
+    workbenchIssue,
     addSlot,
     applyDevicePreset,
     reloadAllSlots,
     updateDisplay,
+    updateWorkbenchIssue,
     setAllSlotsUrl,
     useCount,
   } = useSimulator();
@@ -52,6 +56,10 @@ export function SimulatorApp() {
   const [showCustomDevice, setShowCustomDevice] = useState(false);
   const [showPresetsSection, setShowPresetsSection] = useState(false);
   const [showReviewBanner, setShowReviewBanner] = useState(false);
+  const [inspectSnapshots, setInspectSnapshots] = useState<Record<string, InspectData | null>>({});
+  const copyResetTimerRef = useRef<number | undefined>(undefined);
+  const [copyButtonLabel, setCopyButtonLabel] = useState("Copy prompt");
+  const reviewUrl = "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?utm_source=item-share-cbuse";
 
   // Show review prompt after 5 uses (only once)
   useEffect(() => {
@@ -84,9 +92,16 @@ export function SimulatorApp() {
     return () => query.removeEventListener("change", syncSmallScreenLayout);
   }, []);
 
+  useEffect(() => {
+    return () => window.clearTimeout(copyResetTimerRef.current);
+  }, []);
+
   // ── URL bar state ─────────────────────────────────────────────────────────
   const activeSlot = slots.find((s) => s.id === activeSlotId) ?? slots[0];
   const [urlDraft, setUrlDraft] = useState(activeSlot?.url ?? "");
+  const activeInspect = inspectSnapshots[activeSlotId] ?? null;
+  const compareSlot = slots.find((slot) => slot.id === workbenchIssue.compareSlotId) ?? null;
+  const compareInspect = compareSlot ? inspectSnapshots[compareSlot.id] ?? null : null;
 
   // Keep draft in sync when active slot URL changes (e.g. after Apply)
   useEffect(() => {
@@ -109,6 +124,47 @@ export function SimulatorApp() {
       (e.target as HTMLInputElement).blur();
     }
   }
+
+  const updateInspectSnapshot = useCallback((slotId: string, data: InspectData) => {
+    setInspectSnapshots((current) => ({ ...current, [slotId]: data }));
+  }, []);
+
+  const clearInspectLock = useCallback((slotId: string, locked: boolean, data: InspectData | null) => {
+    setInspectSnapshots((current) => {
+      if (!locked) return current;
+      return { ...current, [slotId]: data };
+    });
+  }, []);
+
+  const captureReport = useCallback(async () => {
+    if (!activeSlot) return;
+    window.clearTimeout(copyResetTimerRef.current);
+    const lines = buildIssueReport({
+      url: activeSlot.url,
+      activeSlot,
+      activeDevice: findDevice(activeSlot.deviceId),
+      activeInspect,
+      compareSlot,
+      compareDevice: compareSlot ? findDevice(compareSlot.deviceId) : null,
+      compareInspect,
+      display,
+      workbenchIssue,
+    });
+    const text = lines.join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyButtonLabel("Copied");
+      updateWorkbenchIssue((current) => ({
+        ...current,
+        lastCapturedAt: new Date().toISOString(),
+      }));
+      copyResetTimerRef.current = window.setTimeout(() => {
+        setCopyButtonLabel("Copy prompt");
+      }, 5000);
+    } catch {
+      console.warn("Failed to copy report");
+    }
+  }, [activeInspect, activeSlot, compareInspect, compareSlot, display, findDevice, updateWorkbenchIssue, workbenchIssue]);
 
   // ── Screenshots ───────────────────────────────────────────────────────────
   async function takeScreenshot() {
@@ -186,7 +242,7 @@ export function SimulatorApp() {
           <Star size={14} className="shrink-0 text-amber-400" />
           <span className="flex-1">Enjoying Multi Device Viewer? Leave us a review — it helps a lot!</span>
           <a
-            href="https://chromewebstore.google.com/detail/multi-device-viewer"
+            href={reviewUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => dismissReview(true)}
@@ -231,11 +287,11 @@ export function SimulatorApp() {
             </button>
           </div>
 
-          <div className={`flex flex-1 flex-col gap-5 overflow-y-auto p-3.5 pb-0 ${sidebarOpen ? "" : "hidden"}`}>
+          <div className={`flex flex-1 flex-col gap-2 overflow-y-auto p-2 pb-0 ${sidebarOpen ? "" : "hidden"}`}>
             {/* Display */}
             <div>
               <Label dark={dark}>Display</Label>
-              <div className="mt-2 flex flex-col gap-2">
+              <div className="mt-1.5 grid grid-cols-1 gap-1">
                 <Toggle
                   active={display.showStatusBar}
                   dark={dark}
@@ -279,23 +335,70 @@ export function SimulatorApp() {
               </div>
             </div>
 
+            {/* Workbench */}
+            <div>
+              <Label dark={dark}>Generate prompt for AI</Label>
+              <div className="mt-1.5 space-y-1">
+                <textarea
+                  value={workbenchIssue.note}
+                  onChange={(e) => updateWorkbenchIssue((current) => ({ ...current, note: e.target.value }))}
+                  placeholder="Describe the issue for AI. This will copy with all device details; it does not show results here."
+                  className={`min-h-[4.5rem] w-full resize-none rounded-md border px-2 py-1.5 text-[11px] outline-none transition ${
+                    dark
+                      ? "border-white/10 bg-white/[0.04] text-white placeholder:text-slate-500"
+                      : "border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400"
+                  }`}
+                />
+                <div className={`relative rounded-md border ${dark ? "border-white/10 bg-white/[0.04]" : "border-slate-200 bg-slate-50"}`}>
+                  <select
+                    value={workbenchIssue.compareSlotId}
+                    onChange={(e) => updateWorkbenchIssue((current) => ({ ...current, compareSlotId: e.target.value }))}
+                    className={`h-7 w-full appearance-none rounded-md bg-transparent px-3 pr-9 text-[11px] outline-none transition ${dark ? "text-white" : "text-slate-800"}`}
+                  >
+                    <option value="">Compare device</option>
+                    {slots
+                      .filter((slot) => slot.id !== activeSlotId)
+                      .map((slot) => {
+                        const device = findDevice(slot.deviceId);
+                        return (
+                          <option key={slot.id} value={slot.id}>
+                            {device.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                  <ChevronDown
+                    size={13}
+                    className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 ${dark ? "text-slate-400" : "text-slate-500"}`}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void captureReport()}
+                  className={`flex h-8 w-full items-center justify-center rounded-md border px-3 text-[12px] font-semibold transition ${
+                    dark
+                      ? "border-teal-400/30 bg-teal-400/10 text-teal-100 hover:bg-teal-400/15"
+                      : "border-teal-200 bg-teal-50 text-teal-900 hover:bg-teal-100"
+                  }`}
+                >
+                  {copyButtonLabel}
+                </button>
+              </div>
+            </div>
+
             {/* Devices */}
             <div>
               <Label dark={dark}>Devices</Label>
-              <div className="mt-1.5 flex flex-col gap-1">
-                <SidebarBtn
-                  dark={dark}
-                  icon={<RotateCw size={14} />}
-                  onClick={() => reloadAllSlots()}
-                >
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                <SidebarBtn compact dark={dark} icon={<RotateCw size={13} />} onClick={() => reloadAllSlots()}>
                   Reload all
                 </SidebarBtn>
                 {slots.length < 4 && (
-                  <SidebarBtn dark={dark} icon={<PanelsTopLeft size={14} />} onClick={() => addSlot()}>
+                  <SidebarBtn compact dark={dark} icon={<PanelsTopLeft size={13} />} onClick={() => addSlot()}>
                     Add device
                   </SidebarBtn>
                 )}
-                <SidebarBtn dark={dark} icon={<Plus size={14} />} onClick={() => setShowCustomDevice(true)}>
+                <SidebarBtn compact dark={dark} icon={<Plus size={13} />} onClick={() => setShowCustomDevice(true)}>
                   Custom device…
                 </SidebarBtn>
               </div>
@@ -331,9 +434,9 @@ export function SimulatorApp() {
                 <SidebarBtn
                   dark={dark}
                   icon={<LayoutGrid size={14} />}
-                  onClick={() => applyDevicePreset(["samsung-galaxy-s24", "apple-ipad-air-4", "macbook-air-2020-13"])}
+                  onClick={() => applyDevicePreset(["macbook-air-2020-13", "apple-iphone-14-pro-max-2022", "apple-ipad-air-4"])}
                 >
-                  Android + Tablet + Laptop
+                  Laptop + Mobile + Tablet
                 </SidebarBtn>
               </div>
               {showPresetsSection && (
@@ -351,11 +454,12 @@ export function SimulatorApp() {
             <div>
               <Label dark={dark}>Capture</Label>
               <div className="mt-1.5 flex flex-col gap-1">
-                <SidebarBtn dark={dark} icon={<Camera size={14} />} onClick={() => void takeScreenshot()} disabled={capturing}>
+                <SidebarBtn compact dark={dark} icon={<Camera size={13} />} onClick={() => void takeScreenshot()} disabled={capturing}>
                   {capturing ? "Capturing…" : "Capture & Annotate"}
                 </SidebarBtn>
               </div>
             </div>
+
           </div>
 
           {/* Close button */}
@@ -411,7 +515,7 @@ export function SimulatorApp() {
               data-capture-board
               className={`flex h-full w-full ${narrowLayout ? "flex-col" : ""}`}
             >
-              {slots.map((slot, i) => (
+            {slots.map((slot, i) => (
                 <div
                   key={slot.id}
                   className="relative flex h-full min-w-0 flex-col overflow-hidden"
@@ -428,6 +532,10 @@ export function SimulatorApp() {
                     display={display}
                     removable={slots.length > 1}
                     onCapture={() => void takeScreenshot()}
+                    compareTargetSlotId={compareSlot?.id}
+                    compareSelector={activeInspect?.selector}
+                    onInspectData={updateInspectSnapshot}
+                    onInspectLockChange={clearInspectLock}
                   />
                   {/* Drag handle */}
                   {i < slots.length - 1 && !narrowLayout && (
@@ -477,19 +585,21 @@ function SidebarBtn({
   onClick,
   disabled,
   dark,
+  compact = false,
 }: {
   icon: ReactNode;
   children: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   dark: boolean;
+  compact?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-[13px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+      className={`flex ${compact ? "h-7 text-[12px] px-2" : "h-8 px-2.5 text-[13px]"} w-full items-center gap-2 rounded-md font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
         dark ? "text-slate-200 hover:bg-white/10 hover:text-white" : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
       }`}
     >
@@ -497,6 +607,82 @@ function SidebarBtn({
       {children}
     </button>
   );
+}
+
+function buildIssueReport({
+  url,
+  activeSlot,
+  activeDevice,
+  activeInspect,
+  compareSlot,
+  compareDevice,
+  compareInspect,
+  display,
+  workbenchIssue,
+}: {
+  url: string;
+  activeSlot: { id: string; deviceId: string; orientation: string; zoomMode: string; zoom: number; reloadToken: number; showFrame: boolean };
+  activeDevice: { name: string; cssViewport: { width: number; height: number }; pixelRatio: number; type: string; os: string; brand: string } | null;
+  activeInspect: InspectData | null;
+  compareSlot: { id: string; deviceId: string } | null;
+  compareDevice: { name: string; cssViewport: { width: number; height: number }; pixelRatio: number; type: string; os: string; brand: string } | null;
+  compareInspect: InspectData | null;
+  display: { scrollSync: boolean; darkMode: boolean; inspectMode: boolean; showUrlBar: boolean; showStatusBar: boolean; hideChrome: boolean; presentationMode: boolean };
+  workbenchIssue: { note: string; compareSlotId: string; lastCapturedAt: string | null; lastCaptureLabel: string };
+}) {
+  const lines: string[] = [];
+  lines.push(`# Multi Device Viewer Issue Report`);
+  lines.push("");
+  lines.push(`URL: ${url}`);
+  lines.push(`Note: ${workbenchIssue.note || "Describe the issue here."}`);
+  lines.push(`Compare device: ${compareDevice?.name ?? "None"}`);
+  lines.push("");
+  lines.push(`## Active device`);
+  lines.push(`- Device: ${activeDevice?.name ?? "Unknown"}`);
+  lines.push(`- Viewport: ${activeDevice ? `${activeDevice.cssViewport.width} x ${activeDevice.cssViewport.height}` : "Unknown"}`);
+  lines.push(`- DPR: ${activeDevice?.pixelRatio ?? "Unknown"}`);
+  lines.push(`- Orientation: ${activeSlot.orientation}`);
+  lines.push(`- Zoom: ${activeSlot.zoomMode} (${activeSlot.zoom})`);
+  lines.push(`- Chrome: ${display.showUrlBar ? "Visible" : "Hidden"}`);
+  lines.push(`- Scroll sync: ${display.scrollSync ? "On" : "Off"}`);
+  lines.push(`- Inspect mode: ${display.inspectMode ? "On" : "Off"}`);
+  lines.push("");
+  lines.push(`## Selected element`);
+  if (activeInspect) {
+    lines.push(`- Selector: ${activeInspect.selector}`);
+    lines.push(`- Breadcrumb: ${activeInspect.breadcrumb}`);
+    lines.push(`- Visibility: ${activeInspect.isVisibleInViewport ? "Visible" : `Hidden (${activeInspect.visibilityReason})`}`);
+    lines.push(`- Size: ${Math.round(activeInspect.width)} x ${Math.round(activeInspect.height)}`);
+    lines.push(`- Layout: ${activeInspect.display}, ${activeInspect.position}, overflow ${activeInspect.overflowX}/${activeInspect.overflowY}`);
+    lines.push(`- Font: ${activeInspect.fontFamily}`);
+    lines.push(`- Color: ${activeInspect.colorHex}`);
+    lines.push(`- Background: ${activeInspect.backgroundColorHex}`);
+    lines.push("");
+    lines.push(`### Computed CSS`);
+    lines.push("```css");
+    lines.push(activeInspect.cssSnippet);
+    lines.push("```");
+  } else {
+    lines.push(`- No inspected element captured yet.`);
+  }
+  lines.push("");
+  lines.push(`## Compare device`);
+  if (compareSlot && compareDevice) {
+    lines.push(`- Device: ${compareDevice.name}`);
+    lines.push(`- Viewport: ${compareDevice.cssViewport.width} x ${compareDevice.cssViewport.height}`);
+    lines.push(`- DPR: ${compareDevice.pixelRatio}`);
+    lines.push(`- Element selector: ${compareInspect?.selector ?? activeInspect?.selector ?? "Not captured"}`);
+    if (compareInspect) {
+      lines.push(`- Visibility: ${compareInspect.isVisibleInViewport ? "Visible" : `Hidden (${compareInspect.visibilityReason})`}`);
+      lines.push(`- Size: ${Math.round(compareInspect.width)} x ${Math.round(compareInspect.height)}`);
+    }
+  } else {
+    lines.push(`- No compare device selected.`);
+  }
+  lines.push("");
+  lines.push(`## AI prompt`);
+  lines.push(`Please inspect the selected element across devices, explain any responsive issue, and suggest the smallest code change that fixes it without breaking the layout.`);
+  return lines;
 }
 
 function Toggle({ active, children, dark, icon, onClick }: { active: boolean; children: ReactNode; dark: boolean; icon: ReactNode; onClick: () => void }) {

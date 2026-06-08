@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { defaultDeviceIds, devices } from "../domain/device/device-catalog";
 import { supportsOrientation } from "../domain/device/device-service";
-import { createPreviewSlot, maxPreviewSlots, nextZoom, normalizeUrl } from "../domain/simulator/simulator-service";
-import type { DisplaySettings, PreviewSlot, SimulatorState } from "../domain/simulator/simulator.types";
+import { createPreviewSlot, createWorkbenchIssue, maxPreviewSlots, nextZoom, normalizeUrl } from "../domain/simulator/simulator-service";
+import type { DisplaySettings, PreviewSlot, SimulatorState, WorkbenchIssue } from "../domain/simulator/simulator.types";
 import { readStore, writeStore } from "../infrastructure/storage/local-store";
 
 interface SimulatorContextValue extends SimulatorState {
@@ -20,20 +20,40 @@ interface SimulatorContextValue extends SimulatorState {
   removeSlot: (slotId: string) => void;
   duplicateActiveSlot: (deviceId?: string) => void;
   updateDisplay: (display: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => void;
+  updateWorkbenchIssue: (issue: WorkbenchIssue | ((current: WorkbenchIssue) => WorkbenchIssue)) => void;
   useCount: number;
+}
+
+interface SavedSimulatorSession {
+  slots: PreviewSlot[];
+  activeSlotId: string;
+  display: DisplaySettings;
+  workbenchIssue: WorkbenchIssue;
 }
 
 const SimulatorContext = createContext<SimulatorContextValue | null>(null);
 
 const defaultDisplay: DisplaySettings = {
   showStatusBar: true,
-  showBattery: true,
+  showBattery: false,
   showUrlBar: true,
   scrollSync: false,
   darkMode: false,
   presentationMode: false,
   hideChrome: false,
   inspectMode: false
+};
+
+const startupDisplay: DisplaySettings = {
+  ...defaultDisplay,
+  showStatusBar: true,
+  showBattery: false,
+  showUrlBar: true,
+  scrollSync: false,
+  darkMode: false,
+  presentationMode: false,
+  hideChrome: false,
+  inspectMode: false,
 };
 
 function initialUrlFromSearch() {
@@ -53,16 +73,39 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   });
   const [activeSlotId, setActiveSlotId] = useState(slots[0].id);
   const [display, setDisplay] = useState(defaultDisplay);
+  const [workbenchIssue, setWorkbenchIssue] = useState<WorkbenchIssue>(() => createWorkbenchIssue(defaultSlotDeviceIds[1] ?? ""));
   const [useCount, setUseCount] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
 
   // Load + increment use count on mount
   useEffect(() => {
-    void readStore<number>("mdvUseCount", 0).then((count) => {
+    void Promise.all([
+      readStore<number>("mdvUseCount", 0),
+      readStore<SavedSimulatorSession | null>("mdvSimulatorSession", null),
+    ]).then(([count, session]) => {
       const next = count + 1;
       setUseCount(next);
       void writeStore("mdvUseCount", next);
+      if (session) {
+        setSlots(session.slots.length > 0 ? session.slots : slots);
+        setActiveSlotId(session.activeSlotId || session.slots[0]?.id || slots[0].id);
+        setDisplay(startupDisplay);
+        setWorkbenchIssue(session.workbenchIssue);
+      }
+      setHydrated(true);
     });
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    const session: SavedSimulatorSession = {
+      slots,
+      activeSlotId,
+      display,
+      workbenchIssue,
+    };
+    void writeStore("mdvSimulatorSession", session);
+  }, [activeSlotId, display, hydrated, slots, workbenchIssue]);
 
   const updateSlot = useCallback(
     (slotId: string, updater: (slot: PreviewSlot) => PreviewSlot) => {
@@ -89,7 +132,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         deviceId,
         orientation: canPreserveOrientation ? slot.orientation : "portrait",
         zoom: 0.58,
-        zoomMode: "fit"
+        zoomMode: "fit",
+        inspectEnabled: false,
+        inspectLocked: false
       };
     });
     setActiveSlot(slotId);
@@ -170,7 +215,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         id: `slot-${Date.now()}-${current.length}`,
         deviceId: deviceId ?? source.deviceId,
         zoom: 0.58,
-        zoomMode: "fit" as const
+        zoomMode: "fit" as const,
+        inspectEnabled: false,
+        inspectLocked: false
       };
       const next = [...current, nextSlot];
       setActiveSlotId(nextSlot.id);
@@ -180,6 +227,10 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
   const updateDisplay = useCallback((nextDisplay: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => {
     setDisplay(nextDisplay);
+  }, []);
+
+  const updateWorkbenchIssue = useCallback((nextIssue: WorkbenchIssue | ((current: WorkbenchIssue) => WorkbenchIssue)) => {
+    setWorkbenchIssue((current) => (typeof nextIssue === "function" ? (nextIssue as (current: WorkbenchIssue) => WorkbenchIssue)(current) : nextIssue));
   }, []);
 
   // Keep a stable ref to the current activeSlotId so the message listener
@@ -217,6 +268,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       slots,
       activeSlotId,
       display,
+      workbenchIssue,
       useCount,
       setActiveSlot,
       setSlotDevice,
@@ -231,7 +283,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       applyDevicePreset,
       removeSlot,
       duplicateActiveSlot,
-      updateDisplay
+      updateDisplay,
+      updateWorkbenchIssue
     }),
     [
       activeSlotId,
@@ -250,6 +303,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSlotZoomMode,
       slots,
       updateDisplay,
+      updateWorkbenchIssue,
+      workbenchIssue,
       useCount,
       zoomSlot
     ]

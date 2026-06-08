@@ -9,10 +9,14 @@ const sn = (v: unknown, fallback = 0): number =>
   Number.isFinite(Number(v)) ? Number(v) : fallback;
 
 export interface InspectData {
+  selector: string;
   tagName: string;
   id: string;
   classes: string[];
   breadcrumb: string;
+  isVisibleInViewport: boolean;
+  isClippedByViewport: boolean;
+  visibilityReason: string;
   fontFamily: string;
   fontSize: string;
   fontWeight: string;

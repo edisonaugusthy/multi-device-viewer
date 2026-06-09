@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Clean output directory
+        run: rm -rf .output
+
       - name: Generate extension icons
         run: npm run generate:icons
 
@@ -56,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          zip_path="$(find .output -maxdepth 2 -type f -name '*chrome*.zip' | sort | tail -n 1)"
+          zip_path="$(find .output -maxdepth 1 -type f -name '*.zip' | sort | tail -n 1)"
           if [[ -z "$zip_path" ]]; then
             echo "No Chrome extension zip found in .output" >&2
             exit 1

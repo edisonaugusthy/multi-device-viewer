@@ -57,6 +57,7 @@ export function SimulatorApp() {
   const [showPresetsSection, setShowPresetsSection] = useState(false);
   const [showReviewBanner, setShowReviewBanner] = useState(false);
   const [inspectSnapshots, setInspectSnapshots] = useState<Record<string, InspectData | null>>({});
+  const [inspectResetToken, setInspectResetToken] = useState(0);
   const copyResetTimerRef = useRef<number | undefined>(undefined);
   const [copyButtonLabel, setCopyButtonLabel] = useState("Copy prompt");
   const reviewUrl = "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?utm_source=item-share-cbuse";
@@ -129,11 +130,8 @@ export function SimulatorApp() {
     setInspectSnapshots((current) => ({ ...current, [slotId]: data }));
   }, []);
 
-  const clearInspectLock = useCallback((slotId: string, locked: boolean, data: InspectData | null) => {
-    setInspectSnapshots((current) => {
-      if (!locked) return current;
-      return { ...current, [slotId]: data };
-    });
+  const resetInspectHover = useCallback(() => {
+    setInspectResetToken((current) => current + 1);
   }, []);
 
   const captureReport = useCallback(async () => {
@@ -312,7 +310,10 @@ export function SimulatorApp() {
                   active={display.scrollSync}
                   dark={dark}
                   icon={<Link2 size={15} />}
-                  onClick={() => updateDisplay((c) => ({ ...c, scrollSync: !c.scrollSync }))}
+                  onClick={() => {
+                    resetInspectHover();
+                    updateDisplay((c) => ({ ...c, scrollSync: !c.scrollSync }));
+                  }}
                 >
                   Scroll sync
                 </Toggle>
@@ -535,7 +536,7 @@ export function SimulatorApp() {
                     compareTargetSlotId={compareSlot?.id}
                     compareSelector={activeInspect?.selector}
                     onInspectData={updateInspectSnapshot}
-                    onInspectLockChange={clearInspectLock}
+                    inspectResetToken={inspectResetToken}
                   />
                   {/* Drag handle */}
                   {i < slots.length - 1 && !narrowLayout && (

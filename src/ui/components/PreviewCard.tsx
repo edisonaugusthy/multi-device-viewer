@@ -38,6 +38,25 @@ interface ScrollSyncPayload {
   viewportWidth?: number;
 }
 
+interface InteractionSyncPayload {
+  slotId: string;
+  kind: string;
+  selector?: string;
+  x?: number;
+  y?: number;
+  value?: string;
+  checked?: boolean;
+  inputType?: string;
+  key?: string;
+  code?: string;
+  button?: number;
+  buttons?: number;
+  ctrlKey?: boolean;
+  altKey?: boolean;
+  shiftKey?: boolean;
+  metaKey?: boolean;
+}
+
 interface PreviewCardProps {
   slot: PreviewSlot;
   device: Device;
@@ -47,7 +66,7 @@ interface PreviewCardProps {
   compareTargetSlotId?: string;
   compareSelector?: string;
   onInspectData?: (slotId: string, data: InspectData) => void;
-  onInspectLockChange?: (slotId: string, locked: boolean, data: InspectData | null) => void;
+  inspectResetToken: number;
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -61,7 +80,7 @@ export function PreviewCard({
   compareTargetSlotId,
   compareSelector,
   onInspectData,
-  onInspectLockChange,
+  inspectResetToken,
 }: PreviewCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -76,9 +95,7 @@ export function PreviewCard({
   const [scrollMeta, setScrollMeta] = useState<ScrollSyncPayload | null>(null);
   const [inspectOpen, setInspectOpen] = useState(false);
   const [inspectData, setInspectData] = useState<InspectData | null>(null);
-  const [inspectLocked, setInspectLocked] = useState(false);
   const [inspectSuppressed, setInspectSuppressed] = useState(false);
-  const inspectLockedRef = useRef(false);
   // Direct DOM ref for the highlight box — updated imperatively on every MDV_INSPECT_MOVE
   // to avoid React re-renders on every mousemove frame.
   const highlightRef = useRef<HTMLDivElement | null>(null);
@@ -118,6 +135,39 @@ export function PreviewCard({
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
 
+  const syncInspectBridge = (iframe: HTMLIFrameElement | null) => {
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      {
+        type: display.inspectMode && !inspectSuppressed ? "MDV_INSPECT_ENABLE" : "MDV_INSPECT_DISABLE",
+        slotId: slot.id,
+      },
+      "*",
+    );
+  };
+
+  const syncScrollBridge = (iframe: HTMLIFrameElement | null) => {
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      {
+        type: display.scrollSync ? "MDV_SCROLL_SYNC_ENABLE" : "MDV_SCROLL_SYNC_DISABLE",
+        slotId: slot.id,
+      },
+      "*",
+    );
+  };
+
+  const syncInteractionBridge = (iframe: HTMLIFrameElement | null) => {
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      {
+        type: display.scrollSync ? "MDV_SCROLL_SYNC_ENABLE" : "MDV_SCROLL_SYNC_DISABLE",
+        slotId: slot.id,
+      },
+      "*",
+    );
+  };
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -137,9 +187,7 @@ export function PreviewCard({
     setScrollMeta(null);
     setInspectOpen(false);
     setInspectData(null);
-    setInspectLocked(false);
     setInspectSuppressed(false);
-    inspectLockedRef.current = false;
     if (highlightRef.current) highlightRef.current.style.display = "none";
   }, [device.id, slot.reloadToken, slot.url]);
 
@@ -165,6 +213,9 @@ export function PreviewCard({
         { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
         "*",
       );
+      syncInspectBridge(iframe);
+      syncScrollBridge(iframe);
+      syncInteractionBridge(iframe);
       window.clearTimeout(bridgeStatusTimer.current);
       bridgeStatusTimer.current = window.setTimeout(() => {
         if (bridgeStatusRef.current === "checking") {
@@ -207,6 +258,12 @@ export function PreviewCard({
         setScrollMeta(data as ScrollSyncPayload);
         if (!display.scrollSync) return;
         broadcastScrollSync(data as ScrollSyncPayload);
+        return;
+      }
+
+      if (data.type === "MDV_INTERACTION_EVENT") {
+        if (!display.scrollSync) return;
+        broadcastInteractionSync(data as InteractionSyncPayload);
       }
     };
 
@@ -237,23 +294,40 @@ export function PreviewCard({
     return () => window.removeEventListener("MDV_SCROLL_SYNC_EVENT", onSync);
   }, [blocked, display.scrollSync, slot.id]);
 
+  useEffect(() => {
+    if (!display.scrollSync || blocked) return;
+
+    const onSync = (event: Event) => {
+      const detail = (event as CustomEvent<InteractionSyncPayload>).detail;
+      if (!detail || detail.slotId === slot.id) return;
+      const { slotId: _sourceSlotId, ...payload } = detail;
+      iframeRef.current?.contentWindow?.postMessage(
+        {
+          type: "MDV_APPLY_INTERACTION",
+          slotId: slot.id,
+          ...payload,
+        },
+        "*",
+      );
+    };
+
+    window.addEventListener("MDV_INTERACTION_EVENT", onSync);
+    return () => window.removeEventListener("MDV_INTERACTION_EVENT", onSync);
+  }, [blocked, display.scrollSync, slot.id]);
+
+  useEffect(() => {
+    syncScrollBridge(iframeRef.current);
+  }, [display.scrollSync, slot.id]);
+
   // ── Inspect mode bridge ───────────────────────────────────────────────────
   useEffect(() => {
     if (!iframeRef.current) return;
     if (!display.inspectMode) {
       setInspectSuppressed(false);
     }
-    iframeRef.current.contentWindow?.postMessage(
-      {
-        type: display.inspectMode && !inspectSuppressed ? "MDV_INSPECT_ENABLE" : "MDV_INSPECT_DISABLE",
-        slotId: slot.id,
-      },
-      "*",
-    );
+    syncInspectBridge(iframeRef.current);
     if (!display.inspectMode) {
       setInspectData(null);
-      inspectLockedRef.current = false;
-      setInspectLocked(false);
       if (highlightRef.current) highlightRef.current.style.display = "none";
     }
   }, [display.inspectMode, inspectSuppressed, slot.id]);
@@ -262,12 +336,15 @@ export function PreviewCard({
     if (display.inspectMode) {
       setInspectOpen(false);
       setInspectData(null);
-      inspectLockedRef.current = false;
-      setInspectLocked(false);
       setInspectSuppressed(true);
       if (highlightRef.current) highlightRef.current.style.display = "none";
     }
   }, [device.id]);
+
+  useEffect(() => {
+    setInspectData(null);
+    if (highlightRef.current) highlightRef.current.style.display = "none";
+  }, [inspectResetToken]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -277,7 +354,6 @@ export function PreviewCard({
 
       // ── Hot path: just move the highlight box via direct DOM, zero React re-render ──
       if (msg.type === "MDV_INSPECT_MOVE") {
-        if (inspectLockedRef.current) return;
         const h = highlightRef.current;
         const container = containerRef.current;
         const iframe = iframeRef.current;
@@ -302,26 +378,9 @@ export function PreviewCard({
 
       // ── Element changed: update tooltip panel via React state ──
       if (msg.type === "MDV_INSPECT_DATA") {
-        if (!inspectLockedRef.current) {
-          const data = msg as unknown as InspectData;
-          onInspectData?.(slot.id, data);
-          setInspectData(data);
-        }
-        return;
-      }
-
-      if (msg.type === "MDV_INSPECT_CLICK") {
-        if (inspectLockedRef.current) {
-          inspectLockedRef.current = false;
-          setInspectLocked(false);
-          onInspectLockChange?.(slot.id, false, null);
-        } else {
-          const data = msg as unknown as InspectData;
-          setInspectData(data);
-          inspectLockedRef.current = true;
-          setInspectLocked(true);
-          onInspectLockChange?.(slot.id, true, data);
-        }
+        const data = msg as unknown as InspectData;
+        onInspectData?.(slot.id, data);
+        setInspectData(data);
         return;
       }
     };
@@ -501,7 +560,6 @@ export function PreviewCard({
         {display.inspectMode && (
           <ElementInspectOverlay
             data={inspectData}
-            locked={inspectLocked}
             scale={scale}
             dark={display.darkMode}
             containerRef={containerRef}
@@ -516,6 +574,12 @@ export function PreviewCard({
 function broadcastScrollSync(detail: ScrollSyncPayload) {
   window.dispatchEvent(
     new CustomEvent<ScrollSyncPayload>("MDV_SCROLL_SYNC_EVENT", { detail }),
+  );
+}
+
+function broadcastInteractionSync(detail: InteractionSyncPayload) {
+  window.dispatchEvent(
+    new CustomEvent<InteractionSyncPayload>("MDV_INTERACTION_EVENT", { detail }),
   );
 }
 

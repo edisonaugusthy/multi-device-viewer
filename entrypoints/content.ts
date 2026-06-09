@@ -34,6 +34,8 @@ function setupPreviewBridge() {
   let scrollRafPending = false;
   let lastScrollLeft = 0;
   let lastScrollTop = 0;
+  let scrollSyncEnabled = false;
+  let applyingRemoteInteraction = false;
   let inspectEnabled = false;
   let inspectRafPending = false;
   let inspectPendingX = -1;
@@ -112,9 +114,139 @@ function setupPreviewBridge() {
   function buildSelector(el: Element): string {
     const id = el.id.trim();
     if (id) return `#${CSS.escape(id)}`;
-    const classes = Array.from(el.classList).slice(0, 3).map((value) => `.${CSS.escape(value)}`).join("");
-    const tag = el.tagName.toLowerCase();
-    return `${tag}${classes}`;
+    const parts: string[] = [];
+    let cur: Element | null = el;
+    while (cur && cur !== document.documentElement && parts.length < 4) {
+      let part = cur.tagName.toLowerCase();
+      const classes = Array.from(cur.classList).slice(0, 2).map((value) => `.${CSS.escape(value)}`).join("");
+      if (classes) part += classes;
+      const parent = cur.parentElement;
+      if (parent) {
+        const sameTag = Array.from(parent.children).filter((child) => child.tagName === cur!.tagName);
+        if (sameTag.length > 1) {
+          const index = sameTag.indexOf(cur) + 1;
+          part += `:nth-of-type(${index})`;
+        }
+      }
+      parts.unshift(part);
+      cur = cur.parentElement;
+    }
+    return parts.join(" > ");
+  }
+
+  function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement, value: string) {
+    const proto = Object.getPrototypeOf(el);
+    const desc =
+      Object.getOwnPropertyDescriptor(proto, "value") ??
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+    desc?.set?.call(el, value);
+  }
+
+  function resolveInteractionTarget(selector?: string): Element | null {
+    if (!selector) return null;
+    return document.querySelector(selector);
+  }
+
+  function resolveInteractionSource(target: EventTarget | null): Element | null {
+    if (!(target instanceof Element)) return null;
+    const interactive = target.closest(
+      'input, textarea, select, button, a, label, [contenteditable="true"], [role="button"], [role="checkbox"], [role="switch"]',
+    );
+    return interactive ?? target;
+  }
+
+  function postInteraction(kind: string, payload: Record<string, unknown>) {
+    if (!slotId || !scrollSyncEnabled) return;
+    window.parent.postMessage({
+      type: "MDV_INTERACTION_EVENT",
+      slotId,
+      kind,
+      ...payload,
+    }, "*");
+  }
+
+  function dispatchMouseSequence(target: Element, payload: Record<string, unknown>) {
+    const init = {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      clientX: Number(payload.x ?? 0) * window.innerWidth,
+      clientY: Number(payload.y ?? 0) * window.innerHeight,
+      button: Number(payload.button ?? 0),
+      buttons: Number(payload.buttons ?? 0),
+      ctrlKey: Boolean(payload.ctrlKey),
+      altKey: Boolean(payload.altKey),
+      shiftKey: Boolean(payload.shiftKey),
+      metaKey: Boolean(payload.metaKey),
+    };
+    target.dispatchEvent(new MouseEvent("pointerdown", init as MouseEventInit));
+    target.dispatchEvent(new MouseEvent("mousedown", init as MouseEventInit));
+    target.dispatchEvent(new MouseEvent("pointerup", init as MouseEventInit));
+    target.dispatchEvent(new MouseEvent("mouseup", init as MouseEventInit));
+    target.dispatchEvent(new MouseEvent("click", init as MouseEventInit));
+  }
+
+  function applyRemoteInteraction(payload: Record<string, unknown>) {
+    if (!scrollSyncEnabled || applyingRemoteInteraction) return;
+    applyingRemoteInteraction = true;
+    try {
+      const target = resolveInteractionTarget(typeof payload.selector === "string" ? payload.selector : undefined);
+      if (!target) return;
+
+      if (payload.kind === "click") {
+        if (target instanceof HTMLElement) {
+          target.focus?.();
+          target.click();
+        } else {
+          dispatchMouseSequence(target, payload);
+        }
+        return;
+      }
+
+      if (payload.kind === "input" || payload.kind === "change") {
+        const value = typeof payload.value === "string" ? payload.value : "";
+        const checked = Boolean(payload.checked);
+        if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+          setNativeValue(target, value);
+          if (typeof payload.checked === "boolean" && target instanceof HTMLInputElement) {
+            target.checked = checked;
+          }
+        } else if (target instanceof HTMLSelectElement) {
+          target.value = value;
+        } else if (target instanceof HTMLElement && target.isContentEditable) {
+          target.textContent = value;
+        }
+        target.dispatchEvent(new InputEvent("input", {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          inputType: typeof payload.inputType === "string" ? payload.inputType : "insertText",
+          data: value,
+        }));
+        target.dispatchEvent(new Event("change", { bubbles: true, cancelable: true, composed: true }));
+        return;
+      }
+
+      if (payload.kind === "keydown") {
+        const key = typeof payload.key === "string" ? payload.key : "";
+        const code = typeof payload.code === "string" ? payload.code : "";
+        const init = {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          key,
+          code,
+          altKey: Boolean(payload.altKey),
+          ctrlKey: Boolean(payload.ctrlKey),
+          shiftKey: Boolean(payload.shiftKey),
+          metaKey: Boolean(payload.metaKey),
+        };
+        target.dispatchEvent(new KeyboardEvent("keydown", init));
+        target.dispatchEvent(new KeyboardEvent("keyup", init));
+      }
+    } finally {
+      applyingRemoteInteraction = false;
+    }
   }
 
   function collectInspectData(el: Element, x: number, y: number) {
@@ -229,6 +361,18 @@ function setupPreviewBridge() {
     return post;
   }
 
+  function emitScrollSync() {
+    if (!slotId || programmaticScroll) return;
+    const payload = scrollRatios();
+    lastScrollLeft = payload.scrollLeft;
+    lastScrollTop = payload.scrollTop;
+    window.parent.postMessage({
+      type: "MDV_SCROLL_SYNC_EVENT",
+      slotId,
+      ...payload
+    }, "*");
+  }
+
   function fireInspectMove() {
     inspectRafPending = false;
     if (!inspectEnabled || !slotId) return;
@@ -274,14 +418,58 @@ function setupPreviewBridge() {
   }, { passive: true });
 
   window.addEventListener("click", (e) => {
-    if (!inspectEnabled) return;
-    const x = e.clientX;
-    const y = e.clientY;
-    const el = document.elementFromPoint(x, y);
-    if (!el || !slotId) return;
-    const post = collectInspectData(el, x, y);
-    post("MDV_INSPECT_CLICK");
-  }, { passive: true });
+    if (!scrollSyncEnabled || !slotId || !e.isTrusted) return;
+    const source = resolveInteractionSource(e.target);
+    if (!source) return;
+    postInteraction("click", {
+      selector: buildSelector(source),
+      button: e.button,
+      buttons: e.buttons,
+      ctrlKey: e.ctrlKey,
+      altKey: e.altKey,
+      shiftKey: e.shiftKey,
+      metaKey: e.metaKey,
+    });
+  }, { capture: true, passive: true });
+
+  window.addEventListener("input", (e) => {
+    if (!scrollSyncEnabled || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
+    const target = resolveInteractionSource(e.target);
+    if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || (target instanceof HTMLElement && target.isContentEditable))) return;
+    postInteraction("input", {
+      selector: buildSelector(target),
+      value: target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement ? target.value : target.textContent ?? "",
+      checked: target instanceof HTMLInputElement ? target.checked : undefined,
+      inputType: e instanceof InputEvent ? e.inputType : undefined,
+    });
+  }, { capture: true, passive: true });
+
+  window.addEventListener("change", (e) => {
+    if (!scrollSyncEnabled || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
+    const target = resolveInteractionSource(e.target);
+    if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement)) return;
+    postInteraction("change", {
+      selector: buildSelector(target),
+      value: target.value,
+      checked: target instanceof HTMLInputElement ? target.checked : undefined,
+    });
+  }, { capture: true, passive: true });
+
+  window.addEventListener("keydown", (e) => {
+    if (!scrollSyncEnabled || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
+    const target = resolveInteractionSource(e.target);
+    if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable))) return;
+    if (e.key.length !== 1 && !["Enter", "Backspace", "Delete", "Tab"].includes(e.key)) return;
+    postInteraction("keydown", {
+      selector: buildSelector(target),
+      key: e.key,
+      code: e.code,
+      ctrlKey: e.ctrlKey,
+      altKey: e.altKey,
+      shiftKey: e.shiftKey,
+      metaKey: e.metaKey,
+    });
+  }, { capture: true, passive: true });
 
   window.addEventListener("message", (event) => {
     const data = event.data;
@@ -321,6 +509,31 @@ function setupPreviewBridge() {
       }, 120);
     }
 
+    if (data.type === "MDV_SCROLL_SYNC_ENABLE" && typeof data.slotId === "string") {
+      slotId = data.slotId;
+      scrollSyncEnabled = true;
+      programmaticScroll = false;
+      window.clearTimeout(resetTimer);
+      lastScrollLeft = root().scrollLeft;
+      lastScrollTop = root().scrollTop;
+      window.requestAnimationFrame(() => {
+        emitScrollSync();
+      });
+      return;
+    }
+
+    if (data.type === "MDV_SCROLL_SYNC_DISABLE" && typeof data.slotId === "string" && data.slotId === slotId) {
+      scrollSyncEnabled = false;
+      programmaticScroll = false;
+      window.clearTimeout(resetTimer);
+      return;
+    }
+
+    if (data.type === "MDV_APPLY_INTERACTION" && typeof data.slotId === "string" && data.slotId === slotId) {
+      applyRemoteInteraction(data as Record<string, unknown>);
+      return;
+    }
+
     if (data.type === "MDV_INSPECT_ENABLE" && typeof data.slotId === "string") {
       slotId = data.slotId;
       inspectEnabled = true;
@@ -354,14 +567,7 @@ function setupPreviewBridge() {
     requestAnimationFrame(() => {
       scrollRafPending = false;
       if (!slotId || programmaticScroll) return;
-      const payload = scrollRatios();
-      lastScrollLeft = payload.scrollLeft;
-      lastScrollTop = payload.scrollTop;
-      window.parent.postMessage({
-        type: "MDV_SCROLL_SYNC_EVENT",
-        slotId,
-        ...payload
-      }, "*");
+      emitScrollSync();
     });
   };
 

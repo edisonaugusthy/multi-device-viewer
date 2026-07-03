@@ -510,7 +510,7 @@ export function PreviewCard({
               <div
                 style={{
                   width: viewportSize.width,
-                  height: viewportSize.height,
+                  height: "100%",
                 }}
               >
                 {blocked ? (

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { defaultDeviceIds, devices } from "../domain/device/device-catalog";
 import { supportsOrientation } from "../domain/device/device-service";
 import { createPreviewSlot, createWorkbenchIssue, maxPreviewSlots, nextZoom, normalizeUrl } from "../domain/simulator/simulator-service";
@@ -56,13 +56,19 @@ const startupDisplay: DisplaySettings = {
   inspectMode: false,
 };
 
+function launchUrlFromSearch(): string | null {
+  if (typeof window === "undefined") return null;
+  const url = new URLSearchParams(window.location.search).get("url");
+  return url ? normalizeUrl(url) : null;
+}
+
 function initialUrlFromSearch() {
   if (typeof window === "undefined") return "https://example.com";
-  return normalizeUrl(new URLSearchParams(window.location.search).get("url") ?? "https://example.com");
+  return launchUrlFromSearch() ?? "https://example.com";
 }
 
 const defaultSlotDeviceIds = [
-  "apple-iphone-air-2025",   // latest Apple mobile
+  "apple-iphone-14-pro-max-2022", // match common iPhone reference viewport
   "macbook-air-2020-13",     // latest Apple laptop
 ];
 
@@ -79,6 +85,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
   // Load + increment use count on mount
   useEffect(() => {
+    const launchUrl = launchUrlFromSearch();
     void Promise.all([
       readStore<number>("mdvUseCount", 0),
       readStore<SavedSimulatorSession | null>("mdvSimulatorSession", null),
@@ -87,8 +94,18 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setUseCount(next);
       void writeStore("mdvUseCount", next);
       if (session) {
-        setSlots(session.slots.length > 0 ? session.slots : slots);
-        setActiveSlotId(session.activeSlotId || session.slots[0]?.id || slots[0].id);
+        const restoredSlots = session.slots.length > 0 ? session.slots : slots;
+        const nextSlots = launchUrl
+          ? restoredSlots.map((slot) => ({
+              ...slot,
+              url: launchUrl,
+              reloadToken: slot.reloadToken + 1,
+              inspectEnabled: false,
+              inspectLocked: false,
+            }))
+          : restoredSlots;
+        setSlots(nextSlots);
+        setActiveSlotId(session.activeSlotId || nextSlots[0]?.id || slots[0].id);
         setDisplay(startupDisplay);
         setWorkbenchIssue(session.workbenchIssue);
       }
@@ -233,13 +250,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setWorkbenchIssue((current) => (typeof nextIssue === "function" ? (nextIssue as (current: WorkbenchIssue) => WorkbenchIssue)(current) : nextIssue));
   }, []);
 
-  // Keep a stable ref to the current activeSlotId so the message listener
-  // below doesn't need to be re-registered every time the active slot changes.
-  const activeSlotIdRef = useRef(activeSlotId);
-  useEffect(() => {
-    activeSlotIdRef.current = activeSlotId;
-  }, [activeSlotId]);
-
   // Listen for LOAD_URL messages sent by the background service worker when the
   // extension icon is clicked while a simulator tab is already open.
   useEffect(() => {
@@ -253,7 +263,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         typeof (message as Record<string, unknown>).url === "string"
       ) {
         const newUrl = (message as Record<string, unknown>).url as string;
-        setSlotUrl(activeSlotIdRef.current, newUrl);
+        setAllSlotsUrl(newUrl);
       }
     };
 
@@ -261,7 +271,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     return () => {
       chrome.runtime.onMessage.removeListener(listener);
     };
-  }, [setSlotUrl]);
+  }, [setAllSlotsUrl]);
 
   const value = useMemo<SimulatorContextValue>(
     () => ({

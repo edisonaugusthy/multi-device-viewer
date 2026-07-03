@@ -45,12 +45,15 @@ export function DeviceFrame({
 
   const statusH = showStatusBar ? getStatusHeight(profile.platform, profile.kind, compact) : 0;
   const addrH = showUrlBar && profile.platform === "android" ? 48 : 0;
-  const bottomH = showUrlBar && profile.platform !== "ios" ? getBottomHeight(profile.platform, compact) : 0;
+  const bottomH = showUrlBar ? getBottomHeight(profile.platform, compact) : 0;
 
   // ── No frame ──────────────────────────────────────────────────────────────
   if (!showFrame) {
     return (
-      <div className={`overflow-hidden rounded-[10px] border shadow-sm ${darkMode ? "border-white/10 bg-[#0f172a]" : "border-slate-200 bg-white"}`}>
+      <div
+        className={`overflow-hidden rounded-[10px] border shadow-sm ${darkMode ? "border-white/10 bg-[#0f172a]" : "border-slate-200 bg-white"}`}
+        style={{ width: viewportSize.width, height: viewportSize.height }}
+      >
         {children}
       </div>
     );
@@ -156,7 +159,8 @@ export function DeviceFrame({
   // ── Tablet ─────────────────────────────────────────────────────────────────
   if (profile.kind === "tablet") {
     const isIos = profile.platform === "ios";
-    const screenH = viewportSize.height + statusH + addrH + bottomH;
+    const screenH = viewportSize.height;
+    const contentH = Math.max(120, viewportSize.height - statusH - addrH - bottomH);
     return (
       <div
         className="relative shadow-[0_24px_72px_rgba(0,0,0,0.28)] ring-1 ring-black/20"
@@ -183,7 +187,7 @@ export function DeviceFrame({
             <div
               style={{
                 width: viewportSize.width,
-                height: viewportSize.height,
+                height: contentH,
                 marginTop: statusH + addrH,
                 marginBottom: bottomH,
               }}
@@ -201,7 +205,8 @@ export function DeviceFrame({
 
   // ── Phone (iOS / Android) ───────────────────────────────────────────────────
   const isIos = profile.platform === "ios";
-  const screenH = viewportSize.height + statusH + addrH + bottomH;
+  const screenH = viewportSize.height;
+  const contentH = Math.max(120, viewportSize.height - statusH - addrH - bottomH);
   const innerR = Math.max(16, contentR);
 
   return (
@@ -228,7 +233,7 @@ export function DeviceFrame({
           <div
             style={{
               width: viewportSize.width,
-              height: viewportSize.height,
+              height: contentH,
               marginTop: statusH + addrH,
               marginBottom: bottomH,
             }}
@@ -279,7 +284,7 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
   const compact = profile.kind === "tablet" || profile.kind === "iphone-classic" || viewportSize.width > viewportSize.height;
   const statusH = showStatusBar ? getStatusHeight(profile.platform, profile.kind, compact) : 0;
   const addrH = showUrlBar && profile.platform === "android" ? 48 : 0;
-  const bottomH = showUrlBar && profile.platform !== "ios" ? getBottomHeight(profile.platform, compact) : 0;
+  const bottomH = showUrlBar ? getBottomHeight(profile.platform, compact) : 0;
 
   const isTablet = profile.kind === "tablet";
   const shellP = profile.style.shellPadding ?? profile.shellPadding;
@@ -288,7 +293,7 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
 
   return {
     width: viewportSize.width + chrome,
-    height: viewportSize.height + statusH + addrH + bottomH + chrome,
+    height: viewportSize.height + chrome,
   };
 }
 
@@ -332,10 +337,15 @@ function StatusBar({ platform, showBattery, compact, dark }: { platform: string;
   const time = platform === "android" ? "9:41" : "9:41";
   const h = platform === "android" ? 28 : compact ? 28 : 44;
   const px = compact ? 14 : 18;
+  const ios = platform === "ios";
   return (
     <div
       className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between font-black text-[11px] ${
-        dark ? "bg-[#0f172a]/90 text-slate-100" : "bg-white/90 text-slate-900"
+        ios
+          ? "bg-black text-white"
+          : dark
+            ? "bg-[#0f172a]/90 text-slate-100"
+            : "bg-white/90 text-slate-900"
       }`}
       style={{ height: h, paddingLeft: px, paddingRight: px }}
     >
@@ -350,12 +360,12 @@ function StatusBar({ platform, showBattery, compact, dark }: { platform: string;
 }
 
 function SafariBar({ hostname, compact, dark }: { hostname: string; compact: boolean; dark: boolean }) {
-  const barH = compact ? 34 : 42;
-  const tabH = compact ? 28 : 36;
+  const barH = compact ? 34 : 38;
+  const tabH = compact ? 28 : 34;
   return (
     <>
       <div
-        className={`pointer-events-none absolute inset-x-3 z-20 flex items-center gap-2 rounded-[12px] border px-3 font-medium shadow-sm backdrop-blur-xl ${
+        className={`pointer-events-none absolute inset-x-3 z-20 flex items-center gap-2 rounded-[10px] border px-3 font-medium shadow-sm backdrop-blur-xl ${
           dark ? "border-white/10 bg-[#1f2937]/82 text-slate-200" : "border-slate-200/80 bg-[#f1f2f5]/82 text-slate-600"
         }`}
         style={{ bottom: tabH + 8, height: barH, fontSize: compact ? 11 : 13 }}
@@ -444,13 +454,13 @@ function SideButtons({ platform, kind, color }: { platform: string; kind: string
 function getStatusHeight(platform: string, kind: string, compact: boolean) {
   if (platform === "android") return 28;
   if (kind === "iphone-classic" || compact) return 28;
-  return 44;
+  return 54;
 }
 
 function getBottomHeight(platform: string, compact: boolean) {
   if (platform === "android") return 36;
   if (compact) return 62;
-  return 90;
+  return 112;
 }
 
 function SignalIcon() {

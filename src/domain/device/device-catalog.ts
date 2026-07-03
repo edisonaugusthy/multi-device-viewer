@@ -3,6 +3,21 @@ import { getMockupAssets, localMockupCatalog } from "./mockup-catalog";
 
 const curatedDevices: Device[] = [
   {
+    id: "apple-iphone-14-pro-max-2022",
+    name: "Apple iPhone 14 Pro Max",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2022,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 428, height: 928 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1290, height: 2796 },
+    mockupAssets: getMockupAssets("apple-iphone-14-pro-max-2022"),
+    updatedAt: "2023-09-23",
+    tags: ["ios", "large"]
+  },
+  {
     id: "apple-iphone-air-2025",
     name: "Apple iPhone Air (2025)",
     brand: "Apple",
@@ -310,7 +325,7 @@ export const devices: Device[] = [
 ];
 
 export const defaultDeviceIds = [
-  "apple-iphone-air-2025",
+  "apple-iphone-14-pro-max-2022",
   "samsung-galaxy-s24",
   "apple-ipad-air-4"
 ];

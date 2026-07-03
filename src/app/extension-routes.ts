@@ -4,7 +4,9 @@ export function simulatorUrl(initialUrl?: string): string {
     : "/simulator.html";
 
   if (!initialUrl) return base;
-  const url = new URL(base, window.location.origin);
+  const fallbackOrigin =
+    typeof window !== "undefined" ? window.location.origin : "https://localhost";
+  const url = new URL(base, fallbackOrigin);
   url.searchParams.set("url", initialUrl);
   return url.toString();
 }

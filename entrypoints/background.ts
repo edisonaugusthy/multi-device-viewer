@@ -1,7 +1,8 @@
 import { defineBackground } from "wxt/utils/define-background";
+import { openSimulator } from "../src/app/extension-routes";
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
-const UPDATE_BADGE_TEXT = "!";
+const UPDATE_BADGE_TEXT = "NEW";
 
 export default defineBackground(() => {
   createContextMenu();
@@ -44,26 +45,15 @@ export default defineBackground(() => {
 
   function openSimulatorForTab(tab: chrome.tabs.Tab) {
     clearUpdateIndicator();
-    if (!tab.id) return;
 
     const url =
       tab.url && /^https?:\/\//i.test(tab.url) ? tab.url : undefined;
 
-    chrome.tabs.sendMessage(tab.id, { type: "OPEN_SIMULATOR", url }).catch(() => {
-      chrome.scripting
-        .executeScript({
-          target: { tabId: tab.id! },
-          files: ["content-scripts/content.js"],
-        })
-        .then(() => {
-          chrome.tabs.sendMessage(tab.id!, { type: "OPEN_SIMULATOR", url });
-        })
-        .catch(console.error);
-    });
+    void openSimulator(url).catch(console.error);
   }
 
   function syncUpdateIndicator() {
-    chrome.action.setBadgeBackgroundColor({ color: "#dc2626" });
+    chrome.action.setBadgeBackgroundColor({ color: "#0f766e" });
     chrome.action.setBadgeText({ text: UPDATE_BADGE_TEXT });
   }
 

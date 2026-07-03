@@ -21,7 +21,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { captureTabWithOverlay } from "../../domain/capture/capture-service";
-import { normalizeUrl } from "../../domain/simulator/simulator-service";
+import { maxPreviewSlots, normalizeUrl } from "../../domain/simulator/simulator-service";
 import type { InspectData } from "./ElementInspectOverlay";
 import { PreviewCard } from "./PreviewCard";
 import { AnnotationOverlay } from "./AnnotationOverlay";
@@ -61,6 +61,26 @@ export function SimulatorApp() {
   const copyResetTimerRef = useRef<number | undefined>(undefined);
   const [copyButtonLabel, setCopyButtonLabel] = useState("Copy prompt");
   const reviewUrl = "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?utm_source=item-share-cbuse";
+
+  const closeViewer = () => {
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*");
+      return;
+    }
+
+    if (typeof chrome !== "undefined" && chrome.tabs?.getCurrent && chrome.tabs?.remove) {
+      chrome.tabs.getCurrent((tab) => {
+        if (tab?.id) {
+          void chrome.tabs.remove(tab.id);
+          return;
+        }
+        window.close();
+      });
+      return;
+    }
+
+    window.close();
+  };
 
   // Show review prompt after 5 uses (only once)
   useEffect(() => {
@@ -286,10 +306,38 @@ export function SimulatorApp() {
           </div>
 
           <div className={`flex flex-1 flex-col gap-2 overflow-y-auto p-2 pb-0 ${sidebarOpen ? "" : "hidden"}`}>
+            {/* Devices */}
+            <div>
+              <Label dark={dark}>Devices</Label>
+              <div className="mt-1.5 flex flex-col gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => addSlot()}
+                  disabled={slots.length >= maxPreviewSlots}
+                  className={`flex h-9 w-full items-center justify-center gap-2 rounded-md border px-3 text-[13px] font-black transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                    dark
+                      ? "border-teal-400/30 bg-teal-400/15 text-teal-100 hover:bg-teal-400/20"
+                      : "border-teal-200 bg-teal-50 text-teal-900 hover:bg-teal-100"
+                  }`}
+                >
+                  <Plus size={15} className="shrink-0" />
+                  Add device
+                </button>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <SidebarBtn compact dark={dark} icon={<RotateCw size={13} />} onClick={() => reloadAllSlots()}>
+                    Reload all
+                  </SidebarBtn>
+                  <SidebarBtn compact dark={dark} icon={<PanelsTopLeft size={13} />} onClick={() => setShowCustomDevice(true)}>
+                    Custom device
+                  </SidebarBtn>
+                </div>
+              </div>
+            </div>
+
             {/* Display */}
             <div>
               <Label dark={dark}>Display</Label>
-              <div className="mt-1.5 grid grid-cols-1 gap-1">
+              <div className="mt-1.5 grid grid-cols-2 gap-1">
                 <Toggle
                   active={display.showStatusBar}
                   dark={dark}
@@ -387,24 +435,6 @@ export function SimulatorApp() {
               </div>
             </div>
 
-            {/* Devices */}
-            <div>
-              <Label dark={dark}>Devices</Label>
-              <div className="mt-1.5 flex flex-wrap gap-1.5">
-                <SidebarBtn compact dark={dark} icon={<RotateCw size={13} />} onClick={() => reloadAllSlots()}>
-                  Reload all
-                </SidebarBtn>
-                {slots.length < 4 && (
-                  <SidebarBtn compact dark={dark} icon={<PanelsTopLeft size={13} />} onClick={() => addSlot()}>
-                    Add device
-                  </SidebarBtn>
-                )}
-                <SidebarBtn compact dark={dark} icon={<Plus size={13} />} onClick={() => setShowCustomDevice(true)}>
-                  Custom device…
-                </SidebarBtn>
-              </div>
-            </div>
-
             {/* Layout presets */}
             <div>
               <div className="flex items-center justify-between">
@@ -467,7 +497,7 @@ export function SimulatorApp() {
           <div className={`shrink-0 border-t p-3 ${dark ? "border-white/10" : "border-slate-100"} ${sidebarOpen ? "" : "hidden"}`}>
             <button
               type="button"
-              onClick={() => window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*")}
+              onClick={closeViewer}
               className={`flex h-9 w-full items-center gap-2 rounded-md px-2.5 text-[13px] font-medium transition ${
                 dark ? "text-slate-300 hover:bg-red-500/10 hover:text-red-200" : "text-slate-500 hover:bg-red-50 hover:text-red-600"
               }`}

@@ -9,7 +9,7 @@ import {
   RotateCw,
   X,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   mediaQueryFor,
   supportsOrientation,
@@ -22,6 +22,12 @@ import type {
 } from "../../domain/simulator/simulator.types";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
+import {
+  DEVICE_GROUP_LABEL,
+  DEVICE_GROUP_ORDER,
+  deviceGroupFor,
+} from "../../domain/device/device-groups";
+import { captureLivePreview } from "../../domain/capture/capture-service";
 import { DeviceFrame, estimateDeviceFrameSize } from "./DeviceFrame";
 import { ElementInspectOverlay, type InspectData } from "./ElementInspectOverlay";
 
@@ -61,8 +67,10 @@ interface PreviewCardProps {
   slot: PreviewSlot;
   device: Device;
   display: DisplaySettings;
+  sourceTabId: number | null;
   removable: boolean;
   onCapture: () => void;
+  onSwitchToLivePreview: () => void;
   compareTargetSlotId?: string;
   compareSelector?: string;
   onInspectData?: (slotId: string, data: InspectData) => void;
@@ -75,8 +83,10 @@ export function PreviewCard({
   slot,
   device,
   display,
+  sourceTabId,
   removable,
   onCapture,
+  onSwitchToLivePreview,
   compareTargetSlotId,
   compareSelector,
   onInspectData,
@@ -96,6 +106,9 @@ export function PreviewCard({
   const [inspectOpen, setInspectOpen] = useState(false);
   const [inspectData, setInspectData] = useState<InspectData | null>(null);
   const [inspectSuppressed, setInspectSuppressed] = useState(false);
+  const [livePreviewUrl, setLivePreviewUrl] = useState<string | null>(null);
+  const [livePreviewBusy, setLivePreviewBusy] = useState(false);
+  const [livePreviewError, setLivePreviewError] = useState<string | null>(null);
   // Direct DOM ref for the highlight box — updated imperatively on every MDV_INSPECT_MOVE
   // to avoid React re-renders on every mousemove frame.
   const highlightRef = useRef<HTMLDivElement | null>(null);
@@ -134,6 +147,7 @@ export function PreviewCard({
       : slot.zoomMode === "fit"
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
+  const liveMode = display.previewMode === "live";
 
   const syncInspectBridge = (iframe: HTMLIFrameElement | null) => {
     if (!iframe?.contentWindow) return;
@@ -188,8 +202,68 @@ export function PreviewCard({
     setInspectOpen(false);
     setInspectData(null);
     setInspectSuppressed(false);
+    setLivePreviewError(null);
     if (highlightRef.current) highlightRef.current.style.display = "none";
   }, [device.id, slot.reloadToken, slot.url]);
+
+  useEffect(() => {
+    if (!liveMode) return;
+    if (!sourceTabId) {
+      setLivePreviewUrl(null);
+      setLivePreviewBusy(false);
+      setLivePreviewError("Open the viewer from a browser tab to use live previews.");
+      return;
+    }
+
+    let cancelled = false;
+    const mobile =
+      device.type === "phone" ||
+      device.type === "tablet" ||
+      device.type === "watch" ||
+      device.type === "custom";
+    const refresh = async () => {
+      setLivePreviewBusy(true);
+      const result = await captureLivePreview({
+        tabId: sourceTabId,
+        width: viewportSize.width,
+        height: viewportSize.height,
+        contentHeight: viewportSize.height,
+        deviceScaleFactor: Math.max(1, Math.min(3, Math.round(device.pixelRatio || 2))),
+        mobile,
+      });
+
+      if (cancelled) return;
+
+      setLivePreviewBusy(false);
+      if (result.dataUrl) {
+        setLivePreviewUrl(result.dataUrl);
+        setLivePreviewError(null);
+        setBlocked(false);
+        setBridgeStatus("ready");
+        return;
+      }
+
+      setLivePreviewUrl(null);
+      setLivePreviewError(result.error ?? "Live preview unavailable.");
+      setBridgeStatus("unavailable");
+    };
+
+    void refresh();
+    const timer = window.setInterval(refresh, display.liveReloadMs);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [
+    liveMode,
+    sourceTabId,
+    viewportSize.width,
+    viewportSize.height,
+    device.pixelRatio,
+    device.type,
+    slot.reloadToken,
+    display.liveReloadMs,
+  ]);
 
   useEffect(() => {
     if (!compareSelector || compareTargetSlotId !== slot.id) return;
@@ -421,9 +495,27 @@ export function PreviewCard({
         >
           {viewportSize.width}×{viewportSize.height}
         </span>
+        {liveMode && (
+          <span
+            className={`ml-1 shrink-0 rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.16em] ${
+              display.darkMode
+                ? "bg-teal-400/15 text-teal-100"
+                : "bg-teal-50 text-teal-700"
+            }`}
+          >
+            {livePreviewBusy ? "Refreshing" : "Live tab"}
+          </span>
+        )}
 
         <div className="min-w-0 flex-1" />
 
+        <CardBtn
+          dark={display.darkMode}
+          label={liveMode ? "Refresh live preview" : "Reload preview"}
+          onClick={() => reloadSlot(slot.id)}
+        >
+          <RefreshCw size={14} />
+        </CardBtn>
         {canRotate && (
           <CardBtn
             dark={display.darkMode}
@@ -450,7 +542,7 @@ export function PreviewCard({
         <CardBtn
           dark={display.darkMode}
           label="Inspect viewport"
-          disabled={inspectSuppressed}
+          disabled={inspectSuppressed || liveMode}
           onClick={() => setInspectOpen((value) => !value)}
         >
           <Info size={14} />
@@ -513,11 +605,27 @@ export function PreviewCard({
                   height: "100%",
                 }}
               >
-                {blocked ? (
+                {liveMode ? (
+                  livePreviewUrl ? (
+                    <img
+                      src={livePreviewUrl}
+                      alt={`${device.name} live preview`}
+                      className="h-full w-full select-none object-cover object-top"
+                      draggable={false}
+                    />
+                  ) : (
+                    <LivePreviewFallback
+                      message={livePreviewError}
+                      onReload={() => reloadSlot(slot.id)}
+                    />
+                  )
+                ) : blocked ? (
                   <BlockedView
                     url={slot.url}
                     onCapture={onCapture}
                     onReload={() => reloadSlot(slot.id)}
+                    canUseLivePreview={Boolean(sourceTabId)}
+                    onUseLivePreview={onSwitchToLivePreview}
                   />
                 ) : (
                   <iframe
@@ -585,22 +693,6 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
 
 // ─── Device switcher ──────────────────────────────────────────────────────────
 
-const TYPE_ORDER = [
-  "phone",
-  "tablet",
-  "laptop",
-  "desktop",
-  "tv",
-  "watch",
-] as const;
-const TYPE_LABEL: Record<string, string> = {
-  phone: "Phones",
-  tablet: "Tablets",
-  laptop: "Laptops",
-  desktop: "Desktops",
-  tv: "TV",
-  watch: "Watch",
-};
 const POPULAR_DEVICE_IDS = [
   "apple-iphone-14-pro-max-2022",
   "apple-iphone-16-pro-max-2024",
@@ -690,11 +782,11 @@ function DeviceSwitcher({
       addSection("Favorites", favorites);
     }
 
-    for (const t of TYPE_ORDER) {
+    for (const group of DEVICE_GROUP_ORDER) {
       const list = filtered.filter(
-        (device) => device.type === t && !used.has(device.id),
+        (device) => deviceGroupFor(device) === group && !used.has(device.id),
       );
-      if (list.length > 0) sections.push([TYPE_LABEL[t], list]);
+      if (list.length > 0) sections.push([DEVICE_GROUP_LABEL[group], list]);
     }
 
     return sections;
@@ -756,37 +848,18 @@ function DeviceSwitcher({
                 </p>
                 <div className="grid grid-cols-1 gap-1 px-1 min-[420px]:grid-cols-2">
                   {list.map((d) => (
-                    <button
+                    <DeviceSwitcherItem
                       key={d.id}
-                      ref={
-                        d.id === currentDevice.id ? activeItemRef : undefined
-                      }
-                      type="button"
-                      className={`flex min-h-10 w-full min-w-0 items-center gap-1.5 rounded-[8px] px-1.5 py-1.25 text-left transition ${
-                        d.id === currentDevice.id
-                          ? "bg-slate-900 text-white hover:bg-slate-800"
-                          : dark
-                            ? "text-slate-200 hover:bg-white/[0.07]"
-                            : "text-slate-700 hover:bg-slate-50"
-                      }`}
-                      onClick={() => {
+                      ref={d.id === currentDevice.id ? activeItemRef : undefined}
+                      device={d}
+                      active={d.id === currentDevice.id}
+                      dark={dark}
+                      onPick={() => {
                         addRecent(d.id);
                         onSwitch(d.id);
                         setOpen(false);
                       }}
-                    >
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[11px] font-semibold leading-tight">
-                          {shortName(d.name)}
-                        </span>
-                        <span
-                          className={`mt-0.5 block truncate text-[8px] ${d.id === currentDevice.id ? "text-white/60" : dark ? "text-slate-500" : "text-slate-400"}`}
-                        >
-                          {d.cssViewport.width}×{d.cssViewport.height} ·{" "}
-                          {d.brand}
-                        </span>
-                      </span>
-                    </button>
+                    />
                   ))}
                 </div>
               </div>
@@ -804,6 +877,39 @@ function DeviceSwitcher({
 }
 
 // ─── Small helpers ────────────────────────────────────────────────────────────
+
+const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
+  device: Device;
+  active: boolean;
+  dark: boolean;
+  onPick: () => void;
+}>(function DeviceSwitcherItem({ device, active, dark, onPick }, ref) {
+  return (
+    <button
+      ref={ref}
+      type="button"
+      className={`flex min-h-10 w-full min-w-0 items-center gap-1.5 rounded-[8px] px-1.5 py-1.25 text-left transition ${
+        active
+          ? "bg-slate-900 text-white hover:bg-slate-800"
+          : dark
+            ? "text-slate-200 hover:bg-white/[0.07]"
+            : "text-slate-700 hover:bg-slate-50"
+      }`}
+      onClick={onPick}
+    >
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[11px] font-semibold leading-tight">
+          {shortName(device.name)}
+        </span>
+        <span
+          className={`mt-0.5 block truncate text-[8px] ${active ? "text-white/60" : dark ? "text-slate-500" : "text-slate-400"}`}
+        >
+          {device.cssViewport.width}×{device.cssViewport.height} · {device.brand}
+        </span>
+      </span>
+    </button>
+  );
+});
 
 function InspectPanel({
   bridgeStatus,
@@ -918,10 +1024,14 @@ function InspectMetric({
 function BlockedView({
   onCapture,
   onReload,
+  onUseLivePreview,
+  canUseLivePreview,
   url,
 }: {
   onCapture: () => void;
   onReload: () => void;
+  onUseLivePreview: () => void;
+  canUseLivePreview: boolean;
   url: string;
 }) {
   return (
@@ -955,7 +1065,38 @@ function BlockedView({
         >
           <Camera size={13} /> Capture current tab instead
         </button>
+        {canUseLivePreview && (
+          <button
+            className="flex items-center justify-center gap-2 rounded-md border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-bold text-teal-800"
+            onClick={onUseLivePreview}
+          >
+            <ExternalLink size={13} /> Switch to live tab
+          </button>
+        )}
       </div>
+    </div>
+  );
+}
+
+function LivePreviewFallback({
+  message,
+  onReload,
+}: {
+  message: string | null;
+  onReload: () => void;
+}) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-3 bg-slate-50 p-6 text-center">
+      <p className="text-sm font-black text-slate-900">Live preview unavailable.</p>
+      <p className="max-w-[260px] text-xs leading-5 text-slate-500">
+        {message ?? "The source tab could not be captured right now."}
+      </p>
+      <button
+        className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
+        onClick={onReload}
+      >
+        <RefreshCw size={13} /> Refresh live preview
+      </button>
     </div>
   );
 }

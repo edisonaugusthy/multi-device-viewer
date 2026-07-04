@@ -368,6 +368,7 @@ function createDeviceFromMockup(id: string): Device {
 }
 
 function deviceTypeFromId(id: string): Device["type"] {
+  if (id.includes("self-service-kiosk") || id.includes("nspanel")) return "custom";
   if (id.includes("watch")) return "watch";
   if (id.includes("tv")) return "tv";
   if (id.includes("macbook") || id.includes("latitude")) return "laptop";
@@ -386,10 +387,16 @@ function brandFromId(id: string) {
   if (id.startsWith("oppo")) return "OPPO";
   if (id.startsWith("microsoft")) return "Microsoft";
   if (id.startsWith("dell")) return "Dell";
+  if (id.startsWith("zebra")) return "Zebra";
+  if (id.startsWith("sonoff")) return "Sonoff";
+  if (id.startsWith("non-branded")) return "Non-branded";
+  if (id.startsWith("self-service")) return "Self-service";
   return "Generic";
 }
 
 function osFromId(id: string, type: Device["type"], brand: string) {
+  if (id.includes("self-service-kiosk")) return "Kiosk";
+  if (id.includes("nspanel")) return "Embedded";
   if (type === "watch") return brand === "Apple" ? "watchOS" : "Wear OS";
   if (type === "tv") return brand === "Samsung" ? "Tizen" : "TV";
   if (type === "desktop" || type === "laptop") return brand === "Apple" ? "macOS" : "Desktop";
@@ -399,6 +406,10 @@ function osFromId(id: string, type: Device["type"], brand: string) {
 }
 
 function viewportFromId(id: string, type: Device["type"]) {
+  if (id.includes("self-service-kiosk")) return { width: 1080, height: 1920 };
+  if (id.includes("nspanel")) return { width: 480, height: 480 };
+  if (id.includes("zebra-mc330")) return { width: 480, height: 800 };
+  if (id.includes("zebra-tc78")) return { width: 360, height: 800 };
   if (type === "watch") return { width: 162, height: 197 };
   if (type === "tv") return { width: 1920, height: 1080 };
   if (type === "desktop") return { width: 2240, height: 1260 };
@@ -416,6 +427,10 @@ function viewportFromId(id: string, type: Device["type"]) {
 }
 
 function familyFromId(id: string, brand: string, type: Device["type"]) {
+  if (id.includes("self-service-kiosk")) return "Kiosk";
+  if (id.includes("nspanel")) return "Control Panel";
+  if (brand === "Zebra") return id.includes("mc330") ? "Mobile Computer" : "Handheld";
+  if (brand === "Non-branded") return "Android Smartphone";
   if (type === "watch") return "Watch";
   if (type === "tv") return "Smart TV";
   if (type === "tablet") return brand === "Apple" ? "iPad" : "Tablet";
@@ -433,7 +448,13 @@ function yearFromId(id: string) {
 }
 
 function tagsFromId(id: string, type: Device["type"], os: string) {
-  return [type, os.toLowerCase(), ...(id.includes("fold") || id.includes("duo") ? ["foldable"] : [])];
+  return [
+    type,
+    os.toLowerCase(),
+    ...(id.includes("fold") || id.includes("duo") ? ["foldable"] : []),
+    ...(id.includes("self-service-kiosk") || id.includes("nspanel") ? ["special"] : []),
+    ...(id.includes("zebra-mc330") ? ["special", "android"] : [])
+  ];
 }
 
 function nameFromId(id: string) {
@@ -448,6 +469,10 @@ function nameFromId(id: string) {
     .replace(/^oppo-/, "")
     .replace(/^microsoft-/, "")
     .replace(/^dell-/, "")
+    .replace(/^zebra-/, "")
+    .replace(/^sonoff-/, "")
+    .replace(/^non-branded-/, "")
+    .replace(/^self-service-/, "")
     .split("-")
     .filter((word) => !/^20\d{2}$/.test(word))
     .map((word) => (word.length <= 3 ? word.toUpperCase() : word[0].toUpperCase() + word.slice(1)))

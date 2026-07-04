@@ -1,13 +1,17 @@
-export function simulatorUrl(initialUrl?: string): string {
+export function simulatorUrl(initialUrl?: string, sourceTabId?: number): string {
   const base = typeof chrome !== "undefined" && chrome.runtime?.getURL
     ? chrome.runtime.getURL("/simulator.html")
     : "/simulator.html";
 
-  if (!initialUrl) return base;
   const fallbackOrigin =
     typeof window !== "undefined" ? window.location.origin : "https://localhost";
   const url = new URL(base, fallbackOrigin);
-  url.searchParams.set("url", initialUrl);
+  if (initialUrl) {
+    url.searchParams.set("url", initialUrl);
+  }
+  if (typeof sourceTabId === "number" && Number.isFinite(sourceTabId)) {
+    url.searchParams.set("sourceTabId", String(sourceTabId));
+  }
   return url.toString();
 }
 
@@ -17,8 +21,8 @@ export async function getActiveTabUrl(): Promise<string | undefined> {
   return tab?.url;
 }
 
-export async function openSimulator(initialUrl?: string): Promise<void> {
-  const targetUrl = simulatorUrl(initialUrl);
+export async function openSimulator(initialUrl?: string, sourceTabId?: number): Promise<void> {
+  const targetUrl = simulatorUrl(initialUrl, sourceTabId);
 
   if (typeof chrome !== "undefined" && chrome.tabs?.create) {
     const tabs = await chrome.tabs.query({});

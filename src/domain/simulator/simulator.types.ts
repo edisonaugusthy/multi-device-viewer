@@ -1,6 +1,7 @@
 import type { Orientation } from "../device/device.types";
 
 export type ZoomMode = "fit" | "actual" | "custom";
+export type PreviewMode = "iframe" | "live";
 
 export interface PreviewSlot {
   id: string;
@@ -31,6 +32,8 @@ export interface DisplaySettings {
   presentationMode: boolean;
   hideChrome: boolean;
   inspectMode: boolean;
+  previewMode: PreviewMode;
+  liveReloadMs: number;
 }
 
 export interface SimulatorState {
@@ -38,4 +41,5 @@ export interface SimulatorState {
   activeSlotId: string;
   display: DisplaySettings;
   workbenchIssue: WorkbenchIssue;
+  sourceTabId: number | null;
 }

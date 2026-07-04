@@ -2,17 +2,8 @@ import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
+import { DEVICE_GROUP_LABEL, groupDevices } from "../../domain/device/device-groups";
 import type { Device } from "../../domain/device/device.types";
-
-const TYPE_ORDER = ["phone", "tablet", "laptop", "desktop", "tv", "watch"];
-const TYPE_LABEL: Record<string, string> = {
-  phone: "Phones",
-  tablet: "Tablets",
-  laptop: "Laptops",
-  desktop: "Desktops",
-  tv: "TV",
-  watch: "Watch",
-};
 
 export function DeviceLibrary({ onPick }: { onPick?: () => void }) {
   const { devices } = useDeviceCatalog();
@@ -38,13 +29,7 @@ export function DeviceLibrary({ onPick }: { onPick?: () => void }) {
   }, [devices, query]);
 
   const grouped = useMemo(() => {
-    const map = new Map<string, Device[]>();
-    for (const type of TYPE_ORDER) map.set(type, []);
-    for (const d of filtered) {
-      const bucket = map.get(d.type) ?? map.get("phone")!;
-      bucket.push(d);
-    }
-    return Array.from(map.entries()).filter(([, list]) => list.length > 0);
+    return groupDevices(filtered);
   }, [filtered]);
 
   return (
@@ -69,10 +54,10 @@ export function DeviceLibrary({ onPick }: { onPick?: () => void }) {
 
       {/* Device list */}
       <div className="px-2 pb-4">
-        {grouped.map(([type, list]) => (
-          <div key={type} className="mb-3">
+        {grouped.map(([group, list]) => (
+          <div key={group} className="mb-3">
             <p className="px-1 pb-1 pt-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
-              {TYPE_LABEL[type] ?? type}
+              {DEVICE_GROUP_LABEL[group]}
             </p>
             <div className="flex flex-col gap-0.5">
               {list.map((device) => (

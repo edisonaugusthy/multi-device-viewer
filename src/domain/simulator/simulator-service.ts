@@ -42,3 +42,8 @@ export function createWorkbenchIssue(compareSlotId = ""): WorkbenchIssue {
     lastCaptureLabel: "Copy for AI"
   };
 }
+
+export function normalizePreviewRefreshMs(value: number): number {
+  if (!Number.isFinite(value)) return 5000;
+  return Math.min(15000, Math.max(1500, Math.round(value)));
+}

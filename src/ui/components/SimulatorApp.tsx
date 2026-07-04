@@ -5,6 +5,7 @@ import {
   ChevronDown,
   LayoutGrid,
   Link2,
+  Monitor,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
@@ -13,14 +14,16 @@ import {
   RectangleHorizontal,
   RotateCw,
   Signal,
+  Smartphone,
   Star,
   Sun,
+  Video,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
-import { captureTabWithOverlay } from "../../domain/capture/capture-service";
+import { captureTabWithOverlay, startTabRecording, stopTabRecording } from "../../domain/capture/capture-service";
 import { maxPreviewSlots, normalizeUrl } from "../../domain/simulator/simulator-service";
 import type { InspectData } from "./ElementInspectOverlay";
 import { PreviewCard } from "./PreviewCard";
@@ -41,6 +44,7 @@ export function SimulatorApp() {
     updateDisplay,
     updateWorkbenchIssue,
     setAllSlotsUrl,
+    sourceTabId,
     useCount,
   } = useSimulator();
 
@@ -58,6 +62,7 @@ export function SimulatorApp() {
   const [showReviewBanner, setShowReviewBanner] = useState(false);
   const [inspectSnapshots, setInspectSnapshots] = useState<Record<string, InspectData | null>>({});
   const [inspectResetToken, setInspectResetToken] = useState(0);
+  const [recording, setRecording] = useState(false);
   const copyResetTimerRef = useRef<number | undefined>(undefined);
   const [copyButtonLabel, setCopyButtonLabel] = useState("Copy prompt");
   const reviewUrl = "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?utm_source=item-share-cbuse";
@@ -115,6 +120,20 @@ export function SimulatorApp() {
 
   useEffect(() => {
     return () => window.clearTimeout(copyResetTimerRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
+
+    const listener = (message: unknown) => {
+      if (!message || typeof message !== "object") return;
+      if ((message as Record<string, unknown>).type === "OFFSCREEN_RECORDING_COMPLETE") {
+        setRecording(false);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(listener);
+    return () => chrome.runtime.onMessage.removeListener(listener);
   }, []);
 
   // ── URL bar state ─────────────────────────────────────────────────────────
@@ -195,6 +214,17 @@ export function SimulatorApp() {
     } finally {
       setCapturing(false);
     }
+  }
+
+  async function toggleRecordingCapture() {
+    if (recording) {
+      const stopped = await stopTabRecording();
+      if (stopped) setRecording(false);
+      return;
+    }
+
+    const started = await startTabRecording(sourceTabId);
+    if (started) setRecording(true);
   }
 
   const captureMeta = {
@@ -336,6 +366,46 @@ export function SimulatorApp() {
 
             {/* Display */}
             <div>
+              <Label dark={dark}>Preview source</Label>
+              <div className="mt-1.5 grid grid-cols-2 gap-1">
+                <SidebarModeBtn
+                  active={display.previewMode === "iframe"}
+                  dark={dark}
+                  icon={<Monitor size={14} />}
+                  onClick={() =>
+                    updateDisplay((c) => ({
+                      ...c,
+                      previewMode: "iframe",
+                    }))
+                  }
+                >
+                  Iframe
+                </SidebarModeBtn>
+                <SidebarModeBtn
+                  active={display.previewMode === "live"}
+                  dark={dark}
+                  disabled={!sourceTabId}
+                  icon={<Smartphone size={14} />}
+                  onClick={() =>
+                    updateDisplay((c) => ({
+                      ...c,
+                      previewMode: "live",
+                      inspectMode: false,
+                      scrollSync: false,
+                    }))
+                  }
+                >
+                  Live tab
+                </SidebarModeBtn>
+              </div>
+              <p className={`mt-1 text-[10px] leading-4 ${dark ? "text-slate-500" : "text-slate-400"}`}>
+                {sourceTabId
+                  ? "Live tab mirrors the original page session without asking you to log in again."
+                  : "Live tab becomes available when the viewer is opened from a browser tab."}
+              </p>
+            </div>
+
+            <div>
               <Label dark={dark}>Display</Label>
               <div className="mt-1.5 grid grid-cols-2 gap-1">
                 <Toggle
@@ -377,6 +447,7 @@ export function SimulatorApp() {
                   active={display.inspectMode}
                   dark={dark}
                   icon={<Crosshair size={15} />}
+                  disabled={display.previewMode === "live"}
                   onClick={() => updateDisplay((c) => ({ ...c, inspectMode: !c.inspectMode }))}
                 >
                   Inspect element
@@ -488,6 +559,15 @@ export function SimulatorApp() {
                 <SidebarBtn compact dark={dark} icon={<Camera size={13} />} onClick={() => void takeScreenshot()} disabled={capturing}>
                   {capturing ? "Capturing…" : "Capture & Annotate"}
                 </SidebarBtn>
+                <SidebarBtn
+                  compact
+                  dark={dark}
+                  disabled={!sourceTabId}
+                  icon={<Video size={13} />}
+                  onClick={() => void toggleRecordingCapture()}
+                >
+                  {recording ? "Stop recording" : "Record source tab"}
+                </SidebarBtn>
               </div>
             </div>
 
@@ -561,8 +641,17 @@ export function SimulatorApp() {
                     slot={slot}
                     device={findDevice(slot.deviceId)}
                     display={display}
+                    sourceTabId={sourceTabId}
                     removable={slots.length > 1}
                     onCapture={() => void takeScreenshot()}
+                    onSwitchToLivePreview={() =>
+                      updateDisplay((current) => ({
+                        ...current,
+                        previewMode: "live",
+                        inspectMode: false,
+                        scrollSync: false,
+                      }))
+                    }
                     compareTargetSlotId={compareSlot?.id}
                     compareSelector={activeInspect?.selector}
                     onInspectData={updateInspectSnapshot}
@@ -635,6 +724,42 @@ function SidebarBtn({
       }`}
     >
       <span className={`shrink-0 ${dark ? "text-slate-400" : "text-slate-500"}`}>{icon}</span>
+      {children}
+    </button>
+  );
+}
+
+function SidebarModeBtn({
+  icon,
+  children,
+  onClick,
+  disabled,
+  dark,
+  active,
+}: {
+  icon: ReactNode;
+  children: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  dark: boolean;
+  active: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={`flex h-8 items-center justify-center gap-2 rounded-md border px-2 text-[11px] font-black transition disabled:cursor-not-allowed disabled:opacity-50 ${
+        active
+          ? dark
+            ? "border-teal-400/40 bg-teal-400/15 text-teal-100"
+            : "border-teal-200 bg-teal-50 text-teal-900"
+          : dark
+            ? "border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.06]"
+            : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+      }`}
+    >
+      {icon}
       {children}
     </button>
   );
@@ -716,12 +841,27 @@ function buildIssueReport({
   return lines;
 }
 
-function Toggle({ active, children, dark, icon, onClick }: { active: boolean; children: ReactNode; dark: boolean; icon: ReactNode; onClick: () => void }) {
+function Toggle({
+  active,
+  children,
+  dark,
+  icon,
+  onClick,
+  disabled = false,
+}: {
+  active: boolean;
+  children: ReactNode;
+  dark: boolean;
+  icon: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
   return (
     <button
       type="button"
+      disabled={disabled}
       onClick={onClick}
-      className={`flex min-h-10 w-full items-center gap-2 rounded-[8px] border px-2.5 text-[12px] font-semibold transition ${
+      className={`flex min-h-10 w-full items-center gap-2 rounded-[8px] border px-2.5 text-[12px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
         active
           ? dark ? "border-teal-400/40 bg-teal-400/10 text-teal-100" : "border-teal-200 bg-teal-50 text-teal-900"
           : dark ? "border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.07]" : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"

@@ -11,7 +11,7 @@ export default defineConfig({
     description:
       "Responsive website tester for mobile, tablet, desktop, and laptop previews with screenshots, mockups, and annotations.",
     version: "0.1.3",
-    permissions: ["activeTab", "contextMenus", "debugger", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "scripting", "storage", "tabs"],
+    permissions: ["activeTab", "commands", "contextMenus", "debugger", "declarativeNetRequest", "declarativeNetRequestWithHostAccess", "downloads", "offscreen", "scripting", "storage", "tabCapture", "tabs", "webNavigation", "webRequest"],
     declarative_net_request: {
       rule_resources: [
         {
@@ -21,7 +21,24 @@ export default defineConfig({
         }
       ]
     },
-    host_permissions: ["<all_urls>"],
+    host_permissions: ["<all_urls>", "*://*/*"],
+    commands: {
+      "take-screenshot-1": {
+        description: "Capture iPhone 14 Pro Max viewport",
+      },
+      "take-screenshot-2": {
+        description: "Capture Pixel 8 viewport",
+      },
+      "take-screenshot-3": {
+        description: "Capture iPad Air viewport",
+      },
+      "take-screenshot-4": {
+        description: "Capture MacBook Air viewport",
+      },
+      "start-stop-video-capture": {
+        description: "Start or stop recording the source tab",
+      },
+    },
     icons: {
       16: "/icons/icon-16.png",
       32: "/icons/icon-32.png",
@@ -41,6 +58,18 @@ export default defineConfig({
       {
         resources: ["mockups/*", "icons/*", "simulator.html", "chunks/*", "assets/*"],
         matches: ["<all_urls>"]
+      },
+      {
+        resources: [
+          "offscreen.html",
+          "workers/*",
+          "pages/permission/*",
+          "mockups/*",
+          "icons/*",
+          "assets/*",
+          "fonts/*",
+        ],
+        matches: ["<all_urls>"],
       }
     ]
   },

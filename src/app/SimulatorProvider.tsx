@@ -1,7 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { defaultDeviceIds, devices } from "../domain/device/device-catalog";
 import { supportsOrientation } from "../domain/device/device-service";
-import { createPreviewSlot, createWorkbenchIssue, maxPreviewSlots, nextZoom, normalizeUrl } from "../domain/simulator/simulator-service";
+import {
+  createPreviewSlot,
+  createWorkbenchIssue,
+  maxPreviewSlots,
+  nextZoom,
+  normalizePreviewRefreshMs,
+  normalizeUrl,
+} from "../domain/simulator/simulator-service";
 import type { DisplaySettings, PreviewSlot, SimulatorState, WorkbenchIssue } from "../domain/simulator/simulator.types";
 import { readStore, writeStore } from "../infrastructure/storage/local-store";
 
@@ -22,6 +29,7 @@ interface SimulatorContextValue extends SimulatorState {
   updateDisplay: (display: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => void;
   updateWorkbenchIssue: (issue: WorkbenchIssue | ((current: WorkbenchIssue) => WorkbenchIssue)) => void;
   useCount: number;
+  setSourceTabId: (tabId: number | null) => void;
 }
 
 interface SavedSimulatorSession {
@@ -41,7 +49,9 @@ const defaultDisplay: DisplaySettings = {
   darkMode: false,
   presentationMode: false,
   hideChrome: false,
-  inspectMode: false
+  inspectMode: false,
+  previewMode: "iframe",
+  liveReloadMs: 5000,
 };
 
 const startupDisplay: DisplaySettings = {
@@ -54,7 +64,17 @@ const startupDisplay: DisplaySettings = {
   presentationMode: false,
   hideChrome: false,
   inspectMode: false,
+  previewMode: "iframe",
+  liveReloadMs: 5000,
 };
+
+function launchTabIdFromSearch(): number | null {
+  if (typeof window === "undefined") return null;
+  const raw = new URLSearchParams(window.location.search).get("sourceTabId");
+  if (!raw) return null;
+  const parsed = Number(raw);
+  return Number.isInteger(parsed) ? parsed : null;
+}
 
 function launchUrlFromSearch(): string | null {
   if (typeof window === "undefined") return null;
@@ -82,6 +102,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   const [workbenchIssue, setWorkbenchIssue] = useState<WorkbenchIssue>(() => createWorkbenchIssue(defaultSlotDeviceIds[1] ?? ""));
   const [useCount, setUseCount] = useState(0);
   const [hydrated, setHydrated] = useState(false);
+  const [sourceTabId, setSourceTabId] = useState<number | null>(() => launchTabIdFromSearch());
 
   // Load + increment use count on mount
   useEffect(() => {
@@ -91,6 +112,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       readStore<SavedSimulatorSession | null>("mdvSimulatorSession", null),
     ]).then(([count, session]) => {
       const next = count + 1;
+      const launchTabId = launchTabIdFromSearch();
       setUseCount(next);
       void writeStore("mdvUseCount", next);
       if (session) {
@@ -106,8 +128,15 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
           : restoredSlots;
         setSlots(nextSlots);
         setActiveSlotId(session.activeSlotId || nextSlots[0]?.id || slots[0].id);
-        setDisplay(startupDisplay);
+        setDisplay({
+          ...startupDisplay,
+          previewMode: session.display.previewMode ?? startupDisplay.previewMode,
+          liveReloadMs: normalizePreviewRefreshMs(session.display.liveReloadMs ?? startupDisplay.liveReloadMs),
+        });
         setWorkbenchIssue(session.workbenchIssue);
+      }
+      if (launchTabId !== null) {
+        setSourceTabId(launchTabId);
       }
       setHydrated(true);
     });
@@ -243,7 +272,16 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, [activeSlotId]);
 
   const updateDisplay = useCallback((nextDisplay: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => {
-    setDisplay(nextDisplay);
+    setDisplay((current) => {
+      const resolved =
+        typeof nextDisplay === "function"
+          ? (nextDisplay as (value: DisplaySettings) => DisplaySettings)(current)
+          : nextDisplay;
+      return {
+        ...resolved,
+        liveReloadMs: normalizePreviewRefreshMs(resolved.liveReloadMs),
+      };
+    });
   }, []);
 
   const updateWorkbenchIssue = useCallback((nextIssue: WorkbenchIssue | ((current: WorkbenchIssue) => WorkbenchIssue)) => {
@@ -264,6 +302,10 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       ) {
         const newUrl = (message as Record<string, unknown>).url as string;
         setAllSlotsUrl(newUrl);
+        const nextTabId = (message as Record<string, unknown>).sourceTabId;
+        if (typeof nextTabId === "number" && Number.isInteger(nextTabId)) {
+          setSourceTabId(nextTabId);
+        }
       }
     };
 
@@ -279,6 +321,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       activeSlotId,
       display,
       workbenchIssue,
+      sourceTabId,
       useCount,
       setActiveSlot,
       setSlotDevice,
@@ -294,7 +337,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       removeSlot,
       duplicateActiveSlot,
       updateDisplay,
-      updateWorkbenchIssue
+      updateWorkbenchIssue,
+      setSourceTabId,
     }),
     [
       activeSlotId,
@@ -312,11 +356,12 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSlotUrl,
       setSlotZoomMode,
       slots,
+      sourceTabId,
       updateDisplay,
       updateWorkbenchIssue,
       workbenchIssue,
       useCount,
-      zoomSlot
+      zoomSlot,
     ]
   );
 

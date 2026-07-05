@@ -278,8 +278,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
         "leftRatio": 134.313 / 390,
         "widthRatio": (209.944 - 134.313) / 390,
         "heightRatio": (45.6561 - 12.46) / 844,
-        "lensRightRatio": 0.16,
-        "lensSizeRatio": 0.28
+        "lensTopRatio": 12.46 / 844,
+        "lensLeftRatio": 222.063 / 390,
+        "lensSizeRatio": (255.323 - 222.063) / (45.6561 - 12.46)
       }
     }
   },
@@ -305,8 +306,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
         "leftRatio": 147 / 428,
         "widthRatio": 84 / 428,
         "heightRatio": 38 / 928,
-        "lensRightRatio": 0.16,
-        "lensSizeRatio": 0.28
+        "lensTopRatio": 13.7 / 928,
+        "lensLeftRatio": 243.7 / 428,
+        "lensSizeRatio": 36.5 / 38
       }
     }
   },

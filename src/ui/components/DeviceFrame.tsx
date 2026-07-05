@@ -30,6 +30,7 @@ export function DeviceFrame({
   url,
   viewportSize,
   orientation,
+  scrollProgress = 0,
 }: {
   device: Device;
   children: ReactNode;
@@ -41,6 +42,7 @@ export function DeviceFrame({
   url: string;
   viewportSize: Size;
   orientation: Orientation;
+  scrollProgress?: number;
 }) {
   const profile = getFrameProfile(device);
   const hostname = safeHostname(url);
@@ -49,6 +51,7 @@ export function DeviceFrame({
   const shellP = profile.style.shellPadding ?? profile.shellPadding;
   const innerP = profile.style.innerPadding ?? 0;
   const contentR = profile.style.contentRadius ?? profile.contentRadius;
+  const chromeCollapse = clamp(scrollProgress, 0, 1);
 
   const statusH = showStatusBar ? getStatusHeight(profile.platform, profile.kind, compact) : 0;
   const addrH = showUrlBar && profile.platform === "android" ? 48 : 0;
@@ -96,10 +99,11 @@ export function DeviceFrame({
           : Math.max(16, contentR);
     const desktopToolbarH = showUrlBar && (device.type === "laptop" || device.type === "desktop") ? 36 : 0;
     const useSafariDesktopChrome = showUrlBar && profile.style.desktopChrome === "safari";
+    const imageContentTop = device.type === "laptop" || device.type === "desktop" || device.type === "tv" ? 0 : imageStatusH + imageAddrH;
     const imageContentH =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? Math.max(120, viewportSize.height - (useSafariDesktopChrome ? 56 : desktopToolbarH))
-        : Math.max(120, viewportSize.height - imageStatusH - imageAddrH - imageBottomH);
+        : viewportSize.height;
 
     return (
       <div
@@ -123,7 +127,7 @@ export function DeviceFrame({
               borderRadius: viewportClipPath ? undefined : Math.max(4, (landscape ? Math.max(10, screenRadius - 6) : screenRadius) * screenFit.radiusScale),
               clipPath: viewportClipPath,
               backgroundColor: device.type === "phone" && profile.platform === "ios"
-                ? "#ffffff"
+                ? "#000000"
                 : darkMode
                   ? "#0f172a"
                   : "#ffffff",
@@ -161,8 +165,8 @@ export function DeviceFrame({
                       height={imageStatusH || undefined}
                     />
                   )}
-                  {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={imageStatusH} />}
-                  {mobileChrome.showCutout && !viewportClipPath && (
+                  {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={imageStatusH} scrollProgress={chromeCollapse} />}
+                  {mobileChrome.showCutout && (
                     <DeviceCutout
                       kind={profile.kind}
                       platform={profile.platform}
@@ -175,14 +179,13 @@ export function DeviceFrame({
                     style={{
                       width: viewportSize.width,
                       height: imageContentH,
-                      marginTop: imageStatusH + imageAddrH,
-                      marginBottom: imageBottomH,
+                      marginTop: imageContentTop,
                     }}
                   >
                     {children}
                   </div>
-                  {mobileChrome.showSafariBar && showUrlBar && <SafariBar hostname={hostname} compact={compact} dark={darkMode} />}
-                  {mobileChrome.showAndroidBottomBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} />}
+                  {mobileChrome.showSafariBar && showUrlBar && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} />}
+                  {mobileChrome.showAndroidBottomBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
                   {mobileChrome.showHomeIndicator && <HomeIndicator />}
                 </>
               )}
@@ -316,7 +319,7 @@ export function DeviceFrame({
             style={{ borderRadius: landscape ? Math.max(10, contentR - 6) : contentR, width: viewportSize.width, height: screenH }}
           >
             {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={darkMode} />}
-            {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} />}
+            {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} scrollProgress={chromeCollapse} />}
             <div
               style={{
                 width: viewportSize.width,
@@ -327,8 +330,8 @@ export function DeviceFrame({
             >
               {children}
             </div>
-            {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} />}
-            {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} />}
+            {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} />}
+            {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
             {isIos && <HomeIndicator />}
           </div>
         </div>
@@ -361,7 +364,7 @@ export function DeviceFrame({
           style={{ borderRadius: landscape ? Math.max(10, innerR - 6) : innerR, width: viewportSize.width, height: screenH }}
         >
           {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={darkMode} />}
-          {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} />}
+          {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} scrollProgress={chromeCollapse} />}
           <div
             style={{
               width: viewportSize.width,
@@ -372,8 +375,8 @@ export function DeviceFrame({
           >
             {children}
           </div>
-          {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} />}
-          {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} />}
+          {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} />}
+          {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
           {isIos && <HomeIndicator />}
         </div>
       </div>
@@ -643,11 +646,9 @@ function DeviceCutout({
         style={cutout}
       >
         <span
-          className="absolute top-1/2 -translate-y-1/2 rounded-full bg-[#111] ring-[1.5px] ring-[#050505]"
+          className="absolute rounded-full bg-[radial-gradient(circle_at_46%_42%,#1d36a8_0,#060713_42%,#010101_72%)] ring-[1.5px] ring-[#050505]"
           style={{
-            right: Math.max(8, cutout.width * (style.imageCutout?.lensRightRatio ?? 0.16)),
-            width: Math.max(7, cutout.height * (style.imageCutout?.lensSizeRatio ?? 0.28)),
-            height: Math.max(7, cutout.height * (style.imageCutout?.lensSizeRatio ?? 0.28)),
+            ...resolveImageLens(style, viewportSize, cutout),
           }}
         />
       </div>
@@ -700,6 +701,30 @@ function resolveImageCutout(style: DeviceFrameStyle, viewportSize: Size) {
   };
 }
 
+function resolveImageLens(style: DeviceFrameStyle, viewportSize: Size | undefined, cutout: { top: number; left: number | string; width: number; height: number }) {
+  const config = style.imageCutout;
+  const size = Math.max(7, cutout.height * (config?.lensSizeRatio ?? 0.28));
+
+  if (viewportSize && config?.lensLeftRatio !== undefined && typeof cutout.left === "number") {
+    const left = viewportSize.width * config.lensLeftRatio - cutout.left;
+    const top = viewportSize.height * (config.lensTopRatio ?? config.topRatio) - cutout.top;
+    return {
+      left,
+      top,
+      width: size,
+      height: size,
+    };
+  }
+
+  return {
+    top: "50%",
+    right: Math.max(8, cutout.width * (config?.lensRightRatio ?? 0.16)),
+    width: size,
+    height: size,
+    transform: "translateY(-50%)",
+  };
+}
+
 function getImageStatusHeight(style: DeviceFrameStyle, viewportSize: Size, fallback: number) {
   if (!style.imageStatusBarHeightRatio) return fallback;
   return Math.max(fallback, Math.round(viewportSize.height * style.imageStatusBarHeightRatio));
@@ -728,17 +753,17 @@ function StatusBar({
   const iosImageBackedTablet = ios && imageBackedKind === "tablet";
 
   if (iosImageBackedPhone) {
-    const iconColor = dark ? "text-white" : "text-slate-950";
+    const iconColor = "text-white";
     return (
       <div
-        className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center bg-transparent font-black text-[16px] ${iconColor}`}
+        className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center bg-transparent text-[15px] font-bold ${iconColor}`}
         style={{ height: h }}
       >
         <span className="flex h-full w-[36%] items-center justify-center">{time}</span>
-        <span className="ml-auto flex h-full w-[36%] items-center justify-center gap-1.5">
+        <span className="ml-auto flex h-full w-[36%] items-center justify-center gap-[5px]">
           <SignalIcon />
           <WifiIcon />
-          {showBattery && <BatteryIcon />}
+          {showBattery && <BatteryIcon showPercent />}
         </span>
       </div>
     );
@@ -746,7 +771,7 @@ function StatusBar({
 
   return (
     <div
-      className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between font-black text-[11px] ${
+      className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between text-[11px] font-bold ${
         iosImageBackedTablet
           ? "bg-transparent text-slate-950"
           : ios
@@ -761,32 +786,53 @@ function StatusBar({
       <span className="flex items-center gap-1">
         <SignalIcon />
         <WifiIcon />
-        {showBattery && <BatteryIcon />}
+        {showBattery && <BatteryIcon showPercent={ios} />}
       </span>
     </div>
   );
 }
 
-function SafariBar({ hostname, compact, dark }: { hostname: string; compact: boolean; dark: boolean }) {
+function SafariBar({
+  hostname,
+  compact,
+  dark,
+  scrollProgress = 0
+}: {
+  hostname: string;
+  compact: boolean;
+  dark: boolean;
+  scrollProgress?: number;
+}) {
   const barH = compact ? 34 : 38;
   const tabH = compact ? 28 : 34;
+  const collapse = clamp(scrollProgress, 0, 1);
+  const searchLift = Math.round(collapse * (barH + 12));
+  const tabShrink = Math.round(collapse * Math.min(18, tabH * 0.58));
+  const tabVisibleH = Math.max(10, tabH - tabShrink);
+  const actionOpacity = Math.max(0.18, 1 - collapse * 0.82);
   return (
     <>
       <div
-        className={`pointer-events-none absolute inset-x-3 z-20 flex items-center gap-2 rounded-[10px] border px-3 font-medium shadow-sm backdrop-blur-xl ${
+        className={`pointer-events-none absolute inset-x-3 z-20 flex items-center gap-2 rounded-[10px] border px-3 font-medium shadow-sm backdrop-blur-xl transition-[bottom,opacity,transform] duration-150 ${
           dark ? "border-white/10 bg-[#1f2937]/82 text-slate-200" : "border-slate-200/80 bg-[#f1f2f5]/82 text-slate-600"
         }`}
-        style={{ bottom: tabH + 8, height: barH, fontSize: compact ? 11 : 13 }}
+        style={{
+          bottom: tabVisibleH + 8 - searchLift,
+          height: barH,
+          fontSize: compact ? 11 : 13,
+          opacity: Math.max(0.08, 1 - collapse * 0.92),
+          transform: `translateY(${Math.round(collapse * 6)}px)`
+        }}
       >
         <Lock size={10} className={`shrink-0 ${dark ? "text-slate-200" : "text-slate-700"}`} />
         <span className="min-w-0 flex-1 truncate">{hostname}</span>
         <RefreshCw size={12} className={`shrink-0 ${dark ? "text-slate-200" : "text-slate-700"}`} />
       </div>
       <div
-        className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-around ${
+        className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-around overflow-hidden transition-[height,opacity] duration-150 ${
           dark ? "bg-[#111827]/82 text-sky-300" : "bg-white/82 text-[#007AFF]"
         }`}
-        style={{ height: tabH }}
+        style={{ height: tabVisibleH, opacity: actionOpacity }}
       >
         <ChevronLeft size={17} />
         <ChevronRight size={17} className="text-slate-300" />
@@ -840,14 +886,31 @@ function SafariDesktopBar({ hostname, dark }: { hostname: string; dark: boolean 
   );
 }
 
-function AndroidAddrBar({ hostname, dark, top = false, topOffset = 0 }: { hostname: string; dark: boolean; top?: boolean; topOffset?: number }) {
+function AndroidAddrBar({
+  hostname,
+  dark,
+  top = false,
+  topOffset = 0,
+  scrollProgress = 0,
+}: {
+  hostname: string;
+  dark: boolean;
+  top?: boolean;
+  topOffset?: number;
+  scrollProgress?: number;
+}) {
+  const collapse = clamp(scrollProgress, 0, 1);
   if (top) {
     return (
       <div
-        className={`pointer-events-none absolute inset-x-0 z-20 flex h-12 items-center gap-2 border-b px-3 text-[12px] font-semibold ${
+        className={`pointer-events-none absolute inset-x-0 z-20 flex h-12 items-center gap-2 border-b px-3 text-[12px] font-semibold transition-[opacity,transform] duration-150 ${
           dark ? "border-white/10 bg-[#111827] text-slate-300" : "border-slate-100 bg-white text-slate-600"
         }`}
-        style={{ top: topOffset }}
+        style={{
+          top: topOffset,
+          opacity: Math.max(0.12, 1 - collapse * 0.88),
+          transform: `translateY(${-Math.round(collapse * 34)}px)`,
+        }}
       >
         <Home size={17} className={`shrink-0 ${dark ? "text-slate-100" : "text-slate-800"}`} />
         <span className={`min-w-0 flex-1 truncate rounded-full px-3 py-1.5 ${dark ? "bg-white/10" : "bg-slate-100"}`}>{hostname}</span>
@@ -855,8 +918,12 @@ function AndroidAddrBar({ hostname, dark, top = false, topOffset = 0 }: { hostna
       </div>
     );
   }
+  const bottomHeight = Math.max(10, 36 - Math.round(collapse * 24));
   return (
-    <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-9 items-center justify-center gap-6 ${dark ? "bg-[#111827]/95" : "bg-white/95"}`}>
+    <div
+      className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-6 overflow-hidden transition-[height,opacity] duration-150 ${dark ? "bg-[#111827]/95" : "bg-white/95"}`}
+      style={{ height: bottomHeight, opacity: Math.max(0.2, 1 - collapse * 0.8) }}
+    >
       <span className="grid h-4 w-4 place-items-center"><span className={`h-2 w-2 rounded-full border-[1.5px] ${dark ? "border-slate-100" : "border-slate-800"}`} /></span>
       <span className={`h-[3px] w-14 rounded-full ${dark ? "bg-slate-100" : "bg-slate-800"}`} />
       <Square size={12} strokeWidth={2} className={dark ? "text-slate-100" : "text-slate-800"} />
@@ -900,23 +967,34 @@ function getBottomHeight(platform: string, compact: boolean) {
 
 function SignalIcon() {
   return (
-    <span className="flex h-3 items-end gap-[2px]">
+    <span className="flex h-[11px] items-end gap-[1.5px]">
       <i className="block h-[4px] w-[3px] rounded-[1px] bg-current" />
       <i className="block h-[6px] w-[3px] rounded-[1px] bg-current" />
-      <i className="block h-[9px] w-[3px] rounded-[1px] bg-current" />
+      <i className="block h-[8px] w-[3px] rounded-[1px] bg-current" />
+      <i className="block h-[10px] w-[3px] rounded-[1px] bg-current" />
     </span>
   );
 }
 
 function WifiIcon() {
-  return <span className="block h-[9px] w-[12px] rounded-full border-[1.5px] border-current border-b-transparent" style={{ transform: "rotate(-45deg)" }} />;
+  return (
+    <svg width="13" height="10" viewBox="0 0 13 10" aria-hidden="true" className="block fill-current">
+      <path d="M6.5 9.4 4.9 7.8a2.26 2.26 0 0 1 3.2 0L6.5 9.4Z" />
+      <path d="M3.3 6.2 2.1 5a6.22 6.22 0 0 1 8.8 0L9.7 6.2a4.52 4.52 0 0 0-6.4 0Z" />
+      <path d="M1.2 4.1 0 2.9a9.18 9.18 0 0 1 13 0l-1.2 1.2a7.48 7.48 0 0 0-10.6 0Z" />
+    </svg>
+  );
 }
 
-function BatteryIcon() {
+function BatteryIcon({ showPercent = false }: { showPercent?: boolean }) {
   return (
-    <span className="relative flex h-[10px] w-[18px] items-center rounded-[2px] border-[1.5px] border-current">
+    <span className="relative flex h-[9px] w-[22px] items-center rounded-[2px] border-[1.25px] border-current">
       <span className="absolute -right-[3px] h-[4px] w-[2px] rounded-r bg-current" />
-      <span className="ml-[1px] h-[5px] w-[11px] rounded-[1px] bg-current" />
+      {showPercent ? (
+        <span className="flex w-full justify-center text-[6.5px] font-bold leading-none">100</span>
+      ) : (
+        <span className="ml-[1px] h-[5px] w-[14px] rounded-[1px] bg-current" />
+      )}
     </span>
   );
 }

@@ -2,7 +2,6 @@ import {
   Camera,
   ChevronDown,
   ExternalLink,
-  Info,
   Minus,
   Plus,
   RefreshCw,
@@ -11,7 +10,6 @@ import {
 } from "lucide-react";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
-  mediaQueryFor,
   supportsOrientation,
   toLandscapeAwareSize,
 } from "../../domain/device/device-service";
@@ -95,6 +93,7 @@ export function PreviewCard({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const bridgeStatusTimer = useRef<number | undefined>(undefined);
+  const browserChromeTimer = useRef<number | undefined>(undefined);
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
   const [containerSize, setContainerSize] = useState<Size>({
     width: 0,
@@ -102,10 +101,9 @@ export function PreviewCard({
   });
   const [blocked, setBlocked] = useState(false);
   const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("checking");
-  const [scrollMeta, setScrollMeta] = useState<ScrollSyncPayload | null>(null);
-  const [inspectOpen, setInspectOpen] = useState(false);
   const [inspectData, setInspectData] = useState<InspectData | null>(null);
   const [inspectSuppressed, setInspectSuppressed] = useState(false);
+  const [browserChromeHidden, setBrowserChromeHidden] = useState(false);
   const [livePreviewUrl, setLivePreviewUrl] = useState<string | null>(null);
   const [livePreviewBusy, setLivePreviewBusy] = useState(false);
   const [livePreviewError, setLivePreviewError] = useState<string | null>(null);
@@ -149,6 +147,7 @@ export function PreviewCard({
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
   const liveMode = display.previewMode === "live";
+  const chromeScrollProgress = browserChromeHidden ? 1 : 0;
 
   const syncInspectBridge = (iframe: HTMLIFrameElement | null) => {
     if (!iframe?.contentWindow) return;
@@ -199,8 +198,6 @@ export function PreviewCard({
   useEffect(() => {
     setBlocked(false);
     setBridgeStatus("checking");
-    setScrollMeta(null);
-    setInspectOpen(false);
     setInspectData(null);
     setInspectSuppressed(false);
     setLivePreviewError(null);
@@ -284,13 +281,25 @@ export function PreviewCard({
 
     const register = () => {
       setBridgeStatus("checking");
-      iframe.contentWindow?.postMessage(
-        { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
-        "*",
-      );
-      syncInspectBridge(iframe);
-      syncScrollBridge(iframe);
-      syncInteractionBridge(iframe);
+      const postRegister = () => {
+        iframe.contentWindow?.postMessage(
+          { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
+          "*",
+        );
+        syncInspectBridge(iframe);
+        syncScrollBridge(iframe);
+        syncInteractionBridge(iframe);
+      };
+
+      const injectAndRegister = () => {
+        void ensurePreviewBridgeInjected().finally(postRegister);
+      };
+
+      injectAndRegister();
+      [250, 750, 1500].forEach((delay) => {
+        window.setTimeout(injectAndRegister, delay);
+      });
+
       window.clearTimeout(bridgeStatusTimer.current);
       bridgeStatusTimer.current = window.setTimeout(() => {
         if (bridgeStatusRef.current === "checking") {
@@ -307,7 +316,7 @@ export function PreviewCard({
       iframe.removeEventListener("load", register);
       window.clearTimeout(bridgeStatusTimer.current);
     };
-  }, [slot.id, slot.reloadToken, slot.url]);
+  }, [containerSize.width, slot.id, slot.reloadToken, slot.url]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -318,7 +327,6 @@ export function PreviewCard({
       if (data.type === "MDV_PREVIEW_READY") {
         setBridgeStatus("ready");
         setBlocked(false);
-        setScrollMeta(data as ScrollSyncPayload);
         return;
       }
 
@@ -330,7 +338,11 @@ export function PreviewCard({
 
       if (data.type === "MDV_SCROLL_SYNC_EVENT") {
         setBridgeStatus("ready");
-        setScrollMeta(data as ScrollSyncPayload);
+        setBrowserChromeHidden(true);
+        window.clearTimeout(browserChromeTimer.current);
+        browserChromeTimer.current = window.setTimeout(() => {
+          setBrowserChromeHidden(false);
+        }, 650);
         if (!display.scrollSync) return;
         broadcastScrollSync(data as ScrollSyncPayload);
         return;
@@ -345,6 +357,8 @@ export function PreviewCard({
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, [display.scrollSync, slot.id]);
+
+  useEffect(() => () => window.clearTimeout(browserChromeTimer.current), []);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -409,7 +423,6 @@ export function PreviewCard({
 
   useEffect(() => {
     if (display.inspectMode) {
-      setInspectOpen(false);
       setInspectData(null);
       setInspectSuppressed(true);
       if (highlightRef.current) highlightRef.current.style.display = "none";
@@ -540,14 +553,6 @@ export function PreviewCard({
         >
           <Plus size={14} />
         </CardBtn>
-        <CardBtn
-          dark={display.darkMode}
-          label="Inspect viewport"
-          disabled={inspectSuppressed || liveMode}
-          onClick={() => setInspectOpen((value) => !value)}
-        >
-          <Info size={14} />
-        </CardBtn>
         {removable && (
           <CardBtn
             dark={display.darkMode}
@@ -558,18 +563,6 @@ export function PreviewCard({
           </CardBtn>
         )}
       </div>
-
-      {inspectOpen && (
-        <InspectPanel
-          device={device}
-          display={display}
-          slot={slot}
-          viewportSize={viewportSize}
-          bridgeStatus={bridgeStatus}
-          scrollMeta={scrollMeta}
-          dark={display.darkMode}
-        />
-      )}
 
       {/* ── Canvas ── */}
       <div
@@ -599,11 +592,13 @@ export function PreviewCard({
               url={slot.url}
               viewportSize={viewportSize}
               orientation={effectiveOrientation}
+              scrollProgress={chromeScrollProgress}
             >
               <div
                 style={{
                   width: viewportSize.width,
                   height: "100%",
+                  overflow: "hidden",
                 }}
               >
                 {liveMode ? (
@@ -636,6 +631,7 @@ export function PreviewCard({
                     src={slot.url}
                     className={`h-full w-full border-0 ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
                     style={{
+                      width: `calc(100% + 17px)`,
                       backgroundColor: display.darkMode ? "#0f172a" : "#ffffff",
                       colorScheme: display.darkMode ? "dark" : "light",
                       filter: display.darkMode
@@ -690,6 +686,75 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
   window.dispatchEvent(
     new CustomEvent<InteractionSyncPayload>("MDV_INTERACTION_EVENT", { detail }),
   );
+}
+
+function ensurePreviewBridgeInjected(): Promise<void> {
+  if (
+    typeof chrome === "undefined" ||
+    !chrome.tabs?.getCurrent ||
+    !chrome.webNavigation?.getAllFrames ||
+    !chrome.scripting?.executeScript
+  ) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    chrome.tabs.getCurrent((tab) => {
+      if (chrome.runtime.lastError || !tab?.id) {
+        resolve();
+        return;
+      }
+      const tabId = tab.id;
+      let attempts = 0;
+
+      const injectWhenFramesReady = () => chrome.webNavigation.getAllFrames({ tabId }, (frames) => {
+        if (chrome.runtime.lastError || !frames?.length) {
+          attempts += 1;
+          if (attempts < 8) {
+            window.setTimeout(injectWhenFramesReady, 100);
+            return;
+          }
+          resolve();
+          return;
+        }
+
+        const frameIds = frames
+          .filter((frame) => /^https?:\/\//i.test(frame.url))
+          .map((frame) => frame.frameId);
+
+        if (frameIds.length === 0) {
+          attempts += 1;
+          if (attempts < 8) {
+            window.setTimeout(injectWhenFramesReady, 100);
+            return;
+          }
+          resolve();
+          return;
+        }
+
+        let remaining = frameIds.length;
+        const done = () => {
+          remaining -= 1;
+          if (remaining <= 0) resolve();
+        };
+
+        for (const frameId of frameIds) {
+          chrome.scripting.executeScript(
+            {
+              target: { tabId, frameIds: [frameId] },
+              files: ["content-scripts/content.js"],
+            },
+            () => {
+              void chrome.runtime.lastError;
+              done();
+            },
+          );
+        }
+      });
+
+      injectWhenFramesReady();
+    });
+  });
 }
 
 // ─── Device switcher ──────────────────────────────────────────────────────────
@@ -911,116 +976,6 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
     </button>
   );
 });
-
-function InspectPanel({
-  bridgeStatus,
-  dark,
-  device,
-  display,
-  scrollMeta,
-  slot,
-  viewportSize,
-}: {
-  bridgeStatus: BridgeStatus;
-  dark: boolean;
-  device: Device;
-  display: DisplaySettings;
-  scrollMeta: ScrollSyncPayload | null;
-  slot: PreviewSlot;
-  viewportSize: Size;
-}) {
-  const scrollPercent = scrollMeta
-    ? `${Math.round((scrollMeta.scrollTop / Math.max(1, (scrollMeta.scrollHeight ?? viewportSize.height) - viewportSize.height)) * 100)}%`
-    : "Unknown";
-  const statusText =
-    bridgeStatus === "ready"
-      ? "Ready"
-      : bridgeStatus === "checking"
-        ? "Checking"
-        : bridgeStatus === "blocked"
-          ? "Blocked"
-          : "Unavailable";
-
-  return (
-    <div
-      className={`grid shrink-0 gap-2 border-b px-3 py-2 text-[11px] ${
-        dark
-          ? "border-white/10 bg-[#111827] text-slate-300"
-          : "border-slate-200 bg-slate-50 text-slate-600"
-      }`}
-    >
-      <div className="grid grid-cols-2 gap-2 min-[920px]:grid-cols-4">
-        <InspectMetric
-          label="Device"
-          value={shortName(device.name)}
-          dark={dark}
-        />
-        <InspectMetric
-          label="Viewport"
-          value={`${viewportSize.width}×${viewportSize.height}`}
-          dark={dark}
-        />
-        <InspectMetric
-          label="DPR"
-          value={`${device.pixelRatio}x`}
-          dark={dark}
-        />
-        <InspectMetric
-          label="Orientation"
-          value={slot.orientation}
-          dark={dark}
-        />
-        <InspectMetric
-          label="Chrome"
-          value={display.showUrlBar ? "Visible" : "Hidden"}
-          dark={dark}
-        />
-        <InspectMetric
-          label="Frame"
-          value={slot.showFrame ? "Visible" : "Hidden"}
-          dark={dark}
-        />
-        <InspectMetric label="Sync bridge" value={statusText} dark={dark} />
-        <InspectMetric label="Scroll" value={scrollPercent} dark={dark} />
-      </div>
-      <code
-        className={`block truncate rounded px-2 py-1 font-semibold ${
-          dark ? "bg-white/5 text-slate-300" : "bg-white text-slate-600"
-        }`}
-      >
-        {mediaQueryFor(device, slot.orientation)}
-      </code>
-      <p className="truncate font-medium">{slot.url}</p>
-    </div>
-  );
-}
-
-function InspectMetric({
-  dark,
-  label,
-  value,
-}: {
-  dark: boolean;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div
-      className={`rounded-md border px-2 py-1.5 ${
-        dark ? "border-white/10 bg-white/[0.03]" : "border-slate-200 bg-white"
-      }`}
-    >
-      <p className="font-black uppercase tracking-[0.08em] text-slate-400">
-        {label}
-      </p>
-      <p
-        className={`mt-0.5 truncate font-bold ${dark ? "text-slate-100" : "text-slate-900"}`}
-      >
-        {value}
-      </p>
-    </div>
-  );
-}
 
 function BlockedView({
   onCapture,

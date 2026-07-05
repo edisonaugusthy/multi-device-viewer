@@ -43,7 +43,7 @@ const SimulatorContext = createContext<SimulatorContextValue | null>(null);
 
 const defaultDisplay: DisplaySettings = {
   showStatusBar: true,
-  showBattery: false,
+  showBattery: true,
   showUrlBar: true,
   scrollSync: false,
   darkMode: false,
@@ -57,7 +57,7 @@ const defaultDisplay: DisplaySettings = {
 const startupDisplay: DisplaySettings = {
   ...defaultDisplay,
   showStatusBar: true,
-  showBattery: false,
+  showBattery: true,
   showUrlBar: true,
   scrollSync: false,
   darkMode: false,

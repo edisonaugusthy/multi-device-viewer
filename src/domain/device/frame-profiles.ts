@@ -52,6 +52,8 @@ export interface ImageBackedCutoutStyle {
   heightRatio: number;
   minWidth?: number;
   minHeight?: number;
+  lensTopRatio?: number;
+  lensLeftRatio?: number;
   lensRightRatio?: number;
   lensSizeRatio?: number;
 }
@@ -222,7 +224,6 @@ function getImageBackedChromeConfig(device: Device, profile: Omit<DeviceFramePro
   const isAndroidDevice = profile.platform === "android";
   const isSpecial = device.tags.includes("special") || device.type === "custom" || device.type === "watch" || device.type === "tv";
   const isHandheldSpecial = device.brand === "Zebra" && device.id.includes("tc");
-
   if (isSpecial && !isHandheldSpecial) {
     return emptyImageChrome;
   }

@@ -27,6 +27,8 @@ export interface MockupFrameStyle {
     heightRatio: number;
     minWidth?: number;
     minHeight?: number;
+    lensTopRatio?: number;
+    lensLeftRatio?: number;
     lensRightRatio?: number;
     lensSizeRatio?: number;
   };

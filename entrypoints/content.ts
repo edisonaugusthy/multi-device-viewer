@@ -28,6 +28,10 @@ export default defineContentScript({
 });
 
 function setupPreviewBridge() {
+  const bridgeWindow = window as Window & { __MDV_PREVIEW_BRIDGE_READY?: boolean };
+  if (bridgeWindow.__MDV_PREVIEW_BRIDGE_READY) return;
+  bridgeWindow.__MDV_PREVIEW_BRIDGE_READY = true;
+
   let slotId: string | undefined;
   let programmaticScroll = false;
   let resetTimer: number | undefined;
@@ -86,6 +90,28 @@ function setupPreviewBridge() {
     style.textContent = `
       :root { color-scheme: ${theme}; }
       html[data-mdv-theme="${theme}"] { color-scheme: ${theme}; }
+    `;
+  }
+
+  function applyPreviewViewportStyle() {
+    let style = document.getElementById("mdv-preview-viewport-style") as HTMLStyleElement | null;
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "mdv-preview-viewport-style";
+      document.head.appendChild(style);
+    }
+    style.textContent = `
+      html, body {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar,
+      *::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        display: none !important;
+      }
     `;
   }
 
@@ -477,6 +503,7 @@ function setupPreviewBridge() {
 
     if (data.type === "MDV_PREVIEW_REGISTER" && typeof data.slotId === "string") {
       slotId = data.slotId;
+      applyPreviewViewportStyle();
       lastScrollLeft = root().scrollLeft;
       lastScrollTop = root().scrollTop;
       announceReady();

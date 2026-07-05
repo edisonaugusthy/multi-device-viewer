@@ -7,6 +7,32 @@ export interface Size {
   height: number;
 }
 
+export interface MockupViewportConfig {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  paths?: Partial<Record<Orientation, string | string[]>>;
+  enableRotation?: boolean;
+}
+
+export interface MockupFrameStyle {
+  cutoutTop?: number;
+  cutoutWidth?: number;
+  cutoutHeight?: number;
+  imageCutout?: {
+    topRatio: number;
+    leftRatio?: number;
+    widthRatio: number;
+    heightRatio: number;
+    minWidth?: number;
+    minHeight?: number;
+    lensRightRatio?: number;
+    lensSizeRatio?: number;
+  };
+  imageStatusBarHeightRatio?: number;
+}
+
 export interface MockupAsset {
   kind: "transparent-png" | "frame";
   localPath?: string;
@@ -18,6 +44,8 @@ export interface MockupAsset {
     bottom: number;
     left: number;
   };
+  viewport?: Partial<Record<Orientation, MockupViewportConfig>>;
+  frameStyle?: MockupFrameStyle;
 }
 
 export interface Device {

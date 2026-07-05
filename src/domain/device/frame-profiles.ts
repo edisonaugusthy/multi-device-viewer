@@ -17,6 +17,7 @@ export interface DeviceFrameProfile {
   shellPadding: number;
   contentRadius: number;
   style: DeviceFrameStyle;
+  imageChrome: ImageBackedChromeConfig;
 }
 
 export interface DeviceFrameStyle {
@@ -26,8 +27,33 @@ export interface DeviceFrameStyle {
   cutoutTop?: number;
   cutoutWidth?: number;
   cutoutHeight?: number;
+  imageCutout?: ImageBackedCutoutStyle;
+  imageStatusBarHeightRatio?: number;
+  desktopChrome?: "safari" | "default";
   sideButtonColor?: string;
   shellGradient?: string;
+}
+
+export interface ImageBackedChromeConfig {
+  showStatusBar: boolean;
+  showAndroidTopBar: boolean;
+  showBottomBar: boolean;
+  showCutout: boolean;
+  showTabletCamera: boolean;
+  showSafariBar: boolean;
+  showAndroidBottomBar: boolean;
+  showHomeIndicator: boolean;
+}
+
+export interface ImageBackedCutoutStyle {
+  topRatio: number;
+  leftRatio?: number;
+  widthRatio: number;
+  heightRatio: number;
+  minWidth?: number;
+  minHeight?: number;
+  lensRightRatio?: number;
+  lensSizeRatio?: number;
 }
 
 const defaultFrameStyles: Record<FrameProfileKind, DeviceFrameStyle> = {
@@ -38,6 +64,16 @@ const defaultFrameStyles: Record<FrameProfileKind, DeviceFrameStyle> = {
     cutoutTop: 22,
     cutoutWidth: 118,
     cutoutHeight: 26,
+    imageCutout: {
+      topRatio: 0.014,
+      widthRatio: 0.2,
+      heightRatio: 0.041,
+      minWidth: 72,
+      minHeight: 32,
+      lensRightRatio: 0.16,
+      lensSizeRatio: 0.28
+    },
+    imageStatusBarHeightRatio: 0.07,
     sideButtonColor: "#a59672",
     shellGradient: "linear-gradient(135deg, #c8bc9a 0%, #111 52%, #f0e8d0 100%)"
   },
@@ -91,19 +127,15 @@ const defaultFrameStyles: Record<FrameProfileKind, DeviceFrameStyle> = {
   desktop: { shellPadding: 10, innerPadding: 0, contentRadius: 10 }
 };
 
-// Per-device visual tuning lives here. Add a device id and override only the
-// numbers that need adjustment after comparing against a real/rival frame.
-const deviceFrameStyleOverrides: Record<string, DeviceFrameStyle> = {
-  "apple-iphone-14-pro-2022": {
-    cutoutTop: 22,
-    cutoutWidth: 116,
-    cutoutHeight: 26
-  },
-  "apple-iphone-14-pro-max-2022": {
-    cutoutTop: 22,
-    cutoutWidth: 118,
-    cutoutHeight: 26
-  }
+const emptyImageChrome: ImageBackedChromeConfig = {
+  showStatusBar: false,
+  showAndroidTopBar: false,
+  showBottomBar: false,
+  showCutout: false,
+  showTabletCamera: false,
+  showSafariBar: false,
+  showAndroidBottomBar: false,
+  showHomeIndicator: false
 };
 
 export function getFrameProfile(device: Device): DeviceFrameProfile {
@@ -166,16 +198,43 @@ function hasDynamicIsland(device: Device) {
   );
 }
 
-function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style">): DeviceFrameProfile {
+function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome">): DeviceFrameProfile {
+  const desktopChrome: DeviceFrameStyle["desktopChrome"] =
+    isApple(device) && (device.type === "laptop" || device.type === "desktop") ? "safari" : "default";
+  const mockupFrameStyle = device.mockupAssets.find((asset) => asset.frameStyle)?.frameStyle;
   const style = {
     ...defaultFrameStyles[profile.kind],
     shellPadding: profile.shellPadding,
     contentRadius: profile.contentRadius,
-    ...deviceFrameStyleOverrides[device.id]
+    ...mockupFrameStyle,
+    desktopChrome
   };
 
   return {
     ...profile,
-    style
+    style,
+    imageChrome: getImageBackedChromeConfig(device, profile)
+  };
+}
+
+function getImageBackedChromeConfig(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome">): ImageBackedChromeConfig {
+  const isIos = profile.platform === "ios";
+  const isAndroidDevice = profile.platform === "android";
+  const isSpecial = device.tags.includes("special") || device.type === "custom" || device.type === "watch" || device.type === "tv";
+  const isHandheldSpecial = device.brand === "Zebra" && device.id.includes("tc");
+
+  if (isSpecial && !isHandheldSpecial) {
+    return emptyImageChrome;
+  }
+
+  return {
+    showStatusBar: isIos || isAndroidDevice,
+    showAndroidTopBar: isAndroidDevice,
+    showBottomBar: isIos || isAndroidDevice,
+    showCutout: isIos && device.type === "phone",
+    showTabletCamera: isIos && device.type === "tablet",
+    showSafariBar: isIos,
+    showAndroidBottomBar: isAndroidDevice,
+    showHomeIndicator: isIos
   };
 }

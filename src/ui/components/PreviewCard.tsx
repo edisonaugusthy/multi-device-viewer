@@ -122,8 +122,9 @@ export function PreviewCard({
   } = useSimulator();
 
   const canRotate = supportsOrientation(device);
+  const effectiveOrientation = canRotate ? slot.orientation : "portrait";
   const viewportSize = canRotate
-    ? toLandscapeAwareSize(device.cssViewport, slot.orientation)
+    ? toLandscapeAwareSize(device.cssViewport, effectiveOrientation)
     : device.cssViewport;
 
   const frameSize = estimateDeviceFrameSize({
@@ -597,7 +598,7 @@ export function PreviewCard({
               darkMode={display.darkMode}
               url={slot.url}
               viewportSize={viewportSize}
-              orientation={slot.orientation}
+              orientation={effectiveOrientation}
             >
               <div
                 style={{

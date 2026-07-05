@@ -205,9 +205,9 @@ const curatedDevices: Device[] = [
     year: 2021,
     type: "tablet",
     os: "iPadOS",
-    cssViewport: { width: 744, height: 1133 },
+    cssViewport: { width: 768, height: 1024 },
     pixelRatio: 2,
-    manufacturerResolution: { width: 1488, height: 2266 },
+    manufacturerResolution: { width: 1536, height: 2048 },
     mockupAssets: getMockupAssets("apple-ipad-mini-6"),
     updatedAt: "2022-01-02",
     tags: ["tablet", "ios"]
@@ -250,9 +250,9 @@ const curatedDevices: Device[] = [
     year: 2021,
     type: "laptop",
     os: "macOS",
-    cssViewport: { width: 1728, height: 1117 },
+    cssViewport: { width: 1728, height: 1085 },
     pixelRatio: 2,
-    manufacturerResolution: { width: 3456, height: 2234 },
+    manufacturerResolution: { width: 3456, height: 2170 },
     mockupAssets: getMockupAssets("macbook-pro-16-2021"),
     updatedAt: "2022-04-30",
     tags: ["desktop", "laptop"]
@@ -265,7 +265,7 @@ const curatedDevices: Device[] = [
     year: 2020,
     type: "laptop",
     os: "macOS",
-    cssViewport: { width: 1440, height: 900 },
+    cssViewport: { width: 1280, height: 800 },
     pixelRatio: 2,
     manufacturerResolution: { width: 2560, height: 1600 },
     mockupAssets: getMockupAssets("macbook-air-2020-13"),
@@ -280,9 +280,9 @@ const curatedDevices: Device[] = [
     year: 2021,
     type: "desktop",
     os: "macOS",
-    cssViewport: { width: 2240, height: 1260 },
+    cssViewport: { width: 2048, height: 1152 },
     pixelRatio: 2,
-    manufacturerResolution: { width: 4480, height: 2520 },
+    manufacturerResolution: { width: 4096, height: 2304 },
     mockupAssets: getMockupAssets("imac-24-2021"),
     updatedAt: "2022-05-02",
     tags: ["desktop"]
@@ -344,7 +344,11 @@ function createDeviceFromMockup(id: string): Device {
   const brand = brandFromId(id);
   const year = yearFromId(id);
   const os = osFromId(id, type, brand);
-  const cssViewport = viewportFromId(id, type);
+  const mockupAssets = getMockupAssets(id);
+  const configuredViewport = mockupAssets[0]?.viewport?.portrait;
+  const cssViewport = configuredViewport
+    ? { width: configuredViewport.width, height: configuredViewport.height }
+    : viewportFromId(id, type);
   const pixelRatio = type === "desktop" || type === "laptop" || type === "tv" ? 2 : type === "watch" ? 2 : 3;
 
   return {
@@ -361,7 +365,7 @@ function createDeviceFromMockup(id: string): Device {
       width: Math.round(cssViewport.width * pixelRatio),
       height: Math.round(cssViewport.height * pixelRatio)
     },
-    mockupAssets: getMockupAssets(id),
+    mockupAssets,
     updatedAt: "2026-05-07",
     tags: tagsFromId(id, type, os)
   };

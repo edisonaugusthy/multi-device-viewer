@@ -9,6 +9,13 @@ export function toLandscapeAwareSize(size: Size, orientation: Orientation): Size
 }
 
 export function supportsOrientation(device: Device): boolean {
+  const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.localPath);
+  if (imageFrame) {
+    if (!imageFrame.viewport) return false;
+    if (imageFrame.viewport.portrait?.enableRotation === false) return false;
+    return Boolean(imageFrame.viewport.landscape);
+  }
+
   return device.type === "phone" || device.type === "tablet";
 }
 

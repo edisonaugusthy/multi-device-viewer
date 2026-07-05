@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Copy, BookOpen, Lock, Plus, RefreshCw, Share, Square, Home, MoreVertical } from "lucide-react";
-import type { Device, Orientation, Size } from "../../domain/device/device.types";
-import { getFrameProfile } from "../../domain/device/frame-profiles";
+import type { Device, MockupViewportConfig, Orientation, Size } from "../../domain/device/device.types";
+import { getFrameProfile, type DeviceFrameStyle } from "../../domain/device/frame-profiles";
 
 interface FrameSizeInput {
   device: Device;
@@ -17,9 +17,6 @@ interface ScreenRect {
   width: number;
   height: number;
 }
-
-const PHONE_SCREEN_INSET_X_RATIO = 0.2912;
-const PHONE_SCREEN_INSET_Y_RATIO = 0.2862;
 
 // ─── Main component ─────────────────────────────────────────────────────────
 export function DeviceFrame({
@@ -75,13 +72,20 @@ export function DeviceFrame({
   if (imageFrame?.localPath && imageFrame.width && imageFrame.height) {
     const frameW = imageFrame.width / 2;
     const frameH = imageFrame.height / 2;
+    const viewportConfig = imageFrame.viewport?.[orientation];
     const catalogScreenRect = screenRectFromInset(imageFrame.screenInset, frameW, frameH);
     const resolvedMeasuredScreenRect = catalogScreenRect ?? measuredScreenRect;
-    const waitForMeasuredScreen = requiresMeasuredImageScreenRect(device) && !resolvedMeasuredScreenRect;
-    const screenRect = getImageFrameScreenRect(device, viewportSize, frameW, frameH, resolvedMeasuredScreenRect);
+    const waitForMeasuredScreen = !viewportConfig && device.type !== "phone" && !resolvedMeasuredScreenRect;
+    const screenRect = adjustImageFrameScreenRect(
+      getImageFrameScreenRect(viewportSize, frameW, frameH, resolvedMeasuredScreenRect),
+      frameW,
+      frameH,
+      viewportConfig,
+    );
     const screenFit = fitViewportToScreen(viewportSize, screenRect);
-    const mobileChrome = imageBackedMobileChrome(device);
-    const imageStatusH = mobileChrome.showStatusBar && showStatusBar ? statusH : 0;
+    const viewportClipPath = getImageViewportClipPath(viewportConfig, orientation);
+    const mobileChrome = profile.imageChrome;
+    const imageStatusH = mobileChrome.showStatusBar && showStatusBar ? getImageStatusHeight(profile.style, viewportSize, statusH) : 0;
     const imageAddrH = mobileChrome.showAndroidTopBar && showUrlBar ? addrH : 0;
     const imageBottomH = mobileChrome.showBottomBar && showUrlBar ? bottomH : 0;
     const screenRadius =
@@ -91,7 +95,7 @@ export function DeviceFrame({
           ? contentR
           : Math.max(16, contentR);
     const desktopToolbarH = showUrlBar && (device.type === "laptop" || device.type === "desktop") ? 36 : 0;
-    const useSafariDesktopChrome = showUrlBar && isAppleDesktopDevice(device);
+    const useSafariDesktopChrome = showUrlBar && profile.style.desktopChrome === "safari";
     const imageContentH =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? Math.max(120, viewportSize.height - (useSafariDesktopChrome ? 56 : desktopToolbarH))
@@ -116,7 +120,8 @@ export function DeviceFrame({
               top: screenFit.top,
               width: screenFit.width,
               height: screenFit.height,
-              borderRadius: Math.max(4, (landscape ? Math.max(10, screenRadius - 6) : screenRadius) * screenFit.radiusScale),
+              borderRadius: viewportClipPath ? undefined : Math.max(4, (landscape ? Math.max(10, screenRadius - 6) : screenRadius) * screenFit.radiusScale),
+              clipPath: viewportClipPath,
               backgroundColor: device.type === "phone" && profile.platform === "ios"
                 ? "#ffffff"
                 : darkMode
@@ -152,11 +157,20 @@ export function DeviceFrame({
                       showBattery={showBattery}
                       compact={compact}
                       dark={darkMode}
-                      imageBacked
+                      imageBackedKind={device.type === "tablet" ? "tablet" : "phone"}
+                      height={imageStatusH || undefined}
                     />
                   )}
                   {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={imageStatusH} />}
-                  {mobileChrome.showCutout && <DeviceCutout kind={profile.kind} platform={profile.platform} style={profile.style} />}
+                  {mobileChrome.showCutout && !viewportClipPath && (
+                    <DeviceCutout
+                      kind={profile.kind}
+                      platform={profile.platform}
+                      style={profile.style}
+                      viewportSize={viewportSize}
+                    />
+                  )}
+                  {mobileChrome.showTabletCamera && <TabletCamera />}
                   <div
                     style={{
                       width: viewportSize.width,
@@ -425,7 +439,6 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
 function getImageFrameScreenRect(
-  device: Device,
   viewportSize: Size,
   frameW: number,
   frameH: number,
@@ -433,26 +446,6 @@ function getImageFrameScreenRect(
 ): ScreenRect {
   const extraW = Math.max(0, frameW - viewportSize.width);
   const extraH = Math.max(0, frameH - viewportSize.height);
-
-  if (device.type === "phone") {
-    if (!/ios/i.test(device.os) && measuredScreenRect) return measuredScreenRect;
-
-    // Phone PNGs include curved glass and camera hardware in the dark pixel area.
-    // For iPhones, use the calibrated viewport placement so the page surface
-    // stays inside the frame instead of covering the gold/black hardware edge.
-    const left = clamp(extraW * PHONE_SCREEN_INSET_X_RATIO, 0, extraW);
-    const top = clamp(extraH * PHONE_SCREEN_INSET_Y_RATIO, 0, extraH);
-    return {
-      left,
-      top,
-      width: Math.min(viewportSize.width, frameW - left),
-      height: Math.min(viewportSize.height, frameH - top),
-    };
-  }
-
-  if (device.type === "laptop" && measuredScreenRect) {
-    return laptopScreenRect(device, measuredScreenRect);
-  }
 
   if (measuredScreenRect) return measuredScreenRect;
 
@@ -464,49 +457,40 @@ function getImageFrameScreenRect(
   };
 }
 
-function laptopScreenRect(device: Device, measured: ScreenRect): ScreenRect {
-  if (device.id.includes("macbook-air")) {
-    return {
-      left: measured.left,
-      top: measured.top + 74,
-      width: measured.width,
-      height: Math.max(120, measured.height - 148),
-    };
-  }
-
-  if (device.id.includes("macbook-pro")) {
-    return {
-      left: measured.left + 8,
-      top: measured.top + 68,
-      width: Math.max(120, measured.width - 16),
-      height: Math.max(120, measured.height - 136),
-    };
-  }
+function adjustImageFrameScreenRect(
+  rect: ScreenRect,
+  frameW: number,
+  frameH: number,
+  adjustment?: MockupViewportConfig,
+): ScreenRect {
+  if (!adjustment) return rect;
 
   return {
-    left: measured.left + 8,
-    top: measured.top + 32,
-    width: Math.max(120, measured.width - 16),
-    height: Math.max(120, measured.height - 96),
+    left: clamp(adjustment.left, 0, frameW - 1),
+    top: clamp(adjustment.top, 0, frameH - 1),
+    width: clamp(adjustment.width, 1, frameW - adjustment.left),
+    height: clamp(adjustment.height, 1, frameH - adjustment.top),
   };
 }
 
+function getImageViewportClipPath(adjustment: MockupViewportConfig | undefined, orientation: Orientation) {
+  const path = adjustment?.paths?.[orientation];
+  const pathValue = Array.isArray(path) ? path.join(" ") : path;
+  return pathValue ? `path("${pathValue}")` : undefined;
+}
+
 function fitViewportToScreen(viewportSize: Size, screenRect: ScreenRect) {
-  const scale = Math.min(
-    screenRect.width / viewportSize.width,
-    screenRect.height / viewportSize.height,
-  );
-  const fittedWidth = viewportSize.width * scale;
-  const fittedHeight = viewportSize.height * scale;
+  const scaleX = screenRect.width / viewportSize.width;
+  const scaleY = screenRect.height / viewportSize.height;
 
   return {
-    scaleX: scale,
-    scaleY: scale,
-    radiusScale: scale,
-    width: fittedWidth,
-    height: fittedHeight,
-    left: screenRect.left + (screenRect.width - fittedWidth) / 2,
-    top: screenRect.top + (screenRect.height - fittedHeight) / 2,
+    scaleX,
+    scaleY,
+    radiusScale: Math.min(scaleX, scaleY),
+    width: screenRect.width,
+    height: screenRect.height,
+    left: screenRect.left,
+    top: screenRect.top,
   };
 }
 
@@ -631,16 +615,41 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
-function DeviceCutout({ kind, platform, style }: { kind: string; platform: string; style: { cutoutTop?: number; cutoutWidth?: number; cutoutHeight?: number } }) {
+function DeviceCutout({
+  kind,
+  platform,
+  style,
+  viewportSize,
+}: {
+  kind: string;
+  platform: string;
+  style: DeviceFrameStyle;
+  viewportSize?: Size;
+}) {
   if (kind === "iphone-dynamic-island") {
-    const width = style.cutoutWidth ?? 118;
-    const height = style.cutoutHeight ?? 26;
+    const configuredCutout = style.imageCutout && viewportSize
+      ? resolveImageCutout(style, viewportSize)
+      : null;
+    const cutout = configuredCutout ?? {
+      top: style.cutoutTop ?? 22,
+      left: "50%",
+      width: style.cutoutWidth ?? 118,
+      height: style.cutoutHeight ?? 26,
+      transform: "translateX(-50%)",
+    };
     return (
       <div
-        className="pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 rounded-full bg-black shadow-[inset_0_1px_2px_rgba(255,255,255,0.06)]"
-        style={{ top: style.cutoutTop ?? 22, width, height }}
+        className="pointer-events-none absolute z-30 rounded-full bg-black shadow-[inset_0_1px_2px_rgba(255,255,255,0.06)]"
+        style={cutout}
       >
-        <span className="absolute right-[16px] top-1/2 h-[8px] w-[8px] -translate-y-1/2 rounded-full bg-[#111] ring-[1.5px] ring-[#050505]" />
+        <span
+          className="absolute top-1/2 -translate-y-1/2 rounded-full bg-[#111] ring-[1.5px] ring-[#050505]"
+          style={{
+            right: Math.max(8, cutout.width * (style.imageCutout?.lensRightRatio ?? 0.16)),
+            width: Math.max(7, cutout.height * (style.imageCutout?.lensSizeRatio ?? 0.28)),
+            height: Math.max(7, cutout.height * (style.imageCutout?.lensSizeRatio ?? 0.28)),
+          }}
+        />
       </div>
     );
   }
@@ -665,17 +674,81 @@ function DeviceCutout({ kind, platform, style }: { kind: string; platform: strin
   return null;
 }
 
-function StatusBar({ platform, showBattery, compact, dark, imageBacked = false }: { platform: string; showBattery: boolean; compact: boolean; dark: boolean; imageBacked?: boolean }) {
+function TabletCamera() {
+  return (
+    <div className="pointer-events-none absolute inset-x-0 top-[7px] z-30 flex justify-center">
+      <span className="h-[7px] w-[7px] rounded-full bg-[#050505] ring-[1px] ring-white/10" />
+    </div>
+  );
+}
+
+function resolveImageCutout(style: DeviceFrameStyle, viewportSize: Size) {
+  const config = style.imageCutout;
+  if (!config) return null;
+  const width = Math.max(config.minWidth ?? 1, viewportSize.width * config.widthRatio);
+  const height = Math.max(config.minHeight ?? 1, viewportSize.height * config.heightRatio);
+  const left = config.leftRatio === undefined
+    ? (viewportSize.width - width) / 2
+    : viewportSize.width * config.leftRatio;
+
+  return {
+    top: viewportSize.height * config.topRatio,
+    left,
+    width,
+    height,
+    transform: "none",
+  };
+}
+
+function getImageStatusHeight(style: DeviceFrameStyle, viewportSize: Size, fallback: number) {
+  if (!style.imageStatusBarHeightRatio) return fallback;
+  return Math.max(fallback, Math.round(viewportSize.height * style.imageStatusBarHeightRatio));
+}
+
+function StatusBar({
+  platform,
+  showBattery,
+  compact,
+  dark,
+  imageBackedKind,
+  height,
+}: {
+  platform: string;
+  showBattery: boolean;
+  compact: boolean;
+  dark: boolean;
+  imageBackedKind?: "phone" | "tablet";
+  height?: number;
+}) {
   const time = platform === "android" ? "9:41" : "9:41";
-  const h = platform === "android" ? 28 : compact ? 28 : 44;
+  const h = height ?? (platform === "android" ? 28 : compact ? 28 : 44);
   const px = compact ? 14 : 18;
   const ios = platform === "ios";
-  const iosImageBacked = ios && imageBacked;
+  const iosImageBackedPhone = ios && imageBackedKind === "phone";
+  const iosImageBackedTablet = ios && imageBackedKind === "tablet";
+
+  if (iosImageBackedPhone) {
+    const iconColor = dark ? "text-white" : "text-slate-950";
+    return (
+      <div
+        className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center bg-transparent font-black text-[16px] ${iconColor}`}
+        style={{ height: h }}
+      >
+        <span className="flex h-full w-[36%] items-center justify-center">{time}</span>
+        <span className="ml-auto flex h-full w-[36%] items-center justify-center gap-1.5">
+          <SignalIcon />
+          <WifiIcon />
+          {showBattery && <BatteryIcon />}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between font-black text-[11px] ${
-        iosImageBacked
-          ? "bg-black text-white"
+        iosImageBackedTablet
+          ? "bg-transparent text-slate-950"
           : ios
           ? "bg-black text-white"
           : dark
@@ -854,41 +927,4 @@ function safeHostname(url: string) {
   } catch {
     return url;
   }
-}
-
-function isAppleDesktopDevice(device: Device) {
-  return device.brand.toLowerCase() === "apple" && (device.type === "laptop" || device.type === "desktop");
-}
-
-function requiresMeasuredImageScreenRect(device: Device) {
-  return device.type !== "phone";
-}
-
-function imageBackedMobileChrome(device: Device) {
-  const isIos = /ios|ipados/i.test(device.os);
-  const isAndroid = /android/i.test(device.os);
-  const isSpecial = device.tags.includes("special") || device.type === "custom" || device.type === "watch" || device.type === "tv";
-  const isHandheldSpecial = device.brand === "Zebra" && device.id.includes("tc");
-
-  if (isSpecial && !isHandheldSpecial) {
-    return {
-      showStatusBar: false,
-      showAndroidTopBar: false,
-      showBottomBar: false,
-      showCutout: false,
-      showSafariBar: false,
-      showAndroidBottomBar: false,
-      showHomeIndicator: false,
-    };
-  }
-
-  return {
-    showStatusBar: isIos || isAndroid,
-    showAndroidTopBar: isAndroid,
-    showBottomBar: isIos || isAndroid,
-    showCutout: isIos,
-    showSafariBar: isIos,
-    showAndroidBottomBar: isAndroid,
-    showHomeIndicator: isIos,
-  };
 }

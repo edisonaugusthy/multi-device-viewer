@@ -3,13 +3,11 @@ import { defaultDeviceIds, devices } from "../domain/device/device-catalog";
 import { supportsOrientation } from "../domain/device/device-service";
 import {
   createPreviewSlot,
-  createWorkbenchIssue,
   maxPreviewSlots,
   nextZoom,
-  normalizePreviewRefreshMs,
   normalizeUrl,
 } from "../domain/simulator/simulator-service";
-import type { DisplaySettings, PreviewSlot, SimulatorState, WorkbenchIssue } from "../domain/simulator/simulator.types";
+import type { DisplaySettings, PreviewSlot, SimulatorState } from "../domain/simulator/simulator.types";
 import { readStore, writeStore } from "../infrastructure/storage/local-store";
 
 interface SimulatorContextValue extends SimulatorState {
@@ -27,7 +25,6 @@ interface SimulatorContextValue extends SimulatorState {
   removeSlot: (slotId: string) => void;
   duplicateActiveSlot: (deviceId?: string) => void;
   updateDisplay: (display: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => void;
-  updateWorkbenchIssue: (issue: WorkbenchIssue | ((current: WorkbenchIssue) => WorkbenchIssue)) => void;
   useCount: number;
   setSourceTabId: (tabId: number | null) => void;
 }
@@ -36,36 +33,17 @@ interface SavedSimulatorSession {
   slots: PreviewSlot[];
   activeSlotId: string;
   display: DisplaySettings;
-  workbenchIssue: WorkbenchIssue;
 }
 
 const SimulatorContext = createContext<SimulatorContextValue | null>(null);
 
 const defaultDisplay: DisplaySettings = {
-  showStatusBar: true,
-  showBattery: true,
-  showUrlBar: true,
   scrollSync: false,
   darkMode: false,
-  presentationMode: false,
-  hideChrome: false,
-  inspectMode: false,
-  previewMode: "iframe",
-  liveReloadMs: 5000,
 };
 
 const startupDisplay: DisplaySettings = {
   ...defaultDisplay,
-  showStatusBar: true,
-  showBattery: true,
-  showUrlBar: true,
-  scrollSync: false,
-  darkMode: false,
-  presentationMode: false,
-  hideChrome: false,
-  inspectMode: false,
-  previewMode: "iframe",
-  liveReloadMs: 5000,
 };
 
 function launchTabIdFromSearch(): number | null {
@@ -88,8 +66,8 @@ function initialUrlFromSearch() {
 }
 
 const defaultSlotDeviceIds = [
-  "apple-iphone-14-pro-max-2022", // match common iPhone reference viewport
-  "macbook-air-2020-13",     // latest Apple laptop
+  "apple-iphone-17-pro-2025",   // latest iOS iPhone
+  "macbook-pro-16-2021",        // latest 16-inch Pro laptop
 ];
 
 export function SimulatorProvider({ children }: { children: ReactNode }) {
@@ -99,7 +77,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   });
   const [activeSlotId, setActiveSlotId] = useState(slots[0].id);
   const [display, setDisplay] = useState(defaultDisplay);
-  const [workbenchIssue, setWorkbenchIssue] = useState<WorkbenchIssue>(() => createWorkbenchIssue(defaultSlotDeviceIds[1] ?? ""));
   const [useCount, setUseCount] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const [sourceTabId, setSourceTabId] = useState<number | null>(() => launchTabIdFromSearch());
@@ -122,18 +99,15 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
               ...slot,
               url: launchUrl,
               reloadToken: slot.reloadToken + 1,
-              inspectEnabled: false,
-              inspectLocked: false,
             }))
           : restoredSlots;
         setSlots(nextSlots);
         setActiveSlotId(session.activeSlotId || nextSlots[0]?.id || slots[0].id);
         setDisplay({
           ...startupDisplay,
-          previewMode: session.display.previewMode ?? startupDisplay.previewMode,
-          liveReloadMs: normalizePreviewRefreshMs(session.display.liveReloadMs ?? startupDisplay.liveReloadMs),
+          darkMode: session.display?.darkMode ?? startupDisplay.darkMode,
+          scrollSync: session.display?.scrollSync ?? startupDisplay.scrollSync,
         });
-        setWorkbenchIssue(session.workbenchIssue);
       }
       if (launchTabId !== null) {
         setSourceTabId(launchTabId);
@@ -148,10 +122,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       slots,
       activeSlotId,
       display,
-      workbenchIssue,
     };
     void writeStore("mdvSimulatorSession", session);
-  }, [activeSlotId, display, hydrated, slots, workbenchIssue]);
+  }, [activeSlotId, display, hydrated, slots]);
 
   const updateSlot = useCallback(
     (slotId: string, updater: (slot: PreviewSlot) => PreviewSlot) => {
@@ -179,8 +152,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         orientation: canPreserveOrientation ? slot.orientation : "portrait",
         zoom: 0.58,
         zoomMode: "fit",
-        inspectEnabled: false,
-        inspectLocked: false
       };
     });
     setActiveSlot(slotId);
@@ -262,8 +233,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         deviceId: deviceId ?? source.deviceId,
         zoom: 0.58,
         zoomMode: "fit" as const,
-        inspectEnabled: false,
-        inspectLocked: false
       };
       const next = [...current, nextSlot];
       setActiveSlotId(nextSlot.id);
@@ -272,20 +241,11 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, [activeSlotId]);
 
   const updateDisplay = useCallback((nextDisplay: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => {
-    setDisplay((current) => {
-      const resolved =
-        typeof nextDisplay === "function"
-          ? (nextDisplay as (value: DisplaySettings) => DisplaySettings)(current)
-          : nextDisplay;
-      return {
-        ...resolved,
-        liveReloadMs: normalizePreviewRefreshMs(resolved.liveReloadMs),
-      };
-    });
-  }, []);
-
-  const updateWorkbenchIssue = useCallback((nextIssue: WorkbenchIssue | ((current: WorkbenchIssue) => WorkbenchIssue)) => {
-    setWorkbenchIssue((current) => (typeof nextIssue === "function" ? (nextIssue as (current: WorkbenchIssue) => WorkbenchIssue)(current) : nextIssue));
+    setDisplay((current) =>
+      typeof nextDisplay === "function"
+        ? (nextDisplay as (value: DisplaySettings) => DisplaySettings)(current)
+        : nextDisplay,
+    );
   }, []);
 
   // Listen for LOAD_URL messages sent by the background service worker when the
@@ -320,7 +280,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       slots,
       activeSlotId,
       display,
-      workbenchIssue,
       sourceTabId,
       useCount,
       setActiveSlot,
@@ -337,7 +296,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       removeSlot,
       duplicateActiveSlot,
       updateDisplay,
-      updateWorkbenchIssue,
       setSourceTabId,
     }),
     [
@@ -358,8 +316,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       slots,
       sourceTabId,
       updateDisplay,
-      updateWorkbenchIssue,
-      workbenchIssue,
       useCount,
       zoomSlot,
     ]

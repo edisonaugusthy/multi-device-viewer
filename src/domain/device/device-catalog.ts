@@ -25,9 +25,9 @@ const curatedDevices: Device[] = [
     year: 2025,
     type: "phone",
     os: "iOS",
-    cssViewport: { width: 430, height: 932 },
+    cssViewport: { width: 420, height: 912 },
     pixelRatio: 3,
-    manufacturerResolution: { width: 1290, height: 2796 },
+    manufacturerResolution: { width: 1260, height: 2736 },
     mockupAssets: getMockupAssets("apple-iphone-air-2025"),
     updatedAt: "2025-10-22",
     tags: ["notch", "ios", "new"]
@@ -145,7 +145,7 @@ const curatedDevices: Device[] = [
     year: 2024,
     type: "phone",
     os: "Android",
-    cssViewport: { width: 384, height: 824 },
+    cssViewport: { width: 384, height: 832 },
     pixelRatio: 3.75,
     manufacturerResolution: { width: 1440, height: 3120 },
     mockupAssets: getMockupAssets("samsung-galaxy-s24-ultra"),
@@ -160,7 +160,7 @@ const curatedDevices: Device[] = [
     year: 2024,
     type: "phone",
     os: "Android",
-    cssViewport: { width: 412, height: 915 },
+    cssViewport: { width: 412, height: 916 },
     pixelRatio: 2.625,
     manufacturerResolution: { width: 1080, height: 2400 },
     mockupAssets: getMockupAssets("google-pixel-8"),
@@ -325,9 +325,8 @@ export const devices: Device[] = [
 ];
 
 export const defaultDeviceIds = [
-  "apple-iphone-14-pro-max-2022",
-  "samsung-galaxy-s24",
-  "apple-ipad-air-4"
+  "apple-iphone-17-pro-2025",
+  "macbook-pro-16-2021"
 ];
 
 function createMockupOnlyDevices(existing: Device[]): Device[] {

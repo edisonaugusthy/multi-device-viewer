@@ -12,61 +12,6 @@ export async function captureTabWithOverlay(): Promise<string | null> {
   });
 }
 
-export interface ViewportCaptureRequest {
-  width: number;
-  height: number;
-  contentHeight?: number;
-  deviceScaleFactor?: number;
-  mobile?: boolean;
-  scrollToTop?: boolean;
-  tabId?: number | null;
-}
-
-export interface LivePreviewCaptureResult {
-  dataUrl: string | null;
-  activeUrl?: string;
-  activeTabId?: number;
-  error?: string;
-}
-
-export async function captureTabForViewport(
-  request: ViewportCaptureRequest,
-): Promise<string | null> {
-  if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) return null;
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage(
-      { type: "CAPTURE_TAB_FOR_VIEWPORT", ...request },
-      (response: { dataUrl?: string; error?: string } | undefined) => {
-        if (chrome.runtime.lastError || !response?.dataUrl) resolve(null);
-        else resolve(response.dataUrl);
-      },
-    );
-  });
-}
-
-export async function captureLivePreview(
-  request: ViewportCaptureRequest,
-): Promise<LivePreviewCaptureResult> {
-  if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) {
-    return { dataUrl: null, error: "runtime unavailable" };
-  }
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage(
-      { type: "CAPTURE_LIVE_TAB_PREVIEW", ...request },
-      (response: LivePreviewCaptureResult | undefined) => {
-        if (chrome.runtime.lastError || !response) {
-          resolve({
-            dataUrl: null,
-            error: chrome.runtime.lastError?.message ?? "capture failed",
-          });
-          return;
-        }
-        resolve(response);
-      },
-    );
-  });
-}
-
 export async function startTabRecording(tabId?: number | null): Promise<boolean> {
   if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) return false;
   return new Promise((resolve) => {

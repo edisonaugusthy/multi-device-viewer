@@ -1,20 +1,14 @@
 import {
   Camera,
   Check,
-  Crosshair,
-  ChevronDown,
-  LayoutGrid,
   Link2,
-  Monitor,
+  LayoutGrid,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
   PanelsTopLeft,
   Plus,
-  RectangleHorizontal,
   RotateCw,
-  Signal,
-  Smartphone,
   Star,
   Sun,
   Video,
@@ -23,9 +17,12 @@ import {
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
-import { captureTabWithOverlay, startTabRecording, stopTabRecording } from "../../domain/capture/capture-service";
-import { maxPreviewSlots, normalizeUrl } from "../../domain/simulator/simulator-service";
-import type { InspectData } from "./ElementInspectOverlay";
+import {
+  captureTabWithOverlay,
+  startTabRecording,
+  stopTabRecording,
+} from "../../domain/capture/capture-service";
+import { maxPreviewSlots } from "../../domain/simulator/simulator-service";
 import { PreviewCard } from "./PreviewCard";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CustomDeviceModal } from "./CustomDeviceModal";
@@ -37,13 +34,10 @@ export function SimulatorApp() {
     slots,
     display,
     activeSlotId,
-    workbenchIssue,
     addSlot,
     applyDevicePreset,
     reloadAllSlots,
     updateDisplay,
-    updateWorkbenchIssue,
-    setAllSlotsUrl,
     sourceTabId,
     useCount,
   } = useSimulator();
@@ -60,11 +54,7 @@ export function SimulatorApp() {
   const [showCustomDevice, setShowCustomDevice] = useState(false);
   const [showPresetsSection, setShowPresetsSection] = useState(false);
   const [showReviewBanner, setShowReviewBanner] = useState(false);
-  const [inspectSnapshots, setInspectSnapshots] = useState<Record<string, InspectData | null>>({});
-  const [inspectResetToken, setInspectResetToken] = useState(0);
   const [recording, setRecording] = useState(false);
-  const copyResetTimerRef = useRef<number | undefined>(undefined);
-  const [copyButtonLabel, setCopyButtonLabel] = useState("Copy prompt");
   const reviewUrl = "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?utm_source=item-share-cbuse";
 
   const closeViewer = () => {
@@ -119,10 +109,6 @@ export function SimulatorApp() {
   }, []);
 
   useEffect(() => {
-    return () => window.clearTimeout(copyResetTimerRef.current);
-  }, []);
-
-  useEffect(() => {
     if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
 
     const listener = (message: unknown) => {
@@ -135,73 +121,6 @@ export function SimulatorApp() {
     chrome.runtime.onMessage.addListener(listener);
     return () => chrome.runtime.onMessage.removeListener(listener);
   }, []);
-
-  // ── URL bar state ─────────────────────────────────────────────────────────
-  const activeSlot = slots.find((s) => s.id === activeSlotId) ?? slots[0];
-  const [urlDraft, setUrlDraft] = useState(activeSlot?.url ?? "");
-  const activeInspect = inspectSnapshots[activeSlotId] ?? null;
-  const compareSlot = slots.find((slot) => slot.id === workbenchIssue.compareSlotId) ?? null;
-  const compareInspect = compareSlot ? inspectSnapshots[compareSlot.id] ?? null : null;
-
-  // Keep draft in sync when active slot URL changes (e.g. after Apply)
-  useEffect(() => {
-    setUrlDraft(activeSlot?.url ?? "");
-  }, [activeSlot?.url]);
-
-  function applyUrl(raw: string) {
-    const normalized = normalizeUrl(raw);
-    setUrlDraft(normalized);
-    setAllSlotsUrl(normalized);
-  }
-
-  function handleUrlKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      applyUrl(urlDraft);
-    }
-    if (e.key === "Escape") {
-      setUrlDraft(activeSlot?.url ?? "");
-      (e.target as HTMLInputElement).blur();
-    }
-  }
-
-  const updateInspectSnapshot = useCallback((slotId: string, data: InspectData) => {
-    setInspectSnapshots((current) => ({ ...current, [slotId]: data }));
-  }, []);
-
-  const resetInspectHover = useCallback(() => {
-    setInspectResetToken((current) => current + 1);
-  }, []);
-
-  const captureReport = useCallback(async () => {
-    if (!activeSlot) return;
-    window.clearTimeout(copyResetTimerRef.current);
-    const lines = buildIssueReport({
-      url: activeSlot.url,
-      activeSlot,
-      activeDevice: findDevice(activeSlot.deviceId),
-      activeInspect,
-      compareSlot,
-      compareDevice: compareSlot ? findDevice(compareSlot.deviceId) : null,
-      compareInspect,
-      display,
-      workbenchIssue,
-    });
-    const text = lines.join("\n");
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopyButtonLabel("Copied");
-      updateWorkbenchIssue((current) => ({
-        ...current,
-        lastCapturedAt: new Date().toISOString(),
-      }));
-      copyResetTimerRef.current = window.setTimeout(() => {
-        setCopyButtonLabel("Copy prompt");
-      }, 5000);
-    } catch {
-      console.warn("Failed to copy report");
-    }
-  }, [activeInspect, activeSlot, compareInspect, compareSlot, display, findDevice, updateWorkbenchIssue, workbenchIssue]);
 
   // ── Screenshots ───────────────────────────────────────────────────────────
   async function takeScreenshot() {
@@ -366,72 +285,13 @@ export function SimulatorApp() {
 
             {/* Display */}
             <div>
-              <Label dark={dark}>Preview source</Label>
-              <div className="mt-1.5 grid grid-cols-2 gap-1">
-                <SidebarModeBtn
-                  active={display.previewMode === "iframe"}
-                  dark={dark}
-                  icon={<Monitor size={14} />}
-                  onClick={() =>
-                    updateDisplay((c) => ({
-                      ...c,
-                      previewMode: "iframe",
-                    }))
-                  }
-                >
-                  Iframe
-                </SidebarModeBtn>
-                <SidebarModeBtn
-                  active={display.previewMode === "live"}
-                  dark={dark}
-                  disabled={!sourceTabId}
-                  icon={<Smartphone size={14} />}
-                  onClick={() =>
-                    updateDisplay((c) => ({
-                      ...c,
-                      previewMode: "live",
-                      inspectMode: false,
-                      scrollSync: false,
-                    }))
-                  }
-                >
-                  Live tab
-                </SidebarModeBtn>
-              </div>
-              <p className={`mt-1 text-[10px] leading-4 ${dark ? "text-slate-500" : "text-slate-400"}`}>
-                {sourceTabId
-                  ? "Live tab mirrors the original page session without asking you to log in again."
-                  : "Live tab becomes available when the viewer is opened from a browser tab."}
-              </p>
-            </div>
-
-            <div>
               <Label dark={dark}>Display</Label>
               <div className="mt-1.5 grid grid-cols-2 gap-1">
-                <Toggle
-                  active={display.showStatusBar}
-                  dark={dark}
-                  icon={<Signal size={15} />}
-                  onClick={() => updateDisplay((c) => ({ ...c, showStatusBar: !c.showStatusBar }))}
-                >
-                  Status bar
-                </Toggle>
-                <Toggle
-                  active={display.showUrlBar}
-                  dark={dark}
-                  icon={<RectangleHorizontal size={15} />}
-                  onClick={() => updateDisplay((c) => ({ ...c, showUrlBar: !c.showUrlBar }))}
-                >
-                  Browser chrome
-                </Toggle>
                 <Toggle
                   active={display.scrollSync}
                   dark={dark}
                   icon={<Link2 size={15} />}
-                  onClick={() => {
-                    resetInspectHover();
-                    updateDisplay((c) => ({ ...c, scrollSync: !c.scrollSync }));
-                  }}
+                  onClick={() => updateDisplay((c) => ({ ...c, scrollSync: !c.scrollSync }))}
                 >
                   Scroll sync
                 </Toggle>
@@ -443,66 +303,6 @@ export function SimulatorApp() {
                 >
                   Dark mode
                 </Toggle>
-                <Toggle
-                  active={display.inspectMode}
-                  dark={dark}
-                  icon={<Crosshair size={15} />}
-                  disabled={display.previewMode === "live"}
-                  onClick={() => updateDisplay((c) => ({ ...c, inspectMode: !c.inspectMode }))}
-                >
-                  Inspect element
-                </Toggle>
-              </div>
-            </div>
-
-            {/* Workbench */}
-            <div>
-              <Label dark={dark}>Generate prompt for AI</Label>
-              <div className="mt-1.5 space-y-1">
-                <textarea
-                  value={workbenchIssue.note}
-                  onChange={(e) => updateWorkbenchIssue((current) => ({ ...current, note: e.target.value }))}
-                  placeholder="Describe the issue for AI. This will copy with all device details; it does not show results here."
-                  className={`min-h-[4.5rem] w-full resize-none rounded-md border px-2 py-1.5 text-[11px] outline-none transition ${
-                    dark
-                      ? "border-white/10 bg-white/[0.04] text-white placeholder:text-slate-500"
-                      : "border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400"
-                  }`}
-                />
-                <div className={`relative rounded-md border ${dark ? "border-white/10 bg-white/[0.04]" : "border-slate-200 bg-slate-50"}`}>
-                  <select
-                    value={workbenchIssue.compareSlotId}
-                    onChange={(e) => updateWorkbenchIssue((current) => ({ ...current, compareSlotId: e.target.value }))}
-                    className={`h-7 w-full appearance-none rounded-md bg-transparent px-3 pr-9 text-[11px] outline-none transition ${dark ? "text-white" : "text-slate-800"}`}
-                  >
-                    <option value="">Compare device</option>
-                    {slots
-                      .filter((slot) => slot.id !== activeSlotId)
-                      .map((slot) => {
-                        const device = findDevice(slot.deviceId);
-                        return (
-                          <option key={slot.id} value={slot.id}>
-                            {device.name}
-                          </option>
-                        );
-                      })}
-                  </select>
-                  <ChevronDown
-                    size={13}
-                    className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 ${dark ? "text-slate-400" : "text-slate-500"}`}
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => void captureReport()}
-                  className={`flex h-8 w-full items-center justify-center rounded-md border px-3 text-[12px] font-semibold transition ${
-                    dark
-                      ? "border-teal-400/30 bg-teal-400/10 text-teal-100 hover:bg-teal-400/15"
-                      : "border-teal-200 bg-teal-50 text-teal-900 hover:bg-teal-100"
-                  }`}
-                >
-                  {copyButtonLabel}
-                </button>
               </div>
             </div>
 
@@ -588,36 +388,8 @@ export function SimulatorApp() {
           </div>
         </aside>
 
-        {/* ── Right pane: URL bar + preview canvas ── */}
+        {/* ── Right pane: preview canvas ── */}
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden max-[720px]:pl-10">
-
-          {/* ── Global URL bar ── */}
-          <div className={`flex shrink-0 items-center gap-2 border-b px-3 py-2 ${dark ? "border-white/10 bg-[#151922]" : "border-black/[0.06] bg-white"}`}>
-            <input
-              type="url"
-              value={urlDraft}
-              onChange={(e) => setUrlDraft(e.target.value)}
-              onKeyDown={handleUrlKeyDown}
-              onFocus={(e) => e.target.select()}
-              onBlur={(e) => applyUrl(e.target.value)}
-              placeholder="Enter URL…"
-              spellCheck={false}
-              className={`min-w-0 flex-1 rounded-lg border px-3 py-1.5 font-mono text-[12px] font-medium outline-none transition ${
-                dark
-                  ? "border-white/10 bg-white/[0.05] text-white placeholder:text-slate-500 focus:border-teal-400/60 focus:bg-white/[0.08]"
-                  : "border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400 focus:border-teal-500 focus:bg-white"
-              }`}
-            />
-            <button
-              type="button"
-              onClick={() => applyUrl(urlDraft)}
-              className={`h-8 shrink-0 rounded-lg px-3 text-[12px] font-black transition ${
-                dark ? "bg-teal-500/20 text-teal-300 hover:bg-teal-500/30" : "bg-teal-500 text-white hover:bg-teal-400"
-              }`}
-            >
-              Go
-            </button>
-          </div>
 
           {/* ── Preview canvas (resizable panels) ── */}
           <main className="flex min-h-0 flex-1 overflow-hidden">
@@ -641,21 +413,8 @@ export function SimulatorApp() {
                     slot={slot}
                     device={findDevice(slot.deviceId)}
                     display={display}
-                    sourceTabId={sourceTabId}
                     removable={slots.length > 1}
                     onCapture={() => void takeScreenshot()}
-                    onSwitchToLivePreview={() =>
-                      updateDisplay((current) => ({
-                        ...current,
-                        previewMode: "live",
-                        inspectMode: false,
-                        scrollSync: false,
-                      }))
-                    }
-                    compareTargetSlotId={compareSlot?.id}
-                    compareSelector={activeInspect?.selector}
-                    onInspectData={updateInspectSnapshot}
-                    inspectResetToken={inspectResetToken}
                   />
                   {/* Drag handle */}
                   {i < slots.length - 1 && !narrowLayout && (
@@ -727,118 +486,6 @@ function SidebarBtn({
       {children}
     </button>
   );
-}
-
-function SidebarModeBtn({
-  icon,
-  children,
-  onClick,
-  disabled,
-  dark,
-  active,
-}: {
-  icon: ReactNode;
-  children: ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  dark: boolean;
-  active: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      className={`flex h-8 items-center justify-center gap-2 rounded-md border px-2 text-[11px] font-black transition disabled:cursor-not-allowed disabled:opacity-50 ${
-        active
-          ? dark
-            ? "border-teal-400/40 bg-teal-400/15 text-teal-100"
-            : "border-teal-200 bg-teal-50 text-teal-900"
-          : dark
-            ? "border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.06]"
-            : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-      }`}
-    >
-      {icon}
-      {children}
-    </button>
-  );
-}
-
-function buildIssueReport({
-  url,
-  activeSlot,
-  activeDevice,
-  activeInspect,
-  compareSlot,
-  compareDevice,
-  compareInspect,
-  display,
-  workbenchIssue,
-}: {
-  url: string;
-  activeSlot: { id: string; deviceId: string; orientation: string; zoomMode: string; zoom: number; reloadToken: number; showFrame: boolean };
-  activeDevice: { name: string; cssViewport: { width: number; height: number }; pixelRatio: number; type: string; os: string; brand: string } | null;
-  activeInspect: InspectData | null;
-  compareSlot: { id: string; deviceId: string } | null;
-  compareDevice: { name: string; cssViewport: { width: number; height: number }; pixelRatio: number; type: string; os: string; brand: string } | null;
-  compareInspect: InspectData | null;
-  display: { scrollSync: boolean; darkMode: boolean; inspectMode: boolean; showUrlBar: boolean; showStatusBar: boolean; hideChrome: boolean; presentationMode: boolean };
-  workbenchIssue: { note: string; compareSlotId: string; lastCapturedAt: string | null; lastCaptureLabel: string };
-}) {
-  const lines: string[] = [];
-  lines.push(`# Multi Device Viewer Issue Report`);
-  lines.push("");
-  lines.push(`URL: ${url}`);
-  lines.push(`Note: ${workbenchIssue.note || "Describe the issue here."}`);
-  lines.push(`Compare device: ${compareDevice?.name ?? "None"}`);
-  lines.push("");
-  lines.push(`## Active device`);
-  lines.push(`- Device: ${activeDevice?.name ?? "Unknown"}`);
-  lines.push(`- Viewport: ${activeDevice ? `${activeDevice.cssViewport.width} x ${activeDevice.cssViewport.height}` : "Unknown"}`);
-  lines.push(`- DPR: ${activeDevice?.pixelRatio ?? "Unknown"}`);
-  lines.push(`- Orientation: ${activeSlot.orientation}`);
-  lines.push(`- Zoom: ${activeSlot.zoomMode} (${activeSlot.zoom})`);
-  lines.push(`- Chrome: ${display.showUrlBar ? "Visible" : "Hidden"}`);
-  lines.push(`- Scroll sync: ${display.scrollSync ? "On" : "Off"}`);
-  lines.push(`- Inspect mode: ${display.inspectMode ? "On" : "Off"}`);
-  lines.push("");
-  lines.push(`## Selected element`);
-  if (activeInspect) {
-    lines.push(`- Selector: ${activeInspect.selector}`);
-    lines.push(`- Breadcrumb: ${activeInspect.breadcrumb}`);
-    lines.push(`- Visibility: ${activeInspect.isVisibleInViewport ? "Visible" : `Hidden (${activeInspect.visibilityReason})`}`);
-    lines.push(`- Size: ${Math.round(activeInspect.width)} x ${Math.round(activeInspect.height)}`);
-    lines.push(`- Layout: ${activeInspect.display}, ${activeInspect.position}, overflow ${activeInspect.overflowX}/${activeInspect.overflowY}`);
-    lines.push(`- Font: ${activeInspect.fontFamily}`);
-    lines.push(`- Color: ${activeInspect.colorHex}`);
-    lines.push(`- Background: ${activeInspect.backgroundColorHex}`);
-    lines.push("");
-    lines.push(`### Computed CSS`);
-    lines.push("```css");
-    lines.push(activeInspect.cssSnippet);
-    lines.push("```");
-  } else {
-    lines.push(`- No inspected element captured yet.`);
-  }
-  lines.push("");
-  lines.push(`## Compare device`);
-  if (compareSlot && compareDevice) {
-    lines.push(`- Device: ${compareDevice.name}`);
-    lines.push(`- Viewport: ${compareDevice.cssViewport.width} x ${compareDevice.cssViewport.height}`);
-    lines.push(`- DPR: ${compareDevice.pixelRatio}`);
-    lines.push(`- Element selector: ${compareInspect?.selector ?? activeInspect?.selector ?? "Not captured"}`);
-    if (compareInspect) {
-      lines.push(`- Visibility: ${compareInspect.isVisibleInViewport ? "Visible" : `Hidden (${compareInspect.visibilityReason})`}`);
-      lines.push(`- Size: ${Math.round(compareInspect.width)} x ${Math.round(compareInspect.height)}`);
-    }
-  } else {
-    lines.push(`- No compare device selected.`);
-  }
-  lines.push("");
-  lines.push(`## AI prompt`);
-  lines.push(`Please inspect the selected element across devices, explain any responsive issue, and suggest the smallest code change that fixes it without breaking the layout.`);
-  return lines;
 }
 
 function Toggle({

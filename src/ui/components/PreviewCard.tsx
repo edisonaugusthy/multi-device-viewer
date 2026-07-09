@@ -1,5 +1,4 @@
 import {
-  Camera,
   ChevronDown,
   ExternalLink,
   Minus,
@@ -20,16 +19,10 @@ import type {
 } from "../../domain/simulator/simulator.types";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
-import {
-  DEVICE_GROUP_LABEL,
-  DEVICE_GROUP_ORDER,
-  deviceGroupFor,
-} from "../../domain/device/device-groups";
-import { captureLivePreview } from "../../domain/capture/capture-service";
 import { DeviceFrame, estimateDeviceFrameSize } from "./DeviceFrame";
-import { ElementInspectOverlay, type InspectData } from "./ElementInspectOverlay";
 
 const CARD_PAD = 32;
+
 interface ScrollSyncPayload {
   slotId: string;
   scrollLeft: number;
@@ -65,14 +58,8 @@ interface PreviewCardProps {
   slot: PreviewSlot;
   device: Device;
   display: DisplaySettings;
-  sourceTabId: number | null;
   removable: boolean;
   onCapture: () => void;
-  onSwitchToLivePreview: () => void;
-  compareTargetSlotId?: string;
-  compareSelector?: string;
-  onInspectData?: (slotId: string, data: InspectData) => void;
-  inspectResetToken: number;
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -81,19 +68,12 @@ export function PreviewCard({
   slot,
   device,
   display,
-  sourceTabId,
   removable,
   onCapture,
-  onSwitchToLivePreview,
-  compareTargetSlotId,
-  compareSelector,
-  onInspectData,
-  inspectResetToken,
 }: PreviewCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const bridgeStatusTimer = useRef<number | undefined>(undefined);
-  const browserChromeTimer = useRef<number | undefined>(undefined);
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
   const [containerSize, setContainerSize] = useState<Size>({
     width: 0,
@@ -101,15 +81,6 @@ export function PreviewCard({
   });
   const [blocked, setBlocked] = useState(false);
   const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("checking");
-  const [inspectData, setInspectData] = useState<InspectData | null>(null);
-  const [inspectSuppressed, setInspectSuppressed] = useState(false);
-  const [browserChromeHidden, setBrowserChromeHidden] = useState(false);
-  const [livePreviewUrl, setLivePreviewUrl] = useState<string | null>(null);
-  const [livePreviewBusy, setLivePreviewBusy] = useState(false);
-  const [livePreviewError, setLivePreviewError] = useState<string | null>(null);
-  // Direct DOM ref for the highlight box — updated imperatively on every MDV_INSPECT_MOVE
-  // to avoid React re-renders on every mousemove frame.
-  const highlightRef = useRef<HTMLDivElement | null>(null);
   const {
     setActiveSlot,
     removeSlot,
@@ -125,11 +96,14 @@ export function PreviewCard({
     ? toLandscapeAwareSize(device.cssViewport, effectiveOrientation)
     : device.cssViewport;
 
+  // Device chrome is always visible — no runtime toggle. Pass constants.
+  const SHOW_CHROME = { showStatusBar: true, showUrlBar: true, showBattery: true } as const;
+
   const frameSize = estimateDeviceFrameSize({
     device,
     showFrame: slot.showFrame,
-    showStatusBar: display.showStatusBar,
-    showUrlBar: display.showUrlBar,
+    showStatusBar: SHOW_CHROME.showStatusBar,
+    showUrlBar: SHOW_CHROME.showUrlBar,
     viewportSize,
   });
 
@@ -146,32 +120,8 @@ export function PreviewCard({
       : slot.zoomMode === "fit"
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
-  const liveMode = display.previewMode === "live";
-  const chromeScrollProgress = browserChromeHidden ? 1 : 0;
-
-  const syncInspectBridge = (iframe: HTMLIFrameElement | null) => {
-    if (!iframe?.contentWindow) return;
-    iframe.contentWindow.postMessage(
-      {
-        type: display.inspectMode && !inspectSuppressed ? "MDV_INSPECT_ENABLE" : "MDV_INSPECT_DISABLE",
-        slotId: slot.id,
-      },
-      "*",
-    );
-  };
 
   const syncScrollBridge = (iframe: HTMLIFrameElement | null) => {
-    if (!iframe?.contentWindow) return;
-    iframe.contentWindow.postMessage(
-      {
-        type: display.scrollSync ? "MDV_SCROLL_SYNC_ENABLE" : "MDV_SCROLL_SYNC_DISABLE",
-        slotId: slot.id,
-      },
-      "*",
-    );
-  };
-
-  const syncInteractionBridge = (iframe: HTMLIFrameElement | null) => {
     if (!iframe?.contentWindow) return;
     iframe.contentWindow.postMessage(
       {
@@ -198,107 +148,26 @@ export function PreviewCard({
   useEffect(() => {
     setBlocked(false);
     setBridgeStatus("checking");
-    setInspectData(null);
-    setInspectSuppressed(false);
-    setLivePreviewError(null);
-    if (highlightRef.current) highlightRef.current.style.display = "none";
   }, [device.id, slot.reloadToken, slot.url]);
-
-  useEffect(() => {
-    if (!liveMode) return;
-    if (!sourceTabId) {
-      setLivePreviewUrl(null);
-      setLivePreviewBusy(false);
-      setLivePreviewError("Open the viewer from a browser tab to use live previews.");
-      return;
-    }
-
-    let cancelled = false;
-    const mobile =
-      device.type === "phone" ||
-      device.type === "tablet" ||
-      device.type === "watch" ||
-      device.type === "custom";
-    const refresh = async () => {
-      setLivePreviewBusy(true);
-      const result = await captureLivePreview({
-        tabId: sourceTabId,
-        width: viewportSize.width,
-        height: viewportSize.height,
-        contentHeight: viewportSize.height,
-        deviceScaleFactor: Math.max(1, Math.min(3, Math.round(device.pixelRatio || 2))),
-        mobile,
-      });
-
-      if (cancelled) return;
-
-      setLivePreviewBusy(false);
-      if (result.dataUrl) {
-        setLivePreviewUrl(result.dataUrl);
-        setLivePreviewError(null);
-        setBlocked(false);
-        setBridgeStatus("ready");
-        return;
-      }
-
-      setLivePreviewUrl(null);
-      setLivePreviewError(result.error ?? "Live preview unavailable.");
-      setBridgeStatus("unavailable");
-    };
-
-    void refresh();
-    const timer = window.setInterval(refresh, display.liveReloadMs);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, [
-    liveMode,
-    sourceTabId,
-    viewportSize.width,
-    viewportSize.height,
-    device.pixelRatio,
-    device.type,
-    slot.reloadToken,
-    display.liveReloadMs,
-  ]);
-
-  useEffect(() => {
-    if (!compareSelector || compareTargetSlotId !== slot.id) return;
-    iframeRef.current?.contentWindow?.postMessage(
-      { type: "MDV_INSPECT_QUERY", slotId: slot.id, selector: compareSelector },
-      "*",
-    );
-  }, [compareSelector, compareTargetSlotId, slot.id]);
 
   useEffect(() => {
     bridgeStatusRef.current = bridgeStatus;
   }, [bridgeStatus]);
 
+  // Register the iframe with the in-iframe scroll-sync bridge. The content script
+  // is injected by extension-routes/messaging, so we only need to post the
+  // registration + scroll-sync toggle here. Inspect / live features are removed.
   useEffect(() => {
     const iframe = iframeRef.current;
     if (!iframe) return;
 
     const register = () => {
       setBridgeStatus("checking");
-      const postRegister = () => {
-        iframe.contentWindow?.postMessage(
-          { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
-          "*",
-        );
-        syncInspectBridge(iframe);
-        syncScrollBridge(iframe);
-        syncInteractionBridge(iframe);
-      };
-
-      const injectAndRegister = () => {
-        void ensurePreviewBridgeInjected().finally(postRegister);
-      };
-
-      injectAndRegister();
-      [250, 750, 1500].forEach((delay) => {
-        window.setTimeout(injectAndRegister, delay);
-      });
+      iframe.contentWindow?.postMessage(
+        { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
+        "*",
+      );
+      syncScrollBridge(iframe);
 
       window.clearTimeout(bridgeStatusTimer.current);
       bridgeStatusTimer.current = window.setTimeout(() => {
@@ -338,11 +207,8 @@ export function PreviewCard({
 
       if (data.type === "MDV_SCROLL_SYNC_EVENT") {
         setBridgeStatus("ready");
-        setBrowserChromeHidden(true);
-        window.clearTimeout(browserChromeTimer.current);
-        browserChromeTimer.current = window.setTimeout(() => {
-          setBrowserChromeHidden(false);
-        }, 650);
+        // Device chrome (status/address/bottom bars) is intentionally STATIC — we no
+        // longer collapse it on scroll. Doing so reflowed the iframe every frame.
         if (!display.scrollSync) return;
         broadcastScrollSync(data as ScrollSyncPayload);
         return;
@@ -357,8 +223,6 @@ export function PreviewCard({
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, [display.scrollSync, slot.id]);
-
-  useEffect(() => () => window.clearTimeout(browserChromeTimer.current), []);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -408,75 +272,6 @@ export function PreviewCard({
     syncScrollBridge(iframeRef.current);
   }, [display.scrollSync, slot.id]);
 
-  // ── Inspect mode bridge ───────────────────────────────────────────────────
-  useEffect(() => {
-    if (!iframeRef.current) return;
-    if (!display.inspectMode) {
-      setInspectSuppressed(false);
-    }
-    syncInspectBridge(iframeRef.current);
-    if (!display.inspectMode) {
-      setInspectData(null);
-      if (highlightRef.current) highlightRef.current.style.display = "none";
-    }
-  }, [display.inspectMode, inspectSuppressed, slot.id]);
-
-  useEffect(() => {
-    if (display.inspectMode) {
-      setInspectData(null);
-      setInspectSuppressed(true);
-      if (highlightRef.current) highlightRef.current.style.display = "none";
-    }
-  }, [device.id]);
-
-  useEffect(() => {
-    setInspectData(null);
-    if (highlightRef.current) highlightRef.current.style.display = "none";
-  }, [inspectResetToken]);
-
-  useEffect(() => {
-    const onMessage = (event: MessageEvent) => {
-      if (event.source !== iframeRef.current?.contentWindow) return;
-      const msg = event.data;
-      if (!msg || typeof msg !== "object" || msg.slotId !== slot.id) return;
-
-      // ── Hot path: just move the highlight box via direct DOM, zero React re-render ──
-      if (msg.type === "MDV_INSPECT_MOVE") {
-        const h = highlightRef.current;
-        const container = containerRef.current;
-        const iframe = iframeRef.current;
-        if (!h || !container || !iframe) return;
-        if (msg.hidden) {
-          h.style.display = "none";
-          return;
-        }
-        const cr = container.getBoundingClientRect();
-        const ir = iframe.getBoundingClientRect();
-        const ox = ir.left - cr.left;
-        const oy = ir.top - cr.top;
-        const r = msg.rect as { top: number; left: number; width: number; height: number };
-        // scale is captured from the closure — it's stable between renders
-        h.style.left   = `${ox + r.left   * scale}px`;
-        h.style.top    = `${oy + r.top    * scale}px`;
-        h.style.width  = `${Math.max(1, r.width  * scale)}px`;
-        h.style.height = `${Math.max(1, r.height * scale)}px`;
-        h.style.display = "block";
-        return;
-      }
-
-      // ── Element changed: update tooltip panel via React state ──
-      if (msg.type === "MDV_INSPECT_DATA") {
-        const data = msg as unknown as InspectData;
-        onInspectData?.(slot.id, data);
-        setInspectData(data);
-        return;
-      }
-    };
-
-    window.addEventListener("message", onMessage);
-    return () => window.removeEventListener("message", onMessage);
-  }, [slot.id, scale]); // scale needed for coord math in the closure
-
   return (
     <section
       className="flex h-full flex-col overflow-hidden"
@@ -492,7 +287,6 @@ export function PreviewCard({
             : "border-black/[0.06] bg-white"
         }`}
       >
-        {/* Device switcher */}
         <DeviceSwitcher
           currentDevice={device}
           dark={display.darkMode}
@@ -503,29 +297,17 @@ export function PreviewCard({
           className={`mx-0.5 h-4 w-px shrink-0 ${display.darkMode ? "bg-white/10" : "bg-slate-200"}`}
         />
 
-        {/* Viewport dims */}
         <span
           className={`shrink-0 whitespace-nowrap text-[10px] font-medium tabular-nums tracking-tight ${display.darkMode ? "text-slate-400" : "text-slate-500"}`}
         >
           {viewportSize.width}×{viewportSize.height}
         </span>
-        {liveMode && (
-          <span
-            className={`ml-1 shrink-0 rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.16em] ${
-              display.darkMode
-                ? "bg-teal-400/15 text-teal-100"
-                : "bg-teal-50 text-teal-700"
-            }`}
-          >
-            {livePreviewBusy ? "Refreshing" : "Live tab"}
-          </span>
-        )}
 
         <div className="min-w-0 flex-1" />
 
         <CardBtn
           dark={display.darkMode}
-          label={liveMode ? "Refresh live preview" : "Reload preview"}
+          label="Reload preview"
           onClick={() => reloadSlot(slot.id)}
         >
           <RefreshCw size={14} />
@@ -585,14 +367,14 @@ export function PreviewCard({
             <DeviceFrame
               device={device}
               showFrame={slot.showFrame}
-              showStatusBar={display.showStatusBar}
-              showBattery={display.showBattery}
-              showUrlBar={display.showUrlBar}
+              showStatusBar={SHOW_CHROME.showStatusBar}
+              showBattery={SHOW_CHROME.showBattery}
+              showUrlBar={SHOW_CHROME.showUrlBar}
               darkMode={display.darkMode}
               url={slot.url}
               viewportSize={viewportSize}
               orientation={effectiveOrientation}
-              scrollProgress={chromeScrollProgress}
+              scrollProgress={0}
             >
               <div
                 style={{
@@ -601,27 +383,11 @@ export function PreviewCard({
                   overflow: "hidden",
                 }}
               >
-                {liveMode ? (
-                  livePreviewUrl ? (
-                    <img
-                      src={livePreviewUrl}
-                      alt={`${device.name} live preview`}
-                      className="h-full w-full select-none object-cover object-top"
-                      draggable={false}
-                    />
-                  ) : (
-                    <LivePreviewFallback
-                      message={livePreviewError}
-                      onReload={() => reloadSlot(slot.id)}
-                    />
-                  )
-                ) : blocked ? (
+                {blocked ? (
                   <BlockedView
                     url={slot.url}
                     onCapture={onCapture}
                     onReload={() => reloadSlot(slot.id)}
-                    canUseLivePreview={Boolean(sourceTabId)}
-                    onUseLivePreview={onSwitchToLivePreview}
                   />
                 ) : (
                   <iframe
@@ -646,31 +412,6 @@ export function PreviewCard({
             </DeviceFrame>
           </div>
         )}
-
-        {/* Inspect highlight box — driven imperatively via highlightRef, no React re-render on move */}
-        {display.inspectMode && (
-          <div
-            ref={highlightRef}
-            className="pointer-events-none absolute rounded-[2px] border-2 border-blue-500"
-            style={{
-              display: "none",
-              background: "rgba(59,130,246,0.07)",
-              boxShadow: "0 0 0 1px rgba(59,130,246,0.3)",
-              zIndex: 40,
-            }}
-          />
-        )}
-
-        {/* Inspect tooltip panel — only re-renders when element changes */}
-        {display.inspectMode && (
-          <ElementInspectOverlay
-            data={inspectData}
-            scale={scale}
-            dark={display.darkMode}
-            containerRef={containerRef}
-            iframeRef={iframeRef}
-          />
-        )}
       </div>
     </section>
   );
@@ -688,85 +429,29 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
   );
 }
 
-function ensurePreviewBridgeInjected(): Promise<void> {
-  if (
-    typeof chrome === "undefined" ||
-    !chrome.tabs?.getCurrent ||
-    !chrome.webNavigation?.getAllFrames ||
-    !chrome.scripting?.executeScript
-  ) {
-    return Promise.resolve();
-  }
+// ─── Device switcher ──────────────────────────────────────────────────────────
+// Static groups + recently used. iOS = phones running iOS, Android = phones
+// running Android, Other = tablets, laptops, desktops, watches, TVs, custom.
 
-  return new Promise((resolve) => {
-    chrome.tabs.getCurrent((tab) => {
-      if (chrome.runtime.lastError || !tab?.id) {
-        resolve();
-        return;
-      }
-      const tabId = tab.id;
-      let attempts = 0;
+type MenuGroupId = "ios" | "android" | "other";
+type MenuSection = { key: MenuGroupId | "recent"; label: string; devices: Device[] };
 
-      const injectWhenFramesReady = () => chrome.webNavigation.getAllFrames({ tabId }, (frames) => {
-        if (chrome.runtime.lastError || !frames?.length) {
-          attempts += 1;
-          if (attempts < 8) {
-            window.setTimeout(injectWhenFramesReady, 100);
-            return;
-          }
-          resolve();
-          return;
-        }
+const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "other"];
+const MENU_GROUP_LABEL: Record<MenuGroupId, string> = {
+  ios: "iOS",
+  android: "Android",
+  other: "Other",
+};
 
-        const frameIds = frames
-          .filter((frame) => /^https?:\/\//i.test(frame.url))
-          .map((frame) => frame.frameId);
-
-        if (frameIds.length === 0) {
-          attempts += 1;
-          if (attempts < 8) {
-            window.setTimeout(injectWhenFramesReady, 100);
-            return;
-          }
-          resolve();
-          return;
-        }
-
-        let remaining = frameIds.length;
-        const done = () => {
-          remaining -= 1;
-          if (remaining <= 0) resolve();
-        };
-
-        for (const frameId of frameIds) {
-          chrome.scripting.executeScript(
-            {
-              target: { tabId, frameIds: [frameId] },
-              files: ["content-scripts/content.js"],
-            },
-            () => {
-              void chrome.runtime.lastError;
-              done();
-            },
-          );
-        }
-      });
-
-      injectWhenFramesReady();
-    });
-  });
+function menuGroupFor(device: Device): MenuGroupId {
+  if (device.type !== "phone") return "other";
+  const os = (device.os || "").toLowerCase();
+  if (os === "ios" || os === "ipados") return "ios";
+  if (os === "android") return "android";
+  return "other";
 }
 
-// ─── Device switcher ──────────────────────────────────────────────────────────
-
-const POPULAR_DEVICE_IDS = [
-  "apple-iphone-14-pro-max-2022",
-  "apple-iphone-16-pro-max-2024",
-  "samsung-galaxy-s24",
-  "samsung-galaxy-s24-ultra",
-  "apple-ipad-air-4",
-  "macbook-air",
-];
+const RECENT_LIMIT = 4;
 
 function DeviceSwitcher({
   currentDevice,
@@ -783,7 +468,7 @@ function DeviceSwitcher({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
-  const { devices, favorites, recents, addRecent } = useDeviceCatalog();
+  const { devices, recents, addRecent } = useDeviceCatalog();
 
   // Close on outside click
   useEffect(() => {
@@ -802,7 +487,6 @@ function DeviceSwitcher({
       setQuery("");
       setTimeout(() => {
         inputRef.current?.focus();
-        // Scroll the active device into view inside the list container
         if (activeItemRef.current && listRef.current) {
           const list = listRef.current;
           const item = activeItemRef.current;
@@ -820,43 +504,38 @@ function DeviceSwitcher({
     }
   }, [open]);
 
-  const filtered = useMemo(() => {
+  const sections = useMemo<MenuSection[]>(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return devices;
-    return devices.filter((d) =>
-      [d.name, d.brand, d.family, d.type].join(" ").toLowerCase().includes(q),
-    );
-  }, [devices, query]);
+    const filterByQuery = (list: Device[]): Device[] =>
+      q ? list.filter((d) => d.name.toLowerCase().includes(q)) : list;
 
-  const grouped = useMemo(() => {
-    const used = new Set<string>();
-    const sections: Array<[string, Device[]]> = [];
-    const q = query.trim();
+    const findById = (id: string) => devices.find((device) => device.id === id);
 
-    const addSection = (label: string, ids: string[]) => {
-      const list = ids
-        .map((id) => filtered.find((device) => device.id === id))
-        .filter((device): device is Device => !!device && !used.has(device.id));
-      if (list.length === 0) return;
-      list.forEach((device) => used.add(device.id));
-      sections.push([label, list]);
-    };
-
-    if (!q) {
-      addSection("Popular", POPULAR_DEVICE_IDS);
-      addSection("Recent", recents);
-      addSection("Favorites", favorites);
-    }
-
-    for (const group of DEVICE_GROUP_ORDER) {
-      const list = filtered.filter(
-        (device) => deviceGroupFor(device) === group && !used.has(device.id),
+    // Recently used — most recent first, capped, never reorder when picking.
+    const usedInRecents = new Set<string>();
+    const recentDevices = recents
+      .map(findById)
+      .filter((d): d is Device => !!d && !usedInRecents.has(d.id) && (usedInRecents.add(d.id), true))
+      .slice(0, RECENT_LIMIT);
+    const recentSection: MenuSection | null = (() => {
+      const filtered = filterByQuery(recentDevices).filter(
+        (d) => d.id !== currentDevice.id,
       );
-      if (list.length > 0) sections.push([DEVICE_GROUP_LABEL[group], list]);
+      if (filtered.length === 0) return null;
+      return { key: "recent", label: "Recently used", devices: filtered };
+    })();
+
+    // Static groups — fixed order, never reorder when picking.
+    const groups: MenuSection[] = [];
+    for (const group of MENU_GROUP_ORDER) {
+      const list = filterByQuery(devices).filter(
+        (device) => menuGroupFor(device) === group,
+      );
+      if (list.length > 0) groups.push({ key: group, label: MENU_GROUP_LABEL[group], devices: list });
     }
 
-    return sections;
-  }, [favorites, filtered, query, recents]);
+    return recentSection ? [recentSection, ...groups] : groups;
+  }, [devices, query, recents, currentDevice.id]);
 
   return (
     <div ref={ref} className="relative min-w-0 flex-[1.45]">
@@ -885,7 +564,7 @@ function DeviceSwitcher({
       {open && (
         <div
           data-testid="device-switcher-panel"
-          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(300px,calc(100vw-16px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
+          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(380px,calc(100vw-16px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
             dark ? "border-white/10 bg-[#171b24]" : "border-slate-200 bg-white"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -898,22 +577,22 @@ function DeviceSwitcher({
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search…"
+              placeholder="Search devices…"
               className={`w-full bg-transparent text-[13px] font-medium outline-none placeholder:text-slate-400 ${dark ? "text-white" : "text-slate-800"}`}
             />
           </div>
 
           {/* List */}
           <div ref={listRef} className="max-h-[420px] overflow-y-auto py-1">
-            {grouped.map(([type, list]) => (
-              <div key={type}>
+            {sections.map((section) => (
+              <div key={section.key}>
                 <p
                   className={`px-2 pb-1 pt-1.5 text-[9px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}
                 >
-                  {type}
+                  {section.label}
                 </p>
-                <div className="grid grid-cols-1 gap-1 px-1 min-[420px]:grid-cols-2">
-                  {list.map((d) => (
+                <div className="grid grid-cols-2 gap-1 px-1 min-[420px]:grid-cols-3">
+                  {section.devices.map((d) => (
                     <DeviceSwitcherItem
                       key={d.id}
                       ref={d.id === currentDevice.id ? activeItemRef : undefined}
@@ -930,7 +609,7 @@ function DeviceSwitcher({
                 </div>
               </div>
             ))}
-            {grouped.length === 0 && (
+            {sections.length === 0 && (
               <p className="px-3 py-4 text-center text-[11px] text-slate-400">
                 No results
               </p>
@@ -954,7 +633,8 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
     <button
       ref={ref}
       type="button"
-      className={`flex min-h-10 w-full min-w-0 items-center gap-1.5 rounded-[8px] px-1.5 py-1.25 text-left transition ${
+      title={device.name}
+      className={`flex min-h-9 w-full min-w-0 items-center rounded-[8px] px-2 py-1.5 text-left transition ${
         active
           ? "bg-slate-900 text-white hover:bg-slate-800"
           : dark
@@ -963,15 +643,8 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
       }`}
       onClick={onPick}
     >
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-[11px] font-semibold leading-tight">
-          {shortName(device.name)}
-        </span>
-        <span
-          className={`mt-0.5 block truncate text-[8px] ${active ? "text-white/60" : dark ? "text-slate-500" : "text-slate-400"}`}
-        >
-          {device.cssViewport.width}×{device.cssViewport.height} · {device.brand}
-        </span>
+      <span className="block truncate text-[11px] font-semibold leading-tight">
+        {shortName(device.name)}
       </span>
     </button>
   );
@@ -980,14 +653,10 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
 function BlockedView({
   onCapture,
   onReload,
-  onUseLivePreview,
-  canUseLivePreview,
   url,
 }: {
   onCapture: () => void;
   onReload: () => void;
-  onUseLivePreview: () => void;
-  canUseLivePreview: boolean;
   url: string;
 }) {
   return (
@@ -999,60 +668,32 @@ function BlockedView({
         {url}
       </p>
       <p className="max-w-[260px] text-xs leading-5 text-slate-500">
-        The page likely keeps frame protection, uses a restricted browser URL,
-        or prevented the preview bridge from loading.
+        The page likely keeps frame protection, uses a restricted browser URL, or
+        prevented the preview bridge from loading.
       </p>
       <div className="grid w-full max-w-[240px] gap-2">
         <button
+          type="button"
           className="flex items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white"
           onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
         >
           <ExternalLink size={13} /> Open in tab
         </button>
         <button
+          type="button"
           className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
           onClick={onReload}
         >
           <RefreshCw size={13} /> Reload preview
         </button>
         <button
+          type="button"
           className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
           onClick={onCapture}
         >
-          <Camera size={13} /> Capture current tab instead
+          Capture current tab instead
         </button>
-        {canUseLivePreview && (
-          <button
-            className="flex items-center justify-center gap-2 rounded-md border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-bold text-teal-800"
-            onClick={onUseLivePreview}
-          >
-            <ExternalLink size={13} /> Switch to live tab
-          </button>
-        )}
       </div>
-    </div>
-  );
-}
-
-function LivePreviewFallback({
-  message,
-  onReload,
-}: {
-  message: string | null;
-  onReload: () => void;
-}) {
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 bg-slate-50 p-6 text-center">
-      <p className="text-sm font-black text-slate-900">Live preview unavailable.</p>
-      <p className="max-w-[260px] text-xs leading-5 text-slate-500">
-        {message ?? "The source tab could not be captured right now."}
-      </p>
-      <button
-        className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
-        onClick={onReload}
-      >
-        <RefreshCw size={13} /> Refresh live preview
-      </button>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { PreviewSlot, WorkbenchIssue } from "./simulator.types";
+import type { PreviewSlot } from "./simulator.types";
 
 export const maxPreviewSlots = 4;
 
@@ -20,8 +20,6 @@ export function createPreviewSlot(deviceId: string, url: string, index: number):
     zoomMode: "fit",
     reloadToken: 0,
     showFrame: true,
-    inspectEnabled: false,
-    inspectLocked: false
   };
 }
 
@@ -32,18 +30,4 @@ export function canAddPreviewSlot(slots: PreviewSlot[]): boolean {
 export function nextZoom(current: number, direction: "in" | "out"): number {
   const delta = direction === "in" ? 0.1 : -0.1;
   return Math.min(1.6, Math.max(0.2, Number((current + delta).toFixed(2))));
-}
-
-export function createWorkbenchIssue(compareSlotId = ""): WorkbenchIssue {
-  return {
-    note: "",
-    compareSlotId,
-    lastCapturedAt: null,
-    lastCaptureLabel: "Copy for AI"
-  };
-}
-
-export function normalizePreviewRefreshMs(value: number): number {
-  if (!Number.isFinite(value)) return 5000;
-  return Math.min(15000, Math.max(1500, Math.round(value)));
 }

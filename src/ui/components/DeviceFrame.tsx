@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Copy, BookOpen, Lock, Plus, RefreshCw, Share, Square, Home, MoreVertical } from "lucide-react";
 import type { Device, MockupViewportConfig, Orientation, Size } from "../../domain/device/device.types";
-import { getFrameProfile, type DeviceFrameStyle } from "../../domain/device/frame-profiles";
+import { getFrameProfile, type DeviceFrameStyle, type ChromeVariant } from "../../domain/device/frame-profiles";
 
 interface FrameSizeInput {
   device: Device;
@@ -53,7 +53,13 @@ export function DeviceFrame({
   const contentR = profile.style.contentRadius ?? profile.contentRadius;
   const chromeCollapse = clamp(scrollProgress, 0, 1);
 
-  const statusH = showStatusBar ? getStatusHeight(profile.platform, profile.kind, compact) : 0;
+  // Reserve the top safe area (status bar + notch / Dynamic Island) so content never
+  // renders under the cutout. In landscape the cutout is on the side, so no top inset.
+  const safeTopCss = orientation === "landscape" ? 0 : profile.safeAreaInsetTop;
+  const statusH = Math.max(
+    showStatusBar ? getStatusHeight(profile.platform, profile.kind, compact) : 0,
+    safeTopCss,
+  );
   const addrH = showUrlBar && profile.platform === "android" ? 48 : 0;
   const bottomH = showUrlBar ? getBottomHeight(profile.platform, compact) : 0;
   const contentH = Math.max(120, viewportSize.height - statusH - addrH - bottomH);
@@ -88,7 +94,13 @@ export function DeviceFrame({
     const screenFit = fitViewportToScreen(viewportSize, screenRect);
     const viewportClipPath = getImageViewportClipPath(viewportConfig, orientation);
     const mobileChrome = profile.imageChrome;
-    const imageStatusH = mobileChrome.showStatusBar && showStatusBar ? getImageStatusHeight(profile.style, viewportSize, statusH) : 0;
+    const isIosImage = profile.platform === "ios";
+    // The top safe area = status bar + notch / Dynamic Island clearance. In landscape the
+    // notch moves to the side, so no vertical top inset is reserved.
+    const safeTop = landscape ? 0 : profile.safeAreaInsetTop;
+    const imageStatusH = mobileChrome.showStatusBar && showStatusBar
+      ? Math.max(safeTop, getImageStatusHeight(profile.style, viewportSize, statusH))
+      : safeTop;
     const imageAddrH = mobileChrome.showAndroidTopBar && showUrlBar ? addrH : 0;
     const imageBottomH = mobileChrome.showBottomBar && showUrlBar ? bottomH : 0;
     const screenRadius =
@@ -99,11 +111,17 @@ export function DeviceFrame({
           : Math.max(16, contentR);
     const desktopToolbarH = showUrlBar && (device.type === "laptop" || device.type === "desktop") ? 36 : 0;
     const useSafariDesktopChrome = showUrlBar && profile.style.desktopChrome === "safari";
-    const imageContentTop = device.type === "laptop" || device.type === "desktop" || device.type === "tv" ? 0 : imageStatusH + imageAddrH;
+    // Content offset is FIXED (based on the full chrome) so the iframe never reflows while
+    // the address banner collapses on scroll — the bars visually overlay the page instead,
+    // exactly like a real browser. This prevents the scroll "jumping" that reflow caused.
+    const imageContentTop =
+      device.type === "laptop" || device.type === "desktop" || device.type === "tv"
+        ? 0
+        : imageStatusH + imageAddrH;
     const imageContentH =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? Math.max(120, viewportSize.height - (useSafariDesktopChrome ? 56 : desktopToolbarH))
-        : viewportSize.height;
+        : Math.max(120, viewportSize.height - imageContentTop);
 
     return (
       <div
@@ -163,18 +181,10 @@ export function DeviceFrame({
                       dark={darkMode}
                       imageBackedKind={device.type === "tablet" ? "tablet" : "phone"}
                       height={imageStatusH || undefined}
+                      chromeVariant={profile.chromeVariant}
                     />
                   )}
                   {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={imageStatusH} scrollProgress={chromeCollapse} />}
-                  {mobileChrome.showCutout && (
-                    <DeviceCutout
-                      kind={profile.kind}
-                      platform={profile.platform}
-                      style={profile.style}
-                      viewportSize={viewportSize}
-                    />
-                  )}
-                  {mobileChrome.showTabletCamera && <TabletCamera />}
                   <div
                     style={{
                       width: viewportSize.width,
@@ -184,9 +194,18 @@ export function DeviceFrame({
                   >
                     {children}
                   </div>
-                  {mobileChrome.showSafariBar && showUrlBar && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} />}
+                  {mobileChrome.showSafariBar && showUrlBar && (
+                    <SafariBar
+                      hostname={hostname}
+                      compact={compact}
+                      dark={darkMode}
+                      scrollProgress={chromeCollapse}
+                      variant={profile.chromeVariant}
+                      safeAreaInsetBottom={profile.safeAreaInsetBottom}
+                    />
+                  )}
                   {mobileChrome.showAndroidBottomBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
-                  {mobileChrome.showHomeIndicator && <HomeIndicator />}
+                  {mobileChrome.showHomeIndicator && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
                 </>
               )}
             </div>
@@ -318,7 +337,7 @@ export function DeviceFrame({
             className={`relative overflow-hidden ${darkMode ? "bg-[#0f172a]" : "bg-white"}`}
             style={{ borderRadius: landscape ? Math.max(10, contentR - 6) : contentR, width: viewportSize.width, height: screenH }}
           >
-            {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={darkMode} />}
+            {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={darkMode} chromeVariant={profile.chromeVariant} height={statusH} />}
             {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} scrollProgress={chromeCollapse} />}
             <div
               style={{
@@ -330,9 +349,9 @@ export function DeviceFrame({
             >
               {children}
             </div>
-            {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} />}
+            {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
             {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
-            {isIos && <HomeIndicator />}
+            {isIos && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
           </div>
         </div>
       </div>
@@ -363,7 +382,7 @@ export function DeviceFrame({
           className={`relative overflow-hidden ${darkMode ? "bg-[#0f172a]" : "bg-white"}`}
           style={{ borderRadius: landscape ? Math.max(10, innerR - 6) : innerR, width: viewportSize.width, height: screenH }}
         >
-          {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={darkMode} />}
+          {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={darkMode} chromeVariant={profile.chromeVariant} height={statusH} />}
           {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} scrollProgress={chromeCollapse} />}
           <div
             style={{
@@ -375,9 +394,9 @@ export function DeviceFrame({
           >
             {children}
           </div>
-          {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} />}
+          {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
           {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
-          {isIos && <HomeIndicator />}
+          {isIos && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
         </div>
       </div>
     </div>
@@ -479,7 +498,11 @@ function adjustImageFrameScreenRect(
 function getImageViewportClipPath(adjustment: MockupViewportConfig | undefined, orientation: Orientation) {
   const path = adjustment?.paths?.[orientation];
   const pathValue = Array.isArray(path) ? path.join(" ") : path;
-  return pathValue ? `path("${pathValue}")` : undefined;
+  // Use the evenodd fill rule so the inner camera/notch sub-path is always cut out as a
+  // hole, regardless of its winding direction. With the default (nonzero) rule, a hole only
+  // appears when the sub-paths wind in opposite directions — which is why the notch showed
+  // on some devices and not others.
+  return pathValue ? `path(evenodd, "${pathValue}")` : undefined;
 }
 
 function fitViewportToScreen(viewportSize: Size, screenRect: ScreenRect) {
@@ -737,6 +760,7 @@ function StatusBar({
   dark,
   imageBackedKind,
   height,
+  chromeVariant = "none",
 }: {
   platform: string;
   showBattery: boolean;
@@ -744,27 +768,60 @@ function StatusBar({
   dark: boolean;
   imageBackedKind?: "phone" | "tablet";
   height?: number;
+  chromeVariant?: ChromeVariant;
 }) {
-  const time = platform === "android" ? "9:41" : "9:41";
+  void chromeVariant;
+  const time = "9:41";
   const h = height ?? (platform === "android" ? 28 : compact ? 28 : 44);
   const px = compact ? 14 : 18;
   const ios = platform === "ios";
+  const android = platform === "android";
   const iosImageBackedPhone = ios && imageBackedKind === "phone";
   const iosImageBackedTablet = ios && imageBackedKind === "tablet";
+  const androidImageBacked = android && (imageBackedKind === "phone" || imageBackedKind === "tablet");
 
-  if (iosImageBackedPhone) {
-    const iconColor = "text-white";
+  // ── Android status strip — a CONSTANT top bar (never scrolls). Holds the clock on the
+  //    left and the indicators on the right, aligned to the hole-punch camera row, over a
+  //    solid Chrome-coloured background that stays fixed while the page scrolls beneath. ──
+  if (androidImageBacked) {
+    // The clock/indicators sit in the lower ~26px band so they line up with the camera dot.
+    const rowH = 26;
     return (
       <div
-        className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center bg-transparent text-[15px] font-bold ${iconColor}`}
+        className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-end ${
+          dark ? "bg-[#111827] text-slate-100" : "bg-white text-slate-900"
+        }`}
         style={{ height: h }}
       >
-        <span className="flex h-full w-[36%] items-center justify-center">{time}</span>
-        <span className="ml-auto flex h-full w-[36%] items-center justify-center gap-[5px]">
-          <SignalIcon />
-          <WifiIcon />
-          {showBattery && <BatteryIcon showPercent />}
-        </span>
+        <div className="flex w-full items-center justify-between" style={{ height: rowH, paddingLeft: px, paddingRight: px }}>
+          <span className="text-[12px] font-semibold leading-none">{time}</span>
+          <span className="flex items-center gap-[5px]">
+            <WifiIcon />
+            <SignalIcon />
+            {showBattery && <BatteryIcon />}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (iosImageBackedPhone) {
+    // The time sits to the LEFT of the notch/island and the indicators to the RIGHT,
+    // both vertically centered on the island band (roughly the lower half of the safe area).
+    const islandBand = Math.min(h, 44);
+    return (
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-end bg-transparent font-semibold text-white"
+        style={{ height: h }}
+      >
+        <div className="flex w-full items-center" style={{ height: islandBand }}>
+          <span className="flex h-full flex-1 items-center justify-center pr-[28%] text-[15px] leading-none tracking-tight">{time}</span>
+          <span className="flex h-full flex-1 items-center justify-center gap-[5px] pl-[28%]">
+            <SignalIcon />
+            <WifiIcon />
+            {showBattery && <BatteryIcon showPercent />}
+          </span>
+        </div>
       </div>
     );
   }
@@ -796,51 +853,94 @@ function SafariBar({
   hostname,
   compact,
   dark,
-  scrollProgress = 0
+  scrollProgress = 0,
+  variant = "ios-modern",
+  safeAreaInsetBottom = 0,
 }: {
   hostname: string;
   compact: boolean;
   dark: boolean;
   scrollProgress?: number;
+  variant?: ChromeVariant;
+  safeAreaInsetBottom?: number;
 }) {
-  const barH = compact ? 34 : 38;
-  const tabH = compact ? 28 : 34;
-  const collapse = clamp(scrollProgress, 0, 1);
-  const searchLift = Math.round(collapse * (barH + 12));
-  const tabShrink = Math.round(collapse * Math.min(18, tabH * 0.58));
-  const tabVisibleH = Math.max(10, tabH - tabShrink);
-  const actionOpacity = Math.max(0.18, 1 - collapse * 0.82);
+  // safeAreaInsetBottom is in device px (baked at 90 for iOS 26). Scale it down to the
+  // on-screen chrome footprint so the floating bar clears the home-indicator zone.
+  const safeGap = variant === "ios-liquid-glass" ? Math.round(Math.min(24, safeAreaInsetBottom * 0.22)) : 0;
+
+  // ── iOS 26 Liquid Glass — a single translucent floating pill, no bottom tab strip ──
+  // (Static — no scroll collapse, so the page never reflows / jumps while scrolling.)
+  if (variant === "ios-liquid-glass") {
+    const barH = compact ? 40 : 46;
+    return (
+      <div
+        className="pointer-events-none absolute inset-x-0 z-20 flex justify-center"
+        style={{ bottom: 10 + safeGap }}
+      >
+        <div
+          className={`flex items-center gap-2 rounded-full px-4 font-medium shadow-[0_8px_24px_rgba(0,0,0,0.18)] ring-1 backdrop-blur-2xl ${
+            dark
+              ? "bg-white/12 text-slate-100 ring-white/15"
+              : "bg-white/55 text-slate-700 ring-black/5"
+          }`}
+          style={{
+            height: barH,
+            width: "82%",
+            fontSize: compact ? 12 : 14,
+            // Liquid Glass sheen
+            backgroundImage: dark
+              ? "linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02))"
+              : "linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.30))",
+          }}
+        >
+          <ChevronLeft size={16} className={dark ? "text-slate-200" : "text-slate-500"} />
+          <Lock size={11} className={`shrink-0 ${dark ? "text-slate-300" : "text-slate-500"}`} />
+          <span className="min-w-0 flex-1 truncate text-center">{hostname}</span>
+          <RefreshCw size={14} className={`shrink-0 ${dark ? "text-slate-200" : "text-slate-500"}`} />
+        </div>
+      </div>
+    );
+  }
+
+  // ── iOS 15–18 modern + iOS ≤14 classic — real Safari bottom chrome: one contiguous
+  //    frosted bar with the address pill and the toolbar icon row below it. (Static.) ──
+  const searchH = compact ? 36 : 40;
+  const toolbarH = compact ? 30 : 36;
+  const radius = variant === "ios-classic" ? 9 : 11;
   return (
-    <>
-      <div
-        className={`pointer-events-none absolute inset-x-3 z-20 flex items-center gap-2 rounded-[10px] border px-3 font-medium shadow-sm backdrop-blur-xl transition-[bottom,opacity,transform] duration-150 ${
-          dark ? "border-white/10 bg-[#1f2937]/82 text-slate-200" : "border-slate-200/80 bg-[#f1f2f5]/82 text-slate-600"
-        }`}
-        style={{
-          bottom: tabVisibleH + 8 - searchLift,
-          height: barH,
-          fontSize: compact ? 11 : 13,
-          opacity: Math.max(0.08, 1 - collapse * 0.92),
-          transform: `translateY(${Math.round(collapse * 6)}px)`
-        }}
-      >
-        <Lock size={10} className={`shrink-0 ${dark ? "text-slate-200" : "text-slate-700"}`} />
-        <span className="min-w-0 flex-1 truncate">{hostname}</span>
-        <RefreshCw size={12} className={`shrink-0 ${dark ? "text-slate-200" : "text-slate-700"}`} />
+    <div
+      className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end overflow-hidden border-t backdrop-blur-xl ${
+        dark ? "border-white/10 bg-[#1c1c1e]/90" : "border-black/5 bg-[#f7f7f8]/92"
+      }`}
+    >
+      {/* Address pill row */}
+      <div className="flex items-center px-3" style={{ height: searchH }}>
+        <div
+          className={`flex w-full items-center gap-2 px-3 font-medium ${
+            dark ? "bg-white/10 text-slate-200" : "bg-[#e3e3e6] text-slate-700"
+          }`}
+          style={{ height: compact ? 28 : 32, borderRadius: radius, fontSize: compact ? 11 : 13 }}
+        >
+          <span className={`text-[13px] font-semibold ${dark ? "text-slate-300" : "text-slate-500"}`}>AA</span>
+          <Lock size={10} className={`shrink-0 ${dark ? "text-slate-300" : "text-slate-500"}`} />
+          <span className="min-w-0 flex-1 truncate text-center">{hostname}</span>
+          <RefreshCw size={12} className={`shrink-0 ${dark ? "text-slate-300" : "text-slate-500"}`} />
+        </div>
       </div>
+      {/* Toolbar icon row */}
       <div
-        className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-around overflow-hidden transition-[height,opacity] duration-150 ${
-          dark ? "bg-[#111827]/82 text-sky-300" : "bg-white/82 text-[#007AFF]"
+        className={`flex items-center justify-around ${
+          dark ? "text-sky-400" : "text-[#007AFF]"
         }`}
-        style={{ height: tabVisibleH, opacity: actionOpacity }}
+        style={{ height: toolbarH }}
       >
-        <ChevronLeft size={17} />
-        <ChevronRight size={17} className="text-slate-300" />
-        <Share size={16} />
-        <BookOpen size={17} />
-        <Copy size={16} />
+        <ChevronLeft size={19} />
+        <ChevronRight size={19} className={dark ? "text-slate-600" : "text-slate-300"} />
+        <Share size={17} />
+        <BookOpen size={18} />
+        <Copy size={17} />
       </div>
-    </>
+    </div>
   );
 }
 
@@ -891,7 +991,6 @@ function AndroidAddrBar({
   dark,
   top = false,
   topOffset = 0,
-  scrollProgress = 0,
 }: {
   hostname: string;
   dark: boolean;
@@ -899,18 +998,16 @@ function AndroidAddrBar({
   topOffset?: number;
   scrollProgress?: number;
 }) {
-  const collapse = clamp(scrollProgress, 0, 1);
   if (top) {
+    // The Chrome address bar stays CONSTANT (no scroll collapse). Collapsing it reflowed the
+    // iframe every scroll frame, which caused the UI to jump. It now overlays the top of the
+    // page as a fixed banner below the constant status strip.
     return (
       <div
-        className={`pointer-events-none absolute inset-x-0 z-20 flex h-12 items-center gap-2 border-b px-3 text-[12px] font-semibold transition-[opacity,transform] duration-150 ${
+        className={`pointer-events-none absolute inset-x-0 z-20 flex h-12 items-center gap-2 border-b px-3 text-[12px] font-semibold ${
           dark ? "border-white/10 bg-[#111827] text-slate-300" : "border-slate-100 bg-white text-slate-600"
         }`}
-        style={{
-          top: topOffset,
-          opacity: Math.max(0.12, 1 - collapse * 0.88),
-          transform: `translateY(${-Math.round(collapse * 34)}px)`,
-        }}
+        style={{ top: topOffset }}
       >
         <Home size={17} className={`shrink-0 ${dark ? "text-slate-100" : "text-slate-800"}`} />
         <span className={`min-w-0 flex-1 truncate rounded-full px-3 py-1.5 ${dark ? "bg-white/10" : "bg-slate-100"}`}>{hostname}</span>
@@ -918,11 +1015,11 @@ function AndroidAddrBar({
       </div>
     );
   }
-  const bottomHeight = Math.max(10, 36 - Math.round(collapse * 24));
+  // Bottom gesture navigation pill — stays constant (Android keeps nav visible).
   return (
     <div
-      className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-6 overflow-hidden transition-[height,opacity] duration-150 ${dark ? "bg-[#111827]/95" : "bg-white/95"}`}
-      style={{ height: bottomHeight, opacity: Math.max(0.2, 1 - collapse * 0.8) }}
+      className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-6 ${dark ? "bg-[#111827]/95" : "bg-white/95"}`}
+      style={{ height: 36 }}
     >
       <span className="grid h-4 w-4 place-items-center"><span className={`h-2 w-2 rounded-full border-[1.5px] ${dark ? "border-slate-100" : "border-slate-800"}`} /></span>
       <span className={`h-[3px] w-14 rounded-full ${dark ? "bg-slate-100" : "bg-slate-800"}`} />
@@ -931,9 +1028,17 @@ function AndroidAddrBar({
   );
 }
 
-function HomeIndicator() {
+function HomeIndicator({
+  variant = "ios-modern",
+  safeAreaInsetBottom = 0,
+}: {
+  variant?: ChromeVariant;
+  safeAreaInsetBottom?: number;
+} = {}) {
+  // On iOS 26 the home indicator sits within the Liquid Glass safe area, slightly higher.
+  const bottom = variant === "ios-liquid-glass" ? Math.max(6, Math.round(Math.min(12, safeAreaInsetBottom * 0.1))) : 6;
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-[6px] z-30 flex justify-center">
+    <div className="pointer-events-none absolute inset-x-0 z-30 flex justify-center" style={{ bottom }}>
       <span className="h-[4px] w-28 rounded-full bg-black/25" />
     </div>
   );

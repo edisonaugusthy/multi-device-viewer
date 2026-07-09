@@ -1,4 +1,5 @@
 import type { Device } from "./device.types";
+import { getDeviceChromeMeta } from "./mockup-catalog";
 
 export type FrameProfileKind =
   | "iphone-dynamic-island"
@@ -10,6 +11,21 @@ export type FrameProfileKind =
   | "watch"
   | "desktop";
 
+/**
+ * OS chrome generation. Determines how the browser bars / status bar look:
+ * - "ios-liquid-glass": iOS 26+ — translucent floating Safari pill + bottom safe area (90px)
+ * - "ios-modern": iOS 15–18 — solid Safari bottom bar + notch/island
+ * - "ios-classic": iOS ≤14 with notch — legacy Safari bar
+ * - "android-modern": Chrome top address bar + gesture nav pill
+ * - "none": desktop / tv / watch / special
+ */
+export type ChromeVariant =
+  | "ios-liquid-glass"
+  | "ios-modern"
+  | "ios-classic"
+  | "android-modern"
+  | "none";
+
 export interface DeviceFrameProfile {
   kind: FrameProfileKind;
   platform: "ios" | "android" | "desktop" | "watch";
@@ -18,6 +34,18 @@ export interface DeviceFrameProfile {
   contentRadius: number;
   style: DeviceFrameStyle;
   imageChrome: ImageBackedChromeConfig;
+  /** OS chrome generation used to select the correct browser/status bar look. */
+  chromeVariant: ChromeVariant;
+  /** Bottom safe-area inset in CSS px (iOS 26 Liquid Glass reports 90). */
+  safeAreaInsetBottom: number;
+  /**
+   * Top safe-area inset in CSS px. This is the vertical space reserved for the
+   * status bar + physical notch / Dynamic Island. Web content starts BELOW it,
+   * so the page never renders under the camera cutout.
+   */
+  safeAreaInsetTop: number;
+  /** OS major version parsed from reference data (e.g. 26, 16). */
+  osMajor: number;
 }
 
 export interface DeviceFrameStyle {
@@ -200,7 +228,7 @@ function hasDynamicIsland(device: Device) {
   );
 }
 
-function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome">): DeviceFrameProfile {
+function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome" | "chromeVariant" | "safeAreaInsetBottom" | "safeAreaInsetTop" | "osMajor">): DeviceFrameProfile {
   const desktopChrome: DeviceFrameStyle["desktopChrome"] =
     isApple(device) && (device.type === "laptop" || device.type === "desktop") ? "safari" : "default";
   const mockupFrameStyle = device.mockupAssets.find((asset) => asset.frameStyle)?.frameStyle;
@@ -212,14 +240,69 @@ function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style"
     desktopChrome
   };
 
+  const meta = getDeviceChromeMeta(device.id);
+  const osMajor = parseOsMajor(meta?.osVersion ?? device.os);
+  const safeAreaInsetBottom = meta?.safeAreaInsetBottom ?? 0;
+  const chromeVariant = resolveChromeVariant(profile.platform, profile.kind, osMajor, safeAreaInsetBottom);
+  const safeAreaInsetTop = resolveSafeAreaInsetTop(profile.platform, profile.kind, device.type, meta?.safeAreaInsetTop);
+
   return {
     ...profile,
     style,
-    imageChrome: getImageBackedChromeConfig(device, profile)
+    imageChrome: getImageBackedChromeConfig(device, profile),
+    chromeVariant,
+    safeAreaInsetBottom,
+    safeAreaInsetTop,
+    osMajor
   };
 }
 
-function getImageBackedChromeConfig(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome">): ImageBackedChromeConfig {
+/**
+ * Vertical space (CSS px) reserved at the top of the screen for the status bar plus
+ * the physical notch / Dynamic Island. Content is pushed below this so it never sits
+ * under the camera cutout. Values follow Apple's documented safe-area-inset-top.
+ */
+function resolveSafeAreaInsetTop(
+  platform: DeviceFrameProfile["platform"],
+  kind: FrameProfileKind,
+  deviceType: Device["type"],
+  measuredTop?: number
+): number {
+  if (platform === "android") {
+    // Prefer the per-device value measured from the mockup's baked hole-punch cutout,
+    // so content always clears the physical camera (which sits 24–50px down by device).
+    if (measuredTop && measuredTop > 0) return measuredTop;
+    return deviceType === "tablet" ? 28 : 32;
+  }
+  if (platform === "ios") {
+    if (kind === "iphone-dynamic-island") return 59; // Dynamic Island generations
+    if (kind === "iphone-notch") return 47;          // iPhone X–14 / XR notch
+    if (kind === "iphone-classic") return 20;         // SE / legacy status bar
+    if (kind === "tablet") return 24;                 // iPad status bar
+  }
+  return 0;
+}
+
+function parseOsMajor(version: string): number {
+  const match = /(\d+)/.exec(version ?? "");
+  return match ? Number(match[1]) : 0;
+}
+
+function resolveChromeVariant(
+  platform: DeviceFrameProfile["platform"],
+  kind: FrameProfileKind,
+  osMajor: number,
+  safeAreaInsetBottom: number
+): ChromeVariant {
+  if (platform === "android") return "android-modern";
+  if (platform !== "ios") return "none";
+  // iOS 26+ (or any device reporting the Liquid Glass bottom safe area) → Liquid Glass chrome.
+  if (osMajor >= 26 || safeAreaInsetBottom >= 60) return "ios-liquid-glass";
+  if (kind === "iphone-classic") return "ios-classic";
+  return "ios-modern";
+}
+
+function getImageBackedChromeConfig(device: Device, profile: Pick<DeviceFrameProfile, "kind" | "platform">): ImageBackedChromeConfig {
   const isIos = profile.platform === "ios";
   const isAndroidDevice = profile.platform === "android";
   const isSpecial = device.tags.includes("special") || device.type === "custom" || device.type === "watch" || device.type === "tv";
@@ -228,12 +311,16 @@ function getImageBackedChromeConfig(device: Device, profile: Omit<DeviceFramePro
     return emptyImageChrome;
   }
 
+  // The physical notch / Dynamic Island / hole-punch camera is baked into the device PNG.
+  // We must NOT redraw our own cutout on top of an image-backed frame — doing so double-draws
+  // the notch and, because it uses generic ratios, lands in the wrong spot on many devices.
+  // (This was the root cause of the "sometimes correct, sometimes not" alignment bug.)
   return {
     showStatusBar: isIos || isAndroidDevice,
     showAndroidTopBar: isAndroidDevice,
     showBottomBar: isIos || isAndroidDevice,
-    showCutout: isIos && device.type === "phone",
-    showTabletCamera: isIos && device.type === "tablet",
+    showCutout: false,
+    showTabletCamera: false,
     showSafariBar: isIos,
     showAndroidBottomBar: isAndroidDevice,
     showHomeIndicator: isIos

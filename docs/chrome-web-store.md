@@ -10,42 +10,39 @@
 
 ### Extension name
 
-Responsive Device Viewer & Mobile Tester
+Mobile View & Responsive Device Viewer
 
 ### Short description (132 chars max)
 
-Preview responsive websites on mobile, tablet, desktop, and laptop viewports side by side. Capture screenshots and mockups.
+Preview responsive websites in mobile view across phones, tablets, laptops, and desktops. Compare devices and capture screenshots.
 
 ### Detailed description
 
-Multi Device Viewer is a responsive testing and mobile preview extension for checking how websites look across phones, tablets, laptops, desktops, watches, and TVs. Open the extension on any page to compare multiple device viewports side by side without leaving the site.
+Mobile View & Responsive Device Viewer helps developers test responsive websites across phones, tablets, laptops, and desktop screens. Open it on the current page to compare up to four device viewports side by side without switching between Chrome DevTools presets.
 
-Click the extension icon or use the Chrome context menu, and the current site immediately appears inside realistic device frames without navigating away or opening a new tab. Close the overlay and the page is exactly as you left it.
+Click the extension icon or use the Chrome context menu to open the current website inside realistic device frames. The responsive device viewer appears over the current tab, so you can check mobile view and desktop breakpoints in one workspace and return to the page when you close it.
 
-**Responsive Website Testing**
-- Compare up to four device viewports side by side in resizable panels.
-- Choose from a built-in catalog of phones, tablets, laptops, desktops, watches, and TVs, including newer iPhone profiles.
-- Switch orientation, zoom, fit mode, and reload each panel independently.
-- Use the global URL bar to send a page to every active preview.
-- Save favorites, browse recents, or create a custom viewport size.
-- Turn on dark mode or inspect mode for focused responsive QA.
+**Responsive website and mobile view testing**
+- Compare up to four device previews side by side in resizable panels.
+- Test phone, tablet, laptop, and desktop layouts at realistic viewport sizes.
+- Switch device, orientation, zoom level, and reload state independently.
+- Synchronize scrolling across previews when checking long pages.
+- Create custom viewport sizes for project-specific breakpoints.
 
-**Mobile, Tablet, Desktop, and Laptop Preview**
-- Test mobile view, tablet layouts, laptop breakpoints, desktop screens, watch layouts, and TV previews in one workspace.
-- Use realistic device shells for phone, tablet, laptop, desktop, and watch previews.
-- Move quickly between common responsive design breakpoints and exact custom viewport sizes.
+**Realistic device previews**
+- Preview iPhone, Android, iPad, tablet, MacBook, laptop, and desktop layouts.
+- Use device frames with platform-appropriate status and browser chrome.
+- See viewport dimensions and resize comparison panels directly.
 
-**Presets for repeat QA**
-- Start from built-in layouts like Mobile vs Tablet, iOS vs Android, and Android + Tablet + Laptop.
-- Save your own named device layouts.
-- Import or export preset JSON for reuse across local browser profiles.
+**One-click comparison sets**
+- Open Phone + Tablet, iOS + Android, or Mobile + Tablet + Laptop comparisons from the toolbar.
+- Save named device sets for repeated responsive QA.
+- Reuse custom device configurations from local Chrome storage.
 
-**Screenshots, Mockups, and Annotations**
-- One click in the sidebar captures the entire simulator view as-is.
-- Built-in annotation editor: pen, rectangle, arrow, text, and crop tools.
-- Eight-color palette, three stroke widths, font size picker.
-- Crop bakes your annotations into a trimmed canvas.
-- Copy to clipboard or download — everything stays on your machine.
+**Screenshots and annotations**
+- Capture the complete multi-device comparison.
+- Annotate with pen, rectangle, arrow, text, and crop tools.
+- Copy the result to the clipboard or download it locally.
 
 **Privacy-first by design**
 - No account required.
@@ -53,6 +50,17 @@ Click the extension icon or use the Chrome context menu, and the current site im
 - No analytics, telemetry, or remote logging.
 - Screenshots, URLs, annotations, and settings never leave your browser.
 - Preferences, presets, recents, custom devices, and UI state are saved locally in Chrome storage.
+
+### Screenshot order and captions
+
+Use current UI captures at 1280×800 or 640×400. Keep text overlays short and readable.
+
+1. **Compare responsive mobile, tablet, and laptop views side by side** — show the Mobile + Tablet + Laptop device set.
+2. **Test iOS and Android layouts in one synchronized workspace** — show two phone previews with Scroll sync enabled.
+3. **Switch devices, rotate, zoom, and resize each viewport** — show the device selector and visible resize grip.
+4. **Capture and annotate responsive issues without leaving Chrome** — show the annotation editor.
+
+Do not reuse screenshots from the previous sidebar or URL-bar design; outdated images can reduce listing clarity and conversion.
 
 ### Category
 
@@ -67,7 +75,7 @@ English
 ## Privacy Tab Answers
 
 **Single purpose**
-Responsive website preview, preset-based device comparison, inspect mode, and screenshot annotation across multiple device viewport profiles, operating as an overlay on the current tab.
+Responsive website preview, preset-based device comparison, synchronized scrolling, and screenshot annotation across multiple device viewport profiles, operating as an overlay on the current tab.
 
 **Data usage certification**
 The extension does not sell, transfer, or use user data for any purpose outside its single stated purpose.

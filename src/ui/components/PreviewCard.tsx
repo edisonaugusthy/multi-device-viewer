@@ -21,7 +21,7 @@ import { useSimulator } from "../../app/SimulatorProvider";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { DeviceFrame, estimateDeviceFrameSize } from "./DeviceFrame";
 
-const CARD_PAD = 32;
+const CARD_PAD = 16;
 
 interface ScrollSyncPayload {
   slotId: string;
@@ -82,6 +82,7 @@ export function PreviewCard({
   const [blocked, setBlocked] = useState(false);
   const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("checking");
   const {
+    activeSlotId,
     setActiveSlot,
     removeSlot,
     rotateSlot,
@@ -107,7 +108,8 @@ export function PreviewCard({
     viewportSize,
   });
 
-  const availW = Math.max(80, containerSize.width - CARD_PAD);
+  const horizontalPad = device.type === "laptop" || device.type === "desktop" ? 40 : CARD_PAD;
+  const availW = Math.max(80, containerSize.width - horizontalPad);
   const availH = Math.max(80, containerSize.height - CARD_PAD);
   const fitScale = Math.min(
     1,
@@ -274,14 +276,14 @@ export function PreviewCard({
 
   return (
     <section
-      className="flex h-full flex-col overflow-hidden"
+      className={`flex h-full min-h-0 flex-col overflow-hidden border-t transition-colors ${activeSlotId === slot.id ? "border-t-teal-500" : "border-t-transparent"}`}
       style={{ minWidth: 0 }}
       onClick={() => setActiveSlot(slot.id)}
       onFocus={() => setActiveSlot(slot.id)}
     >
       {/* ── Per-card header ── */}
       <div
-        className={`flex min-h-11 shrink-0 flex-nowrap items-center gap-1 border-b px-1 py-1 transition-colors ${
+        className={`flex h-9 shrink-0 flex-nowrap items-center gap-0.5 border-b px-1 transition-colors ${
           display.darkMode
             ? "border-white/10 bg-[#151922]"
             : "border-black/[0.06] bg-white"
@@ -293,7 +295,9 @@ export function PreviewCard({
           onSwitch={(id) => setSlotDevice(slot.id, id)}
         />
 
-        <div className="min-w-0 flex-1" />
+        <span className={`shrink-0 px-1 text-[9px] font-bold ${display.darkMode ? "text-slate-500" : "text-slate-400"}`}>
+          {viewportSize.width} × {viewportSize.height}
+        </span>
 
         <CardBtn
           dark={display.darkMode}
@@ -311,29 +315,9 @@ export function PreviewCard({
             <RotateCw size={14} />
           </CardBtn>
         )}
-        <CardBtn
-          dark={display.darkMode}
-          label="Zoom out"
-          onClick={() => zoomSlot(slot.id, "out")}
-        >
-          <Minus size={14} />
-        </CardBtn>
-        <CardBtn
-          dark={display.darkMode}
-          label="Zoom in"
-          onClick={() => zoomSlot(slot.id, "in")}
-        >
-          <Plus size={14} />
-        </CardBtn>
-        {removable && (
-          <CardBtn
-            dark={display.darkMode}
-            label="Remove"
-            onClick={() => removeSlot(slot.id)}
-          >
-            <X size={14} />
-          </CardBtn>
-        )}
+        <CardBtn dark={display.darkMode} label="Zoom out" onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
+        <CardBtn dark={display.darkMode} label="Zoom in" onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
+        {removable && <CardBtn dark={display.darkMode} label="Remove device" onClick={() => removeSlot(slot.id)}><X size={13} /></CardBtn>}
       </div>
 
       {/* ── Canvas ── */}
@@ -536,7 +520,7 @@ function DeviceSwitcher({
           e.stopPropagation();
           setOpen((v) => !v);
         }}
-        className={`flex h-8 w-full min-w-0 items-center gap-1 whitespace-nowrap rounded-[8px] border px-1.5 text-[12px] font-semibold transition ${
+        className={`flex h-7 w-full min-w-0 items-center gap-1 whitespace-nowrap rounded-[7px] border px-1.5 text-[11px] font-semibold transition ${
           dark
             ? "border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]"
             : "border-slate-200 bg-slate-50 text-slate-800 hover:bg-slate-100"
@@ -712,7 +696,7 @@ function CardBtn({
       title={label}
       aria-label={label}
       disabled={disabled}
-      className={`grid h-8 w-8 shrink-0 place-items-center rounded-md transition ${
+      className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition ${
         dark
           ? "text-slate-400 hover:bg-white/10 hover:text-white"
           : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"

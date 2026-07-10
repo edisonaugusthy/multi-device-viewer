@@ -1,122 +1,108 @@
 import {
   Camera,
+  ChevronRight,
+  GripVertical,
   Link2,
+  Menu,
+  Moon,
   PanelLeftClose,
-  PanelLeftOpen,
   PanelsTopLeft,
   Plus,
-  Star,
+  RefreshCw,
+  Settings2,
+  Sun,
   Video,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
-import {
-  captureTabWithOverlay,
-  startTabRecording,
-  stopTabRecording,
-} from "../../domain/capture/capture-service";
+import { captureTabWithOverlay, startTabRecording, stopTabRecording } from "../../domain/capture/capture-service";
 import { maxPreviewSlots } from "../../domain/simulator/simulator-service";
-import { PreviewCard } from "./PreviewCard";
 import { AnnotationOverlay } from "./AnnotationOverlay";
+import { BrandMark } from "./BrandMark";
 import { CustomDeviceModal } from "./CustomDeviceModal";
 import { PresetsManager } from "./PresetsManager";
+import { PreviewCard } from "./PreviewCard";
+
+const QUICK_DEVICE_SETS = [
+  { label: "Phone + tablet", devices: ["apple-iphone-14-pro-max-2022", "apple-ipad-air-4"] },
+  { label: "iOS + Android", devices: ["apple-iphone-14-pro-max-2022", "samsung-galaxy-s24"] },
+  { label: "Mobile + tablet + laptop", devices: ["macbook-air-2020-13", "apple-iphone-14-pro-max-2022", "apple-ipad-air-4"] },
+] as const;
 
 export function SimulatorApp() {
   const { findDevice } = useDeviceCatalog();
   const {
     slots,
     display,
-    activeSlotId,
     addSlot,
     applyDevicePreset,
+    reloadAllSlots,
     updateDisplay,
     sourceTabId,
-    useCount,
   } = useSimulator();
-
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
   const [capturing, setCapturing] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(() => (
-    typeof window === "undefined" ? true : window.innerWidth > 720
-  ));
-  const [narrowLayout, setNarrowLayout] = useState(() => (
-    typeof window === "undefined" ? false : window.innerWidth <= 720
-  ));
-  const [showCustomDevice, setShowCustomDevice] = useState(false);
-  const [showPresetsSection, setShowPresetsSection] = useState(false);
-  const [showReviewBanner, setShowReviewBanner] = useState(false);
   const [recording, setRecording] = useState(false);
-  const reviewUrl = "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?utm_source=item-share-cbuse";
-
-  const closeViewer = () => {
-    if (window.parent !== window) {
-      window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*");
-      return;
-    }
-
-    if (typeof chrome !== "undefined" && chrome.tabs?.getCurrent && chrome.tabs?.remove) {
-      chrome.tabs.getCurrent((tab) => {
-        if (tab?.id) {
-          void chrome.tabs.remove(tab.id);
-          return;
-        }
-        window.close();
-      });
-      return;
-    }
-
-    window.close();
-  };
-
-  // Show review prompt after 5 uses (only once)
-  useEffect(() => {
-    if (useCount < 5) return;
-    void import("../../infrastructure/storage/local-store").then(({ readStore }) => {
-      void readStore<boolean>("mdvReviewDismissed", false).then((dismissed) => {
-        if (!dismissed) setShowReviewBanner(true);
-      });
-    });
-  }, [useCount]);
-
-  function dismissReview(permanent: boolean) {
-    setShowReviewBanner(false);
-    if (permanent) {
-      void import("../../infrastructure/storage/local-store").then(({ writeStore }) => {
-        void writeStore("mdvReviewDismissed", true);
-      });
-    }
-  }
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window === "undefined" || window.innerWidth > 760);
+  const [narrowLayout, setNarrowLayout] = useState(() => typeof window !== "undefined" && window.innerWidth <= 760);
+  const [showCustomDevice, setShowCustomDevice] = useState(false);
+  const [showSavedSets, setShowSavedSets] = useState(false);
+  const [widths, setWidths] = useState<number[]>(() => slots.map(() => 100 / slots.length));
+  const previousSlotCount = useRef(slots.length);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const dark = display.darkMode;
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const query = window.matchMedia("(max-width: 720px)");
-    const syncSmallScreenLayout = () => {
+    const query = window.matchMedia("(max-width: 760px)");
+    const update = () => {
       setNarrowLayout(query.matches);
       if (query.matches) setSidebarOpen(false);
     };
-    syncSmallScreenLayout();
-    query.addEventListener("change", syncSmallScreenLayout);
-    return () => query.removeEventListener("change", syncSmallScreenLayout);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
     if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
-
     const listener = (message: unknown) => {
-      if (!message || typeof message !== "object") return;
-      if ((message as Record<string, unknown>).type === "OFFSCREEN_RECORDING_COMPLETE") {
-        setRecording(false);
-      }
+      if (message && typeof message === "object" && (message as Record<string, unknown>).type === "OFFSCREEN_RECORDING_COMPLETE") setRecording(false);
     };
-
     chrome.runtime.onMessage.addListener(listener);
     return () => chrome.runtime.onMessage.removeListener(listener);
   }, []);
 
-  // ── Screenshots ───────────────────────────────────────────────────────────
+  if (slots.length !== previousSlotCount.current) {
+    previousSlotCount.current = slots.length;
+    setWidths(slots.map(() => 100 / slots.length));
+  }
+
+  const startResize = useCallback((event: React.MouseEvent, index: number) => {
+    event.preventDefault();
+    const board = boardRef.current;
+    if (!board) return;
+    const startX = event.clientX;
+    const totalWidth = board.getBoundingClientRect().width;
+    const left = widths[index];
+    const right = widths[index + 1];
+    const combined = left + right;
+    const onMove = (moveEvent: MouseEvent) => {
+      const delta = ((moveEvent.clientX - startX) / totalWidth) * 100;
+      const minimum = (120 / totalWidth) * 100;
+      const nextLeft = Math.min(combined - minimum, Math.max(minimum, left + delta));
+      setWidths((current) => current.map((value, itemIndex) => itemIndex === index ? nextLeft : itemIndex === index + 1 ? combined - nextLeft : value));
+    };
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }, [widths]);
+
   async function takeScreenshot() {
     if (capturing) return;
     setCapturing(true);
@@ -129,15 +115,21 @@ export function SimulatorApp() {
     }
   }
 
-  async function toggleRecordingCapture() {
+  async function toggleRecording() {
     if (recording) {
-      const stopped = await stopTabRecording();
-      if (stopped) setRecording(false);
+      if (await stopTabRecording()) setRecording(false);
       return;
     }
+    if (await startTabRecording(sourceTabId)) setRecording(true);
+  }
 
-    const started = await startTabRecording(sourceTabId);
-    if (started) setRecording(true);
+  function closeViewer() {
+    if (window.parent !== window) return void window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*");
+    if (typeof chrome !== "undefined" && chrome.tabs?.getCurrent && chrome.tabs?.remove) {
+      chrome.tabs.getCurrent((tab) => tab?.id ? void chrome.tabs.remove(tab.id) : window.close());
+      return;
+    }
+    window.close();
   }
 
   const captureMeta = {
@@ -146,388 +138,97 @@ export function SimulatorApp() {
     devices: slots.map((slot) => {
       const device = findDevice(slot.deviceId);
       return `${device.name} (${device.cssViewport.width}x${device.cssViewport.height})`;
-    })
+    }),
   };
 
-  // ── Resizable panel widths ────────────────────────────────────────────────
-  const [widths, setWidths] = useState<number[]>(() =>
-    slots.map(() => 100 / slots.length)
-  );
-  const prevSlotCount = useRef(slots.length);
-  if (slots.length !== prevSlotCount.current) {
-    prevSlotCount.current = slots.length;
-    const equal = 100 / slots.length;
-    setWidths(slots.map(() => equal));
-  }
-
-  const boardRef = useRef<HTMLDivElement>(null);
-
-  const startResize = useCallback((e: React.MouseEvent, handleIndex: number) => {
-    e.preventDefault();
-    const board = boardRef.current;
-    if (!board) return;
-    const startX = e.clientX;
-    const totalW = board.getBoundingClientRect().width;
-    const startLeft = widths[handleIndex];
-    const startRight = widths[handleIndex + 1];
-    const combined = startLeft + startRight;
-
-    const onMove = (me: MouseEvent) => {
-      const delta = ((me.clientX - startX) / totalW) * 100;
-      const minPct = (120 / totalW) * 100;
-      const newLeft = Math.min(combined - minPct, Math.max(minPct, startLeft + delta));
-      const newRight = combined - newLeft;
-      setWidths((prev) => {
-        const next = [...prev];
-        next[handleIndex] = newLeft;
-        next[handleIndex + 1] = newRight;
-        return next;
-      });
-    };
-    const onUp = () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", onUp);
-    };
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
-  }, [widths]);
-
-  const dark = display.darkMode;
-
   return (
-    <div className={`flex h-screen flex-col overflow-hidden transition-colors ${dark ? "bg-[#111318]" : "bg-[#f5f5f3]"}`}>
-
-      {/* ── Review prompt banner ── */}
-      {showReviewBanner && (
-        <div className={`flex shrink-0 items-center gap-3 border-b px-4 py-2 text-[12px] font-semibold ${dark ? "border-white/10 bg-teal-900/40 text-teal-100" : "border-teal-100 bg-teal-50 text-teal-900"}`}>
-          <Star size={14} className="shrink-0 text-amber-400" />
-          <span className="flex-1">Enjoying Multi Device Viewer? Leave us a review — it helps a lot!</span>
-          <a
-            href={reviewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => dismissReview(true)}
-            className="rounded-md bg-teal-500 px-2.5 py-1 text-[11px] font-black text-white transition hover:bg-teal-400"
-          >
-            Rate it
-          </a>
-          <button
-            type="button"
-            onClick={() => dismissReview(true)}
-            className={`grid h-6 w-6 shrink-0 place-items-center rounded transition ${dark ? "hover:bg-white/10" : "hover:bg-teal-100"}`}
-            title="Dismiss"
-          >
-            <X size={12} />
-          </button>
+    <div className={`flex h-screen flex-col overflow-hidden font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}>
+      <header className={`z-20 flex h-10 shrink-0 items-center gap-1.5 border-b px-2 ${dark ? "border-white/[0.08] bg-[#11141a]" : "border-slate-200 bg-white"}`}>
+        <button type="button" className={`grid h-8 w-8 place-items-center rounded-lg lg:hidden ${dark ? "hover:bg-white/10" : "hover:bg-slate-100"}`} onClick={() => setSidebarOpen(true)} aria-label="Open workspace setup"><Menu size={15} /></button>
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center" title="Multi Device Viewer"><BrandMark size={27} /></div>
+        <div className="ml-1 hidden items-center gap-1 md:flex" aria-label="Quick device sets">
+          {QUICK_DEVICE_SETS.map((set) => (
+            <button
+              key={set.label}
+              type="button"
+              title={`Open ${set.label}`}
+              onClick={() => applyDevicePreset([...set.devices])}
+              className={`h-7 rounded-[7px] border px-2 text-[10px] font-bold transition ${dark ? "border-white/10 text-slate-400 hover:border-white/20 hover:bg-white/[0.06] hover:text-white" : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"}`}
+            >
+              {set.label}
+            </button>
+          ))}
         </div>
-      )}
+        <div className="min-w-0 flex-1" />
+        <button type="button" disabled={slots.length >= maxPreviewSlots} onClick={() => addSlot()} className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold sm:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><Plus size={12} />Add device</button>
+        <button type="button" title={display.scrollSync ? "Turn off scroll sync" : "Turn on scroll sync"} aria-pressed={display.scrollSync} onClick={() => updateDisplay((current) => ({ ...current, scrollSync: !current.scrollSync }))} className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${display.scrollSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}><Link2 size={12} /><span>Scroll sync</span></button>
+        <ToolbarButton label="Capture comparison" dark={dark} onClick={() => void takeScreenshot()}><Camera size={14} /></ToolbarButton>
+        <ToolbarButton label="Reload all" dark={dark} onClick={reloadAllSlots}><RefreshCw size={15} /></ToolbarButton>
+        <ToolbarButton label={dark ? "Light theme" : "Dark theme"} dark={dark} onClick={() => updateDisplay((current) => ({ ...current, darkMode: !current.darkMode }))}>{dark ? <Sun size={15} /> : <Moon size={15} />}</ToolbarButton>
+        <ToolbarButton label="Close viewer" dark={dark} onClick={closeViewer}><X size={16} /></ToolbarButton>
+      </header>
 
-      {/* ── Main row: sidebar + canvas ── */}
-      <div className="flex min-h-0 flex-1 overflow-hidden">
-
-        {/* ── Left sidebar ── */}
-        <aside
-          className={`flex shrink-0 flex-col border-r transition-all duration-200 max-[720px]:absolute max-[720px]:inset-y-0 max-[720px]:left-0 max-[720px]:z-30 max-[720px]:shadow-2xl ${
-            dark ? "border-white/10 bg-[#151922]" : "border-black/[0.07] bg-white"
-          } ${sidebarOpen ? "w-56" : "w-10"}`}
-        >
-          {/* Logo / brand + toggle */}
-          <div className={`flex h-12 shrink-0 items-center gap-1 border-b px-2 ${dark ? "border-white/10" : "border-slate-100"}`}>
-            {sidebarOpen && (
-              <span className={`flex-1 pl-2 text-[13px] font-black tracking-tight ${dark ? "text-white" : "text-slate-800"}`}>Device Viewer</span>
-            )}
-            <button
-              type="button"
-              title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-              onClick={() => setSidebarOpen((v) => !v)}
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition ${
-                dark ? "text-slate-400 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-              }`}
-            >
-              {sidebarOpen ? <PanelLeftClose size={15} /> : <PanelLeftOpen size={15} />}
-            </button>
+      <div className="relative flex min-h-0 flex-1 overflow-hidden">
+        {sidebarOpen && narrowLayout && <button type="button" aria-label="Close workspace setup" className="absolute inset-0 z-30 bg-black/40" onClick={() => setSidebarOpen(false)} />}
+        <aside className={`z-40 flex shrink-0 flex-col border-r transition-[width,transform] duration-200 ${dark ? "border-white/[0.08] bg-[#11141a]" : "border-slate-200 bg-white"} ${sidebarOpen ? "w-60 translate-x-0" : "w-0 -translate-x-full overflow-hidden border-r-0"} ${narrowLayout ? "absolute inset-y-0 left-0 shadow-2xl" : "relative"}`}>
+          {sidebarOpen && <>
+          <div className={`flex h-11 shrink-0 items-center justify-between border-b px-3 ${dark ? "border-white/[0.07]" : "border-slate-100"}`}>
+            <div className="flex items-center gap-2"><Settings2 size={14} className="text-[#0f9f8f]" /><span className="text-[11px] font-extrabold">Workspace setup</span></div>
+            <button type="button" onClick={() => setSidebarOpen(false)} className={`grid h-7 w-7 place-items-center rounded-md ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"}`} aria-label="Collapse workspace setup"><PanelLeftClose size={14} /></button>
           </div>
+          <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-3">
+            <SidebarSection title="Devices" meta={`${slots.length} of ${maxPreviewSlots}`} dark={dark}>
+              <button type="button" disabled={slots.length >= maxPreviewSlots} onClick={() => addSlot()} className="flex h-9 w-full items-center justify-center gap-2 rounded-[9px] bg-[#0f9f8f] text-[11px] font-bold text-white shadow-sm hover:bg-[#0c8b7e] disabled:opacity-40"><Plus size={14} />Add viewport</button>
+              <ActionRow dark={dark} icon={<PanelsTopLeft size={14} />} onClick={() => setShowCustomDevice(true)} label="Create custom device" />
+            </SidebarSection>
 
-          <div className={`flex flex-1 flex-col gap-2 overflow-y-auto p-2 pb-0 ${sidebarOpen ? "" : "hidden"}`}>
-            {/* Devices */}
-            <div>
-              <Label dark={dark}>Devices</Label>
-              <div className="mt-1.5 flex flex-col gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => addSlot()}
-                  disabled={slots.length >= maxPreviewSlots}
-                    className={`flex h-8 w-full items-center justify-center gap-2 rounded-md border px-3 text-[12px] font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${
-                    dark
-                      ? "border-teal-400/30 bg-teal-400/15 text-teal-100 hover:bg-teal-400/20"
-                      : "border-teal-200 bg-teal-50 text-teal-900 hover:bg-teal-100"
-                  }`}
-                >
-                  <Plus size={15} className="shrink-0" />
-                  Add device
-                </button>
-                <SidebarBtn dark={dark} icon={<PanelsTopLeft size={14} />} onClick={() => setShowCustomDevice(true)}>
-                  Custom device
-                </SidebarBtn>
-              </div>
-            </div>
+            <SidebarSection title="Saved sets" dark={dark} action={<button type="button" onClick={() => setShowSavedSets((value) => !value)} className="text-[9px] font-extrabold uppercase tracking-wider text-[#0f9f8f]">{showSavedSets ? "Done" : "Manage"}</button>}>
+              <p className={`text-[10px] leading-4 ${dark ? "text-slate-500" : "text-slate-400"}`}>Reuse device combinations for repeated checks.</p>
+              {showSavedSets && <PresetsManager dark={dark} currentDeviceIds={slots.map((slot) => slot.deviceId)} onApply={applyDevicePreset} />}
+            </SidebarSection>
 
-            {/* Display */}
-            <div>
-              <Label dark={dark}>Display</Label>
-              <div className="mt-1.5 flex">
-                <Toggle
-                  active={display.scrollSync}
-                  dark={dark}
-                  icon={<Link2 size={15} />}
-                  onClick={() => updateDisplay((c) => ({ ...c, scrollSync: !c.scrollSync }))}
-                >
-                  Scroll sync
-                </Toggle>
-              </div>
-            </div>
-
-            {/* Layout presets */}
-            <div>
-              <div className="flex items-center justify-between">
-                <Label dark={dark}>Presets</Label>
-                <button
-                  type="button"
-                  onClick={() => setShowPresetsSection((v) => !v)}
-                  className={`text-[10px] font-black uppercase tracking-widest transition ${dark ? "text-slate-600 hover:text-slate-400" : "text-slate-300 hover:text-slate-500"}`}
-                >
-                  {showPresetsSection ? "hide" : "manage"}
-                </button>
-              </div>
-              <div className="mt-1.5 grid grid-cols-1 gap-1">
-                <div className="flex flex-col gap-1">
-                  <PresetIconButton dark={dark} label="Mobile vs tablet" onClick={() => applyDevicePreset(["apple-iphone-14-pro-max-2022", "apple-ipad-air-4"])}>
-                    <span>Mobile vs tablet</span>
-                  </PresetIconButton>
-                  <PresetIconButton dark={dark} label="iOS vs Android" onClick={() => applyDevicePreset(["apple-iphone-14-pro-max-2022", "samsung-galaxy-s24"])}>
-                    <span>iOS vs Android</span>
-                  </PresetIconButton>
-                  <PresetIconButton dark={dark} label="Laptop, mobile, and tablet" onClick={() => applyDevicePreset(["macbook-air-2020-13", "apple-iphone-14-pro-max-2022", "apple-ipad-air-4"])}>
-                    <span>Laptop, mobile, tablet</span>
-                  </PresetIconButton>
-                </div>
-              </div>
-              {showPresetsSection && (
-                <div className="mt-2">
-                  <PresetsManager
-                    dark={dark}
-                    currentDeviceIds={slots.map((s) => s.deviceId)}
-                    onApply={applyDevicePreset}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Capture */}
-            <div>
-              <Label dark={dark}>Capture</Label>
-              <div className="mt-1.5 flex flex-col gap-1">
-                <SidebarBtn compact dark={dark} icon={<Camera size={13} />} onClick={() => void takeScreenshot()} disabled={capturing}>
-                  {capturing ? "Capturing…" : "Capture & Annotate"}
-                </SidebarBtn>
-                <SidebarBtn
-                  compact
-                  dark={dark}
-                  disabled={!sourceTabId}
-                  icon={<Video size={13} />}
-                  onClick={() => void toggleRecordingCapture()}
-                >
-                  {recording ? "Stop recording" : "Record source tab"}
-                </SidebarBtn>
-              </div>
-            </div>
-
+            <SidebarSection title="Session tools" dark={dark}>
+              <ActionRow dark={dark} icon={<Camera size={14} />} onClick={() => void takeScreenshot()} label={capturing ? "Capturing comparison…" : "Capture and annotate"} />
+              <ActionRow dark={dark} icon={<Video size={14} />} onClick={() => void toggleRecording()} disabled={!sourceTabId} active={recording} label={recording ? "Stop recording" : "Record source tab"} />
+            </SidebarSection>
           </div>
-
-          {/* Close button */}
-          <div className={`shrink-0 border-t p-3 ${dark ? "border-white/10" : "border-slate-100"} ${sidebarOpen ? "" : "hidden"}`}>
-            <button
-              type="button"
-              onClick={closeViewer}
-              className={`flex h-9 w-full items-center gap-2 rounded-md px-2.5 text-[13px] font-medium transition ${
-                dark ? "text-slate-300 hover:bg-red-500/10 hover:text-red-200" : "text-slate-500 hover:bg-red-50 hover:text-red-600"
-              }`}
-            >
-              <X size={14} className="shrink-0" />
-              Close viewer
-            </button>
+          <div className={`border-t p-3 ${dark ? "border-white/[0.07]" : "border-slate-100"}`}>
+            <div className={`rounded-[10px] p-2.5 ${dark ? "bg-white/[0.035]" : "bg-slate-50"}`}>
+              <p className={`text-[9px] font-extrabold uppercase tracking-[0.12em] ${dark ? "text-slate-600" : "text-slate-400"}`}>Current session</p>
+              <p className="mt-1 truncate text-[10px] font-semibold">{slots.length} viewports · {display.scrollSync ? "linked" : "independent"}</p>
+            </div>
           </div>
+          </>}
         </aside>
 
-        {/* ── Right pane: preview canvas ── */}
-        <div className="flex min-w-0 flex-1 flex-col overflow-hidden max-[720px]:pl-10">
+        {!sidebarOpen && !narrowLayout && <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Open workspace setup" className={`absolute left-2 top-2 z-20 grid h-8 w-8 place-items-center rounded-lg border shadow-sm ${dark ? "border-white/10 bg-[#171a21] text-slate-400 hover:text-white" : "border-slate-200 bg-white text-slate-500 hover:text-slate-900"}`}><Settings2 size={14} /></button>}
 
-          {/* ── Preview canvas (resizable panels) ── */}
-          <main className="flex min-h-0 flex-1 overflow-hidden">
-            <div
-              ref={boardRef}
-              data-capture-board
-              className={`flex h-full w-full ${narrowLayout ? "flex-col" : ""}`}
-            >
-            {slots.map((slot, i) => (
-                <div
-                  key={slot.id}
-                  className="relative flex h-full min-w-0 flex-col overflow-hidden"
-                  style={{
-                    width: narrowLayout ? "100%" : `${widths[i] ?? 100 / slots.length}%`,
-                    height: narrowLayout ? `${100 / slots.length}%` : undefined,
-                    flexShrink: 0,
-                    flexGrow: 0
-                  }}
-                >
-                  <PreviewCard
-                    slot={slot}
-                    device={findDevice(slot.deviceId)}
-                    display={display}
-                    removable={slots.length > 1}
-                    onCapture={() => void takeScreenshot()}
-                  />
-                  {/* Drag handle */}
-                  {i < slots.length - 1 && !narrowLayout && (
-                    <div
-                      className="group absolute right-0 top-0 z-10 flex h-full w-[9px] cursor-col-resize flex-col items-center justify-center"
-                      onMouseDown={(e) => startResize(e, i)}
-                    >
-                      <div className="absolute inset-y-0 left-1/2 w-[1px] -translate-x-1/2 bg-black/[0.07] transition-all group-hover:w-[2px] group-hover:bg-slate-400/70" />
-                      <div className="relative z-10 flex flex-col items-center gap-[3px] rounded-full bg-white px-[3px] py-[6px] shadow-[0_1px_4px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.08] transition-all group-hover:shadow-[0_2px_8px_rgba(0,0,0,0.16)] group-hover:ring-black/[0.14]">
-                        <span className="block h-[3px] w-[3px] rounded-full bg-slate-400 transition-colors group-hover:bg-slate-600" />
-                        <span className="block h-[3px] w-[3px] rounded-full bg-slate-400 transition-colors group-hover:bg-slate-600" />
-                        <span className="block h-[3px] w-[3px] rounded-full bg-slate-400 transition-colors group-hover:bg-slate-600" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </main>
-        </div>
+        <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+          <div ref={boardRef} data-capture-board className={`flex min-h-0 flex-1 ${narrowLayout ? "flex-col" : ""}`}>
+            {slots.map((slot, index) => (
+              <div key={slot.id} className="relative flex h-full min-w-0 flex-col overflow-visible" style={{ width: narrowLayout ? "100%" : `${widths[index] ?? 100 / slots.length}%`, height: narrowLayout ? `${100 / slots.length}%` : undefined, flexShrink: 0 }}>
+                <PreviewCard slot={slot} device={findDevice(slot.deviceId)} display={display} removable={slots.length > 1} onCapture={() => void takeScreenshot()} />
+                {index < slots.length - 1 && !narrowLayout && <div role="separator" aria-label="Resize adjacent viewports" aria-orientation="vertical" className="group absolute right-0 top-0 z-20 flex h-full w-4 translate-x-1/2 cursor-col-resize items-center justify-center" onMouseDown={(event) => startResize(event, index)}><div className={`absolute inset-y-0 left-1/2 w-px transition-colors group-hover:bg-[#0f9f8f] ${dark ? "bg-white/20" : "bg-slate-300"}`} /><span className={`relative grid h-9 w-4 place-items-center rounded-full border shadow-sm transition-colors group-hover:border-[#0f9f8f] group-hover:bg-[#0f9f8f] group-hover:text-white ${dark ? "border-white/20 bg-[#1a1e27] text-slate-400" : "border-slate-300 bg-white text-slate-500"}`}><GripVertical size={12} /></span></div>}
+              </div>
+            ))}
+          </div>
+        </main>
       </div>
 
       {annotationOpen && <AnnotationOverlay imageUrl={annotationImage} meta={captureMeta} onClose={() => setAnnotationOpen(false)} />}
-
-      {showCustomDevice && (
-        <CustomDeviceModal
-          dark={dark}
-          onClose={() => setShowCustomDevice(false)}
-          onCreated={() => setShowCustomDevice(false)}
-        />
-      )}
+      {showCustomDevice && <CustomDeviceModal dark={dark} onClose={() => setShowCustomDevice(false)} onCreated={() => setShowCustomDevice(false)} />}
     </div>
   );
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function Label({ children, dark }: { children: ReactNode; dark: boolean }) {
-  return (
-    <p className={`text-[10px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}>{children}</p>
-  );
+function ToolbarButton({ children, label, dark, onClick }: { children: ReactNode; label: string; dark: boolean; onClick: () => void }) {
+  return <button type="button" title={label} aria-label={label} onClick={onClick} className={`grid h-8 w-8 shrink-0 place-items-center rounded-[8px] transition ${dark ? "text-slate-500 hover:bg-white/[0.07] hover:text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"}`}>{children}</button>;
 }
 
-function PresetIconButton({
-  children,
-  dark,
-  label,
-  onClick,
-}: {
-  children: ReactNode;
-  dark: boolean;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      title={label}
-      aria-label={label}
-      onClick={onClick}
-      className={`flex h-8 items-center justify-start gap-1.5 rounded-md border px-2 text-[11px] font-semibold transition ${
-        dark
-          ? "border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
-          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-      }`}
-    >
-      {children}
-    </button>
-  );
+function SidebarSection({ title, meta, action, dark, children }: { title: string; meta?: string; action?: ReactNode; dark: boolean; children: ReactNode }) {
+  return <section><div className="mb-2 flex items-center justify-between"><h2 className={`text-[9px] font-extrabold uppercase tracking-[0.13em] ${dark ? "text-slate-600" : "text-slate-400"}`}>{title}</h2>{action ?? (meta && <span className={`text-[9px] font-bold ${dark ? "text-slate-600" : "text-slate-400"}`}>{meta}</span>)}</div><div className="flex flex-col gap-1.5">{children}</div></section>;
 }
 
-function SidebarBtn({
-  icon,
-  children,
-  onClick,
-  disabled,
-  dark,
-  compact = false,
-}: {
-  icon: ReactNode;
-  children: ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-  dark: boolean;
-  compact?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex ${compact ? "h-7 text-[12px] px-2" : "h-8 px-2.5 text-[13px]"} w-full items-center gap-2 rounded-md font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
-        dark ? "text-slate-200 hover:bg-white/10 hover:text-white" : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-      }`}
-    >
-      <span className={`shrink-0 ${dark ? "text-slate-400" : "text-slate-500"}`}>{icon}</span>
-      {children}
-    </button>
-  );
-}
-
-function Toggle({
-  active,
-  children,
-  dark,
-  icon,
-  onClick,
-  disabled = false,
-}: {
-  active: boolean;
-  children: ReactNode;
-  dark: boolean;
-  icon: ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      disabled={disabled}
-      onClick={onClick}
-      className={`flex min-h-10 w-full items-center gap-2 rounded-[8px] border px-2.5 text-[12px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
-        active
-          ? dark ? "border-teal-400/40 bg-teal-400/10 text-teal-100" : "border-teal-200 bg-teal-50 text-teal-900"
-          : dark ? "border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.07]" : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-      }`}
-    >
-      <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-md ${active ? "bg-teal-500 text-white" : dark ? "bg-white/10 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
-        {icon}
-      </span>
-      <span className="min-w-0 flex-1 whitespace-nowrap text-left">{children}</span>
-      <span className={`relative block h-5 w-9 shrink-0 rounded-full transition ${
-        active
-          ? "bg-teal-500"
-          : dark ? "bg-white/15" : "bg-slate-200"
-      }`}>
-        <span
-          className="absolute left-0 top-0.5 block h-4 w-4 rounded-full bg-white shadow-sm transition-transform"
-          style={{ transform: `translateX(${active ? 16 : 2}px)` }}
-        />
-      </span>
-    </button>
-  );
+function ActionRow({ icon, label, dark, onClick, disabled, active }: { icon: ReactNode; label: string; dark: boolean; onClick: () => void; disabled?: boolean; active?: boolean }) {
+  return <button type="button" onClick={onClick} disabled={disabled} className={`flex h-8 w-full items-center gap-2 rounded-[8px] px-2 text-left text-[11px] font-semibold transition disabled:opacity-35 ${active ? "bg-red-500/10 text-red-500" : dark ? "text-slate-400 hover:bg-white/[0.055] hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}><span className="shrink-0">{icon}</span><span className="min-w-0 flex-1 truncate">{label}</span><ChevronRight size={11} className="shrink-0 opacity-35" /></button>;
 }

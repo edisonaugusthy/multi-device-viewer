@@ -834,7 +834,7 @@ function StatusBar({
           <span className="flex h-full flex-1 items-center justify-center gap-[5px] pl-[28%]">
             <SignalIcon />
             <WifiIcon />
-            {showBattery && <BatteryIcon showPercent />}
+            {showBattery && <BatteryIcon />}
           </span>
         </div>
       </div>
@@ -858,7 +858,7 @@ function StatusBar({
       <span className="flex items-center gap-1">
         <SignalIcon />
         <WifiIcon />
-        {showBattery && <BatteryIcon showPercent={ios} />}
+        {showBattery && <BatteryIcon />}
       </span>
     </div>
   );
@@ -1087,35 +1087,32 @@ function getBottomHeight(platform: string, compact: boolean) {
 
 function SignalIcon() {
   return (
-    <span className="flex h-[11px] items-end gap-[1.5px]">
-      <i className="block h-[4px] w-[3px] rounded-[1px] bg-current" />
-      <i className="block h-[6px] w-[3px] rounded-[1px] bg-current" />
-      <i className="block h-[8px] w-[3px] rounded-[1px] bg-current" />
-      <i className="block h-[10px] w-[3px] rounded-[1px] bg-current" />
-    </span>
+    <svg width="15" height="11" viewBox="0 0 15 11" aria-hidden="true" className="block fill-current">
+      <rect x="0" y="7" width="2.5" height="4" rx="0.8" />
+      <rect x="4" y="5" width="2.5" height="6" rx="0.8" />
+      <rect x="8" y="2.5" width="2.5" height="8.5" rx="0.8" />
+      <rect x="12" y="0" width="2.5" height="11" rx="0.8" />
+    </svg>
   );
 }
 
 function WifiIcon() {
   return (
-    <svg width="13" height="10" viewBox="0 0 13 10" aria-hidden="true" className="block fill-current">
-      <path d="M6.5 9.4 4.9 7.8a2.26 2.26 0 0 1 3.2 0L6.5 9.4Z" />
-      <path d="M3.3 6.2 2.1 5a6.22 6.22 0 0 1 8.8 0L9.7 6.2a4.52 4.52 0 0 0-6.4 0Z" />
-      <path d="M1.2 4.1 0 2.9a9.18 9.18 0 0 1 13 0l-1.2 1.2a7.48 7.48 0 0 0-10.6 0Z" />
+    <svg width="14" height="11" viewBox="0 0 14 11" aria-hidden="true" className="block fill-current">
+      <path d="M7 10.8 5.35 9.15a2.34 2.34 0 0 1 3.3 0L7 10.8Z" />
+      <path d="m3.35 7.15-1.2-1.2a6.86 6.86 0 0 1 9.7 0l-1.2 1.2a5.16 5.16 0 0 0-7.3 0Z" />
+      <path d="M1.2 4.95 0 3.75a9.9 9.9 0 0 1 14 0l-1.2 1.2a8.2 8.2 0 0 0-11.6 0Z" />
     </svg>
   );
 }
 
-function BatteryIcon({ showPercent = false }: { showPercent?: boolean }) {
+function BatteryIcon() {
   return (
-    <span className="relative flex h-[9px] w-[22px] items-center rounded-[2px] border-[1.25px] border-current">
-      <span className="absolute -right-[3px] h-[4px] w-[2px] rounded-r bg-current" />
-      {showPercent ? (
-        <span className="flex w-full justify-center text-[6.5px] font-bold leading-none">100</span>
-      ) : (
-        <span className="ml-[1px] h-[5px] w-[14px] rounded-[1px] bg-current" />
-      )}
-    </span>
+    <svg width="23" height="11" viewBox="0 0 23 11" aria-hidden="true" className="block">
+      <rect x="0.65" y="0.65" width="19" height="9.7" rx="2.4" fill="none" stroke="currentColor" strokeWidth="1.3" opacity="0.72" />
+      <rect x="2.2" y="2.2" width="15.9" height="6.6" rx="1.25" fill="currentColor" />
+      <path d="M21 3.45v4.1c1.05-.34 1.65-1.08 1.65-2.05S22.05 3.79 21 3.45Z" fill="currentColor" opacity="0.72" />
+    </svg>
   );
 }
 

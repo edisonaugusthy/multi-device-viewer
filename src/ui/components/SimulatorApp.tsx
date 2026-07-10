@@ -1,16 +1,11 @@
 import {
   Camera,
-  Check,
   Link2,
-  LayoutGrid,
-  Moon,
   PanelLeftClose,
   PanelLeftOpen,
   PanelsTopLeft,
   Plus,
-  RotateCw,
   Star,
-  Sun,
   Video,
   X,
 } from "lucide-react";
@@ -36,7 +31,6 @@ export function SimulatorApp() {
     activeSlotId,
     addSlot,
     applyDevicePreset,
-    reloadAllSlots,
     updateDisplay,
     sourceTabId,
     useCount,
@@ -235,7 +229,7 @@ export function SimulatorApp() {
         <aside
           className={`flex shrink-0 flex-col border-r transition-all duration-200 max-[720px]:absolute max-[720px]:inset-y-0 max-[720px]:left-0 max-[720px]:z-30 max-[720px]:shadow-2xl ${
             dark ? "border-white/10 bg-[#151922]" : "border-black/[0.07] bg-white"
-          } ${sidebarOpen ? "w-64" : "w-10"}`}
+          } ${sidebarOpen ? "w-56" : "w-10"}`}
         >
           {/* Logo / brand + toggle */}
           <div className={`flex h-12 shrink-0 items-center gap-1 border-b px-2 ${dark ? "border-white/10" : "border-slate-100"}`}>
@@ -263,7 +257,7 @@ export function SimulatorApp() {
                   type="button"
                   onClick={() => addSlot()}
                   disabled={slots.length >= maxPreviewSlots}
-                  className={`flex h-9 w-full items-center justify-center gap-2 rounded-md border px-3 text-[13px] font-black transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                    className={`flex h-8 w-full items-center justify-center gap-2 rounded-md border px-3 text-[12px] font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${
                     dark
                       ? "border-teal-400/30 bg-teal-400/15 text-teal-100 hover:bg-teal-400/20"
                       : "border-teal-200 bg-teal-50 text-teal-900 hover:bg-teal-100"
@@ -272,21 +266,16 @@ export function SimulatorApp() {
                   <Plus size={15} className="shrink-0" />
                   Add device
                 </button>
-                <div className="grid grid-cols-2 gap-1.5">
-                  <SidebarBtn compact dark={dark} icon={<RotateCw size={13} />} onClick={() => reloadAllSlots()}>
-                    Reload all
-                  </SidebarBtn>
-                  <SidebarBtn compact dark={dark} icon={<PanelsTopLeft size={13} />} onClick={() => setShowCustomDevice(true)}>
-                    Custom device
-                  </SidebarBtn>
-                </div>
+                <SidebarBtn dark={dark} icon={<PanelsTopLeft size={14} />} onClick={() => setShowCustomDevice(true)}>
+                  Custom device
+                </SidebarBtn>
               </div>
             </div>
 
             {/* Display */}
             <div>
               <Label dark={dark}>Display</Label>
-              <div className="mt-1.5 grid grid-cols-2 gap-1">
+              <div className="mt-1.5 flex">
                 <Toggle
                   active={display.scrollSync}
                   dark={dark}
@@ -294,14 +283,6 @@ export function SimulatorApp() {
                   onClick={() => updateDisplay((c) => ({ ...c, scrollSync: !c.scrollSync }))}
                 >
                   Scroll sync
-                </Toggle>
-                <Toggle
-                  active={dark}
-                  dark={dark}
-                  icon={dark ? <Moon size={15} /> : <Sun size={15} />}
-                  onClick={() => updateDisplay((c) => ({ ...c, darkMode: !c.darkMode }))}
-                >
-                  Dark mode
                 </Toggle>
               </div>
             </div>
@@ -319,27 +300,17 @@ export function SimulatorApp() {
                 </button>
               </div>
               <div className="mt-1.5 grid grid-cols-1 gap-1">
-                <SidebarBtn
-                  dark={dark}
-                  icon={<LayoutGrid size={14} />}
-                  onClick={() => applyDevicePreset(["apple-iphone-14-pro-max-2022", "apple-ipad-air-4"])}
-                >
-                  Mobile vs Tablet
-                </SidebarBtn>
-                <SidebarBtn
-                  dark={dark}
-                  icon={<LayoutGrid size={14} />}
-                  onClick={() => applyDevicePreset(["apple-iphone-14-pro-max-2022", "samsung-galaxy-s24"])}
-                >
-                  iOS vs Android
-                </SidebarBtn>
-                <SidebarBtn
-                  dark={dark}
-                  icon={<LayoutGrid size={14} />}
-                  onClick={() => applyDevicePreset(["macbook-air-2020-13", "apple-iphone-14-pro-max-2022", "apple-ipad-air-4"])}
-                >
-                  Laptop + Mobile + Tablet
-                </SidebarBtn>
+                <div className="flex flex-col gap-1">
+                  <PresetIconButton dark={dark} label="Mobile vs tablet" onClick={() => applyDevicePreset(["apple-iphone-14-pro-max-2022", "apple-ipad-air-4"])}>
+                    <span>Mobile vs tablet</span>
+                  </PresetIconButton>
+                  <PresetIconButton dark={dark} label="iOS vs Android" onClick={() => applyDevicePreset(["apple-iphone-14-pro-max-2022", "samsung-galaxy-s24"])}>
+                    <span>iOS vs Android</span>
+                  </PresetIconButton>
+                  <PresetIconButton dark={dark} label="Laptop, mobile, and tablet" onClick={() => applyDevicePreset(["macbook-air-2020-13", "apple-iphone-14-pro-max-2022", "apple-ipad-air-4"])}>
+                    <span>Laptop, mobile, tablet</span>
+                  </PresetIconButton>
+                </div>
               </div>
               {showPresetsSection && (
                 <div className="mt-2">
@@ -458,6 +429,34 @@ function Label({ children, dark }: { children: ReactNode; dark: boolean }) {
   );
 }
 
+function PresetIconButton({
+  children,
+  dark,
+  label,
+  onClick,
+}: {
+  children: ReactNode;
+  dark: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      onClick={onClick}
+      className={`flex h-8 items-center justify-start gap-1.5 rounded-md border px-2 text-[11px] font-semibold transition ${
+        dark
+          ? "border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
+          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 function SidebarBtn({
   icon,
   children,
@@ -506,6 +505,7 @@ function Toggle({
   return (
     <button
       type="button"
+      aria-pressed={active}
       disabled={disabled}
       onClick={onClick}
       className={`flex min-h-10 w-full items-center gap-2 rounded-[8px] border px-2.5 text-[12px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
@@ -517,13 +517,16 @@ function Toggle({
       <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-md ${active ? "bg-teal-500 text-white" : dark ? "bg-white/10 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
         {icon}
       </span>
-      <span className="min-w-0 flex-1 text-left">{children}</span>
-      <span className={`grid h-5 w-5 shrink-0 place-items-center rounded border transition ${
+      <span className="min-w-0 flex-1 whitespace-nowrap text-left">{children}</span>
+      <span className={`relative block h-5 w-9 shrink-0 rounded-full transition ${
         active
-          ? "border-teal-500 bg-teal-500 text-white"
-          : dark ? "border-white/20 bg-transparent text-transparent" : "border-slate-300 bg-white text-transparent"
+          ? "bg-teal-500"
+          : dark ? "bg-white/15" : "bg-slate-200"
       }`}>
-        <Check size={13} strokeWidth={3} />
+        <span
+          className="absolute left-0 top-0.5 block h-4 w-4 rounded-full bg-white shadow-sm transition-transform"
+          style={{ transform: `translateX(${active ? 16 : 2}px)` }}
+        />
       </span>
     </button>
   );

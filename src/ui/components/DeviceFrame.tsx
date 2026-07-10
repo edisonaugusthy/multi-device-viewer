@@ -79,8 +79,13 @@ export function DeviceFrame({
   }
 
   if (imageFrame?.localPath && imageFrame.width && imageFrame.height) {
-    const frameW = imageFrame.width / 2;
-    const frameH = imageFrame.height / 2;
+    const baseFrameW = imageFrame.width / 2;
+    const baseFrameH = imageFrame.height / 2;
+    // Mockup PNGs are stored portrait-first. In landscape, rotate the complete
+    // shell and swap its outer dimensions so the screen, chrome, and frame all
+    // share the same orientation.
+    const frameW = landscape ? baseFrameH : baseFrameW;
+    const frameH = landscape ? baseFrameW : baseFrameH;
     const viewportConfig = imageFrame.viewport?.[orientation];
     const catalogScreenRect = screenRectFromInset(imageFrame.screenInset, frameW, frameH);
     const resolvedMeasuredScreenRect = catalogScreenRect ?? measuredScreenRect;
@@ -132,7 +137,14 @@ export function DeviceFrame({
           src={imageFrame.localPath}
           alt=""
           draggable={false}
-          className="pointer-events-none absolute inset-0 h-full w-full select-none"
+          className="pointer-events-none absolute select-none"
+          style={{
+            width: baseFrameW,
+            height: baseFrameH,
+            left: "50%",
+            top: "50%",
+            transform: `translate(-50%, -50%)${landscape ? " rotate(90deg)" : ""}`,
+          }}
         />
         {!waitForMeasuredScreen && (
           <div
@@ -410,9 +422,10 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
   const profile = getFrameProfile(device);
   const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.width && asset.height);
   if (imageFrame?.width && imageFrame.height) {
+    const landscape = viewportSize.width > viewportSize.height;
     return {
-      width: imageFrame.width / 2,
-      height: imageFrame.height / 2,
+      width: (landscape ? imageFrame.height : imageFrame.width) / 2,
+      height: (landscape ? imageFrame.width : imageFrame.height) / 2,
     };
   }
 

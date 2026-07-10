@@ -39,7 +39,7 @@ const SimulatorContext = createContext<SimulatorContextValue | null>(null);
 
 const defaultDisplay: DisplaySettings = {
   scrollSync: false,
-  darkMode: false,
+  darkMode: typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)").matches,
 };
 
 const startupDisplay: DisplaySettings = {
@@ -105,7 +105,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         setActiveSlotId(session.activeSlotId || nextSlots[0]?.id || slots[0].id);
         setDisplay({
           ...startupDisplay,
-          darkMode: session.display?.darkMode ?? startupDisplay.darkMode,
           scrollSync: session.display?.scrollSync ?? startupDisplay.scrollSync,
         });
       }
@@ -114,6 +113,16 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       }
       setHydrated(true);
     });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const syncColorScheme = (event: MediaQueryListEvent) => {
+      setDisplay((current) => ({ ...current, darkMode: event.matches }));
+    };
+    media.addEventListener("change", syncColorScheme);
+    return () => media.removeEventListener("change", syncColorScheme);
   }, []);
 
   useEffect(() => {

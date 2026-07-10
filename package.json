@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wxt",
+    "dev:preview": "vite --config vite.preview.config.ts",
     "build": "wxt build",
     "zip": "wxt zip",
     "compile": "tsc --noEmit",

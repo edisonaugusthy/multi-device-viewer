@@ -13,7 +13,10 @@ export default defineContentScript({
       chrome.runtime.onMessage.addListener((message) => {
         if (message !== null && typeof message === "object") {
           if (message.type === "OPEN_SIMULATOR") {
-            toggleSimulator(typeof message.url === "string" ? message.url : undefined);
+            toggleSimulator(
+              typeof message.url === "string" ? message.url : undefined,
+              typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,
+            );
           } else if (message.type === "HIDE_OVERLAY") {
             const el = document.getElementById(OVERLAY_ID);
             if (el) el.style.visibility = "hidden";
@@ -613,7 +616,7 @@ function setupPreviewBridge() {
   });
 }
 
-function toggleSimulator(targetUrl?: string) {
+function toggleSimulator(targetUrl?: string, sourceTabId?: number) {
   // If overlay is already open, close it (toggle behaviour).
   const existing = document.getElementById(OVERLAY_ID);
   if (existing) {
@@ -628,6 +631,9 @@ function toggleSimulator(targetUrl?: string) {
   const pageUrl = targetUrl ?? window.location.href;
   if (/^https?:\/\//i.test(pageUrl)) {
     simulatorUrl.searchParams.set("url", pageUrl);
+  }
+  if (typeof sourceTabId === "number") {
+    simulatorUrl.searchParams.set("sourceTabId", String(sourceTabId));
   }
 
   // Outer container — full-screen fixed overlay.

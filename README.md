@@ -32,6 +32,16 @@ npm run dev
 
 Load the unpacked extension from `.output/chrome-mv3/` in Chrome developer mode (`chrome://extensions`).
 
+### Standalone Codex preview
+
+To view the simulator UI as a regular website in Codex's in-app browser, run:
+
+```bash
+npm run dev:preview
+```
+
+Then open [http://localhost:5173/](http://localhost:5173/) in the browser. This preview uses browser storage and download fallbacks; Chrome-extension-only capture, recording, and tab controls remain disabled.
+
 ## Build
 
 ```bash

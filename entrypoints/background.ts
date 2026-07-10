@@ -90,7 +90,45 @@ export default defineBackground(() => {
     const url =
       tab.url && /^https?:\/\//i.test(tab.url) ? tab.url : undefined;
 
-    void openSimulator(url, tab.id).catch(console.error);
+    if (typeof tab.id !== "number") {
+      void openSimulator(url, tab.id).catch(console.error);
+      return;
+    }
+
+    // Keep the viewer on the current page. The content script owns the
+    // full-screen overlay, so the source page remains underneath it.
+    const message = { type: "OPEN_SIMULATOR", url, sourceTabId: tab.id };
+    const sendMessage = () => {
+      chrome.tabs.sendMessage(tab.id!, message, () => {
+        if (!chrome.runtime.lastError) return;
+        const isWebPage = /^https?:\/\//i.test(tab.url ?? "");
+        if (!isWebPage) {
+          // Chrome-internal/restricted pages cannot receive content-script
+          // messages, so preserve a usable fallback for those pages.
+          void openSimulator(url, tab.id).catch(console.error);
+          return;
+        }
+        console.error("Multi Device Viewer could not attach to the current page", chrome.runtime.lastError.message);
+      });
+    };
+
+    chrome.tabs.sendMessage(tab.id, message, () => {
+      if (!chrome.runtime.lastError) return;
+
+      // A tab that was already open when the extension was reloaded does not
+      // automatically receive the content script. Inject it once, then retry
+      // the in-page launch instead of opening a chrome-extension:// tab.
+      chrome.scripting.executeScript(
+        { target: { tabId: tab.id! }, files: ["content-scripts/content.js"] },
+        () => {
+          if (chrome.runtime.lastError) {
+            sendMessage();
+            return;
+          }
+          sendMessage();
+        },
+      );
+    });
   }
 
   function syncUpdateIndicator() {

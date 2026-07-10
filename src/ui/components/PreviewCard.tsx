@@ -293,16 +293,6 @@ export function PreviewCard({
           onSwitch={(id) => setSlotDevice(slot.id, id)}
         />
 
-        <span
-          className={`mx-0.5 h-4 w-px shrink-0 ${display.darkMode ? "bg-white/10" : "bg-slate-200"}`}
-        />
-
-        <span
-          className={`shrink-0 whitespace-nowrap text-[10px] font-medium tabular-nums tracking-tight ${display.darkMode ? "text-slate-400" : "text-slate-500"}`}
-        >
-          {viewportSize.width}×{viewportSize.height}
-        </span>
-
         <div className="min-w-0 flex-1" />
 
         <CardBtn
@@ -395,9 +385,9 @@ export function PreviewCard({
                     key={`${slot.id}-${slot.reloadToken}`}
                     title={`${device.name} preview`}
                     src={slot.url}
-                    className={`h-full w-full border-0 ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
+                    className={`block h-full w-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
                     style={{
-                      width: `calc(100% + 17px)`,
+                      width: "100%",
                       backgroundColor: display.darkMode ? "#0f172a" : "#ffffff",
                       colorScheme: display.darkMode ? "dark" : "light",
                       filter: display.darkMode
@@ -564,7 +554,7 @@ function DeviceSwitcher({
       {open && (
         <div
           data-testid="device-switcher-panel"
-          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(380px,calc(100vw-16px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
+          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(360px,calc(100vw-24px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
             dark ? "border-white/10 bg-[#171b24]" : "border-slate-200 bg-white"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -591,7 +581,7 @@ function DeviceSwitcher({
                 >
                   {section.label}
                 </p>
-                <div className="grid grid-cols-2 gap-1 px-1 min-[420px]:grid-cols-3">
+                <div className="grid grid-cols-2 gap-1 px-1">
                   {section.devices.map((d) => (
                     <DeviceSwitcherItem
                       key={d.id}
@@ -634,7 +624,7 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
       ref={ref}
       type="button"
       title={device.name}
-      className={`flex min-h-9 w-full min-w-0 items-center rounded-[8px] px-2 py-1.5 text-left transition ${
+      className={`flex min-h-10 w-full min-w-0 items-center rounded-[8px] px-2 py-1.5 text-left transition ${
         active
           ? "bg-slate-900 text-white hover:bg-slate-800"
           : dark
@@ -643,8 +633,13 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
       }`}
       onClick={onPick}
     >
-      <span className="block truncate text-[11px] font-semibold leading-tight">
-        {shortName(device.name)}
+      <span className="min-w-0">
+        <span className="block line-clamp-1 break-words text-[11px] font-semibold leading-tight">
+          {shortName(device.name)}
+        </span>
+        <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? "text-slate-300" : dark ? "text-slate-500" : "text-slate-400"}`}>
+          {device.os} · {device.cssViewport.width}×{device.cssViewport.height}
+        </span>
       </span>
     </button>
   );

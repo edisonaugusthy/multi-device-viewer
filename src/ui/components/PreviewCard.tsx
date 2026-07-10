@@ -1,10 +1,12 @@
 import {
+  Check,
   ChevronDown,
   ExternalLink,
   Minus,
   Plus,
   RefreshCw,
   RotateCw,
+  Search,
   X,
 } from "lucide-react";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -276,7 +278,7 @@ export function PreviewCard({
 
   return (
     <section
-      className={`flex h-full min-h-0 flex-col overflow-hidden border-t transition-colors ${activeSlotId === slot.id ? "border-t-teal-500" : "border-t-transparent"}`}
+      className={`flex h-full min-h-0 flex-col overflow-visible border-t transition-colors ${activeSlotId === slot.id ? "border-t-teal-500" : "border-t-transparent"}`}
       style={{ minWidth: 0 }}
       onClick={() => setActiveSlot(slot.id)}
       onFocus={() => setActiveSlot(slot.id)}
@@ -481,7 +483,9 @@ function DeviceSwitcher({
   const sections = useMemo<MenuSection[]>(() => {
     const q = query.trim().toLowerCase();
     const filterByQuery = (list: Device[]): Device[] =>
-      q ? list.filter((d) => d.name.toLowerCase().includes(q)) : list;
+      q
+        ? list.filter((device) => `${device.name} ${device.brand} ${device.os} ${device.type} ${device.cssViewport.width}x${device.cssViewport.height}`.toLowerCase().includes(q))
+        : list;
 
     const findById = (id: string) => devices.find((device) => device.id === id);
 
@@ -538,34 +542,38 @@ function DeviceSwitcher({
       {open && (
         <div
           data-testid="device-switcher-panel"
-          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(360px,calc(100vw-24px))] flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_40px_rgba(0,0,0,0.18)] ${
+          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(340px,calc(100vw-24px))] flex-col overflow-hidden rounded-xl border shadow-[0_18px_50px_rgba(0,0,0,0.22)] ${
             dark ? "border-white/10 bg-[#171b24]" : "border-slate-200 bg-white"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Search */}
-          <div
-            className={`border-b px-2 py-1.5 ${dark ? "border-white/10" : "border-slate-100"}`}
-          >
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search devices…"
-              className={`w-full bg-transparent text-[13px] font-medium outline-none placeholder:text-slate-400 ${dark ? "text-white" : "text-slate-800"}`}
-            />
+          <div className={`border-b p-2.5 ${dark ? "border-white/10" : "border-slate-100"}`}>
+            <div className="mb-2 flex items-center justify-between px-0.5">
+              <p className={`text-[11px] font-extrabold ${dark ? "text-white" : "text-slate-800"}`}>Choose a device</p>
+              <span className={`text-[9px] font-bold ${dark ? "text-slate-500" : "text-slate-400"}`}>{new Set(sections.flatMap((section) => section.devices.map((device) => device.id))).size} results</span>
+            </div>
+            <div className={`flex h-8 items-center gap-2 rounded-lg border px-2 ${dark ? "border-white/10 bg-white/[0.05]" : "border-slate-200 bg-slate-50"}`}>
+              <Search size={13} className={dark ? "text-slate-500" : "text-slate-400"} />
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
+                placeholder="Search name, OS, type, or size"
+                className={`min-w-0 flex-1 bg-transparent text-[11px] font-medium outline-none placeholder:text-slate-400 ${dark ? "text-white" : "text-slate-800"}`}
+              />
+              {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear device search" className={`grid h-5 w-5 place-items-center rounded ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-200 hover:text-slate-700"}`}><X size={11} /></button>}
+            </div>
           </div>
 
           {/* List */}
           <div ref={listRef} className="max-h-[420px] overflow-y-auto py-1">
             {sections.map((section) => (
               <div key={section.key}>
-                <p
-                  className={`px-2 pb-1 pt-1.5 text-[9px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}
-                >
-                  {section.label}
+                <p className={`flex items-center justify-between px-3 pb-1 pt-2 text-[9px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}>
+                  <span>{section.label}</span><span>{section.devices.length}</span>
                 </p>
-                <div className="grid grid-cols-2 gap-1 px-1">
+                <div className="flex flex-col gap-0.5 px-1.5">
                   {section.devices.map((d) => (
                     <DeviceSwitcherItem
                       key={d.id}
@@ -584,8 +592,8 @@ function DeviceSwitcher({
               </div>
             ))}
             {sections.length === 0 && (
-              <p className="px-3 py-4 text-center text-[11px] text-slate-400">
-                No results
+              <p className="px-3 py-8 text-center text-[11px] text-slate-400">
+                No devices match “{query}”
               </p>
             )}
           </div>
@@ -608,23 +616,24 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
       ref={ref}
       type="button"
       title={device.name}
-      className={`flex min-h-10 w-full min-w-0 items-center rounded-[8px] px-2 py-1.5 text-left transition ${
+      className={`flex min-h-11 w-full min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 text-left transition ${
         active
-          ? "bg-slate-900 text-white hover:bg-slate-800"
+          ? dark ? "bg-teal-400/15 text-teal-100" : "bg-teal-50 text-teal-900"
           : dark
             ? "text-slate-200 hover:bg-white/[0.07]"
             : "text-slate-700 hover:bg-slate-50"
       }`}
       onClick={onPick}
     >
-      <span className="min-w-0">
+      <span className="min-w-0 flex-1">
         <span className="block line-clamp-1 break-words text-[11px] font-semibold leading-tight">
           {shortName(device.name)}
         </span>
-        <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? "text-slate-300" : dark ? "text-slate-500" : "text-slate-400"}`}>
-          {device.os} · {device.cssViewport.width}×{device.cssViewport.height}
+        <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? dark ? "text-teal-300/70" : "text-teal-700/70" : dark ? "text-slate-500" : "text-slate-400"}`}>
+          {device.os} · {device.type} · {device.cssViewport.width} × {device.cssViewport.height}
         </span>
       </span>
+      {active && <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full ${dark ? "bg-teal-400/20 text-teal-300" : "bg-teal-100 text-teal-700"}`}><Check size={12} strokeWidth={2.5} /></span>}
     </button>
   );
 });

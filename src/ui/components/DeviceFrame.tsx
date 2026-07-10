@@ -46,7 +46,9 @@ export function DeviceFrame({
 }) {
   const profile = getFrameProfile(device);
   const hostname = safeHostname(url);
-  const landscape = orientation === "landscape";
+  // Only handset/tablet mockups rotate. Laptop/desktop assets are already
+  // landscape canvases and must never be swapped as if they were phones.
+  const landscape = orientation === "landscape" && (device.type === "phone" || device.type === "tablet");
   const compact = landscape || profile.kind === "iphone-classic" || profile.kind === "tablet";
   const shellP = profile.style.shellPadding ?? profile.shellPadding;
   const innerP = profile.style.innerPadding ?? 0;
@@ -422,7 +424,7 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
   const profile = getFrameProfile(device);
   const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.width && asset.height);
   if (imageFrame?.width && imageFrame.height) {
-    const landscape = viewportSize.width > viewportSize.height;
+    const landscape = (device.type === "phone" || device.type === "tablet") && viewportSize.width > viewportSize.height;
     return {
       width: (landscape ? imageFrame.height : imageFrame.width) / 2,
       height: (landscape ? imageFrame.width : imageFrame.height) / 2,

@@ -10,7 +10,7 @@ export default defineConfig({
     name: PRODUCT_NAME,
     short_name: PRODUCT_SHORT_NAME,
     description: PRODUCT_DESCRIPTION,
-    version: "0.1.4",
+    version: "0.1.5",
     permissions: ["contextMenus", "declarativeNetRequest", "downloads", "offscreen", "scripting", "storage", "tabCapture", "tabs"],
     declarative_net_request: {
       rule_resources: [

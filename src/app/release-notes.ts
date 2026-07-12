@@ -26,8 +26,8 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
-  "0.1.4": {
-    version: "0.1.4",
+  "0.1.5": {
+    version: "0.1.5",
     heading: "A faster everyday responsive-development workspace",
     summary: "This release makes it easier to keep the viewer beside your editor, follow changes across devices, and share visual feedback.",
     notes: [

@@ -1,6 +1,6 @@
 {
   "name": "multi-device-viewer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A local-first Chrome extension for mobile view and responsive device testing across phones, tablets, laptops, and desktops.",
   "type": "module",
   "scripts": {

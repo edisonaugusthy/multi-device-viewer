@@ -90,7 +90,7 @@ npm run compile
 npm test
 npm run build
 npm run zip
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.1.4-chrome.zip
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.1.5-chrome.zip
 ```
 
 The production extension and zip are written to `.output/`.

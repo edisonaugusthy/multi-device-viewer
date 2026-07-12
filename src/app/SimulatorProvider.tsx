@@ -25,6 +25,8 @@ interface SimulatorContextValue extends SimulatorState {
   applyDevicePreset: (deviceIds: string[]) => void;
   removeSlot: (slotId: string) => void;
   duplicateActiveSlot: (deviceId?: string) => void;
+  moveSlot: (slotId: string, direction: "left" | "right") => void;
+  resetSession: () => void;
   updateDisplay: (display: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => void;
   useCount: number;
   setSourceTabId: (tabId: number | null) => void;
@@ -256,6 +258,25 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     });
   }, [activeSlotId]);
 
+  const moveSlot = useCallback((slotId: string, direction: "left" | "right") => {
+    setSlots((current) => {
+      const from = current.findIndex((slot) => slot.id === slotId);
+      const to = direction === "left" ? from - 1 : from + 1;
+      if (from < 0 || to < 0 || to >= current.length) return current;
+      const next = [...current];
+      [next[from], next[to]] = [next[to], next[from]];
+      return next;
+    });
+  }, []);
+
+  const resetSession = useCallback(() => {
+    const url = slots[0]?.url ?? initialUrlFromSearch();
+    const next = defaultSlotDeviceIds.map((deviceId, index) => createPreviewSlot(deviceId, url, index));
+    setSlots(next);
+    setActiveSlotId(next[0].id);
+    setDisplay(startupDisplay);
+  }, [slots]);
+
   const updateDisplay = useCallback((nextDisplay: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => {
     setDisplay((current) =>
       typeof nextDisplay === "function"
@@ -311,6 +332,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       applyDevicePreset,
       removeSlot,
       duplicateActiveSlot,
+      moveSlot,
+      resetSession,
       updateDisplay,
       setSourceTabId,
     }),
@@ -320,9 +343,11 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       applyDevicePreset,
       display,
       duplicateActiveSlot,
+      moveSlot,
       reloadAllSlots,
       reloadSlot,
       removeSlot,
+      resetSession,
       rotateSlot,
       setActiveSlot,
       setAllSlotsUrl,

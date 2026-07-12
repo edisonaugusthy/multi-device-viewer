@@ -1,12 +1,17 @@
 import {
+  ArrowLeft,
+  ArrowRight,
   Check,
   ChevronDown,
   ExternalLink,
+  Maximize2,
+  Minimize2,
   Minus,
   Plus,
   RefreshCw,
   RotateCw,
   Search,
+  Star,
   X,
 } from "lucide-react";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -62,6 +67,10 @@ interface PreviewCardProps {
   display: DisplaySettings;
   removable: boolean;
   onCapture: () => void;
+  focused: boolean;
+  first: boolean;
+  last: boolean;
+  onToggleFocus: () => void;
   designOverlay?: {
     image: string;
     opacity: number;
@@ -79,6 +88,10 @@ export function PreviewCard({
   display,
   removable,
   onCapture,
+  focused,
+  first,
+  last,
+  onToggleFocus,
   designOverlay,
 }: PreviewCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -99,6 +112,7 @@ export function PreviewCard({
     zoomSlot,
     setSlotDevice,
     reloadSlot,
+    moveSlot,
   } = useSimulator();
 
   const canRotate = supportsOrientation(device);
@@ -340,6 +354,7 @@ export function PreviewCard({
 
   return (
     <section
+      data-preview-slot-id={slot.id}
       className={`flex h-full min-h-0 flex-col overflow-visible border-t transition-colors ${activeSlotId === slot.id ? "border-t-teal-500" : "border-t-transparent"}`}
       style={{ minWidth: 0 }}
       onClick={() => setActiveSlot(slot.id)}
@@ -368,7 +383,12 @@ export function PreviewCard({
           label="Reload preview"
           onClick={() => reloadSlot(slot.id)}
         >
-          <RefreshCw size={14} />
+          <RefreshCw size={14} className={bridgeStatus === "checking" ? "animate-spin" : ""} />
+        </CardBtn>
+        {!focused && !first && <CardBtn dark={display.darkMode} label="Move viewport left" onClick={() => moveSlot(slot.id, "left")}><ArrowLeft size={13} /></CardBtn>}
+        {!focused && !last && <CardBtn dark={display.darkMode} label="Move viewport right" onClick={() => moveSlot(slot.id, "right")}><ArrowRight size={13} /></CardBtn>}
+        <CardBtn dark={display.darkMode} label={focused ? "Show all viewports" : "Focus this viewport"} onClick={onToggleFocus}>
+          {focused ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
         </CardBtn>
         {canRotate && (
           <CardBtn
@@ -487,7 +507,7 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
 // Special-purpose hardware (kiosks, control panels, watches, TVs, custom) stays
 // in Other instead of being mixed with tablets and computers.
 type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other" | "custom";
-type MenuSection = { key: MenuGroupId | "recent" | "search"; label: string; devices: Device[] };
+type MenuSection = { key: MenuGroupId | "favorite" | "recent" | "search"; label: string; devices: Device[] };
 
 const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other", "custom"];
 const MENU_GROUP_LABEL: Record<MenuGroupId, string> = {
@@ -538,7 +558,7 @@ function DeviceSwitcher({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
-  const { devices, recents, addRecent } = useDeviceCatalog();
+  const { devices, favorites, recents, addRecent, toggleFavorite, isFavorite } = useDeviceCatalog();
 
   // Close on outside click
   useEffect(() => {
@@ -583,6 +603,10 @@ function DeviceSwitcher({
         : list;
 
     const findById = (id: string) => devices.find((device) => device.id === id);
+    const favoriteDevices = favorites.map(findById).filter((device): device is Device => !!device);
+    const favoriteSection: MenuSection | null = favoriteDevices.length > 0
+      ? { key: "favorite", label: "Favorites", devices: filterByQuery(favoriteDevices) }
+      : null;
 
     // Recently used — most recent first, capped, never reorder when picking.
     const usedInRecents = new Set<string>();
@@ -612,8 +636,8 @@ function DeviceSwitcher({
       devices: categoryDevices,
     };
 
-    return recentSection ? [recentSection, categorySection] : [categorySection];
-  }, [activeGroup, devices, query, recents, currentDevice.id]);
+    return [favoriteSection, recentSection, categorySection].filter((section): section is MenuSection => !!section && section.devices.length > 0);
+  }, [activeGroup, devices, favorites, query, recents, currentDevice.id]);
 
   const groupCounts = useMemo(() => Object.fromEntries(
     MENU_GROUP_ORDER.map((group) => [group, devices.filter((device) => menuGroupFor(device) === group).length]),
@@ -695,6 +719,8 @@ function DeviceSwitcher({
                       device={d}
                       active={d.id === currentDevice.id}
                       dark={dark}
+                      favorite={isFavorite(d.id)}
+                      onToggleFavorite={() => toggleFavorite(d.id)}
                       onPick={() => {
                         addRecent(d.id);
                         onSwitch(d.id);
@@ -723,8 +749,10 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
   device: Device;
   active: boolean;
   dark: boolean;
+  favorite: boolean;
+  onToggleFavorite: () => void;
   onPick: () => void;
-}>(function DeviceSwitcherItem({ device, active, dark, onPick }, ref) {
+}>(function DeviceSwitcherItem({ device, active, dark, favorite, onToggleFavorite, onPick }, ref) {
   return (
     <button
       ref={ref}
@@ -745,6 +773,14 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
           {device.os.toLowerCase() === "android" ? `${device.brand} · ` : ""}{device.os} · {device.cssViewport.width} × {device.cssViewport.height}
         </span>
       </span>
+      <span
+        role="button"
+        tabIndex={0}
+        aria-label={favorite ? `Remove ${device.name} from favorites` : `Add ${device.name} to favorites`}
+        onClick={(event) => { event.stopPropagation(); onToggleFavorite(); }}
+        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); onToggleFavorite(); } }}
+        className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg ${favorite ? "text-amber-400" : dark ? "text-slate-600 hover:text-slate-300" : "text-slate-300 hover:text-slate-600"}`}
+      ><Star size={13} fill={favorite ? "currentColor" : "none"} /></span>
       {active && <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full ${dark ? "bg-teal-400/20 text-teal-300" : "bg-teal-100 text-teal-700"}`}><Check size={12} strokeWidth={2.5} /></span>}
     </button>
   );

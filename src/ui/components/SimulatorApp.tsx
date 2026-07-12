@@ -1,5 +1,6 @@
 import {
   Camera,
+  Focus,
   ChevronRight,
   GripVertical,
   Images,
@@ -10,6 +11,7 @@ import {
   PanelsTopLeft,
   Plus,
   RefreshCw,
+  RotateCcw,
   ScanSearch,
   Settings2,
   Sun,
@@ -81,6 +83,7 @@ export function SimulatorApp() {
   const { findDevice, customDevices, removeCustomDevice } = useDeviceCatalog();
   const {
     slots,
+    activeSlotId,
     display,
     addSlot,
     applyDevicePreset,
@@ -89,6 +92,7 @@ export function SimulatorApp() {
     sourceTabId,
     useCount,
     setSlotDevice,
+    resetSession,
   } = useSimulator();
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
@@ -128,9 +132,55 @@ export function SimulatorApp() {
   const [widths, setWidths] = useState<number[]>(() =>
     slots.map(() => 100 / slots.length),
   );
+  const [focusedSlotId, setFocusedSlotId] = useState<string | null>(null);
+  const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const previousSlotCount = useRef(slots.length);
   const boardRef = useRef<HTMLDivElement>(null);
   const dark = display.darkMode;
+
+  useEffect(() => {
+    void readStore<{
+      widths?: number[];
+      focusedSlotId?: string | null;
+      sidebarOpen?: boolean;
+      showDesignReference?: boolean;
+      referenceViewportId?: string;
+      designReferences?: Record<string, string>;
+      referenceMode?: ReferenceMode;
+      referenceOpacity?: number;
+      overlayPlacements?: Record<string, { x: number; y: number; width: number; height: number }>;
+      designPanelWidth?: number;
+    } | null>("mdvWorkspaceView", null)
+      .then((saved) => {
+        if (saved?.widths?.length === slots.length) setWidths(saved.widths);
+        if (saved?.focusedSlotId && slots.some((slot) => slot.id === saved.focusedSlotId)) setFocusedSlotId(saved.focusedSlotId);
+        if (typeof saved?.sidebarOpen === "boolean" && !narrowLayout) setSidebarOpen(saved.sidebarOpen);
+        if (saved?.showDesignReference) setShowDesignReference(true);
+        if (saved?.referenceViewportId) setReferenceViewportId(saved.referenceViewportId);
+        if (saved?.designReferences) setDesignReferences(saved.designReferences);
+        if (saved?.referenceMode) setReferenceMode(saved.referenceMode);
+        if (typeof saved?.referenceOpacity === "number") setReferenceOpacity(saved.referenceOpacity);
+        if (saved?.overlayPlacements) setOverlayPlacements(saved.overlayPlacements);
+        if (typeof saved?.designPanelWidth === "number") setDesignPanelWidth(saved.designPanelWidth);
+        setWorkspaceHydrated(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!workspaceHydrated) return;
+    void writeStore("mdvWorkspaceView", {
+      widths,
+      focusedSlotId,
+      sidebarOpen,
+      showDesignReference,
+      referenceViewportId,
+      designReferences,
+      referenceMode,
+      referenceOpacity,
+      overlayPlacements,
+      designPanelWidth,
+    });
+  }, [designPanelWidth, designReferences, focusedSlotId, overlayPlacements, referenceMode, referenceOpacity, referenceViewportId, showDesignReference, sidebarOpen, widths, workspaceHydrated]);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 760px)");
@@ -236,6 +286,32 @@ export function SimulatorApp() {
     } finally {
       setCapturing(false);
     }
+  }
+
+  async function takeScopedScreenshot(scope: "workspace" | "active" = "workspace") {
+    if (capturing) return;
+    setCapturing(true);
+    try {
+      const dataUrl = await captureTabWithOverlay();
+      if (!dataUrl) return;
+      const selector = scope === "active"
+        ? `[data-preview-slot-id="${activeSlotId}"]`
+        : "[data-capture-board]";
+      const target = document.querySelector<HTMLElement>(selector);
+      const cropped = target ? await cropScreenshotToElement(dataUrl, target) : dataUrl;
+      setAnnotationImage(cropped);
+      setAnnotationOpen(true);
+    } finally {
+      setCapturing(false);
+    }
+  }
+
+  function startNewCheck() {
+    setFocusedSlotId(null);
+    setShowDesignReference(false);
+    setDesignReferences({});
+    setOverlayPlacements({});
+    resetSession();
   }
 
   async function toggleRecording() {
@@ -377,9 +453,9 @@ export function SimulatorApp() {
           <span>Scroll sync</span>
         </button>
         <ToolbarButton
-          label="Capture comparison"
+          label="Capture active viewport"
           dark={dark}
-          onClick={() => void takeScreenshot()}
+          onClick={() => void takeScopedScreenshot("active")}
         >
           <Camera size={14} />
         </ToolbarButton>
@@ -526,6 +602,13 @@ export function SimulatorApp() {
                 <SidebarSection title="Session tools" dark={dark}>
                   <ActionRow
                     dark={dark}
+                    icon={<Focus size={14} />}
+                    onClick={() => setFocusedSlotId(focusedSlotId ? null : activeSlotId)}
+                    active={!!focusedSlotId}
+                    label={focusedSlotId ? "Show all viewports" : "Focus active viewport"}
+                  />
+                  <ActionRow
+                    dark={dark}
                     icon={<ScanSearch size={14} />}
                     onClick={() => setShowReviewIssue(true)}
                     label="Generate AI fix prompt"
@@ -539,12 +622,18 @@ export function SimulatorApp() {
                   <ActionRow
                     dark={dark}
                     icon={<Camera size={14} />}
-                    onClick={() => void takeScreenshot()}
+                    onClick={() => void takeScopedScreenshot("workspace")}
                     label={
                       capturing
                         ? "Capturing comparison…"
                         : "Capture and annotate"
                     }
+                  />
+                  <ActionRow
+                    dark={dark}
+                    icon={<RotateCcw size={14} />}
+                    onClick={startNewCheck}
+                    label="Start a new check"
                   />
                   <ActionRow
                     dark={dark}
@@ -635,13 +724,16 @@ export function SimulatorApp() {
             className={`flex min-h-0 flex-1 ${narrowLayout ? "flex-col" : ""}`}
           >
             {slots.map((slot, index) => (
+              focusedSlotId && focusedSlotId !== slot.id ? null :
               <div
                 key={slot.id}
                 className="relative flex h-full min-w-0 flex-col overflow-visible"
                 style={{
                   width: narrowLayout
                     ? "100%"
-                    : `${widths[index] ?? 100 / slots.length}%`,
+                    : focusedSlotId === slot.id
+                      ? "100%"
+                      : `${widths[index] ?? 100 / slots.length}%`,
                   height: narrowLayout ? `${100 / slots.length}%` : undefined,
                   flexShrink: 0,
                 }}
@@ -651,7 +743,11 @@ export function SimulatorApp() {
                   device={findDevice(slot.deviceId)}
                   display={display}
                   removable={slots.length > 1}
-                  onCapture={() => void takeScreenshot()}
+                  onCapture={() => void takeScopedScreenshot("active")}
+                  focused={focusedSlotId === slot.id}
+                  first={index === 0}
+                  last={index === slots.length - 1}
+                  onToggleFocus={() => setFocusedSlotId((current) => current === slot.id ? null : slot.id)}
                   designOverlay={
                     showDesignReference &&
                     referenceMode === "overlay" &&
@@ -671,7 +767,7 @@ export function SimulatorApp() {
                       : undefined
                   }
                 />
-                {index < slots.length - 1 && !narrowLayout && (
+                {!focusedSlotId && index < slots.length - 1 && !narrowLayout && (
                   <div
                     role="separator"
                     aria-label="Resize adjacent viewports"
@@ -812,4 +908,33 @@ function ActionRow({
       <ChevronRight size={11} className="shrink-0 opacity-35" />
     </button>
   );
+}
+
+async function cropScreenshotToElement(dataUrl: string, element: HTMLElement): Promise<string> {
+  const image = new Image();
+  image.src = dataUrl;
+  await image.decode();
+  const rect = element.getBoundingClientRect();
+  const scaleX = image.naturalWidth / window.innerWidth;
+  const scaleY = image.naturalHeight / window.innerHeight;
+  const sourceX = Math.max(0, Math.round(rect.left * scaleX));
+  const sourceY = Math.max(0, Math.round(rect.top * scaleY));
+  const sourceWidth = Math.min(image.naturalWidth - sourceX, Math.round(rect.width * scaleX));
+  const sourceHeight = Math.min(image.naturalHeight - sourceY, Math.round(rect.height * scaleY));
+  if (sourceWidth <= 0 || sourceHeight <= 0) return dataUrl;
+  const canvas = document.createElement("canvas");
+  canvas.width = sourceWidth;
+  canvas.height = sourceHeight;
+  canvas.getContext("2d")?.drawImage(
+    image,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    0,
+    0,
+    sourceWidth,
+    sourceHeight,
+  );
+  return canvas.toDataURL("image/png");
 }

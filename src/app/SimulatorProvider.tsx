@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { defaultDeviceIds, devices } from "../domain/device/device-catalog";
+import { defaultDeviceIds } from "../domain/device/device-catalog";
+import { useDeviceCatalog } from "./DeviceCatalogProvider";
 import { supportsOrientation } from "../domain/device/device-service";
 import {
   createPreviewSlot,
@@ -20,7 +21,7 @@ interface SimulatorContextValue extends SimulatorState {
   setSlotZoomMode: (slotId: string, zoomMode: PreviewSlot["zoomMode"]) => void;
   reloadSlot: (slotId: string) => void;
   reloadAllSlots: () => void;
-  addSlot: (deviceId?: string) => void;
+  addSlot: (deviceId?: string, orientation?: PreviewSlot["orientation"]) => void;
   applyDevicePreset: (deviceIds: string[]) => void;
   removeSlot: (slotId: string) => void;
   duplicateActiveSlot: (deviceId?: string) => void;
@@ -71,6 +72,7 @@ const defaultSlotDeviceIds = [
 ];
 
 export function SimulatorProvider({ children }: { children: ReactNode }) {
+  const { devices } = useDeviceCatalog();
   const [slots, setSlots] = useState<PreviewSlot[]>(() => {
     const url = initialUrlFromSearch();
     return defaultSlotDeviceIds.map((deviceId, i) => createPreviewSlot(deviceId, url, i));
@@ -155,16 +157,17 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       const nextDevice = devices.find((device) => device.id === deviceId);
       const canPreserveOrientation = currentDevice && nextDevice && supportsOrientation(currentDevice) && supportsOrientation(nextDevice);
 
+      const naturalOrientation = nextDevice && nextDevice.cssViewport.width > nextDevice.cssViewport.height ? "landscape" : "portrait";
       return {
         ...slot,
         deviceId,
-        orientation: canPreserveOrientation ? slot.orientation : "portrait",
+        orientation: nextDevice?.brand === "Custom" ? naturalOrientation : canPreserveOrientation ? slot.orientation : naturalOrientation,
         zoom: 0.58,
         zoomMode: "fit",
       };
     });
     setActiveSlot(slotId);
-  }, [setActiveSlot, updateSlot]);
+  }, [devices, setActiveSlot, updateSlot]);
 
   const setSlotUrl = useCallback((slotId: string, url: string) => {
     updateSlot(slotId, (slot) => ({ ...slot, url: normalizeUrl(url), reloadToken: slot.reloadToken + 1 }));
@@ -205,14 +208,18 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setSlots((current) => current.map((slot) => ({ ...slot, reloadToken: slot.reloadToken + 1 })));
   }, []);
 
-  const addSlot = useCallback((deviceId = defaultDeviceIds[0]) => {
+  const addSlot = useCallback((deviceId = defaultDeviceIds[0], orientation?: PreviewSlot["orientation"]) => {
     setSlots((current) => {
       if (current.length >= maxPreviewSlots) return current;
-      const next = [...current, createPreviewSlot(deviceId, current[0]?.url ?? initialUrlFromSearch(), current.length)];
+      const slot = createPreviewSlot(deviceId, current[0]?.url ?? initialUrlFromSearch(), current.length);
+      const device = devices.find((item) => item.id === deviceId);
+      if (orientation) slot.orientation = orientation;
+      else if (device?.brand === "Custom" && device.cssViewport.width > device.cssViewport.height) slot.orientation = "landscape";
+      const next = [...current, slot];
       setActiveSlotId(next[next.length - 1].id);
       return next;
     });
-  }, []);
+  }, [devices]);
 
   const applyDevicePreset = useCallback((deviceIds: string[]) => {
     setSlots((current) => {

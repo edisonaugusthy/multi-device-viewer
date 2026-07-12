@@ -80,6 +80,31 @@ export function DeviceFrame({
     );
   }
 
+  // User-created viewports use one neutral browser shell. They have no physical
+  // mockup metadata, so rendering them as an iPhone/Android model is misleading.
+  // Keep the entered viewport exact and anchor a compact browser bar to its bottom.
+  if (device.brand === "Custom") {
+    const customStatusH = showStatusBar ? (compact ? 20 : 24) : 0;
+    const customBottomH = showUrlBar ? (compact ? 66 : 76) : 0;
+    const customContentH = Math.max(1, viewportSize.height - customStatusH - customBottomH);
+    return (
+      <div
+        className="relative shrink-0 rounded-[20px] bg-gradient-to-br from-[#303640] to-[#171b21] p-2 shadow-[0_24px_70px_rgba(0,0,0,0.3)] ring-1 ring-black/25"
+        style={{ width: viewportSize.width + 16, height: viewportSize.height + 16 }}
+      >
+        <div
+          className={`relative h-full w-full overflow-hidden rounded-[13px] ${darkMode ? "bg-[#0f172a]" : "bg-white"}`}
+        >
+          {showStatusBar && <StatusBar platform="ios" showBattery={showBattery} compact={compact} dark={darkMode} height={customStatusH} />}
+          <div style={{ width: viewportSize.width, height: customContentH, marginTop: customStatusH }}>
+            {children}
+          </div>
+          {showUrlBar && <SafariBar hostname={hostname} compact={compact} dark={darkMode} variant="ios-classic" />}
+        </div>
+      </div>
+    );
+  }
+
   if (imageFrame?.localPath && imageFrame.width && imageFrame.height) {
     const baseFrameW = imageFrame.width / 2;
     const baseFrameH = imageFrame.height / 2;
@@ -420,6 +445,10 @@ export function DeviceFrame({
 // ─── estimateDeviceFrameSize ─────────────────────────────────────────────────
 export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, showUrlBar, viewportSize }: FrameSizeInput): Size {
   if (!showFrame) return viewportSize;
+
+  if (device.brand === "Custom") {
+    return { width: viewportSize.width + 16, height: viewportSize.height + 16 };
+  }
 
   const profile = getFrameProfile(device);
   const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.width && asset.height);

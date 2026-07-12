@@ -6,6 +6,7 @@ import { readStore, writeStore } from "../infrastructure/storage/local-store";
 
 interface DeviceCatalogContextValue {
   devices: Device[];
+  customDevices: Device[];
   visibleDevices: Device[];
   filters: DeviceFilters;
   brands: string[];
@@ -17,6 +18,7 @@ interface DeviceCatalogContextValue {
   toggleFavorite: (id: string) => void;
   addRecent: (id: string) => void;
   addCustomDevice: (input: CustomDeviceInput) => string | null;
+  removeCustomDevice: (id: string) => void;
   isFavorite: (id: string) => boolean;
   findDevice: (id: string) => Device;
 }
@@ -96,9 +98,29 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
     return null;
   }, [setSelectedDeviceId]);
 
+  const removeCustomDevice = useCallback((id: string) => {
+    setCustomDevices((current) => {
+      const next = current.filter((device) => device.id !== id);
+      void writeStore("customDevices", next);
+      return next;
+    });
+    setFavorites((current) => {
+      const next = current.filter((candidate) => candidate !== id);
+      void writeStore("favoriteDeviceIds", next);
+      return next;
+    });
+    setRecents((current) => {
+      const next = current.filter((candidate) => candidate !== id);
+      void writeStore("recentDeviceIds", next);
+      return next;
+    });
+    setSelectedDeviceIdState((current) => current === id ? defaultDeviceIds[0] : current);
+  }, []);
+
   const value = useMemo<DeviceCatalogContextValue>(
     () => ({
       devices,
+      customDevices,
       visibleDevices,
       filters,
       brands,
@@ -110,6 +132,7 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
       toggleFavorite,
       addRecent,
       addCustomDevice,
+      removeCustomDevice,
       isFavorite: (id) => favorites.includes(id),
       findDevice
     }),
@@ -117,11 +140,13 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
       addCustomDevice,
       addRecent,
       brands,
+      customDevices,
       devices,
       favorites,
       filters,
       findDevice,
       recents,
+      removeCustomDevice,
       selectedDeviceId,
       setSelectedDeviceId,
       toggleFavorite,

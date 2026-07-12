@@ -99,6 +99,8 @@ The production zip lands in `.output/`.
 
 Chrome Web Store releases are prepared and uploaded manually. See [docs/chrome-web-store.md](docs/chrome-web-store.md) for listing copy and the manual release checklist.
 
+Before each release, add the new version and user-facing changes to `src/app/release-notes.ts`. Fresh installs see only the welcome guide; existing users see that version's release notes once after Chrome updates the extension.
+
 ## Privacy
 
 The extension is entirely local. It does not collect data, contact a backend, use analytics, or track user behavior. See [docs/privacy-policy.md](docs/privacy-policy.md) for the full policy.

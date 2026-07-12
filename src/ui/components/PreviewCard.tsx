@@ -486,10 +486,10 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
 // Device categories mirror the way responsive developers scan target hardware.
 // Special-purpose hardware (kiosks, control panels, watches, TVs, custom) stays
 // in Other instead of being mixed with tablets and computers.
-type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other";
+type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other" | "custom";
 type MenuSection = { key: MenuGroupId | "recent" | "search"; label: string; devices: Device[] };
 
-const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other"];
+const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other", "custom"];
 const MENU_GROUP_LABEL: Record<MenuGroupId, string> = {
   ios: "iOS",
   android: "Android",
@@ -497,9 +497,11 @@ const MENU_GROUP_LABEL: Record<MenuGroupId, string> = {
   laptop: "Laptops",
   desktop: "Desktops",
   other: "Other",
+  custom: "Custom",
 };
 
 function menuGroupFor(device: Device): MenuGroupId {
+  if (device.brand === "Custom") return "custom";
   if (device.type === "tablet") return "tablet";
   if (device.type === "laptop") return "laptop";
   if (device.type === "desktop") return "desktop";
@@ -667,7 +669,7 @@ function DeviceSwitcher({
               {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear device search" className={`grid h-5 w-5 place-items-center rounded ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-200 hover:text-slate-700"}`}><X size={11} /></button>}
             </div>
             {!query && <div className="mt-2 grid grid-cols-3 gap-1" role="tablist" aria-label="Device categories">
-              {MENU_GROUP_ORDER.map((group) => <button
+              {MENU_GROUP_ORDER.filter((group) => groupCounts[group] > 0).map((group) => <button
                 key={group}
                 type="button"
                 role="tab"

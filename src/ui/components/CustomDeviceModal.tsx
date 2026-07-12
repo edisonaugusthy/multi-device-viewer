@@ -1,12 +1,13 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
+import { createCustomDevice } from "../../domain/device/device-service";
 import type { CustomDeviceInput, DeviceType } from "../../domain/device/device.types";
 
 interface CustomDeviceModalProps {
   dark: boolean;
   onClose: () => void;
-  onCreated: (deviceId: string) => void;
+  onCreated: (deviceId: string, orientation: "portrait" | "landscape") => void;
 }
 
 const DEVICE_TYPES: DeviceType[] = ["phone", "tablet", "laptop", "desktop", "watch", "tv", "custom"];
@@ -35,9 +36,7 @@ export function CustomDeviceModal({ dark, onClose, onCreated }: CustomDeviceModa
       setError(err);
       return;
     }
-    // addCustomDevice sets selectedDeviceId to the new device — derive id from name
-    const deviceId = `custom-${name.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")}`;
-    onCreated(deviceId);
+    onCreated(createCustomDevice(input).id, input.width > input.height ? "landscape" : "portrait");
     onClose();
   }
 
@@ -52,7 +51,7 @@ export function CustomDeviceModal({ dark, onClose, onCreated }: CustomDeviceModa
       <div className={`w-full max-w-sm rounded-2xl border shadow-2xl ${bg}`}>
         {/* Header */}
         <div className={`flex items-center justify-between border-b px-4 py-3 ${dark ? "border-white/10" : "border-slate-100"}`}>
-          <p className={`text-[14px] font-black ${dark ? "text-white" : "text-slate-900"}`}>Custom device</p>
+          <p className={`text-[14px] font-black ${dark ? "text-white" : "text-slate-900"}`}>Custom viewport</p>
           <button
             type="button"
             onClick={onClose}
@@ -140,7 +139,7 @@ export function CustomDeviceModal({ dark, onClose, onCreated }: CustomDeviceModa
             type="submit"
             className="mt-1 h-10 w-full rounded-xl bg-teal-500 text-[13px] font-black text-white transition hover:bg-teal-400 active:scale-[0.98]"
           >
-            Add device
+            Save and add viewport
           </button>
         </form>
       </div>

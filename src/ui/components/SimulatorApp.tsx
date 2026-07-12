@@ -13,6 +13,7 @@ import {
   ScanSearch,
   Settings2,
   Sun,
+  Trash2,
   Video,
   X,
 } from "lucide-react";
@@ -27,11 +28,19 @@ import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { PRODUCT_SHORT_NAME } from "../../app/product";
 import {
+  LAST_SEEN_RELEASE_VERSION_KEY,
+  PENDING_RELEASE_VERSION_KEY,
+  decideStartupNotice,
+  releaseNotesFor,
+  type VersionReleaseNotes,
+} from "../../app/release-notes";
+import {
   captureTabWithOverlay,
   startTabRecording,
   stopTabRecording,
 } from "../../domain/capture/capture-service";
 import { maxPreviewSlots } from "../../domain/simulator/simulator-service";
+import { defaultDeviceIds } from "../../domain/device/device-catalog";
 import {
   readStore,
   writeStore,
@@ -47,6 +56,7 @@ import { FirstRunGuide } from "./FirstRunGuide";
 import { PresetsManager } from "./PresetsManager";
 import { PreviewCard } from "./PreviewCard";
 import { ReviewIssueModal } from "./ReviewIssueModal";
+import { ReleaseNotesModal } from "./ReleaseNotesModal";
 
 const QUICK_DEVICE_SETS = [
   {
@@ -68,7 +78,7 @@ const QUICK_DEVICE_SETS = [
 ] as const;
 
 export function SimulatorApp() {
-  const { findDevice } = useDeviceCatalog();
+  const { findDevice, customDevices, removeCustomDevice } = useDeviceCatalog();
   const {
     slots,
     display,
@@ -78,6 +88,7 @@ export function SimulatorApp() {
     updateDisplay,
     sourceTabId,
     useCount,
+    setSlotDevice,
   } = useSimulator();
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
@@ -113,6 +124,7 @@ export function SimulatorApp() {
     ),
   );
   const [showFirstRun, setShowFirstRun] = useState(false);
+  const [releaseNotes, setReleaseNotes] = useState<VersionReleaseNotes | null>(null);
   const [widths, setWidths] = useState<number[]>(() =>
     slots.map(() => 100 / slots.length),
   );
@@ -137,12 +149,24 @@ export function SimulatorApp() {
   }, [referenceViewportId, slots]);
 
   useEffect(() => {
-    if (useCount !== 1) return;
-    void readStore("responsiveTesterFirstRunComplete", false).then(
-      (complete) => {
-        if (!complete) setShowFirstRun(true);
-      },
-    );
+    if (useCount < 1) return;
+    void Promise.all([
+      readStore("responsiveTesterFirstRunComplete", false),
+      readStore<string | null>(PENDING_RELEASE_VERSION_KEY, null),
+      readStore<string | null>(LAST_SEEN_RELEASE_VERSION_KEY, null),
+    ]).then(([firstRunComplete, pendingVersion, lastSeenVersion]) => {
+      const notice = decideStartupNotice({ useCount, firstRunComplete, pendingVersion, lastSeenVersion });
+      if (notice.kind === "welcome") {
+        setShowFirstRun(true);
+        return;
+      }
+      if (notice.kind !== "release") return;
+      setReleaseNotes(releaseNotesFor(notice.version));
+      void Promise.all([
+        writeStore(LAST_SEEN_RELEASE_VERSION_KEY, notice.version),
+        writeStore<string | null>(PENDING_RELEASE_VERSION_KEY, null),
+      ]);
+    });
   }, [useCount]);
 
   useEffect(() => {
@@ -243,6 +267,13 @@ export function SimulatorApp() {
     void writeStore("responsiveTesterFirstRunComplete", true);
   }
 
+  function deleteCustomViewport(deviceId: string) {
+    for (const slot of slots) {
+      if (slot.deviceId === deviceId) setSlotDevice(slot.id, defaultDeviceIds[0]);
+    }
+    removeCustomDevice(deviceId);
+  }
+
   const captureMeta = {
     title: `${PRODUCT_SHORT_NAME} QA capture`,
     url: slots[0]?.url ?? "",
@@ -310,7 +341,7 @@ export function SimulatorApp() {
           className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold sm:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}
         >
           <Plus size={12} />
-          Add device
+          Add viewport
         </button>
         <button
           type="button"
@@ -423,9 +454,47 @@ export function SimulatorApp() {
                     dark={dark}
                     icon={<PanelsTopLeft size={14} />}
                     onClick={() => setShowCustomDevice(true)}
-                    label="Create custom device"
+                    label="Add custom viewport"
                   />
                 </SidebarSection>
+
+                {customDevices.length > 0 && (
+                  <SidebarSection
+                    title="Custom viewports"
+                    meta={`${customDevices.length}`}
+                    dark={dark}
+                  >
+                    <div className="flex flex-col gap-1">
+                      {customDevices.map((device) => (
+                        <div
+                          key={device.id}
+                          className={`flex h-8 min-w-0 items-center gap-1 rounded-lg border pl-2 pr-1 ${dark ? "border-white/[0.07] bg-white/[0.025]" : "border-slate-100 bg-slate-50"}`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => addSlot(device.id, device.cssViewport.width > device.cssViewport.height ? "landscape" : "portrait")}
+                            disabled={slots.length >= maxPreviewSlots}
+                            title={`Add ${device.name} viewport`}
+                            className="flex min-w-0 flex-1 items-center gap-1.5 text-left disabled:cursor-not-allowed disabled:opacity-45"
+                          >
+                            <span className="min-w-0 flex-1 truncate text-[10px] font-bold">{device.name}</span>
+                            <span className={`shrink-0 font-mono text-[8px] ${dark ? "text-slate-500" : "text-slate-400"}`}>{device.cssViewport.width}×{device.cssViewport.height}</span>
+                            <Plus size={10} className="shrink-0 text-[#0f9f8f]" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => deleteCustomViewport(device.id)}
+                            title={`Delete ${device.name}`}
+                            aria-label={`Delete ${device.name}`}
+                            className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition ${dark ? "text-slate-600 hover:bg-red-500/10 hover:text-red-400" : "text-slate-400 hover:bg-red-50 hover:text-red-600"}`}
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </SidebarSection>
+                )}
 
                 <SidebarSection
                   title="Saved sets"
@@ -637,7 +706,10 @@ export function SimulatorApp() {
         <CustomDeviceModal
           dark={dark}
           onClose={() => setShowCustomDevice(false)}
-          onCreated={() => setShowCustomDevice(false)}
+          onCreated={(deviceId, orientation) => {
+            addSlot(deviceId, orientation);
+            setShowCustomDevice(false);
+          }}
         />
       )}
       {showReviewIssue && (
@@ -649,6 +721,7 @@ export function SimulatorApp() {
         />
       )}
       {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
+      {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
     </div>
   );
 }

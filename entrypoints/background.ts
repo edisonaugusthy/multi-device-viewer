@@ -1,6 +1,7 @@
 import { defineBackground } from "wxt/utils/define-background";
 import { openSimulator } from "../src/app/extension-routes";
 import { screenshotFilename } from "../src/domain/capture/capture-service";
+import { LAST_SEEN_RELEASE_VERSION_KEY, PENDING_RELEASE_VERSION_KEY } from "../src/app/release-notes";
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
 const UPDATE_BADGE_TEXT = "NEW";
@@ -38,7 +39,18 @@ export default defineBackground(() => {
 
   chrome.runtime.onInstalled.addListener((details) => {
     createContextMenu();
-    if (details.reason === "update") syncUpdateIndicator();
+    const version = chrome.runtime.getManifest().version;
+    if (details.reason === "install") {
+      void chrome.storage.local.set({
+        [LAST_SEEN_RELEASE_VERSION_KEY]: version,
+        [PENDING_RELEASE_VERSION_KEY]: null,
+      });
+      return;
+    }
+    if (details.reason === "update") {
+      void chrome.storage.local.set({ [PENDING_RELEASE_VERSION_KEY]: version });
+      syncUpdateIndicator();
+    }
   });
 
   chrome.runtime.onStartup.addListener(() => {

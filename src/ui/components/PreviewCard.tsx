@@ -483,25 +483,39 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
 }
 
 // ─── Device switcher ──────────────────────────────────────────────────────────
-// Static groups + recently used. iOS = phones running iOS, Android = phones
-// running Android, Other = tablets, laptops, desktops, watches, TVs, custom.
+// Device categories mirror the way responsive developers scan target hardware.
+// Special-purpose hardware (kiosks, control panels, watches, TVs, custom) stays
+// in Other instead of being mixed with tablets and computers.
+type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other";
+type MenuSection = { key: MenuGroupId | "recent" | "search"; label: string; devices: Device[] };
 
-type MenuGroupId = "ios" | "android" | "other";
-type MenuSection = { key: MenuGroupId | "recent"; label: string; devices: Device[] };
-
-const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "other"];
+const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other"];
 const MENU_GROUP_LABEL: Record<MenuGroupId, string> = {
   ios: "iOS",
   android: "Android",
+  tablet: "Tablets",
+  laptop: "Laptops",
+  desktop: "Desktops",
   other: "Other",
 };
 
 function menuGroupFor(device: Device): MenuGroupId {
-  if (device.type !== "phone") return "other";
-  const os = (device.os || "").toLowerCase();
-  if (os === "ios" || os === "ipados") return "ios";
-  if (os === "android") return "android";
+  if (device.type === "tablet") return "tablet";
+  if (device.type === "laptop") return "laptop";
+  if (device.type === "desktop") return "desktop";
+  if (device.type === "phone") {
+    const os = (device.os || "").toLowerCase();
+    if (os === "ios") return "ios";
+    if (os === "android") return "android";
+  }
   return "other";
+}
+
+function newestDevicesFirst(left: Device, right: Device): number {
+  const yearDifference = (right.year ?? -1) - (left.year ?? -1);
+  if (yearDifference !== 0) return yearDifference;
+  const updatedDifference = right.updatedAt.localeCompare(left.updatedAt);
+  return updatedDifference || left.name.localeCompare(right.name);
 }
 
 const RECENT_LIMIT = 4;
@@ -517,6 +531,7 @@ function DeviceSwitcher({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [activeGroup, setActiveGroup] = useState<MenuGroupId>(() => menuGroupFor(currentDevice));
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -538,6 +553,7 @@ function DeviceSwitcher({
   useEffect(() => {
     if (open) {
       setQuery("");
+      setActiveGroup(menuGroupFor(currentDevice));
       setTimeout(() => {
         inputRef.current?.focus();
         if (activeItemRef.current && listRef.current) {
@@ -580,17 +596,26 @@ function DeviceSwitcher({
       return { key: "recent", label: "Recently used", devices: filtered };
     })();
 
-    // Static groups — fixed order, never reorder when picking.
-    const groups: MenuSection[] = [];
-    for (const group of MENU_GROUP_ORDER) {
-      const list = filterByQuery(devices).filter(
-        (device) => menuGroupFor(device) === group,
-      );
-      if (list.length > 0) groups.push({ key: group, label: MENU_GROUP_LABEL[group], devices: list });
+    if (q) {
+      const matches = filterByQuery(devices).sort(newestDevicesFirst);
+      return matches.length > 0 ? [{ key: "search", label: "Search results", devices: matches }] : [];
     }
 
-    return recentSection ? [recentSection, ...groups] : groups;
-  }, [devices, query, recents, currentDevice.id]);
+    const categoryDevices = devices
+      .filter((device) => menuGroupFor(device) === activeGroup)
+      .sort(newestDevicesFirst);
+    const categorySection: MenuSection = {
+      key: activeGroup,
+      label: MENU_GROUP_LABEL[activeGroup],
+      devices: categoryDevices,
+    };
+
+    return recentSection ? [recentSection, categorySection] : [categorySection];
+  }, [activeGroup, devices, query, recents, currentDevice.id]);
+
+  const groupCounts = useMemo(() => Object.fromEntries(
+    MENU_GROUP_ORDER.map((group) => [group, devices.filter((device) => menuGroupFor(device) === group).length]),
+  ) as Record<MenuGroupId, number>, [devices]);
 
   return (
     <div ref={ref} className="relative min-w-0 flex-[1.45]">
@@ -619,7 +644,7 @@ function DeviceSwitcher({
       {open && (
         <div
           data-testid="device-switcher-panel"
-          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(340px,calc(100vw-24px))] flex-col overflow-hidden rounded-xl border shadow-[0_18px_50px_rgba(0,0,0,0.22)] ${
+          className={`absolute left-0 top-full z-50 mt-1 flex w-[min(400px,calc(100vw-24px))] flex-col overflow-hidden rounded-2xl border shadow-[0_20px_60px_rgba(0,0,0,0.24)] ${
             dark ? "border-white/10 bg-[#171b24]" : "border-slate-200 bg-white"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -641,10 +666,20 @@ function DeviceSwitcher({
               />
               {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear device search" className={`grid h-5 w-5 place-items-center rounded ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-200 hover:text-slate-700"}`}><X size={11} /></button>}
             </div>
+            {!query && <div className="mt-2 grid grid-cols-3 gap-1" role="tablist" aria-label="Device categories">
+              {MENU_GROUP_ORDER.map((group) => <button
+                key={group}
+                type="button"
+                role="tab"
+                aria-selected={activeGroup === group}
+                onClick={() => setActiveGroup(group)}
+                className={`flex h-8 items-center justify-between rounded-lg px-2 text-[9px] font-extrabold transition ${activeGroup === group ? "bg-[#0f9f8f] text-white shadow-sm" : dark ? "bg-white/[0.045] text-slate-400 hover:bg-white/[0.08] hover:text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900"}`}
+              ><span>{MENU_GROUP_LABEL[group]}</span><span className={activeGroup === group ? "text-white/70" : "opacity-50"}>{groupCounts[group]}</span></button>)}
+            </div>}
           </div>
 
           {/* List */}
-          <div ref={listRef} className="max-h-[420px] overflow-y-auto py-1">
+          <div ref={listRef} className="max-h-[400px] overflow-y-auto py-1.5">
             {sections.map((section) => (
               <div key={section.key}>
                 <p className={`flex items-center justify-between px-3 pb-1 pt-2 text-[9px] font-black uppercase tracking-widest ${dark ? "text-slate-500" : "text-slate-400"}`}>
@@ -693,21 +728,19 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
       ref={ref}
       type="button"
       title={device.name}
-      className={`flex min-h-11 w-full min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 text-left transition ${
+      className={`group flex min-h-12 w-full min-w-0 items-center gap-2.5 rounded-xl border border-transparent px-2.5 py-2 text-left transition ${
         active
-          ? dark ? "bg-teal-400/15 text-teal-100" : "bg-teal-50 text-teal-900"
+          ? dark ? "border-teal-400/20 bg-teal-400/15 text-teal-100" : "border-teal-100 bg-teal-50 text-teal-900"
           : dark
-            ? "text-slate-200 hover:bg-white/[0.07]"
-            : "text-slate-700 hover:bg-slate-50"
+            ? "text-slate-200 hover:border-white/[0.06] hover:bg-white/[0.055]"
+            : "text-slate-700 hover:border-slate-100 hover:bg-slate-50"
       }`}
       onClick={onPick}
     >
       <span className="min-w-0 flex-1">
-        <span className="block line-clamp-1 break-words text-[11px] font-semibold leading-tight">
-          {shortName(device.name)}
-        </span>
+        <span className="flex min-w-0 items-center gap-2"><span className="min-w-0 flex-1 truncate text-[11px] font-bold leading-tight">{shortName(device.name)}</span>{device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] font-bold ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-500" : "bg-slate-100 text-slate-400"}`}>{device.year}</span>}</span>
         <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? dark ? "text-teal-300/70" : "text-teal-700/70" : dark ? "text-slate-500" : "text-slate-400"}`}>
-          {device.os} · {device.type} · {device.cssViewport.width} × {device.cssViewport.height}
+          {device.os.toLowerCase() === "android" ? `${device.brand} · ` : ""}{device.os} · {device.cssViewport.width} × {device.cssViewport.height}
         </span>
       </span>
       {active && <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full ${dark ? "bg-teal-400/20 text-teal-300" : "bg-teal-100 text-teal-700"}`}><Check size={12} strokeWidth={2.5} /></span>}

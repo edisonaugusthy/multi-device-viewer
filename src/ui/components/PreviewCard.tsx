@@ -40,6 +40,7 @@ interface ScrollSyncPayload {
   scrollWidth?: number;
   viewportHeight?: number;
   viewportWidth?: number;
+  scrollTargetSelector?: string;
 }
 
 interface InteractionSyncPayload {
@@ -98,6 +99,7 @@ export function PreviewCard({
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const bridgeStatusTimer = useRef<number | undefined>(undefined);
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
+  const previousScrollSyncRef = useRef(display.scrollSync);
   const [containerSize, setContainerSize] = useState<Size>({
     width: 0,
     height: 0,
@@ -317,6 +319,7 @@ export function PreviewCard({
           scrollTop: detail.scrollTop,
           deltaLeft: detail.deltaLeft,
           deltaTop: detail.deltaTop,
+          scrollTargetSelector: detail.scrollTargetSelector,
         },
         "*",
       );
@@ -349,6 +352,14 @@ export function PreviewCard({
 
   useEffect(() => {
     syncScrollBridge(iframeRef.current);
+    const enabling = display.scrollSync && !previousScrollSyncRef.current;
+    if (enabling && activeSlotId === slot.id) {
+      iframeRef.current?.contentWindow?.postMessage({
+        type: "MDV_SCROLL_SYNC_SNAPSHOT",
+        slotId: slot.id,
+      }, "*");
+    }
+    previousScrollSyncRef.current = display.scrollSync;
   }, [display.scrollSync, slot.id]);
 
 

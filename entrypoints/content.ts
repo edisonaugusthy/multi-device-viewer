@@ -32,6 +32,7 @@ export default defineContentScript({
 });
 
 function setupPreviewBridge() {
+  if (window.parent === window) return;
   const bridgeWindow = window as Window & { __MDV_PREVIEW_BRIDGE_READY?: boolean };
   if (bridgeWindow.__MDV_PREVIEW_BRIDGE_READY) return;
   bridgeWindow.__MDV_PREVIEW_BRIDGE_READY = true;
@@ -42,6 +43,7 @@ function setupPreviewBridge() {
   let scrollRafPending = false;
   let lastScrollLeft = 0;
   let lastScrollTop = 0;
+  const nestedScrollPositions = new WeakMap<Element, { left: number; top: number }>();
   let scrollSyncEnabled = false;
   let applyingRemoteInteraction = false;
   let inspectEnabled = false;
@@ -67,6 +69,25 @@ function setupPreviewBridge() {
       viewportHeight: window.innerHeight,
       viewportWidth: window.innerWidth
     };
+  };
+
+  const scrollPayload = (target?: Element) => {
+    const el = target ?? root();
+    if (el === root()) return scrollRatios();
+    const previous = nestedScrollPositions.get(el);
+    const payload = {
+      scrollLeft: el.scrollLeft,
+      scrollTop: el.scrollTop,
+      deltaLeft: previous ? el.scrollLeft - previous.left : 0,
+      deltaTop: previous ? el.scrollTop - previous.top : 0,
+      scrollHeight: el.scrollHeight,
+      scrollWidth: el.scrollWidth,
+      viewportHeight: el.clientHeight,
+      viewportWidth: el.clientWidth,
+      scrollTargetSelector: buildSelector(el),
+    };
+    nestedScrollPositions.set(el, { left: el.scrollLeft, top: el.scrollTop });
+    return payload;
   };
 
   const announceReady = () => {
@@ -391,11 +412,13 @@ function setupPreviewBridge() {
     return post;
   }
 
-  function emitScrollSync() {
+  function emitScrollSync(target?: Element) {
     if (!slotId || programmaticScroll) return;
-    const payload = scrollRatios();
-    lastScrollLeft = payload.scrollLeft;
-    lastScrollTop = payload.scrollTop;
+    const payload = scrollPayload(target);
+    if (!target || target === root()) {
+      lastScrollLeft = payload.scrollLeft;
+      lastScrollTop = payload.scrollTop;
+    }
     window.parent.postMessage({
       type: "MDV_SCROLL_SYNC_EVENT",
       slotId,
@@ -502,6 +525,7 @@ function setupPreviewBridge() {
   }, { capture: true, passive: true });
 
   window.addEventListener("message", (event) => {
+    if (event.source !== window.parent) return;
     const data = event.data;
     if (!data || typeof data !== "object") return;
 
@@ -515,7 +539,10 @@ function setupPreviewBridge() {
     }
 
     if (data.type === "MDV_APPLY_SCROLL_SYNC" && typeof data.slotId === "string" && data.slotId === slotId) {
-      const el = root();
+      const targetSelector = typeof data.scrollTargetSelector === "string" ? data.scrollTargetSelector : "";
+      const requestedTarget = targetSelector ? document.querySelector(targetSelector) : null;
+      if (targetSelector && !requestedTarget) return;
+      const el = requestedTarget ?? root();
       programmaticScroll = true;
       const deltaLeft = Number(data.deltaLeft ?? 0);
       const deltaTop = Number(data.deltaTop ?? 0);
@@ -532,8 +559,12 @@ function setupPreviewBridge() {
           behavior: "auto"
         });
       }
-      lastScrollLeft = el.scrollLeft;
-      lastScrollTop = el.scrollTop;
+      if (el === root()) {
+        lastScrollLeft = el.scrollLeft;
+        lastScrollTop = el.scrollTop;
+      } else {
+        nestedScrollPositions.set(el, { left: el.scrollLeft, top: el.scrollTop });
+      }
       window.clearTimeout(resetTimer);
       resetTimer = window.setTimeout(() => {
         programmaticScroll = false;
@@ -547,9 +578,11 @@ function setupPreviewBridge() {
       window.clearTimeout(resetTimer);
       lastScrollLeft = root().scrollLeft;
       lastScrollTop = root().scrollTop;
-      window.requestAnimationFrame(() => {
-        emitScrollSync();
-      });
+      return;
+    }
+
+    if (data.type === "MDV_SCROLL_SYNC_SNAPSHOT" && typeof data.slotId === "string" && data.slotId === slotId) {
+      window.requestAnimationFrame(() => emitScrollSync());
       return;
     }
 
@@ -591,21 +624,22 @@ function setupPreviewBridge() {
     }
   });
 
-  const postScroll = () => {
+  const postScroll = (event: Event) => {
     if (!slotId || programmaticScroll) return;
+    const target = event.target instanceof Element && event.target !== document.documentElement && event.target !== document.body
+      ? event.target
+      : undefined;
     if (scrollRafPending) return;
     scrollRafPending = true;
     requestAnimationFrame(() => {
       scrollRafPending = false;
       if (!slotId || programmaticScroll) return;
-      emitScrollSync();
+      emitScrollSync(target);
     });
   };
 
   window.addEventListener("scroll", postScroll, { passive: true });
   document.addEventListener("scroll", postScroll, true);
-  window.addEventListener("wheel", postScroll, { passive: true });
-  window.addEventListener("touchmove", postScroll, { passive: true });
 
   window.addEventListener("error", () => {
     if (!slotId) return;

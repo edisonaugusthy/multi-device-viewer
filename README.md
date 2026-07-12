@@ -1,68 +1,70 @@
 # Mobile View & Responsive Tester
 
-A free, open-source, local-first Chrome extension for testing responsive websites across phone, tablet, laptop, desktop, watch, TV, and custom viewports without leaving the current tab.
+A free, open-source, privacy-first Chrome extension for keeping responsive previews beside your frontend development workflow.
 
-Open the extension on a public site or local development server, compare up to four live previews, develop against an imported design reference, capture evidence, or generate a detailed prompt for your coding agent. No account, backend, subscription, telemetry, or upload is required.
+Open the current website or local development server in up to four live device viewports. Save code, reload the previews, switch devices quickly, compare the implementation with a local design, and capture annotated visuals when something needs discussion. There is no account, backend, subscription, telemetry, or automatic upload.
 
-## Core workflows
+## Everyday workflow
 
-### Test responsive layouts
-
-- Open the current page in a full-screen responsive testing workspace.
-- Compare up to four resizable device previews side by side.
-- Use realistic phones, tablets, laptops, desktops, watches, TVs, or custom CSS viewport sizes.
-- Synchronize scrolling and supported interactions across active previews.
-
-### Build against a design while testing live
-
-- Drop, paste, or choose a PNG, JPG, WebP, or SVG exported from Figma or another design tool.
-- Assign a separate reference design to each active device viewport.
-- Keep the current website running in the real, interactive device previews on the right.
-- Compare side by side or place the design over the matching live viewport with adjustable opacity.
-- Resize or zoom the reference panel and drag the enlarged preview to pan it. Press and drag to move or independently stretch an overlay's width and height above the device canvas, then lock it to continue interacting with the live page.
-- Use **Mark feedback** to annotate a reference when documenting a review or manual test result.
-- Imported references remain in memory for the current viewer session and are never uploaded.
-
-### Generate a prompt for an AI coding tool
-
-- Click **Generate AI fix prompt**.
-- Describe the issue, expected behavior, actual behavior, and optional CSS selector.
-- The extension adds the current URL, device names, viewport dimensions, and orientation.
-- Copy the generated instructions into Codex, Copilot, Cursor, Claude, or another coding tool. The extension generates the prompt; it does not send it or produce the code change itself.
-
-### Capture and annotate
-
-- Capture the complete multi-device workspace.
-- Add pen, rectangle, arrow, text, and crop annotations.
-- Copy the result to the clipboard or download it locally.
+1. Open the extension on the page you are developing.
+2. Choose a quick device set, recent device, favorite, custom viewport, or saved set.
+3. Keep the workspace open beside your editor and reload one or every preview after changes.
+4. Focus a viewport or compare all selected screens in resizable columns.
+5. Capture the active viewport or complete workspace, annotate it, and copy or download it for sharing.
 
 ## Features
 
-- Full-screen overlay on the current tab — stays on the same page.
-- Up to four device previews side by side with resizable panels.
-- Collapsible left sidebar with controls; per-card device switcher.
-- Device catalog covering phones, tablets, laptops, desktops, watches, and TVs, including newer 2025 iPhone profiles.
-- Device search, filters, favorites, recents, and custom viewport creation.
-- Built-in layout presets plus saved custom presets with JSON import/export.
-- Per-device orientation, zoom, fit, and reload controls.
-- Scroll synchronization for comparing long responsive pages.
-- Dark mode for low-glare testing.
-- Realistic device frame shells (phone, tablet, laptop, desktop, watch).
-- Chrome context-menu shortcut to open the current tab directly in Responsive Tester.
-- Reference-image and live-device before/after comparison for manual testing.
-- Generated AI fix prompts with active URL and device context.
-- "Capture & Annotate" — captures the full simulator view and opens a built-in annotation editor.
-- Annotation tools: pen, rectangle, arrow, text (with font size picker), and crop.
-- Crop bakes annotations into a new canvas; copy to clipboard or download locally.
-- All screenshots and annotations stay on your machine — nothing leaves the browser.
+### Live responsive workspace
 
-## Privacy and limitations
+- Up to four live phone, tablet, laptop, desktop, watch, TV, kiosk, or custom viewports.
+- Categorized device chooser with search, latest devices first, favorites, and recents.
+- Quick comparison sets and locally saved device sets with JSON import and export.
+- Custom viewport creation, reuse, and deletion.
+- Per-viewport device switching, orientation, fit/custom zoom, reload, focus, reorder, and removal.
+- Resizable viewport columns, collapsible workspace setup, dark interface, and local session restoration.
+- Reload-all control with clear loading feedback.
 
-- No accounts, analytics, telemetry, advertising trackers, remote logging, or behavioral event collection.
-- URLs, screenshots, prompts, presets, and visual comparisons are not uploaded.
-- The toolbar badge shows a green `ON` indicator only while the responsive-testing overlay is active in that tab.
-- Some browser-internal pages and sites with additional embedding restrictions cannot be previewed.
-- Viewport simulation helps find responsive layout issues, but final release testing on real devices and browsers is still recommended.
+### Linked page review
+
+- Optional synchronized page scrolling across previews.
+- The active viewport initializes linked scrolling; refreshing another preview does not reset the group.
+- Matching nested scroll containers are synchronized when the responsive layouts share the same structure.
+- Supported clicks and form interactions are mirrored while linked scrolling is active.
+
+### Design comparison
+
+- Drop, paste, or choose PNG, JPG, WebP, or SVG design references.
+- Assign a separate reference to each viewport.
+- Compare beside the live page or use an adjustable overlay.
+- Resize, stretch, reposition, change opacity, reset, and lock overlays before interacting with the page underneath.
+- Zoom and freely reposition the design inside the reference panel.
+- Mark a reference with the built-in annotation tools.
+- References and overlay settings are stored locally so the workspace can resume later.
+
+### Capture and communication
+
+- Capture the active viewport or the complete multi-device workspace.
+- Annotate with pen, rectangle, arrow, text, and crop tools.
+- Copy the result to the clipboard or download it locally.
+- Record the source tab when a short video explains the behavior better than a still image.
+- Generate a structured fix prompt containing the URL, selected devices, dimensions, orientation, expected result, and actual result. The extension only prepares the text; it never sends it to an AI service.
+
+## Privacy
+
+- No accounts, analytics, telemetry, advertising, remote logging, or behavioral tracking.
+- URLs, page content, screenshots, recordings, prompts, designs, presets, and settings are not sent to a backend.
+- Preferences and resumable workspace state are stored only in Chrome local storage.
+- Screenshots and recordings are created only after an explicit user action.
+- Clipboard and download access are used only when the user chooses those actions.
+
+Read the complete [privacy policy](docs/privacy-policy.md).
+
+## Limitations
+
+- Chrome-internal pages and some restricted sites cannot be previewed.
+- Header rules allow many sites to load in subframes, but applications can still block embedding through runtime logic or authentication behavior.
+- Responsive viewport simulation is a development aid, not a replacement for final testing on physical devices and target browsers.
+- Linked scrolling works best when responsive layouts retain corresponding page or container structure.
 
 ## Development
 
@@ -71,36 +73,40 @@ npm install
 npm run dev
 ```
 
-Load the unpacked extension from `.output/chrome-mv3/` in Chrome developer mode (`chrome://extensions`).
+Load `.output/chrome-mv3/` as an unpacked extension from `chrome://extensions`.
 
-### Standalone Codex preview
-
-To view the simulator UI as a regular website in Codex's in-app browser, run:
+For the standalone simulator UI preview:
 
 ```bash
 npm run dev:preview
 ```
 
-Then open [http://localhost:5173/](http://localhost:5173/) in the browser. This preview uses browser storage and download fallbacks; Chrome-extension-only capture, recording, and tab controls remain disabled.
+Then open [http://localhost:5173/](http://localhost:5173/). Chrome-extension-only capture, recording, tab, and overlay behavior is unavailable in this standalone preview.
 
-## Build
+## Quality checks and build
 
 ```bash
+npm run compile
+npm test
 npm run build
 npm run zip
-npm run test
-npm run compile
 npm run validate:chrome-zip -- .output/multi-device-viewer-0.1.4-chrome.zip
 ```
 
-The production zip lands in `.output/`.
+The production extension and zip are written to `.output/`.
 
-## Release
+## Release process
 
-Chrome Web Store releases are prepared and uploaded manually. See [docs/chrome-web-store.md](docs/chrome-web-store.md) for listing copy and the manual release checklist.
+Chrome Web Store packages are uploaded manually. Before release:
 
-Before each release, add the new version and user-facing changes to `src/app/release-notes.ts`. Fresh installs see only the welcome guide; existing users see that version's release notes once after Chrome updates the extension.
+1. Update the version in `package.json` and `wxt.config.ts`.
+2. Add accurate user-facing changes to `src/app/release-notes.ts`.
+3. Run every quality check and validate the generated zip.
+4. Review the store listing and privacy declarations in [docs/chrome-web-store.md](docs/chrome-web-store.md).
+5. Upload the validated package in the Chrome Web Store dashboard.
 
-## Privacy
+Fresh installations see the welcome guide. Existing installations see release notes once after an extension update.
 
-The extension is entirely local. It does not collect data, contact a backend, use analytics, or track user behavior. See [docs/privacy-policy.md](docs/privacy-policy.md) for the full policy.
+## Open source
+
+Licensed under the [MIT License](LICENSE). Issues and contributions are welcome.

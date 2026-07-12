@@ -11,7 +11,7 @@ export default defineConfig({
     short_name: PRODUCT_SHORT_NAME,
     description: PRODUCT_DESCRIPTION,
     version: "0.1.4",
-    permissions: ["contextMenus", "debugger", "declarativeNetRequest", "downloads", "offscreen", "scripting", "storage", "tabCapture", "tabs"],
+    permissions: ["contextMenus", "declarativeNetRequest", "downloads", "offscreen", "scripting", "storage", "tabCapture", "tabs"],
     declarative_net_request: {
       rule_resources: [
         {
@@ -21,24 +21,7 @@ export default defineConfig({
         }
       ]
     },
-    host_permissions: ["<all_urls>", "*://*/*"],
-    commands: {
-      "take-screenshot-1": {
-        description: "Capture iPhone 14 Pro Max viewport",
-      },
-      "take-screenshot-2": {
-        description: "Capture Pixel 8 viewport",
-      },
-      "take-screenshot-3": {
-        description: "Capture iPad Air viewport",
-      },
-      "take-screenshot-4": {
-        description: "Capture MacBook Air viewport",
-      },
-      "start-stop-video-capture": {
-        description: "Start or stop recording the source tab",
-      },
-    },
+    host_permissions: ["<all_urls>"],
     icons: {
       16: "/icons/icon-16.png",
       32: "/icons/icon-32.png",
@@ -58,18 +41,6 @@ export default defineConfig({
       {
         resources: ["mockups/*", "icons/*", "simulator.html", "chunks/*", "assets/*"],
         matches: ["<all_urls>"]
-      },
-      {
-        resources: [
-          "offscreen.html",
-          "workers/*",
-          "pages/permission/*",
-          "mockups/*",
-          "icons/*",
-          "assets/*",
-          "fonts/*",
-        ],
-        matches: ["<all_urls>"],
       }
     ]
   },

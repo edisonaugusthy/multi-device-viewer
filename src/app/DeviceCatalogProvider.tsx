@@ -1,20 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { defaultDeviceIds, devices as baseDevices } from "../domain/device/device-catalog";
-import { createCustomDevice, filterDevices, getDeviceBrands, validateCustomDevice } from "../domain/device/device-service";
-import type { CustomDeviceInput, Device, DeviceFilters } from "../domain/device/device.types";
+import { createCustomDevice, validateCustomDevice } from "../domain/device/device-service";
+import type { CustomDeviceInput, Device } from "../domain/device/device.types";
 import { readStore, writeStore } from "../infrastructure/storage/local-store";
 
 interface DeviceCatalogContextValue {
   devices: Device[];
   customDevices: Device[];
-  visibleDevices: Device[];
-  filters: DeviceFilters;
-  brands: string[];
   favorites: string[];
   recents: string[];
-  selectedDeviceId: string;
-  setFilters: (filters: DeviceFilters) => void;
-  setSelectedDeviceId: (id: string) => void;
   toggleFavorite: (id: string) => void;
   addRecent: (id: string) => void;
   addCustomDevice: (input: CustomDeviceInput) => string | null;
@@ -25,19 +19,10 @@ interface DeviceCatalogContextValue {
 
 const DeviceCatalogContext = createContext<DeviceCatalogContextValue | null>(null);
 
-const defaultFilters: DeviceFilters = {
-  query: "",
-  type: "all",
-  brand: "all",
-  favoritesOnly: false
-};
-
 export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
   const [customDevices, setCustomDevices] = useState<Device[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [recents, setRecents] = useState<string[]>([]);
-  const [selectedDeviceId, setSelectedDeviceIdState] = useState(defaultDeviceIds[0]);
-  const [filters, setFilters] = useState<DeviceFilters>(defaultFilters);
 
   useEffect(() => {
     void Promise.all([
@@ -52,8 +37,6 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const devices = useMemo(() => [...baseDevices, ...customDevices], [customDevices]);
-  const brands = useMemo(() => getDeviceBrands(devices), [devices]);
-  const visibleDevices = useMemo(() => filterDevices(devices, filters, favorites), [devices, favorites, filters]);
 
   const findDevice = useCallback(
     (id: string) => devices.find((device) => device.id === id) ?? devices[0],
@@ -67,14 +50,6 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
       return next;
     });
   }, []);
-
-  const setSelectedDeviceId = useCallback(
-    (id: string) => {
-      setSelectedDeviceIdState(id);
-      addRecent(id);
-    },
-    [addRecent]
-  );
 
   const toggleFavorite = useCallback((id: string) => {
     setFavorites((current) => {
@@ -94,9 +69,9 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
       void writeStore("customDevices", next);
       return next;
     });
-    setSelectedDeviceId(device.id);
+    addRecent(device.id);
     return null;
-  }, [setSelectedDeviceId]);
+  }, [addRecent]);
 
   const removeCustomDevice = useCallback((id: string) => {
     setCustomDevices((current) => {
@@ -114,21 +89,14 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
       void writeStore("recentDeviceIds", next);
       return next;
     });
-    setSelectedDeviceIdState((current) => current === id ? defaultDeviceIds[0] : current);
   }, []);
 
   const value = useMemo<DeviceCatalogContextValue>(
     () => ({
       devices,
       customDevices,
-      visibleDevices,
-      filters,
-      brands,
       favorites,
       recents,
-      selectedDeviceId,
-      setFilters,
-      setSelectedDeviceId,
       toggleFavorite,
       addRecent,
       addCustomDevice,
@@ -139,18 +107,13 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
     [
       addCustomDevice,
       addRecent,
-      brands,
       customDevices,
       devices,
       favorites,
-      filters,
       findDevice,
       recents,
       removeCustomDevice,
-      selectedDeviceId,
-      setSelectedDeviceId,
       toggleFavorite,
-      visibleDevices
     ]
   );
 

@@ -14,11 +14,11 @@ Mobile View & Responsive Tester
 
 ### Short description (132 chars max)
 
-Test responsive websites in mobile view across phones, tablets, laptops, and desktops. Compare devices and copy issues to AI.
+Preview frontend changes across phones, tablets, laptops, and desktops. Switch devices and share annotated captures.
 
 ### Detailed description
 
-Mobile View & Responsive Tester helps developers test responsive websites across phones, tablets, laptops, and desktop screens. Open it on the current page to compare up to four device viewports side by side without switching between Chrome DevTools presets.
+Mobile View & Responsive Tester is a persistent responsive-development companion. Keep it beside your editor to see frontend changes across phones, tablets, laptops, and desktop screens, then capture anything that needs discussion.
 
 Click the extension icon or use the Chrome context menu to open the current website inside realistic device frames. The responsive device viewer appears over the current tab, so you can check mobile view and desktop breakpoints in one workspace and return to the page when you close it.
 
@@ -26,7 +26,7 @@ Click the extension icon or use the Chrome context menu to open the current webs
 - Compare up to four device previews side by side in resizable panels.
 - Test phone, tablet, laptop, and desktop layouts at realistic viewport sizes.
 - Switch device, orientation, zoom level, and reload state independently.
-- Synchronize scrolling across previews when checking long pages.
+- Synchronize page and matching nested-container scrolling across previews when checking long pages.
 - Create custom viewport sizes for project-specific breakpoints.
 
 **Realistic device previews**
@@ -38,9 +38,10 @@ Click the extension icon or use the Chrome context menu to open the current webs
 - Open Phone + Tablet, iOS + Android, or Mobile + Tablet + Laptop comparisons from the toolbar.
 - Save named device sets for repeated responsive QA.
 - Reuse custom device configurations from local Chrome storage.
+- Favorite frequently used devices, reopen recent devices, reorder viewports, or focus one viewport without rebuilding the workspace.
 
 **Screenshots and annotations**
-- Capture the complete multi-device comparison.
+- Capture the active viewport or complete multi-device comparison.
 - Annotate with pen, rectangle, arrow, text, and crop tools.
 - Copy the result to the clipboard or download it locally.
 
@@ -54,14 +55,14 @@ Click the extension icon or use the Chrome context menu to open the current webs
 - Place a previous screenshot or approved design on the left.
 - Keep the current website interactive in the device previews on the right.
 - Import local design references for each viewport, compare them beside or over the live page, manually align overlays, and mark feedback locally.
-- Reference images stay on the device and are discarded when the comparison closes.
+- Reference images and overlay settings stay in local Chrome storage so the workspace can resume; nothing is uploaded.
 
 **Privacy-first by design**
 - No account required.
 - No backend service.
 - No analytics, telemetry, or remote logging.
-- Screenshots, URLs, annotations, and settings never leave your browser.
-- Preferences, presets, recents, custom devices, and UI state are saved locally in Chrome storage.
+- Screenshots, recordings, URLs, annotations, designs, and settings are never sent to a backend.
+- Preferences, presets, recents, custom devices, design references, and UI state are saved locally in Chrome storage.
 
 ### Screenshot order and captions
 
@@ -86,7 +87,7 @@ English
 ## Privacy Tab Answers
 
 **Single purpose**
-Responsive website preview, preset-based device comparison, synchronized scrolling, and screenshot annotation across multiple device viewport profiles, operating as an overlay on the current tab.
+Responsive website preview, device comparison, linked scrolling, local design reference, and visual capture across multiple viewport profiles in an overlay on the current tab.
 
 **Data usage certification**
 The extension does not sell, transfer, or use user data for any purpose outside its single stated purpose.
@@ -115,7 +116,6 @@ The extension does not sell, transfer, or use user data for any purpose outside 
 | `declarativeNetRequest` | Remove `X-Frame-Options` and `Content-Security-Policy` response headers on sub-frame requests so that pages can load inside the simulator iframe. Rules execute entirely within Chrome; no data is transmitted. |
 | `storage` | Persist local preferences: selected devices, saved presets, favorites, recents, custom viewport sizes, review-prompt state, use counters, and UI state. |
 | `downloads` | Save exported screenshots to the user's chosen download location. |
-| `debugger` | Temporarily apply device metrics for individual viewport captures, then detach and restore the page. |
 | `offscreen` | Process user-initiated tab recording in Chrome's required offscreen document. |
 | `tabCapture` | Capture the selected source tab only after the user starts recording. |
 

@@ -28,12 +28,14 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
   "0.1.4": {
     version: "0.1.4",
-    heading: "Faster viewport setup and clearer design review",
-    summary: "This release makes it easier to choose, create, reuse, and manage the viewports used in responsive reviews.",
+    heading: "A faster everyday responsive-development workspace",
+    summary: "This release makes it easier to keep the viewer beside your editor, follow changes across devices, and share visual feedback.",
     notes: [
-      { title: "Cleaner device chooser", description: "Browse iOS, Android, tablets, laptops, desktops, other hardware, and saved custom profiles in focused categories." },
-      { title: "Custom viewport management", description: "Create custom dimensions, add them to a session, reuse them from the sidebar, or delete profiles you no longer need." },
-      { title: "Clearer design comparison", description: "The design-reference workflow now uses direct, action-oriented labels throughout the workspace." },
+      { title: "Faster device switching", description: "Search categorized devices, keep favorites and recents close, reorder viewports, and reuse saved device sets." },
+      { title: "Cleaner development workspace", description: "Focus one viewport, resize comparison panels, reload one or every preview, and resume the previous local session." },
+      { title: "More reliable linked scrolling", description: "The active viewport initializes scroll sync, refreshed previews no longer reset the others, and nested scrolling areas are supported when they match." },
+      { title: "Capture and share clearly", description: "Capture the active viewport or full workspace, annotate it locally, then copy or download the result." },
+      { title: "Flexible design references", description: "Compare a local design beside or over a live viewport, then resize, reposition, adjust opacity, lock, and annotate it." },
     ],
   },
 };

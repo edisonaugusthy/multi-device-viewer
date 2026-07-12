@@ -73,10 +73,3 @@ export interface CustomDeviceInput {
   pixelRatio: number;
   type: DeviceType;
 }
-
-export interface DeviceFilters {
-  query: string;
-  type: "all" | DeviceType;
-  brand: "all" | string;
-  favoritesOnly: boolean;
-}

@@ -2,83 +2,91 @@
 
 Last updated: July 12, 2026
 
-## Overview
+## Summary
 
-Mobile View & Responsive Tester is a local-first Chrome extension for previewing websites across device viewport profiles and capturing responsive testing screenshots. All processing happens in your browser. No data is sent to a remote service.
+Mobile View & Responsive Tester is a local-first Chrome extension. It does not operate a backend and does not collect, sell, transfer, or share user data. It contains no analytics, telemetry, advertising trackers, remote logging, or behavioral tracking.
 
-## Data Collection
+Websites, URLs, designs, screenshots, recordings, annotations, prompts, and preferences remain on the user's device unless the user explicitly copies, downloads, or shares an exported result through another application.
 
-Mobile View & Responsive Tester does **not** collect, track, sell, transfer, or share any user data with third parties.
+## Information processed locally
 
-The extension has no backend, no analytics, no telemetry, no remote logging, and no advertising trackers.
+The extension processes the active tab URL so it can open that page in responsive preview frames. It also renders the website locally inside those frames. This information is not sent to the extension developer or any third-party service.
 
-## Data Stored Locally
+When the user explicitly chooses a feature, the extension may locally process:
 
-The extension uses Chrome's local storage (`chrome.storage`) to persist preferences on your own device. This may include:
+- The active page URL and selected device viewport information.
+- A screenshot of the active responsive viewport or full workspace.
+- A recording of the selected source tab.
+- Design-reference images selected, pasted, or dropped by the user.
+- Annotation marks and locally entered prompt text.
+- Imported device-set JSON files.
 
-- Selected device profiles and slot layout.
+## Data stored on the device
+
+Chrome local storage is used to preserve the working experience. Stored information may include:
+
+- Selected devices, order, orientation, zoom, and viewport layout.
+- Active viewport and interface state.
 - Favorite and recently used devices.
-- Saved layout presets and imported preset JSON.
-- Custom viewport dimensions.
-- Extension UI state (sidebar open/closed, zoom levels, etc.).
-- Local usage counters and dismissed review prompts.
+- Custom viewports and saved device sets.
+- Scroll-sync and theme preferences.
+- Design-reference images, overlay positions, opacity, and panel size.
+- Welcome and release-note state, local use count, and other dismissed notices.
 
-No storage data is transmitted outside your device.
+This data is stored only in the user's browser profile. The extension does not synchronize it through an application account or transmit it to a backend.
 
-## Website Access
+Users can remove this data by deleting saved items in the extension, clearing the extension's site/storage data, or uninstalling the extension.
 
-When you activate the extension from the toolbar or Chrome context menu, it injects an overlay iframe into the current tab so you can preview that page across device viewports. The URL of the active tab is used only to load the page inside the simulator frames. It is not transmitted to any external server.
+## Screenshots, annotations, and clipboard
 
-The extension uses declarative network rules (`declarativeNetRequest`) to remove `X-Frame-Options` and `Content-Security-Policy` headers on sub-frame requests so previewed pages can load inside the simulator. These rules execute entirely within Chrome and do not send data anywhere.
+Screenshots are captured locally with Chrome's visible-tab capture capability and cropped or annotated in the browser. The extension writes an image to the system clipboard only when the user chooses **Copy**, and saves a file only when the user chooses **Download**.
 
-## Screenshots and Annotations
+No screenshot or annotation is uploaded automatically.
 
-Screenshots are captured locally using Chrome's `tabs.captureVisibleTab` API and processed entirely in the browser. Annotations are drawn on a local canvas. Exports are saved to your device via Chrome's `downloads` API only when you explicitly choose to download them. Nothing is uploaded.
+## Tab recording
 
-## Design References
+Recording begins only after the user selects **Record source tab**. Chrome's tab-capture and offscreen-document capabilities process the recording locally. The completed WebM file is downloaded to the user's device. The extension does not upload or retain a remote copy.
 
-When you drop, paste, or choose a design reference, the image is read into browser memory and displayed beside or over the corresponding live device preview. It is not uploaded, transmitted, or automatically saved. References are discarded when the viewer session closes. If you choose **Mark feedback**, the existing local annotation tools apply.
+## Design references
 
-## Presets and Imports
+Design files are read locally and displayed beside or over a live viewport. References may be stored in Chrome local storage so the workspace can resume. They are never uploaded by the extension. Removing the reference, clearing extension storage, or uninstalling the extension removes the locally retained copy.
 
-Saved device presets are stored locally in Chrome storage. If you import a preset JSON file, the file is read in your browser and merged into local storage. Preset files are not uploaded or transmitted.
+## AI fix prompts
 
-## Clipboard
+The extension formats the user's description with the page URL and selected viewport context. It does not inspect page text for this feature, contact an AI provider, or submit the prompt. The text leaves the extension only when the user explicitly copies and pastes it elsewhere.
 
-When you copy an annotated screenshot, the image data is written to your system clipboard via the `navigator.clipboard` API. The data stays on your device.
+## Website access and frame-header rules
 
-When you use Generate AI fix prompt, the extension locally formats the page URL, active device names, viewport sizes, orientation, optional selector, and the text you entered. Page text is not collected. The prompt is not stored or transmitted. It leaves the extension only when you explicitly copy it to your system clipboard.
+HTTP and HTTPS page access is required because the extension runs the local overlay on the selected page and loads that page in responsive subframes.
 
-## Remote Code
+Declarative network rules remove `X-Frame-Options` and `Content-Security-Policy` response headers from subframe requests so pages can load in the responsive viewer. The rules run locally in Chrome. They do not redirect requests, inspect response bodies, or send network activity to the extension developer.
 
-Mobile View & Responsive Tester does not execute remotely hosted JavaScript or WebAssembly. All extension code ships with the packaged extension.
+## Permissions
 
-## Permissions Summary
-
-| Permission | Purpose |
+| Permission | Why it is required |
 |---|---|
-| `contextMenus` | Add a local Chrome menu shortcut for opening the current tab in the simulator. |
-| `scripting` | Run the content script that injects and manages the overlay iframe. |
-| `tabs` | Read the active tab URL and title; capture visible tab screenshots. |
-| `declarativeNetRequest` | Strip `X-Frame-Options` and `CSP` headers on sub-frame requests so previewed pages load inside the simulator. |
-| `storage` | Save local preferences, presets, favorites, layout, review-prompt state, and usage counters to Chrome's local storage. |
-| `downloads` | Save exported screenshots to the user's device. |
-| `debugger` | Temporarily apply device metrics while capturing an individual viewport, then immediately detach and restore the page. |
-| `offscreen` | Run local tab-recording processing in Chrome's required offscreen document. |
-| `tabCapture` | Capture the selected source tab when the user explicitly starts recording. |
+| `contextMenus` | Adds the local shortcut for opening the current page in Responsive Tester. |
+| `declarativeNetRequest` | Applies the packaged subframe-header rules needed for responsive previews. |
+| `downloads` | Saves screenshots and completed recordings after an explicit user action. |
+| `offscreen` | Runs Chrome's local recording pipeline in an offscreen extension document. |
+| `scripting` | Injects the packaged overlay script into a page that was already open when the extension was installed or reloaded. |
+| `storage` | Stores local preferences, workspace state, designs, custom devices, saved sets, and notice state. |
+| `tabCapture` | Records the selected source tab only after the user starts recording. |
+| `tabs` | Reads the selected tab URL, communicates with the overlay, manages the viewer tab fallback, and captures the visible workspace. |
+| HTTP/HTTPS host access | Allows the packaged content script and responsive preview workflow to operate on user-selected web pages and local development servers. |
 
-The extension also requests access to HTTP and HTTPS pages because the simulator must inject its local overlay and load the selected page in device preview frames. This access is used only after installation for the extension's stated responsive-testing purpose and does not transmit browsing activity.
+The extension does not request the `debugger` permission and does not declare background keyboard commands.
 
-The green `ON` toolbar badge is local browser UI state. It records or transmits nothing and is cleared when the simulator overlay closes.
+## Remote code
 
-Keyboard shortcuts are declared through Chrome's `commands` manifest key, which does not add an API permission. The previously declared `activeTab` and `commands` permission entries were removed after the permission audit because the existing content-script and host-access configuration already covers the user-initiated overlay workflow.
+The extension does not execute remotely hosted JavaScript or WebAssembly. All executable code ships inside the extension package.
 
-## Changes to This Policy
+## Policy changes
 
-If the data practices described here change in a meaningful way, the "Last updated" date above will be revised and an updated policy will be published.
+If these practices change materially, this document and its last-updated date will be revised before release.
 
 ## Contact
 
-For privacy questions or to report an issue, open a ticket at:
+Privacy questions and issues can be opened at:
 
 https://github.com/edisonaugusthy/multi-device-viewer/issues

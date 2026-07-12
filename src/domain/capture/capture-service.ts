@@ -46,5 +46,5 @@ export async function downloadDataUrl(dataUrl: string, filename: string): Promis
 export function screenshotFilename(label: string): string {
   const date = new Date().toISOString().replace(/[:.]/g, "-");
   const safeLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  return `multi-device-viewer-${safeLabel || "capture"}-${date}.png`;
+  return `responsive-tester-${safeLabel || "capture"}-${date}.png`;
 }

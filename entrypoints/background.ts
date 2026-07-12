@@ -27,12 +27,16 @@ const SCREENSHOT_COMMAND_PRESETS: Record<string, ViewportCaptureRequest & { labe
 export default defineBackground(() => {
   createContextMenu();
 
+  chrome.runtime.onMessage.addListener((message, sender) => {
+    if (!message || message.type !== "MDV_OVERLAY_STATE" || typeof sender.tab?.id !== "number") return;
+    setActiveIndicator(sender.tab.id, Boolean(message.active));
+  });
+
   chrome.action.onClicked.addListener((tab) => {
     openSimulatorForTab(tab);
   });
 
   chrome.runtime.onInstalled.addListener((details) => {
-    void chrome.storage.local.set({ installedAt: new Date().toISOString() });
     createContextMenu();
     if (details.reason === "update") syncUpdateIndicator();
   });
@@ -70,13 +74,13 @@ export default defineBackground(() => {
   function createContextMenu() {
     chrome.contextMenus.create({
       id: OPEN_SIMULATOR_MENU_ID,
-      title: "Open this tab in Multi Device Viewer",
+      title: "Open this tab in Responsive Tester",
       contexts: ["page", "action"],
     }, () => {
       if (!chrome.runtime.lastError) return;
 
       chrome.contextMenus.update(OPEN_SIMULATOR_MENU_ID, {
-        title: "Open this tab in Multi Device Viewer",
+        title: "Open this tab in Responsive Tester",
         contexts: ["page", "action"],
       }, () => {
         void chrome.runtime.lastError;
@@ -108,7 +112,7 @@ export default defineBackground(() => {
           void openSimulator(url, tab.id).catch(console.error);
           return;
         }
-        console.error("Multi Device Viewer could not attach to the current page", chrome.runtime.lastError.message);
+        console.error("Responsive Tester could not attach to the current page", chrome.runtime.lastError.message);
       });
     };
 
@@ -138,6 +142,12 @@ export default defineBackground(() => {
 
   function clearUpdateIndicator() {
     chrome.action.setBadgeText({ text: "" });
+  }
+
+  function setActiveIndicator(tabId: number, active: boolean) {
+    chrome.action.setBadgeBackgroundColor({ color: "#0f9f8f", tabId });
+    chrome.action.setBadgeText({ text: active ? "ON" : "", tabId });
+    chrome.action.setTitle({ title: active ? "Responsive Tester is active — click to close" : "Open Mobile View & Responsive Tester", tabId });
   }
 
   // ── Helper: hide overlay, wait, run fn, restore overlay ─────────────────────

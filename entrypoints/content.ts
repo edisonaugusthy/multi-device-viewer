@@ -10,6 +10,7 @@ export default defineContentScript({
     setupPreviewBridge();
 
     if (window.top === window) {
+      notifyOverlayState(false);
       chrome.runtime.onMessage.addListener((message) => {
         if (message !== null && typeof message === "object") {
           if (message.type === "OPEN_SIMULATOR") {
@@ -622,6 +623,7 @@ function toggleSimulator(targetUrl?: string, sourceTabId?: number) {
   if (existing) {
     existing.remove();
     document.documentElement.style.removeProperty("overflow");
+    notifyOverlayState(false);
     return;
   }
 
@@ -666,6 +668,7 @@ function toggleSimulator(targetUrl?: string, sourceTabId?: number) {
       overlay.remove();
       document.documentElement.style.removeProperty("overflow");
       window.removeEventListener("message", onMessage);
+      notifyOverlayState(false);
       return;
     }
 
@@ -686,6 +689,7 @@ function toggleSimulator(targetUrl?: string, sourceTabId?: number) {
 
   overlay.appendChild(iframe);
   document.documentElement.appendChild(overlay);
+  notifyOverlayState(true);
 
   // Prevent the host page from scrolling while the overlay is open.
   document.documentElement.style.overflow = "hidden";
@@ -696,7 +700,14 @@ function toggleSimulator(targetUrl?: string, sourceTabId?: number) {
       overlay.remove();
       document.documentElement.style.removeProperty("overflow");
       document.removeEventListener("keydown", onKey, true);
+      notifyOverlayState(false);
     }
   };
   document.addEventListener("keydown", onKey, true);
+}
+
+function notifyOverlayState(active: boolean) {
+  chrome.runtime.sendMessage({ type: "MDV_OVERLAY_STATE", active }, () => {
+    void chrome.runtime.lastError;
+  });
 }

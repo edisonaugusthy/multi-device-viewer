@@ -1,4 +1,4 @@
-# Multi Device Viewer Agent Guide
+# Mobile View & Responsive Tester Agent Guide
 
 ## Product Goal
 Build a fully local Chrome MV3 extension that helps users test websites across realistic phone, tablet, laptop, desktop, watch, and TV viewports. The extension must work after install without any backend, account, subscription, telemetry, payment flow, API key, or hosted configuration.

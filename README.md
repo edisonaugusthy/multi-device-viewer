@@ -1,8 +1,38 @@
-# Multi Device Viewer
+# Mobile View & Responsive Tester
 
-A local-first Chrome MV3 extension for mobile view and responsive device testing across phone, tablet, laptop, desktop, watch, and TV viewports without leaving the current tab.
+A free, open-source, local-first Chrome extension for testing responsive websites across phone, tablet, laptop, desktop, watch, TV, and custom viewports without leaving the current tab.
 
-Click the extension icon on any page and a full-screen mobile preview and device simulator opens on top — no new tabs, no navigation away. Close it and the page is exactly as you left it.
+Open the extension on a public site or local development server, compare up to four live previews, reproduce a responsive problem, capture evidence, compare before and after, or generate a detailed prompt for your coding agent. No account, backend, subscription, telemetry, or upload is required.
+
+## Core workflows
+
+### Test responsive layouts
+
+- Open the current page in a full-screen responsive testing workspace.
+- Compare up to four resizable device previews side by side.
+- Use realistic phones, tablets, laptops, desktops, watches, TVs, or custom CSS viewport sizes.
+- Synchronize scrolling and supported interactions across active previews.
+
+### Compare before and after while testing live
+
+- Choose a previous screenshot or approved design on the left.
+- Keep the current website running in the real, interactive device previews on the right.
+- Scroll, click, type, rotate devices, and reproduce the current behavior without switching to a captured image.
+- Capture the current workspace or annotate the reference image when documenting a manual test result.
+- The uploaded reference remains in memory and is discarded when the comparison closes.
+
+### Generate a prompt for an AI coding tool
+
+- Click **Generate AI fix prompt**.
+- Describe the issue, expected behavior, actual behavior, and optional CSS selector.
+- The extension adds the current URL, device names, viewport dimensions, and orientation.
+- Copy the generated instructions into Codex, Copilot, Cursor, Claude, or another coding tool. The extension generates the prompt; it does not send it or produce the code change itself.
+
+### Capture and annotate
+
+- Capture the complete multi-device workspace.
+- Add pen, rectangle, arrow, text, and crop annotations.
+- Copy the result to the clipboard or download it locally.
 
 ## Features
 
@@ -16,11 +46,21 @@ Click the extension icon on any page and a full-screen mobile preview and device
 - Scroll synchronization for comparing long responsive pages.
 - Dark mode for low-glare testing.
 - Realistic device frame shells (phone, tablet, laptop, desktop, watch).
-- Chrome context-menu shortcut to open the current tab directly in Multi Device Viewer.
+- Chrome context-menu shortcut to open the current tab directly in Responsive Tester.
+- Reference-image and live-device before/after comparison for manual testing.
+- Generated AI fix prompts with active URL and device context.
 - "Capture & Annotate" — captures the full simulator view and opens a built-in annotation editor.
 - Annotation tools: pen, rectangle, arrow, text (with font size picker), and crop.
 - Crop bakes annotations into a new canvas; copy to clipboard or download locally.
 - All screenshots and annotations stay on your machine — nothing leaves the browser.
+
+## Privacy and limitations
+
+- No accounts, analytics, telemetry, advertising trackers, remote logging, or behavioral event collection.
+- URLs, screenshots, prompts, presets, and visual comparisons are not uploaded.
+- The toolbar badge shows a green `ON` indicator only while the responsive-testing overlay is active in that tab.
+- Some browser-internal pages and sites with additional embedding restrictions cannot be previewed.
+- Viewport simulation helps find responsive layout issues, but final release testing on real devices and browsers is still recommended.
 
 ## Development
 
@@ -46,6 +86,9 @@ Then open [http://localhost:5173/](http://localhost:5173/) in the browser. This 
 ```bash
 npm run build
 npm run zip
+npm run test
+npm run compile
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.1.4-chrome.zip
 ```
 
 The production zip lands in `.output/`.
@@ -56,4 +99,4 @@ Manual Chrome Web Store releases use the `Chrome Web Store Release` GitHub Actio
 
 ## Privacy
 
-The extension is entirely local. It does not collect data, contact a backend, or use analytics. See [docs/privacy-policy.md](docs/privacy-policy.md) for the full policy.
+The extension is entirely local. It does not collect data, contact a backend, use analytics, or track user behavior. See [docs/privacy-policy.md](docs/privacy-policy.md) for the full policy.

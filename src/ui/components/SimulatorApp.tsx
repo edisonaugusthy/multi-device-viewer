@@ -2,6 +2,7 @@ import {
   Camera,
   ChevronRight,
   GripVertical,
+  Images,
   Link2,
   Menu,
   Moon,
@@ -9,6 +10,7 @@ import {
   PanelsTopLeft,
   Plus,
   RefreshCw,
+  ScanSearch,
   Settings2,
   Sun,
   Video,
@@ -17,13 +19,18 @@ import {
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useSimulator } from "../../app/SimulatorProvider";
+import { PRODUCT_SHORT_NAME } from "../../app/product";
 import { captureTabWithOverlay, startTabRecording, stopTabRecording } from "../../domain/capture/capture-service";
 import { maxPreviewSlots } from "../../domain/simulator/simulator-service";
+import { readStore, writeStore } from "../../infrastructure/storage/local-store";
 import { AnnotationOverlay } from "./AnnotationOverlay";
+import { BeforeAfterPanel } from "./BeforeAfterPanel";
 import { BrandMark } from "./BrandMark";
 import { CustomDeviceModal } from "./CustomDeviceModal";
+import { FirstRunGuide } from "./FirstRunGuide";
 import { PresetsManager } from "./PresetsManager";
 import { PreviewCard } from "./PreviewCard";
+import { ReviewIssueModal } from "./ReviewIssueModal";
 
 const QUICK_DEVICE_SETS = [
   { label: "Phone + tablet", devices: ["apple-iphone-14-pro-max-2022", "apple-ipad-air-4"] },
@@ -41,6 +48,7 @@ export function SimulatorApp() {
     reloadAllSlots,
     updateDisplay,
     sourceTabId,
+    useCount,
   } = useSimulator();
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
@@ -50,6 +58,9 @@ export function SimulatorApp() {
   const [narrowLayout, setNarrowLayout] = useState(() => typeof window !== "undefined" && window.innerWidth <= 760);
   const [showCustomDevice, setShowCustomDevice] = useState(false);
   const [showSavedSets, setShowSavedSets] = useState(false);
+  const [showReviewIssue, setShowReviewIssue] = useState(false);
+  const [showVisualCompare, setShowVisualCompare] = useState(false);
+  const [showFirstRun, setShowFirstRun] = useState(false);
   const [widths, setWidths] = useState<number[]>(() => slots.map(() => 100 / slots.length));
   const previousSlotCount = useRef(slots.length);
   const boardRef = useRef<HTMLDivElement>(null);
@@ -65,6 +76,13 @@ export function SimulatorApp() {
     query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
   }, []);
+
+  useEffect(() => {
+    if (useCount !== 1) return;
+    void readStore("responsiveTesterFirstRunComplete", false).then((complete) => {
+      if (!complete) setShowFirstRun(true);
+    });
+  }, [useCount]);
 
   useEffect(() => {
     if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
@@ -132,8 +150,13 @@ export function SimulatorApp() {
     window.close();
   }
 
+  function finishFirstRun() {
+    setShowFirstRun(false);
+    void writeStore("responsiveTesterFirstRunComplete", true);
+  }
+
   const captureMeta = {
-    title: "Multi Device Viewer QA capture",
+    title: `${PRODUCT_SHORT_NAME} QA capture`,
     url: slots[0]?.url ?? "",
     devices: slots.map((slot) => {
       const device = findDevice(slot.deviceId);
@@ -141,11 +164,22 @@ export function SimulatorApp() {
     }),
   };
 
+  const reviewDevices = slots.map((slot) => {
+    const device = findDevice(slot.deviceId);
+    const portrait = device.cssViewport;
+    return {
+      name: device.name,
+      width: slot.orientation === "landscape" ? portrait.height : portrait.width,
+      height: slot.orientation === "landscape" ? portrait.width : portrait.height,
+      orientation: slot.orientation,
+    };
+  });
+
   return (
     <div className={`flex h-screen flex-col overflow-hidden font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}>
       <header className={`z-20 flex h-10 shrink-0 items-center gap-1.5 border-b px-2 ${dark ? "border-white/[0.08] bg-[#11141a]" : "border-slate-200 bg-white"}`}>
         <button type="button" className={`grid h-8 w-8 place-items-center rounded-lg lg:hidden ${dark ? "hover:bg-white/10" : "hover:bg-slate-100"}`} onClick={() => setSidebarOpen(true)} aria-label="Open workspace setup"><Menu size={15} /></button>
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center" title="Multi Device Viewer"><BrandMark size={27} /></div>
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center" title={PRODUCT_SHORT_NAME}><BrandMark size={27} /></div>
         <div className="ml-1 hidden items-center gap-1 md:flex" aria-label="Quick device sets">
           {QUICK_DEVICE_SETS.map((set) => (
             <button
@@ -161,6 +195,8 @@ export function SimulatorApp() {
         </div>
         <div className="min-w-0 flex-1" />
         <button type="button" disabled={slots.length >= maxPreviewSlots} onClick={() => addSlot()} className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold sm:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><Plus size={12} />Add device</button>
+        <button type="button" onClick={() => setShowReviewIssue(true)} className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><ScanSearch size={12} /><span className="hidden sm:inline">Copy fix prompt</span></button>
+        <button type="button" onClick={() => setShowVisualCompare(true)} className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold md:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><Images size={12} />Compare changes</button>
         <button type="button" title={display.scrollSync ? "Turn off scroll sync" : "Turn on scroll sync"} aria-pressed={display.scrollSync} onClick={() => updateDisplay((current) => ({ ...current, scrollSync: !current.scrollSync }))} className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${display.scrollSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}><Link2 size={12} /><span>Scroll sync</span></button>
         <ToolbarButton label="Capture comparison" dark={dark} onClick={() => void takeScreenshot()}><Camera size={14} /></ToolbarButton>
         <ToolbarButton label="Reload all" dark={dark} onClick={reloadAllSlots}><RefreshCw size={15} /></ToolbarButton>
@@ -188,6 +224,8 @@ export function SimulatorApp() {
             </SidebarSection>
 
             <SidebarSection title="Session tools" dark={dark}>
+              <ActionRow dark={dark} icon={<ScanSearch size={14} />} onClick={() => setShowReviewIssue(true)} label="Generate AI fix prompt" />
+              <ActionRow dark={dark} icon={<Images size={14} />} onClick={() => setShowVisualCompare(true)} label="Compare before & after" />
               <ActionRow dark={dark} icon={<Camera size={14} />} onClick={() => void takeScreenshot()} label={capturing ? "Capturing comparison…" : "Capture and annotate"} />
               <ActionRow dark={dark} icon={<Video size={14} />} onClick={() => void toggleRecording()} disabled={!sourceTabId} active={recording} label={recording ? "Stop recording" : "Record source tab"} />
             </SidebarSection>
@@ -203,6 +241,7 @@ export function SimulatorApp() {
 
         {!sidebarOpen && !narrowLayout && <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Open workspace setup" className={`absolute left-2 top-2 z-20 grid h-8 w-8 place-items-center rounded-lg border shadow-sm ${dark ? "border-white/10 bg-[#171a21] text-slate-400 hover:text-white" : "border-slate-200 bg-white text-slate-500 hover:text-slate-900"}`}><Settings2 size={14} /></button>}
 
+        {showVisualCompare && <BeforeAfterPanel dark={dark} onClose={() => setShowVisualCompare(false)} onCaptureCurrent={() => void takeScreenshot()} onAnnotateReference={(image) => { setAnnotationImage(image); setAnnotationOpen(true); }} />}
         <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <div ref={boardRef} data-capture-board className={`flex min-h-0 flex-1 ${narrowLayout ? "flex-col" : ""}`}>
             {slots.map((slot, index) => (
@@ -217,6 +256,8 @@ export function SimulatorApp() {
 
       {annotationOpen && <AnnotationOverlay imageUrl={annotationImage} meta={captureMeta} onClose={() => setAnnotationOpen(false)} />}
       {showCustomDevice && <CustomDeviceModal dark={dark} onClose={() => setShowCustomDevice(false)} onCreated={() => setShowCustomDevice(false)} />}
+      {showReviewIssue && <ReviewIssueModal dark={dark} pageUrl={slots[0]?.url ?? ""} devices={reviewDevices} onClose={() => setShowReviewIssue(false)} />}
+      {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
     </div>
   );
 }

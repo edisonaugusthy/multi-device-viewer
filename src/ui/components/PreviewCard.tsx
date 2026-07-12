@@ -222,6 +222,7 @@ export function PreviewCard({
         if (!display.scrollSync) return;
         broadcastInteractionSync(data as InteractionSyncPayload);
       }
+
     };
 
     window.addEventListener("message", onMessage);
@@ -275,6 +276,7 @@ export function PreviewCard({
   useEffect(() => {
     syncScrollBridge(iframeRef.current);
   }, [display.scrollSync, slot.id]);
+
 
   return (
     <section

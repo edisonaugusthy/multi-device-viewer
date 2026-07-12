@@ -10,15 +10,15 @@
 
 ### Extension name
 
-Mobile View & Responsive Device Viewer
+Mobile View & Responsive Tester
 
 ### Short description (132 chars max)
 
-Preview responsive websites in mobile view across phones, tablets, laptops, and desktops. Compare devices and capture screenshots.
+Test responsive websites in mobile view across phones, tablets, laptops, and desktops. Compare devices and copy issues to AI.
 
 ### Detailed description
 
-Mobile View & Responsive Device Viewer helps developers test responsive websites across phones, tablets, laptops, and desktop screens. Open it on the current page to compare up to four device viewports side by side without switching between Chrome DevTools presets.
+Mobile View & Responsive Tester helps developers test responsive websites across phones, tablets, laptops, and desktop screens. Open it on the current page to compare up to four device viewports side by side without switching between Chrome DevTools presets.
 
 Click the extension icon or use the Chrome context menu to open the current website inside realistic device frames. The responsive device viewer appears over the current tab, so you can check mobile view and desktop breakpoints in one workspace and return to the page when you close it.
 
@@ -44,6 +44,18 @@ Click the extension icon or use the Chrome context menu to open the current webs
 - Annotate with pen, rectangle, arrow, text, and crop tools.
 - Copy the result to the clipboard or download it locally.
 
+**Generate a responsive fix prompt**
+- Describe the expected and actual behavior once.
+- Automatically include the optional selector, device names, viewport sizes, orientation, and page URL.
+- Copy a structured fix prompt to Codex, Copilot, Cursor, Claude, or another coding tool.
+- Nothing is uploaded; the handoff uses your local clipboard.
+
+**Compare a reference with the live website**
+- Place a previous screenshot or approved design on the left.
+- Keep the current website interactive in the device previews on the right.
+- Capture the current workspace or annotate the reference image for manual testing feedback.
+- Reference images stay on the device and are discarded when the comparison closes.
+
 **Privacy-first by design**
 - No account required.
 - No backend service.
@@ -56,9 +68,8 @@ Click the extension icon or use the Chrome context menu to open the current webs
 Use current UI captures at 1280×800 or 640×400. Keep text overlays short and readable.
 
 1. **Compare responsive mobile, tablet, and laptop views side by side** — show the Mobile + Tablet + Laptop device set.
-2. **Test iOS and Android layouts in one synchronized workspace** — show two phone previews with Scroll sync enabled.
-3. **Switch devices, rotate, zoom, and resize each viewport** — show the device selector and visible resize grip.
-4. **Capture and annotate responsive issues without leaving Chrome** — show the annotation editor.
+2. **Switch device presets quickly from the compact header** — show one-click preset controls and the visible device toolbar.
+3. **Pick exact devices from the improved selector** — show the searchable device selector and multi-device workspace.
 
 Do not reuse screenshots from the previous sidebar or URL-bar design; outdated images can reduce listing clarity and conversion.
 
@@ -98,14 +109,15 @@ The extension does not sell, transfer, or use user data for any purpose outside 
 
 | Permission | Justification |
 |---|---|
-| `activeTab` | Inject the simulator overlay into the current tab when the user clicks the extension action or context menu shortcut. |
 | `contextMenus` | Add the "Open this tab in Device Simulator" shortcut to Chrome's page and extension-action context menus. |
 | `scripting` | Execute the content script that creates and manages the full-screen overlay iframe. |
 | `tabs` | Read the active tab URL and title to load the page in the simulator; capture visible tab screenshots. |
-| `declarativeNetRequest` / `declarativeNetRequestWithHostAccess` | Remove `X-Frame-Options` and `Content-Security-Policy` response headers on sub-frame requests so that pages can load inside the simulator iframe. Rules execute entirely within Chrome; no data is transmitted. |
+| `declarativeNetRequest` | Remove `X-Frame-Options` and `Content-Security-Policy` response headers on sub-frame requests so that pages can load inside the simulator iframe. Rules execute entirely within Chrome; no data is transmitted. |
 | `storage` | Persist local preferences: selected devices, saved presets, favorites, recents, custom viewport sizes, review-prompt state, use counters, and UI state. |
 | `downloads` | Save exported screenshots to the user's chosen download location. |
-| `debugger` | Available for advanced per-viewport screenshot emulation. Not used in the default capture flow. |
+| `debugger` | Temporarily apply device metrics for individual viewport captures, then detach and restore the page. |
+| `offscreen` | Process user-initiated tab recording in Chrome's required offscreen document. |
+| `tabCapture` | Capture the selected source tab only after the user starts recording. |
 
 ---
 

@@ -19,7 +19,7 @@ Open the extension on a public site or local development server, compare up to f
 - Assign a separate reference design to each active device viewport.
 - Keep the current website running in the real, interactive device previews on the right.
 - Compare side by side or place the design over the matching live viewport with adjustable opacity.
-- Resize or zoom the reference panel, then press and drag to move or independently stretch an overlay's width and height above the device canvas. Lock it to continue interacting with the live page.
+- Resize or zoom the reference panel and drag the enlarged preview to pan it. Press and drag to move or independently stretch an overlay's width and height above the device canvas, then lock it to continue interacting with the live page.
 - Use **Mark feedback** to annotate a reference when documenting a review or manual test result.
 - Imported references remain in memory for the current viewer session and are never uploaded.
 
@@ -97,7 +97,7 @@ The production zip lands in `.output/`.
 
 ## Release
 
-Manual Chrome Web Store releases use the `Chrome Web Store Release` GitHub Actions workflow. See [docs/chrome-web-store.md](docs/chrome-web-store.md) for listing copy, required GitHub secrets, OAuth setup, and the release checklist.
+Chrome Web Store releases are prepared and uploaded manually. See [docs/chrome-web-store.md](docs/chrome-web-store.md) for listing copy and the manual release checklist.
 
 ## Privacy
 

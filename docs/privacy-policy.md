@@ -35,9 +35,9 @@ The extension uses declarative network rules (`declarativeNetRequest`) to remove
 
 Screenshots are captured locally using Chrome's `tabs.captureVisibleTab` API and processed entirely in the browser. Annotations are drawn on a local canvas. Exports are saved to your device via Chrome's `downloads` API only when you explicitly choose to download them. Nothing is uploaded.
 
-## Visual Comparison
+## Design References
 
-When you choose a reference image for before-and-after comparison, the file is read into browser memory and displayed beside the existing live device previews. It is not uploaded or automatically saved. The reference is discarded when you close the comparison workspace. If you choose Capture current or Annotate before, the existing local screenshot and annotation tools apply.
+When you drop, paste, or choose a design reference, the image is read into browser memory and displayed beside or over the corresponding live device preview. It is not uploaded, transmitted, or automatically saved. References are discarded when the viewer session closes. If you choose **Mark feedback**, the existing local annotation tools apply.
 
 ## Presets and Imports
 

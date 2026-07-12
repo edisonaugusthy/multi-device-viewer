@@ -53,7 +53,7 @@ Click the extension icon or use the Chrome context menu to open the current webs
 **Compare a reference with the live website**
 - Place a previous screenshot or approved design on the left.
 - Keep the current website interactive in the device previews on the right.
-- Capture the current workspace or annotate the reference image for manual testing feedback.
+- Import local design references for each viewport, compare them beside or over the live page, manually align overlays, and mark feedback locally.
 - Reference images stay on the device and are discarded when the comparison closes.
 
 **Privacy-first by design**

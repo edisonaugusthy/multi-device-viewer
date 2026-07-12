@@ -2,7 +2,7 @@
 
 A free, open-source, local-first Chrome extension for testing responsive websites across phone, tablet, laptop, desktop, watch, TV, and custom viewports without leaving the current tab.
 
-Open the extension on a public site or local development server, compare up to four live previews, reproduce a responsive problem, capture evidence, compare before and after, or generate a detailed prompt for your coding agent. No account, backend, subscription, telemetry, or upload is required.
+Open the extension on a public site or local development server, compare up to four live previews, develop against an imported design reference, capture evidence, or generate a detailed prompt for your coding agent. No account, backend, subscription, telemetry, or upload is required.
 
 ## Core workflows
 
@@ -13,13 +13,15 @@ Open the extension on a public site or local development server, compare up to f
 - Use realistic phones, tablets, laptops, desktops, watches, TVs, or custom CSS viewport sizes.
 - Synchronize scrolling and supported interactions across active previews.
 
-### Compare before and after while testing live
+### Build against a design while testing live
 
-- Choose a previous screenshot or approved design on the left.
+- Drop, paste, or choose a PNG, JPG, WebP, or SVG exported from Figma or another design tool.
+- Assign a separate reference design to each active device viewport.
 - Keep the current website running in the real, interactive device previews on the right.
-- Scroll, click, type, rotate devices, and reproduce the current behavior without switching to a captured image.
-- Capture the current workspace or annotate the reference image when documenting a manual test result.
-- The uploaded reference remains in memory and is discarded when the comparison closes.
+- Compare side by side or place the design over the matching live viewport with adjustable opacity.
+- Resize or zoom the reference panel, then press and drag to move or independently stretch an overlay's width and height above the device canvas. Lock it to continue interacting with the live page.
+- Use **Mark feedback** to annotate a reference when documenting a review or manual test result.
+- Imported references remain in memory for the current viewer session and are never uploaded.
 
 ### Generate a prompt for an AI coding tool
 

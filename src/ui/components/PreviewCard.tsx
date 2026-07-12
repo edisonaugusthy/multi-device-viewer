@@ -62,6 +62,13 @@ interface PreviewCardProps {
   display: DisplaySettings;
   removable: boolean;
   onCapture: () => void;
+  designOverlay?: {
+    image: string;
+    opacity: number;
+    adjusting: boolean;
+    placement?: { x: number; y: number; width: number; height: number };
+    onPlacementChange: (placement: { x: number; y: number; width: number; height: number }) => void;
+  };
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -72,6 +79,7 @@ export function PreviewCard({
   display,
   removable,
   onCapture,
+  designOverlay,
 }: PreviewCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -124,6 +132,58 @@ export function PreviewCard({
       : slot.zoomMode === "fit"
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
+
+  const fittedOverlayPlacement = {
+    x: containerSize.width > 0 ? ((containerSize.width - frameSize.width * scale) / 2 / containerSize.width) * 100 : 0,
+    y: containerSize.height > 0 ? ((containerSize.height - frameSize.height * scale) / 2 / containerSize.height) * 100 : 0,
+    width: containerSize.width > 0 ? (frameSize.width * scale / containerSize.width) * 100 : 100,
+    height: containerSize.height > 0 ? (frameSize.height * scale / containerSize.height) * 100 : 100,
+  };
+  const overlayPlacement = designOverlay?.placement ?? fittedOverlayPlacement;
+
+  function startOverlayAdjustment(event: React.PointerEvent, kind: "move" | "width" | "height" | "both") {
+    if (!designOverlay?.adjusting || event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const target = event.currentTarget as HTMLElement;
+    const pointerId = event.pointerId;
+    const surface = event.currentTarget.closest("[data-design-overlay-surface]")?.getBoundingClientRect();
+    if (!surface) return;
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const initial = overlayPlacement;
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      target.removeEventListener("pointermove", onMove);
+      target.removeEventListener("pointerup", finish);
+      target.removeEventListener("pointercancel", finish);
+      target.removeEventListener("lostpointercapture", finish);
+      window.removeEventListener("blur", finish);
+      if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId);
+    };
+    const onMove = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId !== pointerId || (moveEvent.buttons & 1) !== 1) return finish();
+      const deltaX = ((moveEvent.clientX - startX) / surface.width) * 100;
+      const deltaY = ((moveEvent.clientY - startY) / surface.height) * 100;
+      if (kind === "move") {
+        designOverlay.onPlacementChange({ ...initial, x: Math.max(-1000, Math.min(1000, initial.x + deltaX)), y: Math.max(-1000, Math.min(1000, initial.y + deltaY)) });
+      } else {
+        designOverlay.onPlacementChange({
+          ...initial,
+          width: kind === "width" || kind === "both" ? Math.max(1, Math.min(1000, initial.width + deltaX)) : initial.width,
+          height: kind === "height" || kind === "both" ? Math.max(1, Math.min(1000, initial.height + deltaY)) : initial.height,
+        });
+      }
+    };
+    target.addEventListener("pointermove", onMove);
+    target.addEventListener("pointerup", finish);
+    target.addEventListener("pointercancel", finish);
+    target.addEventListener("lostpointercapture", finish);
+    window.addEventListener("blur", finish);
+    target.setPointerCapture(pointerId);
+  }
 
   const syncScrollBridge = (iframe: HTMLIFrameElement | null) => {
     if (!iframe?.contentWindow) return;
@@ -327,7 +387,8 @@ export function PreviewCard({
       {/* ── Canvas ── */}
       <div
         ref={containerRef}
-        className={`relative flex flex-1 items-center justify-center overflow-hidden transition-colors ${display.darkMode ? "bg-[#101217]" : "bg-[#f5f5f3]"}`}
+        data-design-overlay-surface
+        className={`relative flex flex-1 items-center justify-center overflow-visible transition-colors ${display.darkMode ? "bg-[#101217]" : "bg-[#f5f5f3]"}`}
       >
         {containerSize.width > 0 && (
           <div
@@ -355,6 +416,7 @@ export function PreviewCard({
               scrollProgress={0}
             >
               <div
+                className="relative"
                 style={{
                   width: viewportSize.width,
                   height: "100%",
@@ -390,6 +452,19 @@ export function PreviewCard({
             </DeviceFrame>
           </div>
         )}
+        {designOverlay && <div
+          className={`absolute z-30 touch-none select-none ${designOverlay.adjusting ? "cursor-move border-2 border-amber-400 shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "pointer-events-none"}`}
+          style={{ left: `${overlayPlacement.x}%`, top: `${overlayPlacement.y}%`, width: `${overlayPlacement.width}%`, height: `${overlayPlacement.height}%`, opacity: designOverlay.opacity / 100 }}
+          onPointerDown={(event) => startOverlayAdjustment(event, "move")}
+          aria-label="Adjustable design overlay"
+        >
+          <img src={designOverlay.image} alt="Design overlay" draggable={false} className="block h-full w-full" />
+          {designOverlay.adjusting && <>
+            <button type="button" aria-label="Resize design overlay width" onPointerDown={(event) => startOverlayAdjustment(event, "width")} className="absolute -right-2 top-1/2 h-8 w-4 -translate-y-1/2 cursor-ew-resize rounded-full border-2 border-white bg-amber-500 shadow" />
+            <button type="button" aria-label="Resize design overlay height" onPointerDown={(event) => startOverlayAdjustment(event, "height")} className="absolute -bottom-2 left-1/2 h-4 w-8 -translate-x-1/2 cursor-ns-resize rounded-full border-2 border-white bg-amber-500 shadow" />
+            <button type="button" aria-label="Resize design overlay width and height" onPointerDown={(event) => startOverlayAdjustment(event, "both")} className="absolute -bottom-2 -right-2 h-5 w-5 cursor-nwse-resize rounded-full border-2 border-white bg-amber-500 shadow" />
+          </>}
+        </div>}
       </div>
     </section>
   );

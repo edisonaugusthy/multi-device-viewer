@@ -24,7 +24,7 @@ import { captureTabWithOverlay, startTabRecording, stopTabRecording } from "../.
 import { maxPreviewSlots } from "../../domain/simulator/simulator-service";
 import { readStore, writeStore } from "../../infrastructure/storage/local-store";
 import { AnnotationOverlay } from "./AnnotationOverlay";
-import { BeforeAfterPanel } from "./BeforeAfterPanel";
+import { DesignReferencePanel, type ReferenceMode } from "./DesignReferencePanel";
 import { BrandMark } from "./BrandMark";
 import { CustomDeviceModal } from "./CustomDeviceModal";
 import { FirstRunGuide } from "./FirstRunGuide";
@@ -59,7 +59,14 @@ export function SimulatorApp() {
   const [showCustomDevice, setShowCustomDevice] = useState(false);
   const [showSavedSets, setShowSavedSets] = useState(false);
   const [showReviewIssue, setShowReviewIssue] = useState(false);
-  const [showVisualCompare, setShowVisualCompare] = useState(false);
+  const [showDesignReference, setShowDesignReference] = useState(false);
+  const [referenceViewportId, setReferenceViewportId] = useState(() => slots[0]?.id ?? "");
+  const [designReferences, setDesignReferences] = useState<Record<string, string>>({});
+  const [referenceMode, setReferenceMode] = useState<ReferenceMode>("side-by-side");
+  const [referenceOpacity, setReferenceOpacity] = useState(50);
+  const [adjustingOverlay, setAdjustingOverlay] = useState(true);
+  const [overlayPlacements, setOverlayPlacements] = useState<Record<string, { x: number; y: number; width: number; height: number }>>({});
+  const [designPanelWidth, setDesignPanelWidth] = useState(() => Math.min(520, typeof window === "undefined" ? 520 : window.innerWidth * 0.42));
   const [showFirstRun, setShowFirstRun] = useState(false);
   const [widths, setWidths] = useState<number[]>(() => slots.map(() => 100 / slots.length));
   const previousSlotCount = useRef(slots.length);
@@ -76,6 +83,11 @@ export function SimulatorApp() {
     query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
   }, []);
+
+  useEffect(() => {
+    if (slots.some((slot) => slot.id === referenceViewportId)) return;
+    setReferenceViewportId(slots[0]?.id ?? "");
+  }, [referenceViewportId, slots]);
 
   useEffect(() => {
     if (useCount !== 1) return;
@@ -196,7 +208,7 @@ export function SimulatorApp() {
         <div className="min-w-0 flex-1" />
         <button type="button" disabled={slots.length >= maxPreviewSlots} onClick={() => addSlot()} className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold sm:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><Plus size={12} />Add device</button>
         <button type="button" onClick={() => setShowReviewIssue(true)} className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><ScanSearch size={12} /><span className="hidden sm:inline">Copy fix prompt</span></button>
-        <button type="button" onClick={() => setShowVisualCompare(true)} className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold md:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><Images size={12} />Compare changes</button>
+        <button type="button" onClick={() => setShowDesignReference(true)} className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold md:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}><Images size={12} />Design reference</button>
         <button type="button" title={display.scrollSync ? "Turn off scroll sync" : "Turn on scroll sync"} aria-pressed={display.scrollSync} onClick={() => updateDisplay((current) => ({ ...current, scrollSync: !current.scrollSync }))} className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${display.scrollSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}><Link2 size={12} /><span>Scroll sync</span></button>
         <ToolbarButton label="Capture comparison" dark={dark} onClick={() => void takeScreenshot()}><Camera size={14} /></ToolbarButton>
         <ToolbarButton label="Reload all" dark={dark} onClick={reloadAllSlots}><RefreshCw size={15} /></ToolbarButton>
@@ -225,7 +237,7 @@ export function SimulatorApp() {
 
             <SidebarSection title="Session tools" dark={dark}>
               <ActionRow dark={dark} icon={<ScanSearch size={14} />} onClick={() => setShowReviewIssue(true)} label="Generate AI fix prompt" />
-              <ActionRow dark={dark} icon={<Images size={14} />} onClick={() => setShowVisualCompare(true)} label="Compare before & after" />
+              <ActionRow dark={dark} icon={<Images size={14} />} onClick={() => setShowDesignReference(true)} label="Open design reference" />
               <ActionRow dark={dark} icon={<Camera size={14} />} onClick={() => void takeScreenshot()} label={capturing ? "Capturing comparison…" : "Capture and annotate"} />
               <ActionRow dark={dark} icon={<Video size={14} />} onClick={() => void toggleRecording()} disabled={!sourceTabId} active={recording} label={recording ? "Stop recording" : "Record source tab"} />
             </SidebarSection>
@@ -241,12 +253,12 @@ export function SimulatorApp() {
 
         {!sidebarOpen && !narrowLayout && <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Open workspace setup" className={`absolute left-2 top-2 z-20 grid h-8 w-8 place-items-center rounded-lg border shadow-sm ${dark ? "border-white/10 bg-[#171a21] text-slate-400 hover:text-white" : "border-slate-200 bg-white text-slate-500 hover:text-slate-900"}`}><Settings2 size={14} /></button>}
 
-        {showVisualCompare && <BeforeAfterPanel dark={dark} onClose={() => setShowVisualCompare(false)} onCaptureCurrent={() => void takeScreenshot()} onAnnotateReference={(image) => { setAnnotationImage(image); setAnnotationOpen(true); }} />}
+        {showDesignReference && <DesignReferencePanel dark={dark} viewports={slots.map((slot) => ({ id: slot.id, label: findDevice(slot.deviceId).name }))} activeViewportId={referenceViewportId || slots[0]?.id || ""} references={designReferences} mode={referenceMode} opacity={referenceOpacity} adjustingOverlay={adjustingOverlay} width={designPanelWidth} onActiveViewportChange={setReferenceViewportId} onReferenceChange={(id, image) => setDesignReferences((current) => { const next = { ...current }; if (image) next[id] = image; else delete next[id]; return next; })} onModeChange={setReferenceMode} onOpacityChange={setReferenceOpacity} onAdjustingOverlayChange={setAdjustingOverlay} onResetOverlay={() => setOverlayPlacements((current) => { const next = { ...current }; delete next[referenceViewportId]; return next; })} onWidthChange={setDesignPanelWidth} onClose={() => setShowDesignReference(false)} onMarkFeedback={(image) => { setAnnotationImage(image); setAnnotationOpen(true); }} />}
         <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <div ref={boardRef} data-capture-board className={`flex min-h-0 flex-1 ${narrowLayout ? "flex-col" : ""}`}>
             {slots.map((slot, index) => (
               <div key={slot.id} className="relative flex h-full min-w-0 flex-col overflow-visible" style={{ width: narrowLayout ? "100%" : `${widths[index] ?? 100 / slots.length}%`, height: narrowLayout ? `${100 / slots.length}%` : undefined, flexShrink: 0 }}>
-                <PreviewCard slot={slot} device={findDevice(slot.deviceId)} display={display} removable={slots.length > 1} onCapture={() => void takeScreenshot()} />
+                <PreviewCard slot={slot} device={findDevice(slot.deviceId)} display={display} removable={slots.length > 1} onCapture={() => void takeScreenshot()} designOverlay={showDesignReference && referenceMode === "overlay" && referenceViewportId === slot.id && designReferences[slot.id] ? { image: designReferences[slot.id], opacity: referenceOpacity, adjusting: adjustingOverlay, placement: overlayPlacements[slot.id], onPlacementChange: (placement) => setOverlayPlacements((current) => ({ ...current, [slot.id]: placement })) } : undefined} />
                 {index < slots.length - 1 && !narrowLayout && <div role="separator" aria-label="Resize adjacent viewports" aria-orientation="vertical" className="group absolute right-0 top-0 z-20 flex h-full w-4 translate-x-1/2 cursor-col-resize items-center justify-center" onMouseDown={(event) => startResize(event, index)}><div className={`absolute inset-y-0 left-1/2 w-px transition-colors group-hover:bg-[#0f9f8f] ${dark ? "bg-white/20" : "bg-slate-300"}`} /><span className={`relative grid h-9 w-4 place-items-center rounded-full border shadow-sm transition-colors group-hover:border-[#0f9f8f] group-hover:bg-[#0f9f8f] group-hover:text-white ${dark ? "border-white/20 bg-[#1a1e27] text-slate-400" : "border-slate-300 bg-white text-slate-500"}`}><GripVertical size={12} /></span></div>}
               </div>
             ))}

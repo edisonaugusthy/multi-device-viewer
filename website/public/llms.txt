@@ -1,0 +1,36 @@
+# Mobile View & Responsive Tester
+
+> Mobile View & Responsive Tester is a free, local-first, open-source Chrome extension for reviewing responsive websites across multiple device viewports in one workspace.
+
+The extension is a responsive development and quality-assurance aid. It previews the page already open in Chrome across phones, tablets, foldables, laptops, desktops, and custom viewport sizes. It is not a replacement for final testing on physical devices and target browsers.
+
+Core capabilities include up to four resizable previews, device rotation and zoom, saved device sets, synchronized scrolling and navigation, design comparison, annotated captures, source-tab recording, physical-device URL handoff, and locally generated coding-agent fix prompts.
+
+Privacy and licensing facts:
+
+- The extension is open source under the MIT license.
+- It has no extension account system, advertising, telemetry, or remote application backend.
+- URLs, workspace settings, saved sets, captures, recordings, design references, and fix-prompt content remain on the user's device unless the user explicitly copies, downloads, opens, or shares them.
+- The fix-prompt feature formats text locally and does not send code or prompts to an AI provider.
+- Some pages cannot be embedded because of browser restrictions, authentication flows, or frame-protection policies.
+- Localhost pages are supported. Opening a development page on a physical phone requires a LAN-reachable address rather than localhost.
+
+## Product
+
+- [Official website](https://edisonaugusthy.github.io/multi-device-viewer/): Product overview, main features, privacy commitments, frequently asked questions, and installation link.
+- [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb): Official Chrome extension listing.
+- [Source repository](https://github.com/edisonaugusthy/multi-device-viewer): Public source code, implementation history, and contribution surface.
+
+## Documentation
+
+- [Responsive testing guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-testing.html): Practical checklist covering viewport selection, layout integrity, interaction, accessibility, evidence, and physical-device validation.
+- [Privacy policy](https://edisonaugusthy.github.io/multi-device-viewer/privacy.html): Plain-language description of extension data handling, Chrome permissions, local storage, and third-party behavior.
+- [Changelog](https://edisonaugusthy.github.io/multi-device-viewer/changelog.html): Current release notes and product improvements.
+
+## Support
+
+- [Public issue tracker](https://github.com/edisonaugusthy/multi-device-viewer/issues): Bug reports, feature requests, privacy questions, and corrections.
+
+## Optional
+
+- [MIT license](https://github.com/edisonaugusthy/multi-device-viewer/blob/main/LICENSE): Terms for using, modifying, and distributing the source code.

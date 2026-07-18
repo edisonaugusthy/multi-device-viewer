@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { defaultDeviceIds } from "../domain/device/device-catalog";
 import { useDeviceCatalog } from "./DeviceCatalogProvider";
 import { supportsOrientation } from "../domain/device/device-service";
@@ -42,6 +42,7 @@ const SimulatorContext = createContext<SimulatorContextValue | null>(null);
 
 const defaultDisplay: DisplaySettings = {
   scrollSync: false,
+  navigationSync: false,
   darkMode: typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)").matches,
 };
 
@@ -84,6 +85,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   const [useCount, setUseCount] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const [sourceTabId, setSourceTabId] = useState<number | null>(() => launchTabIdFromSearch());
+  const displayUpdatedBeforeHydrationRef = useRef(false);
 
   // Load + increment use count on mount
   useEffect(() => {
@@ -107,10 +109,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
           : restoredSlots;
         setSlots(nextSlots);
         setActiveSlotId(session.activeSlotId || nextSlots[0]?.id || slots[0].id);
-        setDisplay({
-          ...startupDisplay,
-          scrollSync: session.display?.scrollSync ?? startupDisplay.scrollSync,
-        });
+        setDisplay((current) => displayUpdatedBeforeHydrationRef.current
+          ? current
+          : { ...startupDisplay, ...session.display });
       }
       if (launchTabId !== null) {
         setSourceTabId(launchTabId);
@@ -278,12 +279,13 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, [slots]);
 
   const updateDisplay = useCallback((nextDisplay: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => {
+    if (!hydrated) displayUpdatedBeforeHydrationRef.current = true;
     setDisplay((current) =>
       typeof nextDisplay === "function"
         ? (nextDisplay as (value: DisplaySettings) => DisplaySettings)(current)
         : nextDisplay,
     );
-  }, []);
+  }, [hydrated]);
 
   // Listen for LOAD_URL messages sent by the background service worker when the
   // extension icon is clicked while a simulator tab is already open.

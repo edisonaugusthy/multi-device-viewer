@@ -30,6 +30,13 @@ Open the current website or local development server in up to four live device v
 - The active viewport initializes linked scrolling; refreshing another preview does not reset the group.
 - Matching nested scroll containers are synchronized when the responsive layouts share the same structure.
 - Supported clicks and form interactions are mirrored while linked scrolling is active.
+- Optional navigation sync keeps matching previews on the same page.
+
+### Responsive behavior and handoff
+
+- Synchronize scrolling, supported interactions, and navigation across matching previews.
+- Generate a local QR code for physical-device handoff.
+- Prepare a structured AI fix prompt with reproduction steps, constraints, device context, and verification requirements.
 
 ### Design comparison
 
@@ -43,7 +50,7 @@ Open the current website or local development server in up to four live device v
 
 ### Capture and communication
 
-- Capture the active viewport or the complete multi-device workspace.
+- Capture the active viewport or complete multi-device workspace.
 - Annotate with pen, rectangle, arrow, text, and crop tools.
 - Copy the result to the clipboard or download it locally.
 - Record the source tab when a short video explains the behavior better than a still image.
@@ -90,7 +97,9 @@ npm run compile
 npm test
 npm run build
 npm run zip
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.1.5-chrome.zip
+npm run test:e2e
+npm run build:site
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.0-chrome.zip
 ```
 
 The production extension and zip are written to `.output/`.

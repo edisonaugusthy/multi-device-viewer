@@ -8,10 +8,13 @@ import {
   Menu,
   Moon,
   PanelLeftClose,
+  PanelLeftOpen,
   PanelsTopLeft,
   Plus,
   RefreshCw,
   RotateCcw,
+  Route,
+  QrCode,
   ScanSearch,
   Settings2,
   Sun,
@@ -59,6 +62,7 @@ import { PresetsManager } from "./PresetsManager";
 import { PreviewCard } from "./PreviewCard";
 import { ReviewIssueModal } from "./ReviewIssueModal";
 import { ReleaseNotesModal } from "./ReleaseNotesModal";
+import { DeviceHandoffModal } from "./DeviceHandoffModal";
 
 const QUICK_DEVICE_SETS = [
   {
@@ -98,6 +102,7 @@ export function SimulatorApp() {
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
   const [capturing, setCapturing] = useState(false);
   const [recording, setRecording] = useState(false);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth > 760,
   );
@@ -108,6 +113,7 @@ export function SimulatorApp() {
   const [showSavedSets, setShowSavedSets] = useState(false);
   const [showReviewIssue, setShowReviewIssue] = useState(false);
   const [showDesignReference, setShowDesignReference] = useState(false);
+  const [showDeviceHandoff, setShowDeviceHandoff] = useState(false);
   const [referenceViewportId, setReferenceViewportId] = useState(
     () => slots[0]?.id ?? "",
   );
@@ -165,6 +171,18 @@ export function SimulatorApp() {
         setWorkspaceHydrated(true);
       });
   }, []);
+
+  useEffect(() => {
+    if (!recording) {
+      setRecordingSeconds(0);
+      return;
+    }
+    const startedAt = Date.now();
+    const update = () => setRecordingSeconds(Math.floor((Date.now() - startedAt) / 1000));
+    update();
+    const timer = window.setInterval(update, 1000);
+    return () => window.clearInterval(timer);
+  }, [recording]);
 
   useEffect(() => {
     if (!workspaceHydrated) return;
@@ -376,7 +394,8 @@ export function SimulatorApp() {
     <div
       className={`flex h-screen flex-col overflow-hidden font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}
     >
-      <header
+      {sidebarOpen && <header
+        data-main-toolbar
         className={`z-20 flex h-10 shrink-0 items-center gap-1.5 border-b px-2 ${dark ? "border-white/[0.08] bg-[#11141a]" : "border-slate-200 bg-white"}`}
       >
         <button
@@ -452,6 +471,16 @@ export function SimulatorApp() {
           <Link2 size={12} />
           <span>Scroll sync</span>
         </button>
+        <button
+          type="button"
+          title={display.navigationSync ? "Turn off navigation sync" : "Turn on navigation sync"}
+          aria-pressed={display.navigationSync}
+          onClick={() => updateDisplay((current) => ({ ...current, navigationSync: !current.navigationSync }))}
+          className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold lg:flex ${display.navigationSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
+        >
+          <Route size={12} />
+          <span>Navigation sync</span>
+        </button>
         <ToolbarButton
           label="Capture active viewport"
           dark={dark}
@@ -477,7 +506,7 @@ export function SimulatorApp() {
         <ToolbarButton label="Close viewer" dark={dark} onClick={closeViewer}>
           <X size={16} />
         </ToolbarButton>
-      </header>
+      </header>}
 
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
         {sidebarOpen && narrowLayout && (
@@ -607,6 +636,7 @@ export function SimulatorApp() {
                     active={!!focusedSlotId}
                     label={focusedSlotId ? "Show all viewports" : "Focus active viewport"}
                   />
+                  <ActionRow dark={dark} icon={<QrCode size={14} />} onClick={() => setShowDeviceHandoff(true)} label="Open on physical device" />
                   <ActionRow
                     dark={dark}
                     icon={<ScanSearch size={14} />}
@@ -641,8 +671,14 @@ export function SimulatorApp() {
                     onClick={() => void toggleRecording()}
                     disabled={!sourceTabId}
                     active={recording}
-                    label={recording ? "Stop recording" : "Record source tab"}
+                    label={recording ? `Recording ${formatDuration(recordingSeconds)} — stop` : "Record source tab"}
                   />
+                  {recording && (
+                    <div role="status" aria-live="polite" className="flex h-7 items-center gap-2 rounded-lg bg-red-500/10 px-2 text-[10px] font-extrabold text-red-500">
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
+                      REC · {formatDuration(recordingSeconds)} · source tab
+                    </div>
+                  )}
                 </SidebarSection>
               </div>
               <div
@@ -666,14 +702,15 @@ export function SimulatorApp() {
           )}
         </aside>
 
-        {!sidebarOpen && !narrowLayout && (
+        {!sidebarOpen && (
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
             aria-label="Open workspace setup"
-            className={`absolute left-2 top-2 z-20 grid h-8 w-8 place-items-center rounded-lg border shadow-sm ${dark ? "border-white/10 bg-[#171a21] text-slate-400 hover:text-white" : "border-slate-200 bg-white text-slate-500 hover:text-slate-900"}`}
+            title="Show workspace controls"
+            className={`absolute left-2 top-2 z-40 grid h-8 w-8 place-items-center rounded-lg border shadow-sm backdrop-blur transition ${dark ? "border-white/10 bg-[#171a21]/90 text-slate-400 hover:border-white/20 hover:text-white" : "border-slate-200 bg-white/90 text-slate-500 hover:border-slate-300 hover:text-slate-900"}`}
           >
-            <Settings2 size={14} />
+            <PanelLeftOpen size={15} />
           </button>
         )}
 
@@ -742,6 +779,7 @@ export function SimulatorApp() {
                   slot={slot}
                   device={findDevice(slot.deviceId)}
                   display={display}
+                  showToolbar={sidebarOpen}
                   removable={slots.length > 1}
                   onCapture={() => void takeScopedScreenshot("active")}
                   focused={focusedSlotId === slot.id}
@@ -817,6 +855,7 @@ export function SimulatorApp() {
         />
       )}
       {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
+      {showDeviceHandoff && <DeviceHandoffModal dark={dark} url={slots.find((slot) => slot.id === activeSlotId)?.url ?? slots[0]?.url ?? ""} onClose={() => setShowDeviceHandoff(false)} />}
       {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
     </div>
   );
@@ -937,4 +976,10 @@ async function cropScreenshotToElement(dataUrl: string, element: HTMLElement): P
     sourceHeight,
   );
   return canvas.toDataURL("image/png");
+}
+
+function formatDuration(seconds: number) {
+  const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const remainder = Math.floor(seconds % 60).toString().padStart(2, "0");
+  return `${minutes}:${remainder}`;
 }

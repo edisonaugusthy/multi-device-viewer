@@ -1,0 +1,6 @@
+{
+  "extensionName": { "message": "Mobile View & Responsive Tester" },
+  "extensionShortName": { "message": "Responsive Tester" },
+  "extensionDescription": { "message": "Test websites across phone, tablet, laptop, and desktop viewports with synchronized previews, design comparison, and captures." },
+  "actionTitle": { "message": "Open Mobile View & Responsive Tester" }
+}

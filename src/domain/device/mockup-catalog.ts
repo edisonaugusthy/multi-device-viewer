@@ -969,6 +969,54 @@ export const localMockupCatalog: LocalMockupAsset[] = [
       "bottom": 110,
       "left": 49
     }
+  },
+  {
+    "id": "google-pixel-10-2026",
+    "localPath": "/mockups/google-pixel-10-2026.png",
+    "file": "google-pixel-10-2026.png",
+    "bytes": 18649,
+    "width": 918,
+    "height": 1938
+  },
+  {
+    "id": "google-pixel-10-pro-2026",
+    "localPath": "/mockups/google-pixel-10-pro-2026.png",
+    "file": "google-pixel-10-pro-2026.png",
+    "bytes": 19738,
+    "width": 900,
+    "height": 1894
+  },
+  {
+    "id": "google-pixel-10-pro-fold-2026",
+    "localPath": "/mockups/google-pixel-10-pro-fold-2026.png",
+    "file": "google-pixel-10-pro-fold-2026.png",
+    "bytes": 38849,
+    "width": 940,
+    "height": 1902
+  },
+  {
+    "id": "samsung-galaxy-a17-2025",
+    "localPath": "/mockups/samsung-galaxy-a17-2025.png",
+    "file": "samsung-galaxy-a17-2025.png",
+    "bytes": 26123,
+    "width": 918,
+    "height": 1912
+  },
+  {
+    "id": "motorola-razr-70-ultra-2026",
+    "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
+    "file": "motorola-razr-70-ultra-2026.png",
+    "bytes": 46907,
+    "width": 936,
+    "height": 2130
+  },
+  {
+    "id": "infinix-hot-70-2026",
+    "localPath": "/mockups/infinix-hot-70-2026.png",
+    "file": "infinix-hot-70-2026.png",
+    "bytes": 26666,
+    "width": 796,
+    "height": 1680
   }
 ];
 
@@ -1944,6 +1992,102 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
       enableRotation: true,
     },
   },
+  "google-pixel-10-2026": {
+    portrait: {
+      left: 22, top: 23, width: 412, height: 924,
+      paths: {
+        portrait: "M353 0C385.585 0 412 26.4152 412 59L412 865C412 897.585 385.585 924 353 924L59 924C26.4152 924 0 897.585 0 865L0 59C0 26.4152 26.4152 0 59 0L353 0ZM206.055 17.9697C197.684 17.9697 190.898 24.7554 190.898 33.126C190.899 41.4963 197.684 48.2822 206.055 48.2822C214.425 48.282 221.211 41.4962 221.211 33.126C221.211 24.7556 214.425 17.97 206.055 17.9697Z",
+      },
+      enableRotation: true,
+    },
+    landscape: {
+      left: 23, top: 22, width: 924, height: 412,
+      paths: {
+        landscape: "M0 59C0 26.415 26.4152 0 59 0L865 0C897.585 0 924 26.415 924 59L924 353C924 385.5848 897.585 412 865 412L59 412C26.4152 412 0 385.5848 0 353L0 59ZM17.9697 205.945C17.9697 214.316 24.7554 221.102 33.126 221.102C41.4963 221.101 48.2822 214.316 48.2822 205.945C48.282 197.575 41.4962 190.789 33.126 190.789C24.7556 190.789 17.97 197.575 17.9697 205.945Z",
+      },
+      enableRotation: true,
+    },
+  },
+  "google-pixel-10-pro-2026": {
+    portrait: {
+      left: 18, top: 17, width: 410, height: 912,
+      paths: {
+        portrait: "M356 0C385.823 0 410 24.1766 410 54L410 858C410 887.823 385.823 912 356 912L54 912C24.1766 912 0 887.823 0 858L0 54C0 24.1766 24.1766 0 54 0L356 0ZM205.25 17.4004C197.656 17.4004 191.5 23.5565 191.5 31.1504C191.5 38.7441 197.656 44.9004 205.25 44.9004C212.844 44.9004 219 38.7441 219 31.1504C219 23.5565 212.844 17.4004 205.25 17.4004Z",
+      },
+      enableRotation: true,
+    },
+    landscape: {
+      left: 17, top: 18, width: 912, height: 410,
+      paths: {
+        landscape: "M0 54C0 24.177 24.1766 0 54 0L858 0C887.823 0 912 24.177 912 54L912 356C912 385.8234 887.823 410 858 410L54 410C24.1766 410 0 385.8234 0 356L0 54ZM17.4004 204.75C17.4004 212.344 23.5565 218.5 31.1504 218.5C38.7441 218.5 44.9004 212.344 44.9004 204.75C44.9004 197.156 38.7441 191 31.1504 191C23.5565 191 17.4004 197.156 17.4004 204.75Z",
+      },
+      enableRotation: true,
+    },
+  },
+  "google-pixel-10-pro-fold-2026": {
+    portrait: {
+      left: 31, top: 25, width: 412, height: 901,
+      paths: {
+        portrait: "M355 0C386.48 0 412 25.5198 412 57L412 844C412 875.48 386.48 901 355 901L57 901C25.5198 901 0 875.48 0 844L0 57C0 25.5198 25.5198 0 57 0L355 0ZM205.101 17.2002C198.197 17.2002 192.601 22.7966 192.601 29.7002C192.601 36.6038 198.197 42.2002 205.101 42.2002C212.004 42.1999 217.601 36.6036 217.601 29.7002C217.601 22.7968 212.004 17.2005 205.101 17.2002Z",
+      },
+      enableRotation: true,
+    },
+    landscape: {
+      left: 25, top: 31, width: 901, height: 412,
+      paths: {
+        landscape: "M0 57C0 25.52 25.5198 0 57 0L844 0C875.48 0 901 25.52 901 57L901 355C901 386.4802 875.48 412 844 412L57 412C25.5198 412 0 386.4802 0 355L0 57ZM17.2002 206.899C17.2002 213.803 22.7966 219.399 29.7002 219.399C36.6038 219.399 42.2002 213.803 42.2002 206.899C42.1999 199.996 36.6036 194.399 29.7002 194.399C22.7968 194.399 17.2005 199.996 17.2002 206.899Z",
+      },
+      enableRotation: true,
+    },
+  },
+  "samsung-galaxy-a17-2025": {
+    portrait: {
+      left: 21, top: 22, width: 412, height: 892,
+      paths: {
+        portrait: "M371 0C393.644 0 412 18.3563 412 41V851C412 873.644 393.644 892 371 892H41C18.3563 892 0 873.644 0 851V41C0 18.3563 18.3563 7.24793e-07 41 0H172.7C174.512 9.41244e-05 178.686 1.39792 181.466 6.03418C182.904 8.43358 183.324 11.7004 184.214 16.0898C185.068 20.074 186.785 24.1112 189.716 27.6553C193.817 32.6137 200.043 35.7002 205.7 35.7002C211.357 35.7001 217.584 32.6137 221.685 27.6553C224.615 24.1112 226.332 20.074 227.187 16.0898C228.077 11.7003 228.496 8.43359 229.935 6.03418C232.715 1.39776 236.888 0 238.7 0H371Z",
+      },
+      enableRotation: true,
+    },
+    landscape: {
+      left: 22, top: 21, width: 892, height: 412,
+      paths: {
+        landscape: "M0 41C0 18.356 18.3563 0 41 0L851 0C873.644 0 892 18.356 892 41L892 371C892 393.6437 873.644 412 851 412L41 412C18.3563 412 0 393.6437 0 371L0 239.3C0.0001 237.488 1.3979 233.314 6.0342 230.534C8.4336 229.096 11.7004 228.676 16.0898 227.786C20.074 226.932 24.1112 225.215 27.6553 222.284C32.6137 218.183 35.7002 211.957 35.7002 206.3C35.7001 200.643 32.6137 194.416 27.6553 190.315C24.1112 187.385 20.074 185.668 16.0898 184.813C11.7003 183.923 8.4336 183.504 6.0342 182.065C1.3978 179.285 0 175.112 0 173.3L0 41Z",
+      },
+      enableRotation: true,
+    },
+  },
+  "motorola-razr-70-ultra-2026": {
+    portrait: {
+      left: 28, top: 28, width: 412, height: 1008,
+      paths: {
+        portrait: "M375.108 0C395.483 0.0002 412 16.5169 412 36.8916L412 971.107C412 991.48 395.483 1008 375.108 1008L36.8926 1008C16.5176 1008 0 991.48 0 971.107L0 36.8916C0.0002 16.5168 16.5177 0 36.8926 0L375.108 0ZM206 8.25C198.406 8.2501 192.25 14.4062 192.25 22C192.25 29.5938 198.406 35.7499 206 35.75C213.594 35.75 219.75 29.5938 219.75 22C219.75 14.4061 213.594 8.25 206 8.25Z",
+      },
+      enableRotation: true,
+    },
+    landscape: {
+      left: 28, top: 28, width: 1008, height: 412,
+      paths: {
+        landscape: "M0 36.892C0.0002 16.517 16.5169 0 36.8916 0L971.107 0C991.48 0 1008 16.517 1008 36.892L1008 375.1074C1008 395.4824 991.48 412 971.107 412L36.8916 412C16.5168 411.9998 0 395.4823 0 375.1074L0 36.892ZM8.25 206C8.2501 213.594 14.4062 219.75 22 219.75C29.5938 219.75 35.7499 213.594 35.75 206C35.75 198.406 29.5938 192.25 22 192.25C14.4061 192.25 8.25 198.406 8.25 206Z",
+      },
+      enableRotation: true,
+    },
+  },
+  "infinix-hot-70-2026": {
+    portrait: {
+      left: 18, top: 22, width: 360, height: 788,
+      paths: {
+        portrait: "M318.898 0C341.598 0 360 18.4018 360 41.1016L360 746.898C360 769.598 341.598 788 318.898 788L41.1016 788C18.4018 788 0 769.598 0 746.898L0 41.1016C0 18.4018 18.4018 0 41.1016 0L318.898 0ZM180 10C173.925 10 169 14.9249 169 21C169 27.0751 173.925 32 180 32C186.075 32 191 27.0751 191 21C191 14.9249 186.075 10 180 10Z",
+      },
+      enableRotation: true,
+    },
+    landscape: {
+      left: 22, top: 18, width: 788, height: 360,
+      paths: {
+        landscape: "M0 41.102C0 18.402 18.4018 0 41.1016 0L746.898 0C769.598 0 788 18.402 788 41.102L788 318.8984C788 341.5982 769.598 360 746.898 360L41.1016 360C18.4018 360 0 341.5982 0 318.8984L0 41.102ZM10 180C10 186.075 14.9249 191 21 191C27.0751 191 32 186.075 32 180C32 173.925 27.0751 169 21 169C14.9249 169 10 173.925 10 180Z",
+      },
+      enableRotation: true,
+    },
+  },
   "sonoff-nspanel-pro": {
     portrait: {
       left: 42, top: 45, width: 480, height: 480,
@@ -2089,6 +2233,12 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "samsung-galaxy-s24-2024": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 35 },
   "samsung-galaxy-s24-ultra-2024": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, isPro: true, safeAreaInsetTop: 34 },
   "samsung-galaxy-s26-ultra-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 4, isPro: true, safeAreaInsetTop: 42 },
+  "google-pixel-10-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
+  "google-pixel-10-pro-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3.125, isPro: true, safeAreaInsetTop: 36 },
+  "google-pixel-10-pro-fold-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 36 },
+  "samsung-galaxy-a17-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
+  "motorola-razr-70-ultra-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "infinix-hot-70-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, safeAreaInsetTop: 36 },
   "apple-imac-24-inch-2021": { osName: "macOS", osVersion: "15.3", notch: false, devicePixelRatio: 2, isPro: true },
   "samsung-smart-tv": { osName: "Android", osVersion: "12.0", notch: false, devicePixelRatio: 1, isPro: true, safeAreaInsetTop: 28 },
   "self-service-kiosk": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 1, isPro: true, safeAreaInsetTop: 28 },

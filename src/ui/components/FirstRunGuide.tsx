@@ -16,8 +16,8 @@ export function FirstRunGuide({ dark, onClose }: { dark: boolean; onClose: () =>
 
         <ol className="mt-5 space-y-3">
           <GuideStep number="1" title="Choose your everyday viewports" text="Start with a quick set, favorite devices you use often, or save your own combination." dark={dark} />
-          <GuideStep number="2" title="Keep building beside it" text="Save your code and refresh the previews to see the same change across every selected screen." dark={dark} />
-          <GuideStep number="3" title="Capture what needs discussion" text="Capture one viewport or the full workspace, mark the visual, and copy or download it for sharing." dark={dark} />
+          <GuideStep number="2" title="Check responsive behavior" text="Link scrolling and navigation across matching pages, then verify layout and interactions at every selected viewport." dark={dark} />
+          <GuideStep number="3" title="Share actionable evidence" text="Annotate a capture, record the source tab, prepare an AI fix prompt, or open the page on a physical phone." dark={dark} />
         </ol>
 
         <div className={`mt-5 flex gap-3 rounded-xl p-3 ${dark ? "bg-white/[0.04]" : "bg-slate-50"}`}>

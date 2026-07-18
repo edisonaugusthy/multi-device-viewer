@@ -10,6 +10,7 @@ export interface ResponsiveIssue {
   summary: string;
   expected: string;
   actual: string;
+  reproduction?: string;
   selector?: string;
   notes?: string;
   devices: ReviewDevice[];
@@ -26,7 +27,7 @@ export function buildAiReviewPrompt(issue: ResponsiveIssue): string {
     .join("\n");
 
   return [
-    "Fix this responsive UI issue.",
+    "Fix this responsive UI issue in the existing codebase.",
     "",
     `Page: ${issue.pageUrl || "Current page"}`,
     `Issue: ${issue.summary.trim() || "Responsive layout issue"}`,
@@ -37,11 +38,29 @@ export function buildAiReviewPrompt(issue: ResponsiveIssue): string {
     "",
     "Actual behavior:",
     issue.actual.trim() || "The layout breaks or differs from the expected result.",
+    ...optionalSection("Reproduction steps", issue.reproduction),
     "",
     "Affected viewports:",
     devices || "- Reproduce across the active responsive previews.",
-    ...optionalLine("Additional context", issue.notes),
+    ...optionalSection("Constraints and context", issue.notes),
     "",
-    "Please identify the root cause, make the smallest maintainable fix, preserve behavior at unaffected breakpoints, and describe how you verified the result.",
+    "Implementation requirements:",
+    "1. Inspect the existing implementation and styling conventions before editing.",
+    "2. Identify and fix the root cause, not only the visible symptom.",
+    "3. Make the smallest maintainable change and avoid unrelated refactors.",
+    "4. Reuse existing components, tokens, and responsive patterns.",
+    "5. Preserve behavior at unaffected viewports and add or update focused tests when practical.",
+    "",
+    "Verification:",
+    "- Reproduce the original failure at every affected viewport listed above.",
+    "- Verify the expected behavior at those viewports and at adjacent breakpoints.",
+    "- Run the relevant type, unit, and browser checks available in the repository.",
+    "",
+    "In your final response, summarize the root cause, list the files changed, and report the exact verification performed. If essential information is unavailable after inspecting the codebase, state the blocker instead of guessing.",
   ].join("\n");
+}
+
+function optionalSection(label: string, value?: string): string[] {
+  const trimmed = value?.trim();
+  return trimmed ? ["", `${label}:`, trimmed] : [];
 }

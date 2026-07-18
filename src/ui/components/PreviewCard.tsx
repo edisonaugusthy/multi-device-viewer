@@ -66,6 +66,7 @@ interface PreviewCardProps {
   slot: PreviewSlot;
   device: Device;
   display: DisplaySettings;
+  showToolbar?: boolean;
   removable: boolean;
   onCapture: () => void;
   focused: boolean;
@@ -87,6 +88,7 @@ export function PreviewCard({
   slot,
   device,
   display,
+  showToolbar = true,
   removable,
   onCapture,
   focused,
@@ -100,6 +102,7 @@ export function PreviewCard({
   const bridgeStatusTimer = useRef<number | undefined>(undefined);
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
   const previousScrollSyncRef = useRef(display.scrollSync);
+  const previousNavigationUrlRef = useRef(slot.url);
   const [containerSize, setContainerSize] = useState<Size>({
     width: 0,
     height: 0,
@@ -113,6 +116,7 @@ export function PreviewCard({
     rotateSlot,
     zoomSlot,
     setSlotDevice,
+    setSlotUrl,
     reloadSlot,
     moveSlot,
   } = useSimulator();
@@ -276,6 +280,18 @@ export function PreviewCard({
       if (data.type === "MDV_PREVIEW_READY") {
         setBridgeStatus("ready");
         setBlocked(false);
+        const nextUrl = typeof data.url === "string" ? data.url : "";
+        if (
+          display.navigationSync &&
+          nextUrl &&
+          nextUrl !== slot.url &&
+          nextUrl !== previousNavigationUrlRef.current
+        ) {
+          previousNavigationUrlRef.current = nextUrl;
+          window.dispatchEvent(new CustomEvent("MDV_NAVIGATION_EVENT", {
+            detail: { slotId: slot.id, url: nextUrl },
+          }));
+        }
         return;
       }
 
@@ -297,13 +313,14 @@ export function PreviewCard({
       if (data.type === "MDV_INTERACTION_EVENT") {
         if (!display.scrollSync) return;
         broadcastInteractionSync(data as InteractionSyncPayload);
+        return;
       }
 
     };
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [display.scrollSync, slot.id]);
+  }, [display.navigationSync, display.scrollSync, slot.id, slot.url]);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -362,6 +379,18 @@ export function PreviewCard({
     previousScrollSyncRef.current = display.scrollSync;
   }, [display.scrollSync, slot.id]);
 
+  useEffect(() => {
+    if (!display.navigationSync) return;
+    const onNavigation = (event: Event) => {
+      const detail = (event as CustomEvent<{ slotId: string; url: string }>).detail;
+      if (!detail || detail.slotId === slot.id || !detail.url || detail.url === slot.url) return;
+      previousNavigationUrlRef.current = detail.url;
+      setSlotUrl(slot.id, detail.url);
+    };
+    window.addEventListener("MDV_NAVIGATION_EVENT", onNavigation);
+    return () => window.removeEventListener("MDV_NAVIGATION_EVENT", onNavigation);
+  }, [display.navigationSync, setSlotUrl, slot.id, slot.url]);
+
 
   return (
     <section
@@ -372,7 +401,8 @@ export function PreviewCard({
       onFocus={() => setActiveSlot(slot.id)}
     >
       {/* ── Per-card header ── */}
-      <div
+      {showToolbar && <div
+        data-device-toolbar
         className={`flex h-9 shrink-0 flex-nowrap items-center gap-0.5 border-b px-1 transition-colors ${
           display.darkMode
             ? "border-white/10 bg-[#151922]"
@@ -413,7 +443,7 @@ export function PreviewCard({
         <CardBtn dark={display.darkMode} label="Zoom out" onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
         <CardBtn dark={display.darkMode} label="Zoom in" onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
         {removable && <CardBtn dark={display.darkMode} label="Remove device" onClick={() => removeSlot(slot.id)}><X size={13} /></CardBtn>}
-      </div>
+      </div>}
 
       {/* ── Canvas ── */}
       <div
@@ -457,6 +487,7 @@ export function PreviewCard({
                 {blocked ? (
                   <BlockedView
                     url={slot.url}
+                    dark={display.darkMode}
                     onCapture={onCapture}
                     onReload={() => reloadSlot(slot.id)}
                   />
@@ -469,11 +500,7 @@ export function PreviewCard({
                     className={`block h-full w-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
                     style={{
                       width: "100%",
-                      backgroundColor: display.darkMode ? "#0f172a" : "#ffffff",
-                      colorScheme: display.darkMode ? "dark" : "light",
-                      filter: display.darkMode
-                        ? "invert(1) hue-rotate(180deg)"
-                        : undefined,
+                      backgroundColor: "#ffffff",
                     }}
                     sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
                     onError={() => setBlocked(true)}
@@ -798,44 +825,46 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
 });
 
 function BlockedView({
+  dark,
   onCapture,
   onReload,
   url,
 }: {
+  dark: boolean;
   onCapture: () => void;
   onReload: () => void;
   url: string;
 }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 bg-slate-50 p-6 text-center">
-      <p className="text-sm font-black text-slate-900">
+    <div className={`flex h-full flex-col items-center justify-center gap-3 p-6 text-center transition-colors ${dark ? "bg-[#0f172a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
+      <p className="text-sm font-black">
         This site blocks iframe preview.
       </p>
-      <p className="max-w-[250px] break-all text-[11px] font-semibold leading-5 text-slate-500">
+      <p className={`max-w-[250px] break-all text-[11px] font-semibold leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
         {url}
       </p>
-      <p className="max-w-[260px] text-xs leading-5 text-slate-500">
+      <p className={`max-w-[260px] text-xs leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
         The page likely keeps frame protection, uses a restricted browser URL, or
         prevented the preview bridge from loading.
       </p>
       <div className="grid w-full max-w-[240px] gap-2">
         <button
           type="button"
-          className="flex items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white"
+          className={`flex items-center justify-center gap-2 rounded-md px-3 py-1.5 text-xs font-bold text-white ${dark ? "bg-[#0f9f8f]" : "bg-slate-900"}`}
           onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
         >
           <ExternalLink size={13} /> Open in tab
         </button>
         <button
           type="button"
-          className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
+          className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold ${dark ? "border-white/10 bg-white/[0.06] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
           onClick={onReload}
         >
           <RefreshCw size={13} /> Reload preview
         </button>
         <button
           type="button"
-          className="flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
+          className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold ${dark ? "border-white/10 bg-white/[0.06] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
           onClick={onCapture}
         >
           Capture current tab instead

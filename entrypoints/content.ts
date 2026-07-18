@@ -87,6 +87,18 @@ function setupPreviewBridge() {
     }, "*");
   };
 
+  const announceNavigation = () => requestAnimationFrame(announceReady);
+  for (const method of ["pushState", "replaceState"] as const) {
+    const original = history[method].bind(history);
+    history[method] = ((data: unknown, unused: string, url?: string | URL | null) => {
+      const result = original(data, unused, url);
+      announceNavigation();
+      return result;
+    }) as History[typeof method];
+  }
+  window.addEventListener("popstate", announceNavigation);
+  window.addEventListener("hashchange", announceNavigation);
+
   function applyPreviewViewportStyle() {
     let style = document.getElementById("mdv-preview-viewport-style") as HTMLStyleElement | null;
     if (!style) {

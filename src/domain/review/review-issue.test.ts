@@ -8,6 +8,7 @@ describe("buildAiReviewPrompt", () => {
       summary: "Navigation overlaps the heading",
       expected: "Navigation collapses below the tablet breakpoint.",
       actual: "Navigation links wrap over the heading.",
+      reproduction: "Open the dashboard at 390px and scroll to the hero.",
       selector: "header nav",
       notes: "Keep the desktop layout unchanged.",
       devices: [
@@ -16,12 +17,15 @@ describe("buildAiReviewPrompt", () => {
       ],
     });
 
-    expect(prompt).toContain("Fix this responsive UI issue.");
+    expect(prompt).toContain("Fix this responsive UI issue in the existing codebase.");
     expect(prompt).toContain("Page: http://localhost:3000/dashboard");
     expect(prompt).toContain("Selector: header nav");
     expect(prompt).toContain("iPhone 17 Pro: 402x874 CSS px (portrait)");
     expect(prompt).toContain("iPad Air: 1180x820 CSS px (landscape)");
-    expect(prompt).toContain("make the smallest maintainable fix");
+    expect(prompt).toContain("smallest maintainable change");
+    expect(prompt).toContain("Reproduction steps:");
+    expect(prompt).toContain("Verify the expected behavior");
+    expect(prompt).toContain("state the blocker instead of guessing");
   });
 
   it("uses useful fallbacks without inventing private page data", () => {

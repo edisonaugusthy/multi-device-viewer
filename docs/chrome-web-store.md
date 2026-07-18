@@ -14,11 +14,11 @@ Mobile View & Responsive Tester
 
 ### Short description (132 chars max)
 
-Preview frontend changes across phones, tablets, laptops, and desktops. Switch devices and share annotated captures.
+Test websites across phones, tablets, laptops, and desktops with synchronized previews, design comparison, and captures.
 
 ### Detailed description
 
-Mobile View & Responsive Tester is a persistent responsive-development companion. Keep it beside your editor to see frontend changes across phones, tablets, laptops, and desktop screens, then capture anything that needs discussion.
+Mobile View & Responsive Tester is a local-first responsive-development and QA workspace. Keep it beside your editor to see frontend changes across phones, tablets, laptops, and desktop screens, then turn layout problems into exportable findings and visual evidence.
 
 Click the extension icon or use the Chrome context menu to open the current website inside realistic device frames. The responsive device viewer appears over the current tab, so you can check mobile view and desktop breakpoints in one workspace and return to the page when you close it.
 
@@ -45,6 +45,11 @@ Click the extension icon or use the Chrome context menu to open the current webs
 - Annotate with pen, rectangle, arrow, text, and crop tools.
 - Copy the result to the clipboard or download it locally.
 
+**Responsive behavior and physical-device handoff**
+- Synchronize scrolling, supported interactions, and navigation across matching previews.
+- Save reusable device sets for repeatable checks.
+- Open the current URL on a physical phone using a locally generated QR code.
+
 **Generate a responsive fix prompt**
 - Describe the expected and actual behavior once.
 - Automatically include the optional selector, device names, viewport sizes, orientation, and page URL.
@@ -68,9 +73,9 @@ Click the extension icon or use the Chrome context menu to open the current webs
 
 Use current UI captures at 1280×800 or 640×400. Keep text overlays short and readable.
 
-1. **Compare responsive mobile, tablet, and laptop views side by side** — show the Mobile + Tablet + Laptop device set.
-2. **Switch device presets quickly from the compact header** — show one-click preset controls and the visible device toolbar.
-3. **Pick exact devices from the improved selector** — show the searchable device selector and multi-device workspace.
+1. **Compare responsive views side by side** — `screenshot-01-overview.jpg`.
+2. **Test the workspace in light and dark themes** — `screenshot-02-responsive-workspace.jpg`.
+3. **Open the current page on a physical device** — `screenshot-03-physical-device.jpg`.
 
 Do not reuse screenshots from the previous sidebar or URL-bar design; outdated images can reduce listing clarity and conversion.
 

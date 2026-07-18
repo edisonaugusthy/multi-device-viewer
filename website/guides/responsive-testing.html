@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      Responsive Website Testing Checklist — Mobile View &amp; Responsive Tester
+    </title>
+    <meta
+      name="description"
+      content="A practical responsive website testing checklist covering viewports, overflow, touch targets, accessibility, realistic content, and physical devices."
+    />
+    <link
+      rel="canonical"
+      href="https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-testing.html"
+    />
+    <meta name="theme-color" content="#f7f8f4" />
+    <link rel="icon" href="../icons/icon-48.png" type="image/png" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="module" src="../analytics.ts"></script>
+  </head>
+  <body class="content-page">
+    <header class="site-nav">
+      <a
+        class="brand"
+        href="../"
+        aria-label="Mobile View &amp; Responsive Tester home"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../#features">Features</a><a href="../#privacy">Privacy</a
+        ><a href="./responsive-testing.html">Guide</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer"
+          >GitHub</a
+        >
+      </nav>
+      <a
+        class="button button-small"
+        href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?authuser=0&amp;hl=en-GB"
+        >Add to Chrome <span>↗</span></a
+      >
+    </header>
+    <main class="content">
+      <p class="eyebrow">RESPONSIVE TESTING GUIDE</p>
+      <h1>A practical pre-release checklist.</h1>
+      <p class="lead">
+        Use representative viewports and real content. The goal is not to
+        collect screenshots—it is to find layout and interaction failures before
+        users do.
+      </p>
+      <h2>1. Cover the viewport range</h2>
+      <ul>
+        <li>Test a compact phone, a large phone, a tablet, and a laptop.</li>
+        <li>
+          Add the exact viewport dimensions from analytics or support reports.
+        </li>
+        <li>
+          Rotate devices where orientation changes navigation or content
+          hierarchy.
+        </li>
+      </ul>
+      <h2>2. Check layout integrity</h2>
+      <ul>
+        <li>
+          Look for horizontal page overflow, clipped controls, overlapping text,
+          and fixed overlays.
+        </li>
+        <li>
+          Verify long titles, translated strings, empty states, validation
+          errors, and populated tables.
+        </li>
+        <li>
+          Check adjacent widths around each breakpoint, not only the exact
+          preset.
+        </li>
+      </ul>
+      <h2>3. Check interaction and access</h2>
+      <ul>
+        <li>
+          Keep touch targets comfortably usable and controls keyboard
+          accessible.
+        </li>
+        <li>
+          Verify accessible names, image alternatives, heading order, focus
+          visibility, and intentional motion.
+        </li>
+        <li>
+          Test forms, menus, dialogs, sticky elements, and critical navigation
+          at every representative width.
+        </li>
+      </ul>
+      <h2>4. Compare and document</h2>
+      <ul>
+        <li>Overlay the approved design where visual fidelity matters.</li>
+        <li>
+          Capture the failure with enough surrounding context to make it
+          reproducible.
+        </li>
+        <li>
+          Include the affected viewport, expected result, actual result, and any
+          relevant constraints in the handoff.
+        </li>
+      </ul>
+      <h2>5. Finish on physical devices</h2>
+      <p>
+        Responsive emulation creates a fast development loop. Validate critical
+        journeys on physical devices and target browsers before release,
+        especially interactions involving keyboards, safe areas, scrolling, and
+        operating-system UI.
+      </p>
+      <div class="callout">
+        <strong>Testing localhost on a phone</strong>
+        <p>
+          Run your development server on the local network, open the LAN address
+          instead of localhost, and scan the physical-device handoff QR code
+          while both devices are connected to the same network.
+        </p>
+      </div>
+    </main>
+    <footer class="site-footer shell page-footer">
+      <a class="brand" href="../"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <p>
+        Private responsive testing for Chrome.<br />Open source under the MIT
+        license.
+      </p>
+      <div>
+        <a href="../privacy.html">Privacy</a
+        ><a href="../changelog.html">Changelog</a
+        ><a href="./responsive-testing.html">Guide</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer/issues"
+          >Issues</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

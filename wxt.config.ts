@@ -1,16 +1,16 @@
 import { defineConfig } from "wxt";
 import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath } from "node:url";
-import { PRODUCT_DESCRIPTION, PRODUCT_NAME, PRODUCT_SHORT_NAME } from "./src/app/product";
 
 export default defineConfig({
   manifestVersion: 3,
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    name: PRODUCT_NAME,
-    short_name: PRODUCT_SHORT_NAME,
-    description: PRODUCT_DESCRIPTION,
-    version: "0.1.5",
+    default_locale: "en",
+    name: "__MSG_extensionName__",
+    short_name: "__MSG_extensionShortName__",
+    description: "__MSG_extensionDescription__",
+    version: "0.2.0",
     permissions: ["contextMenus", "declarativeNetRequest", "downloads", "offscreen", "scripting", "storage", "tabCapture", "tabs"],
     declarative_net_request: {
       rule_resources: [
@@ -29,7 +29,7 @@ export default defineConfig({
       128: "/icons/icon-128.png"
     },
     action: {
-      default_title: `Open ${PRODUCT_NAME}`,
+      default_title: "__MSG_actionTitle__",
       default_icon: {
         16: "/icons/icon-16.png",
         32: "/icons/icon-32.png",

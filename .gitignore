@@ -2,5 +2,8 @@ node_modules/
 .output/
 .wxt/
 dist/
+dist-site/
+output/
+.playwright-cli/
 *.log
 .DS_Store

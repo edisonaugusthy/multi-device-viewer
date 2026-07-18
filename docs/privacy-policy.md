@@ -1,6 +1,6 @@
 # Mobile View & Responsive Tester — Privacy Policy
 
-Last updated: July 12, 2026
+Last updated: July 15, 2026
 
 ## Summary
 
@@ -20,6 +20,7 @@ When the user explicitly chooses a feature, the extension may locally process:
 - Design-reference images selected, pasted, or dropped by the user.
 - Annotation marks and locally entered prompt text.
 - Imported device-set JSON files.
+- QR handoff URLs and AI fix-prompt text entered by the user.
 
 ## Data stored on the device
 
@@ -32,6 +33,7 @@ Chrome local storage is used to preserve the working experience. Stored informat
 - Scroll-sync and theme preferences.
 - Design-reference images, overlay positions, opacity, and panel size.
 - Welcome and release-note state, local use count, and other dismissed notices.
+- Navigation-sync and recording-interface state.
 
 This data is stored only in the user's browser profile. The extension does not synchronize it through an application account or transmit it to a backend.
 

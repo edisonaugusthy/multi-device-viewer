@@ -15,6 +15,7 @@ export interface PreviewSlot {
 
 export interface DisplaySettings {
   scrollSync: boolean;
+  navigationSync: boolean;
   darkMode: boolean;
 }
 

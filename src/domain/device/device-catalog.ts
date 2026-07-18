@@ -1,5 +1,5 @@
 import type { Device } from "./device.types";
-import { getMockupAssets, localMockupCatalog } from "./mockup-catalog";
+import { getDeviceChromeMeta, getMockupAssets, localMockupCatalog } from "./mockup-catalog";
 
 const curatedDevices: Device[] = [
   {
@@ -348,7 +348,8 @@ function createDeviceFromMockup(id: string): Device {
   const cssViewport = configuredViewport
     ? { width: configuredViewport.width, height: configuredViewport.height }
     : viewportFromId(id, type);
-  const pixelRatio = type === "desktop" || type === "laptop" || type === "tv" ? 2 : type === "watch" ? 2 : 3;
+  const pixelRatio = getDeviceChromeMeta(id)?.devicePixelRatio
+    ?? (type === "desktop" || type === "laptop" || type === "tv" ? 2 : type === "watch" ? 2 : 3);
 
   return {
     id,
@@ -384,6 +385,8 @@ function brandFromId(id: string) {
   if (id.startsWith("apple") || id.includes("macbook")) return "Apple";
   if (id.startsWith("samsung")) return "Samsung";
   if (id.startsWith("google")) return "Google";
+  if (id.startsWith("motorola")) return "Motorola";
+  if (id.startsWith("infinix")) return "Infinix";
   if (id.startsWith("xiaomi")) return "Xiaomi";
   if (id.startsWith("huawei")) return "Huawei";
   if (id.startsWith("oneplus")) return "OnePlus";
@@ -442,6 +445,8 @@ function familyFromId(id: string, brand: string, type: Device["type"]) {
   if (brand === "Apple") return "iPhone";
   if (brand === "Samsung") return id.includes("fold") || id.includes("flip") ? "Galaxy Z" : "Galaxy";
   if (brand === "Google") return "Pixel";
+  if (brand === "Motorola" && id.includes("razr")) return "Razr";
+  if (brand === "Infinix" && id.includes("hot")) return "Hot";
   return "Phone";
 }
 
@@ -466,6 +471,8 @@ function nameFromId(id: string) {
     .replace(/^apple-/, "")
     .replace(/^samsung-/, "")
     .replace(/^google-/, "")
+    .replace(/^motorola-/, "")
+    .replace(/^infinix-/, "")
     .replace(/^xiaomi-/, "")
     .replace(/^huawei-/, "")
     .replace(/^oneplus-/, "")
@@ -485,7 +492,9 @@ function nameFromId(id: string) {
     .replace(/\bIphone\b/g, "iPhone")
     .replace(/\bIpad\b/g, "iPad")
     .replace(/\bImac\b/g, "iMac")
-    .replace(/\bMacbook\b/g, "MacBook");
+    .replace(/\bMacbook\b/g, "MacBook")
+    .replace(/\bPRO\b/g, "Pro")
+    .replace(/\bHOT\b/g, "Hot");
 
   return brand === "Generic" ? formatted : `${brand} ${formatted}`;
 }

@@ -46,13 +46,13 @@ export default defineBackground(() => {
   function createContextMenu() {
     chrome.contextMenus.create({
       id: OPEN_SIMULATOR_MENU_ID,
-      title: "Open this tab in Responsive Tester",
+      title: "Open this tab in Mobile View & Responsive Tester",
       contexts: ["page", "action"],
     }, () => {
       if (!chrome.runtime.lastError) return;
 
       chrome.contextMenus.update(OPEN_SIMULATOR_MENU_ID, {
-        title: "Open this tab in Responsive Tester",
+        title: "Open this tab in Mobile View & Responsive Tester",
         contexts: ["page", "action"],
       }, () => {
         void chrome.runtime.lastError;
@@ -84,7 +84,7 @@ export default defineBackground(() => {
           void openSimulator(url, tab.id).catch(console.error);
           return;
         }
-        console.error("Responsive Tester could not attach to the current page", chrome.runtime.lastError.message);
+        console.error("Mobile View & Responsive Tester could not attach to the current page", chrome.runtime.lastError.message);
       });
     };
 
@@ -119,7 +119,7 @@ export default defineBackground(() => {
   function setActiveIndicator(tabId: number, active: boolean) {
     chrome.action.setBadgeBackgroundColor({ color: "#0f9f8f", tabId });
     chrome.action.setBadgeText({ text: active ? "ON" : "", tabId });
-    chrome.action.setTitle({ title: active ? "Responsive Tester is active — click to close" : "Open Mobile View & Responsive Tester", tabId });
+    chrome.action.setTitle({ title: active ? "Mobile View & Responsive Tester is active — click to close" : "Open Mobile View & Responsive Tester", tabId });
   }
 
   async function resolveCaptureTab(tabId?: number | null): Promise<chrome.tabs.Tab | null> {

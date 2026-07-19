@@ -4,14 +4,23 @@ import { fileURLToPath } from "node:url";
 
 export default defineConfig({
   manifestVersion: 3,
+  targetBrowsers: ["chrome", "firefox"],
   modules: ["@wxt-dev/module-react"],
-  manifest: {
+  manifest: ({ browser }) => ({
     default_locale: "en",
     name: "__MSG_extensionName__",
     short_name: "__MSG_extensionShortName__",
     description: "__MSG_extensionDescription__",
     version: "0.2.0",
-    permissions: ["contextMenus", "declarativeNetRequest", "downloads", "offscreen", "scripting", "storage", "tabCapture", "tabs"],
+    permissions: [
+      "contextMenus",
+      "declarativeNetRequest",
+      "downloads",
+      "scripting",
+      "storage",
+      "tabs",
+      ...(browser === "firefox" ? [] : ["offscreen", "tabCapture"]),
+    ],
     declarative_net_request: {
       rule_resources: [
         {
@@ -42,8 +51,20 @@ export default defineConfig({
         resources: ["mockups/*", "icons/*", "simulator.html", "chunks/*", "assets/*"],
         matches: ["<all_urls>"]
       }
-    ]
-  },
+    ],
+    browser_specific_settings: browser === "firefox" ? {
+      gecko: {
+        id: "multi-device-viewer@edisonaugusthy.dev",
+        strict_min_version: "140.0",
+        data_collection_permissions: {
+          required: ["none"],
+        },
+      },
+      gecko_android: {
+        strict_min_version: "142.0",
+      },
+    } : undefined,
+  }),
   hooks: {
     "build:publicAssets": (_, files) => {
       // Prevent any manifest.json nested inside a subdirectory of public/ from
@@ -66,6 +87,10 @@ export default defineConfig({
     // Belt-and-suspenders: also exclude from the zip in case the file
     // somehow makes it into the output directory through another path.
     exclude: ["**/manifest.json", "!manifest.json"],
+    // Keep generated website/preview bundles out of Mozilla's source archive.
+    // Tailwind scans files below the source root, so including these outputs
+    // changes the rebuilt extension even when the authored sources are equal.
+    excludeSources: ["dist/**", "dist-site/**"],
   },
   vite: () => ({
     plugins: [tailwindcss()],

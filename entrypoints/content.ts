@@ -40,6 +40,8 @@ function setupPreviewBridge() {
   const nestedScrollPositions = new WeakMap<Element, { left: number; top: number }>();
   let scrollSyncEnabled = false;
   let applyingRemoteInteraction = false;
+  let activeEditable: HTMLElement | null = null;
+  let keyboardBlurTimer: number | undefined;
 
   const root = () => document.scrollingElement ?? document.documentElement;
   const scrollRatios = () => {
@@ -107,9 +109,10 @@ function setupPreviewBridge() {
       document.head.appendChild(style);
     }
     style.textContent = `
-      html, body {
+      html, body, * {
         scrollbar-width: none !important;
         -ms-overflow-style: none !important;
+        scrollbar-gutter: auto !important;
       }
       html::-webkit-scrollbar,
       body::-webkit-scrollbar,
@@ -150,6 +153,137 @@ function setupPreviewBridge() {
       Object.getOwnPropertyDescriptor(proto, "value") ??
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
     desc?.set?.call(el, value);
+  }
+
+  function resolveEditable(target: EventTarget | null): HTMLElement | null {
+    if (!(target instanceof Element)) return null;
+    const editable = target.closest("input, textarea, [contenteditable]");
+    if (!(editable instanceof HTMLElement)) return null;
+    if (editable instanceof HTMLInputElement) {
+      const nonTextTypes = new Set(["button", "checkbox", "color", "file", "hidden", "image", "radio", "range", "reset", "submit"]);
+      if (editable.disabled || editable.readOnly || nonTextTypes.has(editable.type.toLowerCase())) return null;
+      return editable;
+    }
+    if (editable instanceof HTMLTextAreaElement) {
+      return editable.disabled || editable.readOnly ? null : editable;
+    }
+    return editable.isContentEditable ? editable : null;
+  }
+
+  function postKeyboardFocus(editable: HTMLElement) {
+    if (!slotId) return;
+    const input = editable instanceof HTMLInputElement ? editable : null;
+    window.parent.postMessage({
+      type: "MDV_KEYBOARD_FOCUS",
+      slotId,
+      selector: buildSelector(editable),
+      inputType: input?.type ?? (editable instanceof HTMLTextAreaElement ? "textarea" : "text"),
+      inputMode: editable.inputMode || "",
+      multiline: editable instanceof HTMLTextAreaElement || editable.isContentEditable,
+    }, "*");
+  }
+
+  function postKeyboardBlur() {
+    if (!slotId) return;
+    window.parent.postMessage({ type: "MDV_KEYBOARD_BLUR", slotId }, "*");
+  }
+
+  function dispatchKeyboardInput(target: HTMLElement, inputType: string, data: string | null) {
+    target.dispatchEvent(new InputEvent("input", {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+      inputType,
+      data,
+    }));
+  }
+
+  function replaceEditableSelection(target: HTMLElement, text: string, inputType = "insertText") {
+    if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+      const value = target.value;
+      const start = target.selectionStart ?? value.length;
+      const end = target.selectionEnd ?? start;
+      const nextValue = `${value.slice(0, start)}${text}${value.slice(end)}`;
+      setNativeValue(target, nextValue);
+      try {
+        target.setSelectionRange(start + text.length, start + text.length);
+      } catch {
+        // Numeric and a few specialized inputs do not expose text selection.
+      }
+      dispatchKeyboardInput(target, inputType, text || null);
+      return;
+    }
+
+    const selection = window.getSelection();
+    if (!selection) return;
+    let range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+    if (!range || !target.contains(range.commonAncestorContainer)) {
+      range = document.createRange();
+      range.selectNodeContents(target);
+      range.collapse(false);
+    }
+    range.deleteContents();
+    if (text) {
+      const node = document.createTextNode(text);
+      range.insertNode(node);
+      range.setStartAfter(node);
+    }
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    dispatchKeyboardInput(target, inputType, text || null);
+  }
+
+  function applyKeyboardAction(payload: Record<string, unknown>) {
+    const target = resolveEditable(document.activeElement) ?? activeEditable;
+    if (!target || !document.contains(target)) {
+      postKeyboardBlur();
+      return;
+    }
+
+    const action = typeof payload.action === "string" ? payload.action : "";
+    if (action === "dismiss") {
+      target.blur();
+      activeEditable = null;
+      postKeyboardBlur();
+      return;
+    }
+    if (action === "text") {
+      replaceEditableSelection(target, typeof payload.text === "string" ? payload.text : "");
+      return;
+    }
+    if (action === "backspace") {
+      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+        const value = target.value;
+        const end = target.selectionEnd ?? value.length;
+        const start = target.selectionStart ?? end;
+        if (start === end && start > 0) {
+          try {
+            target.setSelectionRange(start - 1, end);
+          } catch {
+            setNativeValue(target, value.slice(0, -1));
+            dispatchKeyboardInput(target, "deleteContentBackward", null);
+            return;
+          }
+        }
+      } else {
+        const selection = window.getSelection();
+        const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+        if (range?.collapsed) range.setStart(range.startContainer, Math.max(0, range.startOffset - 1));
+      }
+      replaceEditableSelection(target, "", "deleteContentBackward");
+      return;
+    }
+    if (action === "enter") {
+      if (target instanceof HTMLTextAreaElement || target.isContentEditable) {
+        replaceEditableSelection(target, "\n", "insertLineBreak");
+        return;
+      }
+      const init = { bubbles: true, cancelable: true, composed: true, key: "Enter", code: "Enter" };
+      const allowed = target.dispatchEvent(new KeyboardEvent("keydown", init));
+      target.dispatchEvent(new KeyboardEvent("keyup", init));
+      if (allowed && target instanceof HTMLInputElement) target.form?.requestSubmit();
+    }
   }
 
   function resolveInteractionTarget(selector?: string): Element | null {
@@ -327,6 +461,28 @@ function setupPreviewBridge() {
     });
   }, { capture: true, passive: true });
 
+  window.addEventListener("focusin", (event) => {
+    const editable = resolveEditable(event.target);
+    if (!editable) return;
+    window.clearTimeout(keyboardBlurTimer);
+    activeEditable = editable;
+    postKeyboardFocus(editable);
+  }, true);
+
+  window.addEventListener("focusout", () => {
+    window.clearTimeout(keyboardBlurTimer);
+    keyboardBlurTimer = window.setTimeout(() => {
+      const next = resolveEditable(document.activeElement);
+      if (next) {
+        activeEditable = next;
+        postKeyboardFocus(next);
+        return;
+      }
+      activeEditable = null;
+      postKeyboardBlur();
+    }, 0);
+  }, true);
+
   window.addEventListener("message", (event) => {
     if (event.source !== window.parent) return;
     const data = event.data;
@@ -338,6 +494,11 @@ function setupPreviewBridge() {
       lastScrollLeft = root().scrollLeft;
       lastScrollTop = root().scrollTop;
       announceReady();
+      const focused = resolveEditable(document.activeElement);
+      if (focused) {
+        activeEditable = focused;
+        postKeyboardFocus(focused);
+      }
       return;
     }
 
@@ -398,6 +559,11 @@ function setupPreviewBridge() {
 
     if (data.type === "MDV_APPLY_INTERACTION" && typeof data.slotId === "string" && data.slotId === slotId) {
       applyRemoteInteraction(data as Record<string, unknown>);
+      return;
+    }
+
+    if (data.type === "MDV_KEYBOARD_ACTION" && typeof data.slotId === "string" && data.slotId === slotId) {
+      applyKeyboardAction(data as Record<string, unknown>);
       return;
     }
 

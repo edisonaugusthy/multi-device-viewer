@@ -1,4 +1,4 @@
-import type { Device } from "./device.types";
+import type { Device, Size } from "./device.types";
 import { getDeviceChromeMeta, getMockupAssets, localMockupCatalog } from "./mockup-catalog";
 
 const curatedDevices: Device[] = [
@@ -109,10 +109,10 @@ const curatedDevices: Device[] = [
   },
   {
     id: "apple-iphone-se-2018",
-    name: "Apple iPhone SE (2018)",
+    name: "Apple iPhone SE (1st generation)",
     brand: "Apple",
     family: "iPhone",
-    year: 2018,
+    year: 2016,
     type: "phone",
     os: "iOS",
     cssViewport: { width: 320, height: 568 },
@@ -319,10 +319,72 @@ const curatedDevices: Device[] = [
   }
 ];
 
-export const devices: Device[] = [
+interface DeviceDisplaySpec {
+  cssViewport: Size;
+  pixelRatio: number;
+  manufacturerResolution: Size;
+}
+
+// Logical browser viewports and physical panel resolutions are related, but
+// they are not always exact integer multiples. Keep both values authoritative
+// so the device report does not invent a panel resolution by rounding CSS px.
+const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
+  "google-pixel-10-pro-xl-2025": {
+    cssViewport: { width: 448, height: 997 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1344, height: 2992 },
+  },
+  "motorola-edge-60-pro-2025": {
+    cssViewport: { width: 407, height: 904 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1220, height: 2712 },
+  },
+  "samsung-galaxy-xcover7-pro-2025": {
+    cssViewport: { width: 360, height: 803 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2408 },
+  },
+  "samsung-galaxy-z-flip7-2025": {
+    cssViewport: { width: 360, height: 840 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2520 },
+  },
+  "samsung-galaxy-z-fold7-unfolded-2025": {
+    cssViewport: { width: 874, height: 787 },
+    pixelRatio: 2.5,
+    manufacturerResolution: { width: 2184, height: 1968 },
+  },
+  "oneplus-nord-2": {
+    cssViewport: { width: 412, height: 915 },
+    pixelRatio: 2.625,
+    manufacturerResolution: { width: 1080, height: 2400 },
+  },
+  "apple-macbook-pro-14-m5-2025": {
+    cssViewport: { width: 1512, height: 982 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 3024, height: 1964 },
+  },
+  "modern-laptop-15": {
+    cssViewport: { width: 1440, height: 900 },
+    pixelRatio: 1,
+    manufacturerResolution: { width: 1440, height: 900 },
+  },
+  "apple-iphone-16e-2025": {
+    cssViewport: { width: 390, height: 844 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1170, height: 2532 },
+  },
+  "apple-iphone-16-pro-2024": {
+    cssViewport: { width: 402, height: 874 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1206, height: 2622 },
+  },
+};
+
+export const devices: Device[] = dedupeDevices([
   ...curatedDevices,
   ...createMockupOnlyDevices(curatedDevices)
-];
+]);
 
 export const defaultDeviceIds = [
   "apple-iphone-17-pro-2025",
@@ -331,11 +393,36 @@ export const defaultDeviceIds = [
 
 function createMockupOnlyDevices(existing: Device[]): Device[] {
   const usedIds = new Set(existing.map((device) => device.id));
-  const usedAssetPaths = new Set(existing.flatMap((device) => device.mockupAssets.map((asset) => asset.localPath).filter(Boolean)));
 
   return localMockupCatalog
-    .filter((asset) => !usedIds.has(asset.id) && !usedAssetPaths.has(asset.localPath))
+    .filter((asset) => !usedIds.has(asset.id))
     .map((asset) => createDeviceFromMockup(asset.id));
+}
+
+function dedupeDevices(candidates: Device[]) {
+  const unique = new Map<string, Device>();
+  const distinctSameShellDeviceIds = new Set(["apple-iphone-16e-2025"]);
+
+  for (const candidate of candidates) {
+    const image = candidate.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.localPath);
+    // A different marketing name is not a different preview. Keep a model only
+    // when its shell, viewport geometry, or supported posture actually differs.
+    const key = image
+      ? [
+          "render",
+          candidate.type,
+          image.localPath,
+          `${image.width ?? 0}x${image.height ?? 0}`,
+          `${candidate.cssViewport.width}x${candidate.cssViewport.height}`,
+          Object.keys(image.viewport ?? {}).sort().join(","),
+          distinctSameShellDeviceIds.has(candidate.id) ? candidate.id : "",
+        ].join("|")
+      : `identity|${candidate.name.toLowerCase()}|${candidate.year ?? ""}|${candidate.type}`;
+    const current = unique.get(key);
+    if (!current || (!current.mockupAssets.length && candidate.mockupAssets.length)) unique.set(key, candidate);
+  }
+
+  return [...unique.values()];
 }
 
 function createDeviceFromMockup(id: string): Device {
@@ -344,11 +431,12 @@ function createDeviceFromMockup(id: string): Device {
   const year = yearFromId(id);
   const os = osFromId(id, type, brand);
   const mockupAssets = getMockupAssets(id);
+  const displaySpec = deviceDisplaySpecs[id];
   const configuredViewport = mockupAssets[0]?.viewport?.portrait;
-  const cssViewport = configuredViewport
+  const cssViewport = displaySpec?.cssViewport ?? mockupAssets[0]?.cssViewport ?? (configuredViewport
     ? { width: configuredViewport.width, height: configuredViewport.height }
-    : viewportFromId(id, type);
-  const pixelRatio = getDeviceChromeMeta(id)?.devicePixelRatio
+    : viewportFromId(id, type));
+  const pixelRatio = displaySpec?.pixelRatio ?? getDeviceChromeMeta(id)?.devicePixelRatio
     ?? (type === "desktop" || type === "laptop" || type === "tv" ? 2 : type === "watch" ? 2 : 3);
 
   return {
@@ -361,7 +449,7 @@ function createDeviceFromMockup(id: string): Device {
     os,
     cssViewport,
     pixelRatio,
-    manufacturerResolution: {
+    manufacturerResolution: displaySpec?.manufacturerResolution ?? {
       width: Math.round(cssViewport.width * pixelRatio),
       height: Math.round(cssViewport.height * pixelRatio)
     },
@@ -375,9 +463,9 @@ function deviceTypeFromId(id: string): Device["type"] {
   if (id.includes("self-service-kiosk") || id.includes("nspanel")) return "custom";
   if (id.includes("watch")) return "watch";
   if (id.includes("tv")) return "tv";
-  if (id.includes("macbook") || id.includes("latitude")) return "laptop";
+  if (id.includes("macbook") || id.includes("latitude") || id.includes("laptop") || id.includes("xps")) return "laptop";
   if (id.includes("imac")) return "desktop";
-  if (id.includes("ipad") || id.includes("tab") || id.includes("surface-duo")) return "tablet";
+  if (id.includes("ipad") || id.includes("tab") || id.includes("surface-duo") || id.includes("toughbook-s1")) return "tablet";
   return "phone";
 }
 
@@ -394,6 +482,8 @@ function brandFromId(id: string) {
   if (id.startsWith("microsoft")) return "Microsoft";
   if (id.startsWith("dell")) return "Dell";
   if (id.startsWith("zebra")) return "Zebra";
+  if (id.startsWith("honeywell")) return "Honeywell";
+  if (id.startsWith("panasonic")) return "Panasonic";
   if (id.startsWith("sonoff")) return "Sonoff";
   if (id.startsWith("non-branded")) return "Non-branded";
   if (id.startsWith("self-service")) return "Self-service";
@@ -405,7 +495,7 @@ function osFromId(id: string, type: Device["type"], brand: string) {
   if (id.includes("nspanel")) return "Embedded";
   if (type === "watch") return brand === "Apple" ? "watchOS" : "Wear OS";
   if (type === "tv") return brand === "Samsung" ? "Tizen" : "TV";
-  if (type === "desktop" || type === "laptop") return brand === "Apple" ? "macOS" : "Desktop";
+  if (type === "desktop" || type === "laptop") return brand === "Apple" ? "macOS" : "Windows";
   if (id.includes("ipad")) return "iPadOS";
   if (brand === "Apple") return "iOS";
   return "Android";
@@ -436,6 +526,7 @@ function familyFromId(id: string, brand: string, type: Device["type"]) {
   if (id.includes("self-service-kiosk")) return "Kiosk";
   if (id.includes("nspanel")) return "Control Panel";
   if (brand === "Zebra") return id.includes("mc330") ? "Mobile Computer" : "Handheld";
+  if (brand === "Honeywell") return "Handheld";
   if (brand === "Non-branded") return "Android Smartphone";
   if (type === "watch") return "Watch";
   if (type === "tv") return "Smart TV";
@@ -451,6 +542,8 @@ function familyFromId(id: string, brand: string, type: Device["type"]) {
 }
 
 function yearFromId(id: string) {
+  // Preserve legacy storage IDs while correcting the user-facing launch year.
+  if (id.startsWith("google-pixel-10-") && id.endsWith("-2026")) return 2025;
   const match = id.match(/20\d{2}/);
   return match ? Number(match[0]) : undefined;
 }
@@ -459,14 +552,47 @@ function tagsFromId(id: string, type: Device["type"], os: string) {
   return [
     type,
     os.toLowerCase(),
-    ...(id.includes("fold") || id.includes("duo") ? ["foldable"] : []),
+    ...(id.includes("fold") || id.includes("flip") || id.includes("razr") || id.includes("duo") ? ["foldable"] : []),
     ...(id.includes("self-service-kiosk") || id.includes("nspanel") ? ["special"] : []),
+    ...(id.includes("xcover") || id.includes("zebra") || id.includes("honeywell") || id.includes("toughbook") ? ["rugged", "enterprise"] : []),
     ...(id.includes("zebra-mc330") ? ["special", "android"] : [])
   ];
 }
 
 function nameFromId(id: string) {
+  const normalizedNames: Record<string, string> = {
+    "apple-iphone-14-max-2022": "Apple iPhone 14 Plus",
+    "google-pixel-10-pro-xl-2025": "Google Pixel 10 Pro XL",
+    "samsung-galaxy-z-fold7-unfolded-2025": "Samsung Galaxy Z Fold7 (unfolded)",
+    "modern-laptop-15": "Modern Laptop 15 inch",
+    "zebra-mc330": "Zebra MC330",
+    "zebra-tc78": "Zebra TC78",
+    "apple-iphone-16-pro-2024": "Apple iPhone 16 Pro",
+    "apple-iphone-16e-2025": "Apple iPhone 16e",
+    "apple-iphone-17e-2026": "Apple iPhone 17e",
+    "apple-ipad-pro-13-m4-2024": "Apple iPad Pro 13-inch (M4)",
+    "apple-ipad-air-13-m4-2026": "Apple iPad Air 13-inch (M4)",
+    "apple-ipad-mini-a17-pro-2024": "Apple iPad mini (A17 Pro)",
+    "apple-macbook-air-13-m4-2025": "Apple MacBook Air 13-inch (M4)",
+    "apple-macbook-pro-14-m5-2025": "Apple MacBook Pro 14-inch (M5)",
+    "samsung-galaxy-s26-plus-2026": "Samsung Galaxy S26+",
+    "samsung-galaxy-z-flip7-2025": "Samsung Galaxy Z Flip7",
+    "samsung-galaxy-tab-s11-ultra-2025": "Samsung Galaxy Tab S11 Ultra",
+    "samsung-galaxy-xcover7-pro-2025": "Samsung Galaxy XCover7 Pro",
+    "google-pixel-10a-2026": "Google Pixel 10a",
+    "motorola-edge-60-pro-2025": "Motorola Edge 60 Pro",
+    "motorola-thinkphone-25-2024": "Motorola ThinkPhone 25",
+    "motorola-razr-60-ultra-2025": "Motorola Razr 60 Ultra",
+    "zebra-tc58-2022": "Zebra TC58",
+    "honeywell-ct47-2023": "Honeywell CT47",
+    "panasonic-toughbook-s1-2021": "Panasonic Toughbook S1",
+    "microsoft-surface-laptop-7-2024": "Microsoft Surface Laptop 7",
+    "dell-xps-13-9350-2024": "Dell XPS 13 9350",
+  };
+  if (normalizedNames[id]) return normalizedNames[id];
+
   const brand = brandFromId(id);
+  const uppercaseTokens = new Set(["se", "xr", "tv", "mi"]);
   const words = id
     .replace(/^apple-/, "")
     .replace(/^samsung-/, "")
@@ -480,12 +606,18 @@ function nameFromId(id: string) {
     .replace(/^microsoft-/, "")
     .replace(/^dell-/, "")
     .replace(/^zebra-/, "")
+    .replace(/^honeywell-/, "")
+    .replace(/^panasonic-/, "")
     .replace(/^sonoff-/, "")
     .replace(/^non-branded-/, "")
     .replace(/^self-service-/, "")
     .split("-")
     .filter((word) => !/^20\d{2}$/.test(word))
-    .map((word) => (word.length <= 3 ? word.toUpperCase() : word[0].toUpperCase() + word.slice(1)))
+    .map((word) => (
+      uppercaseTokens.has(word) || /^[a-z]\d+$/i.test(word)
+        ? word.toUpperCase()
+        : word[0].toUpperCase() + word.slice(1)
+    ))
     .join(" ");
 
   const formatted = words
@@ -493,7 +625,6 @@ function nameFromId(id: string) {
     .replace(/\bIpad\b/g, "iPad")
     .replace(/\bImac\b/g, "iMac")
     .replace(/\bMacbook\b/g, "MacBook")
-    .replace(/\bPRO\b/g, "Pro")
     .replace(/\bHOT\b/g, "Hot");
 
   return brand === "Generic" ? formatted : `${brand} ${formatted}`;

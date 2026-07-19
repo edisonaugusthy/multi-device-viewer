@@ -178,54 +178,56 @@ export default defineBackground(() => {
       return true;
     }
 
-    if (message?.type === "START_RECORDING") {
-      void (async () => {
-        const tab = await resolveCaptureTab(typeof message.tabId === "number" ? message.tabId : null);
-        if (!tab?.id) {
-          sendResponse({ ok: false, error: "No source tab" });
-          return;
-        }
+    if (!import.meta.env.FIREFOX) {
+      if (message?.type === "START_RECORDING") {
+        void (async () => {
+          const tab = await resolveCaptureTab(typeof message.tabId === "number" ? message.tabId : null);
+          if (!tab?.id) {
+            sendResponse({ ok: false, error: "No source tab" });
+            return;
+          }
 
-        try {
-          await ensureOffscreenRecordingDocument();
-          const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
-          await chrome.storage.session.set({ mdvRecordingActive: true });
-          chrome.runtime.sendMessage({
-            type: "OFFSCREEN_START_RECORDING",
-            streamId,
-            tabId: tab.id,
-            filename: `multi-device-viewer-recording-${Date.now()}.webm`,
-          });
+          try {
+            await ensureOffscreenRecordingDocument();
+            const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
+            await chrome.storage.session.set({ mdvRecordingActive: true });
+            chrome.runtime.sendMessage({
+              type: "OFFSCREEN_START_RECORDING",
+              streamId,
+              tabId: tab.id,
+              filename: `multi-device-viewer-recording-${Date.now()}.webm`,
+            });
+            sendResponse({ ok: true });
+          } catch (error) {
+            await chrome.storage.session.set({ mdvRecordingActive: false });
+            sendResponse({ ok: false, error: String(error) });
+          }
+        })();
+        return true;
+      }
+
+      if (message?.type === "STOP_RECORDING") {
+        void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
+          chrome.runtime.sendMessage({ type: "OFFSCREEN_STOP_RECORDING" });
           sendResponse({ ok: true });
-        } catch (error) {
-          await chrome.storage.session.set({ mdvRecordingActive: false });
-          sendResponse({ ok: false, error: String(error) });
-        }
-      })();
-      return true;
-    }
+        });
+        return true;
+      }
 
-    if (message?.type === "STOP_RECORDING") {
-      void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
-        chrome.runtime.sendMessage({ type: "OFFSCREEN_STOP_RECORDING" });
-        sendResponse({ ok: true });
-      });
-      return true;
-    }
-
-    if (message?.type === "OFFSCREEN_RECORDING_COMPLETE") {
-      void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
-        if (typeof message.blobUrl === "string" && typeof message.filename === "string") {
-          void chrome.downloads.download({
-            url: message.blobUrl,
-            filename: message.filename,
-            saveAs: true,
-          });
-        }
-        void chrome.offscreen.closeDocument().catch(() => undefined);
-        sendResponse({ ok: true });
-      });
-      return true;
+      if (message?.type === "OFFSCREEN_RECORDING_COMPLETE") {
+        void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
+          if (typeof message.blobUrl === "string" && typeof message.filename === "string") {
+            void chrome.downloads.download({
+              url: message.blobUrl,
+              filename: message.filename,
+              saveAs: true,
+            });
+          }
+          void chrome.offscreen.closeDocument().catch(() => undefined);
+          sendResponse({ ok: true });
+        });
+        return true;
+      }
     }
 
     return false;

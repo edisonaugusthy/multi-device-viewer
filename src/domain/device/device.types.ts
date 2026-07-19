@@ -13,7 +13,17 @@ export interface MockupViewportConfig {
   width: number;
   height: number;
   paths?: Partial<Record<Orientation, string | string[]>>;
+  occlusions?: MockupViewportOcclusion[];
   enableRotation?: boolean;
+}
+
+export interface MockupViewportOcclusion {
+  kind: "circle" | "rounded-rect" | "rect";
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  radius?: number;
 }
 
 export interface MockupFrameStyle {
@@ -47,6 +57,7 @@ export interface MockupAsset {
     left: number;
   };
   viewport?: Partial<Record<Orientation, MockupViewportConfig>>;
+  cssViewport?: Size;
   frameStyle?: MockupFrameStyle;
 }
 

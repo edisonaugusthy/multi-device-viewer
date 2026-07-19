@@ -1,4 +1,4 @@
-import type { MockupAsset, MockupFrameStyle, MockupViewportConfig, Orientation } from "./device.types";
+import type { MockupAsset, MockupFrameStyle, MockupViewportConfig, Orientation, Size } from "./device.types";
 
 interface LocalMockupAsset {
   id: string;
@@ -14,6 +14,8 @@ interface LocalMockupAsset {
     left: number;
   };
   viewport?: Partial<Record<Orientation, MockupViewportConfig>>;
+  viewportSourceId?: string;
+  cssViewport?: Size;
   frameStyle?: MockupFrameStyle;
 }
 
@@ -976,7 +978,13 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "file": "google-pixel-10-2026.png",
     "bytes": 18649,
     "width": 918,
-    "height": 1938
+    "height": 1938,
+    "screenInset": {
+      "top": 12.5,
+      "right": 12,
+      "bottom": 10.5,
+      "left": 9
+    }
   },
   {
     "id": "google-pixel-10-pro-2026",
@@ -984,7 +992,13 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "file": "google-pixel-10-pro-2026.png",
     "bytes": 19738,
     "width": 900,
-    "height": 1894
+    "height": 1894,
+    "screenInset": {
+      "top": 7,
+      "right": 4,
+      "bottom": 7.5,
+      "left": 7
+    }
   },
   {
     "id": "google-pixel-10-pro-fold-2026",
@@ -992,7 +1006,13 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "file": "google-pixel-10-pro-fold-2026.png",
     "bytes": 38849,
     "width": 940,
-    "height": 1902
+    "height": 1902,
+    "screenInset": {
+      "top": 12,
+      "right": 12.5,
+      "bottom": 11,
+      "left": 15
+    }
   },
   {
     "id": "samsung-galaxy-a17-2025",
@@ -1000,7 +1020,13 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "file": "samsung-galaxy-a17-2025.png",
     "bytes": 26123,
     "width": 918,
-    "height": 1912
+    "height": 1912,
+    "screenInset": {
+      "top": 11.5,
+      "right": 15.5,
+      "bottom": 10,
+      "left": 10
+    }
   },
   {
     "id": "motorola-razr-70-ultra-2026",
@@ -1008,7 +1034,13 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "file": "motorola-razr-70-ultra-2026.png",
     "bytes": 46907,
     "width": 936,
-    "height": 2130
+    "height": 2130,
+    "screenInset": {
+      "top": 5,
+      "right": 11.5,
+      "bottom": 4,
+      "left": 6
+    }
   },
   {
     "id": "infinix-hot-70-2026",
@@ -1016,7 +1048,280 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "file": "infinix-hot-70-2026.png",
     "bytes": 26666,
     "width": 796,
-    "height": 1680
+    "height": 1680,
+    "screenInset": {
+      "top": 11,
+      "right": 7.5,
+      "bottom": 5.5,
+      "left": 5
+    }
+  },
+  {
+    "id": "samsung-galaxy-s26-2026",
+    "localPath": "/mockups/samsung-galaxy-s26.png",
+    "file": "samsung-galaxy-s26.png",
+    "bytes": 347910,
+    "width": 746,
+    "height": 1577,
+    "cssViewport": { "width": 360, "height": 780 },
+    "screenInset": {
+      "top": 4.85,
+      "right": 7.77,
+      "bottom": 3.88,
+      "left": 5
+    }
+  },
+  {
+    "id": "samsung-galaxy-z-fold7-unfolded-2025",
+    "localPath": "/mockups/samsung-galaxy-z-fold7-unfolded.png",
+    "file": "samsung-galaxy-z-fold7-unfolded.png",
+    "bytes": 509709,
+    "width": 1842,
+    "height": 1687,
+    "cssViewport": { "width": 874, "height": 787 },
+    "screenInset": {
+      "top": 5.32,
+      "right": 19.49,
+      "bottom": 6.21,
+      "left": 17.72
+    }
+  },
+  {
+    "id": "google-pixel-10-pro-xl-2025",
+    "localPath": "/mockups/google-pixel-10-pro-2026.png",
+    "file": "google-pixel-10-pro-2026.png",
+    "bytes": 19738,
+    "width": 900,
+    "height": 1894,
+    "cssViewport": { "width": 448, "height": 997 },
+    "screenInset": { "top": 7, "right": 4, "bottom": 7.5, "left": 7 },
+    "viewportSourceId": "google-pixel-10-pro-2026"
+  },
+  {
+    "id": "modern-laptop-15",
+    "localPath": "/mockups/modern-laptop-15.png",
+    "file": "modern-laptop-15.png",
+    "bytes": 1532814,
+    "width": 3416,
+    "height": 2240,
+    "cssViewport": { "width": 1440, "height": 900 },
+    "screenInset": {
+      "top": 34,
+      "right": 120,
+      "bottom": 186,
+      "left": 148
+    }
+  },
+  {
+    "id": "apple-iphone-16-pro-2024",
+    "localPath": "/mockups/apple-iphone-17-pro-2025.png",
+    "file": "apple-iphone-17-pro-2025.png",
+    "bytes": 61726,
+    "width": 878,
+    "height": 1806,
+    "cssViewport": { "width": 402, "height": 874 },
+    "screenInset": { "top": 10.5, "right": 12, "bottom": 8.5, "left": 12 }
+  },
+  {
+    "id": "apple-iphone-16e-2025",
+    "localPath": "/mockups/apple-iphone-14-2022.png",
+    "file": "apple-iphone-14-2022.png",
+    "bytes": 46800,
+    "width": 870,
+    "height": 1772,
+    "cssViewport": { "width": 390, "height": 844 },
+    "screenInset": { "top": 7, "right": 8.5, "bottom": 9.5, "left": 10.5 },
+    "viewportSourceId": "apple-iphone-14-2022"
+  },
+  {
+    "id": "apple-iphone-17e-2026",
+    "localPath": "/mockups/apple-iphone-14-2022.png",
+    "file": "apple-iphone-14-2022.png",
+    "bytes": 46800,
+    "width": 870,
+    "height": 1772,
+    "cssViewport": { "width": 390, "height": 844 },
+    "screenInset": { "top": 7, "right": 8.5, "bottom": 9.5, "left": 10.5 },
+    "viewportSourceId": "apple-iphone-14-2022"
+  },
+  {
+    "id": "apple-ipad-pro-13-m4-2024",
+    "localPath": "/mockups/apple-ipad-pro-13.png",
+    "file": "apple-ipad-pro-13.png",
+    "bytes": 614058,
+    "width": 2275,
+    "height": 2960,
+    "cssViewport": { "width": 1032, "height": 1376 },
+    "screenInset": { "top": 50.5, "right": 50.5, "bottom": 53.5, "left": 55 }
+  },
+  {
+    "id": "apple-ipad-air-13-m4-2026",
+    "localPath": "/mockups/apple-ipad-pro-13.png",
+    "file": "apple-ipad-pro-13.png",
+    "bytes": 614058,
+    "width": 2275,
+    "height": 2960,
+    "cssViewport": { "width": 1024, "height": 1366 },
+    "screenInset": { "top": 50.5, "right": 50.5, "bottom": 53.5, "left": 55 }
+  },
+  {
+    "id": "apple-ipad-mini-a17-pro-2024",
+    "localPath": "/mockups/apple-ipad-mini.png",
+    "file": "apple-ipad-mini.png",
+    "bytes": 69190,
+    "width": 1728,
+    "height": 2608,
+    "screenInset": { "top": 9.5, "right": 9, "bottom": 9, "left": 9 }
+  },
+  {
+    "id": "apple-macbook-air-13-m4-2025",
+    "localPath": "/mockups/macbook-air.png",
+    "file": "macbook-air.png",
+    "bytes": 130937,
+    "width": 3296,
+    "height": 1894,
+    "screenInset": { "top": 4, "right": 154, "bottom": 37.5, "left": 153 }
+  },
+  {
+    "id": "apple-macbook-pro-14-m5-2025",
+    "localPath": "/mockups/apple-macbook-pro-16-2021.png",
+    "file": "apple-macbook-pro-16-2021.png",
+    "bytes": 323138,
+    "width": 4244,
+    "height": 2594,
+    "viewportSourceId": "apple-macbook-pro-16-2021",
+    "screenInset": { "top": 10.5, "right": 172, "bottom": 128.5, "left": 171 }
+  },
+  {
+    "id": "samsung-galaxy-s26-plus-2026",
+    "localPath": "/mockups/samsung-galaxy-s26.png",
+    "file": "samsung-galaxy-s26.png",
+    "bytes": 347910,
+    "width": 746,
+    "height": 1577,
+    "cssViewport": { "width": 360, "height": 780 },
+    "screenInset": { "top": 4.85, "right": 7.77, "bottom": 3.88, "left": 5 }
+  },
+  {
+    "id": "samsung-galaxy-z-flip7-2025",
+    "localPath": "/mockups/samsung-galaxy-z-flip7.png",
+    "file": "samsung-galaxy-z-flip7.png",
+    "bytes": 301466,
+    "width": 795,
+    "height": 1785,
+    "cssViewport": { "width": 360, "height": 840 },
+    "screenInset": { "top": 37, "right": 20.5, "bottom": 15.5, "left": 17 }
+  },
+  {
+    "id": "samsung-galaxy-tab-s11-ultra-2025",
+    "localPath": "/mockups/samsung-galaxy-tab-s11-ultra.png",
+    "file": "samsung-galaxy-tab-s11-ultra.png",
+    "bytes": 723229,
+    "width": 2022,
+    "height": 3117,
+    "cssViewport": { "width": 924, "height": 1480 },
+    "screenInset": { "top": 39.5, "right": 35.5, "bottom": 39, "left": 51.5 }
+  },
+  {
+    "id": "samsung-galaxy-xcover7-pro-2025",
+    "localPath": "/mockups/samsung-galaxy-a12-2021.png",
+    "file": "samsung-galaxy-a12-2021.png",
+    "bytes": 43247,
+    "width": 794,
+    "height": 1718,
+    "viewportSourceId": "samsung-galaxy-a12-2021",
+    "cssViewport": { "width": 360, "height": 803 },
+    "screenInset": { "top": 8, "right": 12, "bottom": 8, "left": 9 }
+  },
+  {
+    "id": "google-pixel-10a-2026",
+    "localPath": "/mockups/google-pixel-10-2026.png",
+    "file": "google-pixel-10-2026.png",
+    "bytes": 18649,
+    "width": 918,
+    "height": 1938,
+    "screenInset": { "top": 12.5, "right": 12, "bottom": 10.5, "left": 9 }
+  },
+  {
+    "id": "motorola-edge-60-pro-2025",
+    "localPath": "/mockups/xiaomi-12-2022.png",
+    "file": "xiaomi-12-2022.png",
+    "bytes": 39658,
+    "width": 770,
+    "height": 1670,
+    "viewportSourceId": "xiaomi-12-2022",
+    "cssViewport": { "width": 407, "height": 904 },
+    "screenInset": { "top": 10.5, "right": 14, "bottom": 11.5, "left": 11 }
+  },
+  {
+    "id": "motorola-thinkphone-25-2024",
+    "localPath": "/mockups/xiaomi-12-2022.png",
+    "file": "xiaomi-12-2022.png",
+    "bytes": 39658,
+    "width": 770,
+    "height": 1670,
+    "viewportSourceId": "xiaomi-12-2022",
+    "cssViewport": { "width": 407, "height": 904 },
+    "screenInset": { "top": 10.5, "right": 14, "bottom": 11.5, "left": 11 }
+  },
+  {
+    "id": "motorola-razr-60-ultra-2025",
+    "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
+    "file": "motorola-razr-70-ultra-2026.png",
+    "bytes": 46907,
+    "width": 936,
+    "height": 2130,
+    "screenInset": { "top": 5, "right": 11.5, "bottom": 4, "left": 6 }
+  },
+  {
+    "id": "zebra-tc58-2022",
+    "localPath": "/mockups/zebra-tc58.png",
+    "file": "zebra-tc58.png",
+    "bytes": 885146,
+    "width": 983,
+    "height": 1895,
+    "cssViewport": { "width": 412, "height": 823 },
+    "screenInset": { "top": 66, "right": 39.5, "bottom": 58.5, "left": 40 }
+  },
+  {
+    "id": "honeywell-ct47-2023",
+    "localPath": "/mockups/zebra-tc58.png",
+    "file": "zebra-tc58.png",
+    "bytes": 885146,
+    "width": 983,
+    "height": 1895,
+    "cssViewport": { "width": 412, "height": 823 },
+    "screenInset": { "top": 66, "right": 39.5, "bottom": 58.5, "left": 40 }
+  },
+  {
+    "id": "panasonic-toughbook-s1-2021",
+    "localPath": "/mockups/panasonic-toughbook-s1.png",
+    "file": "panasonic-toughbook-s1.png",
+    "bytes": 2152702,
+    "width": 1493,
+    "height": 2138,
+    "cssViewport": { "width": 533, "height": 853 },
+    "screenInset": { "top": 110.5, "right": 106.5, "bottom": 105.5, "left": 107 }
+  },
+  {
+    "id": "microsoft-surface-laptop-7-2024",
+    "localPath": "/mockups/modern-laptop-15.png",
+    "file": "modern-laptop-15.png",
+    "bytes": 1532814,
+    "width": 3416,
+    "height": 2240,
+    "cssViewport": { "width": 1440, "height": 900 },
+    "screenInset": { "top": 7.86, "right": 134.02, "bottom": 212.23, "left": 134.02 }
+  },
+  {
+    "id": "dell-xps-13-9350-2024",
+    "localPath": "/mockups/modern-laptop-15.png",
+    "file": "modern-laptop-15.png",
+    "bytes": 1532814,
+    "width": 3416,
+    "height": 2240,
+    "cssViewport": { "width": 1440, "height": 900 },
+    "screenInset": { "top": 7.86, "right": 134.02, "bottom": 212.23, "left": 134.02 }
   }
 ];
 
@@ -2113,6 +2418,121 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
       enableRotation: true,
     },
   },
+  "samsung-galaxy-s26-2026": {
+    portrait: {
+      left: 9, top: 8.5, width: 351.5, height: 772.5, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 169, top: 9, width: 17, height: 17 }],
+    },
+    landscape: {
+      left: 7.5, top: 9, width: 772.5, height: 351.5, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 746.5, top: 169, width: 17, height: 17 }],
+    },
+  },
+  "samsung-galaxy-z-fold7-unfolded-2025": {
+    portrait: {
+      left: 17.5, top: 16, width: 884, height: 811, enableRotation: false,
+      occlusions: [
+        { kind: "rect", left: 440.5, top: 0, width: 2.5, height: 811 },
+        { kind: "circle", left: 582, top: 19, width: 16, height: 16 },
+      ],
+    },
+  },
+  "modern-laptop-15": {
+    portrait: {
+      left: 148, top: 34, width: 1440, height: 900, enableRotation: false,
+    },
+  },
+  "apple-iphone-16-pro-2024": {
+    portrait: { left: 19, top: 15, width: 402, height: 874, enableRotation: true },
+    landscape: { left: 15, top: 19, width: 874, height: 402, enableRotation: true },
+  },
+  "apple-iphone-17e-2026": {
+    portrait: {
+      left: 25, top: 16.5, width: 390, height: 844, enableRotation: true,
+      occlusions: [{ kind: "rounded-rect", left: 112, top: 0, width: 166, height: 48, radius: 22 }],
+    },
+    landscape: {
+      left: 12, top: 25, width: 844, height: 390, enableRotation: true,
+      occlusions: [{ kind: "rounded-rect", left: 796, top: 112, width: 48, height: 166, radius: 22 }],
+    },
+  },
+  "apple-ipad-pro-13-m4-2024": {
+    portrait: { left: 55, top: 50.5, width: 1032, height: 1376, enableRotation: true },
+    landscape: { left: 53.5, top: 55, width: 1376, height: 1032, enableRotation: true },
+  },
+  "apple-ipad-air-13-m4-2026": {
+    portrait: { left: 59, top: 55, width: 1024, height: 1366, enableRotation: true },
+    landscape: { left: 55, top: 59, width: 1366, height: 1024, enableRotation: true },
+  },
+  "apple-ipad-mini-a17-pro-2024": {
+    portrait: { left: 60, top: 85, width: 744, height: 1133, enableRotation: true },
+    landscape: { left: 85, top: 60, width: 1133, height: 744, enableRotation: true },
+  },
+  "apple-macbook-air-13-m4-2025": {
+    portrait: { left: 183, top: 54, width: 1280, height: 800, enableRotation: false },
+  },
+  "samsung-galaxy-s26-plus-2026": {
+    portrait: {
+      left: 9, top: 8.5, width: 351.5, height: 772.5, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 169, top: 9, width: 17, height: 17 }],
+    },
+    landscape: {
+      left: 7.5, top: 9, width: 772.5, height: 351.5, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 746.5, top: 169, width: 17, height: 17 }],
+    },
+  },
+  "samsung-galaxy-z-flip7-2025": {
+    portrait: {
+      left: 17, top: 24, width: 360, height: 840, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 174, top: 12, width: 12, height: 12 }],
+    },
+    landscape: {
+      left: 28.5, top: 17, width: 840, height: 360, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 816, top: 174, width: 12, height: 12 }],
+    },
+  },
+  "samsung-galaxy-tab-s11-ultra-2025": {
+    portrait: {
+      left: 36, top: 38.5, width: 940, height: 1481, enableRotation: true,
+      occlusions: [{ kind: "rounded-rect", left: 0, top: 718, width: 20, height: 46, radius: 10 }],
+    },
+    landscape: {
+      left: 39, top: 36, width: 1481, height: 940, enableRotation: true,
+      occlusions: [{ kind: "rounded-rect", left: 717, top: 0, width: 46, height: 20, radius: 10 }],
+    },
+  },
+  "google-pixel-10a-2026": {
+    portrait: { left: 22, top: 23, width: 412, height: 924, enableRotation: true },
+    landscape: { left: 23, top: 22, width: 924, height: 412, enableRotation: true },
+  },
+  "motorola-razr-60-ultra-2025": {
+    portrait: { left: 28, top: 28, width: 412, height: 1008, enableRotation: true },
+    landscape: { left: 28, top: 28, width: 1008, height: 412, enableRotation: true },
+  },
+  "zebra-tc58-2022": {
+    portrait: { left: 36.5, top: 65.5, width: 418.5, height: 823.5, enableRotation: true },
+    landscape: { left: 58.5, top: 36.5, width: 823.5, height: 418.5, enableRotation: true },
+  },
+  "honeywell-ct47-2023": {
+    portrait: { left: 36.5, top: 65.5, width: 418.5, height: 823.5, enableRotation: true },
+    landscape: { left: 58.5, top: 36.5, width: 823.5, height: 418.5, enableRotation: true },
+  },
+  "panasonic-toughbook-s1-2021": {
+    portrait: { left: 107, top: 110.5, width: 533, height: 853, enableRotation: true },
+    landscape: { left: 105.5, top: 107, width: 853, height: 533, enableRotation: true },
+  },
+  "microsoft-surface-laptop-7-2024": {
+    portrait: {
+      left: 134.02, top: 7.86, width: 1440, height: 900, enableRotation: false,
+      occlusions: [{ kind: "circle", left: 712, top: 0, width: 16, height: 16 }],
+    },
+  },
+  "dell-xps-13-9350-2024": {
+    portrait: {
+      left: 134.02, top: 7.86, width: 1440, height: 900, enableRotation: false,
+      occlusions: [{ kind: "circle", left: 712, top: 0, width: 16, height: 16 }],
+    },
+  },
 };
 
 const aliases: Record<string, string> = {
@@ -2140,13 +2560,15 @@ export function getMockupAssets(deviceId: string): MockupAsset[] {
   const lookupId = resolveMockupId(deviceId);
   const asset = localMockupCatalog.find((candidate) => candidate.id === lookupId);
   if (!asset) return [];
+  const viewportId = asset.viewportSourceId ?? lookupId;
   return [{
     kind: "transparent-png",
     localPath: asset.localPath,
     width: asset.width,
     height: asset.height,
     screenInset: asset.screenInset,
-    viewport: asset.viewport ?? mockupViewportConfigs[lookupId],
+    viewport: asset.viewport ?? mockupViewportConfigs[viewportId],
+    cssViewport: asset.cssViewport,
     frameStyle: asset.frameStyle
   }];
 }
@@ -2162,9 +2584,11 @@ export interface DeviceChromeMeta {
   /**
    * Top safe-area inset (CSS px) derived from the mockup's baked camera cutout.
    * Content must start below this so it never renders under the hole-punch / notch.
-   * Present for Android devices (measured per-device); iOS uses generation constants.
+   * Present for devices with a measured inset; otherwise generation constants are used.
    */
   safeAreaInsetTop?: number;
+  /** Additional left padding for status-bar clocks that would overlap an off-centre camera. */
+  statusBarInsetLeft?: number;
   devicePixelRatio?: number;
   isPro?: boolean;
 }
@@ -2179,7 +2603,7 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "xiaomi-mi-11i": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: false, safeAreaInsetTop: 33 },
   "huawei-p30-pro": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: false, safeAreaInsetTop: 28 },
   "google-pixel-5": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: false, safeAreaInsetTop: 49 },
-  "oneplus-nord-2": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, isPro: false, safeAreaInsetTop: 50 },
+  "oneplus-nord-2": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, isPro: false, safeAreaInsetTop: 50, statusBarInsetLeft: 30 },
   "samsung-galaxy-fold2": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, isPro: false, safeAreaInsetTop: 28 },
   "apple-iphone-5": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
   "apple-iphone-se": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
@@ -2191,9 +2615,9 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "samsung-galaxy-tab-s7": { osName: "Android", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false, safeAreaInsetTop: 28 },
   "macbook-air": { osName: "macOS", osVersion: "11.0", notch: false, devicePixelRatio: 2, isPro: false },
   "dell-latitude-14-3420": { osName: "Windows", osVersion: "11.0", notch: false, devicePixelRatio: 1, isPro: true },
-  "apple-iphone-11": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
-  "apple-iphone-11-pro": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false },
-  "apple-iphone-11-pro-max": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false },
+  "apple-iphone-11": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false, safeAreaInsetTop: 44 },
+  "apple-iphone-11-pro": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false, safeAreaInsetTop: 44 },
+  "apple-iphone-11-pro-max": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false, safeAreaInsetTop: 44 },
   "apple-iphone-12-mini": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false },
   "apple-iphone-12": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false },
   "apple-iphone-12-pro": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false },
@@ -2239,6 +2663,10 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "samsung-galaxy-a17-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
   "motorola-razr-70-ultra-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
   "infinix-hot-70-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, safeAreaInsetTop: 36 },
+  "samsung-galaxy-s26-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "samsung-galaxy-z-fold7-unfolded-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.5, isPro: true, safeAreaInsetTop: 28 },
+  "google-pixel-10-pro-xl-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "modern-laptop-15": { osName: "Windows", osVersion: "11.0", notch: false, devicePixelRatio: 1, isPro: true },
   "apple-imac-24-inch-2021": { osName: "macOS", osVersion: "15.3", notch: false, devicePixelRatio: 2, isPro: true },
   "samsung-smart-tv": { osName: "Android", osVersion: "12.0", notch: false, devicePixelRatio: 1, isPro: true, safeAreaInsetTop: 28 },
   "self-service-kiosk": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 1, isPro: true, safeAreaInsetTop: 28 },
@@ -2246,4 +2674,25 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "zebra-tc78": { osName: "Android", osVersion: "13.0", notch: false, devicePixelRatio: 2, isPro: true, safeAreaInsetTop: 28 },
   "sonoff-nspanel-pro": { osName: "Android", osVersion: "8.1.0", notch: false, devicePixelRatio: 1, isPro: true, safeAreaInsetTop: 28 },
   "non-branded-android-smartphone": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 28 },
+  "apple-iphone-16-pro-2024": { osName: "iOS", osVersion: "26.0", notch: true, safeAreaInsetBottom: 90, devicePixelRatio: 3, isPro: true },
+  "apple-iphone-16e-2025": { osName: "iOS", osVersion: "26.0", notch: true, safeAreaInsetBottom: 90, devicePixelRatio: 3 },
+  "apple-iphone-17e-2026": { osName: "iOS", osVersion: "26.0", notch: true, safeAreaInsetBottom: 90, devicePixelRatio: 3 },
+  "apple-ipad-pro-13-m4-2024": { osName: "iPadOS", osVersion: "26.0", notch: false, devicePixelRatio: 2, isPro: true },
+  "apple-ipad-air-13-m4-2026": { osName: "iPadOS", osVersion: "26.0", notch: false, devicePixelRatio: 2, isPro: true },
+  "apple-ipad-mini-a17-pro-2024": { osName: "iPadOS", osVersion: "26.0", notch: false, devicePixelRatio: 2, isPro: true },
+  "apple-macbook-air-13-m4-2025": { osName: "macOS", osVersion: "26.0", notch: true, devicePixelRatio: 2, isPro: true },
+  "apple-macbook-pro-14-m5-2025": { osName: "macOS", osVersion: "26.0", notch: true, devicePixelRatio: 2, isPro: true },
+  "samsung-galaxy-s26-plus-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "samsung-galaxy-z-flip7-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "samsung-galaxy-tab-s11-ultra-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, isPro: true, safeAreaInsetTop: 28 },
+  "samsung-galaxy-xcover7-pro-2025": { osName: "Android", osVersion: "15.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "google-pixel-10a-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
+  "motorola-edge-60-pro-2025": { osName: "Android", osVersion: "15.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "motorola-thinkphone-25-2024": { osName: "Android", osVersion: "15.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "motorola-razr-60-ultra-2025": { osName: "Android", osVersion: "15.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "zebra-tc58-2022": { osName: "Android", osVersion: "13.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 28 },
+  "honeywell-ct47-2023": { osName: "Android", osVersion: "13.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 28 },
+  "panasonic-toughbook-s1-2021": { osName: "Android", osVersion: "11.0", notch: false, devicePixelRatio: 1.5, isPro: true, safeAreaInsetTop: 28 },
+  "microsoft-surface-laptop-7-2024": { osName: "Windows", osVersion: "11.0", notch: false, devicePixelRatio: 1, isPro: true },
+  "dell-xps-13-9350-2024": { osName: "Windows", osVersion: "11.0", notch: false, devicePixelRatio: 1, isPro: true },
 };

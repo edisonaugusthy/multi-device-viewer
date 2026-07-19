@@ -40,6 +40,7 @@ import {
   type VersionReleaseNotes,
 } from "../../app/release-notes";
 import {
+  LOCAL_RECORDING_COMPLETE_EVENT,
   captureTabWithOverlay,
   startTabRecording,
   stopTabRecording,
@@ -236,6 +237,12 @@ export function SimulatorApp() {
       ]);
     });
   }, [useCount]);
+
+  useEffect(() => {
+    const finishLocalRecording = () => setRecording(false);
+    window.addEventListener(LOCAL_RECORDING_COMPLETE_EVENT, finishLocalRecording);
+    return () => window.removeEventListener(LOCAL_RECORDING_COMPLETE_EVENT, finishLocalRecording);
+  }, []);
 
   useEffect(() => {
     if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;

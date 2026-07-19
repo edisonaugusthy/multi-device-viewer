@@ -4,7 +4,7 @@ Last updated: July 15, 2026
 
 ## Summary
 
-Mobile View & Responsive Tester is a local-first Chrome extension. It does not operate a backend and does not collect, sell, transfer, or share user data. It contains no analytics, telemetry, advertising trackers, remote logging, or behavioral tracking.
+Mobile View & Responsive Tester is a local-first Chrome and Firefox extension. It does not operate a backend and does not collect, sell, transfer, or share user data. It contains no analytics, telemetry, advertising trackers, remote logging, or behavioral tracking.
 
 Websites, URLs, designs, screenshots, recordings, annotations, prompts, and preferences remain on the user's device unless the user explicitly copies, downloads, or shares an exported result through another application.
 
@@ -24,7 +24,7 @@ When the user explicitly chooses a feature, the extension may locally process:
 
 ## Data stored on the device
 
-Chrome local storage is used to preserve the working experience. Stored information may include:
+Browser-local extension storage is used to preserve the working experience. Stored information may include:
 
 - Selected devices, order, orientation, zoom, and viewport layout.
 - Active viewport and interface state.
@@ -51,7 +51,7 @@ Recording begins only after the user selects **Record source tab**. Chrome's tab
 
 ## Design references
 
-Design files are read locally and displayed beside or over a live viewport. References may be stored in Chrome local storage so the workspace can resume. They are never uploaded by the extension. Removing the reference, clearing extension storage, or uninstalling the extension removes the locally retained copy.
+Design files are read locally and displayed beside or over a live viewport. References may be stored in browser-local extension storage so the workspace can resume. They are never uploaded by the extension. Removing the reference, clearing extension storage, or uninstalling the extension removes the locally retained copy.
 
 ## AI fix prompts
 
@@ -61,7 +61,7 @@ The extension formats the user's description with the page URL and selected view
 
 HTTP and HTTPS page access is required because the extension runs the local overlay on the selected page and loads that page in responsive subframes.
 
-Declarative network rules remove `X-Frame-Options` and `Content-Security-Policy` response headers from subframe requests so pages can load in the responsive viewer. The rules run locally in Chrome. They do not redirect requests, inspect response bodies, or send network activity to the extension developer.
+Declarative network rules remove `X-Frame-Options` and `Content-Security-Policy` response headers from subframe requests so pages can load in the responsive viewer. The rules run locally in the browser. They do not redirect requests, inspect response bodies, or send network activity to the extension developer.
 
 ## Permissions
 

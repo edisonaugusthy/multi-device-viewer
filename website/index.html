@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>
-      Mobile View &amp; Responsive Tester — Private, Open-Source Chrome Testing
+      Mobile View &amp; Responsive Tester — Private Chrome and Firefox Testing
     </title>
     <meta
       name="description"
-      content="Test responsive websites across multiple device viewports at once. A free, private, open-source Chrome extension with synced navigation, design comparison, captures, and physical-device handoff."
+      content="Test responsive websites across multiple device viewports at once. A free, private, open-source Chrome and Firefox extension with synced navigation, design comparison, captures, and physical-device handoff."
     />
     <link
       rel="canonical"
@@ -41,14 +41,13 @@
     <meta name="theme-color" content="#f7f8f4" />
     <link rel="icon" href="./icons/icon-48.png" type="image/png" />
     <link rel="stylesheet" href="./styles.css" />
-    <script type="module" src="./analytics.ts"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "Mobile View & Responsive Tester",
         "applicationCategory": "DeveloperApplication",
-        "operatingSystem": "Google Chrome",
+        "operatingSystem": "Google Chrome, Mozilla Firefox",
         "description": "A private, open-source responsive website tester for multiple device viewports.",
         "url": "https://edisonaugusthy.github.io/multi-device-viewer/",
         "downloadUrl": "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb",
@@ -249,9 +248,9 @@
             <p>
               The extension has no account, advertising, telemetry, remote
               logging, or automatic uploads. URLs, captures, saved sets, design
-              references, and generated prompts stay in Chrome unless you choose
-              to export them. The public marketing site uses Amplitude analytics
-              and Session Replay.
+              references, and generated prompts stay in your browser unless you choose
+              to export them. The public marketing site does not use analytics
+              or session recording.
             </p>
             <a href="./privacy.html"
               >Read the plain-language privacy policy <span>→</span></a
@@ -454,7 +453,7 @@
               Is this a real mobile browser emulator?<span>+</span>
             </summary>
             <p>
-              It is a fast responsive development aid inside Chrome. It
+              It is a fast responsive development aid inside Chrome or Firefox. It
               reproduces viewport dimensions and useful device presentation,
               while final release testing should still cover physical devices
               and target browsers.
@@ -463,7 +462,7 @@
           <details>
             <summary>Can it test localhost?<span>+</span></summary>
             <p>
-              Yes. Open your local development page in Chrome, then launch the
+              Yes. Open your local development page in Chrome or Firefox, then launch the
               extension. For physical-device handoff, expose the dev server on
               your LAN and use your computer's network address instead of
               localhost.
@@ -496,7 +495,7 @@
           <h2>Make responsive review<br />part of every build.</h2>
           <p>
             Install the extension and start with the page already open in
-            Chrome.
+            your browser.
           </p>
         </div>
         <div class="cta-actions">
@@ -522,7 +521,7 @@
         /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
       >
       <p>
-        Private responsive testing for Chrome.<br />Open source under the MIT
+        Private responsive testing for Chrome and Firefox.<br />Open source under the MIT
         license.
       </p>
       <div>

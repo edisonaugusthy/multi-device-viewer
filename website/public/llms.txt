@@ -1,8 +1,8 @@
 # Mobile View & Responsive Tester
 
-> Mobile View & Responsive Tester is a free, local-first, open-source Chrome extension for reviewing responsive websites across multiple device viewports in one workspace.
+> Mobile View & Responsive Tester is a free, local-first, open-source Chrome and Firefox extension for reviewing responsive websites across multiple device viewports in one workspace.
 
-The extension is a responsive development and quality-assurance aid. It previews the page already open in Chrome across phones, tablets, foldables, laptops, desktops, and custom viewport sizes. It is not a replacement for final testing on physical devices and target browsers.
+The extension is a responsive development and quality-assurance aid. It previews the page already open in Chrome or Firefox across phones, tablets, foldables, laptops, desktops, and custom viewport sizes. It is not a replacement for final testing on physical devices and target browsers.
 
 Core capabilities include up to four resizable previews, device rotation and zoom, saved device sets, synchronized scrolling and navigation, design comparison, annotated captures, source-tab recording, physical-device URL handoff, and locally generated coding-agent fix prompts.
 
@@ -19,12 +19,13 @@ Privacy and licensing facts:
 
 - [Official website](https://edisonaugusthy.github.io/multi-device-viewer/): Product overview, main features, privacy commitments, frequently asked questions, and installation link.
 - [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb): Official Chrome extension listing.
+- [Firefox build instructions](https://github.com/edisonaugusthy/multi-device-viewer#development): Build or temporarily load the Firefox Manifest V3 package.
 - [Source repository](https://github.com/edisonaugusthy/multi-device-viewer): Public source code, implementation history, and contribution surface.
 
 ## Documentation
 
 - [Responsive testing guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-testing.html): Practical checklist covering viewport selection, layout integrity, interaction, accessibility, evidence, and physical-device validation.
-- [Privacy policy](https://edisonaugusthy.github.io/multi-device-viewer/privacy.html): Plain-language description of extension data handling, Chrome permissions, local storage, and third-party behavior.
+- [Privacy policy](https://edisonaugusthy.github.io/multi-device-viewer/privacy.html): Plain-language description of extension data handling, browser permissions, local storage, and third-party behavior.
 - [Changelog](https://edisonaugusthy.github.io/multi-device-viewer/changelog.html): Current release notes and product improvements.
 
 ## Support

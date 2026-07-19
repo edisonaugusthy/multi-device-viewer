@@ -26,7 +26,12 @@ import type {
 } from "../../domain/simulator/simulator.types";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
-import { DeviceFrame, estimateDeviceFrameSize } from "./DeviceFrame";
+import {
+  DeviceFrame,
+  estimateDeviceFrameSize,
+  type MobileKeyboardAction,
+  type MobileKeyboardState,
+} from "./DeviceFrame";
 
 const CARD_PAD = 16;
 
@@ -103,12 +108,14 @@ export function PreviewCard({
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
   const previousScrollSyncRef = useRef(display.scrollSync);
   const previousNavigationUrlRef = useRef(slot.url);
+  const standalonePreview = Boolean((window as Window & { __MDV_STANDALONE_PREVIEW__?: boolean }).__MDV_STANDALONE_PREVIEW__);
   const [containerSize, setContainerSize] = useState<Size>({
     width: 0,
     height: 0,
   });
   const [blocked, setBlocked] = useState(false);
   const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("checking");
+  const [keyboard, setKeyboard] = useState<MobileKeyboardState | undefined>();
   const {
     activeSlotId,
     setActiveSlot,
@@ -216,6 +223,14 @@ export function PreviewCard({
     );
   };
 
+  const sendKeyboardAction = (action: MobileKeyboardAction) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      { type: "MDV_KEYBOARD_ACTION", slotId: slot.id, ...action },
+      "*",
+    );
+    if (action.action === "dismiss") setKeyboard(undefined);
+  };
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -232,7 +247,18 @@ export function PreviewCard({
   useEffect(() => {
     setBlocked(false);
     setBridgeStatus("checking");
-  }, [device.id, slot.reloadToken, slot.url]);
+    setKeyboard(undefined);
+  }, [device.id, effectiveOrientation, slot.reloadToken, slot.url]);
+
+  useEffect(() => {
+    if (!keyboard) return;
+    const dismissOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      sendKeyboardAction({ action: "dismiss" });
+    };
+    window.addEventListener("keydown", dismissOnEscape);
+    return () => window.removeEventListener("keydown", dismissOnEscape);
+  }, [keyboard, slot.id]);
 
   useEffect(() => {
     bridgeStatusRef.current = bridgeStatus;
@@ -246,12 +272,19 @@ export function PreviewCard({
     if (!iframe) return;
 
     const register = () => {
-      setBridgeStatus("checking");
+      if (standalonePreview) {
+        setBridgeStatus("ready");
+        setBlocked(false);
+      } else {
+        setBridgeStatus("checking");
+      }
       iframe.contentWindow?.postMessage(
         { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
         "*",
       );
       syncScrollBridge(iframe);
+
+      if (standalonePreview) return;
 
       window.clearTimeout(bridgeStatusTimer.current);
       bridgeStatusTimer.current = window.setTimeout(() => {
@@ -269,7 +302,7 @@ export function PreviewCard({
       iframe.removeEventListener("load", register);
       window.clearTimeout(bridgeStatusTimer.current);
     };
-  }, [containerSize.width, slot.id, slot.reloadToken, slot.url]);
+  }, [containerSize.width, slot.id, slot.reloadToken, slot.url, standalonePreview]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -316,11 +349,26 @@ export function PreviewCard({
         return;
       }
 
+      if (data.type === "MDV_KEYBOARD_FOCUS") {
+        if (device.type !== "phone" && device.type !== "tablet") return;
+        setKeyboard({
+          inputType: typeof data.inputType === "string" ? data.inputType : "text",
+          inputMode: typeof data.inputMode === "string" ? data.inputMode : "",
+          multiline: Boolean(data.multiline),
+        });
+        return;
+      }
+
+      if (data.type === "MDV_KEYBOARD_BLUR") {
+        setKeyboard(undefined);
+        return;
+      }
+
     };
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [display.navigationSync, display.scrollSync, slot.id, slot.url]);
+  }, [device.type, display.navigationSync, display.scrollSync, slot.id, slot.url]);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -475,6 +523,8 @@ export function PreviewCard({
               viewportSize={viewportSize}
               orientation={effectiveOrientation}
               scrollProgress={0}
+              keyboard={keyboard}
+              onKeyboardAction={sendKeyboardAction}
             >
               <div
                 className="relative"
@@ -635,13 +685,21 @@ function DeviceSwitcher({
 
   const sections = useMemo<MenuSection[]>(() => {
     const q = query.trim().toLowerCase();
+    const queryTerms = q.split(/\s+/).filter(Boolean);
     const filterByQuery = (list: Device[]): Device[] =>
       q
-        ? list.filter((device) => `${device.name} ${device.brand} ${device.os} ${device.type} ${device.cssViewport.width}x${device.cssViewport.height}`.toLowerCase().includes(q))
+        ? list.filter((device) => {
+          const haystack = `${device.name} ${device.brand} ${device.os} ${device.type} ${device.cssViewport.width}x${device.cssViewport.height}`
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, " ");
+          return queryTerms.every((term) => haystack.includes(term));
+        })
         : list;
 
     const findById = (id: string) => devices.find((device) => device.id === id);
-    const favoriteDevices = favorites.map(findById).filter((device): device is Device => !!device);
+    const favoriteDevices = favorites
+      .map(findById)
+      .filter((device): device is Device => !!device && menuGroupFor(device) === activeGroup);
     const favoriteSection: MenuSection | null = favoriteDevices.length > 0
       ? { key: "favorite", label: "Favorites", devices: filterByQuery(favoriteDevices) }
       : null;
@@ -650,7 +708,12 @@ function DeviceSwitcher({
     const usedInRecents = new Set<string>();
     const recentDevices = recents
       .map(findById)
-      .filter((d): d is Device => !!d && !usedInRecents.has(d.id) && (usedInRecents.add(d.id), true))
+      .filter((d): d is Device => (
+        !!d
+        && menuGroupFor(d) === activeGroup
+        && !usedInRecents.has(d.id)
+        && (usedInRecents.add(d.id), true)
+      ))
       .slice(0, RECENT_LIMIT);
     const recentSection: MenuSection | null = (() => {
       const filtered = filterByQuery(recentDevices).filter(
@@ -791,36 +854,38 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
   onToggleFavorite: () => void;
   onPick: () => void;
 }>(function DeviceSwitcherItem({ device, active, dark, favorite, onToggleFavorite, onPick }, ref) {
+  const rowClass = `group flex min-h-12 w-full min-w-0 items-center rounded-xl border transition ${
+    active
+      ? dark ? "border-teal-400/20 bg-teal-400/15 text-teal-100" : "border-teal-100 bg-teal-50 text-teal-900"
+      : dark
+        ? "border-transparent text-slate-200 hover:border-white/[0.06] hover:bg-white/[0.055]"
+        : "border-transparent text-slate-700 hover:border-slate-100 hover:bg-slate-50"
+  }`;
+
   return (
-    <button
-      ref={ref}
-      type="button"
-      title={device.name}
-      className={`group flex min-h-12 w-full min-w-0 items-center gap-2.5 rounded-xl border border-transparent px-2.5 py-2 text-left transition ${
-        active
-          ? dark ? "border-teal-400/20 bg-teal-400/15 text-teal-100" : "border-teal-100 bg-teal-50 text-teal-900"
-          : dark
-            ? "text-slate-200 hover:border-white/[0.06] hover:bg-white/[0.055]"
-            : "text-slate-700 hover:border-slate-100 hover:bg-slate-50"
-      }`}
-      onClick={onPick}
-    >
-      <span className="min-w-0 flex-1">
-        <span className="flex min-w-0 items-center gap-2"><span className="min-w-0 flex-1 truncate text-[11px] font-bold leading-tight">{shortName(device.name)}</span>{device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] font-bold ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-500" : "bg-slate-100 text-slate-400"}`}>{device.year}</span>}</span>
-        <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? dark ? "text-teal-300/70" : "text-teal-700/70" : dark ? "text-slate-500" : "text-slate-400"}`}>
-          {device.os.toLowerCase() === "android" ? `${device.brand} · ` : ""}{device.os} · {device.cssViewport.width} × {device.cssViewport.height}
+    <div className={rowClass}>
+      <button
+        ref={ref}
+        type="button"
+        title={device.name}
+        className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5 rounded-l-xl px-2.5 py-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-500"
+        onClick={onPick}
+      >
+        <span className="min-w-0 flex-1">
+          <span className="flex min-w-0 items-center gap-2"><span className="min-w-0 flex-1 truncate text-[11px] font-bold leading-tight">{shortName(device.name)}</span>{device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] font-bold ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-500" : "bg-slate-100 text-slate-400"}`}>{device.year}</span>}</span>
+          <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? dark ? "text-teal-300/70" : "text-teal-700/70" : dark ? "text-slate-500" : "text-slate-400"}`}>
+            {device.os.toLowerCase() === "android" ? `${device.brand} · ` : ""}{device.os} · {device.cssViewport.width} × {device.cssViewport.height}
+          </span>
         </span>
-      </span>
-      <span
-        role="button"
-        tabIndex={0}
+        {active && <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full ${dark ? "bg-teal-400/20 text-teal-300" : "bg-teal-100 text-teal-700"}`}><Check size={12} strokeWidth={2.5} /></span>}
+      </button>
+      <button
+        type="button"
         aria-label={favorite ? `Remove ${device.name} from favorites` : `Add ${device.name} to favorites`}
-        onClick={(event) => { event.stopPropagation(); onToggleFavorite(); }}
-        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); onToggleFavorite(); } }}
-        className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg ${favorite ? "text-amber-400" : dark ? "text-slate-600 hover:text-slate-300" : "text-slate-300 hover:text-slate-600"}`}
-      ><Star size={13} fill={favorite ? "currentColor" : "none"} /></span>
-      {active && <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full ${dark ? "bg-teal-400/20 text-teal-300" : "bg-teal-100 text-teal-700"}`}><Check size={12} strokeWidth={2.5} /></span>}
-    </button>
+        onClick={onToggleFavorite}
+        className={`mr-1 grid h-9 w-9 shrink-0 place-items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${favorite ? "text-amber-400" : dark ? "text-slate-600 hover:text-slate-300" : "text-slate-300 hover:text-slate-600"}`}
+      ><Star size={13} fill={favorite ? "currentColor" : "none"} /></button>
+    </div>
   );
 });
 

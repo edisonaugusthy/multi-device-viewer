@@ -44,6 +44,8 @@ export interface DeviceFrameProfile {
    * so the page never renders under the camera cutout.
    */
   safeAreaInsetTop: number;
+  /** Extra left padding for image-backed status bars with an off-centre camera. */
+  statusBarInsetLeft: number;
   /** OS major version parsed from reference data (e.g. 26, 16). */
   osMajor: number;
 }
@@ -56,7 +58,6 @@ export interface DeviceFrameStyle {
   cutoutWidth?: number;
   cutoutHeight?: number;
   imageCutout?: ImageBackedCutoutStyle;
-  imageStatusBarHeightRatio?: number;
   desktopChrome?: "safari" | "default";
   sideButtonColor?: string;
   shellGradient?: string;
@@ -103,7 +104,6 @@ const defaultFrameStyles: Record<FrameProfileKind, DeviceFrameStyle> = {
       lensRightRatio: 0.16,
       lensSizeRatio: 0.28
     },
-    imageStatusBarHeightRatio: 0.07,
     sideButtonColor: "#a59672",
     shellGradient: "linear-gradient(135deg, #c8bc9a 0%, #111 52%, #f0e8d0 100%)"
   },
@@ -197,7 +197,7 @@ export function getFrameProfile(device: Device): DeviceFrameProfile {
     });
   }
 
-  if (device.id.includes("se") || device.tags.includes("legacy")) {
+  if (isClassicIphone(device)) {
     return createProfile(device, { kind: "iphone-classic", platform: "ios", radius: 32, shellPadding: 12, contentRadius: 18 });
   }
 
@@ -212,6 +212,11 @@ function isApple(device: Device) {
   return device.brand.toLowerCase() === "apple" || /ios|ipados/i.test(device.os);
 }
 
+function isClassicIphone(device: Device) {
+  const id = device.id.toLowerCase();
+  return id === "apple-iphone-5" || id.includes("iphone-se") || device.tags.includes("legacy");
+}
+
 function isAndroid(device: Device) {
   return /android/i.test(device.os) || ["Samsung", "Google"].includes(device.brand);
 }
@@ -219,6 +224,10 @@ function isAndroid(device: Device) {
 function hasDynamicIsland(device: Device) {
   const id = device.id.toLowerCase();
   const name = device.name.toLowerCase();
+
+  // The value-focused e models retain the wide notch. Their release year alone
+  // must not promote them to the Dynamic Island profile.
+  if (id.includes("iphone-16e") || id.includes("iphone-17e")) return false;
 
   return (
     (device.year ?? 0) >= 2023 ||
@@ -228,7 +237,7 @@ function hasDynamicIsland(device: Device) {
   );
 }
 
-function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome" | "chromeVariant" | "safeAreaInsetBottom" | "safeAreaInsetTop" | "osMajor">): DeviceFrameProfile {
+function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome" | "chromeVariant" | "safeAreaInsetBottom" | "safeAreaInsetTop" | "statusBarInsetLeft" | "osMajor">): DeviceFrameProfile {
   const desktopChrome: DeviceFrameStyle["desktopChrome"] =
     isApple(device) && (device.type === "laptop" || device.type === "desktop") ? "safari" : "default";
   const mockupFrameStyle = device.mockupAssets.find((asset) => asset.frameStyle)?.frameStyle;
@@ -253,6 +262,7 @@ function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style"
     chromeVariant,
     safeAreaInsetBottom,
     safeAreaInsetTop,
+    statusBarInsetLeft: meta?.statusBarInsetLeft ?? 0,
     osMajor
   };
 }
@@ -275,6 +285,7 @@ function resolveSafeAreaInsetTop(
     return deviceType === "tablet" ? 28 : 32;
   }
   if (platform === "ios") {
+    if (measuredTop && measuredTop > 0) return measuredTop;
     if (kind === "iphone-dynamic-island") return 59; // Dynamic Island generations
     if (kind === "iphone-notch") return 47;          // iPhone X–14 / XR notch
     if (kind === "iphone-classic") return 20;         // SE / legacy status bar

@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, Copy, BookOpen, Lock, Plus, RefreshCw, Share, Square, Home, MoreVertical } from "lucide-react";
+import { useEffect, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, Copy, BookOpen, Lock, Plus, RefreshCw, Share, Square, Home, MoreVertical } from "lucide-react";
 import type { Device, MockupViewportConfig, Orientation, Size } from "../../domain/device/device.types";
 import { getFrameProfile, type DeviceFrameStyle, type ChromeVariant } from "../../domain/device/frame-profiles";
 
@@ -18,6 +18,16 @@ interface ScreenRect {
   height: number;
 }
 
+export interface MobileKeyboardState {
+  inputType?: string;
+  inputMode?: string;
+  multiline?: boolean;
+}
+
+export type MobileKeyboardAction =
+  | { action: "text"; text: string }
+  | { action: "backspace" | "enter" | "dismiss" };
+
 // ─── Main component ─────────────────────────────────────────────────────────
 export function DeviceFrame({
   device,
@@ -31,6 +41,8 @@ export function DeviceFrame({
   viewportSize,
   orientation,
   scrollProgress = 0,
+  keyboard,
+  onKeyboardAction,
 }: {
   device: Device;
   children: ReactNode;
@@ -43,12 +55,15 @@ export function DeviceFrame({
   viewportSize: Size;
   orientation: Orientation;
   scrollProgress?: number;
+  keyboard?: MobileKeyboardState;
+  onKeyboardAction?: (action: MobileKeyboardAction) => void;
 }) {
   const profile = getFrameProfile(device);
   const hostname = safeHostname(url);
-  // Only handset/tablet mockups rotate. Laptop/desktop assets are already
-  // landscape canvases and must never be swapped as if they were phones.
-  const landscape = orientation === "landscape" && (device.type === "phone" || device.type === "tablet");
+  // Derive the rendered posture from the viewport itself. Most handset/tablet
+  // PNGs are portrait-first, but unfolded foldables can be natively landscape.
+  // Using the orientation label alone made those assets escape their fitted box.
+  const landscape = viewportSize.width > viewportSize.height && (device.type === "phone" || device.type === "tablet");
   const compact = landscape || profile.kind === "iphone-classic" || profile.kind === "tablet";
   const shellP = profile.style.shellPadding ?? profile.shellPadding;
   const innerP = profile.style.innerPadding ?? 0;
@@ -67,15 +82,26 @@ export function DeviceFrame({
   const contentH = Math.max(120, viewportSize.height - statusH - addrH - bottomH);
   const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.localPath && asset.width && asset.height);
   const measuredScreenRect = useImageScreenRect(imageFrame?.screenInset ? undefined : imageFrame?.localPath);
+  const keyboardOverlay = keyboard && (device.type === "phone" || device.type === "tablet") ? (
+    <MobileKeyboard
+      platform={profile.platform === "ios" ? "ios" : "android"}
+      landscape={landscape}
+      tablet={device.type === "tablet"}
+      dark={darkMode}
+      state={keyboard}
+      onAction={onKeyboardAction}
+    />
+  ) : null;
 
   // ── No frame ──────────────────────────────────────────────────────────────
   if (!showFrame) {
     return (
       <div
-        className={`overflow-hidden rounded-[10px] border shadow-sm ${darkMode ? "border-white/10 bg-[#0f172a]" : "border-slate-200 bg-white"}`}
+        className={`relative overflow-hidden rounded-[10px] border shadow-sm ${darkMode ? "border-white/10 bg-[#0f172a]" : "border-slate-200 bg-white"}`}
         style={{ width: viewportSize.width, height: viewportSize.height }}
       >
         {children}
+        {keyboardOverlay}
       </div>
     );
   }
@@ -100,6 +126,7 @@ export function DeviceFrame({
             {children}
           </div>
           {showUrlBar && <SafariBar hostname={hostname} compact={compact} dark={darkMode} variant="ios-classic" />}
+          {keyboardOverlay}
         </div>
       </div>
     );
@@ -108,11 +135,10 @@ export function DeviceFrame({
   if (imageFrame?.localPath && imageFrame.width && imageFrame.height) {
     const baseFrameW = imageFrame.width / 2;
     const baseFrameH = imageFrame.height / 2;
-    // Mockup PNGs are stored portrait-first. In landscape, rotate the complete
-    // shell and swap its outer dimensions so the screen, chrome, and frame all
-    // share the same orientation.
-    const frameW = landscape ? baseFrameH : baseFrameW;
-    const frameH = landscape ? baseFrameW : baseFrameH;
+    const assetLandscape = baseFrameW > baseFrameH;
+    const rotateImage = (device.type === "phone" || device.type === "tablet") && assetLandscape !== landscape;
+    const frameW = rotateImage ? baseFrameH : baseFrameW;
+    const frameH = rotateImage ? baseFrameW : baseFrameH;
     const viewportConfig = imageFrame.viewport?.[orientation];
     const catalogScreenRect = screenRectFromInset(imageFrame.screenInset, frameW, frameH);
     const resolvedMeasuredScreenRect = catalogScreenRect ?? measuredScreenRect;
@@ -124,14 +150,13 @@ export function DeviceFrame({
       viewportConfig,
     );
     const screenFit = fitViewportToScreen(viewportSize, screenRect);
-    const viewportClipPath = getImageViewportClipPath(viewportConfig, orientation);
+    const viewportClipPath = getImageViewportClipPath(viewportConfig, orientation, screenRadiusForDevice(device));
     const mobileChrome = profile.imageChrome;
-    const isIosImage = profile.platform === "ios";
     // The top safe area = status bar + notch / Dynamic Island clearance. In landscape the
     // notch moves to the side, so no vertical top inset is reserved.
     const safeTop = landscape ? 0 : profile.safeAreaInsetTop;
     const imageStatusH = mobileChrome.showStatusBar && showStatusBar
-      ? Math.max(safeTop, getImageStatusHeight(profile.style, viewportSize, statusH))
+      ? Math.max(safeTop, statusH)
       : safeTop;
     const imageAddrH = mobileChrome.showAndroidTopBar && showUrlBar ? addrH : 0;
     const imageBottomH = mobileChrome.showBottomBar && showUrlBar ? bottomH : 0;
@@ -149,7 +174,7 @@ export function DeviceFrame({
     const imageContentTop =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? 0
-        : imageStatusH + imageAddrH;
+        : getMobileContentTop(imageStatusH, imageAddrH);
     const imageContentH =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? Math.max(120, viewportSize.height - (useSafariDesktopChrome ? 56 : desktopToolbarH))
@@ -157,6 +182,7 @@ export function DeviceFrame({
 
     return (
       <div
+        data-device-frame={device.id}
         className="relative shrink-0"
         style={{ width: frameW, height: frameH }}
       >
@@ -170,11 +196,12 @@ export function DeviceFrame({
             height: baseFrameH,
             left: "50%",
             top: "50%",
-            transform: `translate(-50%, -50%)${landscape ? " rotate(90deg)" : ""}`,
+            transform: `translate(-50%, -50%)${rotateImage ? " rotate(90deg)" : ""}`,
           }}
         />
         {!waitForMeasuredScreen && (
           <div
+            data-device-screen={device.id}
             className="absolute overflow-hidden"
             style={{
               left: screenFit.left,
@@ -221,6 +248,7 @@ export function DeviceFrame({
                       imageBackedKind={device.type === "tablet" ? "tablet" : "phone"}
                       height={imageStatusH || undefined}
                       chromeVariant={profile.chromeVariant}
+                      timeInsetLeft={profile.statusBarInsetLeft}
                     />
                   )}
                   {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={imageStatusH} scrollProgress={chromeCollapse} />}
@@ -245,6 +273,7 @@ export function DeviceFrame({
                   )}
                   {mobileChrome.showAndroidBottomBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
                   {mobileChrome.showHomeIndicator && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
+                  {keyboardOverlay}
                 </>
               )}
             </div>
@@ -391,6 +420,7 @@ export function DeviceFrame({
             {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
             {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
             {isIos && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
+            {keyboardOverlay}
           </div>
         </div>
       </div>
@@ -436,8 +466,152 @@ export function DeviceFrame({
           {showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
           {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
           {isIos && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
+          {keyboardOverlay}
         </div>
       </div>
+    </div>
+  );
+}
+
+function MobileKeyboard({
+  platform,
+  landscape,
+  tablet,
+  dark,
+  state,
+  onAction,
+}: {
+  platform: "ios" | "android";
+  landscape: boolean;
+  tablet: boolean;
+  dark: boolean;
+  state: MobileKeyboardState;
+  onAction?: (action: MobileKeyboardAction) => void;
+}) {
+  const [shifted, setShifted] = useState(false);
+  const [symbolMode, setSymbolMode] = useState(false);
+  const inputKind = `${state.inputType ?? ""} ${state.inputMode ?? ""}`.toLowerCase();
+  const forcedNumeric = /number|numeric|decimal|tel/.test(inputKind);
+  const numeric = forcedNumeric || symbolMode;
+  const email = /email/.test(inputKind);
+  const search = /search/.test(inputKind);
+  const keyboardHeight = landscape ? (tablet ? 250 : 190) : tablet ? 360 : 290;
+  const ios = platform === "ios";
+  const surface = ios
+    ? dark ? "bg-[#5a5d63]/98 text-white" : "bg-[#d1d4d9]/98 text-slate-950"
+    : dark ? "bg-[#202124]/98 text-white" : "bg-[#eceff1]/98 text-slate-950";
+  const keySurface = ios
+    ? dark ? "bg-[#868a91] shadow-[0_2px_0_#303237]" : "bg-white shadow-[0_2px_0_#8d929a]"
+    : dark ? "bg-[#3c4043] shadow-[0_1px_0_#111]" : "bg-white shadow-[0_1px_0_#aeb4b9]";
+  const utilitySurface = ios
+    ? dark ? "bg-[#6b6f76]" : "bg-[#aeb3bb]"
+    : dark ? "bg-[#303134]" : "bg-[#d7dadd]";
+
+  const sendText = (value: string) => {
+    onAction?.({ action: "text", text: shifted ? value.toUpperCase() : value });
+    if (shifted) setShifted(false);
+  };
+  const stopFocusChange = (event: ReactPointerEvent<HTMLButtonElement>) => event.preventDefault();
+  const key = (label: string, value = label, wide = false) => (
+    <button
+      key={`${label}-${value}`}
+      type="button"
+      tabIndex={-1}
+      aria-label={`Key ${label === " " ? "Space" : label}`}
+      className={`flex min-w-0 flex-1 items-center justify-center rounded-[7px] font-medium active:translate-y-px ${keySurface} ${wide ? "basis-[34%]" : ""}`}
+      style={{ fontSize: tablet ? 22 : landscape ? 14 : 18 }}
+      onPointerDown={stopFocusChange}
+      onClick={() => sendText(value)}
+    >
+      {label === " " ? (ios ? "space" : "") : shifted ? label.toUpperCase() : label}
+    </button>
+  );
+  const rows = numeric
+    ? [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"], [".", "0", "-"]]
+    : [["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"], ["a", "s", "d", "f", "g", "h", "j", "k", "l"], ["z", "x", "c", "v", "b", "n", "m"]];
+  const enterLabel = state.multiline ? (ios ? "return" : "Enter") : search ? "Search" : ios ? "go" : "Go";
+
+  useEffect(() => {
+    setShifted(false);
+    setSymbolMode(false);
+  }, [inputKind]);
+
+  return (
+    <div
+      data-mobile-keyboard={platform}
+      role="group"
+      aria-label={`${ios ? "iOS" : "Android"} on-screen keyboard`}
+      className={`absolute inset-x-0 bottom-0 z-[70] flex flex-col gap-2 border-t border-black/10 p-2.5 shadow-[0_-12px_32px_rgba(0,0,0,0.22)] backdrop-blur-xl ${surface}`}
+      style={{ height: keyboardHeight }}
+      onPointerDown={(event) => event.stopPropagation()}
+    >
+      {rows.map((row, index) => (
+        <div key={index} className="flex min-h-0 flex-1 justify-center gap-1.5 px-0.5">
+          {!numeric && index === 2 && (
+            <button
+              type="button"
+              tabIndex={-1}
+              aria-label="Shift"
+              aria-pressed={shifted}
+              className={`flex basis-[12%] items-center justify-center rounded-[7px] text-base ${utilitySurface} ${shifted ? "ring-2 ring-blue-500" : ""}`}
+              onPointerDown={stopFocusChange}
+              onClick={() => setShifted((value) => !value)}
+            >
+              ⇧
+            </button>
+          )}
+          {row.map((letter) => key(letter))}
+          {index === rows.length - 1 && (
+            <button
+              type="button"
+              tabIndex={-1}
+              aria-label="Backspace"
+              className={`flex basis-[12%] items-center justify-center rounded-[7px] text-lg ${utilitySurface}`}
+              onPointerDown={stopFocusChange}
+              onClick={() => onAction?.({ action: "backspace" })}
+            >
+              ⌫
+            </button>
+          )}
+        </div>
+      ))}
+      <div className="flex min-h-0 flex-1 gap-1.5">
+        {forcedNumeric ? key("+") : email ? key("@") : (
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label={numeric ? "Letters keyboard" : "Numbers keyboard"}
+            className={`flex basis-[14%] items-center justify-center rounded-[7px] px-2 font-medium ${utilitySurface}`}
+            onPointerDown={stopFocusChange}
+            onClick={() => setSymbolMode((value) => !value)}
+          >
+            {numeric ? "ABC" : ios ? "123" : "?123"}
+          </button>
+        )}
+        {key(" ", " ", true)}
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label={`Key ${enterLabel}`}
+          className="flex basis-[20%] items-center justify-center rounded-[7px] bg-blue-500 px-2 font-semibold text-white active:bg-blue-600"
+          style={{ fontSize: tablet ? 18 : 14 }}
+          onPointerDown={stopFocusChange}
+          onClick={() => onAction?.({ action: "enter" })}
+        >
+          {enterLabel}
+        </button>
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Dismiss keyboard"
+          className={`flex basis-[12%] items-center justify-center rounded-[7px] ${utilitySurface}`}
+          onPointerDown={stopFocusChange}
+          onClick={() => onAction?.({ action: "dismiss" })}
+        >
+          <ChevronDown size={tablet ? 24 : 18} />
+        </button>
+      </div>
+      {ios && <div className="mx-auto h-1 w-[34%] shrink-0 rounded-full bg-current opacity-70" />}
     </div>
   );
 }
@@ -453,10 +627,12 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
   const profile = getFrameProfile(device);
   const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.width && asset.height);
   if (imageFrame?.width && imageFrame.height) {
-    const landscape = (device.type === "phone" || device.type === "tablet") && viewportSize.width > viewportSize.height;
+    const viewportLandscape = (device.type === "phone" || device.type === "tablet") && viewportSize.width > viewportSize.height;
+    const assetLandscape = imageFrame.width > imageFrame.height;
+    const rotateImage = (device.type === "phone" || device.type === "tablet") && assetLandscape !== viewportLandscape;
     return {
-      width: (landscape ? imageFrame.height : imageFrame.width) / 2,
-      height: (landscape ? imageFrame.width : imageFrame.height) / 2,
+      width: (rotateImage ? imageFrame.height : imageFrame.width) / 2,
+      height: (rotateImage ? imageFrame.width : imageFrame.height) / 2,
     };
   }
 
@@ -539,14 +715,54 @@ function adjustImageFrameScreenRect(
   };
 }
 
-function getImageViewportClipPath(adjustment: MockupViewportConfig | undefined, orientation: Orientation) {
+function getImageViewportClipPath(
+  adjustment: MockupViewportConfig | undefined,
+  orientation: Orientation,
+  radius: number,
+) {
   const path = adjustment?.paths?.[orientation];
   const pathValue = Array.isArray(path) ? path.join(" ") : path;
   // Use the evenodd fill rule so the inner camera/notch sub-path is always cut out as a
   // hole, regardless of its winding direction. With the default (nonzero) rule, a hole only
   // appears when the sub-paths wind in opposite directions — which is why the notch showed
   // on some devices and not others.
-  return pathValue ? `path(evenodd, "${pathValue}")` : undefined;
+  if (pathValue) return `path(evenodd, "${pathValue}")`;
+  if (!adjustment?.occlusions?.length) return undefined;
+
+  const outer = roundedRectPath(0, 0, adjustment.width, adjustment.height, radius);
+  const holes = adjustment.occlusions.map((occlusion) => {
+    if (occlusion.kind === "circle") {
+      const rx = occlusion.width / 2;
+      const ry = occlusion.height / 2;
+      const cx = occlusion.left + rx;
+      const cy = occlusion.top + ry;
+      return `M${cx - rx} ${cy}A${rx} ${ry} 0 1 0 ${cx + rx} ${cy}A${rx} ${ry} 0 1 0 ${cx - rx} ${cy}Z`;
+    }
+    return roundedRectPath(
+      occlusion.left,
+      occlusion.top,
+      occlusion.width,
+      occlusion.height,
+      occlusion.kind === "rounded-rect" ? (occlusion.radius ?? Math.min(occlusion.width, occlusion.height) / 2) : 0,
+    );
+  });
+
+  return `path(evenodd, "${[outer, ...holes].join(" ")}")`;
+}
+
+function roundedRectPath(left: number, top: number, width: number, height: number, radius: number) {
+  const right = left + width;
+  const bottom = top + height;
+  const r = clamp(radius, 0, Math.min(width, height) / 2);
+  if (r === 0) return `M${left} ${top}H${right}V${bottom}H${left}Z`;
+  return `M${left + r} ${top}H${right - r}Q${right} ${top} ${right} ${top + r}V${bottom - r}Q${right} ${bottom} ${right - r} ${bottom}H${left + r}Q${left} ${bottom} ${left} ${bottom - r}V${top + r}Q${left} ${top} ${left + r} ${top}Z`;
+}
+
+function screenRadiusForDevice(device: Device) {
+  if (device.type === "laptop" || device.type === "desktop" || device.type === "tv") return 4;
+  if (device.type === "tablet") return 22;
+  if (device.id.includes("fold7-unfolded")) return 20;
+  return 28;
 }
 
 function fitViewportToScreen(viewportSize: Size, screenRect: ScreenRect) {
@@ -792,11 +1008,6 @@ function resolveImageLens(style: DeviceFrameStyle, viewportSize: Size | undefine
   };
 }
 
-function getImageStatusHeight(style: DeviceFrameStyle, viewportSize: Size, fallback: number) {
-  if (!style.imageStatusBarHeightRatio) return fallback;
-  return Math.max(fallback, Math.round(viewportSize.height * style.imageStatusBarHeightRatio));
-}
-
 function StatusBar({
   platform,
   showBattery,
@@ -805,6 +1016,7 @@ function StatusBar({
   imageBackedKind,
   height,
   chromeVariant = "none",
+  timeInsetLeft = 0,
 }: {
   platform: string;
   showBattery: boolean;
@@ -813,8 +1025,8 @@ function StatusBar({
   imageBackedKind?: "phone" | "tablet";
   height?: number;
   chromeVariant?: ChromeVariant;
+  timeInsetLeft?: number;
 }) {
-  void chromeVariant;
   const time = "9:41";
   const h = height ?? (platform === "android" ? 28 : compact ? 28 : 44);
   const px = compact ? 14 : 18;
@@ -837,7 +1049,7 @@ function StatusBar({
         }`}
         style={{ height: h }}
       >
-        <div className="flex w-full items-center justify-between" style={{ height: rowH, paddingLeft: px, paddingRight: px }}>
+        <div className="flex w-full items-center justify-between" style={{ height: rowH, paddingLeft: px + timeInsetLeft, paddingRight: px }}>
           <span className="text-[12px] font-semibold leading-none">{time}</span>
           <span className="flex items-center gap-[5px]">
             <WifiIcon />
@@ -845,6 +1057,26 @@ function StatusBar({
             {showBattery && <BatteryIcon />}
           </span>
         </div>
+      </div>
+    );
+  }
+
+  if (iosImageBackedPhone && chromeVariant === "ios-classic") {
+    return (
+      <div
+        data-ios-status-layout="classic"
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 grid grid-cols-[1fr_auto_1fr] items-center bg-black px-1.5 text-[9px] font-semibold leading-none text-white"
+        style={{ height: h }}
+      >
+        <span className="flex min-w-0 items-center gap-1">
+          <LegacySignalDots />
+          <span>Carrier</span>
+        </span>
+        <span className="text-[10px]">{time}</span>
+        <span className="flex items-center justify-end gap-1">
+          {showBattery && <span>100%</span>}
+          {showBattery && <BatteryIcon />}
+        </span>
       </div>
     );
   }
@@ -990,15 +1222,24 @@ function SafariBar({
 
 function DesktopBar({ hostname, dark }: { hostname: string; dark: boolean }) {
   return (
-    <div className={`flex h-9 items-center gap-2 border-b px-3 ${dark ? "border-white/10 bg-[#111827]" : "border-slate-200 bg-[#f3f4f6]"}`}>
-      <span className="flex gap-1.5">
-        <span className="h-3 w-3 rounded-full bg-[#ff605c]" />
-        <span className="h-3 w-3 rounded-full bg-[#ffbd44]" />
-        <span className="h-3 w-3 rounded-full bg-[#00ca4e]" />
+    <div
+      data-desktop-chrome="windows"
+      className={`flex h-9 items-center gap-1.5 border-b px-2 ${
+        dark ? "border-white/10 bg-[#111827] text-slate-300" : "border-slate-200 bg-[#f3f4f6] text-slate-600"
+      }`}
+    >
+      <ChevronLeft size={14} className="shrink-0" />
+      <ChevronRight size={14} className={`shrink-0 ${dark ? "text-slate-600" : "text-slate-300"}`} />
+      <RefreshCw size={12} className="mx-0.5 shrink-0" />
+      <span
+        className={`mx-1 flex min-w-0 flex-1 items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold shadow-inner ${
+          dark ? "bg-white/10 text-slate-300" : "bg-white text-slate-500"
+        }`}
+      >
+        <Lock size={10} className="shrink-0" />
+        <span className="truncate">{hostname}</span>
       </span>
-      <span className={`min-w-0 flex-1 truncate rounded-md px-3 py-1 text-[11px] font-semibold shadow-inner ${dark ? "bg-white/10 text-slate-300" : "bg-white text-slate-500"}`}>
-        {hostname}
-      </span>
+      <MoreVertical size={14} className="shrink-0" />
     </div>
   );
 }
@@ -1006,6 +1247,7 @@ function DesktopBar({ hostname, dark }: { hostname: string; dark: boolean }) {
 function SafariDesktopBar({ hostname, dark }: { hostname: string; dark: boolean }) {
   return (
     <div
+      data-desktop-chrome="safari"
       className={`flex h-14 items-center gap-5 border-b px-8 ${
         dark ? "border-white/10 bg-[#111827] text-slate-200" : "border-slate-200 bg-[#f7f7f8] text-[#007AFF]"
       }`}
@@ -1102,10 +1344,16 @@ function SideButtons({ platform, kind, color }: { platform: string; kind: string
   );
 }
 
-function getStatusHeight(platform: string, kind: string, compact: boolean) {
+export function getStatusHeight(platform: string, kind: string, compact: boolean) {
   if (platform === "android") return 28;
-  if (kind === "iphone-classic" || compact) return 28;
+  if (kind === "iphone-classic") return 20;
+  if (compact) return 28;
+  if (kind === "iphone-notch") return 44;
   return 54;
+}
+
+export function getMobileContentTop(statusHeight: number, addressHeight: number) {
+  return Math.max(0, statusHeight) + Math.max(0, addressHeight);
 }
 
 function getBottomHeight(platform: string, compact: boolean) {
@@ -1122,6 +1370,16 @@ function SignalIcon() {
       <rect x="8" y="2.5" width="2.5" height="8.5" rx="0.8" />
       <rect x="12" y="0" width="2.5" height="11" rx="0.8" />
     </svg>
+  );
+}
+
+function LegacySignalDots() {
+  return (
+    <span aria-hidden="true" className="flex items-center gap-px">
+      {Array.from({ length: 5 }, (_, index) => (
+        <span key={index} className="h-[3px] w-[3px] rounded-full bg-current" />
+      ))}
+    </span>
   );
 }
 

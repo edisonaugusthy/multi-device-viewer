@@ -79,6 +79,11 @@ Use current UI captures at 1280×800 or 640×400. Keep text overlays short and r
 
 Do not reuse screenshots from the previous sidebar or URL-bar design; outdated images can reduce listing clarity and conversion.
 
+### Promotional images
+
+- **Small promo tile (440×280 JPEG)** — `promo-small-440x280.jpg`.
+- **Marquee promo tile (1400×560 JPEG)** — `promo-marquee-1400x560.jpg`.
+
 ### Category
 
 Developer Tools

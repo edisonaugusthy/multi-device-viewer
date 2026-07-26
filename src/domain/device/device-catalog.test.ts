@@ -10,6 +10,67 @@ import { getFrameProfile } from "./frame-profiles";
 
 describe("device catalog imports", () => {
   it.each([
+    ["samsung-galaxy-z-fold8-ultra-folded-2026", "Samsung Galaxy Z Fold8 Ultra (folded)", 360, 840, 1080, 2520],
+    ["samsung-galaxy-z-fold8-ultra-unfolded-2026", "Samsung Galaxy Z Fold8 Ultra (unfolded)", 902, 1002, 2256, 2504],
+    ["samsung-galaxy-z-fold8-folded-2026", "Samsung Galaxy Z Fold8 (folded)", 416, 657, 1248, 1972],
+    ["samsung-galaxy-z-fold8-unfolded-2026", "Samsung Galaxy Z Fold8 (unfolded)", 979, 739, 2448, 1848],
+    ["samsung-galaxy-z-flip8-folded-2026", "Samsung Galaxy Z Flip8 (folded)", 316, 349, 948, 1048],
+    ["samsung-galaxy-z-flip8-unfolded-2026", "Samsung Galaxy Z Flip8 (unfolded)", 360, 840, 1080, 2520],
+    ["samsung-galaxy-a27-5g-2026", "Samsung Galaxy A27 5G", 360, 780, 1080, 2340],
+  ])("includes newly announced device %s", (id, name, width, height, panelWidth, panelHeight) => {
+    expect(devices.find((candidate) => candidate.id === id)).toMatchObject({
+      name,
+      year: 2026,
+      cssViewport: { width, height },
+      manufacturerResolution: { width: panelWidth, height: panelHeight },
+      tags: expect.arrayContaining(["android", "new"]),
+    });
+  });
+
+  it("marks only the latest device batch as new", () => {
+    expect(
+      devices
+        .filter((device) => device.tags.includes("new"))
+        .map((device) => device.id)
+        .sort(),
+    ).toEqual([
+      "samsung-galaxy-a27-5g-2026",
+      "samsung-galaxy-z-flip8-folded-2026",
+      "samsung-galaxy-z-flip8-unfolded-2026",
+      "samsung-galaxy-z-fold8-folded-2026",
+      "samsung-galaxy-z-fold8-ultra-folded-2026",
+      "samsung-galaxy-z-fold8-ultra-unfolded-2026",
+      "samsung-galaxy-z-fold8-unfolded-2026",
+    ]);
+  });
+
+  it.each([
+    ["samsung-galaxy-z-fold8-ultra-folded-2026", "/mockups/samsung-galaxy-z-fold8-ultra-folded.png"],
+    ["samsung-galaxy-z-fold8-ultra-unfolded-2026", "/mockups/samsung-galaxy-z-fold8-ultra-unfolded.png"],
+    ["samsung-galaxy-z-fold8-folded-2026", "/mockups/samsung-galaxy-z-fold8-folded.png"],
+    ["samsung-galaxy-z-fold8-unfolded-2026", "/mockups/samsung-galaxy-z-fold8-unfolded.png"],
+    ["samsung-galaxy-z-flip8-folded-2026", "/mockups/samsung-galaxy-z-flip8-folded.png"],
+    ["samsung-galaxy-z-flip8-unfolded-2026", "/mockups/samsung-galaxy-z-flip8-unfolded.png"],
+    ["samsung-galaxy-a27-5g-2026", "/mockups/samsung-galaxy-a27-5g.png"],
+  ])("uses a product-specific official frame for %s", (id, localPath) => {
+    const asset = devices.find((candidate) => candidate.id === id)?.mockupAssets[0];
+
+    expect(asset?.localPath).toBe(localPath);
+    expect(asset?.viewport?.portrait).toBeDefined();
+  });
+
+  it("keeps unfolded foldables free of synthetic hinge seams", () => {
+    for (const id of [
+      "samsung-galaxy-z-fold8-unfolded-2026",
+      "samsung-galaxy-z-fold8-ultra-unfolded-2026",
+    ]) {
+      const portrait = devices.find((device) => device.id === id)!.mockupAssets[0].viewport!.portrait!;
+      expect(portrait.occlusions?.some((occlusion) => occlusion.kind === "rect")).toBe(false);
+      expect(portrait.cornerRadius).toBeLessThan(10);
+    }
+  });
+
+  it.each([
     ["google-pixel-10-2026", "Google Pixel 10", 412, 924, 2.625],
     ["google-pixel-10-pro-2026", "Google Pixel 10 Pro", 410, 912, 3.125],
     ["google-pixel-10-pro-fold-2026", "Google Pixel 10 Pro Fold", 412, 901, 2.625],

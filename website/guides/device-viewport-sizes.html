@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Device Viewport Sizes for Responsive Web Testing</title>
+    <meta
+      name="description"
+      content="Choose practical CSS viewport sizes for responsive website testing across compact phones, large phones, tablets, laptops, desktops, and foldable devices."
+    />
+    <link
+      rel="canonical"
+      href="https://edisonaugusthy.github.io/multi-device-viewer/guides/device-viewport-sizes.html"
+    />
+    <meta property="og:title" content="Device Viewport Sizes for Responsive Testing" />
+    <meta
+      property="og:description"
+      content="Test representative CSS viewport ranges instead of chasing every physical screen resolution."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://edisonaugusthy.github.io/multi-device-viewer/guides/device-viewport-sizes.html"
+    />
+    <meta name="theme-color" content="#f7f8f4" />
+    <link rel="icon" href="../icons/icon-48.png" type="image/png" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Device viewport sizes for responsive web testing",
+        "description": "A practical guide to selecting representative CSS viewport dimensions for responsive website checks.",
+        "datePublished": "2026-07-25",
+        "dateModified": "2026-07-25",
+        "author": { "@type": "Person", "name": "Edison Augusthy" },
+        "mainEntityOfPage": "https://edisonaugusthy.github.io/multi-device-viewer/guides/device-viewport-sizes.html"
+      }
+    </script>
+  </head>
+  <body class="content-page">
+    <header class="site-nav">
+      <a class="brand" href="../" aria-label="Mobile View home"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../#features">Features</a><a href="../#privacy">Privacy</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer"
+          >GitHub</a
+        >
+      </nav>
+      <a
+        class="button button-small"
+        href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?authuser=0&amp;hl=en-GB"
+        >Add to Chrome <span>↗</span></a
+      >
+    </header>
+    <main class="content">
+      <p class="breadcrumbs">
+        <a href="../">Home</a> / <a href="./index.html">Guides</a> / Device
+        viewport sizes
+      </p>
+      <p class="eyebrow">RESPONSIVE VIEWPORT COVERAGE</p>
+      <h1>Test the width range, not every device name.</h1>
+      <p class="lead">
+        A short set of representative CSS viewport sizes finds more responsive
+        failures than a long list of nearly identical phones. Start with the
+        supported width range, then add exact devices only when product
+        analytics or a reported issue requires them.
+      </p>
+
+      <h2>CSS viewport size is not physical screen resolution</h2>
+      <p>
+        Manufacturers publish physical pixel dimensions such as 1080 × 2400.
+        Browsers usually lay out a page in CSS pixels after applying device
+        pixel ratio and browser interface constraints. Responsive media queries
+        react to the CSS viewport, not directly to the panel’s physical pixel
+        count.
+      </p>
+      <p>
+        That is why two phones with different high-resolution displays can
+        expose similar browser widths, while a foldable can change dramatically
+        between folded and unfolded states.
+      </p>
+
+      <h2>A practical baseline viewport set</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Useful starting width</th>
+            <th>Primary risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Compact phone</td>
+            <td>320–360 CSS px</td>
+            <td>Overflow, wrapping, minimum touch space</td>
+          </tr>
+          <tr>
+            <td>Common phone</td>
+            <td>375–430 CSS px</td>
+            <td>Mobile navigation and content hierarchy</td>
+          </tr>
+          <tr>
+            <td>Small tablet</td>
+            <td>600–768 CSS px</td>
+            <td>Breakpoint gaps and awkward intermediate layouts</td>
+          </tr>
+          <tr>
+            <td>Large tablet</td>
+            <td>820–1024 CSS px</td>
+            <td>Two-column transitions and landscape behavior</td>
+          </tr>
+          <tr>
+            <td>Laptop</td>
+            <td>1280–1440 CSS px</td>
+            <td>Desktop density and limited vertical space</td>
+          </tr>
+          <tr>
+            <td>Wide desktop</td>
+            <td>1600 CSS px and above</td>
+            <td>Maximum line length and excessive empty space</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        These ranges are starting points, not universal breakpoints. The right
+        viewport is the one that exposes your content and layout constraints.
+      </p>
+
+      <h2>Test immediately around your CSS breakpoints</h2>
+      <p>
+        If navigation changes at 768px, test 767px, 768px, and 769px. Repeat
+        that pattern for major grid, sidebar, and typography transitions.
+        Custom viewports around actual media queries catch off-by-one rules and
+        unintended overlap more reliably than device presets alone.
+      </p>
+
+      <h2>Include height and orientation</h2>
+      <p>
+        Width controls most responsive layouts, but height reveals sticky
+        headers, cookie banners, bottom navigation, dialogs, and virtual
+        keyboards that consume the visible area. Rotate phone and tablet
+        profiles when landscape changes navigation or content order.
+      </p>
+
+      <h2>How to choose exact device profiles</h2>
+      <ul>
+        <li>Use analytics to identify important viewport dimensions.</li>
+        <li>Add devices named in support reports or bug tickets.</li>
+        <li>
+          Include folded and unfolded layouts when your audience uses
+          foldables.
+        </li>
+        <li>
+          Keep one compact device to protect the minimum supported width.
+        </li>
+        <li>
+          Save a stable release set so results are comparable over time.
+        </li>
+      </ul>
+
+      <div class="callout">
+        <strong>Four strong viewports beat twenty unchecked screenshots</strong>
+        <p>
+          A compact phone, common phone, tablet, and laptop create a useful
+          first pass. Add targeted sizes around breakpoints, then document the
+          exact width where the failure begins.
+        </p>
+      </div>
+
+      <div class="related-guides">
+        <h2>Put the viewport set into practice</h2>
+        <p>
+          Follow the
+          <a href="./responsive-design-checker.html">responsive design checker guide</a>
+          and finish with the
+          <a href="./responsive-testing.html">pre-release responsive checklist</a>.
+        </p>
+      </div>
+    </main>
+    <footer class="site-footer shell page-footer">
+      <a class="brand" href="../"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <p>
+        Free responsive testing for Chrome and Firefox.<br />Open source under
+        the MIT license.
+      </p>
+      <div>
+        <a href="../privacy.html">Privacy</a
+        ><a href="../changelog.html">Changelog</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer/issues"
+          >Issues</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

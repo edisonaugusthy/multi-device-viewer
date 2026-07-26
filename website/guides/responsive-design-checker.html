@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Responsive Design Checker Guide — Test Every Screen Size</title>
+    <meta
+      name="description"
+      content="Learn how to use a responsive design checker to compare mobile, tablet, laptop, and desktop layouts, test breakpoints, and document actionable issues."
+    />
+    <link
+      rel="canonical"
+      href="https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-design-checker.html"
+    />
+    <meta property="og:title" content="Responsive Design Checker Guide" />
+    <meta
+      property="og:description"
+      content="A practical workflow for testing one website across multiple screen sizes."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-design-checker.html"
+    />
+    <meta name="theme-color" content="#f7f8f4" />
+    <link rel="icon" href="../icons/icon-48.png" type="image/png" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "How to use a responsive design checker",
+        "description": "A practical workflow for testing a website across multiple responsive screen sizes.",
+        "datePublished": "2026-07-25",
+        "dateModified": "2026-07-25",
+        "author": { "@type": "Person", "name": "Edison Augusthy" },
+        "mainEntityOfPage": "https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-design-checker.html"
+      }
+    </script>
+  </head>
+  <body class="content-page">
+    <header class="site-nav">
+      <a class="brand" href="../" aria-label="Mobile View home"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../#features">Features</a><a href="../#privacy">Privacy</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer"
+          >GitHub</a
+        >
+      </nav>
+      <a
+        class="button button-small"
+        href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?authuser=0&amp;hl=en-GB"
+        >Add to Chrome <span>↗</span></a
+      >
+    </header>
+    <main class="content">
+      <p class="breadcrumbs">
+        <a href="../">Home</a> / <a href="./index.html">Guides</a> /
+        Responsive design checker
+      </p>
+      <p class="eyebrow">MULTI-SCREEN RESPONSIVE TESTING</p>
+      <h1>A responsive design checker should reveal differences.</h1>
+      <p class="lead">
+        A useful responsive checker lets you compare the same page at several
+        CSS viewport sizes, interact with each version, and turn visible
+        differences into a reproducible issue. The goal is not simply to prove
+        that the page loads on a small screen.
+      </p>
+
+      <h2>What a responsive design checker tests</h2>
+      <p>
+        Responsive web design changes layout according to available browser
+        space. A checker helps expose problems with breakpoints, wrapping,
+        overflow, content order, navigation, fixed elements, and touch-sized
+        controls. Side-by-side previews are especially useful because they keep
+        the content state visible while the layout changes.
+      </p>
+      <p>
+        It does not prove that every mobile browser behaves identically. A
+        viewport simulation is a fast layout and interaction check; browser
+        engine differences, hardware performance, operating-system keyboards,
+        sensors, and safe areas still require target browsers and real devices.
+      </p>
+
+      <h2>Choose a small representative set</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Viewport</th>
+            <th>What it reveals</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Compact phone</td>
+            <td>Minimum supported width, wrapping, overflow, and dense controls</td>
+          </tr>
+          <tr>
+            <td>Large phone</td>
+            <td>Common mobile layout and touch navigation</td>
+          </tr>
+          <tr>
+            <td>Tablet</td>
+            <td>Intermediate layouts that often fall between design breakpoints</td>
+          </tr>
+          <tr>
+            <td>Laptop</td>
+            <td>Desktop navigation, content density, and constrained height</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Add a custom width immediately below and above an important breakpoint.
+        That catches brittle rules more effectively than testing ten similar
+        phone models.
+      </p>
+
+      <h2>Run the same journey across every viewport</h2>
+      <ol>
+        <li>Open the exact page and content state you need to validate.</li>
+        <li>
+          Load a compact phone, large phone, tablet, and laptop side by side.
+        </li>
+        <li>
+          Follow the same navigation, form, menu, or purchase journey in each
+          preview.
+        </li>
+        <li>
+          Synchronize scrolling when comparing long content, but switch it off
+          when independent states are part of the test.
+        </li>
+        <li>
+          Capture the smallest failing width and record the expected behavior.
+        </li>
+      </ol>
+
+      <h2>Check content, not only containers</h2>
+      <p>
+        Use realistic titles, translated strings, form errors, empty states,
+        populated tables, loading indicators, and permission messages. Many
+        responsive failures appear only when content becomes longer or when an
+        extra control enters the layout.
+      </p>
+
+      <div class="callout">
+        <strong>Local pages need a local tool</strong>
+        <p>
+          Online responsive checkers cannot always reach localhost, staging
+          environments, or authenticated pages. A browser extension can start
+          from the page already open in your tab and keep the review local.
+        </p>
+      </div>
+
+      <h2>Responsive checker vs browser DevTools</h2>
+      <p>
+        DevTools device mode is the stronger choice when debugging one viewport
+        deeply. A multi-device checker is faster when you need to answer a
+        comparative question: did the phone fix preserve tablet and desktop?
+        Use both tools, then finish critical paths on physical hardware.
+      </p>
+
+      <div class="related-guides">
+        <h2>Continue the responsive testing workflow</h2>
+        <p>
+          Review the <a href="./device-viewport-sizes.html">device viewport size guide</a>,
+          then use the
+          <a href="./responsive-testing.html">pre-release responsive checklist</a>
+          to document and verify the result.
+        </p>
+      </div>
+    </main>
+    <footer class="site-footer shell page-footer">
+      <a class="brand" href="../"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <p>
+        Free responsive testing for Chrome and Firefox.<br />Open source under
+        the MIT license.
+      </p>
+      <div>
+        <a href="../privacy.html">Privacy</a
+        ><a href="../changelog.html">Changelog</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer/issues"
+          >Issues</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

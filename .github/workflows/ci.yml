@@ -30,6 +30,9 @@ jobs:
       - name: Type-check extension
         run: npm run compile
 
+      - name: Validate localized extension metadata
+        run: npm run validate:locales
+
       - name: Run unit tests
         run: npm test
 
@@ -55,10 +58,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.0-chrome.zip
+          npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.1-chrome.zip
 
       - name: Validate Firefox package
-        run: npm run validate:firefox-zip -- .output/multi-device-viewer-0.2.0-firefox.zip
+        run: npm run validate:firefox-zip -- .output/multi-device-viewer-0.2.1-firefox.zip
 
       - name: Run Mozilla add-on linter
-        run: npm run lint:firefox -- .output/multi-device-viewer-0.2.0-firefox.zip
+        run: npm run lint:firefox -- .output/multi-device-viewer-0.2.1-firefox.zip

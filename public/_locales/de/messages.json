@@ -1,6 +1,6 @@
 {
-  "extensionName": { "message": "Mobile View & Responsive Tester" },
-  "extensionShortName": { "message": "Responsive Tester" },
-  "extensionDescription": { "message": "Websites lokal in Smartphone-, Tablet-, Laptop- und Desktop-Ansichten testen, prüfen und vergleichen." },
-  "actionTitle": { "message": "Mobile View & Responsive Tester öffnen" }
+  "extensionName": { "message": "Mobile View: Responsiver Geräte-Emulator" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Kostenloser Open-Source-Simulator zum Testen von Websites in Smartphone-, Tablet-, Laptop- und Desktop-Ansichten." },
+  "actionTitle": { "message": "Mobile View Geräte-Emulator öffnen" }
 }

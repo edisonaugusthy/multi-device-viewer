@@ -1,6 +1,6 @@
-# Mobile View & Responsive Tester
+# Mobile View: Responsive Device Emulator
 
-A free, open-source, privacy-first Chrome and Firefox extension for keeping responsive previews beside your frontend development workflow.
+A free, open-source, privacy-first mobile simulator and responsive tester for Chrome and Firefox.
 
 Open the current website or local development server in up to four live device viewports. Save code, reload the previews, switch devices quickly, compare the implementation with a local design, and capture annotated visuals when something needs discussion. There is no account, backend, subscription, telemetry, or automatic upload.
 
@@ -109,8 +109,8 @@ npm run zip
 npm run zip:firefox
 npm run test:e2e
 npm run build:site
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.0-chrome.zip
-npm run validate:firefox-zip -- .output/multi-device-viewer-0.2.0-firefox.zip
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.1-chrome.zip
+npm run validate:firefox-zip -- .output/multi-device-viewer-0.2.1-firefox.zip
 ```
 
 The production Chrome and Firefox extensions and zips are written to `.output/`. Firefox packaging also creates the source archive required for Mozilla review. Firefox source-tab recording uses Firefox's native screen/tab picker instead of Chrome's offscreen recording API.

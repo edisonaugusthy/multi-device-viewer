@@ -10,17 +10,19 @@
 
 ### Extension name
 
-Mobile View & Responsive Tester
+Mobile View: Device Emulator & Responsive Tester
 
 ### Short description (132 chars max)
 
-Test websites across phones, tablets, laptops, and desktops with synchronized previews, design comparison, and captures.
+Free, open-source mobile simulator and responsive tester for phone, tablet, laptop, and desktop views side by side.
 
 ### Detailed description
 
-Mobile View & Responsive Tester is a local-first responsive-development and QA workspace. Keep it beside your editor to see frontend changes across phones, tablets, laptops, and desktop screens, then turn layout problems into exportable findings and visual evidence.
+Mobile View is a free, open-source device emulator and responsive tester for Chrome. Use it as a mobile simulator to preview a website in phone, tablet, laptop, and desktop views side by side—without repeatedly resizing a window or switching Chrome DevTools presets.
 
-Click the extension icon or use the Chrome context menu to open the current website inside realistic device frames. The responsive device viewer appears over the current tab, so you can check mobile view and desktop breakpoints in one workspace and return to the page when you close it.
+Use this mobile simulator and responsive tester to catch breakpoint, overflow, navigation, and content issues while you build. Everything runs locally in your browser: no account, subscription, analytics, telemetry, or remote application backend.
+
+Click the extension icon or use the Chrome context menu to open the current website inside realistic device frames. The multi-device preview appears over the current tab, so you can check mobile view and desktop breakpoints in one workspace and return to the page when you close it.
 
 **Responsive website and mobile view testing**
 - Compare up to four device previews side by side in resizable panels.
@@ -63,6 +65,8 @@ Click the extension icon or use the Chrome context menu to open the current webs
 - Reference images and overlay settings stay in local Chrome storage so the workspace can resume; nothing is uploaded.
 
 **Privacy-first by design**
+- Free to use.
+- Open source under the MIT license.
 - No account required.
 - No backend service.
 - No analytics, telemetry, or remote logging.
@@ -73,9 +77,9 @@ Click the extension icon or use the Chrome context menu to open the current webs
 
 Use current UI captures at 1280×800 or 640×400. Keep text overlays short and readable.
 
-1. **Compare responsive views side by side** — `screenshot-01-overview.jpg`.
-2. **Test the workspace in light and dark themes** — `screenshot-02-responsive-workspace.jpg`.
-3. **Open the current page on a physical device** — `screenshot-03-physical-device.jpg`.
+1. **Test mobile, tablet, and desktop side by side** — `screenshot-01-overview.jpg`.
+2. **Use 70+ responsive device profiles in one workspace** — `screenshot-02-responsive-workspace.jpg`.
+3. **Compare a live page with an approved design** — `screenshot-03-design-comparison.jpg`.
 
 Do not reuse screenshots from the previous sidebar or URL-bar design; outdated images can reduce listing clarity and conversion.
 
@@ -84,13 +88,69 @@ Do not reuse screenshots from the previous sidebar or URL-bar design; outdated i
 - **Small promo tile (440×280 JPEG)** — `promo-small-440x280.jpg`.
 - **Marquee promo tile (1400×560 JPEG)** — `promo-marquee-1400x560.jpg`.
 
+Both promotional images lead with the responsive-testing use case and present
+**Free** and **Open source** as separate, high-contrast proof marks. Keep browser
+and platform names out of this artwork so the value remains immediately clear.
+
+### Search-positioning terms
+
+Use these phrases naturally in the name, summary, and first paragraphs; do not
+append a keyword list to the public description:
+
+- Primary: `mobile view`, `device emulator`, `responsive tester`,
+  `mobile simulator`.
+- Secondary: `mobile emulator`, `device simulator`, `responsive viewer`,
+  `mobile preview`, `multi-device preview`, `website mobile view`,
+  `phone and tablet simulator`, `responsive website testing`.
+- Feature-led: `multiple devices side by side`, `synced scrolling`,
+  `custom viewport sizes`, `responsive screenshot`, `design comparison`.
+
+Avoid claiming full hardware, network, sensor, or browser-engine emulation. The
+extension emulates responsive viewports and device presentation for everyday
+frontend testing; critical flows should still be checked on physical devices.
+
+### Search baseline (25 July 2026)
+
+Checked in the live Chrome Web Store with locale `en-GB`. Positions can vary by
+country, account, installation state, listing history, ratings, and Store
+experiments, so use this as a baseline rather than a guaranteed universal rank.
+
+| Query | Current position |
+|---|---:|
+| `multi device viewer` | 3 |
+| `mobile preview` | 6 |
+| `mobile view` | 8 |
+| `responsive viewer` | 8 |
+| `responsive website testing` | 8 |
+| `responsive tester` | 9 |
+| `device emulator` | Outside first 10 |
+| `device simulator` | Outside first 10 |
+| `mobile simulator` | Outside first 10 |
+| `mobile emulator` | Outside first 10 |
+| `responsive emulator` | Outside first 10 |
+| `responsive design tester` | Outside first 10 |
+| `website responsive tester` | Outside first 10 |
+| `multiple device preview` | Outside first 10 |
+
+The leading results consistently place the searched phrase in the extension
+name, repeat it in the short description, and immediately explain the supported
+devices or testing workflow. The recommended name therefore covers three
+high-intent phrases exactly, while the short and detailed descriptions cover
+the related terms naturally. Do not repeat terms unnaturally: Store authority,
+ratings, active users, conversion, retention, localization, and listing quality
+also influence discovery.
+
 ### Category
 
 Developer Tools
 
 ### Language
 
-English
+English default, plus German, Spanish, French, Simplified Chinese, Traditional
+Chinese, Filipino, Dutch, Vietnamese, Brazilian Portuguese, Italian, Japanese,
+Korean, and Hindi. Use
+[`docs/chrome-web-store-localizations.md`](./chrome-web-store-localizations.md)
+when entering localized Store listings.
 
 ---
 

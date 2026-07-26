@@ -1,6 +1,6 @@
 {
   "name": "multi-device-viewer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A local-first Chrome and Firefox extension for responsive device testing across phones, tablets, laptops, and desktops.",
   "type": "module",
   "scripts": {
@@ -9,6 +9,7 @@
     "dev:preview": "vite --config vite.preview.config.ts",
     "dev:site": "vite --config vite.site.config.ts",
     "build:site": "vite build --config vite.site.config.ts",
+    "render:store-assets": "node scripts/render-store-assets.mjs",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox --mv3",
     "zip": "wxt zip",
@@ -16,6 +17,8 @@
     "compile": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "validate:locales": "node scripts/validate-locales.mjs",
+    "validate:site-seo": "node scripts/validate-site-seo.mjs",
     "validate:chrome-zip": "node scripts/validate-chrome-extension-package.mjs",
     "validate:firefox-zip": "node scripts/validate-firefox-extension-package.mjs",
     "lint:firefox": "npx --yes addons-linter@10.9.0 --output text --boring"

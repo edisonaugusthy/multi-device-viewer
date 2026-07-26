@@ -10,13 +10,13 @@ npm run compile
 npm test
 npm run build:firefox
 npm run zip:firefox
-npm run validate:firefox-zip -- .output/multi-device-viewer-0.2.0-firefox.zip
+npm run validate:firefox-zip -- .output/multi-device-viewer-0.2.1-firefox.zip
 ```
 
 Firefox packaging produces:
 
-- `.output/multi-device-viewer-0.2.0-firefox.zip` — add-on submitted to addons.mozilla.org.
-- `.output/multi-device-viewer-0.2.0-sources.zip` — matching source submitted for reviewer reproduction.
+- `.output/multi-device-viewer-0.2.1-firefox.zip` — add-on submitted to addons.mozilla.org.
+- `.output/multi-device-viewer-0.2.1-sources.zip` — matching source submitted for reviewer reproduction.
 - `.output/firefox-mv3/` — unpacked development build.
 
 ## Manifest requirements

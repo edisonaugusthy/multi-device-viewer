@@ -451,6 +451,7 @@ export function PreviewCard({
       {/* ── Per-card header ── */}
       {showToolbar && <div
         data-device-toolbar
+        data-tour={first ? "preview-controls" : undefined}
         className={`flex h-9 shrink-0 flex-nowrap items-center gap-0.5 border-b px-1 transition-colors ${
           display.darkMode
             ? "border-white/10 bg-[#151922]"
@@ -547,11 +548,15 @@ export function PreviewCard({
                     key={`${slot.id}-${slot.reloadToken}`}
                     title={`${device.name} preview`}
                     src={slot.url}
-                    className={`block h-full w-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
+                    className={`block h-full w-full border-0 ${
+                      device.type === "phone" || device.type === "tablet" ? "overflow-hidden" : "overflow-auto"
+                    } ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
                     style={{
                       width: "100%",
                       backgroundColor: "#ffffff",
+                      scrollbarWidth: device.type === "phone" || device.type === "tablet" ? "none" : "auto",
                     }}
+                    scrolling={device.type === "phone" || device.type === "tablet" ? "no" : "auto"}
                     sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
                     onError={() => setBlocked(true)}
                   />
@@ -854,6 +859,7 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
   onToggleFavorite: () => void;
   onPick: () => void;
 }>(function DeviceSwitcherItem({ device, active, dark, favorite, onToggleFavorite, onPick }, ref) {
+  const latest = device.tags.includes("new");
   const rowClass = `group flex min-h-12 w-full min-w-0 items-center rounded-xl border transition ${
     active
       ? dark ? "border-teal-400/20 bg-teal-400/15 text-teal-100" : "border-teal-100 bg-teal-50 text-teal-900"
@@ -872,7 +878,15 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
         onClick={onPick}
       >
         <span className="min-w-0 flex-1">
-          <span className="flex min-w-0 items-center gap-2"><span className="min-w-0 flex-1 truncate text-[11px] font-bold leading-tight">{shortName(device.name)}</span>{device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] font-bold ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-500" : "bg-slate-100 text-slate-400"}`}>{device.year}</span>}</span>
+          <span className="flex min-w-0 items-center gap-1.5">
+            <span className="min-w-0 flex-1 truncate text-[11px] font-bold leading-tight">{shortName(device.name)}</span>
+            {latest && (
+              <span className="shrink-0 rounded-full bg-amber-300 px-1.5 py-0.5 text-[7px] font-black tracking-[0.08em] text-amber-950">
+                NEW
+              </span>
+            )}
+            {device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] font-bold ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-500" : "bg-slate-100 text-slate-400"}`}>{device.year}</span>}
+          </span>
           <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? dark ? "text-teal-300/70" : "text-teal-700/70" : dark ? "text-slate-500" : "text-slate-400"}`}>
             {device.os.toLowerCase() === "android" ? `${device.brand} · ` : ""}{device.os} · {device.cssViewport.width} × {device.cssViewport.height}
           </span>

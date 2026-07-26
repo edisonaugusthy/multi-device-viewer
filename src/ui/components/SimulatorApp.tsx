@@ -1,5 +1,6 @@
 import {
   Camera,
+  CircleHelp,
   Focus,
   ChevronRight,
   GripVertical,
@@ -205,12 +206,12 @@ export function SimulatorApp() {
     const query = window.matchMedia("(max-width: 760px)");
     const update = () => {
       setNarrowLayout(query.matches);
-      if (query.matches) setSidebarOpen(false);
+      if (query.matches && !showFirstRun) setSidebarOpen(false);
     };
     update();
     query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
-  }, []);
+  }, [showFirstRun]);
 
   useEffect(() => {
     if (slots.some((slot) => slot.id === referenceViewportId)) return;
@@ -237,6 +238,10 @@ export function SimulatorApp() {
       ]);
     });
   }, [useCount]);
+
+  useEffect(() => {
+    if (showFirstRun) setSidebarOpen(true);
+  }, [showFirstRun]);
 
   useEffect(() => {
     const finishLocalRecording = () => setRecording(false);
@@ -461,33 +466,38 @@ export function SimulatorApp() {
           <Images size={12} />
           Compare page to design
         </button>
-        <button
-          type="button"
-          title={
-            display.scrollSync ? "Turn off scroll sync" : "Turn on scroll sync"
-          }
-          aria-pressed={display.scrollSync}
-          onClick={() =>
-            updateDisplay((current) => ({
-              ...current,
-              scrollSync: !current.scrollSync,
-            }))
-          }
-          className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${display.scrollSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
+        <div
+          data-tour="sync-controls"
+          className="flex shrink-0 items-center gap-0.5"
         >
-          <Link2 size={12} />
-          <span>Scroll sync</span>
-        </button>
-        <button
-          type="button"
-          title={display.navigationSync ? "Turn off navigation sync" : "Turn on navigation sync"}
-          aria-pressed={display.navigationSync}
-          onClick={() => updateDisplay((current) => ({ ...current, navigationSync: !current.navigationSync }))}
-          className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold lg:flex ${display.navigationSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
-        >
-          <Route size={12} />
-          <span>Navigation sync</span>
-        </button>
+          <button
+            type="button"
+            title={
+              display.scrollSync ? "Turn off scroll sync" : "Turn on scroll sync"
+            }
+            aria-pressed={display.scrollSync}
+            onClick={() =>
+              updateDisplay((current) => ({
+                ...current,
+                scrollSync: !current.scrollSync,
+              }))
+            }
+            className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${display.scrollSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
+          >
+            <Link2 size={12} />
+            <span>Scroll sync</span>
+          </button>
+          <button
+            type="button"
+            title={display.navigationSync ? "Turn off navigation sync" : "Turn on navigation sync"}
+            aria-pressed={display.navigationSync}
+            onClick={() => updateDisplay((current) => ({ ...current, navigationSync: !current.navigationSync }))}
+            className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold lg:flex ${display.navigationSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
+          >
+            <Route size={12} />
+            <span>Navigation sync</span>
+          </button>
+        </div>
         <ToolbarButton
           label="Capture active viewport"
           dark={dark}
@@ -539,6 +549,7 @@ export function SimulatorApp() {
                   </span>
                 </div>
                 <button
+                  data-tour="sidebar-collapse"
                   type="button"
                   onClick={() => setSidebarOpen(false)}
                   className={`grid h-7 w-7 place-items-center rounded-md ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"}`}
@@ -548,11 +559,12 @@ export function SimulatorApp() {
                 </button>
               </div>
               <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-3">
-                <SidebarSection
-                  title="Devices"
-                  meta={`${slots.length} of ${maxPreviewSlots}`}
-                  dark={dark}
-                >
+                <div data-tour="device-setup">
+                  <SidebarSection
+                    title="Devices"
+                    meta={`${slots.length} of ${maxPreviewSlots}`}
+                    dark={dark}
+                  >
                   <button
                     type="button"
                     disabled={slots.length >= maxPreviewSlots}
@@ -568,7 +580,8 @@ export function SimulatorApp() {
                     onClick={() => setShowCustomDevice(true)}
                     label="Add custom viewport"
                   />
-                </SidebarSection>
+                  </SidebarSection>
+                </div>
 
                 {customDevices.length > 0 && (
                   <SidebarSection
@@ -635,8 +648,10 @@ export function SimulatorApp() {
                   )}
                 </SidebarSection>
 
-                <SidebarSection title="Session tools" dark={dark}>
+                <div data-tour="session-tools">
+                  <SidebarSection title="Session tools" dark={dark}>
                   <ActionRow
+                    dataTour="focus-active"
                     dark={dark}
                     icon={<Focus size={14} />}
                     onClick={() => setFocusedSlotId(focusedSlotId ? null : activeSlotId)}
@@ -651,6 +666,7 @@ export function SimulatorApp() {
                     label="Generate AI fix prompt"
                   />
                   <ActionRow
+                    dataTour="compare-design"
                     dark={dark}
                     icon={<Images size={14} />}
                     onClick={() => setShowDesignReference(true)}
@@ -680,13 +696,20 @@ export function SimulatorApp() {
                     active={recording}
                     label={recording ? `Recording ${formatDuration(recordingSeconds)} — stop` : "Record source tab"}
                   />
+                  <ActionRow
+                    dark={dark}
+                    icon={<CircleHelp size={14} />}
+                    onClick={() => setShowFirstRun(true)}
+                    label="Take a feature tour"
+                  />
                   {recording && (
                     <div role="status" aria-live="polite" className="flex h-7 items-center gap-2 rounded-lg bg-red-500/10 px-2 text-[10px] font-extrabold text-red-500">
                       <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
                       REC · {formatDuration(recordingSeconds)} · source tab
                     </div>
                   )}
-                </SidebarSection>
+                  </SidebarSection>
+                </div>
               </div>
               <div
                 className={`border-t p-3 ${dark ? "border-white/[0.07]" : "border-slate-100"}`}
@@ -934,6 +957,7 @@ function ActionRow({
   onClick,
   disabled,
   active,
+  dataTour,
 }: {
   icon: ReactNode;
   label: string;
@@ -941,9 +965,11 @@ function ActionRow({
   onClick: () => void;
   disabled?: boolean;
   active?: boolean;
+  dataTour?: string;
 }) {
   return (
     <button
+      data-tour={dataTour}
       type="button"
       onClick={onClick}
       disabled={disabled}

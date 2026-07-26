@@ -1,0 +1,6 @@
+{
+  "extensionName": { "message": "Mobile View：行動裝置模擬器與響應式測試" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "免費開源的行動裝置模擬器與響應式測試工具，可並排預覽手機、平板、筆電和桌面版面。" },
+  "actionTitle": { "message": "開啟 Mobile View 裝置模擬器" }
+}

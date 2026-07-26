@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Responsive Testing Guides — Mobile View &amp; Device Emulator</title>
+    <meta
+      name="description"
+      content="Practical guides for mobile view testing, responsive design checks, device viewport sizes, Chrome extensions, Firefox workflows, and real-device validation."
+    />
+    <link
+      rel="canonical"
+      href="https://edisonaugusthy.github.io/multi-device-viewer/guides/index.html"
+    />
+    <meta property="og:title" content="Responsive Website Testing Guides" />
+    <meta
+      property="og:description"
+      content="Choose representative viewports, compare layouts, document failures, and finish responsive checks on real devices."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://edisonaugusthy.github.io/multi-device-viewer/guides/index.html"
+    />
+    <meta name="theme-color" content="#f7f8f4" />
+    <link rel="icon" href="../icons/icon-48.png" type="image/png" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Responsive Website Testing Guides",
+        "description": "Practical guides for testing responsive websites across mobile, tablet, laptop, and desktop viewports.",
+        "url": "https://edisonaugusthy.github.io/multi-device-viewer/guides/index.html",
+        "isPartOf": {
+          "@type": "WebSite",
+          "url": "https://edisonaugusthy.github.io/multi-device-viewer/"
+        }
+      }
+    </script>
+  </head>
+  <body class="content-page">
+    <header class="site-nav">
+      <a class="brand" href="../" aria-label="Mobile View home"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../#features">Features</a><a href="../#privacy">Privacy</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer"
+          >GitHub</a
+        >
+      </nav>
+      <a
+        class="button button-small"
+        href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?authuser=0&amp;hl=en-GB"
+        >Add to Chrome <span>↗</span></a
+      >
+    </header>
+    <main class="content">
+      <p class="breadcrumbs"><a href="../">Home</a> / Guides</p>
+      <p class="eyebrow">RESPONSIVE TESTING LIBRARY</p>
+      <h1>Test the right screens for the right reasons.</h1>
+      <p class="lead">
+        Responsive testing is more than opening a phone-sized frame. These
+        guides explain which viewports to choose, what a browser simulation can
+        prove, how to compare several layouts efficiently, and when to move to
+        physical hardware.
+      </p>
+
+      <div class="guide-grid">
+        <a class="guide-card" href="./responsive-design-checker.html">
+          <strong>Responsive design checker guide</strong>
+          <p>
+            Build a useful multi-screen check that finds layout and interaction
+            failures instead of producing screenshots without conclusions.
+          </p>
+        </a>
+        <a class="guide-card" href="./mobile-view-device-emulator.html">
+          <strong>Mobile view and device emulator</strong>
+          <p>
+            Understand viewport emulation, its limits, and how it complements
+            Chrome DevTools and physical devices.
+          </p>
+        </a>
+        <a class="guide-card" href="./chrome-mobile-view-extension.html">
+          <strong>Chrome mobile view extension</strong>
+          <p>
+            Compare mobile, tablet, laptop, and desktop layouts from the page
+            already open in Chrome.
+          </p>
+        </a>
+        <a class="guide-card" href="./firefox-mobile-view.html">
+          <strong>Firefox mobile view testing</strong>
+          <p>
+            Separate Firefox Responsive Design Mode, Firefox for mobile, and
+            real cross-browser testing.
+          </p>
+        </a>
+        <a class="guide-card" href="./device-viewport-sizes.html">
+          <strong>Device viewport sizes</strong>
+          <p>
+            Choose representative CSS viewport widths and avoid confusing
+            physical screen resolution with browser layout size.
+          </p>
+        </a>
+        <a class="guide-card" href="./responsive-testing.html">
+          <strong>Pre-release testing checklist</strong>
+          <p>
+            Cover layout integrity, touch and keyboard access, design
+            comparison, evidence, and final physical-device checks.
+          </p>
+        </a>
+      </div>
+
+      <h2>A practical order for responsive testing</h2>
+      <ol>
+        <li>
+          Start with a compact phone, large phone, tablet, and laptop viewport.
+        </li>
+        <li>
+          Exercise the same navigation and content state across those widths.
+        </li>
+        <li>
+          Check immediately around real CSS breakpoints with custom viewports.
+        </li>
+        <li>
+          Capture the failure with the viewport, expected result, and actual
+          result.
+        </li>
+        <li>
+          Verify critical journeys in target browsers and on physical devices.
+        </li>
+      </ol>
+
+      <div class="callout">
+        <strong>Free, private, and open source</strong>
+        <p>
+          Mobile View &amp; Responsive Tester runs locally as a Chrome and
+          Firefox extension. There is no account, subscription, extension
+          telemetry, or remote application backend.
+        </p>
+      </div>
+    </main>
+    <footer class="site-footer shell page-footer">
+      <a class="brand" href="../"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <p>
+        Free responsive testing for Chrome and Firefox.<br />Open source under
+        the MIT license.
+      </p>
+      <div>
+        <a href="../privacy.html">Privacy</a
+        ><a href="../changelog.html">Changelog</a
+        ><a href="./responsive-testing.html">Checklist</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer/issues"
+          >Issues</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

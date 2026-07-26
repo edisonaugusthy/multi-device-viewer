@@ -729,7 +729,13 @@ function getImageViewportClipPath(
   if (pathValue) return `path(evenodd, "${pathValue}")`;
   if (!adjustment?.occlusions?.length) return undefined;
 
-  const outer = roundedRectPath(0, 0, adjustment.width, adjustment.height, radius);
+  const outer = roundedRectPath(
+    0,
+    0,
+    adjustment.width,
+    adjustment.height,
+    adjustment.cornerRadius ?? radius,
+  );
   const holes = adjustment.occlusions.map((occlusion) => {
     if (occlusion.kind === "circle") {
       const rx = occlusion.width / 2;

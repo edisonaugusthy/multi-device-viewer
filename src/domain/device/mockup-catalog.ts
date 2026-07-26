@@ -1087,6 +1087,76 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
+    "id": "samsung-galaxy-z-fold8-folded-2026",
+    "localPath": "/mockups/samsung-galaxy-z-fold8-folded.png",
+    "file": "samsung-galaxy-z-fold8-folded.png",
+    "bytes": 1284234,
+    "width": 898,
+    "height": 1340,
+    "cssViewport": { "width": 416, "height": 657 },
+    "screenInset": { "top": 23.5, "right": 25.5, "bottom": 22.5, "left": 28.5 }
+  },
+  {
+    "id": "samsung-galaxy-z-fold8-unfolded-2026",
+    "localPath": "/mockups/samsung-galaxy-z-fold8-unfolded.png",
+    "file": "samsung-galaxy-z-fold8-unfolded.png",
+    "bytes": 4165746,
+    "width": 1994,
+    "height": 1530,
+    "cssViewport": { "width": 979, "height": 739 },
+    "screenInset": { "top": 23, "right": 20, "bottom": 22, "left": 21 }
+  },
+  {
+    "id": "samsung-galaxy-z-fold8-ultra-folded-2026",
+    "localPath": "/mockups/samsung-galaxy-z-fold8-ultra-folded.png",
+    "file": "samsung-galaxy-z-fold8-ultra-folded.png",
+    "bytes": 1489963,
+    "width": 798,
+    "height": 1700,
+    "cssViewport": { "width": 360, "height": 840 },
+    "screenInset": { "top": 24, "right": 26, "bottom": 23, "left": 28 }
+  },
+  {
+    "id": "samsung-galaxy-z-fold8-ultra-unfolded-2026",
+    "localPath": "/mockups/samsung-galaxy-z-fold8-ultra-unfolded.png",
+    "file": "samsung-galaxy-z-fold8-ultra-unfolded.png",
+    "bytes": 3297926,
+    "width": 1854,
+    "height": 2040,
+    "cssViewport": { "width": 902, "height": 1002 },
+    "screenInset": { "top": 26, "right": 25, "bottom": 18, "left": 25 }
+  },
+  {
+    "id": "samsung-galaxy-z-flip8-folded-2026",
+    "localPath": "/mockups/samsung-galaxy-z-flip8-folded.png",
+    "file": "samsung-galaxy-z-flip8-folded.png",
+    "bytes": 406856,
+    "width": 676,
+    "height": 760,
+    "cssViewport": { "width": 316, "height": 349 },
+    "screenInset": { "top": 28, "right": 18, "bottom": 16, "left": 16 }
+  },
+  {
+    "id": "samsung-galaxy-z-flip8-unfolded-2026",
+    "localPath": "/mockups/samsung-galaxy-z-flip8-unfolded.png",
+    "file": "samsung-galaxy-z-flip8-unfolded.png",
+    "bytes": 1004624,
+    "width": 786,
+    "height": 1700,
+    "cssViewport": { "width": 360, "height": 840 },
+    "screenInset": { "top": 21, "right": 22, "bottom": 22, "left": 22 }
+  },
+  {
+    "id": "samsung-galaxy-a27-5g-2026",
+    "localPath": "/mockups/samsung-galaxy-a27-5g.png",
+    "file": "samsung-galaxy-a27-5g.png",
+    "bytes": 1210667,
+    "width": 792,
+    "height": 1600,
+    "cssViewport": { "width": 360, "height": 780 },
+    "screenInset": { "top": 25, "right": 28, "bottom": 30, "left": 24 }
+  },
+  {
     "id": "google-pixel-10-pro-xl-2025",
     "localPath": "/mockups/google-pixel-10-pro-2026.png",
     "file": "google-pixel-10-pro-2026.png",
@@ -2435,6 +2505,55 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
         { kind: "rect", left: 440.5, top: 0, width: 2.5, height: 811 },
         { kind: "circle", left: 582, top: 19, width: 16, height: 16 },
       ],
+    },
+  },
+  "samsung-galaxy-z-fold8-folded-2026": {
+    portrait: {
+      left: 28.5, top: 23.5, width: 395, height: 624, cornerRadius: 7, enableRotation: false,
+      occlusions: [{ kind: "circle", left: 188.5, top: 9.5, width: 18, height: 18 }],
+    },
+  },
+  "samsung-galaxy-z-fold8-unfolded-2026": {
+    portrait: {
+      left: 21, top: 23, width: 956, height: 720, cornerRadius: 7, enableRotation: false,
+      occlusions: [{ kind: "circle", left: 711.25, top: 17.4, width: 19, height: 19 }],
+    },
+  },
+  "samsung-galaxy-z-fold8-ultra-folded-2026": {
+    portrait: {
+      left: 28, top: 24, width: 345, height: 803, cornerRadius: 8, enableRotation: false,
+      occlusions: [{ kind: "circle", left: 163, top: 10, width: 19, height: 19 }],
+    },
+  },
+  "samsung-galaxy-z-fold8-ultra-unfolded-2026": {
+    portrait: {
+      left: 25, top: 26, width: 877, height: 976, cornerRadius: 7, enableRotation: false,
+      occlusions: [{ kind: "circle", left: 648, top: 19, width: 20, height: 20 }],
+    },
+  },
+  "samsung-galaxy-z-flip8-folded-2026": {
+    portrait: {
+      left: 16, top: 28, width: 304, height: 336, enableRotation: false,
+      paths: {
+        portrait: "M4 0H300Q304 0 304 4V320Q304 336 288 336H16Q0 336 0 320V4Q0 0 4 0ZM147 297A10 10 0 1 0 167 297A10 10 0 1 0 147 297ZM178 297A26 26 0 1 0 230 297A26 26 0 1 0 178 297ZM239 297A26 26 0 1 0 291 297A26 26 0 1 0 239 297Z",
+      },
+      occlusions: [
+        { kind: "circle", left: 147, top: 287, width: 20, height: 20 },
+        { kind: "circle", left: 178, top: 271, width: 52, height: 52 },
+        { kind: "circle", left: 239, top: 271, width: 52, height: 52 },
+      ],
+    },
+  },
+  "samsung-galaxy-z-flip8-unfolded-2026": {
+    portrait: {
+      left: 22, top: 21, width: 349, height: 807, enableRotation: false,
+      occlusions: [{ kind: "circle", left: 163, top: 10, width: 20, height: 20 }],
+    },
+  },
+  "samsung-galaxy-a27-5g-2026": {
+    portrait: {
+      left: 24, top: 25, width: 344, height: 745, cornerRadius: 31, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 163, top: 9, width: 18, height: 18 }],
     },
   },
   "modern-laptop-15": {

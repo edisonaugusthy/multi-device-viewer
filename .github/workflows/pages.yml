@@ -3,7 +3,7 @@ name: Product site
 on:
   push:
     branches: [main]
-    paths: ["website/**", "store-assets/webstore-upload/**", "vite.site.config.ts", "package.json", "package-lock.json"]
+    paths: ["website/**", "store-assets/webstore-upload/**", "scripts/validate-site-seo.mjs", "vite.site.config.ts", "package.json", "package-lock.json"]
   workflow_dispatch:
 
 permissions:
@@ -29,6 +29,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:site
+      - run: npm run validate:site-seo
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -36,3 +37,12 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify published sitemap
+        run: |
+          sitemap_url="${{ steps.deployment.outputs.page_url }}sitemap.xml"
+          sitemap_headers="$RUNNER_TEMP/mdv-sitemap-headers.txt"
+          sitemap_body="$RUNNER_TEMP/mdv-sitemap.xml"
+          curl --fail --silent --show-error --retry 6 --retry-all-errors --retry-delay 10 \
+            --dump-header "$sitemap_headers" --output "$sitemap_body" "$sitemap_url"
+          grep --ignore-case --quiet '^content-type: application/xml' "$sitemap_headers"
+          grep --quiet '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' "$sitemap_body"

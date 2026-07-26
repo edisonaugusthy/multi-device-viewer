@@ -1,0 +1,6 @@
+{
+  "extensionName": { "message": "Mobile View: Emulador móvil y prueba responsive" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Simulador móvil gratuito y de código abierto para probar vistas de teléfono, tablet, portátil y escritorio en paralelo." },
+  "actionTitle": { "message": "Abrir el emulador móvil Mobile View" }
+}

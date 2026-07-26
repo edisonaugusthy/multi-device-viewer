@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mobile View Chrome Extension — Responsive Testing Guide</title>
+    <meta
+      name="description"
+      content="Use a free mobile view Chrome extension to test websites across phone, tablet, laptop, and desktop viewports, including localhost and authenticated pages."
+    />
+    <link
+      rel="canonical"
+      href="https://edisonaugusthy.github.io/multi-device-viewer/guides/chrome-mobile-view-extension.html"
+    />
+    <meta property="og:title" content="Mobile View Chrome Extension Guide" />
+    <meta
+      property="og:description"
+      content="Compare responsive website layouts from the page already open in Chrome."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://edisonaugusthy.github.io/multi-device-viewer/guides/chrome-mobile-view-extension.html"
+    />
+    <meta name="theme-color" content="#f7f8f4" />
+    <link rel="icon" href="../icons/icon-48.png" type="image/png" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "How to test mobile view with a Chrome extension",
+        "description": "A local responsive testing workflow for Chrome using phone, tablet, laptop, and desktop viewports.",
+        "datePublished": "2026-07-25",
+        "dateModified": "2026-07-25",
+        "author": { "@type": "Person", "name": "Edison Augusthy" },
+        "mainEntityOfPage": "https://edisonaugusthy.github.io/multi-device-viewer/guides/chrome-mobile-view-extension.html"
+      }
+    </script>
+  </head>
+  <body class="content-page">
+    <header class="site-nav">
+      <a class="brand" href="../" aria-label="Mobile View home"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../#features">Features</a><a href="../#privacy">Privacy</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer"
+          >GitHub</a
+        >
+      </nav>
+      <a
+        class="button button-small"
+        href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?authuser=0&amp;hl=en-GB"
+        >Add to Chrome <span>↗</span></a
+      >
+    </header>
+    <main class="content">
+      <p class="breadcrumbs">
+        <a href="../">Home</a> / <a href="./index.html">Guides</a> / Chrome
+        mobile view
+      </p>
+      <p class="eyebrow">CHROME RESPONSIVE TESTING</p>
+      <h1>Open mobile view from the page you are already testing.</h1>
+      <p class="lead">
+        A mobile view Chrome extension is useful when you need several
+        responsive layouts visible at once, especially for localhost,
+        authenticated applications, and rapid checks during frontend
+        development.
+      </p>
+
+      <div class="callout">
+        <strong>Free and open source</strong>
+        <p>
+          Mobile View &amp; Responsive Tester is MIT licensed, requires no
+          account, and has no extension analytics, telemetry, remote logging, or
+          application backend.
+        </p>
+      </div>
+
+      <h2>Install and start from the current Chrome tab</h2>
+      <ol>
+        <li>
+          Install
+          <a
+            href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?authuser=0&amp;hl=en-GB"
+            >Mobile View &amp; Responsive Tester from the Chrome Web Store</a
+          >.
+        </li>
+        <li>Open the website or local development page you want to test.</li>
+        <li>
+          Select the extension from the toolbar or use its page context menu.
+        </li>
+        <li>
+          Start with a phone and laptop, then add a tablet or custom breakpoint.
+        </li>
+      </ol>
+
+      <h2>Why use an extension instead of an online checker?</h2>
+      <p>
+        A public URL checker is convenient for a deployed marketing page. It
+        often cannot access localhost, private staging, authenticated routes, or
+        a page state that exists only in your browser session. A local extension
+        starts from the active tab and keeps screenshots, settings, design
+        references, and generated prompts in your browser.
+      </p>
+
+      <h2>Compare the viewports that represent your users</h2>
+      <p>
+        Open up to four previews and select a compact phone, a large phone or
+        foldable, a tablet, and a laptop. Rotate supported devices and add exact
+        custom sizes when analytics or a bug report identifies a particular
+        viewport. Use saved sets for repeated release checks.
+      </p>
+
+      <h2>Keep long pages and navigation aligned</h2>
+      <p>
+        Scroll synchronization helps compare the same content section across
+        several layouts. Navigation synchronization follows matching links so
+        you can see whether a journey remains usable after a responsive change.
+        Disable synchronization whenever each preview needs a different state.
+      </p>
+
+      <h2>Move from a visual bug to an actionable fix</h2>
+      <ul>
+        <li>Compare the live page beside or over an approved design.</li>
+        <li>Capture and annotate the active viewport or full workspace.</li>
+        <li>Record the source tab when motion or interaction matters.</li>
+        <li>
+          Copy a structured AI fix prompt containing the page, viewports,
+          expected result, and verification guidance.
+        </li>
+        <li>Open a LAN-ready development URL on a physical phone by QR code.</li>
+      </ul>
+
+      <h2>Chrome extension vs DevTools device mode</h2>
+      <p>
+        DevTools remains the best place to inspect CSS, network activity,
+        console errors, and one viewport in detail. A multi-device extension is
+        optimized for comparative review. Use the extension to identify the
+        failing width, DevTools to diagnose it, and physical devices to confirm
+        browser and hardware behavior.
+      </p>
+
+      <div class="related-guides">
+        <h2>Choose stronger viewport coverage</h2>
+        <p>
+          Read the <a href="./device-viewport-sizes.html">device viewport size guide</a>
+          and the
+          <a href="./responsive-design-checker.html">responsive design checker workflow</a>
+          before your next release pass.
+        </p>
+      </div>
+    </main>
+    <footer class="site-footer shell page-footer">
+      <a class="brand" href="../"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <p>
+        Free responsive testing for Chrome and Firefox.<br />Open source under
+        the MIT license.
+      </p>
+      <div>
+        <a href="../privacy.html">Privacy</a
+        ><a href="../changelog.html">Changelog</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer/issues"
+          >Issues</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

@@ -12,6 +12,7 @@ export interface MockupViewportConfig {
   top: number;
   width: number;
   height: number;
+  cornerRadius?: number;
   paths?: Partial<Record<Orientation, string | string[]>>;
   occlusions?: MockupViewportOcclusion[];
   enableRotation?: boolean;

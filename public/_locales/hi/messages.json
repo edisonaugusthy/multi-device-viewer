@@ -1,0 +1,6 @@
+{
+  "extensionName": { "message": "Mobile View: डिवाइस एमुलेटर और रिस्पॉन्सिव टेस्टर" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "फ़ोन, टैबलेट, लैपटॉप और डेस्कटॉप व्यू को साथ-साथ जाँचने के लिए मुफ़्त, ओपन-सोर्स मोबाइल सिम्युलेटर।" },
+  "actionTitle": { "message": "Mobile View डिवाइस एमुलेटर खोलें" }
+}

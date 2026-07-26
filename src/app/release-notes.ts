@@ -26,6 +26,15 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.1": {
+    version: "0.2.1",
+    heading: "What’s new",
+    summary: "",
+    notes: [
+      { title: "Four new 2026 Galaxy devices, with every posture", description: "Adds Galaxy Z Fold8 Ultra, Fold8, Flip8 and A27 5G. Fold8 Ultra, Fold8 and Flip8 include separate folded and unfolded presets, all marked NEW in the device picker until the next device set arrives." },
+      { title: "A guided first run", description: "An eight-step product tour now covers clearing the sidebar, focusing one viewport, comparing against a design, synchronization and handoff without clipping controls at the window edge." },
+    ],
+  },
   "0.2.0": {
     version: "0.2.0",
     heading: "A faster responsive testing workspace",

@@ -1,16 +1,18 @@
 import { defineBackground } from "wxt/utils/define-background";
-import { openSimulator } from "../src/app/extension-routes";
+import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
 import { LAST_SEEN_RELEASE_VERSION_KEY, PENDING_RELEASE_VERSION_KEY } from "../src/app/release-notes";
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
 const UPDATE_BADGE_TEXT = "NEW";
 const OFFSCREEN_RECORDING_PATH = "/offscreen.html";
+const UNSUPPORTED_PAGE_PATH = "/unsupported.html";
 
 const message = (key: string, fallback: string) =>
   chrome.i18n.getMessage(key) || fallback;
 
 export default defineBackground(() => {
   createContextMenu();
+  syncAllActionStates();
 
   chrome.runtime.onMessage.addListener((message, sender) => {
     if (!message || message.type !== "MDV_OVERLAY_STATE" || typeof sender.tab?.id !== "number") return;
@@ -39,6 +41,17 @@ export default defineBackground(() => {
 
   chrome.runtime.onStartup.addListener(() => {
     createContextMenu();
+    syncAllActionStates();
+  });
+
+  chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
+    if (changeInfo.url || changeInfo.status === "complete") syncActionState(tab);
+  });
+
+  chrome.tabs.onActivated.addListener(({ tabId }) => {
+    chrome.tabs.get(tabId, (tab) => {
+      if (!chrome.runtime.lastError) syncActionState(tab);
+    });
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -70,8 +83,15 @@ export default defineBackground(() => {
   function openSimulatorForTab(tab: chrome.tabs.Tab) {
     clearUpdateIndicator();
 
-    const url =
-      tab.url && /^https?:\/\//i.test(tab.url) ? tab.url : undefined;
+    if (!isPreviewableUrl(tab.url)) {
+      syncActionState(tab);
+      if (chrome.action.openPopup && typeof tab.windowId === "number") {
+        void chrome.action.openPopup({ windowId: tab.windowId }).catch(() => undefined);
+      }
+      return;
+    }
+
+    const url = tab.url;
 
     if (typeof tab.id !== "number") {
       void openSimulator(url, tab.id).catch(console.error);
@@ -84,13 +104,6 @@ export default defineBackground(() => {
     const sendMessage = () => {
       chrome.tabs.sendMessage(tab.id!, message, () => {
         if (!chrome.runtime.lastError) return;
-        const isWebPage = /^https?:\/\//i.test(tab.url ?? "");
-        if (!isWebPage) {
-          // Chrome-internal/restricted pages cannot receive content-script
-          // messages, so preserve a usable fallback for those pages.
-          void openSimulator(url, tab.id).catch(console.error);
-          return;
-        }
         console.error("Mobile View & Responsive Tester could not attach to the current page", chrome.runtime.lastError.message);
       });
     };
@@ -111,6 +124,28 @@ export default defineBackground(() => {
           sendMessage();
         },
       );
+    });
+  }
+
+  function syncAllActionStates() {
+    chrome.tabs.query({}, (tabs) => {
+      if (chrome.runtime.lastError) return;
+      tabs.forEach(syncActionState);
+    });
+  }
+
+  function syncActionState(tab: chrome.tabs.Tab) {
+    if (typeof tab.id !== "number") return;
+    const previewable = isPreviewableUrl(tab.url);
+    chrome.action.setPopup({
+      tabId: tab.id,
+      popup: previewable ? "" : UNSUPPORTED_PAGE_PATH,
+    });
+    chrome.action.setTitle({
+      tabId: tab.id,
+      title: previewable
+        ? message("actionTitle", "Open Mobile View device emulator")
+        : message("unsupportedActionTitle", "Open a website first"),
     });
   }
 
@@ -166,7 +201,7 @@ export default defineBackground(() => {
     });
   }
 
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message?.type === "OPEN_ACTIVE_TAB_IN_VIEWER") {
       chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
         const tab = tabs[0];
@@ -182,14 +217,20 @@ export default defineBackground(() => {
 
     // ── CAPTURE_TAB_WITH_OVERLAY: capture the visible tab AS-IS (overlay stays visible) ──
     if (message?.type === "CAPTURE_TAB_WITH_OVERLAY") {
-      chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-        const tab = tabs[0];
-        if (!tab?.windowId) { sendResponse({ error: "No active tab" }); return; }
+      const captureTab = (tab: chrome.tabs.Tab | null) => {
+        if (!tab?.windowId) { sendResponse({ error: "No viewer tab found." }); return; }
+        if (!tab.active) { sendResponse({ error: "The viewer tab is not active." }); return; }
         chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" }, (dataUrl) => {
           if (chrome.runtime.lastError) sendResponse({ error: chrome.runtime.lastError.message });
           else sendResponse({ dataUrl });
         });
-      });
+      };
+      const requestedTabId = typeof message.tabId === "number" ? message.tabId : null;
+      if (sender.tab?.id && (requestedTabId === null || sender.tab.id === requestedTabId)) {
+        captureTab(sender.tab);
+      } else {
+        void resolveCaptureTab(requestedTabId).then(captureTab);
+      }
       return true;
     }
 

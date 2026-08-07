@@ -3,7 +3,6 @@ import {
   ArrowRight,
   Check,
   MousePointerClick,
-  ShieldCheck,
   Sparkles,
   X,
 } from "lucide-react";
@@ -25,16 +24,12 @@ const TOUR_TRANSLATION_KEYS: Array<{
   eyebrow: TranslationKey;
   title: TranslationKey;
   text: TranslationKey;
-  hint: TranslationKey;
+  hint?: TranslationKey;
 }> = [
-  { eyebrow: "tourWelcomeEyebrow", title: "tourWelcomeTitle", text: "tourWelcomeText", hint: "tourWelcomeHint" },
-  { eyebrow: "tourWorkspaceEyebrow", title: "tourWorkspaceTitle", text: "tourWorkspaceText", hint: "tourWorkspaceHint" },
-  { eyebrow: "tourCanvasEyebrow", title: "tourCanvasTitle", text: "tourCanvasText", hint: "tourCanvasHint" },
-  { eyebrow: "tourViewportEyebrow", title: "tourViewportTitle", text: "tourViewportText", hint: "tourViewportHint" },
-  { eyebrow: "tourSyncEyebrow", title: "tourSyncTitle", text: "tourSyncText", hint: "tourSyncHint" },
-  { eyebrow: "tourFocusEyebrow", title: "tourFocusTitle", text: "tourFocusText", hint: "tourFocusHint" },
-  { eyebrow: "tourDesignEyebrow", title: "tourDesignTitle", text: "tourDesignText", hint: "tourDesignHint" },
-  { eyebrow: "tourHandoffEyebrow", title: "tourHandoffTitle", text: "tourHandoffText", hint: "tourHandoffHint" },
+  { eyebrow: "devices", title: "addViewport", text: "tourWorkspaceText", hint: "tourWorkspaceHint" },
+  { eyebrow: "workspaceSetup", title: "collapseWorkspaceSetup", text: "tourCanvasText", hint: "tourCanvasHint" },
+  { eyebrow: "devices", title: "chooseDevice", text: "searchDevice" },
+  { eyebrow: "flowRecorder", title: "recordAFlow", text: "recordFlowToRerun" },
 ];
 
 export function FirstRunGuide({
@@ -44,17 +39,21 @@ export function FirstRunGuide({
   dark: boolean;
   onClose: () => void;
 }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const [stepIndex, setStepIndex] = useState(0);
   const [highlight, setHighlight] = useState<HighlightRect | null>(null);
   const baseStep = FIRST_RUN_TOUR_STEPS[stepIndex];
   const stepKeys = TOUR_TRANSLATION_KEYS[stepIndex];
   const step = {
     ...baseStep,
-    eyebrow: t(stepKeys.eyebrow),
-    title: t(stepKeys.title),
-    text: t(stepKeys.text),
-    hint: t(stepKeys.hint),
+    eyebrow: locale === "en" ? baseStep.eyebrow : t(stepKeys.eyebrow),
+    title: locale === "en" ? baseStep.title : t(stepKeys.title),
+    text: locale === "en" ? baseStep.text : t(stepKeys.text),
+    hint: locale === "en"
+      ? baseStep.hint
+      : stepKeys.hint
+        ? t(stepKeys.hint)
+        : undefined,
   };
   const finalStep = stepIndex === FIRST_RUN_TOUR_STEPS.length - 1;
 
@@ -202,29 +201,15 @@ export function FirstRunGuide({
               dark ? "bg-white/[0.05]" : "bg-slate-50"
             }`}
           >
-            {stepIndex === 0 ? (
-              <ShieldCheck
-                className="mt-0.5 shrink-0 text-[#18b5a4]"
-                size={17}
-              />
-            ) : (
-              <MousePointerClick
-                className="mt-0.5 shrink-0 text-[#18b5a4]"
-                size={17}
-              />
-            )}
+            <MousePointerClick
+              className="mt-0.5 shrink-0 text-[#18b5a4]"
+              size={17}
+            />
             <p
               className={`text-[11px] leading-4 ${
                 dark ? "text-slate-400" : "text-slate-500"
               }`}
             >
-              {stepIndex === 0 && (
-                <strong
-                  className={dark ? "text-slate-200" : "text-slate-700"}
-                >
-                  {t("privateLocal")}{" "}
-                </strong>
-              )}
               {step.hint}
             </p>
           </div>
@@ -240,7 +225,12 @@ export function FirstRunGuide({
                 key={item.title}
                 type="button"
                 onClick={() => setStepIndex(index)}
-                aria-label={t("goToTourStep", { current: index + 1, title: t(TOUR_TRANSLATION_KEYS[index].title) })}
+                aria-label={t("goToTourStep", {
+                  current: index + 1,
+                  title: locale === "en"
+                    ? item.title
+                    : t(TOUR_TRANSLATION_KEYS[index].title),
+                })}
                 aria-current={index === stepIndex ? "step" : undefined}
                 className={`h-1.5 rounded-full transition-all ${
                   index === stepIndex

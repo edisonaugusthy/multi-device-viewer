@@ -49,8 +49,21 @@ export interface MockupFrameStyle {
 export interface MockupAsset {
   kind: "transparent-png" | "frame";
   localPath?: string;
+  sourceUrl?: string;
   width?: number;
   height?: number;
+  /** CSS pixels per source-image pixel. Legacy catalog assets default to 0.5. */
+  renderScale?: number;
+  /** Keeps tightly cropped manufacturer frames from filling the entire preview canvas. */
+  previewScale?: number;
+  /** Paints transparent hardware above the live screen so bezels and cutouts stay intact. */
+  frameOverlay?: boolean;
+  sourceCrop?: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  };
   screenInset?: {
     top: number;
     right: number;

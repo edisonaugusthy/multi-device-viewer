@@ -4,11 +4,37 @@ import {
   getMobileContentTop,
   getStatusHeight,
 } from "../../ui/components/DeviceFrame";
-import { devices } from "./device-catalog";
+import { defaultDeviceIds, devices, quickDevicePresetIds } from "./device-catalog";
 import { supportsOrientation } from "./device-service";
 import { getFrameProfile } from "./frame-profiles";
 
 describe("device catalog imports", () => {
+  it("uses the latest requested devices for startup and quick presets", () => {
+    expect(defaultDeviceIds).toEqual([
+      "apple-iphone-17-pro-2025",
+      "apple-ipad-pro-13-m4-2024",
+      "apple-macbook-pro-14-m5-2025",
+    ]);
+    expect(quickDevicePresetIds).toEqual({
+      phoneTablet: [
+        "apple-iphone-17-pro-2025",
+        "apple-ipad-pro-13-m4-2024",
+      ],
+      iosAndroid: [
+        "apple-iphone-17-pro-2025",
+        "samsung-galaxy-s26-ultra-2026",
+      ],
+      mobileTabletLaptop: [
+        "apple-iphone-17-pro-2025",
+        "apple-ipad-pro-13-m4-2024",
+        "apple-macbook-pro-14-m5-2025",
+      ],
+    });
+    for (const id of new Set([...defaultDeviceIds, ...Object.values(quickDevicePresetIds).flat()])) {
+      expect(devices.some((device) => device.id === id), id).toBe(true);
+    }
+  });
+
   it.each([
     ["samsung-galaxy-z-fold8-ultra-folded-2026", "Samsung Galaxy Z Fold8 Ultra (folded)", 360, 840, 1080, 2520],
     ["samsung-galaxy-z-fold8-ultra-unfolded-2026", "Samsung Galaxy Z Fold8 Ultra (unfolded)", 902, 1002, 2256, 2504],
@@ -17,14 +43,15 @@ describe("device catalog imports", () => {
     ["samsung-galaxy-z-flip8-folded-2026", "Samsung Galaxy Z Flip8 (folded)", 316, 349, 948, 1048],
     ["samsung-galaxy-z-flip8-unfolded-2026", "Samsung Galaxy Z Flip8 (unfolded)", 360, 840, 1080, 2520],
     ["samsung-galaxy-a27-5g-2026", "Samsung Galaxy A27 5G", 360, 780, 1080, 2340],
-  ])("includes newly announced device %s", (id, name, width, height, panelWidth, panelHeight) => {
+  ])("keeps the previous announced device %s without a stale new badge", (id, name, width, height, panelWidth, panelHeight) => {
     expect(devices.find((candidate) => candidate.id === id)).toMatchObject({
       name,
       year: 2026,
       cssViewport: { width, height },
       manufacturerResolution: { width: panelWidth, height: panelHeight },
-      tags: expect.arrayContaining(["android", "new"]),
+      tags: expect.arrayContaining(["android"]),
     });
+    expect(devices.find((candidate) => candidate.id === id)?.tags).not.toContain("new");
   });
 
   it("marks only the latest device batch as new", () => {
@@ -34,13 +61,12 @@ describe("device catalog imports", () => {
         .map((device) => device.id)
         .sort(),
     ).toEqual([
-      "samsung-galaxy-a27-5g-2026",
-      "samsung-galaxy-z-flip8-folded-2026",
-      "samsung-galaxy-z-flip8-unfolded-2026",
-      "samsung-galaxy-z-fold8-folded-2026",
-      "samsung-galaxy-z-fold8-ultra-folded-2026",
-      "samsung-galaxy-z-fold8-ultra-unfolded-2026",
-      "samsung-galaxy-z-fold8-unfolded-2026",
+      "apple-iphone-17e-2026",
+      "apple-macbook-neo-13-2026",
+      "apple-studio-display-xdr-27-2026",
+      "google-pixel-10a-2026",
+      "microsoft-surface-laptop-8-13-8-2026",
+      "samsung-galaxy-s26-plus-2026",
     ]);
   });
 
@@ -57,6 +83,43 @@ describe("device catalog imports", () => {
 
     expect(asset?.localPath).toBe(localPath);
     expect(asset?.viewport?.portrait).toBeDefined();
+  });
+
+  it.each([
+    ["apple-iphone-17e-2026", "Apple iPhone 17e", "phone", 390, 844, 1170, 2532, "/mockups/apple-iphone-17e-2026.png"],
+    ["google-pixel-10a-2026", "Google Pixel 10a", "phone", 412, 924, 1080, 2424, "/mockups/google-pixel-10a-2026.webp"],
+    ["samsung-galaxy-s26-plus-2026", "Samsung Galaxy S26+", "phone", 384, 832, 1440, 3120, "/mockups/samsung-galaxy-s26-plus-2026.png"],
+    ["apple-macbook-neo-13-2026", "Apple MacBook Neo 13-inch", "laptop", 1204, 753, 2408, 1506, "/mockups/apple-macbook-neo-13-2026.png"],
+    ["microsoft-surface-laptop-8-13-8-2026", "Microsoft Surface Laptop 13.8-inch (8th Edition)", "laptop", 1152, 768, 2304, 1536, "/mockups/microsoft-surface-laptop-8-13-8-2026.png"],
+    ["apple-studio-display-xdr-27-2026", "Apple Studio Display XDR 27-inch", "desktop", 2560, 1440, 5120, 2880, "/mockups/apple-studio-display-xdr-27-2026.png"],
+  ])("includes manufacturer-calibrated frame %s", (id, name, type, width, height, panelWidth, panelHeight, localPath) => {
+    expect(devices.find((device) => device.id === id)).toMatchObject({
+      name,
+      type,
+      cssViewport: { width, height },
+      manufacturerResolution: { width: panelWidth, height: panelHeight },
+      tags: expect.arrayContaining(["new"]),
+      mockupAssets: [expect.objectContaining({ localPath })],
+    });
+    const asset = devices.find((device) => device.id === id)?.mockupAssets[0];
+    expect(asset?.sourceCrop).toBeDefined();
+    expect(asset?.renderScale).toBeGreaterThanOrEqual(0.5);
+    expect(asset?.previewScale).toBeLessThan(1);
+    expect(asset?.sourceUrl).toMatch(/^https:\/\//);
+  });
+
+  it("uses the official iPhone hardware as the notch overlay", () => {
+    const asset = devices.find((device) => device.id === "apple-iphone-17e-2026")!.mockupAssets[0];
+
+    expect(asset.frameOverlay).toBe(true);
+    expect(asset.viewport?.portrait?.occlusions).toBeUndefined();
+    expect(asset.viewport?.landscape?.occlusions).toBeUndefined();
+  });
+
+  it("links Studio Display XDR to the XDR manufacturer page", () => {
+    const asset = devices.find((device) => device.id === "apple-studio-display-xdr-27-2026")?.mockupAssets[0];
+
+    expect(asset?.sourceUrl).toBe("https://www.apple.com/shop/buy-mac/studio-display-xdr");
   });
 
   it("keeps unfolded foldables free of synthetic hinge seams", () => {
@@ -204,7 +267,7 @@ describe("device catalog imports", () => {
   it.each([
     ["apple-iphone-air-2025", 420, 912, 1260, 2736],
     ["apple-iphone-16-plus-2024", 430, 932, 1290, 2796],
-  ])("keeps Dynamic Island content edge-to-edge for %s", (id, width, height, panelWidth, panelHeight) => {
+  ])("keeps Dynamic Island screen geometry edge-to-edge for %s", (id, width, height, panelWidth, panelHeight) => {
     const device = devices.find((candidate) => candidate.id === id);
     const asset = device?.mockupAssets[0];
 
@@ -222,7 +285,7 @@ describe("device catalog imports", () => {
     "apple-iphone-17-pro-2025",
     "apple-iphone-air-2025",
     "apple-iphone-16-plus-2024",
-  ])("reserves the exact Dynamic Island top bar for %s", (id) => {
+  ])("keeps the exact Dynamic Island safe area for %s", (id) => {
     const device = devices.find((candidate) => candidate.id === id)!;
     const profile = getFrameProfile(device);
     const statusHeight = Math.max(
@@ -232,6 +295,43 @@ describe("device catalog imports", () => {
 
     expect(profile).toMatchObject({ kind: "iphone-dynamic-island", safeAreaInsetTop: 59 });
     expect(getMobileContentTop(statusHeight, 0)).toBe(59);
+  });
+
+  it.each([
+    "apple-iphone-17e-2026",
+    "apple-iphone-17-2025",
+    "apple-iphone-17-pro-2025",
+    "apple-iphone-17-pro-max-2025",
+    "apple-iphone-air-2025",
+  ])("keeps page content below the iPhone status bar for %s", (id) => {
+    const device = devices.find((candidate) => candidate.id === id)!;
+    const profile = getFrameProfile(device);
+    const statusHeight = Math.max(
+      profile.safeAreaInsetTop,
+      getStatusHeight(profile.platform, profile.kind, false),
+    );
+
+    expect(profile.platform).toBe("ios");
+    expect(getMobileContentTop(statusHeight, 0)).toBe(statusHeight);
+  });
+
+  it.each([
+    "apple-iphone-17e-2026",
+    "apple-iphone-17-2025",
+    "apple-iphone-17-pro-2025",
+    "apple-iphone-17-pro-max-2025",
+    "apple-iphone-air-2025",
+  ])("uses iOS 26 Liquid Glass Safari chrome for %s", (id) => {
+    const device = devices.find((candidate) => candidate.id === id)!;
+    const profile = getFrameProfile(device);
+
+    expect(profile).toMatchObject({
+      platform: "ios",
+      osMajor: 26,
+      chromeVariant: "ios-liquid-glass",
+      safeAreaInsetBottom: 90,
+      imageChrome: { showSafariBar: true },
+    });
   });
 
   it.each([
@@ -247,11 +347,18 @@ describe("device catalog imports", () => {
     "motorola-edge-60-pro-2025",
     "zebra-tc58-2022",
     "panasonic-toughbook-s1-2021",
+    "apple-iphone-17e-2026",
+    "google-pixel-10a-2026",
+    "samsung-galaxy-s26-plus-2026",
+    "apple-macbook-neo-13-2026",
+    "microsoft-surface-laptop-8-13-8-2026",
+    "apple-studio-display-xdr-27-2026",
   ])("keeps the calibrated screen for %s inside its rendered frame", (id) => {
     const device = devices.find((candidate) => candidate.id === id)!;
     const asset = device.mockupAssets[0];
-    const frameWidth = asset.width! / 2;
-    const frameHeight = asset.height! / 2;
+    const renderScale = asset.renderScale ?? 0.5;
+    const frameWidth = (asset.sourceCrop?.width ?? asset.width!) * renderScale;
+    const frameHeight = (asset.sourceCrop?.height ?? asset.height!) * renderScale;
     const portrait = asset.viewport!.portrait!;
 
     expect(portrait.left).toBeGreaterThanOrEqual(0);
@@ -273,6 +380,69 @@ describe("device catalog imports", () => {
   });
 
   it.each([
+    "apple-iphone-17e-2026",
+    "google-pixel-10a-2026",
+    "samsung-galaxy-s26-plus-2026",
+    "apple-macbook-neo-13-2026",
+    "microsoft-surface-laptop-8-13-8-2026",
+    "apple-studio-display-xdr-27-2026",
+  ])("keeps the official frame inset and viewport aligned for %s", (id) => {
+    const asset = devices.find((candidate) => candidate.id === id)!.mockupAssets[0];
+    const renderScale = asset.renderScale ?? 0.5;
+    const frameWidth = (asset.sourceCrop?.width ?? asset.width!) * renderScale;
+    const frameHeight = (asset.sourceCrop?.height ?? asset.height!) * renderScale;
+    const inset = asset.screenInset!;
+    const viewport = asset.viewport!.portrait!;
+
+    expect(viewport.left).toBeCloseTo(inset.left);
+    expect(viewport.top).toBeCloseTo(inset.top);
+    expect(frameWidth - viewport.left - viewport.width).toBeCloseTo(inset.right);
+    expect(frameHeight - viewport.top - viewport.height).toBeCloseTo(inset.bottom);
+  });
+
+  it("keeps the iPhone 17e screen tucked beneath the notch overlay", () => {
+    const asset = devices.find((candidate) => candidate.id === "apple-iphone-17e-2026")!.mockupAssets[0];
+
+    expect(asset.screenInset).toEqual({ top: 20.4, right: 25.2, bottom: 22.8, left: 25.2 });
+    expect(asset.viewport?.portrait).toMatchObject({ left: 25.2, top: 20.4, width: 367.2, height: 799.2 });
+  });
+
+  it("keeps the Pixel 10a screen centered on its official hardware frame", () => {
+    const asset = devices.find((candidate) => candidate.id === "google-pixel-10a-2026")!.mockupAssets[0];
+
+    expect(asset.sourceCrop).toEqual({ left: 696, top: 60, width: 366, height: 767 });
+    expect(asset.screenInset).toEqual({ top: 20, right: 22, bottom: 20, left: 20 });
+    expect(asset.viewport?.portrait).toMatchObject({
+      left: 20,
+      top: 20,
+      width: 324,
+      height: 727,
+      occlusions: [{ kind: "circle", left: 152, top: 15, width: 20, height: 20 }],
+    });
+    expect(asset.viewport?.landscape).toMatchObject({
+      left: 20,
+      top: 20,
+      width: 727,
+      height: 324,
+      occlusions: [{ kind: "circle", left: 692, top: 152, width: 20, height: 20 }],
+    });
+  });
+
+  it("fits the Surface Laptop 13.8-inch content to the complete display opening", () => {
+    const asset = devices.find((candidate) => candidate.id === "microsoft-surface-laptop-8-13-8-2026")!.mockupAssets[0];
+
+    expect(asset.screenInset).toEqual({ top: 48, right: 252, bottom: 364, left: 208 });
+    expect(asset.viewport?.portrait).toMatchObject({
+      left: 208,
+      top: 48,
+      width: 860,
+      height: 598,
+      cornerRadius: 4,
+      enableRotation: false,
+    });
+  });
+
+  it.each([
     ["apple-iphone-16-pro-2024", "Apple iPhone 16 Pro", "phone", 402, 874],
     ["apple-iphone-16e-2025", "Apple iPhone 16e", "phone", 390, 844],
     ["apple-ipad-pro-13-m4-2024", "Apple iPad Pro 13-inch (M4)", "tablet", 1032, 1376],
@@ -289,7 +459,7 @@ describe("device catalog imports", () => {
     const device = devices.find((candidate) => candidate.id === id);
 
     expect(device).toMatchObject({ name, type, cssViewport: { width, height } });
-    expect(device?.mockupAssets[0]?.localPath).toMatch(/^\/mockups\/.+\.png$/);
+    expect(device?.mockupAssets[0]?.localPath).toMatch(/^\/mockups\/.+\.(png|svg)$/);
   });
 
   it.each([
@@ -350,9 +520,6 @@ describe("device catalog imports", () => {
     for (const duplicateId of [
       "apple-watch-serie-6",
       "apple-macbook-air-13-m4-2025",
-      "apple-iphone-17e-2026",
-      "google-pixel-10a-2026",
-      "samsung-galaxy-s26-plus-2026",
       "motorola-razr-60-ultra-2025",
       "motorola-thinkphone-25-2024",
       "honeywell-ct47-2023",

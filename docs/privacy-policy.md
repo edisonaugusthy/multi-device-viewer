@@ -20,7 +20,7 @@ When the user explicitly chooses a feature, the extension may locally process:
 - Design-reference images selected, pasted, or dropped by the user.
 - Annotation marks and locally entered prompt text.
 - Imported device-set JSON files.
-- QR handoff URLs and AI fix-prompt text entered by the user.
+- AI fix-prompt text entered by the user.
 
 ## Data stored on the device
 
@@ -67,6 +67,7 @@ Declarative network rules remove `X-Frame-Options` and `Content-Security-Policy`
 
 | Permission | Why it is required |
 |---|---|
+| `activeTab` | Temporarily captures the visible workspace only after Screenshot and annotate is clicked. It does not grant persistent browsing access. |
 | `contextMenus` | Adds the local shortcut for opening the current page in Responsive Tester. |
 | `declarativeNetRequest` | Applies the packaged subframe-header rules needed for responsive previews. |
 | `downloads` | Saves screenshots and completed recordings after an explicit user action. |
@@ -74,7 +75,6 @@ Declarative network rules remove `X-Frame-Options` and `Content-Security-Policy`
 | `scripting` | Injects the packaged overlay script into a page that was already open when the extension was installed or reloaded. |
 | `storage` | Stores local preferences, workspace state, designs, custom devices, saved sets, and notice state. |
 | `tabCapture` | Records the selected source tab only after the user starts recording. |
-| `tabs` | Reads the selected tab URL, communicates with the overlay, manages the viewer tab fallback, and captures the visible workspace. |
 | HTTP/HTTPS host access | Allows the packaged content script and responsive preview workflow to operate on user-selected web pages and local development servers. |
 
 The extension does not request the `debugger` permission and does not declare background keyboard commands.

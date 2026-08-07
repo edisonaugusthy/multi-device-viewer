@@ -19,7 +19,6 @@ Mobile View is a free, open-source responsive website testing tool, responsive d
 - Save device sets, favorites, and recent devices, or focus one viewport for detailed testing.
 - Capture a viewport or the complete workspace, then annotate it with pen, box, arrow, text, and crop tools.
 - Compare a local design beside or over the live website and mark feedback without uploading the reference.
-- Open the current URL on a physical phone with a locally generated QR code.
 - Copy a structured responsive-fix prompt with the URL, devices, viewport sizes, and optional issue details to your coding tool.
 
 Everything runs locally in your browser. No account, subscription, analytics, telemetry, or application backend is required. URLs, screenshots, recordings, designs, annotations, and settings are not sent to a backend.
@@ -45,7 +44,6 @@ Mobile View ist ein kostenloser Open-Source-Geräte-Emulator und Responsive-Test
 - Speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.
 - Erfasse eine Ansicht oder den gesamten Arbeitsbereich und ergänze Stift, Rahmen, Pfeile, Text oder Zuschnitt.
 - Vergleiche einen lokalen Entwurf neben oder über der Live-Website und markiere Feedback ohne Upload.
-- Öffne die aktuelle URL per lokal erzeugtem QR-Code auf einem echten Smartphone.
 - Kopiere einen strukturierten Prompt zur Behebung responsiver Fehler mit URL, Geräten, Viewport-Größen und optionalen Problemdetails.
 
 Alles läuft lokal im Browser. Kein Konto, Abonnement, Analyse-, Telemetrie- oder Anwendungs-Backend ist erforderlich. URLs, Screenshots, Aufnahmen, Entwürfe, Anmerkungen und Einstellungen werden nicht an ein Backend gesendet.
@@ -175,7 +173,6 @@ Ang Mobile View ay libre at open-source na device emulator at responsive tester 
 - Mag-save ng device set, paborito, at recent device, o tumutok sa isang viewport.
 - Kunan ang isang viewport o buong workspace at lagyan ng pen, kahon, arrow, text, o crop.
 - Ikumpara ang lokal na design sa tabi o ibabaw ng live website at magmarka ng feedback nang walang upload.
-- Buksan ang kasalukuyang URL sa totoong phone gamit ang QR code na lokal na ginawa.
 - Kumopya ng structured fix prompt na may URL, device, viewport size, at opsyonal na detalye papunta sa coding tool.
 
 Lahat ay lokal na tumatakbo sa browser. Walang account, subscription, analytics, telemetry, o application backend. Hindi ipinapadala sa backend ang URL, screenshot, recording, design, annotation, o setting.
@@ -201,7 +198,6 @@ Mobile View is een gratis opensource apparaatemulator en responsive tester voor 
 - Bewaar apparaatsets, favorieten en recente apparaten, of focus één viewport voor een detailcontrole.
 - Leg één viewport of de volledige werkruimte vast en voeg pen, kader, pijl, tekst of uitsnede toe.
 - Vergelijk een lokaal ontwerp naast of over de live website en markeer feedback zonder upload.
-- Open de huidige URL op een echte telefoon via een lokaal gegenereerde QR-code.
 - Kopieer een gestructureerde herstelprompt met URL, apparaten, viewportformaten en optionele probleeminformatie naar je codeertool.
 
 Alles draait lokaal in de browser. Geen account, abonnement, analyse, telemetrie of applicatiebackend nodig. URL’s, screenshots, opnamen, ontwerpen, aantekeningen en instellingen worden niet naar een backend gestuurd.
@@ -253,7 +249,6 @@ O Mobile View é um emulador de dispositivos e testador responsivo gratuito e de
 - Salve conjuntos, favoritos e dispositivos recentes ou foque em uma tela para revisão detalhada.
 - Capture uma tela ou todo o espaço de trabalho e use caneta, caixa, seta, texto e recorte.
 - Compare um design local ao lado ou sobre o site ativo e marque comentários sem fazer upload.
-- Abra a URL atual em um celular físico com um QR code gerado localmente.
 - Copie para sua ferramenta de programação um prompt estruturado com URL, dispositivos, tamanhos e detalhes opcionais do problema.
 
 Tudo funciona localmente no navegador. Não exige conta, assinatura, análise, telemetria ou backend. URLs, capturas, gravações, designs, anotações e configurações não são enviados a um servidor.

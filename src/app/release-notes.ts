@@ -1,6 +1,7 @@
 export interface ReleaseNote {
   title: string;
   description: string;
+  featured?: boolean;
 }
 
 export interface VersionReleaseNotes {
@@ -26,6 +27,16 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.3": {
+    version: "0.2.3",
+    heading: "Localized testing and reusable user flows",
+    summary: "This release makes the responsive workspace easier to use worldwide, adds repeatable user journeys, and refines the latest iPhone previews.",
+    notes: [
+      { title: "A localized workspace", description: "Use the responsive testing interface in 16 supported languages, including Arabic, Chinese, French, German, Hindi, Japanese, Korean, Portuguese, Spanish, and more." },
+      { title: "Record user flow", description: "Record clicks, typing, and scrolling once, then rerun the saved journey across your device viewports to check the same experience consistently.", featured: true },
+      { title: "Refined Liquid Glass previews", description: "The latest iPhone devices now render Safari and system surfaces with corrected Liquid Glass color blending, notch boundaries, and bottom-bar treatment." },
+    ],
+  },
   "0.2.2": {
     version: "0.2.2",
     heading: "Smoother mobile previews",
@@ -40,7 +51,7 @@ const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
     summary: "",
     notes: [
       { title: "Four new 2026 Galaxy devices, with every posture", description: "Adds Galaxy Z Fold8 Ultra, Fold8, Flip8 and A27 5G. Fold8 Ultra, Fold8 and Flip8 include separate folded and unfolded presets, all marked NEW in the device picker until the next device set arrives." },
-      { title: "A guided first run", description: "An eight-step product tour now covers clearing the sidebar, focusing one viewport, comparing against a design, synchronization and handoff without clipping controls at the window edge." },
+      { title: "A guided first run", description: "An eight-step product tour now covers clearing the sidebar, focusing one viewport, comparing against a design, and synchronization without clipping controls at the window edge." },
     ],
   },
   "0.2.0": {

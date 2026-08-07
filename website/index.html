@@ -80,8 +80,7 @@
               "Responsive viewport and device presentation emulation",
               "Scroll and navigation sync",
               "Design comparison",
-              "Annotated captures",
-              "Physical device QR handoff"
+              "Annotated captures"
             ]
           },
           {
@@ -108,7 +107,7 @@
                 "name": "Can it test localhost?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. Open your local development page in Chrome or Firefox, then launch the extension. Physical-device handoff requires a LAN-reachable address instead of localhost."
+                  "text": "Yes. Open your local development page in Chrome or Firefox, then launch the extension. The page stays on your computer while you compare its responsive layouts."
                 }
               },
               {
@@ -154,15 +153,6 @@
         <rect width="18" height="18" x="3" y="3" rx="2" />
         <path d="M3 9h18" />
         <path d="M9 21V9" />
-      </symbol>
-      <symbol id="icon-qr-code" viewBox="0 0 24 24">
-        <rect width="5" height="5" x="3" y="3" rx="1" />
-        <rect width="5" height="5" x="16" y="3" rx="1" />
-        <rect width="5" height="5" x="3" y="16" rx="1" />
-        <path d="M21 16h-3a2 2 0 0 0-2 2v3" />
-        <path
-          d="M21 21v.01M12 7v3a2 2 0 0 1-2 2H7M3 12h.01M12 3h.01M12 16v.01M16 12h1M21 12v.01M12 21v-1"
-        />
       </symbol>
       <symbol id="icon-scan-search" viewBox="0 0 24 24">
         <path
@@ -439,28 +429,6 @@
                 teammate can reproduce the issue quickly.
               </p>
             </article>
-            <article class="feature-card feature-wide warm-card">
-              <div>
-                <span class="feature-kicker"
-                  ><svg aria-hidden="true"><use href="#icon-qr-code" /></svg
-                  ><span class="feature-label"
-                    >PHYSICAL DEVICE HANDOFF</span
-                  ></span
-                >
-                <h3>Continue the check on a real phone.</h3>
-                <p>
-                  Open a LAN-ready development page from a QR code, then
-                  validate the critical path on physical hardware before
-                  release.
-                </p>
-                <a href="./guides/responsive-testing.html"
-                  >Read the responsive testing guide <span>→</span></a
-                >
-              </div>
-              <div class="qr-art" aria-hidden="true">
-                <svg aria-hidden="true"><use href="#icon-qr-code" /></svg>
-              </div>
-            </article>
           </div>
         </div>
       </section>
@@ -579,9 +547,8 @@
             <summary>Can it test localhost?<span>+</span></summary>
             <p>
               Yes. Open your local development page in Chrome or Firefox, then
-              launch the extension. For physical-device handoff, expose the dev
-              server on your LAN and use your computer's network address instead
-              of localhost.
+              launch the extension. The page stays on your computer while you
+              compare its responsive layouts.
             </p>
           </details>
           <details>

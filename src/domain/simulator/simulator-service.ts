@@ -4,7 +4,7 @@ export const maxPreviewSlots = 4;
 
 export function normalizeUrl(input: string): string {
   const value = input.trim();
-  if (!value) return "https://example.com";
+  if (!value) return "";
   if (/^(https?:)?\/\//i.test(value)) return value.startsWith("//") ? `https:${value}` : value;
   if (/^[\w.-]+\.[a-z]{2,}/i.test(value)) return `https://${value}`;
   return `https://www.google.com/search?q=${encodeURIComponent(value)}`;

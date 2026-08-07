@@ -3,10 +3,15 @@ import type { MockupAsset, MockupFrameStyle, MockupViewportConfig, Orientation, 
 interface LocalMockupAsset {
   id: string;
   localPath: string;
+  sourceUrl?: string;
   file: string;
   bytes: number;
   width: number;
   height: number;
+  renderScale?: number;
+  previewScale?: number;
+  frameOverlay?: boolean;
+  sourceCrop?: MockupAsset["sourceCrop"];
   screenInset?: {
     top: number;
     right: number;
@@ -1205,14 +1210,18 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-17e-2026",
-    "localPath": "/mockups/apple-iphone-14-2022.png",
-    "file": "apple-iphone-14-2022.png",
-    "bytes": 46800,
-    "width": 870,
-    "height": 1772,
+    "localPath": "/mockups/apple-iphone-17e-2026.png",
+    "sourceUrl": "https://www.apple.com/v/iphone-17e/d/images/overview/camera/storage_hw__cx0gdpi4auuu_large_2x.png",
+    "file": "apple-iphone-17e-2026.png",
+    "bytes": 102865,
+    "width": 696,
+    "height": 1404,
+    "renderScale": 0.6,
+    "previewScale": 0.88,
+    "frameOverlay": true,
+    "sourceCrop": { "left": 0, "top": 0, "width": 696, "height": 1404 },
     "cssViewport": { "width": 390, "height": 844 },
-    "screenInset": { "top": 7, "right": 8.5, "bottom": 9.5, "left": 10.5 },
-    "viewportSourceId": "apple-iphone-14-2022"
+    "screenInset": { "top": 20.4, "right": 25.2, "bottom": 22.8, "left": 25.2 }
   },
   {
     "id": "apple-ipad-pro-13-m4-2024",
@@ -1264,13 +1273,17 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s26-plus-2026",
-    "localPath": "/mockups/samsung-galaxy-s26.png",
-    "file": "samsung-galaxy-s26.png",
-    "bytes": 347910,
-    "width": 746,
-    "height": 1577,
-    "cssViewport": { "width": 360, "height": 780 },
-    "screenInset": { "top": 4.85, "right": 7.77, "bottom": 3.88, "left": 5 }
+    "localPath": "/mockups/samsung-galaxy-s26-plus-2026.png",
+    "sourceUrl": "https://www.samsung.com/us/smartphones/galaxy-s26/",
+    "file": "samsung-galaxy-s26-plus-2026.png",
+    "bytes": 496694,
+    "width": 1920,
+    "height": 1280,
+    "renderScale": 1,
+    "previewScale": 0.88,
+    "sourceCrop": { "left": 690, "top": 80, "width": 550, "height": 1130 },
+    "cssViewport": { "width": 384, "height": 832 },
+    "screenInset": { "top": 32, "right": 32, "bottom": 40, "left": 26 }
   },
   {
     "id": "samsung-galaxy-z-flip7-2025",
@@ -1305,12 +1318,17 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "google-pixel-10a-2026",
-    "localPath": "/mockups/google-pixel-10-2026.png",
-    "file": "google-pixel-10-2026.png",
-    "bytes": 18649,
-    "width": 918,
-    "height": 1938,
-    "screenInset": { "top": 12.5, "right": 12, "bottom": 10.5, "left": 9 }
+    "localPath": "/mockups/google-pixel-10a-2026.webp",
+    "sourceUrl": "https://store.google.com/product/pixel_10a?hl=en-US",
+    "file": "google-pixel-10a-2026.webp",
+    "bytes": 23526,
+    "width": 1200,
+    "height": 898,
+    "renderScale": 1,
+    "previewScale": 0.88,
+    "sourceCrop": { "left": 696, "top": 60, "width": 366, "height": 767 },
+    "cssViewport": { "width": 412, "height": 924 },
+    "screenInset": { "top": 20, "right": 22, "bottom": 20, "left": 20 }
   },
   {
     "id": "motorola-edge-60-pro-2025",
@@ -1392,6 +1410,48 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "height": 2240,
     "cssViewport": { "width": 1440, "height": 900 },
     "screenInset": { "top": 7.86, "right": 134.02, "bottom": 212.23, "left": 134.02 }
+  },
+  {
+    "id": "apple-macbook-neo-13-2026",
+    "localPath": "/mockups/apple-macbook-neo-13-2026.png",
+    "sourceUrl": "https://www.apple.com/shop/buy-mac/macbook-neo",
+    "file": "apple-macbook-neo-13-2026.png",
+    "bytes": 543813,
+    "width": 1800,
+    "height": 1100,
+    "renderScale": 1,
+    "previewScale": 0.88,
+    "sourceCrop": { "left": 420, "top": 260, "width": 960, "height": 620 },
+    "cssViewport": { "width": 1204, "height": 753 },
+    "screenInset": { "top": 57, "right": 145, "bottom": 140, "left": 144 }
+  },
+  {
+    "id": "microsoft-surface-laptop-8-13-8-2026",
+    "localPath": "/mockups/microsoft-surface-laptop-8-13-8-2026.png",
+    "sourceUrl": "https://www.microsoft.com/en-us/surface/devices/surface-laptop",
+    "file": "microsoft-surface-laptop-8-13-8-2026.png",
+    "bytes": 752654,
+    "width": 1440,
+    "height": 1440,
+    "renderScale": 1,
+    "previewScale": 0.88,
+    "sourceCrop": { "left": 60, "top": 250, "width": 1320, "height": 1010 },
+    "cssViewport": { "width": 1152, "height": 768 },
+    "screenInset": { "top": 48, "right": 252, "bottom": 364, "left": 208 }
+  },
+  {
+    "id": "apple-studio-display-xdr-27-2026",
+    "localPath": "/mockups/apple-studio-display-xdr-27-2026.png",
+    "sourceUrl": "https://www.apple.com/shop/buy-mac/studio-display-xdr",
+    "file": "apple-studio-display-xdr-27-2026.png",
+    "bytes": 312798,
+    "width": 1800,
+    "height": 1400,
+    "renderScale": 1,
+    "previewScale": 0.88,
+    "sourceCrop": { "left": 550, "top": 420, "width": 700, "height": 650 },
+    "cssViewport": { "width": 2560, "height": 1440 },
+    "screenInset": { "top": 90, "right": 98, "bottom": 271, "left": 99 }
   }
 ];
 
@@ -2567,12 +2627,10 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
   },
   "apple-iphone-17e-2026": {
     portrait: {
-      left: 25, top: 16.5, width: 390, height: 844, enableRotation: true,
-      occlusions: [{ kind: "rounded-rect", left: 112, top: 0, width: 166, height: 48, radius: 22 }],
+      left: 25.2, top: 20.4, width: 367.2, height: 799.2, cornerRadius: 47, enableRotation: true,
     },
     landscape: {
-      left: 12, top: 25, width: 844, height: 390, enableRotation: true,
-      occlusions: [{ kind: "rounded-rect", left: 796, top: 112, width: 48, height: 166, radius: 22 }],
+      left: 20.4, top: 25.2, width: 799.2, height: 367.2, cornerRadius: 47, enableRotation: true,
     },
   },
   "apple-ipad-pro-13-m4-2024": {
@@ -2592,12 +2650,12 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
   },
   "samsung-galaxy-s26-plus-2026": {
     portrait: {
-      left: 9, top: 8.5, width: 351.5, height: 772.5, enableRotation: true,
-      occlusions: [{ kind: "circle", left: 169, top: 9, width: 17, height: 17 }],
+      left: 26, top: 32, width: 492, height: 1058, cornerRadius: 58, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 232, top: 12, width: 28, height: 28 }],
     },
     landscape: {
-      left: 7.5, top: 9, width: 772.5, height: 351.5, enableRotation: true,
-      occlusions: [{ kind: "circle", left: 746.5, top: 169, width: 17, height: 17 }],
+      left: 32, top: 26, width: 1058, height: 492, cornerRadius: 58, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 1018, top: 232, width: 28, height: 28 }],
     },
   },
   "samsung-galaxy-z-flip7-2025": {
@@ -2621,8 +2679,14 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
     },
   },
   "google-pixel-10a-2026": {
-    portrait: { left: 22, top: 23, width: 412, height: 924, enableRotation: true },
-    landscape: { left: 23, top: 22, width: 924, height: 412, enableRotation: true },
+    portrait: {
+      left: 20, top: 20, width: 324, height: 727, cornerRadius: 44, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 152, top: 15, width: 20, height: 20 }],
+    },
+    landscape: {
+      left: 20, top: 20, width: 727, height: 324, cornerRadius: 44, enableRotation: true,
+      occlusions: [{ kind: "circle", left: 692, top: 152, width: 20, height: 20 }],
+    },
   },
   "motorola-razr-60-ultra-2025": {
     portrait: { left: 28, top: 28, width: 412, height: 1008, enableRotation: true },
@@ -2651,6 +2715,15 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
       left: 134.02, top: 7.86, width: 1440, height: 900, enableRotation: false,
       occlusions: [{ kind: "circle", left: 712, top: 0, width: 16, height: 16 }],
     },
+  },
+  "apple-macbook-neo-13-2026": {
+    portrait: { left: 144, top: 57, width: 671, height: 423, cornerRadius: 14, enableRotation: false },
+  },
+  "microsoft-surface-laptop-8-13-8-2026": {
+    portrait: { left: 208, top: 48, width: 860, height: 598, cornerRadius: 4, enableRotation: false },
+  },
+  "apple-studio-display-xdr-27-2026": {
+    portrait: { left: 99, top: 90, width: 503, height: 289, cornerRadius: 4, enableRotation: false },
   },
 };
 
@@ -2683,8 +2756,13 @@ export function getMockupAssets(deviceId: string): MockupAsset[] {
   return [{
     kind: "transparent-png",
     localPath: asset.localPath,
+    sourceUrl: asset.sourceUrl,
     width: asset.width,
     height: asset.height,
+    renderScale: asset.renderScale,
+    previewScale: asset.previewScale,
+    frameOverlay: asset.frameOverlay,
+    sourceCrop: asset.sourceCrop,
     screenInset: asset.screenInset,
     viewport: asset.viewport ?? mockupViewportConfigs[viewportId],
     cssViewport: asset.cssViewport,
@@ -2801,7 +2879,7 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "apple-ipad-mini-a17-pro-2024": { osName: "iPadOS", osVersion: "26.0", notch: false, devicePixelRatio: 2, isPro: true },
   "apple-macbook-air-13-m4-2025": { osName: "macOS", osVersion: "26.0", notch: true, devicePixelRatio: 2, isPro: true },
   "apple-macbook-pro-14-m5-2025": { osName: "macOS", osVersion: "26.0", notch: true, devicePixelRatio: 2, isPro: true },
-  "samsung-galaxy-s26-plus-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "samsung-galaxy-s26-plus-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3.75, isPro: true, safeAreaInsetTop: 36 },
   "samsung-galaxy-z-flip7-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
   "samsung-galaxy-tab-s11-ultra-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, isPro: true, safeAreaInsetTop: 28 },
   "samsung-galaxy-xcover7-pro-2025": { osName: "Android", osVersion: "15.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
@@ -2814,4 +2892,7 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "panasonic-toughbook-s1-2021": { osName: "Android", osVersion: "11.0", notch: false, devicePixelRatio: 1.5, isPro: true, safeAreaInsetTop: 28 },
   "microsoft-surface-laptop-7-2024": { osName: "Windows", osVersion: "11.0", notch: false, devicePixelRatio: 1, isPro: true },
   "dell-xps-13-9350-2024": { osName: "Windows", osVersion: "11.0", notch: false, devicePixelRatio: 1, isPro: true },
+  "apple-macbook-neo-13-2026": { osName: "macOS", osVersion: "26.0", notch: false, devicePixelRatio: 2 },
+  "microsoft-surface-laptop-8-13-8-2026": { osName: "Windows", osVersion: "11.0", notch: false, devicePixelRatio: 2, isPro: true },
+  "apple-studio-display-xdr-27-2026": { osName: "macOS", osVersion: "26.0", notch: false, devicePixelRatio: 2, isPro: true },
 };

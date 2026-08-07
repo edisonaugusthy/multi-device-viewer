@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "Simulador móvil gratuito y de código abierto para probar vistas de teléfono, tablet, portátil y escritorio en paralelo." },
   "actionTitle": { "message": "Abrir el emulador móvil Mobile View" },
   "contextMenuTitle": { "message": "Abrir esta pestaña en Mobile View" },
-  "activeActionTitle": { "message": "Mobile View está activo — haz clic para cerrar" }
+  "activeActionTitle": { "message": "Mobile View está activo — haz clic para cerrar" },
+  "unsupportedActionTitle": { "message": "Abre primero un sitio web" },
+  "unsupportedUrlHint": { "message": "Cambia a la página que estás desarrollando y vuelve a hacer clic en la extensión." }
 }

@@ -13,12 +13,14 @@ export default defineConfig({
     description: "__MSG_extensionDescription__",
     version: "0.2.3",
     permissions: [
+      "activeTab",
       "contextMenus",
-      "declarativeNetRequest",
+      browser === "firefox"
+        ? "declarativeNetRequest"
+        : "declarativeNetRequestWithHostAccess",
       "downloads",
       "scripting",
       "storage",
-      "tabs",
       ...(browser === "firefox" ? [] : ["offscreen", "tabCapture"]),
     ],
     declarative_net_request: {
@@ -48,7 +50,7 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        resources: ["mockups/*", "icons/*", "simulator.html", "chunks/*", "assets/*"],
+        resources: ["simulator.html"],
         matches: ["http://*/*", "https://*/*"]
       }
     ],

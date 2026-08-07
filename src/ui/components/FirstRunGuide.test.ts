@@ -6,22 +6,20 @@ import {
 } from "./first-run-tour";
 
 describe("first-run feature tour", () => {
-  it("introduces the complete responsive-testing workflow", () => {
-    expect(FIRST_RUN_TOUR_STEPS).toHaveLength(8);
+  it("introduces the four-step user-flow workflow", () => {
+    expect(FIRST_RUN_TOUR_STEPS).toHaveLength(4);
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.target)).toEqual([
-      undefined,
-      '[data-tour="device-setup"]',
+      '[data-tour="add-viewport"]',
       '[data-tour="sidebar-collapse"]',
-      '[data-tour="preview-controls"]',
-      '[data-tour="sync-controls"]',
-      '[data-tour="focus-active"]',
-      '[data-tour="compare-design"]',
-      '[data-tour="session-tools"]',
+      '[data-tour="change-device"]',
+      '[data-tour="record-user-flow"]',
     ]);
-    expect(FIRST_RUN_TOUR_STEPS.at(-1)?.text).toContain("AI-ready fix prompt");
-    expect(FIRST_RUN_TOUR_STEPS[2]?.text).toContain("Collapse Workspace setup");
-    expect(FIRST_RUN_TOUR_STEPS[5]?.text).toContain("only the selected preview");
-    expect(FIRST_RUN_TOUR_STEPS[6]?.title).toContain("Compare");
+    expect(FIRST_RUN_TOUR_STEPS.map((step) => step.title)).toEqual([
+      "Add viewport",
+      "Hide the toolbar to make space",
+      "Change the device",
+      "Record user flow",
+    ]);
   });
 
   it("centers the welcome card", () => {

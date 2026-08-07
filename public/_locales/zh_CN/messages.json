@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "免费开源的移动设备模拟器和响应式测试工具，可并排预览手机、平板电脑、笔记本和桌面布局。" },
   "actionTitle": { "message": "打开 Mobile View 设备模拟器" },
   "contextMenuTitle": { "message": "在 Mobile View 中打开此标签页" },
-  "activeActionTitle": { "message": "Mobile View 已启用 — 点击关闭" }
+  "activeActionTitle": { "message": "Mobile View 已启用 — 点击关闭" },
+  "unsupportedActionTitle": { "message": "请先打开一个网站" },
+  "unsupportedUrlHint": { "message": "切换到你正在开发的页面，然后再次点击扩展程序。" }
 }

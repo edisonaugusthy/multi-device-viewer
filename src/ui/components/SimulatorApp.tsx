@@ -1,6 +1,7 @@
 import {
   Camera,
   CircleHelp,
+  Eye,
   Focus,
   ChevronRight,
   GripVertical,
@@ -12,13 +13,14 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   PanelsTopLeft,
+  Play,
   Plus,
   RefreshCw,
   RotateCcw,
   Route,
-  QrCode,
   ScanSearch,
   Settings2,
+  Square,
   Sun,
   Trash2,
   Video,
@@ -49,7 +51,9 @@ import {
   stopTabRecording,
 } from "../../domain/capture/capture-service";
 import { maxPreviewSlots } from "../../domain/simulator/simulator-service";
-import { defaultDeviceIds } from "../../domain/device/device-catalog";
+import { defaultDeviceIds, quickDevicePresetIds } from "../../domain/device/device-catalog";
+import { appendRecordedStep } from "../../domain/flow/flow-service";
+import type { FlowReplayRequest, FlowReplayResult, FlowStep } from "../../domain/flow/flow.types";
 import {
   readStore,
   writeStore,
@@ -63,27 +67,23 @@ import { BrandMark } from "./BrandMark";
 import { CustomDeviceModal } from "./CustomDeviceModal";
 import { FirstRunGuide } from "./FirstRunGuide";
 import { PresetsManager } from "./PresetsManager";
+import { PermissionsInfoModal } from "./PermissionsInfoModal";
 import { PreviewCard } from "./PreviewCard";
 import { ReviewIssueModal } from "./ReviewIssueModal";
 import { ReleaseNotesModal } from "./ReleaseNotesModal";
-import { DeviceHandoffModal } from "./DeviceHandoffModal";
 
 const QUICK_DEVICE_SETS = [
   {
     labelKey: "phoneTablet" as const,
-    devices: ["apple-iphone-14-pro-max-2022", "apple-ipad-air-4"],
+    devices: quickDevicePresetIds.phoneTablet,
   },
   {
     labelKey: "iosAndroid" as const,
-    devices: ["apple-iphone-14-pro-max-2022", "samsung-galaxy-s24"],
+    devices: quickDevicePresetIds.iosAndroid,
   },
   {
     labelKey: "mobileTabletLaptop" as const,
-    devices: [
-      "macbook-air-2020-13",
-      "apple-iphone-14-pro-max-2022",
-      "apple-ipad-air-4",
-    ],
+    devices: quickDevicePresetIds.mobileTabletLaptop,
   },
 ] as const;
 
@@ -105,9 +105,20 @@ export function SimulatorApp() {
   } = useSimulator();
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
+  const [annotationMeta, setAnnotationMeta] = useState<{
+    title: string;
+    url: string;
+    devices: string[];
+  }>();
   const [capturing, setCapturing] = useState(false);
+  const [capturingSlotId, setCapturingSlotId] = useState<string | undefined>();
+  const [captureError, setCaptureError] = useState(false);
   const [recording, setRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [flowRecording, setFlowRecording] = useState(false);
+  const [recordedFlow, setRecordedFlow] = useState<FlowStep[]>([]);
+  const [flowReplay, setFlowReplay] = useState<FlowReplayRequest | null>(null);
+  const [flowResults, setFlowResults] = useState<Record<string, FlowReplayResult>>({});
   const [sidebarOpen, setSidebarOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth > 760,
   );
@@ -118,7 +129,7 @@ export function SimulatorApp() {
   const [showSavedSets, setShowSavedSets] = useState(false);
   const [showReviewIssue, setShowReviewIssue] = useState(false);
   const [showDesignReference, setShowDesignReference] = useState(false);
-  const [showDeviceHandoff, setShowDeviceHandoff] = useState(false);
+  const [showPermissions, setShowPermissions] = useState(false);
   const [referenceViewportId, setReferenceViewportId] = useState(
     () => slots[0]?.id ?? "",
   );
@@ -148,6 +159,10 @@ export function SimulatorApp() {
   const previousSlotCount = useRef(slots.length);
   const boardRef = useRef<HTMLDivElement>(null);
   const dark = display.darkMode;
+
+  useEffect(() => {
+    void readStore<FlowStep[]>("mdvRecordedFlow", []).then(setRecordedFlow);
+  }, []);
 
   useEffect(() => {
     void readStore<{
@@ -309,33 +324,32 @@ export function SimulatorApp() {
     [widths],
   );
 
-  async function takeScreenshot() {
+  async function takeScopedScreenshot(slotId?: string) {
     if (capturing) return;
     setCapturing(true);
+    setCapturingSlotId(slotId);
+    setCaptureError(false);
     try {
-      const dataUrl = await captureTabWithOverlay();
-      setAnnotationImage(dataUrl ?? undefined);
-      setAnnotationOpen(true);
-    } finally {
-      setCapturing(false);
-    }
-  }
-
-  async function takeScopedScreenshot(scope: "workspace" | "active" = "workspace") {
-    if (capturing) return;
-    setCapturing(true);
-    try {
-      const dataUrl = await captureTabWithOverlay();
-      if (!dataUrl) return;
-      const selector = scope === "active"
-        ? `[data-preview-slot-id="${activeSlotId}"]`
-        : "[data-capture-board]";
-      const target = document.querySelector<HTMLElement>(selector);
-      const cropped = target ? await cropScreenshotToElement(dataUrl, target) : dataUrl;
+      const capture = await captureTabWithOverlay(sourceTabId);
+      if (!capture.dataUrl) {
+        setCaptureError(true);
+        window.setTimeout(() => setCaptureError(false), 4000);
+        return;
+      }
+      const card = slotId
+        ? Array.from(document.querySelectorAll<HTMLElement>("[data-preview-slot-id]"))
+            .find((element) => element.dataset.previewSlotId === slotId)
+        : undefined;
+      const target = slotId
+        ? card?.querySelector<HTMLElement>("[data-device-frame]") ?? card
+        : document.querySelector<HTMLElement>("[data-capture-board]");
+      const cropped = target ? await cropScreenshotToElement(capture.dataUrl, target) : capture.dataUrl;
       setAnnotationImage(cropped);
+      setAnnotationMeta(captureMetaForSlot(slotId));
       setAnnotationOpen(true);
     } finally {
       setCapturing(false);
+      setCapturingSlotId(undefined);
     }
   }
 
@@ -353,6 +367,58 @@ export function SimulatorApp() {
       return;
     }
     if (await startTabRecording(sourceTabId)) setRecording(true);
+  }
+
+  const recordFlowStep = useCallback((step: Omit<FlowStep, "id">) => {
+    setRecordedFlow((current) => appendRecordedStep(current, step));
+  }, []);
+
+  const receiveFlowResult = useCallback((result: FlowReplayResult) => {
+    setFlowResults((current) => ({ ...current, [result.slotId]: result }));
+  }, []);
+
+  function toggleFlowRecording() {
+    if (flowRecording) {
+      setFlowRecording(false);
+      void writeStore("mdvRecordedFlow", recordedFlow);
+      return;
+    }
+    setFlowReplay(null);
+    setFlowResults({});
+    setRecordedFlow([]);
+    setFlowRecording(true);
+  }
+
+  function replayRecordedFlow() {
+    if (!recordedFlow.length || flowRecording) return;
+    setFlowResults({});
+    setFlowReplay({ runId: crypto.randomUUID(), steps: recordedFlow });
+  }
+
+  function resumePausedFlow() {
+    const pausedResults = Object.values(flowResults).filter(
+      (result) => result.status === "paused" && result.nextStep !== undefined,
+    );
+    if (!pausedResults.length) return;
+    const pausedSlotIds = new Set(pausedResults.map((result) => result.slotId));
+    setFlowResults((current) => Object.fromEntries(
+      Object.entries(current).filter(([slotId]) => !pausedSlotIds.has(slotId)),
+    ));
+    setFlowReplay({
+      runId: crypto.randomUUID(),
+      steps: recordedFlow,
+      startIndexes: Object.fromEntries(
+        pausedResults.map((result) => [result.slotId, result.nextStep ?? 0]),
+      ),
+    });
+  }
+
+  function clearRecordedFlow() {
+    setFlowRecording(false);
+    setRecordedFlow([]);
+    setFlowReplay(null);
+    setFlowResults({});
+    void writeStore<FlowStep[]>("mdvRecordedFlow", []);
   }
 
   function closeViewer() {
@@ -391,6 +457,21 @@ export function SimulatorApp() {
       return `${device.name} (${device.cssViewport.width}x${device.cssViewport.height})`;
     }),
   };
+
+  function captureMetaForSlot(slotId?: string) {
+    if (!slotId) return captureMeta;
+    const slot = slots.find((item) => item.id === slotId);
+    if (!slot) return captureMeta;
+    const device = findDevice(slot.deviceId);
+    const portrait = device.cssViewport;
+    const width = slot.orientation === "landscape" ? portrait.height : portrait.width;
+    const height = slot.orientation === "landscape" ? portrait.width : portrait.height;
+    return {
+      title: `${PRODUCT_SHORT_NAME} · ${device.name}`,
+      url: slot.url,
+      devices: [`${device.name} (${width}x${height})`],
+    };
+  }
 
   const reviewDevices = slots.map((slot) => {
     const device = findDevice(slot.deviceId);
@@ -444,35 +525,7 @@ export function SimulatorApp() {
           ))}
         </div>
         <div className="min-w-0 flex-1" />
-        <button
-          type="button"
-          disabled={slots.length >= maxPreviewSlots}
-          onClick={() => addSlot()}
-          className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold sm:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}
-        >
-          <Plus size={12} />
-          {t("addViewport")}
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowReviewIssue(true)}
-          className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}
-        >
-          <ScanSearch size={12} />
-          <span className="hidden sm:inline">{t("copyFixPrompt")}</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowDesignReference(true)}
-          className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold md:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}
-        >
-          <Images size={12} />
-          {t("comparePageDesign")}
-        </button>
-        <div
-          data-tour="sync-controls"
-          className="flex shrink-0 items-center gap-0.5"
-        >
+        <div className="flex shrink-0 items-center gap-0.5">
           <button
             type="button"
             title={
@@ -501,13 +554,6 @@ export function SimulatorApp() {
             <span>{t("navigationSync")}</span>
           </button>
         </div>
-        <ToolbarButton
-          label={t("captureActiveViewport")}
-          dark={dark}
-          onClick={() => void takeScopedScreenshot("active")}
-        >
-          <Camera size={14} />
-        </ToolbarButton>
         <ToolbarButton label={t("reloadAll")} dark={dark} onClick={reloadAllSlots}>
           <RefreshCw size={15} />
         </ToolbarButton>
@@ -562,13 +608,14 @@ export function SimulatorApp() {
                 </button>
               </div>
               <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-3">
-                <div data-tour="device-setup">
+                <div>
                   <SidebarSection
                     title={t("devices")}
                     meta={t("countOf", { count: slots.length, max: maxPreviewSlots })}
                     dark={dark}
                   >
                   <button
+                    data-tour="add-viewport"
                     type="button"
                     disabled={slots.length >= maxPreviewSlots}
                     onClick={() => addSlot()}
@@ -651,17 +698,15 @@ export function SimulatorApp() {
                   )}
                 </SidebarSection>
 
-                <div data-tour="session-tools">
+                <div>
                   <SidebarSection title={t("sessionTools")} dark={dark}>
                   <ActionRow
-                    dataTour="focus-active"
                     dark={dark}
                     icon={<Focus size={14} />}
                     onClick={() => setFocusedSlotId(focusedSlotId ? null : activeSlotId)}
                     active={!!focusedSlotId}
                     label={focusedSlotId ? t("showAllViewports") : t("focusActiveViewport")}
                   />
-                  <ActionRow dark={dark} icon={<QrCode size={14} />} onClick={() => setShowDeviceHandoff(true)} label={t("openPhysicalDevice")} />
                   <ActionRow
                     dark={dark}
                     icon={<ScanSearch size={14} />}
@@ -669,7 +714,6 @@ export function SimulatorApp() {
                     label={t("generateAiFixPrompt")}
                   />
                   <ActionRow
-                    dataTour="compare-design"
                     dark={dark}
                     icon={<Images size={14} />}
                     onClick={() => setShowDesignReference(true)}
@@ -678,7 +722,7 @@ export function SimulatorApp() {
                   <ActionRow
                     dark={dark}
                     icon={<Camera size={14} />}
-                    onClick={() => void takeScopedScreenshot("workspace")}
+                    onClick={() => void takeScopedScreenshot()}
                     label={
                       capturing
                         ? t("capturingComparison")
@@ -693,11 +737,11 @@ export function SimulatorApp() {
                   />
                   <ActionRow
                     dark={dark}
-                    icon={<Video size={14} />}
+                    icon={recording ? <Square size={13} fill="currentColor" /> : <Video size={14} />}
                     onClick={() => void toggleRecording()}
                     disabled={!sourceTabId}
                     active={recording}
-                    label={recording ? t("recordingStop", { time: formatDuration(recordingSeconds) }) : t("recordSourceTab")}
+                    label={recording ? t("recordingStop") : t("recordSourceTab")}
                   />
                   <ActionRow
                     dark={dark}
@@ -713,19 +757,61 @@ export function SimulatorApp() {
                   )}
                   </SidebarSection>
                 </div>
+                <SidebarSection
+                  title={flowRecording ? t("stopAndSaveFlow", { count: recordedFlow.length }) : t("flowRecorder")}
+                  dark={dark}
+                  active={flowRecording}
+                >
+                  <div data-tour="record-user-flow">
+                    <ActionRow
+                      dark={dark}
+                      icon={flowRecording ? <Square size={13} fill="currentColor" /> : <Route size={14} />}
+                      onClick={toggleFlowRecording}
+                      active={flowRecording}
+                      label={flowRecording ? t("recordingStop") : t("recordAFlow")}
+                    />
+                  </div>
+                  {!flowRecording && <ActionRow
+                    dark={dark}
+                    icon={<Play size={14} />}
+                    onClick={replayRecordedFlow}
+                    disabled={!recordedFlow.length}
+                    label={recordedFlow.length ? t("reloadAndRerunFlow", { count: recordedFlow.length }) : t("recordFlowToRerun")}
+                  />}
+                  {!flowRecording && recordedFlow.length > 0 && (
+                    <ActionRow dark={dark} icon={<Trash2 size={14} />} onClick={clearRecordedFlow} label={t("clearSavedFlow")} />
+                  )}
+                  {flowReplay && (
+                    <p role="status" aria-live="polite" className={`px-2 text-[10px] font-bold ${Object.keys(flowResults).length === slots.length && Object.values(flowResults).every((result) => result.status === "passed") ? "text-emerald-500" : Object.values(flowResults).some((result) => result.status === "failed") ? "text-red-500" : Object.values(flowResults).some((result) => result.status === "paused") ? "text-amber-500" : dark ? "text-slate-400" : "text-slate-500"}`}>
+                      {Object.values(flowResults).some((result) => result.status === "failed")
+                        ? t("flowFailed", { passed: Object.values(flowResults).filter((result) => result.status === "passed").length, count: slots.length, step: (Object.values(flowResults).find((result) => result.status === "failed")?.failedStep ?? 0) + 1 })
+                        : Object.values(flowResults).some((result) => result.status === "paused")
+                          ? t("flowVerificationPaused")
+                        : Object.keys(flowResults).length === slots.length
+                          ? t("flowViewportsPassed", { count: slots.length })
+                          : t("flowRunning", { count: slots.length })}
+                    </p>
+                  )}
+                  {Object.values(flowResults).some((result) => result.status === "paused") && (
+                    <ActionRow
+                      dark={dark}
+                      icon={<Play size={14} />}
+                      onClick={resumePausedFlow}
+                      label={t("resumeFlowAfterVerification")}
+                    />
+                  )}
+                </SidebarSection>
               </div>
               <div
                 className={`border-t p-3 ${dark ? "border-white/[0.07]" : "border-slate-100"}`}
               >
-                <label className="mb-2 flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <Languages size={13} className="shrink-0 text-[#0f9f8f]" />
-                  <span className={`text-[9px] font-extrabold uppercase tracking-[0.12em] ${dark ? "text-slate-500" : "text-slate-400"}`}>
-                    {t("language")}
-                  </span>
                   <select
+                    aria-label={t("language")}
                     value={locale}
                     onChange={(event) => setLocale(event.target.value as AppLocale)}
-                    className={`ml-auto min-w-0 max-w-36 rounded-md border px-2 py-1 text-[10px] font-bold outline-none ${dark ? "border-white/10 bg-[#171a21] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
+                    className={`min-w-0 flex-1 rounded-md border px-2 py-1 text-[10px] font-bold outline-none ${dark ? "border-white/10 bg-[#171a21] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
                   >
                     {SUPPORTED_LOCALES.map((option) => (
                       <option key={option.code} value={option.code}>
@@ -733,21 +819,15 @@ export function SimulatorApp() {
                       </option>
                     ))}
                   </select>
-                </label>
-                <div
-                  className={`rounded-[10px] p-2.5 ${dark ? "bg-white/[0.035]" : "bg-slate-50"}`}
-                >
-                  <p
-                    className={`text-[9px] font-extrabold uppercase tracking-[0.12em] ${dark ? "text-slate-600" : "text-slate-400"}`}
+                  <button
+                    type="button"
+                    onClick={() => setShowPermissions(true)}
+                    aria-label={t("viewPermissions")}
+                    title={t("viewPermissions")}
+                    className={`grid h-7 w-7 shrink-0 place-items-center rounded-md ${dark ? "text-slate-400 hover:bg-white/10 hover:text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"}`}
                   >
-                    {t("currentSession")}
-                  </p>
-                  <p className="mt-1 truncate text-[10px] font-semibold">
-                    {t("sessionSummary", {
-                      count: slots.length,
-                      mode: display.scrollSync ? t("linked") : t("independent"),
-                    })}
-                  </p>
+                    <Eye size={14} />
+                  </button>
                 </div>
               </div>
             </>
@@ -802,6 +882,7 @@ export function SimulatorApp() {
             onClose={() => setShowDesignReference(false)}
             onMarkFeedback={(image) => {
               setAnnotationImage(image);
+              setAnnotationMeta(captureMetaForSlot(referenceViewportId));
               setAnnotationOpen(true);
             }}
           />
@@ -833,11 +914,15 @@ export function SimulatorApp() {
                   display={display}
                   showToolbar={sidebarOpen}
                   removable={slots.length > 1}
-                  onCapture={() => void takeScopedScreenshot("active")}
+                  onCapture={() => void takeScopedScreenshot(slot.id)}
+                  capturePending={capturing && capturingSlotId === slot.id}
                   focused={focusedSlotId === slot.id}
                   first={index === 0}
                   last={index === slots.length - 1}
-                  onToggleFocus={() => setFocusedSlotId((current) => current === slot.id ? null : slot.id)}
+                  flowRecording={flowRecording && activeSlotId === slot.id}
+                  flowReplay={flowReplay}
+                  onFlowStep={recordFlowStep}
+                  onFlowResult={receiveFlowResult}
                   designOverlay={
                     showDesignReference &&
                     referenceMode === "overlay" &&
@@ -884,9 +969,17 @@ export function SimulatorApp() {
       {annotationOpen && (
         <AnnotationOverlay
           imageUrl={annotationImage}
-          meta={captureMeta}
-          onClose={() => setAnnotationOpen(false)}
+          meta={annotationMeta ?? captureMeta}
+          onClose={() => {
+            setAnnotationOpen(false);
+            setAnnotationMeta(undefined);
+          }}
         />
+      )}
+      {captureError && (
+        <div role="alert" className={`fixed bottom-3 left-1/2 z-[100] -translate-x-1/2 rounded-md border px-3 py-2 text-xs font-semibold shadow-sm ${dark ? "border-white/10 bg-[#171b23] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}>
+          {t("noScreenshot")}
+        </div>
       )}
       {showCustomDevice && (
         <CustomDeviceModal
@@ -906,8 +999,8 @@ export function SimulatorApp() {
           onClose={() => setShowReviewIssue(false)}
         />
       )}
+      {showPermissions && <PermissionsInfoModal dark={dark} onClose={() => setShowPermissions(false)} />}
       {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
-      {showDeviceHandoff && <DeviceHandoffModal dark={dark} url={slots.find((slot) => slot.id === activeSlotId)?.url ?? slots[0]?.url ?? ""} onClose={() => setShowDeviceHandoff(false)} />}
       {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
     </div>
   );
@@ -942,20 +1035,25 @@ function SidebarSection({
   meta,
   action,
   dark,
+  active,
   children,
 }: {
   title: string;
   meta?: string;
   action?: ReactNode;
   dark: boolean;
+  active?: boolean;
   children: ReactNode;
 }) {
   return (
     <section>
       <div className="mb-2 flex items-center justify-between">
         <h2
-          className={`text-[9px] font-extrabold uppercase tracking-[0.13em] ${dark ? "text-slate-600" : "text-slate-400"}`}
+          role={active ? "status" : undefined}
+          aria-live={active ? "polite" : undefined}
+          className={`flex min-w-0 items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] ${active ? "text-red-500" : dark ? "text-slate-600" : "text-slate-400"}`}
         >
+          {active && <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-current" />}
           {title}
         </h2>
         {action ??
@@ -979,7 +1077,6 @@ function ActionRow({
   onClick,
   disabled,
   active,
-  dataTour,
 }: {
   icon: ReactNode;
   label: string;
@@ -987,19 +1084,18 @@ function ActionRow({
   onClick: () => void;
   disabled?: boolean;
   active?: boolean;
-  dataTour?: string;
 }) {
   return (
     <button
-      data-tour={dataTour}
       type="button"
       onClick={onClick}
       disabled={disabled}
+      aria-pressed={active || undefined}
       className={`flex h-8 w-full items-center gap-2 rounded-[8px] px-2 text-left text-[11px] font-semibold transition disabled:opacity-35 ${active ? "bg-red-500/10 text-red-500" : dark ? "text-slate-400 hover:bg-white/[0.055] hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
     >
       <span className="shrink-0">{icon}</span>
       <span className="min-w-0 flex-1 truncate">{label}</span>
-      <ChevronRight size={11} className="shrink-0 opacity-35" />
+      {!active && <ChevronRight size={11} className="shrink-0 opacity-35" />}
     </button>
   );
 }

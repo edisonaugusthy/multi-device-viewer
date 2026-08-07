@@ -4,8 +4,7 @@ import {
   Check,
   ChevronDown,
   ExternalLink,
-  Maximize2,
-  Minimize2,
+  ImageDown,
   Minus,
   Plus,
   RefreshCw,
@@ -19,7 +18,9 @@ import {
   supportsOrientation,
   toLandscapeAwareSize,
 } from "../../domain/device/device-service";
+import { getFrameProfile } from "../../domain/device/frame-profiles";
 import type { Device, Size } from "../../domain/device/device.types";
+import type { FlowReplayRequest, FlowReplayResult, FlowStep } from "../../domain/flow/flow.types";
 import type {
   DisplaySettings,
   PreviewSlot,
@@ -30,6 +31,11 @@ import { useI18n } from "../../app/i18n";
 import {
   DeviceFrame,
   estimateDeviceFrameSize,
+  getBottomHeight,
+  getMobileKeyboardHeight,
+  getMobileKeyboardOcclusion,
+  getSafariContentBottomInset,
+  type BrowserSurfaceColors,
   type MobileKeyboardAction,
   type MobileKeyboardState,
 } from "./DeviceFrame";
@@ -53,6 +59,11 @@ interface InteractionSyncPayload {
   slotId: string;
   kind: string;
   selector?: string;
+  tagName?: string;
+  role?: string;
+  ariaLabel?: string;
+  name?: string;
+  text?: string;
   x?: number;
   y?: number;
   value?: string;
@@ -75,10 +86,14 @@ interface PreviewCardProps {
   showToolbar?: boolean;
   removable: boolean;
   onCapture: () => void;
+  capturePending?: boolean;
   focused: boolean;
   first: boolean;
   last: boolean;
-  onToggleFocus: () => void;
+  flowRecording?: boolean;
+  flowReplay?: FlowReplayRequest | null;
+  onFlowStep?: (step: Omit<FlowStep, "id">) => void;
+  onFlowResult?: (result: FlowReplayResult) => void;
   designOverlay?: {
     image: string;
     opacity: number;
@@ -90,6 +105,18 @@ interface PreviewCardProps {
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
 
+function readPageSurfaces(data: Record<string, unknown>): BrowserSurfaceColors | undefined {
+  const top = typeof data.topColor === "string" && CSS.supports("color", data.topColor) ? data.topColor : undefined;
+  const bottom = typeof data.bottomColor === "string" && CSS.supports("color", data.bottomColor) ? data.bottomColor : undefined;
+  if (!top && !bottom) return undefined;
+  return {
+    top: top ?? bottom!,
+    bottom: bottom ?? top!,
+    topIsDark: typeof data.topIsDark === "boolean" ? data.topIsDark : false,
+    bottomIsDark: typeof data.bottomIsDark === "boolean" ? data.bottomIsDark : false,
+  };
+}
+
 export function PreviewCard({
   slot,
   device,
@@ -97,10 +124,14 @@ export function PreviewCard({
   showToolbar = true,
   removable,
   onCapture,
+  capturePending = false,
   focused,
   first,
   last,
-  onToggleFocus,
+  flowRecording = false,
+  flowReplay,
+  onFlowStep,
+  onFlowResult,
   designOverlay,
 }: PreviewCardProps) {
   const { t } = useI18n();
@@ -110,6 +141,9 @@ export function PreviewCard({
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
   const previousScrollSyncRef = useRef(display.scrollSync);
   const previousNavigationUrlRef = useRef(slot.url);
+  const sentFlowRunRef = useRef<string | null>(null);
+  const pendingReplayStepRef = useRef<number | null>(null);
+  const replayContinuationTimerRef = useRef<number | undefined>(undefined);
   const standalonePreview = Boolean((window as Window & { __MDV_STANDALONE_PREVIEW__?: boolean }).__MDV_STANDALONE_PREVIEW__);
   const [containerSize, setContainerSize] = useState<Size>({
     width: 0,
@@ -118,6 +152,7 @@ export function PreviewCard({
   const [blocked, setBlocked] = useState(false);
   const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("checking");
   const [keyboard, setKeyboard] = useState<MobileKeyboardState | undefined>();
+  const [pageSurfaces, setPageSurfaces] = useState<BrowserSurfaceColors | undefined>();
   const {
     activeSlotId,
     setActiveSlot,
@@ -135,6 +170,27 @@ export function PreviewCard({
   const viewportSize = canRotate
     ? toLandscapeAwareSize(device.cssViewport, effectiveOrientation)
     : device.cssViewport;
+  const frameProfile = getFrameProfile(device);
+  const keyboardPlatform = frameProfile.platform === "ios" ? "ios" : "android";
+  const keyboardLandscape = viewportSize.width > viewportSize.height;
+  const keyboardHeight = keyboard
+    ? getMobileKeyboardHeight(keyboardPlatform, keyboardLandscape, device.type === "tablet")
+    : 0;
+  const keyboardOcclusion = keyboard
+    ? getMobileKeyboardOcclusion(
+      keyboardPlatform,
+      keyboardHeight,
+      keyboardPlatform === "ios"
+        ? getSafariContentBottomInset(
+          frameProfile.chromeVariant,
+          getBottomHeight(
+            keyboardPlatform,
+            keyboardLandscape || frameProfile.kind === "tablet" || frameProfile.kind === "iphone-classic",
+          ),
+        )
+        : 0,
+    )
+    : 0;
 
   // Device chrome is always visible — no runtime toggle. Pass constants.
   const SHOW_CHROME = { showStatusBar: true, showUrlBar: true, showBattery: true } as const;
@@ -150,11 +206,15 @@ export function PreviewCard({
   const horizontalPad = device.type === "laptop" || device.type === "desktop" ? 40 : CARD_PAD;
   const availW = Math.max(80, containerSize.width - horizontalPad);
   const availH = Math.max(80, containerSize.height - CARD_PAD);
-  const fitScale = Math.min(
+  const rawFitScale = Math.min(
     1,
     availW / frameSize.width,
     availH / frameSize.height,
   );
+  // Manufacturer crops contain less surrounding whitespace than legacy assets.
+  // Preserve a consistent default margin without changing actual-size mode.
+  const previewScale = device.mockupAssets.find((asset) => asset.kind === "transparent-png")?.previewScale ?? 1;
+  const fitScale = rawFitScale * previewScale;
   const scale =
     slot.zoomMode === "actual"
       ? 1
@@ -225,6 +285,24 @@ export function PreviewCard({
     );
   };
 
+  const syncFlowRecordingBridge = (iframe: HTMLIFrameElement | null) => {
+    iframe?.contentWindow?.postMessage({
+      type: flowRecording ? "MDV_FLOW_RECORDING_ENABLE" : "MDV_FLOW_RECORDING_DISABLE",
+      slotId: slot.id,
+    }, "*");
+  };
+
+  const sendFlowReplay = (startIndex = 0) => {
+    if (!flowReplay) return;
+    iframeRef.current?.contentWindow?.postMessage({
+      type: "MDV_REPLAY_FLOW",
+      slotId: slot.id,
+      runId: flowReplay.runId,
+      startIndex,
+      steps: flowReplay.steps,
+    }, "*");
+  };
+
   const sendKeyboardAction = (action: MobileKeyboardAction) => {
     iframeRef.current?.contentWindow?.postMessage(
       { type: "MDV_KEYBOARD_ACTION", slotId: slot.id, ...action },
@@ -263,8 +341,31 @@ export function PreviewCard({
   }, [keyboard, slot.id]);
 
   useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe?.contentWindow) return;
+    if (!keyboard) {
+      iframe.contentWindow.postMessage({ type: "MDV_KEYBOARD_VIEWPORT_RESET", slotId: slot.id }, "*");
+      return;
+    }
+    const animationFrame = window.requestAnimationFrame(() => {
+      iframe.contentWindow?.postMessage({
+        type: "MDV_KEYBOARD_VIEWPORT",
+        slotId: slot.id,
+        platform: keyboardPlatform,
+        keyboardHeight,
+        occludedBottom: keyboardOcclusion,
+      }, "*");
+    });
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [keyboard, keyboardHeight, keyboardOcclusion, keyboardPlatform, slot.id]);
+
+  useEffect(() => {
     bridgeStatusRef.current = bridgeStatus;
   }, [bridgeStatus]);
+
+  useEffect(() => {
+    setPageSurfaces(undefined);
+  }, [slot.reloadToken, slot.url]);
 
   // Register the iframe with the in-iframe scroll-sync bridge. The content script
   // is injected by extension-routes/messaging, so we only need to post the
@@ -289,6 +390,7 @@ export function PreviewCard({
         "*",
       );
       syncScrollBridge(iframe);
+      syncFlowRecordingBridge(iframe);
 
       if (standalonePreview) return;
 
@@ -308,7 +410,7 @@ export function PreviewCard({
       iframe.removeEventListener("load", register);
       window.clearTimeout(bridgeStatusTimer.current);
     };
-  }, [containerSize.width, device.type, slot.id, slot.reloadToken, slot.url, standalonePreview]);
+  }, [containerSize.width, device.type, flowRecording, slot.id, slot.reloadToken, slot.url, standalonePreview]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -319,6 +421,14 @@ export function PreviewCard({
       if (data.type === "MDV_PREVIEW_READY") {
         setBridgeStatus("ready");
         setBlocked(false);
+        const nextSurfaces = readPageSurfaces(data as Record<string, unknown>);
+        if (nextSurfaces) setPageSurfaces(nextSurfaces);
+        if (pendingReplayStepRef.current !== null) {
+          const nextStep = pendingReplayStepRef.current;
+          pendingReplayStepRef.current = null;
+          window.clearTimeout(replayContinuationTimerRef.current);
+          window.setTimeout(() => sendFlowReplay(nextStep), 150);
+        }
         const nextUrl = typeof data.url === "string" ? data.url : "";
         if (
           display.navigationSync &&
@@ -334,6 +444,12 @@ export function PreviewCard({
         return;
       }
 
+      if (data.type === "MDV_PAGE_SURFACE_COLORS") {
+        const nextSurfaces = readPageSurfaces(data as Record<string, unknown>);
+        if (nextSurfaces) setPageSurfaces(nextSurfaces);
+        return;
+      }
+
       if (data.type === "MDV_PREVIEW_BLOCKED_OR_UNAVAILABLE") {
         setBridgeStatus("blocked");
         setBlocked(true);
@@ -344,14 +460,45 @@ export function PreviewCard({
         setBridgeStatus("ready");
         // Device chrome (status/address/bottom bars) is intentionally STATIC — we no
         // longer collapse it on scroll. Doing so reflowed the iframe every frame.
-        if (!display.scrollSync) return;
-        broadcastScrollSync(data as ScrollSyncPayload);
+        if (flowRecording) {
+          onFlowStep?.({
+            kind: "scroll",
+            scrollLeft: Number(data.scrollLeft ?? 0),
+            scrollTop: Number(data.scrollTop ?? 0),
+            scrollTargetSelector: typeof data.scrollTargetSelector === "string" ? data.scrollTargetSelector : undefined,
+          });
+        }
+        if (display.scrollSync) broadcastScrollSync(data as ScrollSyncPayload);
         return;
       }
 
       if (data.type === "MDV_INTERACTION_EVENT") {
-        if (!display.scrollSync) return;
-        broadcastInteractionSync(data as InteractionSyncPayload);
+        const interaction = data as InteractionSyncPayload;
+        if (flowRecording) {
+          const { slotId: _slotId, ...step } = interaction;
+          onFlowStep?.(step as Omit<FlowStep, "id">);
+        }
+        if (display.scrollSync) broadcastInteractionSync(interaction);
+        return;
+      }
+
+      if (data.type === "MDV_FLOW_REPLAY_RESULT") {
+        pendingReplayStepRef.current = null;
+        window.clearTimeout(replayContinuationTimerRef.current);
+        onFlowResult?.(data as FlowReplayResult);
+        return;
+      }
+
+      if (data.type === "MDV_FLOW_REPLAY_CONTINUE" && flowReplay?.runId === data.runId) {
+        const nextStep = Math.max(0, Number(data.nextStep ?? 0));
+        pendingReplayStepRef.current = nextStep;
+        setBridgeStatus("checking");
+        window.clearTimeout(replayContinuationTimerRef.current);
+        replayContinuationTimerRef.current = window.setTimeout(() => {
+          if (pendingReplayStepRef.current !== nextStep) return;
+          pendingReplayStepRef.current = null;
+          sendFlowReplay(nextStep);
+        }, 1500);
         return;
       }
 
@@ -361,6 +508,9 @@ export function PreviewCard({
           inputType: typeof data.inputType === "string" ? data.inputType : "text",
           inputMode: typeof data.inputMode === "string" ? data.inputMode : "",
           multiline: Boolean(data.multiline),
+          autoCapitalize: typeof data.autoCapitalize === "string" ? data.autoCapitalize : "",
+          enterKeyHint: typeof data.enterKeyHint === "string" ? data.enterKeyHint : "",
+          language: typeof data.language === "string" ? data.language : "",
         });
         return;
       }
@@ -374,7 +524,7 @@ export function PreviewCard({
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [device.type, display.navigationSync, display.scrollSync, slot.id, slot.url]);
+  }, [device.type, display.navigationSync, display.scrollSync, flowRecording, flowReplay, onFlowResult, onFlowStep, slot.id, slot.url]);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -434,6 +584,20 @@ export function PreviewCard({
   }, [display.scrollSync, slot.id]);
 
   useEffect(() => {
+    syncFlowRecordingBridge(iframeRef.current);
+  }, [flowRecording, slot.id]);
+
+  useEffect(() => {
+    if (!flowReplay || bridgeStatus !== "ready" || blocked || sentFlowRunRef.current === flowReplay.runId) return;
+    const startIndex = flowReplay.startIndexes?.[slot.id];
+    if (flowReplay.startIndexes && startIndex === undefined) return;
+    sentFlowRunRef.current = flowReplay.runId;
+    sendFlowReplay(startIndex ?? 0);
+  }, [blocked, bridgeStatus, flowReplay, slot.id]);
+
+  useEffect(() => () => window.clearTimeout(replayContinuationTimerRef.current), []);
+
+  useEffect(() => {
     if (!display.navigationSync) return;
     const onNavigation = (event: Event) => {
       const detail = (event as CustomEvent<{ slotId: string; url: string }>).detail;
@@ -457,7 +621,6 @@ export function PreviewCard({
       {/* ── Per-card header ── */}
       {showToolbar && <div
         data-device-toolbar
-        data-tour={first ? "preview-controls" : undefined}
         className={`flex h-9 shrink-0 flex-nowrap items-center gap-0.5 border-b px-1 transition-colors ${
           display.darkMode
             ? "border-white/10 bg-[#151922]"
@@ -468,6 +631,7 @@ export function PreviewCard({
           currentDevice={device}
           dark={display.darkMode}
           onSwitch={(id) => setSlotDevice(slot.id, id)}
+          tourTarget={first ? "change-device" : undefined}
         />
 
         <span className={`shrink-0 px-1 text-[9px] font-bold ${display.darkMode ? "text-slate-500" : "text-slate-400"}`}>
@@ -483,8 +647,8 @@ export function PreviewCard({
         </CardBtn>
         {!focused && !first && <CardBtn dark={display.darkMode} label={t("moveViewportLeft")} onClick={() => moveSlot(slot.id, "left")}><ArrowLeft size={13} /></CardBtn>}
         {!focused && !last && <CardBtn dark={display.darkMode} label={t("moveViewportRight")} onClick={() => moveSlot(slot.id, "right")}><ArrowRight size={13} /></CardBtn>}
-        <CardBtn dark={display.darkMode} label={focused ? t("showAllViewports") : t("focusThisViewport")} onClick={onToggleFocus}>
-          {focused ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
+        <CardBtn dark={display.darkMode} label={t("captureAndAnnotate")} onClick={onCapture} disabled={capturePending}>
+          <ImageDown size={13} className={capturePending ? "animate-pulse" : undefined} />
         </CardBtn>
         {canRotate && (
           <CardBtn
@@ -532,6 +696,7 @@ export function PreviewCard({
               scrollProgress={0}
               keyboard={keyboard}
               onKeyboardAction={sendKeyboardAction}
+              pageSurfaces={pageSurfaces}
             >
               <div
                 className="relative"
@@ -640,10 +805,12 @@ function DeviceSwitcher({
   currentDevice,
   dark,
   onSwitch,
+  tourTarget,
 }: {
   currentDevice: Device;
   dark: boolean;
   onSwitch: (id: string) => void;
+  tourTarget?: string;
 }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
@@ -764,6 +931,7 @@ function DeviceSwitcher({
     <div ref={ref} className="relative min-w-0 flex-[1.45]">
       <button
         type="button"
+        data-tour={tourTarget}
         data-testid="device-switcher-button"
         onClick={(e) => {
           e.stopPropagation();

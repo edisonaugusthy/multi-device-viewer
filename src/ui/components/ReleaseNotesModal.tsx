@@ -33,8 +33,11 @@ export function ReleaseNotesModal({ dark, release, onClose }: { dark: boolean; r
         </div>
         <div className={`divide-y px-5 ${dark ? "divide-white/10" : "divide-slate-200"}`}>
           {release.notes.map((note) => (
-            <section key={note.title} className="py-4">
-              <h3 className="text-sm font-semibold">{RELEASE_NOTE_KEYS[note.title] ? t(RELEASE_NOTE_KEYS[note.title][0]) : note.title}</h3>
+            <section
+              key={note.title}
+              className={`py-4 ${note.featured ? "my-2 rounded-xl border border-[#18b5a4]/25 bg-[#18b5a4]/10 px-3" : ""}`}
+            >
+              <h3 className={`text-sm font-semibold ${note.featured ? "text-[#0f9f8f]" : ""}`}>{RELEASE_NOTE_KEYS[note.title] ? t(RELEASE_NOTE_KEYS[note.title][0]) : note.title}</h3>
               <p className={`mt-1.5 text-xs leading-5 ${dark ? "text-slate-400" : "text-slate-600"}`}>{RELEASE_NOTE_KEYS[note.title] ? t(RELEASE_NOTE_KEYS[note.title][1]) : note.description}</p>
             </section>
           ))}

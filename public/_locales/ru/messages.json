@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "Бесплатный эмулятор и тест адаптивности: сравнивайте виды телефона, планшета, ноутбука и ПК рядом." },
   "actionTitle": { "message": "Открыть эмулятор устройств Mobile View" },
   "contextMenuTitle": { "message": "Открыть эту вкладку в Mobile View" },
-  "activeActionTitle": { "message": "Mobile View активен — нажмите, чтобы закрыть" }
+  "activeActionTitle": { "message": "Mobile View активен — нажмите, чтобы закрыть" },
+  "unsupportedActionTitle": { "message": "Сначала откройте сайт" },
+  "unsupportedUrlHint": { "message": "Перейдите на разрабатываемую страницу и снова нажмите значок расширения." }
 }

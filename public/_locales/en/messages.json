@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "Responsive testing across phone, tablet, laptop and desktop views—side by side in a free mobile simulator and device emulator." },
   "actionTitle": { "message": "Open Mobile View device emulator" },
   "contextMenuTitle": { "message": "Open this tab in Mobile View & Responsive Tester" },
-  "activeActionTitle": { "message": "Mobile View & Responsive Tester is active — click to close" }
+  "activeActionTitle": { "message": "Mobile View & Responsive Tester is active — click to close" },
+  "unsupportedActionTitle": { "message": "Open a website first" },
+  "unsupportedUrlHint": { "message": "Switch to the page you’re developing, then click the extension again." }
 }

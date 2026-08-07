@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "Kostenloser Open-Source-Simulator zum Testen von Websites in Smartphone-, Tablet-, Laptop- und Desktop-Ansichten." },
   "actionTitle": { "message": "Mobile View Geräte-Emulator öffnen" },
   "contextMenuTitle": { "message": "Diesen Tab in Mobile View öffnen" },
-  "activeActionTitle": { "message": "Mobile View ist aktiv — zum Schließen klicken" }
+  "activeActionTitle": { "message": "Mobile View ist aktiv — zum Schließen klicken" },
+  "unsupportedActionTitle": { "message": "Öffne zuerst eine Website" },
+  "unsupportedUrlHint": { "message": "Wechsle zur Seite, die du entwickelst, und klicke erneut auf die Erweiterung." }
 }

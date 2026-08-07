@@ -32,10 +32,9 @@ Open the current website or local development server in up to four live device v
 - Supported clicks and form interactions are mirrored while linked scrolling is active.
 - Optional navigation sync keeps matching previews on the same page.
 
-### Responsive behavior and handoff
+### Responsive behavior
 
 - Synchronize scrolling, supported interactions, and navigation across matching previews.
-- Generate a local QR code for physical-device handoff.
 - Prepare a structured AI fix prompt with reproduction steps, constraints, device context, and verification requirements.
 
 ### Design comparison

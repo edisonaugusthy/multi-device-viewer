@@ -47,10 +47,9 @@ Click the extension icon or use the Chrome context menu to open the current webs
 - Annotate with pen, rectangle, arrow, text, and crop tools.
 - Copy the result to the clipboard or download it locally.
 
-**Responsive behavior and physical-device handoff**
+**Responsive behavior**
 - Synchronize scrolling, supported interactions, and navigation across matching previews.
 - Save reusable device sets for repeatable checks.
-- Open the current URL on a physical phone using a locally generated QR code.
 
 **Generate a responsive fix prompt**
 - Describe the expected and actual behavior once.
@@ -198,9 +197,9 @@ The extension does not sell, transfer, or use user data for any purpose outside 
 
 | Permission | Justification |
 |---|---|
+| `activeTab` | Temporarily capture the visible workspace only after the user clicks Screenshot and annotate. It does not grant persistent browsing access. |
 | `contextMenus` | Add the "Open this tab in Device Simulator" shortcut to Chrome's page and extension-action context menus. |
 | `scripting` | Execute the content script that creates and manages the full-screen overlay iframe. |
-| `tabs` | Read the active tab URL and title to load the page in the simulator; capture visible tab screenshots. |
 | `declarativeNetRequest` | Remove `X-Frame-Options` and `Content-Security-Policy` response headers on sub-frame requests so that pages can load inside the simulator iframe. Rules execute entirely within Chrome; no data is transmitted. |
 | `storage` | Persist local preferences: selected devices, saved presets, favorites, recents, custom viewport sizes, review-prompt state, use counters, and UI state. |
 | `downloads` | Save exported screenshots to the user's chosen download location. |

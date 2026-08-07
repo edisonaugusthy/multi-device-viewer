@@ -1,4 +1,6 @@
 import { defineContentScript } from "wxt/utils/define-content-script";
+import { hasVerificationChallenge } from "../src/domain/flow/challenge-detection";
+import { getKeyboardScrollDelta, shouldKeepKeyboardSessionOnBlur } from "../src/domain/device/mobile-keyboard";
 
 const OVERLAY_ID = "multi-device-viewer-overlay";
 
@@ -39,9 +41,14 @@ function setupPreviewBridge() {
   let lastScrollTop = 0;
   const nestedScrollPositions = new WeakMap<Element, { left: number; top: number }>();
   let scrollSyncEnabled = false;
+  let flowRecordingEnabled = false;
   let applyingRemoteInteraction = false;
   let activeEditable: HTMLElement | null = null;
   let keyboardBlurTimer: number | undefined;
+  let keyboardVisibilityTimer: number | undefined;
+  let keyboardViewport: { platform: "ios" | "android"; occludedBottom: number } | undefined;
+  let surfaceRafPending = false;
+  let lastSurfaceSignature = "";
 
   // The iframe name is available as soon as the document starts loading, so
   // mobile scrollbar hiding does not depend on a later registration message.
@@ -85,12 +92,91 @@ function setupPreviewBridge() {
     return payload;
   };
 
+  function usableColor(value: string | null | undefined): value is string {
+    if (!value || value === "transparent" || !CSS.supports("color", value)) return false;
+    const channels = value.match(/[\d.]+/g)?.map(Number) ?? [];
+    const legacyAlpha = /^rgba\(/i.test(value) && channels.length >= 4 ? channels[3] : undefined;
+    const modernAlpha = value.match(/\/\s*([\d.]+)\s*%?\s*\)$/)?.[1];
+    const alpha = modernAlpha === undefined ? legacyAlpha : Number(modernAlpha);
+    return alpha === undefined || alpha > 0.01;
+  }
+
+  function elementBackground(start: Element | null, includeDocumentRoots = false) {
+    let element = start;
+    while (element) {
+      if (!includeDocumentRoots && (element === document.body || element === document.documentElement)) break;
+      const color = getComputedStyle(element).backgroundColor;
+      if (usableColor(color)) return color;
+      element = element.parentElement;
+    }
+    return undefined;
+  }
+
+  function themeColor() {
+    const content = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.content;
+    return usableColor(content) ? content : undefined;
+  }
+
+  function documentBackground() {
+    return elementBackground(document.body, true)
+      ?? elementBackground(document.documentElement, true)
+      ?? "rgb(255, 255, 255)";
+  }
+
+  function colorIsDark(color: string) {
+    const channels = color.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+    if (!channels || channels.length < 3) return false;
+    const [red, green, blue] = channels.map((channel) => channel / 255);
+    return (red * 0.2126 + green * 0.7152 + blue * 0.0722) < 0.55;
+  }
+
+  function samplePageSurfaces() {
+    const x = Math.max(0, Math.min(window.innerWidth - 1, window.innerWidth / 2));
+    const topPoint = document.elementFromPoint(x, 1);
+    const bottomPoint = document.elementFromPoint(x, Math.max(0, window.innerHeight - 2));
+    const fallback = documentBackground();
+    const topColor = elementBackground(topPoint)
+      ?? elementBackground(document.querySelector("header, [role='banner'], nav"))
+      ?? themeColor()
+      ?? fallback;
+    const bottomColor = elementBackground(bottomPoint)
+      ?? elementBackground(document.querySelector("footer, [role='contentinfo']"))
+      ?? fallback;
+    return {
+      topColor,
+      bottomColor,
+      topIsDark: colorIsDark(topColor),
+      bottomIsDark: colorIsDark(bottomColor),
+    };
+  }
+
+  function announceSurfaceColors(force = false) {
+    if (!slotId) return;
+    const surfaces = samplePageSurfaces();
+    const signature = JSON.stringify(surfaces);
+    if (!force && signature === lastSurfaceSignature) return;
+    lastSurfaceSignature = signature;
+    window.parent.postMessage({ type: "MDV_PAGE_SURFACE_COLORS", slotId, ...surfaces }, "*");
+  }
+
+  function scheduleSurfaceColors() {
+    if (surfaceRafPending) return;
+    surfaceRafPending = true;
+    requestAnimationFrame(() => {
+      surfaceRafPending = false;
+      announceSurfaceColors();
+    });
+  }
+
   const announceReady = () => {
     if (!slotId) return;
+    const surfaces = samplePageSurfaces();
+    lastSurfaceSignature = JSON.stringify(surfaces);
     window.parent.postMessage({
       type: "MDV_PREVIEW_READY",
       slotId,
       url: window.location.href,
+      ...surfaces,
       ...scrollRatios()
     }, "*");
   };
@@ -106,6 +192,12 @@ function setupPreviewBridge() {
   }
   window.addEventListener("popstate", announceNavigation);
   window.addEventListener("hashchange", announceNavigation);
+  window.addEventListener("resize", scheduleSurfaceColors, { passive: true });
+  new MutationObserver(scheduleSurfaceColors).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class", "style"],
+    subtree: true,
+  });
 
   function applyPreviewViewportStyle(hideScrollbars: boolean) {
     let style = document.getElementById("mdv-preview-viewport-style") as HTMLStyleElement | null;
@@ -190,12 +282,45 @@ function setupPreviewBridge() {
       inputType: input?.type ?? (editable instanceof HTMLTextAreaElement ? "textarea" : "text"),
       inputMode: editable.inputMode || "",
       multiline: editable instanceof HTMLTextAreaElement || editable.isContentEditable,
+      autoCapitalize: editable.getAttribute("autocapitalize") || "",
+      enterKeyHint: editable.enterKeyHint || "",
+      language: editable.closest("[lang]")?.getAttribute("lang") || document.documentElement.lang || navigator.language,
     }, "*");
   }
 
   function postKeyboardBlur() {
     if (!slotId) return;
     window.parent.postMessage({ type: "MDV_KEYBOARD_BLUR", slotId }, "*");
+  }
+
+  function scrollParentFor(target: HTMLElement): HTMLElement {
+    let current = target.parentElement;
+    while (current && current !== document.body && current !== document.documentElement) {
+      const style = getComputedStyle(current);
+      if (/(auto|scroll|overlay)/.test(style.overflowY) && current.scrollHeight > current.clientHeight) return current;
+      current = current.parentElement;
+    }
+    return root() as HTMLElement;
+  }
+
+  function keepFocusedEditableVisible() {
+    const target = resolveEditable(document.activeElement) ?? activeEditable;
+    if (!target || !keyboardViewport || !document.contains(target)) return;
+    const { platform, occludedBottom } = keyboardViewport;
+    window.requestAnimationFrame(() => {
+      const rect = target.getBoundingClientRect();
+      const delta = getKeyboardScrollDelta({
+        rect,
+        viewportHeight: window.innerHeight,
+        occludedBottom,
+        platform,
+      });
+      if (Math.abs(delta) < 1) return;
+      const scroller = scrollParentFor(target);
+      const behavior: ScrollBehavior = platform === "ios" ? "smooth" : "auto";
+      if (scroller === root()) window.scrollBy({ top: delta, behavior });
+      else scroller.scrollBy({ top: delta, behavior });
+    });
   }
 
   function dispatchKeyboardInput(target: HTMLElement, inputType: string, data: string | null) {
@@ -258,6 +383,10 @@ function setupPreviewBridge() {
       postKeyboardBlur();
       return;
     }
+    if (document.activeElement !== target) {
+      target.focus({ preventScroll: true });
+      activeEditable = target;
+    }
     if (action === "text") {
       replaceEditableSelection(target, typeof payload.text === "string" ? payload.text : "");
       return;
@@ -285,6 +414,22 @@ function setupPreviewBridge() {
       return;
     }
     if (action === "enter") {
+      const enterKeyHint = typeof payload.enterKeyHint === "string" ? payload.enterKeyHint.toLowerCase() : "";
+      if (enterKeyHint === "next") {
+        const editables = Array.from(document.querySelectorAll<HTMLElement>("input, textarea, [contenteditable]"))
+          .filter((candidate) => resolveEditable(candidate) && candidate.offsetParent !== null);
+        const next = editables[editables.indexOf(target) + 1];
+        if (next) {
+          next.focus();
+          return;
+        }
+      }
+      if (enterKeyHint === "done") {
+        target.blur();
+        activeEditable = null;
+        postKeyboardBlur();
+        return;
+      }
       if (target instanceof HTMLTextAreaElement || target.isContentEditable) {
         replaceEditableSelection(target, "\n", "insertLineBreak");
         return;
@@ -296,9 +441,26 @@ function setupPreviewBridge() {
     }
   }
 
-  function resolveInteractionTarget(selector?: string): Element | null {
-    if (!selector) return null;
-    return document.querySelector(selector);
+  function resolveInteractionTarget(payload: Record<string, unknown>): Element | null {
+    const selector = typeof payload.selector === "string" ? payload.selector : "";
+    if (selector) {
+      try {
+        const match = document.querySelector(selector);
+        if (match) return match;
+      } catch {
+        // A stale selector can still be recovered from accessible metadata.
+      }
+    }
+    const candidates = Array.from(document.querySelectorAll<HTMLElement>(
+      'input, textarea, select, button, a, label, [contenteditable="true"], [role="button"], [role="checkbox"], [role="switch"]',
+    ));
+    const ariaLabel = typeof payload.ariaLabel === "string" ? payload.ariaLabel : "";
+    const name = typeof payload.name === "string" ? payload.name : "";
+    const text = typeof payload.text === "string" ? payload.text : "";
+    return candidates.find((candidate) => ariaLabel && candidate.getAttribute("aria-label") === ariaLabel)
+      ?? candidates.find((candidate) => name && candidate.getAttribute("name") === name)
+      ?? candidates.find((candidate) => text && candidate.textContent?.trim().replace(/\s+/g, " ").slice(0, 120) === text)
+      ?? null;
   }
 
   function resolveInteractionSource(target: EventTarget | null): Element | null {
@@ -310,13 +472,23 @@ function setupPreviewBridge() {
   }
 
   function postInteraction(kind: string, payload: Record<string, unknown>) {
-    if (!slotId || !scrollSyncEnabled) return;
+    if (!slotId || (!scrollSyncEnabled && !flowRecordingEnabled)) return;
     window.parent.postMessage({
       type: "MDV_INTERACTION_EVENT",
       slotId,
       kind,
       ...payload,
     }, "*");
+  }
+
+  function targetMetadata(target: Element) {
+    return {
+      tagName: target.tagName.toLowerCase(),
+      role: target.getAttribute("role") || undefined,
+      ariaLabel: target.getAttribute("aria-label") || undefined,
+      name: target.getAttribute("name") || undefined,
+      text: target.textContent?.trim().replace(/\s+/g, " ").slice(0, 120) || undefined,
+    };
   }
 
   function dispatchMouseSequence(target: Element, payload: Record<string, unknown>) {
@@ -340,11 +512,11 @@ function setupPreviewBridge() {
     target.dispatchEvent(new MouseEvent("click", init as MouseEventInit));
   }
 
-  function applyRemoteInteraction(payload: Record<string, unknown>) {
-    if (!scrollSyncEnabled || applyingRemoteInteraction) return;
+  function applyRemoteInteraction(payload: Record<string, unknown>, force = false) {
+    if ((!scrollSyncEnabled && !force) || applyingRemoteInteraction) return;
     applyingRemoteInteraction = true;
     try {
-      const target = resolveInteractionTarget(typeof payload.selector === "string" ? payload.selector : undefined);
+      const target = resolveInteractionTarget(payload);
       if (!target) return;
 
       if (payload.kind === "click") {
@@ -403,6 +575,113 @@ function setupPreviewBridge() {
     }
   }
 
+  async function waitForInteractionTarget(payload: Record<string, unknown>, timeoutMs = 5000): Promise<Element | null> {
+    const startedAt = Date.now();
+    let target = resolveInteractionTarget(payload);
+    while (!target && Date.now() - startedAt < timeoutMs) {
+      await new Promise((resolve) => window.setTimeout(resolve, 100));
+      target = resolveInteractionTarget(payload);
+    }
+    return target;
+  }
+
+  const challengeSelector = [
+    'iframe[src*="challenges.cloudflare.com"]',
+    'iframe[title*="challenge" i]',
+    '[class*="cf-challenge" i]',
+    '[id*="cf-challenge" i]',
+    '[role="dialog"] iframe[src*="recaptcha"]',
+    '[role="dialog"] iframe[src*="hcaptcha"]',
+  ].join(",");
+
+  function verificationChallengeVisible() {
+    const challengeElementFound = [...document.querySelectorAll<HTMLElement>(challengeSelector)]
+      .some((element) => {
+        const style = window.getComputedStyle(element);
+        const bounds = element.getBoundingClientRect();
+        return style.display !== "none"
+          && style.visibility !== "hidden"
+          && bounds.width >= 24
+          && bounds.height >= 24;
+      });
+    return hasVerificationChallenge({
+      title: document.title,
+      bodyText: document.body?.innerText.slice(0, 12_000) ?? "",
+      challengeElementFound,
+    });
+  }
+
+  function pauseFlowForVerification(runId: string, nextStep: number) {
+    window.parent.postMessage({
+      type: "MDV_FLOW_REPLAY_RESULT",
+      slotId,
+      runId,
+      status: "paused",
+      reason: "verification-required",
+      nextStep,
+      url: window.location.href,
+    }, "*");
+  }
+
+  async function replayFlow(data: Record<string, unknown>) {
+    if (!slotId || typeof data.runId !== "string" || !Array.isArray(data.steps)) return;
+    const runId = data.runId;
+    const startIndex = Math.max(0, Number(data.startIndex ?? 0));
+    for (let index = startIndex; index < data.steps.length; index += 1) {
+      if (verificationChallengeVisible()) {
+        pauseFlowForVerification(runId, index);
+        return;
+      }
+      const step = data.steps[index];
+      if (!step || typeof step !== "object") continue;
+      const payload = step as Record<string, unknown>;
+      if (payload.kind === "scroll") {
+        const targetSelector = typeof payload.scrollTargetSelector === "string" ? payload.scrollTargetSelector : "";
+        const target = targetSelector ? await waitForInteractionTarget({ selector: targetSelector }) : root();
+        if (!target) {
+          if (verificationChallengeVisible()) {
+            pauseFlowForVerification(runId, index);
+            return;
+          }
+          window.parent.postMessage({ type: "MDV_FLOW_REPLAY_RESULT", slotId, runId, status: "failed", failedStep: index, error: "Scroll target was not found" }, "*");
+          return;
+        }
+        target.scrollTo({ left: Number(payload.scrollLeft ?? 0), top: Number(payload.scrollTop ?? 0), behavior: "auto" });
+      } else {
+        const target = await waitForInteractionTarget(payload);
+        if (!target) {
+          if (verificationChallengeVisible()) {
+            pauseFlowForVerification(runId, index);
+            return;
+          }
+          window.parent.postMessage({ type: "MDV_FLOW_REPLAY_RESULT", slotId, runId, status: "failed", failedStep: index, error: "Target was not found" }, "*");
+          return;
+        }
+        const navigates = payload.kind === "click" && Boolean(
+          target.closest("a[href]")
+          || target.closest('button[type="submit"], input[type="submit"]')
+        );
+        if (navigates) {
+          window.parent.postMessage({
+            type: "MDV_FLOW_REPLAY_CONTINUE",
+            slotId,
+            runId,
+            nextStep: index + 1,
+          }, "*");
+          applyRemoteInteraction({ ...payload, selector: buildSelector(target) }, true);
+          return;
+        }
+        applyRemoteInteraction({ ...payload, selector: buildSelector(target) }, true);
+      }
+      await new Promise((resolve) => window.setTimeout(resolve, 180));
+      if (verificationChallengeVisible()) {
+        pauseFlowForVerification(runId, index + 1);
+        return;
+      }
+    }
+    window.parent.postMessage({ type: "MDV_FLOW_REPLAY_RESULT", slotId, runId, status: "passed" }, "*");
+  }
+
   function emitScrollSync(target?: Element) {
     if (!slotId || programmaticScroll) return;
     const payload = scrollPayload(target);
@@ -418,11 +697,12 @@ function setupPreviewBridge() {
   }
 
   window.addEventListener("click", (e) => {
-    if (!scrollSyncEnabled || !slotId || !e.isTrusted) return;
+    if ((!scrollSyncEnabled && !flowRecordingEnabled) || !slotId || !e.isTrusted) return;
     const source = resolveInteractionSource(e.target);
     if (!source) return;
     postInteraction("click", {
       selector: buildSelector(source),
+      ...targetMetadata(source),
       button: e.button,
       buttons: e.buttons,
       ctrlKey: e.ctrlKey,
@@ -433,11 +713,12 @@ function setupPreviewBridge() {
   }, { capture: true, passive: true });
 
   window.addEventListener("input", (e) => {
-    if (!scrollSyncEnabled || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
+    if ((!scrollSyncEnabled && !flowRecordingEnabled) || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
     const target = resolveInteractionSource(e.target);
     if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || (target instanceof HTMLElement && target.isContentEditable))) return;
     postInteraction("input", {
       selector: buildSelector(target),
+      ...targetMetadata(target),
       value: target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement ? target.value : target.textContent ?? "",
       checked: target instanceof HTMLInputElement ? target.checked : undefined,
       inputType: e instanceof InputEvent ? e.inputType : undefined,
@@ -445,23 +726,25 @@ function setupPreviewBridge() {
   }, { capture: true, passive: true });
 
   window.addEventListener("change", (e) => {
-    if (!scrollSyncEnabled || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
+    if ((!scrollSyncEnabled && !flowRecordingEnabled) || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
     const target = resolveInteractionSource(e.target);
     if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement)) return;
     postInteraction("change", {
       selector: buildSelector(target),
+      ...targetMetadata(target),
       value: target.value,
       checked: target instanceof HTMLInputElement ? target.checked : undefined,
     });
   }, { capture: true, passive: true });
 
   window.addEventListener("keydown", (e) => {
-    if (!scrollSyncEnabled || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
+    if ((!scrollSyncEnabled && !flowRecordingEnabled) || !slotId || !e.isTrusted || applyingRemoteInteraction) return;
     const target = resolveInteractionSource(e.target);
     if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable))) return;
     if (e.key.length !== 1 && !["Enter", "Backspace", "Delete", "Tab"].includes(e.key)) return;
     postInteraction("keydown", {
       selector: buildSelector(target),
+      ...targetMetadata(target),
       key: e.key,
       code: e.code,
       ctrlKey: e.ctrlKey,
@@ -477,6 +760,7 @@ function setupPreviewBridge() {
     window.clearTimeout(keyboardBlurTimer);
     activeEditable = editable;
     postKeyboardFocus(editable);
+    keepFocusedEditableVisible();
   }, true);
 
   window.addEventListener("focusout", () => {
@@ -488,6 +772,10 @@ function setupPreviewBridge() {
         postKeyboardFocus(next);
         return;
       }
+      if (shouldKeepKeyboardSessionOnBlur({
+        documentHasFocus: document.hasFocus(),
+        activeEditableConnected: Boolean(activeEditable && document.contains(activeEditable)),
+      })) return;
       activeEditable = null;
       postKeyboardBlur();
     }, 0);
@@ -572,14 +860,47 @@ function setupPreviewBridge() {
       return;
     }
 
+    if (data.type === "MDV_FLOW_RECORDING_ENABLE" && typeof data.slotId === "string" && data.slotId === slotId) {
+      flowRecordingEnabled = true;
+      return;
+    }
+
+    if (data.type === "MDV_FLOW_RECORDING_DISABLE" && typeof data.slotId === "string" && data.slotId === slotId) {
+      flowRecordingEnabled = false;
+      return;
+    }
+
+    if (data.type === "MDV_REPLAY_FLOW" && typeof data.slotId === "string" && data.slotId === slotId) {
+      void replayFlow(data as Record<string, unknown>);
+      return;
+    }
+
     if (data.type === "MDV_KEYBOARD_ACTION" && typeof data.slotId === "string" && data.slotId === slotId) {
       applyKeyboardAction(data as Record<string, unknown>);
+      return;
+    }
+
+    if (data.type === "MDV_KEYBOARD_VIEWPORT" && typeof data.slotId === "string" && data.slotId === slotId) {
+      keyboardViewport = {
+        platform: data.platform === "ios" ? "ios" : "android",
+        occludedBottom: Math.max(0, Number(data.occludedBottom ?? 0)),
+      };
+      keepFocusedEditableVisible();
+      window.clearTimeout(keyboardVisibilityTimer);
+      keyboardVisibilityTimer = window.setTimeout(keepFocusedEditableVisible, 220);
+      return;
+    }
+
+    if (data.type === "MDV_KEYBOARD_VIEWPORT_RESET" && typeof data.slotId === "string" && data.slotId === slotId) {
+      keyboardViewport = undefined;
+      window.clearTimeout(keyboardVisibilityTimer);
       return;
     }
 
   });
 
   const postScroll = (event: Event) => {
+    scheduleSurfaceColors();
     if (!slotId || programmaticScroll) return;
     const target = event.target instanceof Element && event.target !== document.documentElement && event.target !== document.body
       ? event.target
@@ -588,7 +909,7 @@ function setupPreviewBridge() {
     scrollRafPending = true;
     requestAnimationFrame(() => {
       scrollRafPending = false;
-      if (!slotId || programmaticScroll) return;
+      if (!slotId || programmaticScroll || (!scrollSyncEnabled && !flowRecordingEnabled)) return;
       emitScrollSync(target);
     });
   };
@@ -653,11 +974,39 @@ function toggleSimulator(targetUrl?: string, sourceTabId?: number) {
 
   // Listen for postMessages posted from inside the iframe.
   const onMessage = async (e: MessageEvent) => {
+    if (e.source !== iframe.contentWindow) return;
+
     if (e.data?.type === "CLOSE_SIMULATOR") {
       overlay.remove();
       document.documentElement.style.removeProperty("overflow");
       window.removeEventListener("message", onMessage);
       notifyOverlayState(false);
+      return;
+    }
+
+    if (
+      e.data?.type === "MDV_CAPTURE_TAB_REQUEST" &&
+      typeof e.data.requestId === "string"
+    ) {
+      chrome.runtime.sendMessage(
+        {
+          type: "CAPTURE_TAB_WITH_OVERLAY",
+          tabId: typeof e.data.tabId === "number"
+            ? e.data.tabId
+            : typeof sourceTabId === "number"
+              ? sourceTabId
+              : undefined,
+        },
+        (response: { dataUrl?: string; error?: string } | undefined) => {
+          const error = chrome.runtime.lastError?.message ?? response?.error;
+          iframe.contentWindow?.postMessage({
+            type: "MDV_CAPTURE_TAB_RESULT",
+            requestId: e.data.requestId,
+            dataUrl: response?.dataUrl,
+            error,
+          }, "*");
+        },
+      );
       return;
     }
 

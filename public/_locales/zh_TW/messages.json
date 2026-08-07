@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "免費開源的行動裝置模擬器與響應式測試工具，可並排預覽手機、平板、筆電和桌面版面。" },
   "actionTitle": { "message": "開啟 Mobile View 裝置模擬器" },
   "contextMenuTitle": { "message": "在 Mobile View 中開啟此分頁" },
-  "activeActionTitle": { "message": "Mobile View 已啟用 — 點擊關閉" }
+  "activeActionTitle": { "message": "Mobile View 已啟用 — 點擊關閉" },
+  "unsupportedActionTitle": { "message": "請先開啟網站" },
+  "unsupportedUrlHint": { "message": "切換到你正在開發的頁面，然後再次點擊擴充功能。" }
 }

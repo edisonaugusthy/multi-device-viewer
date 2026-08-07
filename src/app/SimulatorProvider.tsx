@@ -69,16 +69,11 @@ function initialUrlFromSearch() {
   return launchUrlFromSearch() ?? "https://example.com";
 }
 
-const defaultSlotDeviceIds = [
-  "apple-iphone-17-pro-2025",   // latest iOS iPhone
-  "macbook-pro-16-2021",        // latest 16-inch Pro laptop
-];
-
 export function SimulatorProvider({ children }: { children: ReactNode }) {
   const { devices } = useDeviceCatalog();
   const [slots, setSlots] = useState<PreviewSlot[]>(() => {
     const url = initialUrlFromSearch();
-    return defaultSlotDeviceIds.map((deviceId, i) => createPreviewSlot(deviceId, url, i));
+    return defaultDeviceIds.map((deviceId, i) => createPreviewSlot(deviceId, url, i));
   });
   const [activeSlotId, setActiveSlotId] = useState(slots[0].id);
   const [display, setDisplay] = useState(defaultDisplay);
@@ -272,7 +267,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
   const resetSession = useCallback(() => {
     const url = slots[0]?.url ?? initialUrlFromSearch();
-    const next = defaultSlotDeviceIds.map((deviceId, index) => createPreviewSlot(deviceId, url, index));
+    const next = defaultDeviceIds.map((deviceId, index) => createPreviewSlot(deviceId, url, index));
     setSlots(next);
     setActiveSlotId(next[0].id);
     setDisplay(startupDisplay);

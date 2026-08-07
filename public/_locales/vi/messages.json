@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "Trình giả lập di động miễn phí, mã nguồn mở để kiểm thử song song giao diện điện thoại, máy tính bảng, laptop và máy tính." },
   "actionTitle": { "message": "Mở trình giả lập thiết bị Mobile View" },
   "contextMenuTitle": { "message": "Mở thẻ này trong Mobile View" },
-  "activeActionTitle": { "message": "Mobile View đang hoạt động — nhấp để đóng" }
+  "activeActionTitle": { "message": "Mobile View đang hoạt động — nhấp để đóng" },
+  "unsupportedActionTitle": { "message": "Hãy mở một trang web trước" },
+  "unsupportedUrlHint": { "message": "Chuyển sang trang bạn đang phát triển, rồi nhấp lại vào tiện ích." }
 }

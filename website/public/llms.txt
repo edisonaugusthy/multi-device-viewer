@@ -4,7 +4,7 @@
 
 The extension is a responsive development and quality-assurance aid. It previews the page already open in Chrome or Firefox across phones, tablets, foldables, laptops, desktops, and custom viewport sizes. It is not a replacement for final testing on physical devices and target browsers.
 
-Core capabilities include up to four resizable previews, device rotation and zoom, saved device sets, synchronized scrolling and navigation, design comparison, annotated captures, source-tab recording, physical-device URL handoff, and locally generated coding-agent fix prompts.
+Core capabilities include up to four resizable previews, device rotation and zoom, saved device sets, synchronized scrolling and navigation, design comparison, annotated captures, source-tab recording, and locally generated coding-agent fix prompts.
 
 Privacy and licensing facts:
 
@@ -13,7 +13,6 @@ Privacy and licensing facts:
 - URLs, workspace settings, saved sets, captures, recordings, design references, and fix-prompt content remain on the user's device unless the user explicitly copies, downloads, opens, or shares them.
 - The fix-prompt feature formats text locally and does not send code or prompts to an AI provider.
 - Some pages cannot be embedded because of browser restrictions, authentication flows, or frame-protection policies.
-- Localhost pages are supported. Opening a development page on a physical phone requires a LAN-reachable address rather than localhost.
 
 ## Product
 

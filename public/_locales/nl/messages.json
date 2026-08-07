@@ -4,5 +4,7 @@
   "extensionDescription": { "message": "Gratis opensource mobiele simulator en responsive tester voor telefoon-, tablet-, laptop- en desktopweergaven naast elkaar." },
   "actionTitle": { "message": "Mobile View-apparaatemulator openen" },
   "contextMenuTitle": { "message": "Dit tabblad openen in Mobile View" },
-  "activeActionTitle": { "message": "Mobile View is actief — klik om te sluiten" }
+  "activeActionTitle": { "message": "Mobile View is actief — klik om te sluiten" },
+  "unsupportedActionTitle": { "message": "Open eerst een website" },
+  "unsupportedUrlHint": { "message": "Ga naar de pagina die je ontwikkelt en klik daarna opnieuw op de extensie." }
 }

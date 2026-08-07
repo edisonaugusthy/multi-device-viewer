@@ -2,13 +2,55 @@
  * Capture the visible tab exactly as the user sees it — extension overlay included.
  * Used for the "Capture & Annotate" action so the annotator gets the full simulator view.
  */
-export async function captureTabWithOverlay(): Promise<string | null> {
-  if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) return null;
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage({ type: "CAPTURE_TAB_WITH_OVERLAY" }, (response: { dataUrl?: string; error?: string } | undefined) => {
-      if (chrome.runtime.lastError || !response?.dataUrl) resolve(null);
-      else resolve(response.dataUrl);
+export interface TabCaptureResult {
+  dataUrl?: string;
+  error?: string;
+}
+
+export async function captureTabWithOverlay(tabId?: number | null): Promise<TabCaptureResult> {
+  const requestId = crypto.randomUUID();
+
+  // The simulator normally runs in an extension iframe over the source page.
+  // Route capture through that page's content script so the background worker
+  // receives an authoritative sender.tab instead of guessing the active tab.
+  if (window.parent !== window) {
+    return new Promise((resolve) => {
+      const timeout = window.setTimeout(() => {
+        window.removeEventListener("message", onResult);
+        resolve({ error: "Screenshot request timed out." });
+      }, 10_000);
+      const onResult = (event: MessageEvent) => {
+        if (
+          event.source !== window.parent ||
+          event.data?.type !== "MDV_CAPTURE_TAB_RESULT" ||
+          event.data.requestId !== requestId
+        ) return;
+        window.clearTimeout(timeout);
+        window.removeEventListener("message", onResult);
+        resolve({
+          dataUrl: typeof event.data.dataUrl === "string" ? event.data.dataUrl : undefined,
+          error: typeof event.data.error === "string" ? event.data.error : undefined,
+        });
+      };
+      window.addEventListener("message", onResult);
+      window.parent.postMessage({ type: "MDV_CAPTURE_TAB_REQUEST", requestId, tabId }, "*");
     });
+  }
+
+  if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) {
+    return { error: "Screenshot capture is unavailable." };
+  }
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      {
+        type: "CAPTURE_TAB_WITH_OVERLAY",
+        tabId: typeof tabId === "number" ? tabId : undefined,
+      },
+      (response: TabCaptureResult | undefined) => {
+        const error = chrome.runtime.lastError?.message ?? response?.error;
+        resolve({ dataUrl: response?.dataUrl, error });
+      },
+    );
   });
 }
 

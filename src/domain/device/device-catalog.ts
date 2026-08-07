@@ -152,8 +152,7 @@ const curatedDevices: Device[] = [
     updatedAt: "2025-02-20",
     tags: ["android", "large"]
   },
-  // The `new` tag belongs only to the latest catalog batch. Move it to the
-  // replacement batch when the next set of devices is added.
+  // Announced devices remain in the catalog after their launch badge expires.
   {
     id: "samsung-galaxy-z-fold8-ultra-folded-2026",
     name: "Samsung Galaxy Z Fold8 Ultra (folded)",
@@ -167,7 +166,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: 1080, height: 2520 },
     mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-ultra-folded-2026"),
     updatedAt: "2026-07-25",
-    tags: ["android", "foldable", "new"]
+    tags: ["android", "foldable"]
   },
   {
     id: "samsung-galaxy-z-fold8-ultra-unfolded-2026",
@@ -182,7 +181,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: 2256, height: 2504 },
     mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-ultra-unfolded-2026"),
     updatedAt: "2026-07-25",
-    tags: ["android", "foldable", "large", "new"]
+    tags: ["android", "foldable", "large"]
   },
   {
     id: "samsung-galaxy-z-fold8-folded-2026",
@@ -197,7 +196,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: 1248, height: 1972 },
     mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-folded-2026"),
     updatedAt: "2026-07-25",
-    tags: ["android", "foldable", "new"]
+    tags: ["android", "foldable"]
   },
   {
     id: "samsung-galaxy-z-fold8-unfolded-2026",
@@ -212,7 +211,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: 2448, height: 1848 },
     mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-unfolded-2026"),
     updatedAt: "2026-07-25",
-    tags: ["android", "foldable", "large", "new"]
+    tags: ["android", "foldable", "large"]
   },
   {
     id: "samsung-galaxy-z-flip8-folded-2026",
@@ -227,7 +226,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: 948, height: 1048 },
     mockupAssets: getMockupAssets("samsung-galaxy-z-flip8-folded-2026"),
     updatedAt: "2026-07-25",
-    tags: ["android", "foldable", "new"]
+    tags: ["android", "foldable"]
   },
   {
     id: "samsung-galaxy-z-flip8-unfolded-2026",
@@ -242,7 +241,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: 1080, height: 2520 },
     mockupAssets: getMockupAssets("samsung-galaxy-z-flip8-unfolded-2026"),
     updatedAt: "2026-07-25",
-    tags: ["android", "foldable", "new"]
+    tags: ["android", "foldable"]
   },
   {
     id: "samsung-galaxy-a27-5g-2026",
@@ -257,7 +256,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: 1080, height: 2340 },
     mockupAssets: getMockupAssets("samsung-galaxy-a27-5g-2026"),
     updatedAt: "2026-07-25",
-    tags: ["android", "new"]
+    tags: ["android"]
   },
   {
     id: "google-pixel-8",
@@ -486,6 +485,36 @@ const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
     pixelRatio: 3,
     manufacturerResolution: { width: 1206, height: 2622 },
   },
+  "apple-iphone-17e-2026": {
+    cssViewport: { width: 390, height: 844 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1170, height: 2532 },
+  },
+  "google-pixel-10a-2026": {
+    cssViewport: { width: 412, height: 924 },
+    pixelRatio: 2.625,
+    manufacturerResolution: { width: 1080, height: 2424 },
+  },
+  "samsung-galaxy-s26-plus-2026": {
+    cssViewport: { width: 384, height: 832 },
+    pixelRatio: 3.75,
+    manufacturerResolution: { width: 1440, height: 3120 },
+  },
+  "apple-macbook-neo-13-2026": {
+    cssViewport: { width: 1204, height: 753 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 2408, height: 1506 },
+  },
+  "microsoft-surface-laptop-8-13-8-2026": {
+    cssViewport: { width: 1152, height: 768 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 2304, height: 1536 },
+  },
+  "apple-studio-display-xdr-27-2026": {
+    cssViewport: { width: 2560, height: 1440 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 5120, height: 2880 },
+  },
 };
 
 export const devices: Device[] = dedupeDevices([
@@ -495,8 +524,25 @@ export const devices: Device[] = dedupeDevices([
 
 export const defaultDeviceIds = [
   "apple-iphone-17-pro-2025",
-  "macbook-pro-16-2021"
+  "apple-ipad-pro-13-m4-2024",
+  "apple-macbook-pro-14-m5-2025",
 ];
+
+export const quickDevicePresetIds = {
+  phoneTablet: [
+    "apple-iphone-17-pro-2025",
+    "apple-ipad-pro-13-m4-2024",
+  ],
+  iosAndroid: [
+    "apple-iphone-17-pro-2025",
+    "samsung-galaxy-s26-ultra-2026",
+  ],
+  mobileTabletLaptop: [
+    "apple-iphone-17-pro-2025",
+    "apple-ipad-pro-13-m4-2024",
+    "apple-macbook-pro-14-m5-2025",
+  ],
+} as const;
 
 function createMockupOnlyDevices(existing: Device[]): Device[] {
   const usedIds = new Set(existing.map((device) => device.id));
@@ -571,7 +617,7 @@ function deviceTypeFromId(id: string): Device["type"] {
   if (id.includes("watch")) return "watch";
   if (id.includes("tv")) return "tv";
   if (id.includes("macbook") || id.includes("latitude") || id.includes("laptop") || id.includes("xps")) return "laptop";
-  if (id.includes("imac")) return "desktop";
+  if (id.includes("imac") || id.includes("studio-display") || id.includes("monitor")) return "desktop";
   if (id.includes("ipad") || id.includes("tab") || id.includes("surface-duo") || id.includes("toughbook-s1")) return "tablet";
   return "phone";
 }
@@ -656,9 +702,18 @@ function yearFromId(id: string) {
 }
 
 function tagsFromId(id: string, type: Device["type"], os: string) {
+  const latestCatalogIds = new Set([
+    "apple-iphone-17e-2026",
+    "google-pixel-10a-2026",
+    "samsung-galaxy-s26-plus-2026",
+    "apple-macbook-neo-13-2026",
+    "microsoft-surface-laptop-8-13-8-2026",
+    "apple-studio-display-xdr-27-2026",
+  ]);
   return [
     type,
     os.toLowerCase(),
+    ...(latestCatalogIds.has(id) ? ["new"] : []),
     ...(id.includes("fold") || id.includes("flip") || id.includes("razr") || id.includes("duo") ? ["foldable"] : []),
     ...(id.includes("self-service-kiosk") || id.includes("nspanel") ? ["special"] : []),
     ...(id.includes("xcover") || id.includes("zebra") || id.includes("honeywell") || id.includes("toughbook") ? ["rugged", "enterprise"] : []),
@@ -695,6 +750,9 @@ function nameFromId(id: string) {
     "panasonic-toughbook-s1-2021": "Panasonic Toughbook S1",
     "microsoft-surface-laptop-7-2024": "Microsoft Surface Laptop 7",
     "dell-xps-13-9350-2024": "Dell XPS 13 9350",
+    "apple-macbook-neo-13-2026": "Apple MacBook Neo 13-inch",
+    "microsoft-surface-laptop-8-13-8-2026": "Microsoft Surface Laptop 13.8-inch (8th Edition)",
+    "apple-studio-display-xdr-27-2026": "Apple Studio Display XDR 27-inch",
   };
   if (normalizedNames[id]) return normalizedNames[id];
 

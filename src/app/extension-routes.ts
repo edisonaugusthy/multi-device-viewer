@@ -15,6 +15,16 @@ export function simulatorUrl(initialUrl?: string, sourceTabId?: number): string 
   return url.toString();
 }
 
+export function isPreviewableUrl(value?: string | null): boolean {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export async function getActiveTabUrl(): Promise<string | undefined> {
   if (typeof chrome === "undefined" || !chrome.tabs?.query) return undefined;
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });

@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { PRODUCT_NAME } from "../../app/product";
 
 export interface ProductTourStep {
   eyebrow: string;
@@ -20,59 +19,30 @@ export type TargetRect = HighlightRect;
 
 export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
   {
-    eyebrow: "Welcome",
-    title: "Test every screen without leaving your page",
-    text: `${PRODUCT_NAME} opens the current tab in several real device viewports, so responsive problems are easier to find and explain.`,
-    hint: "This quick tour takes about one minute.",
+    eyebrow: "Devices",
+    title: "Add viewport",
+    text: "Add a phone, tablet, laptop, display, or your own custom viewport.",
+    target: '[data-tour="add-viewport"]',
+    hint: "Start with Add viewport, then choose the screen you need.",
   },
   {
     eyebrow: "Workspace",
-    title: "Choose the screens that matter",
-    text: "Add a preset phone, tablet, laptop, or your own custom viewport. Save combinations you use for repeated checks.",
-    target: '[data-tour="device-setup"]',
-    hint: "Start with Add viewport, then choose a device in its card.",
-  },
-  {
-    eyebrow: "Clear canvas",
-    title: "Hide setup when you need more room",
-    text: "Collapse Workspace setup after choosing your devices to give every preview more horizontal space.",
+    title: "Hide the toolbar to make space",
+    text: "Collapse Workspace setup after adding your viewports to give every preview more room.",
     target: '[data-tour="sidebar-collapse"]',
-    hint: "Use Open workspace setup whenever you need the sidebar again.",
+    hint: "Open Workspace setup whenever you need the controls again.",
   },
   {
-    eyebrow: "Viewport",
-    title: "Use each preview like the real page",
-    text: "Change device, rotate, zoom, reload, focus one viewport, or resize the split between screens.",
-    target: '[data-tour="preview-controls"]',
-    hint: "The controls above each preview apply only to that viewport.",
+    eyebrow: "Devices",
+    title: "Change the device",
+    text: "Open the device selector in a viewport to switch to another screen size.",
+    target: '[data-tour="change-device"]',
   },
   {
-    eyebrow: "Synchronization",
-    title: "Check the same journey everywhere",
-    text: "Scroll sync keeps matching pages aligned. Navigation sync follows links across viewports, so one action can reveal layout differences.",
-    target: '[data-tour="sync-controls"]',
-    hint: "Active sync controls turn green.",
-  },
-  {
-    eyebrow: "Focus",
-    title: "Inspect one viewport without distractions",
-    text: "Focus active viewport temporarily shows only the selected preview, giving detailed layout and interaction checks the full canvas.",
-    target: '[data-tour="focus-active"]',
-    hint: "Choose Show all viewports in the same place to return to the comparison.",
-  },
-  {
-    eyebrow: "Design review",
-    title: "Compare the live page with its design",
-    text: "Open Compare page to design to place an approved reference beside a viewport or overlay it directly on the live page.",
-    target: '[data-tour="compare-design"]',
-    hint: "Adjust the reference size, position, and opacity to spot visual differences.",
-  },
-  {
-    eyebrow: "Handoff",
-    title: "Turn a problem into a clear handoff",
-    text: "Compare against a design, capture and annotate evidence, record the source tab, open it on a phone, or copy an AI-ready fix prompt.",
-    target: '[data-tour="session-tools"]',
-    hint: "You can replay this tour from Take a feature tour.",
+    eyebrow: "User flow",
+    title: "Record user flow",
+    text: "Record a journey once so you can rerun the same interactions across your viewports.",
+    target: '[data-tour="record-user-flow"]',
   },
 ];
 

@@ -6,6 +6,9 @@ const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
 const UPDATE_BADGE_TEXT = "NEW";
 const OFFSCREEN_RECORDING_PATH = "/offscreen.html";
 
+const message = (key: string, fallback: string) =>
+  chrome.i18n.getMessage(key) || fallback;
+
 export default defineBackground(() => {
   createContextMenu();
 
@@ -44,15 +47,19 @@ export default defineBackground(() => {
   });
 
   function createContextMenu() {
+    const title = message(
+      "contextMenuTitle",
+      "Open this tab in Mobile View & Responsive Tester",
+    );
     chrome.contextMenus.create({
       id: OPEN_SIMULATOR_MENU_ID,
-      title: "Open this tab in Mobile View & Responsive Tester",
+      title,
       contexts: ["page", "action"],
     }, () => {
       if (!chrome.runtime.lastError) return;
 
       chrome.contextMenus.update(OPEN_SIMULATOR_MENU_ID, {
-        title: "Open this tab in Mobile View & Responsive Tester",
+        title,
         contexts: ["page", "action"],
       }, () => {
         void chrome.runtime.lastError;
@@ -119,7 +126,15 @@ export default defineBackground(() => {
   function setActiveIndicator(tabId: number, active: boolean) {
     chrome.action.setBadgeBackgroundColor({ color: "#0f9f8f", tabId });
     chrome.action.setBadgeText({ text: active ? "ON" : "", tabId });
-    chrome.action.setTitle({ title: active ? "Mobile View & Responsive Tester is active — click to close" : "Open Mobile View & Responsive Tester", tabId });
+    chrome.action.setTitle({
+      title: active
+        ? message(
+            "activeActionTitle",
+            "Mobile View & Responsive Tester is active — click to close",
+          )
+        : message("actionTitle", "Open Mobile View device emulator"),
+      tabId,
+    });
   }
 
   async function resolveCaptureTab(tabId?: number | null): Promise<chrome.tabs.Tab | null> {

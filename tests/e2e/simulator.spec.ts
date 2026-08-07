@@ -1,10 +1,16 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+async function dismissFirstRunGuide(page: Page) {
+  const skipTour = page.getByRole("button", { name: "Skip feature tour" });
+  if (await skipTour.isVisible().catch(() => false)) await skipTour.click();
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
   const start = page.getByRole("button", { name: "Start developing" });
   await start.waitFor({ state: "visible", timeout: 1200 }).catch(() => undefined);
   if (await start.isVisible().catch(() => false)) await start.click();
+  await dismissFirstRunGuide(page);
 });
 
 test("applies night mode to the emulator without altering the page", async ({ page }) => {
@@ -227,6 +233,7 @@ test("shows a persistent source-tab recording indicator", async ({ page }) => {
   await page.goto("/?sourceTabId=17");
   const start = page.getByRole("button", { name: "Start developing" });
   if (await start.isVisible().catch(() => false)) await start.click();
+  await dismissFirstRunGuide(page);
 
   await page.getByRole("button", { name: "Record source tab" }).click();
   await expect(page.getByRole("status")).toContainText("REC · 00:00 · source tab");

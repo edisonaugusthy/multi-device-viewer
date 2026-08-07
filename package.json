@@ -1,6 +1,6 @@
 {
   "name": "multi-device-viewer",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "A local-first Chrome and Firefox extension for responsive device testing across phones, tablets, laptops, and desktops.",
   "type": "module",
   "scripts": {
@@ -18,6 +18,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "validate:locales": "node scripts/validate-locales.mjs",
+    "validate:store-assets": "node scripts/validate-chrome-store-assets.mjs",
     "validate:site-seo": "node scripts/validate-site-seo.mjs",
     "validate:chrome-zip": "node scripts/validate-chrome-extension-package.mjs",
     "validate:firefox-zip": "node scripts/validate-firefox-extension-package.mjs",

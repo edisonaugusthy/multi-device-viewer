@@ -11,7 +11,7 @@ export default defineConfig({
     name: "__MSG_extensionName__",
     short_name: "__MSG_extensionShortName__",
     description: "__MSG_extensionDescription__",
-    version: "0.2.1",
+    version: "0.2.3",
     permissions: [
       "contextMenus",
       "declarativeNetRequest",
@@ -30,7 +30,7 @@ export default defineConfig({
         }
       ]
     },
-    host_permissions: ["<all_urls>"],
+    host_permissions: ["http://*/*", "https://*/*"],
     icons: {
       16: "/icons/icon-16.png",
       32: "/icons/icon-32.png",
@@ -49,7 +49,7 @@ export default defineConfig({
     web_accessible_resources: [
       {
         resources: ["mockups/*", "icons/*", "simulator.html", "chunks/*", "assets/*"],
-        matches: ["<all_urls>"]
+        matches: ["http://*/*", "https://*/*"]
       }
     ],
     browser_specific_settings: browser === "firefox" ? {

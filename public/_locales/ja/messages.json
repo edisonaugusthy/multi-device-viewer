@@ -2,5 +2,7 @@
   "extensionName": { "message": "Mobile View：デバイスエミュレーター＆レスポンシブテスト" },
   "extensionShortName": { "message": "Mobile View" },
   "extensionDescription": { "message": "無料・オープンソースのモバイルシミュレーター。スマホ、タブレット、ノートPC、デスクトップ表示を並べて確認できます。" },
-  "actionTitle": { "message": "Mobile View デバイスエミュレーターを開く" }
+  "actionTitle": { "message": "Mobile View デバイスエミュレーターを開く" },
+  "contextMenuTitle": { "message": "このタブを Mobile View で開く" },
+  "activeActionTitle": { "message": "Mobile View は有効です — クリックして閉じる" }
 }

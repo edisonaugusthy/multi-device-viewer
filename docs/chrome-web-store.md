@@ -14,11 +14,11 @@ Mobile View: Device Emulator & Responsive Tester
 
 ### Short description (132 chars max)
 
-Free, open-source mobile simulator and responsive tester for phone, tablet, laptop, and desktop views side by side.
+Responsive testing across phone, tablet, laptop and desktop views—side by side in a free mobile simulator and device emulator.
 
 ### Detailed description
 
-Mobile View is a free, open-source device emulator and responsive tester for Chrome. Use it as a mobile simulator to preview a website in phone, tablet, laptop, and desktop views side by side—without repeatedly resizing a window or switching Chrome DevTools presets.
+Mobile View is a free, open-source responsive website testing tool, device emulator, and mobile simulator for Chrome. Compare a website in phone, tablet, laptop, and desktop views side by side—without repeatedly resizing a window or switching Chrome DevTools presets.
 
 Use this mobile simulator and responsive tester to catch breakpoint, overflow, navigation, and content issues while you build. Everything runs locally in your browser: no account, subscription, analytics, telemetry, or remote application backend.
 
@@ -92,6 +92,22 @@ Both promotional images lead with the responsive-testing use case and present
 **Free** and **Open source** as separate, high-contrast proof marks. Keep browser
 and platform names out of this artwork so the value remains immediately clear.
 
+### Day 1 responsive-testing experiment
+
+This is the first controlled Store-copy experiment after the August 1 baseline.
+Publish the English summary above and the following opening paragraph together;
+do not change the title or screenshots in the same release:
+
+> Mobile View is a responsive website testing tool, responsive design tester,
+> mobile simulator, and device emulator for Chrome. Preview websites across
+> multiple phone, tablet, laptop, and desktop viewports at once.
+
+Measure direct in-store ranks for 7 and 14 days. The primary success condition
+is entry into the top 10 for at least 10 locales across the responsive-testing
+queries while the protected `multi device viewer` median does not worsen by
+more than two positions. This experiment changes one copy package only; it
+does not prove causality until the Store listing is actually published.
+
 ### Search-positioning terms
 
 Use these phrases naturally in the name, summary, and first paragraphs; do not
@@ -148,9 +164,11 @@ Developer Tools
 
 English default, plus German, Spanish, French, Simplified Chinese, Traditional
 Chinese, Filipino, Dutch, Vietnamese, Brazilian Portuguese, Italian, Japanese,
-Korean, and Hindi. Use
+Korean, Hindi, Russian, and Arabic. Use
 [`docs/chrome-web-store-localizations.md`](./chrome-web-store-localizations.md)
-when entering localized Store listings.
+for the locale overview and
+[`docs/chrome-web-store-listing-copy.md`](./chrome-web-store-listing-copy.md)
+for complete copy-and-paste descriptions and screenshot captions.
 
 ---
 
@@ -194,8 +212,13 @@ The extension does not sell, transfer, or use user data for any purpose outside 
 ## Release Checklist
 
 1. Bump `manifest.version` in `wxt.config.ts`.
-2. Run `npm run build && npm run zip` and confirm the zip builds cleanly.
-3. Open the Chrome Web Store Developer Dashboard and select the extension item.
-4. Verify the Store listing, Privacy tab, and support fields are complete.
-5. Upload the generated `.output/multi-device-viewer-<version>-chrome.zip` package manually.
-6. Review the package warnings and submit it for review from the dashboard.
+2. Keep the version in `package.json` identical to `manifest.version`.
+3. Run `npm run validate:store-assets`, `npm run build`, `npm run zip`, and
+   `npm run validate:chrome-zip -- .output/multi-device-viewer-<version>-chrome.zip`.
+4. Open the Chrome Web Store Developer Dashboard and select the extension item.
+5. Verify the Store listing, Privacy tab, and support fields are complete.
+6. Upload the generated `.output/multi-device-viewer-<version>-chrome.zip` package manually.
+7. Review the package warnings and submit it for review from the dashboard.
+8. After the update is public and stable, complete the
+   [Featured badge readiness checklist](./chrome-web-store-featured-readiness.md)
+   and nominate it through Chrome Web Store One Stop Support.

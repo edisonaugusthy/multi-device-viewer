@@ -2,5 +2,7 @@
   "extensionName": { "message": "Mobile View: Responsiver Geräte-Emulator" },
   "extensionShortName": { "message": "Mobile View" },
   "extensionDescription": { "message": "Kostenloser Open-Source-Simulator zum Testen von Websites in Smartphone-, Tablet-, Laptop- und Desktop-Ansichten." },
-  "actionTitle": { "message": "Mobile View Geräte-Emulator öffnen" }
+  "actionTitle": { "message": "Mobile View Geräte-Emulator öffnen" },
+  "contextMenuTitle": { "message": "Diesen Tab in Mobile View öffnen" },
+  "activeActionTitle": { "message": "Mobile View ist aktiv — zum Schließen klicken" }
 }

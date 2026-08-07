@@ -1,0 +1,8 @@
+{
+  "extensionName": { "message": "Mobile View: محاكي أجهزة واختبار تجاوب" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "محاكي جوال مجاني ومفتوح المصدر لاختبار عروض الهاتف والجهاز اللوحي والحاسوب المحمول وسطح المكتب جنبًا إلى جنب." },
+  "actionTitle": { "message": "فتح محاكي الأجهزة Mobile View" },
+  "contextMenuTitle": { "message": "فتح علامة التبويب هذه في Mobile View" },
+  "activeActionTitle": { "message": "Mobile View نشط — انقر للإغلاق" }
+}

@@ -43,6 +43,12 @@ function setupPreviewBridge() {
   let activeEditable: HTMLElement | null = null;
   let keyboardBlurTimer: number | undefined;
 
+  // The iframe name is available as soon as the document starts loading, so
+  // mobile scrollbar hiding does not depend on a later registration message.
+  if (window.name.startsWith("mdv-mobile-preview-")) {
+    applyPreviewViewportStyle(true);
+  }
+
   const root = () => document.scrollingElement ?? document.documentElement;
   const scrollRatios = () => {
     const el = root();
@@ -101,8 +107,12 @@ function setupPreviewBridge() {
   window.addEventListener("popstate", announceNavigation);
   window.addEventListener("hashchange", announceNavigation);
 
-  function applyPreviewViewportStyle() {
+  function applyPreviewViewportStyle(hideScrollbars: boolean) {
     let style = document.getElementById("mdv-preview-viewport-style") as HTMLStyleElement | null;
+    if (!hideScrollbars) {
+      style?.remove();
+      return;
+    }
     if (!style) {
       style = document.createElement("style");
       style.id = "mdv-preview-viewport-style";
@@ -490,7 +500,7 @@ function setupPreviewBridge() {
 
     if (data.type === "MDV_PREVIEW_REGISTER" && typeof data.slotId === "string") {
       slotId = data.slotId;
-      applyPreviewViewportStyle();
+      applyPreviewViewportStyle(Boolean(data.hideScrollbars));
       lastScrollLeft = root().scrollLeft;
       lastScrollTop = root().scrollTop;
       announceReady();

@@ -1,6 +1,8 @@
 {
   "extensionName": { "message": "Mobile View: Device Emulator & Responsive Tester" },
   "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Free, open-source mobile simulator and responsive tester for phone, tablet, laptop, and desktop views side by side." },
-  "actionTitle": { "message": "Open Mobile View device emulator" }
+  "extensionDescription": { "message": "Responsive testing across phone, tablet, laptop and desktop views—side by side in a free mobile simulator and device emulator." },
+  "actionTitle": { "message": "Open Mobile View device emulator" },
+  "contextMenuTitle": { "message": "Open this tab in Mobile View & Responsive Tester" },
+  "activeActionTitle": { "message": "Mobile View & Responsive Tester is active — click to close" }
 }

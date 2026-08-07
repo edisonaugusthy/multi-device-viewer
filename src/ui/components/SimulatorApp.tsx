@@ -5,6 +5,7 @@ import {
   ChevronRight,
   GripVertical,
   Images,
+  Languages,
   Link2,
   Menu,
   Moon,
@@ -31,6 +32,7 @@ import {
   type ReactNode,
 } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
+import { SUPPORTED_LOCALES, useI18n, type AppLocale } from "../../app/i18n";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { PRODUCT_SHORT_NAME } from "../../app/product";
 import {
@@ -68,15 +70,15 @@ import { DeviceHandoffModal } from "./DeviceHandoffModal";
 
 const QUICK_DEVICE_SETS = [
   {
-    label: "Phone + tablet",
+    labelKey: "phoneTablet" as const,
     devices: ["apple-iphone-14-pro-max-2022", "apple-ipad-air-4"],
   },
   {
-    label: "iOS + Android",
+    labelKey: "iosAndroid" as const,
     devices: ["apple-iphone-14-pro-max-2022", "samsung-galaxy-s24"],
   },
   {
-    label: "Mobile + tablet + laptop",
+    labelKey: "mobileTabletLaptop" as const,
     devices: [
       "macbook-air-2020-13",
       "apple-iphone-14-pro-max-2022",
@@ -86,6 +88,7 @@ const QUICK_DEVICE_SETS = [
 ] as const;
 
 export function SimulatorApp() {
+  const { locale, setLocale, t } = useI18n();
   const { findDevice, customDevices, removeCustomDevice } = useDeviceCatalog();
   const {
     slots,
@@ -414,7 +417,7 @@ export function SimulatorApp() {
           type="button"
           className={`grid h-8 w-8 place-items-center rounded-lg lg:hidden ${dark ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
           onClick={() => setSidebarOpen(true)}
-          aria-label="Open workspace setup"
+          aria-label={t("openWorkspaceSetup")}
         >
           <Menu size={15} />
         </button>
@@ -426,17 +429,17 @@ export function SimulatorApp() {
         </div>
         <div
           className="ml-1 hidden items-center gap-1 md:flex"
-          aria-label="Quick device sets"
+          aria-label={t("quickDeviceSets")}
         >
           {QUICK_DEVICE_SETS.map((set) => (
             <button
-              key={set.label}
+              key={set.labelKey}
               type="button"
-              title={`Open ${set.label}`}
+              title={t("openDeviceSet", { name: t(set.labelKey) })}
               onClick={() => applyDevicePreset([...set.devices])}
               className={`h-7 rounded-[7px] border px-2 text-[10px] font-bold transition ${dark ? "border-white/10 text-slate-400 hover:border-white/20 hover:bg-white/[0.06] hover:text-white" : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"}`}
             >
-              {set.label}
+              {t(set.labelKey)}
             </button>
           ))}
         </div>
@@ -448,7 +451,7 @@ export function SimulatorApp() {
           className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold sm:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}
         >
           <Plus size={12} />
-          Add viewport
+          {t("addViewport")}
         </button>
         <button
           type="button"
@@ -456,7 +459,7 @@ export function SimulatorApp() {
           className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}
         >
           <ScanSearch size={12} />
-          <span className="hidden sm:inline">Copy fix prompt</span>
+          <span className="hidden sm:inline">{t("copyFixPrompt")}</span>
         </button>
         <button
           type="button"
@@ -464,7 +467,7 @@ export function SimulatorApp() {
           className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold md:flex ${dark ? "text-slate-400 hover:bg-white/[0.06] hover:text-white" : "text-slate-600 hover:bg-slate-100"}`}
         >
           <Images size={12} />
-          Compare page to design
+          {t("comparePageDesign")}
         </button>
         <div
           data-tour="sync-controls"
@@ -473,7 +476,7 @@ export function SimulatorApp() {
           <button
             type="button"
             title={
-              display.scrollSync ? "Turn off scroll sync" : "Turn on scroll sync"
+              display.scrollSync ? t("turnOffScrollSync") : t("turnOnScrollSync")
             }
             aria-pressed={display.scrollSync}
             onClick={() =>
@@ -485,31 +488,31 @@ export function SimulatorApp() {
             className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${display.scrollSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
           >
             <Link2 size={12} />
-            <span>Scroll sync</span>
+            <span>{t("scrollSync")}</span>
           </button>
           <button
             type="button"
-            title={display.navigationSync ? "Turn off navigation sync" : "Turn on navigation sync"}
+            title={display.navigationSync ? t("turnOffNavigationSync") : t("turnOnNavigationSync")}
             aria-pressed={display.navigationSync}
             onClick={() => updateDisplay((current) => ({ ...current, navigationSync: !current.navigationSync }))}
             className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold lg:flex ${display.navigationSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
           >
             <Route size={12} />
-            <span>Navigation sync</span>
+            <span>{t("navigationSync")}</span>
           </button>
         </div>
         <ToolbarButton
-          label="Capture active viewport"
+          label={t("captureActiveViewport")}
           dark={dark}
           onClick={() => void takeScopedScreenshot("active")}
         >
           <Camera size={14} />
         </ToolbarButton>
-        <ToolbarButton label="Reload all" dark={dark} onClick={reloadAllSlots}>
+        <ToolbarButton label={t("reloadAll")} dark={dark} onClick={reloadAllSlots}>
           <RefreshCw size={15} />
         </ToolbarButton>
         <ToolbarButton
-          label={dark ? "Light theme" : "Dark theme"}
+          label={dark ? t("lightTheme") : t("darkTheme")}
           dark={dark}
           onClick={() =>
             updateDisplay((current) => ({
@@ -520,7 +523,7 @@ export function SimulatorApp() {
         >
           {dark ? <Sun size={15} /> : <Moon size={15} />}
         </ToolbarButton>
-        <ToolbarButton label="Close viewer" dark={dark} onClick={closeViewer}>
+        <ToolbarButton label={t("closeViewer")} dark={dark} onClick={closeViewer}>
           <X size={16} />
         </ToolbarButton>
       </header>}
@@ -529,7 +532,7 @@ export function SimulatorApp() {
         {sidebarOpen && narrowLayout && (
           <button
             type="button"
-            aria-label="Close workspace setup"
+            aria-label={t("closeWorkspaceSetup")}
             className="absolute inset-0 z-30 bg-black/40"
             onClick={() => setSidebarOpen(false)}
           />
@@ -545,7 +548,7 @@ export function SimulatorApp() {
                 <div className="flex items-center gap-2">
                   <Settings2 size={14} className="text-[#0f9f8f]" />
                   <span className="text-[11px] font-extrabold">
-                    Workspace setup
+                    {t("workspaceSetup")}
                   </span>
                 </div>
                 <button
@@ -553,7 +556,7 @@ export function SimulatorApp() {
                   type="button"
                   onClick={() => setSidebarOpen(false)}
                   className={`grid h-7 w-7 place-items-center rounded-md ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"}`}
-                  aria-label="Collapse workspace setup"
+                  aria-label={t("collapseWorkspaceSetup")}
                 >
                   <PanelLeftClose size={14} />
                 </button>
@@ -561,8 +564,8 @@ export function SimulatorApp() {
               <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-3">
                 <div data-tour="device-setup">
                   <SidebarSection
-                    title="Devices"
-                    meta={`${slots.length} of ${maxPreviewSlots}`}
+                    title={t("devices")}
+                    meta={t("countOf", { count: slots.length, max: maxPreviewSlots })}
                     dark={dark}
                   >
                   <button
@@ -572,20 +575,20 @@ export function SimulatorApp() {
                     className="flex h-9 w-full items-center justify-center gap-2 rounded-[9px] bg-[#0f9f8f] text-[11px] font-bold text-white shadow-sm hover:bg-[#0c8b7e] disabled:opacity-40"
                   >
                     <Plus size={14} />
-                    Add viewport
+                    {t("addViewport")}
                   </button>
                   <ActionRow
                     dark={dark}
                     icon={<PanelsTopLeft size={14} />}
                     onClick={() => setShowCustomDevice(true)}
-                    label="Add custom viewport"
+                    label={t("addCustomViewport")}
                   />
                   </SidebarSection>
                 </div>
 
                 {customDevices.length > 0 && (
                   <SidebarSection
-                    title="Custom viewports"
+                    title={t("customViewports")}
                     meta={`${customDevices.length}`}
                     dark={dark}
                   >
@@ -599,7 +602,7 @@ export function SimulatorApp() {
                             type="button"
                             onClick={() => addSlot(device.id, device.cssViewport.width > device.cssViewport.height ? "landscape" : "portrait")}
                             disabled={slots.length >= maxPreviewSlots}
-                            title={`Add ${device.name} viewport`}
+                            title={t("addNamedViewport", { name: device.name })}
                             className="flex min-w-0 flex-1 items-center gap-1.5 text-left disabled:cursor-not-allowed disabled:opacity-45"
                           >
                             <span className="min-w-0 flex-1 truncate text-[10px] font-bold">{device.name}</span>
@@ -609,8 +612,8 @@ export function SimulatorApp() {
                           <button
                             type="button"
                             onClick={() => deleteCustomViewport(device.id)}
-                            title={`Delete ${device.name}`}
-                            aria-label={`Delete ${device.name}`}
+                            title={t("deleteNamed", { name: device.name })}
+                            aria-label={t("deleteNamed", { name: device.name })}
                             className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition ${dark ? "text-slate-600 hover:bg-red-500/10 hover:text-red-400" : "text-slate-400 hover:bg-red-50 hover:text-red-600"}`}
                           >
                             <Trash2 size={12} />
@@ -622,7 +625,7 @@ export function SimulatorApp() {
                 )}
 
                 <SidebarSection
-                  title="Saved sets"
+                  title={t("savedSets")}
                   dark={dark}
                   action={
                     <button
@@ -630,14 +633,14 @@ export function SimulatorApp() {
                       onClick={() => setShowSavedSets((value) => !value)}
                       className="text-[9px] font-extrabold uppercase tracking-wider text-[#0f9f8f]"
                     >
-                      {showSavedSets ? "Done" : "Manage"}
+                      {showSavedSets ? t("done") : t("manage")}
                     </button>
                   }
                 >
                   <p
                     className={`text-[10px] leading-4 ${dark ? "text-slate-500" : "text-slate-400"}`}
                   >
-                    Reuse device combinations for repeated checks.
+                    {t("reuseDeviceCombinations")}
                   </p>
                   {showSavedSets && (
                     <PresetsManager
@@ -649,28 +652,28 @@ export function SimulatorApp() {
                 </SidebarSection>
 
                 <div data-tour="session-tools">
-                  <SidebarSection title="Session tools" dark={dark}>
+                  <SidebarSection title={t("sessionTools")} dark={dark}>
                   <ActionRow
                     dataTour="focus-active"
                     dark={dark}
                     icon={<Focus size={14} />}
                     onClick={() => setFocusedSlotId(focusedSlotId ? null : activeSlotId)}
                     active={!!focusedSlotId}
-                    label={focusedSlotId ? "Show all viewports" : "Focus active viewport"}
+                    label={focusedSlotId ? t("showAllViewports") : t("focusActiveViewport")}
                   />
-                  <ActionRow dark={dark} icon={<QrCode size={14} />} onClick={() => setShowDeviceHandoff(true)} label="Open on physical device" />
+                  <ActionRow dark={dark} icon={<QrCode size={14} />} onClick={() => setShowDeviceHandoff(true)} label={t("openPhysicalDevice")} />
                   <ActionRow
                     dark={dark}
                     icon={<ScanSearch size={14} />}
                     onClick={() => setShowReviewIssue(true)}
-                    label="Generate AI fix prompt"
+                    label={t("generateAiFixPrompt")}
                   />
                   <ActionRow
                     dataTour="compare-design"
                     dark={dark}
                     icon={<Images size={14} />}
                     onClick={() => setShowDesignReference(true)}
-                    label="Compare page to design"
+                    label={t("comparePageDesign")}
                   />
                   <ActionRow
                     dark={dark}
@@ -678,15 +681,15 @@ export function SimulatorApp() {
                     onClick={() => void takeScopedScreenshot("workspace")}
                     label={
                       capturing
-                        ? "Capturing comparison…"
-                        : "Capture and annotate"
+                        ? t("capturingComparison")
+                        : t("captureAndAnnotate")
                     }
                   />
                   <ActionRow
                     dark={dark}
                     icon={<RotateCcw size={14} />}
                     onClick={startNewCheck}
-                    label="Start a new check"
+                    label={t("startNewCheck")}
                   />
                   <ActionRow
                     dark={dark}
@@ -694,18 +697,18 @@ export function SimulatorApp() {
                     onClick={() => void toggleRecording()}
                     disabled={!sourceTabId}
                     active={recording}
-                    label={recording ? `Recording ${formatDuration(recordingSeconds)} — stop` : "Record source tab"}
+                    label={recording ? t("recordingStop", { time: formatDuration(recordingSeconds) }) : t("recordSourceTab")}
                   />
                   <ActionRow
                     dark={dark}
                     icon={<CircleHelp size={14} />}
                     onClick={() => setShowFirstRun(true)}
-                    label="Take a feature tour"
+                    label={t("takeFeatureTour")}
                   />
                   {recording && (
                     <div role="status" aria-live="polite" className="flex h-7 items-center gap-2 rounded-lg bg-red-500/10 px-2 text-[10px] font-extrabold text-red-500">
                       <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-                      REC · {formatDuration(recordingSeconds)} · source tab
+                      {t("recordingStatus", { time: formatDuration(recordingSeconds) })}
                     </div>
                   )}
                   </SidebarSection>
@@ -714,17 +717,36 @@ export function SimulatorApp() {
               <div
                 className={`border-t p-3 ${dark ? "border-white/[0.07]" : "border-slate-100"}`}
               >
+                <label className="mb-2 flex items-center gap-2">
+                  <Languages size={13} className="shrink-0 text-[#0f9f8f]" />
+                  <span className={`text-[9px] font-extrabold uppercase tracking-[0.12em] ${dark ? "text-slate-500" : "text-slate-400"}`}>
+                    {t("language")}
+                  </span>
+                  <select
+                    value={locale}
+                    onChange={(event) => setLocale(event.target.value as AppLocale)}
+                    className={`ml-auto min-w-0 max-w-36 rounded-md border px-2 py-1 text-[10px] font-bold outline-none ${dark ? "border-white/10 bg-[#171a21] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
+                  >
+                    {SUPPORTED_LOCALES.map((option) => (
+                      <option key={option.code} value={option.code}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <div
                   className={`rounded-[10px] p-2.5 ${dark ? "bg-white/[0.035]" : "bg-slate-50"}`}
                 >
                   <p
                     className={`text-[9px] font-extrabold uppercase tracking-[0.12em] ${dark ? "text-slate-600" : "text-slate-400"}`}
                   >
-                    Current session
+                    {t("currentSession")}
                   </p>
                   <p className="mt-1 truncate text-[10px] font-semibold">
-                    {slots.length} viewports ·{" "}
-                    {display.scrollSync ? "linked" : "independent"}
+                    {t("sessionSummary", {
+                      count: slots.length,
+                      mode: display.scrollSync ? t("linked") : t("independent"),
+                    })}
                   </p>
                 </div>
               </div>
@@ -736,8 +758,8 @@ export function SimulatorApp() {
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            aria-label="Open workspace setup"
-            title="Show workspace controls"
+            aria-label={t("openWorkspaceSetup")}
+            title={t("showWorkspaceControls")}
             className={`absolute left-2 top-2 z-40 grid h-8 w-8 place-items-center rounded-lg border shadow-sm backdrop-blur transition ${dark ? "border-white/10 bg-[#171a21]/90 text-slate-400 hover:border-white/20 hover:text-white" : "border-slate-200 bg-white/90 text-slate-500 hover:border-slate-300 hover:text-slate-900"}`}
           >
             <PanelLeftOpen size={15} />
@@ -838,7 +860,7 @@ export function SimulatorApp() {
                 {!focusedSlotId && index < slots.length - 1 && !narrowLayout && (
                   <div
                     role="separator"
-                    aria-label="Resize adjacent viewports"
+                    aria-label={t("resizeAdjacentViewports")}
                     aria-orientation="vertical"
                     className="group absolute right-0 top-0 z-20 flex h-full w-4 translate-x-1/2 cursor-col-resize items-center justify-center"
                     onMouseDown={(event) => startResize(event, index)}

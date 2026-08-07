@@ -26,6 +26,14 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.2": {
+    version: "0.2.2",
+    heading: "Smoother mobile previews",
+    summary: "",
+    notes: [
+      { title: "Scroll without visible scrollbars", description: "Phone and tablet previews keep native scrolling while hiding browser scrollbar chrome, including cross-origin pages." },
+    ],
+  },
   "0.2.1": {
     version: "0.2.1",
     heading: "What’s new",

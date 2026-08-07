@@ -13,12 +13,29 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
+import { useI18n, type TranslationKey } from "../../app/i18n";
 import {
   FIRST_RUN_TOUR_STEPS,
   highlightRectForTarget,
   positionCard,
   type HighlightRect,
 } from "./first-run-tour";
+
+const TOUR_TRANSLATION_KEYS: Array<{
+  eyebrow: TranslationKey;
+  title: TranslationKey;
+  text: TranslationKey;
+  hint: TranslationKey;
+}> = [
+  { eyebrow: "tourWelcomeEyebrow", title: "tourWelcomeTitle", text: "tourWelcomeText", hint: "tourWelcomeHint" },
+  { eyebrow: "tourWorkspaceEyebrow", title: "tourWorkspaceTitle", text: "tourWorkspaceText", hint: "tourWorkspaceHint" },
+  { eyebrow: "tourCanvasEyebrow", title: "tourCanvasTitle", text: "tourCanvasText", hint: "tourCanvasHint" },
+  { eyebrow: "tourViewportEyebrow", title: "tourViewportTitle", text: "tourViewportText", hint: "tourViewportHint" },
+  { eyebrow: "tourSyncEyebrow", title: "tourSyncTitle", text: "tourSyncText", hint: "tourSyncHint" },
+  { eyebrow: "tourFocusEyebrow", title: "tourFocusTitle", text: "tourFocusText", hint: "tourFocusHint" },
+  { eyebrow: "tourDesignEyebrow", title: "tourDesignTitle", text: "tourDesignText", hint: "tourDesignHint" },
+  { eyebrow: "tourHandoffEyebrow", title: "tourHandoffTitle", text: "tourHandoffText", hint: "tourHandoffHint" },
+];
 
 export function FirstRunGuide({
   dark,
@@ -27,9 +44,18 @@ export function FirstRunGuide({
   dark: boolean;
   onClose: () => void;
 }) {
+  const { t } = useI18n();
   const [stepIndex, setStepIndex] = useState(0);
   const [highlight, setHighlight] = useState<HighlightRect | null>(null);
-  const step = FIRST_RUN_TOUR_STEPS[stepIndex];
+  const baseStep = FIRST_RUN_TOUR_STEPS[stepIndex];
+  const stepKeys = TOUR_TRANSLATION_KEYS[stepIndex];
+  const step = {
+    ...baseStep,
+    eyebrow: t(stepKeys.eyebrow),
+    title: t(stepKeys.title),
+    text: t(stepKeys.text),
+    hint: t(stepKeys.hint),
+  };
   const finalStep = stepIndex === FIRST_RUN_TOUR_STEPS.length - 1;
 
   const updateHighlight = useCallback(() => {
@@ -137,8 +163,10 @@ export function FirstRunGuide({
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#18b5a4]">
-              {step.eyebrow} · {stepIndex + 1} of{" "}
-              {FIRST_RUN_TOUR_STEPS.length}
+              {step.eyebrow} · {t("tourStep", {
+                current: stepIndex + 1,
+                total: FIRST_RUN_TOUR_STEPS.length,
+              })}
             </p>
             <h2
               id="first-run-title"
@@ -150,8 +178,8 @@ export function FirstRunGuide({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Skip feature tour"
-            title="Skip tour"
+            aria-label={t("skipFeatureTour")}
+            title={t("skipTour")}
             className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${
               dark ? "hover:bg-white/10" : "hover:bg-slate-100"
             }`}
@@ -194,7 +222,7 @@ export function FirstRunGuide({
                 <strong
                   className={dark ? "text-slate-200" : "text-slate-700"}
                 >
-                  Private and local.{" "}
+                  {t("privateLocal")}{" "}
                 </strong>
               )}
               {step.hint}
@@ -205,14 +233,14 @@ export function FirstRunGuide({
         <div className="mt-5 flex items-center justify-between gap-3">
           <div
             className="flex gap-1.5"
-            aria-label={`Tour step ${stepIndex + 1} of ${FIRST_RUN_TOUR_STEPS.length}`}
+            aria-label={t("tourStep", { current: stepIndex + 1, total: FIRST_RUN_TOUR_STEPS.length })}
           >
             {FIRST_RUN_TOUR_STEPS.map((item, index) => (
               <button
                 key={item.title}
                 type="button"
                 onClick={() => setStepIndex(index)}
-                aria-label={`Go to step ${index + 1}: ${item.title}`}
+                aria-label={t("goToTourStep", { current: index + 1, title: t(TOUR_TRANSLATION_KEYS[index].title) })}
                 aria-current={index === stepIndex ? "step" : undefined}
                 className={`h-1.5 rounded-full transition-all ${
                   index === stepIndex
@@ -234,7 +262,7 @@ export function FirstRunGuide({
                     ? "bg-white/[0.07] hover:bg-white/10"
                     : "bg-slate-100 hover:bg-slate-200"
                 }`}
-                aria-label="Previous tour step"
+                aria-label={t("previousTourStep")}
               >
                 <ArrowLeft size={15} />
               </button>
@@ -251,16 +279,16 @@ export function FirstRunGuide({
               {finalStep ? (
                 <>
                   <Check size={15} />
-                  Start testing
+                  {t("startTesting")}
                 </>
               ) : stepIndex === 0 ? (
                 <>
                   <Sparkles size={15} />
-                  Show me
+                  {t("showMe")}
                 </>
               ) : (
                 <>
-                  Next
+                  {t("next")}
                   <ArrowRight size={15} />
                 </>
               )}

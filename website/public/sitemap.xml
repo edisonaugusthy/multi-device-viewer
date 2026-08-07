@@ -2,42 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/index.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/mobile-view-device-emulator.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-design-checker.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/chrome-mobile-view-extension.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/firefox-mobile-view.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/device-viewport-sizes.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-testing.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/privacy.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
   </url>
   <url>
     <loc>https://edisonaugusthy.github.io/multi-device-viewer/changelog.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
+  </url>
+  <url>
+    <loc>https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-website-testing.html</loc>
+    <lastmod>2026-08-07</lastmod>
   </url>
 </urlset>

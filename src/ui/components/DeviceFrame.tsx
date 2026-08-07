@@ -2,6 +2,7 @@ import { useEffect, useState, type PointerEvent as ReactPointerEvent, type React
 import { ChevronDown, ChevronLeft, ChevronRight, Copy, BookOpen, Lock, Plus, RefreshCw, Share, Square, Home, MoreVertical } from "lucide-react";
 import type { Device, MockupViewportConfig, Orientation, Size } from "../../domain/device/device.types";
 import { getFrameProfile, type DeviceFrameStyle, type ChromeVariant } from "../../domain/device/frame-profiles";
+import { useI18n } from "../../app/i18n";
 
 interface FrameSizeInput {
   device: Device;
@@ -58,6 +59,7 @@ export function DeviceFrame({
   keyboard?: MobileKeyboardState;
   onKeyboardAction?: (action: MobileKeyboardAction) => void;
 }) {
+  const { t } = useI18n();
   const profile = getFrameProfile(device);
   const hostname = safeHostname(url);
   // Derive the rendered posture from the viewport itself. Most handset/tablet
@@ -488,6 +490,7 @@ function MobileKeyboard({
   state: MobileKeyboardState;
   onAction?: (action: MobileKeyboardAction) => void;
 }) {
+  const { t } = useI18n();
   const [shifted, setShifted] = useState(false);
   const [symbolMode, setSymbolMode] = useState(false);
   const inputKind = `${state.inputType ?? ""} ${state.inputMode ?? ""}`.toLowerCase();
@@ -517,7 +520,7 @@ function MobileKeyboard({
       key={`${label}-${value}`}
       type="button"
       tabIndex={-1}
-      aria-label={`Key ${label === " " ? "Space" : label}`}
+      aria-label={t("key", { key: label === " " ? t("space") : label })}
       className={`flex min-w-0 flex-1 items-center justify-center rounded-[7px] font-medium active:translate-y-px ${keySurface} ${wide ? "basis-[34%]" : ""}`}
       style={{ fontSize: tablet ? 22 : landscape ? 14 : 18 }}
       onPointerDown={stopFocusChange}
@@ -540,7 +543,7 @@ function MobileKeyboard({
     <div
       data-mobile-keyboard={platform}
       role="group"
-      aria-label={`${ios ? "iOS" : "Android"} on-screen keyboard`}
+      aria-label={t("onScreenKeyboard", { platform: ios ? "iOS" : "Android" })}
       className={`absolute inset-x-0 bottom-0 z-[70] flex flex-col gap-2 border-t border-black/10 p-2.5 shadow-[0_-12px_32px_rgba(0,0,0,0.22)] backdrop-blur-xl ${surface}`}
       style={{ height: keyboardHeight }}
       onPointerDown={(event) => event.stopPropagation()}
@@ -551,7 +554,7 @@ function MobileKeyboard({
             <button
               type="button"
               tabIndex={-1}
-              aria-label="Shift"
+              aria-label={t("shift")}
               aria-pressed={shifted}
               className={`flex basis-[12%] items-center justify-center rounded-[7px] text-base ${utilitySurface} ${shifted ? "ring-2 ring-blue-500" : ""}`}
               onPointerDown={stopFocusChange}
@@ -565,7 +568,7 @@ function MobileKeyboard({
             <button
               type="button"
               tabIndex={-1}
-              aria-label="Backspace"
+              aria-label={t("backspace")}
               className={`flex basis-[12%] items-center justify-center rounded-[7px] text-lg ${utilitySurface}`}
               onPointerDown={stopFocusChange}
               onClick={() => onAction?.({ action: "backspace" })}
@@ -580,7 +583,7 @@ function MobileKeyboard({
           <button
             type="button"
             tabIndex={-1}
-            aria-label={numeric ? "Letters keyboard" : "Numbers keyboard"}
+            aria-label={numeric ? t("lettersKeyboard") : t("numbersKeyboard")}
             className={`flex basis-[14%] items-center justify-center rounded-[7px] px-2 font-medium ${utilitySurface}`}
             onPointerDown={stopFocusChange}
             onClick={() => setSymbolMode((value) => !value)}
@@ -592,7 +595,7 @@ function MobileKeyboard({
         <button
           type="button"
           tabIndex={-1}
-          aria-label={`Key ${enterLabel}`}
+          aria-label={t("key", { key: enterLabel })}
           className="flex basis-[20%] items-center justify-center rounded-[7px] bg-blue-500 px-2 font-semibold text-white active:bg-blue-600"
           style={{ fontSize: tablet ? 18 : 14 }}
           onPointerDown={stopFocusChange}
@@ -603,7 +606,7 @@ function MobileKeyboard({
         <button
           type="button"
           tabIndex={-1}
-          aria-label="Dismiss keyboard"
+          aria-label={t("dismissKeyboard")}
           className={`flex basis-[12%] items-center justify-center rounded-[7px] ${utilitySurface}`}
           onPointerDown={stopFocusChange}
           onClick={() => onAction?.({ action: "dismiss" })}
@@ -1033,6 +1036,7 @@ function StatusBar({
   chromeVariant?: ChromeVariant;
   timeInsetLeft?: number;
 }) {
+  const { t } = useI18n();
   const time = "9:41";
   const h = height ?? (platform === "android" ? 28 : compact ? 28 : 44);
   const px = compact ? 14 : 18;
@@ -1076,7 +1080,7 @@ function StatusBar({
       >
         <span className="flex min-w-0 items-center gap-1">
           <LegacySignalDots />
-          <span>Carrier</span>
+          <span>{t("carrier")}</span>
         </span>
         <span className="text-[10px]">{time}</span>
         <span className="flex items-center justify-end gap-1">

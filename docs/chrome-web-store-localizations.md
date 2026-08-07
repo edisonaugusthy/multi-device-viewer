@@ -6,7 +6,7 @@ privacy statements, screenshots, and pricing consistent across every language.
 
 | Locale | Language / market | Extension name | Short description |
 |---|---|---|---|
-| `en` | English | Mobile View: Device Emulator & Responsive Tester | Free, open-source mobile simulator and responsive tester for phone, tablet, laptop, and desktop views side by side. |
+| `en` | English | Mobile View: Device Emulator & Responsive Tester | Responsive testing across phone, tablet, laptop and desktop views—side by side in a free mobile simulator and device emulator. |
 | `de` | German | Mobile View: Responsiver Geräte-Emulator | Kostenloser Open-Source-Simulator zum Testen von Websites in Smartphone-, Tablet-, Laptop- und Desktop-Ansichten. |
 | `es` | Spanish | Mobile View: Emulador móvil y prueba responsive | Simulador móvil gratuito y de código abierto para probar vistas de teléfono, tablet, portátil y escritorio en paralelo. |
 | `fr` | French | Mobile View : Émulateur mobile et test responsive | Simulateur mobile gratuit et open source pour tester côte à côte les vues téléphone, tablette, ordinateur portable et bureau. |
@@ -20,6 +20,18 @@ privacy statements, screenshots, and pricing consistent across every language.
 | `ja` | Japanese | Mobile View：デバイスエミュレーター＆レスポンシブテスト | 無料・オープンソースのモバイルシミュレーター。スマホ、タブレット、ノートPC、デスクトップ表示を並べて確認できます。 |
 | `ko` | Korean | Mobile View: 기기 에뮬레이터 및 반응형 테스트 | 무료 오픈 소스 모바일 시뮬레이터로 휴대폰, 태블릿, 노트북, 데스크톱 화면을 나란히 테스트하세요. |
 | `hi` | Hindi | Mobile View: डिवाइस एमुलेटर और रिस्पॉन्सिव टेस्टर | फ़ोन, टैबलेट, लैपटॉप और डेस्कटॉप व्यू को साथ-साथ जाँचने के लिए मुफ़्त, ओपन-सोर्स मोबाइल सिम्युलेटर। |
+| `ru` | Russian | Mobile View: эмулятор устройств и адаптивный тест | Бесплатный эмулятор и тест адаптивности: сравнивайте виды телефона, планшета, ноутбука и ПК рядом. |
+| `ar` | Arabic | Mobile View: محاكي أجهزة واختبار تجاوب | محاكي جوال مجاني ومفتوح المصدر لاختبار عروض الهاتف والجهاز اللوحي والحاسوب المحمول وسطح المكتب جنبًا إلى جنب. |
+
+The complete copy-and-paste detailed descriptions and screenshot captions are
+in [`chrome-web-store-listing-copy.md`](./chrome-web-store-listing-copy.md).
+
+The English row is the Day 1 experiment package. Publish it first and measure
+the direct in-store baseline before changing localized summaries. The remaining
+locales retain their current natural translations until the English experiment
+establishes a winning message; then localize the same intent for German, French,
+Spanish, Portuguese, Japanese, Korean, Chinese, Indonesian, Turkish, Thai, and
+Polish with human review.
 
 ## Initial rollout order
 
@@ -29,6 +41,8 @@ privacy statements, screenshots, and pricing consistent across every language.
    Console export dated 25 July 2026.
 3. Brazilian Portuguese, Italian, Japanese, Korean, and Hindi — broader
    high-reach coverage for the first international release.
+4. Russian and Arabic — the strongest Store-interface signals in the May–July
+   2026 page-title analytics export that were not already packaged.
 
 Chrome chooses a packaged `_locales` translation from the browser language and
 falls back to English. The Store listing translations must also be entered in

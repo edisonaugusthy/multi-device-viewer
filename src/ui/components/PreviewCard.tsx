@@ -26,6 +26,7 @@ import type {
 } from "../../domain/simulator/simulator.types";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
+import { useI18n } from "../../app/i18n";
 import {
   DeviceFrame,
   estimateDeviceFrameSize,
@@ -102,6 +103,7 @@ export function PreviewCard({
   onToggleFocus,
   designOverlay,
 }: PreviewCardProps) {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const bridgeStatusTimer = useRef<number | undefined>(undefined);
@@ -279,7 +281,11 @@ export function PreviewCard({
         setBridgeStatus("checking");
       }
       iframe.contentWindow?.postMessage(
-        { type: "MDV_PREVIEW_REGISTER", slotId: slot.id },
+        {
+          type: "MDV_PREVIEW_REGISTER",
+          slotId: slot.id,
+          hideScrollbars: device.type === "phone" || device.type === "tablet",
+        },
         "*",
       );
       syncScrollBridge(iframe);
@@ -302,7 +308,7 @@ export function PreviewCard({
       iframe.removeEventListener("load", register);
       window.clearTimeout(bridgeStatusTimer.current);
     };
-  }, [containerSize.width, slot.id, slot.reloadToken, slot.url, standalonePreview]);
+  }, [containerSize.width, device.type, slot.id, slot.reloadToken, slot.url, standalonePreview]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -470,28 +476,28 @@ export function PreviewCard({
 
         <CardBtn
           dark={display.darkMode}
-          label="Reload preview"
+          label={t("reloadPreview")}
           onClick={() => reloadSlot(slot.id)}
         >
           <RefreshCw size={14} className={bridgeStatus === "checking" ? "animate-spin" : ""} />
         </CardBtn>
-        {!focused && !first && <CardBtn dark={display.darkMode} label="Move viewport left" onClick={() => moveSlot(slot.id, "left")}><ArrowLeft size={13} /></CardBtn>}
-        {!focused && !last && <CardBtn dark={display.darkMode} label="Move viewport right" onClick={() => moveSlot(slot.id, "right")}><ArrowRight size={13} /></CardBtn>}
-        <CardBtn dark={display.darkMode} label={focused ? "Show all viewports" : "Focus this viewport"} onClick={onToggleFocus}>
+        {!focused && !first && <CardBtn dark={display.darkMode} label={t("moveViewportLeft")} onClick={() => moveSlot(slot.id, "left")}><ArrowLeft size={13} /></CardBtn>}
+        {!focused && !last && <CardBtn dark={display.darkMode} label={t("moveViewportRight")} onClick={() => moveSlot(slot.id, "right")}><ArrowRight size={13} /></CardBtn>}
+        <CardBtn dark={display.darkMode} label={focused ? t("showAllViewports") : t("focusThisViewport")} onClick={onToggleFocus}>
           {focused ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
         </CardBtn>
         {canRotate && (
           <CardBtn
             dark={display.darkMode}
-            label="Rotate"
+            label={t("rotate")}
             onClick={() => rotateSlot(slot.id)}
           >
             <RotateCw size={14} />
           </CardBtn>
         )}
-        <CardBtn dark={display.darkMode} label="Zoom out" onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
-        <CardBtn dark={display.darkMode} label="Zoom in" onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
-        {removable && <CardBtn dark={display.darkMode} label="Remove device" onClick={() => removeSlot(slot.id)}><X size={13} /></CardBtn>}
+        <CardBtn dark={display.darkMode} label={t("zoomOut")} onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
+        <CardBtn dark={display.darkMode} label={t("zoomIn")} onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
+        {removable && <CardBtn dark={display.darkMode} label={t("removeDevice")} onClick={() => removeSlot(slot.id)}><X size={13} /></CardBtn>}
       </div>}
 
       {/* ── Canvas ── */}
@@ -546,17 +552,22 @@ export function PreviewCard({
                   <iframe
                     ref={iframeRef}
                     key={`${slot.id}-${slot.reloadToken}`}
-                    title={`${device.name} preview`}
+                    name={
+                      device.type === "phone" || device.type === "tablet"
+                        ? `mdv-mobile-preview-${slot.id}`
+                        : `mdv-preview-${slot.id}`
+                    }
+                    title={t("devicePreview", { name: device.name })}
                     src={slot.url}
-                    className={`block h-full w-full border-0 ${
-                      device.type === "phone" || device.type === "tablet" ? "overflow-hidden" : "overflow-auto"
-                    } ${display.darkMode ? "bg-[#0f172a]" : "bg-white"}`}
+                    className={`block h-full w-full overflow-auto border-0 ${
+                      display.darkMode ? "bg-[#0f172a]" : "bg-white"
+                    }`}
                     style={{
                       width: "100%",
                       backgroundColor: "#ffffff",
                       scrollbarWidth: device.type === "phone" || device.type === "tablet" ? "none" : "auto",
                     }}
-                    scrolling={device.type === "phone" || device.type === "tablet" ? "no" : "auto"}
+                    scrolling="auto"
                     sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
                     onError={() => setBlocked(true)}
                   />
@@ -569,13 +580,13 @@ export function PreviewCard({
           className={`absolute z-30 touch-none select-none ${designOverlay.adjusting ? "cursor-move border-2 border-amber-400 shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "pointer-events-none"}`}
           style={{ left: `${overlayPlacement.x}%`, top: `${overlayPlacement.y}%`, width: `${overlayPlacement.width}%`, height: `${overlayPlacement.height}%`, opacity: designOverlay.opacity / 100 }}
           onPointerDown={(event) => startOverlayAdjustment(event, "move")}
-          aria-label="Adjustable design overlay"
+          aria-label={t("adjustableDesignOverlay")}
         >
-          <img src={designOverlay.image} alt="Design overlay" draggable={false} className="block h-full w-full" />
+          <img src={designOverlay.image} alt={t("designOverlay")} draggable={false} className="block h-full w-full" />
           {designOverlay.adjusting && <>
-            <button type="button" aria-label="Resize design overlay width" onPointerDown={(event) => startOverlayAdjustment(event, "width")} className="absolute -right-2 top-1/2 h-8 w-4 -translate-y-1/2 cursor-ew-resize rounded-full border-2 border-white bg-amber-500 shadow" />
-            <button type="button" aria-label="Resize design overlay height" onPointerDown={(event) => startOverlayAdjustment(event, "height")} className="absolute -bottom-2 left-1/2 h-4 w-8 -translate-x-1/2 cursor-ns-resize rounded-full border-2 border-white bg-amber-500 shadow" />
-            <button type="button" aria-label="Resize design overlay width and height" onPointerDown={(event) => startOverlayAdjustment(event, "both")} className="absolute -bottom-2 -right-2 h-5 w-5 cursor-nwse-resize rounded-full border-2 border-white bg-amber-500 shadow" />
+            <button type="button" aria-label={t("resizeOverlayWidth")} onPointerDown={(event) => startOverlayAdjustment(event, "width")} className="absolute -right-2 top-1/2 h-8 w-4 -translate-y-1/2 cursor-ew-resize rounded-full border-2 border-white bg-amber-500 shadow" />
+            <button type="button" aria-label={t("resizeOverlayHeight")} onPointerDown={(event) => startOverlayAdjustment(event, "height")} className="absolute -bottom-2 left-1/2 h-4 w-8 -translate-x-1/2 cursor-ns-resize rounded-full border-2 border-white bg-amber-500 shadow" />
+            <button type="button" aria-label={t("resizeOverlayBoth")} onPointerDown={(event) => startOverlayAdjustment(event, "both")} className="absolute -bottom-2 -right-2 h-5 w-5 cursor-nwse-resize rounded-full border-2 border-white bg-amber-500 shadow" />
           </>}
         </div>}
       </div>
@@ -603,16 +614,6 @@ type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other"
 type MenuSection = { key: MenuGroupId | "favorite" | "recent" | "search"; label: string; devices: Device[] };
 
 const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other", "custom"];
-const MENU_GROUP_LABEL: Record<MenuGroupId, string> = {
-  ios: "iOS",
-  android: "Android",
-  tablet: "Tablets",
-  laptop: "Laptops",
-  desktop: "Desktops",
-  other: "Other",
-  custom: "Custom",
-};
-
 function menuGroupFor(device: Device): MenuGroupId {
   if (device.brand === "Custom") return "custom";
   if (device.type === "tablet") return "tablet";
@@ -644,6 +645,7 @@ function DeviceSwitcher({
   dark: boolean;
   onSwitch: (id: string) => void;
 }) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeGroup, setActiveGroup] = useState<MenuGroupId>(() => menuGroupFor(currentDevice));
@@ -652,6 +654,15 @@ function DeviceSwitcher({
   const listRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
   const { devices, favorites, recents, addRecent, toggleFavorite, isFavorite } = useDeviceCatalog();
+  const groupLabels: Record<MenuGroupId, string> = {
+    ios: "iOS",
+    android: "Android",
+    tablet: t("tablets"),
+    laptop: t("laptops"),
+    desktop: t("desktops"),
+    other: t("other"),
+    custom: t("custom"),
+  };
 
   // Close on outside click
   useEffect(() => {
@@ -706,7 +717,7 @@ function DeviceSwitcher({
       .map(findById)
       .filter((device): device is Device => !!device && menuGroupFor(device) === activeGroup);
     const favoriteSection: MenuSection | null = favoriteDevices.length > 0
-      ? { key: "favorite", label: "Favorites", devices: filterByQuery(favoriteDevices) }
+      ? { key: "favorite", label: t("favorites"), devices: filterByQuery(favoriteDevices) }
       : null;
 
     // Recently used — most recent first, capped, never reorder when picking.
@@ -725,12 +736,12 @@ function DeviceSwitcher({
         (d) => d.id !== currentDevice.id,
       );
       if (filtered.length === 0) return null;
-      return { key: "recent", label: "Recently used", devices: filtered };
+      return { key: "recent", label: t("recentlyUsed"), devices: filtered };
     })();
 
     if (q) {
       const matches = filterByQuery(devices).sort(newestDevicesFirst);
-      return matches.length > 0 ? [{ key: "search", label: "Search results", devices: matches }] : [];
+      return matches.length > 0 ? [{ key: "search", label: t("searchResults"), devices: matches }] : [];
     }
 
     const categoryDevices = devices
@@ -738,12 +749,12 @@ function DeviceSwitcher({
       .sort(newestDevicesFirst);
     const categorySection: MenuSection = {
       key: activeGroup,
-      label: MENU_GROUP_LABEL[activeGroup],
+      label: groupLabels[activeGroup],
       devices: categoryDevices,
     };
 
     return [favoriteSection, recentSection, categorySection].filter((section): section is MenuSection => !!section && section.devices.length > 0);
-  }, [activeGroup, devices, favorites, query, recents, currentDevice.id]);
+  }, [activeGroup, devices, favorites, query, recents, currentDevice.id, t]);
 
   const groupCounts = useMemo(() => Object.fromEntries(
     MENU_GROUP_ORDER.map((group) => [group, devices.filter((device) => menuGroupFor(device) === group).length]),
@@ -783,8 +794,8 @@ function DeviceSwitcher({
         >
           <div className={`border-b p-2.5 ${dark ? "border-white/10" : "border-slate-100"}`}>
             <div className="mb-2 flex items-center justify-between px-0.5">
-              <p className={`text-[11px] font-extrabold ${dark ? "text-white" : "text-slate-800"}`}>Choose a device</p>
-              <span className={`text-[9px] font-bold ${dark ? "text-slate-500" : "text-slate-400"}`}>{new Set(sections.flatMap((section) => section.devices.map((device) => device.id))).size} results</span>
+              <p className={`text-[11px] font-extrabold ${dark ? "text-white" : "text-slate-800"}`}>{t("chooseDevice")}</p>
+              <span className={`text-[9px] font-bold ${dark ? "text-slate-500" : "text-slate-400"}`}>{t("results", { count: new Set(sections.flatMap((section) => section.devices.map((device) => device.id))).size })}</span>
             </div>
             <div className={`flex h-8 items-center gap-2 rounded-lg border px-2 ${dark ? "border-white/10 bg-white/[0.05]" : "border-slate-200 bg-slate-50"}`}>
               <Search size={13} className={dark ? "text-slate-500" : "text-slate-400"} />
@@ -793,12 +804,12 @@ function DeviceSwitcher({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
-                placeholder="Search name, OS, type, or size"
+                placeholder={t("searchDevice")}
                 className={`min-w-0 flex-1 bg-transparent text-[11px] font-medium outline-none placeholder:text-slate-400 ${dark ? "text-white" : "text-slate-800"}`}
               />
-              {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear device search" className={`grid h-5 w-5 place-items-center rounded ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-200 hover:text-slate-700"}`}><X size={11} /></button>}
+              {query && <button type="button" onClick={() => setQuery("")} aria-label={t("clearDeviceSearch")} className={`grid h-5 w-5 place-items-center rounded ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-200 hover:text-slate-700"}`}><X size={11} /></button>}
             </div>
-            {!query && <div className="mt-2 grid grid-cols-3 gap-1" role="tablist" aria-label="Device categories">
+            {!query && <div className="mt-2 grid grid-cols-3 gap-1" role="tablist" aria-label={t("deviceCategories")}>
               {MENU_GROUP_ORDER.filter((group) => groupCounts[group] > 0).map((group) => <button
                 key={group}
                 type="button"
@@ -806,7 +817,7 @@ function DeviceSwitcher({
                 aria-selected={activeGroup === group}
                 onClick={() => setActiveGroup(group)}
                 className={`flex h-8 items-center justify-between rounded-lg px-2 text-[9px] font-extrabold transition ${activeGroup === group ? "bg-[#0f9f8f] text-white shadow-sm" : dark ? "bg-white/[0.045] text-slate-400 hover:bg-white/[0.08] hover:text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900"}`}
-              ><span>{MENU_GROUP_LABEL[group]}</span><span className={activeGroup === group ? "text-white/70" : "opacity-50"}>{groupCounts[group]}</span></button>)}
+              ><span>{groupLabels[group]}</span><span className={activeGroup === group ? "text-white/70" : "opacity-50"}>{groupCounts[group]}</span></button>)}
             </div>}
           </div>
 
@@ -839,7 +850,7 @@ function DeviceSwitcher({
             ))}
             {sections.length === 0 && (
               <p className="px-3 py-8 text-center text-[11px] text-slate-400">
-                No devices match “{query}”
+                {t("noDevicesMatch", { query })}
               </p>
             )}
           </div>
@@ -859,6 +870,7 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
   onToggleFavorite: () => void;
   onPick: () => void;
 }>(function DeviceSwitcherItem({ device, active, dark, favorite, onToggleFavorite, onPick }, ref) {
+  const { t } = useI18n();
   const latest = device.tags.includes("new");
   const rowClass = `group flex min-h-12 w-full min-w-0 items-center rounded-xl border transition ${
     active
@@ -882,7 +894,7 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
             <span className="min-w-0 flex-1 truncate text-[11px] font-bold leading-tight">{shortName(device.name)}</span>
             {latest && (
               <span className="shrink-0 rounded-full bg-amber-300 px-1.5 py-0.5 text-[7px] font-black tracking-[0.08em] text-amber-950">
-                NEW
+                {t("newLabel")}
               </span>
             )}
             {device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] font-bold ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-500" : "bg-slate-100 text-slate-400"}`}>{device.year}</span>}
@@ -895,7 +907,7 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
       </button>
       <button
         type="button"
-        aria-label={favorite ? `Remove ${device.name} from favorites` : `Add ${device.name} to favorites`}
+        aria-label={favorite ? t("removeFavorite", { name: device.name }) : t("addFavorite", { name: device.name })}
         onClick={onToggleFavorite}
         className={`mr-1 grid h-9 w-9 shrink-0 place-items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${favorite ? "text-amber-400" : dark ? "text-slate-600 hover:text-slate-300" : "text-slate-300 hover:text-slate-600"}`}
       ><Star size={13} fill={favorite ? "currentColor" : "none"} /></button>
@@ -914,17 +926,17 @@ function BlockedView({
   onReload: () => void;
   url: string;
 }) {
+  const { t } = useI18n();
   return (
     <div className={`flex h-full flex-col items-center justify-center gap-3 p-6 text-center transition-colors ${dark ? "bg-[#0f172a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
       <p className="text-sm font-black">
-        This site blocks iframe preview.
+        {t("iframeBlocked")}
       </p>
       <p className={`max-w-[250px] break-all text-[11px] font-semibold leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
         {url}
       </p>
       <p className={`max-w-[260px] text-xs leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
-        The page likely keeps frame protection, uses a restricted browser URL, or
-        prevented the preview bridge from loading.
+        {t("iframeBlockedHelp")}
       </p>
       <div className="grid w-full max-w-[240px] gap-2">
         <button
@@ -932,21 +944,21 @@ function BlockedView({
           className={`flex items-center justify-center gap-2 rounded-md px-3 py-1.5 text-xs font-bold text-white ${dark ? "bg-[#0f9f8f]" : "bg-slate-900"}`}
           onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
         >
-          <ExternalLink size={13} /> Open in tab
+          <ExternalLink size={13} /> {t("openInTab")}
         </button>
         <button
           type="button"
           className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold ${dark ? "border-white/10 bg-white/[0.06] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
           onClick={onReload}
         >
-          <RefreshCw size={13} /> Reload preview
+          <RefreshCw size={13} /> {t("reloadPreview")}
         </button>
         <button
           type="button"
           className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold ${dark ? "border-white/10 bg-white/[0.06] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
           onClick={onCapture}
         >
-          Capture current tab instead
+          {t("captureCurrentTab")}
         </button>
       </div>
     </div>

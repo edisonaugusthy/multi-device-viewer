@@ -1,6 +1,7 @@
 import { ArrowUpRight, Check, Clipboard, Crop, Download, Pencil, Square, Type, Undo2, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { downloadDataUrl, screenshotFilename } from "../../domain/capture/capture-service";
+import { useI18n } from "../../app/i18n";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ const FONT_SIZES = [12, 16, 20, 28, 40];
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: string; meta?: CaptureMeta; onClose: () => void }) {
+  const { t } = useI18n();
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const imgRef       = useRef<HTMLImageElement | null>(null);
   const textareaRef  = useRef<HTMLTextAreaElement>(null);
@@ -347,11 +349,11 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
 
         {/* Tools */}
         <div className="flex items-center gap-0.5">
-          <ToolBtn active={tool === "pen"}   title="Pen"   onClick={() => { setTool("pen");   cancelCrop(); }}><Pencil size={14} /></ToolBtn>
-          <ToolBtn active={tool === "rect"}  title="Box"   onClick={() => { setTool("rect");  cancelCrop(); }}><Square size={14} /></ToolBtn>
-          <ToolBtn active={tool === "arrow"} title="Arrow" onClick={() => { setTool("arrow"); cancelCrop(); }}><ArrowUpRight size={14} /></ToolBtn>
-          <ToolBtn active={tool === "text"}  title="Text"  onClick={() => { setTool("text");  cancelCrop(); }}><Type size={14} /></ToolBtn>
-          <ToolBtn active={tool === "crop"}  title="Crop"  onClick={() => { setTool("crop");  setCropRect(null); }}><Crop size={14} /></ToolBtn>
+          <ToolBtn active={tool === "pen"}   title={t("pen")}   onClick={() => { setTool("pen");   cancelCrop(); }}><Pencil size={14} /></ToolBtn>
+          <ToolBtn active={tool === "rect"}  title={t("box")}   onClick={() => { setTool("rect");  cancelCrop(); }}><Square size={14} /></ToolBtn>
+          <ToolBtn active={tool === "arrow"} title={t("arrow")} onClick={() => { setTool("arrow"); cancelCrop(); }}><ArrowUpRight size={14} /></ToolBtn>
+          <ToolBtn active={tool === "text"}  title={t("text")}  onClick={() => { setTool("text");  cancelCrop(); }}><Type size={14} /></ToolBtn>
+          <ToolBtn active={tool === "crop"}  title={t("crop")}  onClick={() => { setTool("crop");  setCropRect(null); }}><Crop size={14} /></ToolBtn>
         </div>
 
         <div className="h-5 w-px bg-slate-200" />
@@ -381,7 +383,7 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
           {WIDTHS.map((w) => (
             <button
               key={w}
-              title={`Size ${w}`}
+              title={t("size", { size: w })}
               onClick={() => setLineWidth(w)}
               className={`flex h-7 w-7 items-center justify-center rounded-md transition ${lineWidth === w ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100"}`}
             >
@@ -399,7 +401,7 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
               {FONT_SIZES.map((s) => (
                 <button
                   key={s}
-                  title={`Font size ${s}`}
+                  title={t("fontSize", { size: s })}
                   onClick={() => setFontSize(s)}
                   className={`flex h-7 min-w-[28px] items-center justify-center rounded-md px-1 text-[11px] font-semibold transition ${fontSize === s ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100"}`}
                 >
@@ -414,7 +416,7 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
 
         {/* Undo */}
         <button
-          title="Undo"
+          title={t("undo")}
           onClick={undo}
           disabled={marks.length === 0 && !textPos}
           className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 disabled:opacity-30"
@@ -431,7 +433,7 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
           className="flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
         >
           {copied ? <Check size={13} className="text-green-500" /> : <Clipboard size={13} />}
-          {copied ? "Copied!" : "Copy"}
+          {copied ? t("copiedBang") : t("copy")}
         </button>
         <button
           onClick={() => void downloadImage()}
@@ -439,12 +441,12 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
           className="flex h-8 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-[12px] font-semibold text-white transition hover:bg-slate-700 disabled:opacity-40"
         >
           <Download size={13} />
-          Download
+          {t("download")}
         </button>
 
         <div className="h-5 w-px bg-slate-200" />
 
-        <button onClick={onClose} title="Close" className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-800">
+        <button onClick={onClose} title={t("close")} className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-800">
           <X size={15} />
         </button>
       </div>
@@ -452,18 +454,18 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
       {/* ── Crop confirm bar ── */}
       {tool === "crop" && cropRect && (
         <div className="flex h-10 shrink-0 items-center justify-center gap-2 border-b border-black/[0.07] bg-amber-50">
-          <span className="text-[12px] font-medium text-amber-700">Crop to selection?</span>
+          <span className="text-[12px] font-medium text-amber-700">{t("cropSelection")}</span>
           <button
             onClick={applyCrop}
             className="flex h-7 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-[12px] font-semibold text-white transition hover:bg-slate-700"
           >
-            <Check size={12} /> Apply crop
+            <Check size={12} /> {t("applyCrop")}
           </button>
           <button
             onClick={cancelCrop}
             className="flex h-7 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-50"
           >
-            <X size={12} /> Cancel
+            <X size={12} /> {t("cancel")}
           </button>
         </div>
       )}
@@ -497,7 +499,7 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
                 if (e.key === "Escape") { setTextPos(null); setTextInput(""); }
               }}
               onBlur={commitText}
-              placeholder="Type here…"
+              placeholder={t("typeHere")}
               rows={1}
               style={{
                 position: "absolute",
@@ -521,7 +523,7 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
 
           {!imgReady && !imageUrl && (
             <div className="flex h-[500px] w-[800px] items-center justify-center rounded-xl bg-white text-slate-400">
-              <span className="text-sm">No screenshot available</span>
+              <span className="text-sm">{t("noScreenshot")}</span>
             </div>
           )}
         </div>

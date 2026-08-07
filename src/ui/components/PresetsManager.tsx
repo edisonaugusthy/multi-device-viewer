@@ -7,6 +7,7 @@
 import { Download, Plus, Trash2, Upload } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readStore, writeStore } from "../../infrastructure/storage/local-store";
+import { useI18n } from "../../app/i18n";
 
 export interface SavedPreset {
   id: string;
@@ -24,6 +25,7 @@ interface PresetsManagerProps {
 const STORAGE_KEY = "mdvSavedPresets";
 
 export function PresetsManager({ dark, currentDeviceIds, onApply }: PresetsManagerProps) {
+  const { t } = useI18n();
   const [presets, setPresets] = useState<SavedPreset[]>([]);
   const [saveName, setSaveName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -97,14 +99,14 @@ export function PresetsManager({ dark, currentDeviceIds, onApply }: PresetsManag
           value={saveName}
           onChange={(e) => setSaveName(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") savePreset(); }}
-          placeholder="Name this layout…"
+          placeholder={t("nameLayout")}
           className={`min-w-0 flex-1 rounded-md border px-2.5 py-1.5 text-[12px] font-medium outline-none transition ${inputCls}`}
         />
         <button
           type="button"
           onClick={savePreset}
           disabled={!saveName.trim()}
-          title="Save preset"
+          title={t("savePreset")}
           className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-teal-500 text-white transition hover:bg-teal-400 disabled:opacity-40"
         >
           <Plus size={14} />
@@ -125,12 +127,12 @@ export function PresetsManager({ dark, currentDeviceIds, onApply }: PresetsManag
                 className={`min-w-0 flex-1 truncate text-left text-[12px] font-semibold transition ${dark ? "text-slate-200 hover:text-white" : "text-slate-700 hover:text-slate-900"}`}
               >
                 {p.name}
-                <span className={`ml-1.5 text-[10px] font-normal ${labelCls}`}>{p.deviceIds.length} device{p.deviceIds.length !== 1 ? "s" : ""}</span>
+                <span className={`ml-1.5 text-[10px] font-normal ${labelCls}`}>{t(p.deviceIds.length === 1 ? "deviceCount" : "devicesCount", { count: p.deviceIds.length })}</span>
               </button>
               <button
                 type="button"
                 onClick={() => deletePreset(p.id)}
-                title="Delete preset"
+                title={t("deletePreset")}
                 className={`grid h-6 w-6 shrink-0 place-items-center rounded transition ${dark ? "text-slate-600 hover:text-red-400" : "text-slate-300 hover:text-red-500"}`}
               >
                 <Trash2 size={11} />
@@ -150,7 +152,7 @@ export function PresetsManager({ dark, currentDeviceIds, onApply }: PresetsManag
             dark ? "border-white/10 text-slate-400 hover:bg-white/[0.06] hover:text-white" : "border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
           }`}
         >
-          <Download size={11} /> Export
+          <Download size={11} /> {t("export")}
         </button>
         <button
           type="button"
@@ -159,7 +161,7 @@ export function PresetsManager({ dark, currentDeviceIds, onApply }: PresetsManag
             dark ? "border-white/10 text-slate-400 hover:bg-white/[0.06] hover:text-white" : "border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
           }`}
         >
-          <Upload size={11} /> Import
+          <Upload size={11} /> {t("import")}
         </button>
         <input ref={fileInputRef} type="file" accept=".json" className="hidden" onChange={importPresets} />
       </div>

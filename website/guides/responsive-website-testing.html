@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Responsive Website Testing Tool — Complete Workflow</title>
+    <meta
+      name="description"
+      content="A practical responsive website testing workflow for comparing phone, tablet, laptop, and desktop viewports, checking breakpoints, and documenting fixes."
+    />
+    <link
+      rel="canonical"
+      href="https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-website-testing.html"
+    />
+    <meta property="og:title" content="Responsive Website Testing Tool — Complete Workflow" />
+    <meta
+      property="og:description"
+      content="Compare representative viewports, check responsive breakpoints, and document reproducible layout issues."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-website-testing.html"
+    />
+    <meta name="theme-color" content="#f7f8f4" />
+    <link rel="icon" href="../icons/icon-48.png" type="image/png" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Responsive website testing: a repeatable workflow",
+        "description": "A practical workflow for comparing responsive website layouts across representative viewports and documenting fixes.",
+        "datePublished": "2026-08-07",
+        "dateModified": "2026-08-07",
+        "author": { "@type": "Person", "name": "Edison Augusthy" },
+        "mainEntityOfPage": "https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-website-testing.html"
+      }
+    </script>
+  </head>
+  <body class="content-page">
+    <header class="site-nav">
+      <a class="brand" href="../" aria-label="Mobile View home"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../#features">Features</a><a href="../#privacy">Privacy</a
+        ><a href="./index.html">Guides</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer"
+          >GitHub</a
+        >
+      </nav>
+      <a
+        class="button button-small"
+        href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb?authuser=0&amp;hl=en-GB"
+        >Add to Chrome <span>↗</span></a
+      >
+    </header>
+    <main class="content">
+      <p class="breadcrumbs">
+        <a href="../">Home</a> / <a href="./index.html">Guides</a> /
+        Responsive website testing
+      </p>
+      <p class="eyebrow">RESPONSIVE WEBSITE TESTING</p>
+      <h1>Test the layout, not just the screen.</h1>
+      <p class="lead">
+        A responsive website testing tool is most useful when it turns a range
+        of viewports into one repeatable workflow. Compare the same page and
+        content state, find the breakpoint where the experience fails, and
+        leave enough evidence for someone else to fix it.
+      </p>
+
+      <h2>1. Choose representative viewports</h2>
+      <p>
+        Start with a compact phone, a large phone, a tablet, and a laptop. Add
+        the exact widths around important CSS breakpoints instead of collecting
+        many nearly identical device presets. A desktop view is useful for
+        checking content density and navigation, but it should not replace the
+        narrowest supported layout.
+      </p>
+
+      <h2>2. Keep the page state consistent</h2>
+      <p>
+        Open the same URL, account state, test data, and navigation path in
+        every viewport. Side-by-side comparison is strongest when a changed
+        layout is the only meaningful difference. Synchronized scrolling and
+        navigation can shorten this pass when the previews share a matching
+        structure.
+      </p>
+
+      <h2>3. Check the failure-prone details</h2>
+      <ul>
+        <li>Horizontal overflow, clipped controls, and unexpected fixed layers.</li>
+        <li>Long translated strings, empty states, errors, and real content density.</li>
+        <li>Navigation, dialogs, forms, keyboard focus, and touch target size.</li>
+        <li>Breakpoints immediately above and below the expected transition.</li>
+      </ul>
+
+      <h2>4. Capture an actionable issue</h2>
+      <p>
+        Record the affected viewport, expected behavior, actual behavior, page
+        URL, and a short reproduction path. A screenshot or annotated capture
+        should show enough surrounding context to identify the component. A
+        structured fix prompt can carry the same context into a coding tool,
+        but the prompt is copied locally and does not produce or upload code by
+        itself.
+      </p>
+
+      <h2>5. Finish on real devices</h2>
+      <p>
+        Viewport emulation is a fast responsive development check, not full
+        hardware or browser-engine emulation. Validate critical flows on target
+        browsers and physical devices, especially safe-area behavior, virtual
+        keyboards, scrolling, performance, and touch interaction.
+      </p>
+
+      <div class="callout">
+        <strong>Use a side-by-side responsive tester</strong>
+        <p>
+          Mobile View lets you compare up to four phone, tablet, laptop, and
+          desktop previews locally, then capture evidence or continue on a
+          physical phone.
+        </p>
+        <a href="../">Open the Mobile View responsive testing workspace →</a>
+      </div>
+
+      <h2>Related guides</h2>
+      <ul>
+        <li><a href="./responsive-design-checker.html">Responsive design checker workflow</a></li>
+        <li><a href="./device-viewport-sizes.html">Device viewport sizes and breakpoints</a></li>
+        <li><a href="./responsive-testing.html">Pre-release responsive testing checklist</a></li>
+      </ul>
+    </main>
+    <footer class="site-footer shell page-footer">
+      <a class="brand" href="../"
+        ><img
+          class="brand-icon"
+          src="../icons/icon-32.png"
+          alt=""
+          width="29"
+          height="29"
+        /><span>Mobile View <em>&amp;</em> Responsive Tester</span></a
+      >
+      <p>
+        Free responsive testing for Chrome and Firefox.<br />Open source under
+        the MIT license.
+      </p>
+      <div>
+        <a href="../privacy.html">Privacy</a
+        ><a href="../changelog.html">Changelog</a
+        ><a href="./responsive-testing.html">Checklist</a
+        ><a href="https://github.com/edisonaugusthy/multi-device-viewer/issues"
+          >Issues</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

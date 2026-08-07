@@ -2,5 +2,7 @@
   "extensionName": { "message": "Mobile View: Device Emulator at Responsive Tester" },
   "extensionShortName": { "message": "Mobile View" },
   "extensionDescription": { "message": "Libre at open-source na mobile simulator at responsive tester para sa magkatabing phone, tablet, laptop, at desktop view." },
-  "actionTitle": { "message": "Buksan ang Mobile View device emulator" }
+  "actionTitle": { "message": "Buksan ang Mobile View device emulator" },
+  "contextMenuTitle": { "message": "Buksan ang tab na ito sa Mobile View" },
+  "activeActionTitle": { "message": "Aktibo ang Mobile View — i-click para isara" }
 }

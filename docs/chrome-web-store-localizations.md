@@ -6,7 +6,7 @@ privacy statements, screenshots, and pricing consistent across every language.
 
 | Locale | Language / market | Extension name | Short description |
 |---|---|---|---|
-| `en` | English | Mobile View: Device Emulator & Responsive Tester | Responsive testing across phone, tablet, laptop and desktop views—side by side in a free mobile simulator and device emulator. |
+| `en` | English | Mobile View: Device Emulator & Responsive Tester | Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator. |
 | `de` | German | Mobile View: Responsiver Geräte-Emulator | Kostenloser Open-Source-Simulator zum Testen von Websites in Smartphone-, Tablet-, Laptop- und Desktop-Ansichten. |
 | `es` | Spanish | Mobile View: Emulador móvil y prueba responsive | Simulador móvil gratuito y de código abierto para probar vistas de teléfono, tablet, portátil y escritorio en paralelo. |
 | `fr` | French | Mobile View : Émulateur mobile et test responsive | Simulateur mobile gratuit et open source pour tester côte à côte les vues téléphone, tablette, ordinateur portable et bureau. |
@@ -26,12 +26,14 @@ privacy statements, screenshots, and pricing consistent across every language.
 The complete copy-and-paste detailed descriptions and screenshot captions are
 in [`chrome-web-store-listing-copy.md`](./chrome-web-store-listing-copy.md).
 
-The English row is the Day 1 experiment package. Publish it first and measure
-the direct in-store baseline before changing localized summaries. The remaining
-locales retain their current natural translations until the English experiment
-establishes a winning message; then localize the same intent for German, French,
-Spanish, Portuguese, Japanese, Korean, Chinese, Indonesian, Turkish, Thai, and
-Polish with human review.
+The English row is the 8 August 2026 controlled keyword experiment package. It
+adds multi-device viewer, mobile preview, responsive testing, and mobile
+simulator while the unchanged title protects Mobile View, device emulator, and
+responsive tester. The opening description retains mobile emulator, device
+simulator, and responsive design tester. Measure the direct in-store ranks for 7 and 14 days before
+changing localized summaries. The remaining locales retain their current
+natural translations until the English experiment establishes a winning
+message; then localize the same intent with human review.
 
 ## Initial rollout order
 

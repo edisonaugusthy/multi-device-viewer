@@ -14,11 +14,11 @@ Mobile View: Device Emulator & Responsive Tester
 
 ### Short description (132 chars max)
 
-Responsive testing across phone, tablet, laptop and desktop views—side by side in a free mobile simulator and device emulator.
+Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator.
 
 ### Detailed description
 
-Mobile View is a free, open-source responsive website testing tool, device emulator, and mobile simulator for Chrome. Compare a website in phone, tablet, laptop, and desktop views side by side—without repeatedly resizing a window or switching Chrome DevTools presets.
+Mobile View is a free, open-source multi-device viewer and responsive website testing tool for Chrome. Preview a website in phone, tablet, laptop, and desktop views side by side with a mobile emulator, device simulator, and responsive design tester in one workspace.
 
 Use this mobile simulator and responsive tester to catch breakpoint, overflow, navigation, and content issues while you build. Everything runs locally in your browser: no account, subscription, analytics, telemetry, or remote application backend.
 

@@ -8,11 +8,11 @@ every locale. The three numbered lines are localized screenshot captions.
 
 **Name:** Mobile View: Device Emulator & Responsive Tester
 
-**Summary:** Responsive testing across phone, tablet, laptop and desktop views—side by side in a free mobile simulator and device emulator.
+**Summary:** Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator.
 
 **Detailed description**
 
-Mobile View is a free, open-source responsive website testing tool, responsive design tester, device emulator, and mobile simulator for Chrome. Preview a website in up to four phone, tablet, laptop, and desktop views side by side without repeatedly resizing a window or switching DevTools presets.
+Mobile View is a free, open-source multi-device viewer and responsive website testing tool for Chrome. Preview a website in up to four phone, tablet, laptop, and desktop views side by side with a mobile emulator, device simulator, and responsive design tester in one workspace.
 
 - Choose realistic devices, change orientation and zoom, reload individual previews, or create custom viewport sizes.
 - Synchronize scrolling, supported interactions, and navigation across matching previews.
@@ -69,7 +69,6 @@ Mobile View es un emulador de dispositivos y probador responsive gratuito y de c
 - Guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.
 - Captura una vista o todo el espacio de trabajo y añade trazos, cuadros, flechas, texto o recortes.
 - Compara un diseño local junto a la web activa o superpuesto sobre ella y marca comentarios sin subirlo.
-- Abre la URL actual en un teléfono físico mediante un código QR generado localmente.
 - Copia a tu herramienta de programación un prompt estructurado con la URL, dispositivos, tamaños y detalles opcionales del problema.
 
 Todo funciona localmente en el navegador. No requiere cuenta, suscripción, analítica, telemetría ni backend. Las URL, capturas, grabaciones, diseños, anotaciones y ajustes no se envían a ningún servidor.
@@ -95,7 +94,6 @@ Mobile View est un émulateur d’appareils et un outil de test responsive gratu
 - Enregistrez des ensembles, favoris et appareils récents, ou concentrez-vous sur une seule vue.
 - Capturez une vue ou tout l’espace de travail, puis ajoutez tracés, cadres, flèches, texte et recadrage.
 - Comparez une maquette locale à côté ou au-dessus du site et annotez-la sans l’envoyer.
-- Ouvrez l’URL actuelle sur un téléphone réel avec un code QR généré localement.
 - Copiez vers votre outil de développement un prompt structuré contenant URL, appareils, dimensions et détails facultatifs du problème.
 
 Tout fonctionne localement dans le navigateur. Aucun compte, abonnement, service d’analyse, télémétrie ou backend n’est requis. Les URL, captures, enregistrements, maquettes, annotations et réglages ne sont envoyés à aucun serveur.
@@ -121,7 +119,6 @@ Mobile View 是一款免费、开源的 Chrome 设备模拟器与响应式测试
 - 保存设备组合、收藏和最近使用的设备，也可聚焦单个视口进行细致检查。
 - 截取单个视口或整个工作区，并使用画笔、方框、箭头、文字和裁剪工具标注。
 - 将本地设计稿放在实时网站旁边或叠加显示，无需上传即可标记反馈。
-- 使用本地生成的二维码在真实手机上打开当前网址。
 - 将包含网址、设备、视口尺寸和可选问题说明的结构化修复提示复制到编程工具。
 
 所有功能均在浏览器本地运行，无需账户、订阅、分析、遥测或应用后端。网址、截图、录屏、设计稿、标注和设置都不会发送到后端。
@@ -326,7 +323,6 @@ Mobile View는 Chrome용 무료 오픈 소스 기기 에뮬레이터이자 반�
 - 기기 세트, 즐겨찾기, 최근 기기를 저장하거나 하나의 뷰포트에 집중하세요.
 - 한 화면 또는 전체 작업 공간을 캡처하고 펜, 상자, 화살표, 텍스트 및 자르기로 주석을 추가하세요.
 - 로컬 디자인을 실시간 웹사이트 옆이나 위에 겹쳐 비교하고 업로드 없이 피드백을 표시하세요.
-- 로컬에서 만든 QR 코드로 현재 URL을 실제 휴대폰에서 여세요.
 - URL, 기기, 뷰포트 크기와 선택적 문제 설명이 포함된 구조화된 수정 프롬프트를 코딩 도구로 복사하세요.
 
 모든 기능은 브라우저에서 로컬로 실행됩니다. 계정, 구독, 분석, 원격 측정 또는 앱 백엔드가 필요 없습니다. URL, 스크린샷, 녹화, 디자인, 주석 및 설정은 백엔드로 전송되지 않습니다.
@@ -378,7 +374,6 @@ Mobile View — бесплатный эмулятор устройств и ин
 - Сохраняйте наборы, избранные и недавние устройства или сосредоточьтесь на одной области просмотра.
 - Снимайте отдельный вид или всю рабочую область и добавляйте рисунки, рамки, стрелки, текст и обрезку.
 - Сравнивайте локальный макет рядом с действующим сайтом или поверх него и отмечайте замечания без загрузки файлов.
-- Открывайте текущий URL на реальном телефоне с помощью локально созданного QR-кода.
 - Копируйте в инструмент разработки структурированный запрос на исправление с URL, устройствами, размерами и дополнительным описанием проблемы.
 
 Все работает локально в браузере. Не нужны учетная запись, подписка, аналитика, телеметрия или сервер приложения. URL, снимки, записи, макеты, аннотации и настройки не отправляются на сервер.

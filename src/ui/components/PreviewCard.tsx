@@ -141,6 +141,7 @@ export function PreviewCard({
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
   const previousScrollSyncRef = useRef(display.scrollSync);
   const previousNavigationUrlRef = useRef(slot.url);
+  const currentPageUrlRef = useRef(slot.url);
   const sentFlowRunRef = useRef<string | null>(null);
   const pendingReplayStepRef = useRef<number | null>(null);
   const replayContinuationTimerRef = useRef<number | undefined>(undefined);
@@ -430,6 +431,7 @@ export function PreviewCard({
           window.setTimeout(() => sendFlowReplay(nextStep), 150);
         }
         const nextUrl = typeof data.url === "string" ? data.url : "";
+        if (nextUrl) currentPageUrlRef.current = nextUrl;
         if (
           display.navigationSync &&
           nextUrl &&
@@ -466,6 +468,7 @@ export function PreviewCard({
             scrollLeft: Number(data.scrollLeft ?? 0),
             scrollTop: Number(data.scrollTop ?? 0),
             scrollTargetSelector: typeof data.scrollTargetSelector === "string" ? data.scrollTargetSelector : undefined,
+            url: typeof data.url === "string" ? data.url : undefined,
           });
         }
         if (display.scrollSync) broadcastScrollSync(data as ScrollSyncPayload);
@@ -592,6 +595,17 @@ export function PreviewCard({
     const startIndex = flowReplay.startIndexes?.[slot.id];
     if (flowReplay.startIndexes && startIndex === undefined) return;
     sentFlowRunRef.current = flowReplay.runId;
+    if (
+      !flowReplay.startIndexes
+      && flowReplay.startUrl
+      && currentPageUrlRef.current !== flowReplay.startUrl
+      && iframeRef.current
+    ) {
+      pendingReplayStepRef.current = 0;
+      setBridgeStatus("checking");
+      iframeRef.current.src = flowReplay.startUrl;
+      return;
+    }
     sendFlowReplay(startIndex ?? 0);
   }, [blocked, bridgeStatus, flowReplay, slot.id]);
 

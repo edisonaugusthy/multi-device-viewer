@@ -392,7 +392,11 @@ export function SimulatorApp() {
   function replayRecordedFlow() {
     if (!recordedFlow.length || flowRecording) return;
     setFlowResults({});
-    setFlowReplay({ runId: crypto.randomUUID(), steps: recordedFlow });
+    setFlowReplay({
+      runId: crypto.randomUUID(),
+      steps: recordedFlow,
+      startUrl: recordedFlow.find((step) => step.url)?.url,
+    });
   }
 
   function resumePausedFlow() {
@@ -407,6 +411,7 @@ export function SimulatorApp() {
     setFlowReplay({
       runId: crypto.randomUUID(),
       steps: recordedFlow,
+      startUrl: recordedFlow.find((step) => step.url)?.url,
       startIndexes: Object.fromEntries(
         pausedResults.map((result) => [result.slotId, result.nextStep ?? 0]),
       ),

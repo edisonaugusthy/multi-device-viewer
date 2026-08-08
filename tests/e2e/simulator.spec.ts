@@ -399,8 +399,8 @@ test("shows a persistent source-tab recording indicator", async ({ page }) => {
 test("reruns a saved flow without refreshing the previews", async ({ page }) => {
   await page.evaluate(() => {
     localStorage.setItem("mdvRecordedFlow", JSON.stringify([
-      { id: "step-1", kind: "input", selector: "#email", value: "person@example.com" },
-      { id: "step-2", kind: "click", selector: "#continue" },
+      { id: "step-1", kind: "input", selector: "#email", value: "person@example.com", url: "https://example.com" },
+      { id: "step-2", kind: "click", selector: "#continue", url: "https://example.com" },
     ]));
   });
   await page.reload();
@@ -414,4 +414,21 @@ test("reruns a saved flow without refreshing the previews", async ({ page }) => 
   await page.waitForTimeout(400);
 
   await expect(page.locator('iframe[data-replay-preview="original"]')).toHaveCount(1);
+});
+
+test("returns a moved preview to the recorded flow start page", async ({ page }) => {
+  await page.evaluate(() => {
+    localStorage.setItem("mdvRecordedFlow", JSON.stringify([
+      { id: "step-1", kind: "click", selector: "#start", url: "https://example.org" },
+    ]));
+  });
+  await page.reload();
+  const start = page.getByRole("button", { name: "Start developing" });
+  if (await start.isVisible().catch(() => false)) await start.click();
+  await dismissFirstRunGuide(page);
+
+  const preview = page.locator("iframe").first();
+  await expect(preview).toHaveAttribute("src", "https://example.com");
+  await page.getByRole("button", { name: "Rerun · 1 steps", exact: true }).click();
+  await expect(preview).toHaveAttribute("src", "https://example.org");
 });

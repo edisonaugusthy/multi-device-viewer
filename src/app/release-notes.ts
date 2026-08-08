@@ -27,8 +27,8 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
-  "0.2.3": {
-    version: "0.2.3",
+  "0.2.4": {
+    version: "0.2.4",
     heading: "Localized testing and reusable user flows",
     summary: "This release makes the responsive workspace easier to use worldwide, adds repeatable user journeys, and refines the latest iPhone previews.",
     notes: [

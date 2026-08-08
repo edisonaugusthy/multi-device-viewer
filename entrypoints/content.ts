@@ -33,7 +33,8 @@ function setupPreviewBridge() {
   if (bridgeWindow.__MDV_PREVIEW_BRIDGE_READY) return;
   bridgeWindow.__MDV_PREVIEW_BRIDGE_READY = true;
 
-  let slotId: string | undefined;
+  const frameNameMatch = window.name.match(/^mdv-(?:mobile-)?preview-(.+)$/);
+  let slotId: string | undefined = frameNameMatch?.[1];
   let programmaticScroll = false;
   let resetTimer: number | undefined;
   let scrollRafPending = false;
@@ -49,6 +50,7 @@ function setupPreviewBridge() {
   let keyboardViewport: { platform: "ios" | "android"; occludedBottom: number } | undefined;
   let surfaceRafPending = false;
   let lastSurfaceSignature = "";
+  let pagehideContinuation: { runId: string; nextStep: number } | undefined;
 
   // The iframe name is available as soon as the document starts loading, so
   // mobile scrollbar hiding does not depend on a later registration message.
@@ -182,6 +184,7 @@ function setupPreviewBridge() {
   };
 
   const announceNavigation = () => requestAnimationFrame(announceReady);
+  if (slotId) requestAnimationFrame(announceReady);
   for (const method of ["pushState", "replaceState"] as const) {
     const original = history[method].bind(history);
     history[method] = ((data: unknown, unused: string, url?: string | URL | null) => {
@@ -229,6 +232,16 @@ function setupPreviewBridge() {
   function buildSelector(el: Element): string {
     const id = el.id.trim();
     if (id) return `#${CSS.escape(id)}`;
+    for (const attribute of ["data-testid", "data-test", "data-cy", "name", "aria-label"]) {
+      const value = el.getAttribute(attribute)?.trim();
+      if (!value) continue;
+      const selector = `[${attribute}=${JSON.stringify(value)}]`;
+      try {
+        if (document.querySelectorAll(selector).length === 1) return selector;
+      } catch {
+        // Fall through to the structural selector for unusual attribute values.
+      }
+    }
     const parts: string[] = [];
     let cur: Element | null = el;
     while (cur && cur !== document.documentElement && parts.length < 4) {
@@ -441,25 +454,41 @@ function setupPreviewBridge() {
     }
   }
 
+  function isUsableInteractionTarget(element: Element): boolean {
+    const style = window.getComputedStyle(element);
+    const bounds = element.getBoundingClientRect();
+    if (style.display === "none" || style.visibility === "hidden" || bounds.width < 1 || bounds.height < 1) return false;
+    return !(element instanceof HTMLButtonElement || element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLTextAreaElement)
+      || !element.disabled;
+  }
+
+  function normalizedText(element: Element): string {
+    return element.textContent?.trim().replace(/\s+/g, " ").slice(0, 120) ?? "";
+  }
+
   function resolveInteractionTarget(payload: Record<string, unknown>): Element | null {
     const selector = typeof payload.selector === "string" ? payload.selector : "";
     if (selector) {
       try {
         const match = document.querySelector(selector);
-        if (match) return match;
+        if (match && isUsableInteractionTarget(match)) return match;
       } catch {
         // A stale selector can still be recovered from accessible metadata.
       }
     }
     const candidates = Array.from(document.querySelectorAll<HTMLElement>(
       'input, textarea, select, button, a, label, [contenteditable="true"], [role="button"], [role="checkbox"], [role="switch"]',
-    ));
+    )).filter(isUsableInteractionTarget);
     const ariaLabel = typeof payload.ariaLabel === "string" ? payload.ariaLabel : "";
     const name = typeof payload.name === "string" ? payload.name : "";
     const text = typeof payload.text === "string" ? payload.text : "";
+    const tagName = typeof payload.tagName === "string" ? payload.tagName.toLowerCase() : "";
+    const role = typeof payload.role === "string" ? payload.role : "";
     return candidates.find((candidate) => ariaLabel && candidate.getAttribute("aria-label") === ariaLabel)
       ?? candidates.find((candidate) => name && candidate.getAttribute("name") === name)
-      ?? candidates.find((candidate) => text && candidate.textContent?.trim().replace(/\s+/g, " ").slice(0, 120) === text)
+      ?? candidates.find((candidate) => text && normalizedText(candidate) === text && (!tagName || candidate.tagName.toLowerCase() === tagName))
+      ?? candidates.find((candidate) => text && normalizedText(candidate) === text && (!role || candidate.getAttribute("role") === role))
+      ?? candidates.find((candidate) => text && normalizedText(candidate).includes(text))
       ?? null;
   }
 
@@ -477,6 +506,7 @@ function setupPreviewBridge() {
       type: "MDV_INTERACTION_EVENT",
       slotId,
       kind,
+      url: window.location.href,
       ...payload,
     }, "*");
   }
@@ -567,15 +597,18 @@ function setupPreviewBridge() {
           shiftKey: Boolean(payload.shiftKey),
           metaKey: Boolean(payload.metaKey),
         };
-        target.dispatchEvent(new KeyboardEvent("keydown", init));
+        const allowed = target.dispatchEvent(new KeyboardEvent("keydown", init));
         target.dispatchEvent(new KeyboardEvent("keyup", init));
+        if (allowed && key === "Enter" && target instanceof HTMLInputElement) {
+          target.form?.requestSubmit();
+        }
       }
     } finally {
       applyingRemoteInteraction = false;
     }
   }
 
-  async function waitForInteractionTarget(payload: Record<string, unknown>, timeoutMs = 5000): Promise<Element | null> {
+  async function waitForInteractionTarget(payload: Record<string, unknown>, timeoutMs = 8000): Promise<Element | null> {
     const startedAt = Date.now();
     let target = resolveInteractionTarget(payload);
     while (!target && Date.now() - startedAt < timeoutMs) {
@@ -623,6 +656,16 @@ function setupPreviewBridge() {
     }, "*");
   }
 
+  window.addEventListener("pagehide", () => {
+    if (!slotId || !pagehideContinuation) return;
+    window.parent.postMessage({
+      type: "MDV_FLOW_REPLAY_CONTINUE",
+      slotId,
+      runId: pagehideContinuation.runId,
+      nextStep: pagehideContinuation.nextStep,
+    }, "*");
+  });
+
   async function replayFlow(data: Record<string, unknown>) {
     if (!slotId || typeof data.runId !== "string" || !Array.isArray(data.steps)) return;
     const runId = data.runId;
@@ -657,23 +700,13 @@ function setupPreviewBridge() {
           window.parent.postMessage({ type: "MDV_FLOW_REPLAY_RESULT", slotId, runId, status: "failed", failedStep: index, error: "Target was not found" }, "*");
           return;
         }
-        const navigates = payload.kind === "click" && Boolean(
-          target.closest("a[href]")
-          || target.closest('button[type="submit"], input[type="submit"]')
-        );
-        if (navigates) {
-          window.parent.postMessage({
-            type: "MDV_FLOW_REPLAY_CONTINUE",
-            slotId,
-            runId,
-            nextStep: index + 1,
-          }, "*");
-          applyRemoteInteraction({ ...payload, selector: buildSelector(target) }, true);
-          return;
+        if (payload.kind === "click" || (payload.kind === "keydown" && payload.key === "Enter")) {
+          pagehideContinuation = { runId, nextStep: index + 1 };
         }
         applyRemoteInteraction({ ...payload, selector: buildSelector(target) }, true);
       }
-      await new Promise((resolve) => window.setTimeout(resolve, 180));
+      await new Promise((resolve) => window.setTimeout(resolve, 300));
+      pagehideContinuation = undefined;
       if (verificationChallengeVisible()) {
         pauseFlowForVerification(runId, index + 1);
         return;
@@ -692,6 +725,7 @@ function setupPreviewBridge() {
     window.parent.postMessage({
       type: "MDV_SCROLL_SYNC_EVENT",
       slotId,
+      url: window.location.href,
       ...payload
     }, "*");
   }

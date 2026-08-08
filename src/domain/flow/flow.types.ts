@@ -17,11 +17,13 @@ export interface FlowStep {
   scrollLeft?: number;
   scrollTop?: number;
   scrollTargetSelector?: string;
+  url?: string;
 }
 
 export interface FlowReplayRequest {
   runId: string;
   steps: FlowStep[];
+  startUrl?: string;
   startIndexes?: Record<string, number>;
 }
 

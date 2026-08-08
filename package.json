@@ -1,6 +1,6 @@
 {
   "name": "multi-device-viewer",
-  "version": "0.2.4",
+  "version": "0.2.3",
   "description": "A local-first Chrome and Firefox extension for responsive device testing across phones, tablets, laptops, and desktops.",
   "type": "module",
   "scripts": {

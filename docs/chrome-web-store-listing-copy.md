@@ -144,7 +144,6 @@ Mobile View 是免費、開源的 Chrome 裝置模擬器與響應式測試工具
 - 儲存裝置組合、收藏與最近使用的裝置，或聚焦單一視區進行詳細檢查。
 - 擷取單一視區或完整工作區，並以畫筆、方框、箭頭、文字及裁切工具標註。
 - 將本機設計稿放在即時網站旁或疊加顯示，不需上傳即可標記意見。
-- 使用本機產生的 QR 圖碼，在實體手機上開啟目前網址。
 - 將包含網址、裝置、視區尺寸與選填問題說明的結構化修正提示複製到程式開發工具。
 
 所有功能都在瀏覽器本機執行，不需要帳戶、訂閱、分析、遙測或應用程式後端。網址、螢幕截圖、錄影、設計稿、標註與設定不會傳送到後端。
@@ -220,7 +219,6 @@ Mobile View là trình giả lập thiết bị và công cụ kiểm thử resp
 - Lưu bộ thiết bị, mục yêu thích và thiết bị gần đây, hoặc tập trung vào một viewport.
 - Chụp một viewport hoặc toàn bộ không gian làm việc rồi thêm nét vẽ, khung, mũi tên, chữ và cắt ảnh.
 - So sánh thiết kế cục bộ bên cạnh hoặc phủ lên trang web trực tiếp và đánh dấu phản hồi mà không cần tải lên.
-- Mở URL hiện tại trên điện thoại thật bằng mã QR tạo cục bộ.
 - Sao chép prompt sửa lỗi có cấu trúc gồm URL, thiết bị, kích thước viewport và thông tin tùy chọn sang công cụ lập trình.
 
 Mọi thứ chạy cục bộ trong trình duyệt. Không cần tài khoản, thuê bao, phân tích, đo từ xa hay backend ứng dụng. URL, ảnh chụp, bản ghi, thiết kế, chú thích và cài đặt không được gửi đến backend.
@@ -271,7 +269,6 @@ Mobile View è un emulatore di dispositivi e tester responsive gratuito e open s
 - Salva set, preferiti e dispositivi recenti oppure concentra l’analisi su una sola viewport.
 - Acquisisci una vista o l’intera area di lavoro e aggiungi penna, riquadro, freccia, testo o ritaglio.
 - Confronta un design locale accanto o sopra il sito attivo e segna feedback senza caricarlo.
-- Apri l’URL corrente su un telefono fisico tramite un codice QR generato localmente.
 - Copia nel tuo strumento di sviluppo un prompt strutturato con URL, dispositivi, dimensioni e dettagli facoltativi del problema.
 
 Tutto viene eseguito localmente nel browser. Non servono account, abbonamento, analytics, telemetria o backend. URL, screenshot, registrazioni, design, annotazioni e impostazioni non vengono inviati a un server.
@@ -297,7 +294,6 @@ Mobile View は Chrome 向けの無料・オープンソースのデバイスエ
 - デバイスセット、お気に入り、最近使った端末を保存し、1つの表示に集中することもできます。
 - 単一の表示またはワークスペース全体をキャプチャし、ペン、枠、矢印、文字、切り抜きで注釈できます。
 - ローカルのデザインをライブサイトの横または上に重ね、アップロードせずにフィードバックを記録できます。
-- ローカル生成のQRコードで現在のURLを実機のスマホに開けます。
 - URL、端末、表示サイズ、任意の問題説明を含む修正プロンプトを開発ツールへコピーできます。
 
 すべてブラウザ内でローカルに動作します。アカウント、サブスクリプション、分析、テレメトリ、アプリ用バックエンドは不要です。URL、画像、録画、デザイン、注釈、設定がバックエンドへ送信されることはありません。
@@ -348,7 +344,6 @@ Mobile View Chrome के लिए मुफ़्त और ओपन-सो�
 - डिवाइस सेट, पसंदीदा और हाल के डिवाइस सहेजें या किसी एक व्यूपोर्ट पर ध्यान दें।
 - एक व्यूपोर्ट या पूरा वर्कस्पेस कैप्चर करके पेन, बॉक्स, तीर, टेक्स्ट और क्रॉप से टिप्पणी जोड़ें।
 - स्थानीय डिज़ाइन को लाइव वेबसाइट के पास या उसके ऊपर रखकर तुलना करें और बिना अपलोड किए फ़ीडबैक चिह्नित करें।
-- स्थानीय रूप से बने QR कोड से मौजूदा URL वास्तविक फ़ोन पर खोलें।
 - URL, डिवाइस, व्यूपोर्ट आकार और वैकल्पिक समस्या विवरण वाला व्यवस्थित सुधार प्रॉम्प्ट अपने कोडिंग टूल में कॉपी करें।
 
 सब कुछ ब्राउज़र में स्थानीय रूप से चलता है। खाता, सदस्यता, एनालिटिक्स, टेलीमेट्री या ऐप बैकएंड की आवश्यकता नहीं है। URL, स्क्रीनशॉट, रिकॉर्डिंग, डिज़ाइन, टिप्पणियाँ और सेटिंग किसी बैकएंड को नहीं भेजी जातीं।
@@ -399,7 +394,6 @@ Mobile View هو محاكي أجهزة وأداة مجانية ومفتوحة ا
 - احفظ مجموعات الأجهزة والمفضلة والأجهزة الحديثة، أو ركّز على واجهة واحدة للفحص التفصيلي.
 - التقط واجهة واحدة أو مساحة العمل كاملة، ثم أضف القلم والمربعات والأسهم والنص والاقتصاص.
 - قارن تصميمًا محليًا بجانب الموقع المباشر أو فوقه وسجّل الملاحظات من دون رفع الملف.
-- افتح الرابط الحالي على هاتف فعلي باستخدام رمز QR يتم إنشاؤه محليًا.
 - انسخ إلى أداة البرمجة طلب إصلاح منظمًا يتضمن الرابط والأجهزة وأحجام العرض وتفاصيل المشكلة الاختيارية.
 
 تعمل جميع الميزات محليًا داخل المتصفح. لا يلزم حساب أو اشتراك أو تحليلات أو قياس عن بُعد أو خادم للتطبيق. لا تُرسل الروابط أو لقطات الشاشة أو التسجيلات أو التصاميم أو التعليقات أو الإعدادات إلى أي خادم.

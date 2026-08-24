@@ -27,13 +27,23 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
-  "0.2.3": {
-    version: "0.2.3",
+  "0.2.4": {
+    version: "0.2.4",
     heading: "What’s new",
     summary: "",
     notes: [
       { title: "New devices", description: "Added Google Pixel 11, Pixel 11 Pro, Pixel 11 Pro XL, and Pixel 11 Pro Fold to the responsive testing catalog." },
       { title: "New review option", description: "You can now leave an honest Chrome Web Store review from the responsive testing workspace." },
+    ],
+  },
+  "0.2.3": {
+    version: "0.2.3",
+    heading: "Localized testing and reusable user flows",
+    summary: "This release makes the responsive workspace easier to use worldwide, adds repeatable user journeys, and refines the latest iPhone previews.",
+    notes: [
+      { title: "A localized workspace", description: "Use the responsive testing interface in 16 supported languages, including Arabic, Chinese, French, German, Hindi, Japanese, Korean, Portuguese, Spanish, and more." },
+      { title: "Record user flow", description: "Record clicks, typing, and scrolling once, then rerun the saved journey across your device viewports to check the same experience consistently.", featured: true },
+      { title: "Refined Liquid Glass previews", description: "The latest iPhone devices now render Safari and system surfaces with corrected Liquid Glass color blending, notch boundaries, and bottom-bar treatment." },
     ],
   },
   "0.2.2": {

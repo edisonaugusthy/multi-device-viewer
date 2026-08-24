@@ -31,8 +31,20 @@ describe("decideStartupNotice", () => {
     expect(release.notes[1]?.description).toContain("focusing one viewport");
   });
 
-  it("keeps the 0.2.3 update to devices and the review option", () => {
+  it("highlights record user flow in the 0.2.3 release", () => {
     const release = releaseNotesFor("0.2.3");
+
+    expect(release.notes.map((note) => note.title)).toEqual([
+      "A localized workspace",
+      "Record user flow",
+      "Refined Liquid Glass previews",
+    ]);
+    expect(release.notes[1]?.featured).toBe(true);
+    expect(release.notes[2]?.description).toContain("Liquid Glass");
+  });
+
+  it("keeps the 0.2.4 update to devices and the review option", () => {
+    const release = releaseNotesFor("0.2.4");
 
     expect(release.notes.map((note) => note.title)).toEqual([
       "New devices",

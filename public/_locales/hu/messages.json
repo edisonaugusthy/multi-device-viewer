@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Eszközemulátor és reszponzív teszt" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Ingyenes emulátor webhelyek egyidejű előnézetéhez és reszponzív teszteléséhez telefonon, tableten és számítógépen." },
+  "actionTitle": { "message": "A Mobile View eszközemulátor megnyitása" },
+  "contextMenuTitle": { "message": "Lap megnyitása a Mobile Viewban" },
+  "activeActionTitle": { "message": "A Mobile View aktív — kattintson a bezáráshoz" },
+  "unsupportedActionTitle": { "message": "Előbb nyisson meg egy webhelyet" },
+  "unsupportedUrlHint": { "message": "Lépjen a fejlesztett oldalra, majd kattintson ismét a bővítményre." }
+}

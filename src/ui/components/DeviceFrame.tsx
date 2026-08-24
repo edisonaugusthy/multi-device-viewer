@@ -377,6 +377,7 @@ export function DeviceFrame({
                       height={imageStatusH || undefined}
                       chromeVariant={profile.chromeVariant}
                       timeInsetLeft={profile.statusBarInsetLeft}
+                      indicatorInsetRight={landscape ? 0 : profile.statusBarInsetRight}
                     />
                   )}
                   {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={imageStatusH} scrollProgress={chromeCollapse} />}
@@ -1227,6 +1228,7 @@ function StatusBar({
   height,
   chromeVariant = "none",
   timeInsetLeft = 0,
+  indicatorInsetRight = 0,
   surfaceOverlay = false,
 }: {
   platform: string;
@@ -1237,6 +1239,7 @@ function StatusBar({
   height?: number;
   chromeVariant?: ChromeVariant;
   timeInsetLeft?: number;
+  indicatorInsetRight?: number;
   surfaceOverlay?: boolean;
 }) {
   const { t } = useI18n();
@@ -1262,7 +1265,7 @@ function StatusBar({
         }`}
         style={{ height: h }}
       >
-        <div className="flex w-full items-center justify-between" style={{ height: rowH, paddingLeft: px + timeInsetLeft, paddingRight: px }}>
+        <div className="flex w-full items-center justify-between" style={{ height: rowH, paddingLeft: px + timeInsetLeft, paddingRight: px + indicatorInsetRight }}>
           <span className="text-[12px] font-semibold leading-none">{time}</span>
           <span className="flex items-center gap-[5px]">
             <WifiIcon />

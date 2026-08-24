@@ -273,6 +273,26 @@ const curatedDevices: Device[] = [
     updatedAt: "2025-02-20",
     tags: ["android"]
   },
+  ...[
+    ["google-pixel-11-2026", "Google Pixel 11", 412, 924, 2.625, 1080, 2424],
+    ["google-pixel-11-pro-2026", "Google Pixel 11 Pro", 410, 914, 3.125, 1280, 2856],
+    ["google-pixel-11-pro-xl-2026", "Google Pixel 11 Pro XL", 448, 997, 3, 1344, 2992],
+    ["google-pixel-11-pro-fold-2026", "Google Pixel 11 Pro Fold", 791, 823, 2.625, 2076, 2160],
+  ].map(([id, name, width, height, pixelRatio, resolutionWidth, resolutionHeight]) => ({
+    id: id as string,
+    name: name as string,
+    brand: "Google",
+    family: "Pixel",
+    year: 2026,
+    type: "phone" as const,
+    os: "Android",
+    cssViewport: { width: width as number, height: height as number },
+    pixelRatio: pixelRatio as number,
+    manufacturerResolution: { width: resolutionWidth as number, height: resolutionHeight as number },
+    mockupAssets: getMockupAssets(id as string),
+    updatedAt: "2026-08-14",
+    tags: ["android", "new", ...(String(id).includes("fold") ? ["foldable"] : [])],
+  })),
   {
     id: "google-pixel-6-pro",
     name: "Google Pixel 6 Pro",
@@ -435,6 +455,26 @@ interface DeviceDisplaySpec {
 // they are not always exact integer multiples. Keep both values authoritative
 // so the device report does not invent a panel resolution by rounding CSS px.
 const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
+  "google-pixel-11-2026": {
+    cssViewport: { width: 412, height: 924 },
+    pixelRatio: 2.625,
+    manufacturerResolution: { width: 1080, height: 2424 },
+  },
+  "google-pixel-11-pro-2026": {
+    cssViewport: { width: 410, height: 914 },
+    pixelRatio: 3.125,
+    manufacturerResolution: { width: 1280, height: 2856 },
+  },
+  "google-pixel-11-pro-xl-2026": {
+    cssViewport: { width: 448, height: 997 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1344, height: 2992 },
+  },
+  "google-pixel-11-pro-fold-2026": {
+    cssViewport: { width: 791, height: 823 },
+    pixelRatio: 2.625,
+    manufacturerResolution: { width: 2076, height: 2160 },
+  },
   "google-pixel-10-pro-xl-2025": {
     cssViewport: { width: 448, height: 997 },
     pixelRatio: 3,
@@ -703,12 +743,10 @@ function yearFromId(id: string) {
 
 function tagsFromId(id: string, type: Device["type"], os: string) {
   const latestCatalogIds = new Set([
-    "apple-iphone-17e-2026",
-    "google-pixel-10a-2026",
-    "samsung-galaxy-s26-plus-2026",
-    "apple-macbook-neo-13-2026",
-    "microsoft-surface-laptop-8-13-8-2026",
-    "apple-studio-display-xdr-27-2026",
+    "google-pixel-11-2026",
+    "google-pixel-11-pro-2026",
+    "google-pixel-11-pro-xl-2026",
+    "google-pixel-11-pro-fold-2026",
   ]);
   return [
     type,
@@ -723,6 +761,10 @@ function tagsFromId(id: string, type: Device["type"], os: string) {
 
 function nameFromId(id: string) {
   const normalizedNames: Record<string, string> = {
+    "google-pixel-11-2026": "Google Pixel 11",
+    "google-pixel-11-pro-2026": "Google Pixel 11 Pro",
+    "google-pixel-11-pro-xl-2026": "Google Pixel 11 Pro XL",
+    "google-pixel-11-pro-fold-2026": "Google Pixel 11 Pro Fold",
     "apple-iphone-14-max-2022": "Apple iPhone 14 Plus",
     "google-pixel-10-pro-xl-2025": "Google Pixel 10 Pro XL",
     "samsung-galaxy-z-fold7-unfolded-2025": "Samsung Galaxy Z Fold7 (unfolded)",

@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: ഡിവൈസ് എമുലേറ്ററും റെസ്‌പോൺസീവ് ടെസ്റ്ററും" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "ഫോൺ, ടാബ്‌ലെറ്റ്, ലാപ്‌ടോപ്പ്, ഡെസ്‌ക്‌ടോപ്പ് കാഴ്ചകൾ ഒരുമിച്ച് പരിശോധിക്കാനുള്ള സൗജന്യ ഡിവൈസ് എമുലേറ്റർ." },
+  "actionTitle": { "message": "Mobile View ഡിവൈസ് എമുലേറ്റർ തുറക്കുക" },
+  "contextMenuTitle": { "message": "ഈ ടാബ് Mobile Viewൽ തുറക്കുക" },
+  "activeActionTitle": { "message": "Mobile View സജീവമാണ് — അടയ്ക്കാൻ ക്ലിക്ക് ചെയ്യുക" },
+  "unsupportedActionTitle": { "message": "ആദ്യം ഒരു വെബ്‌സൈറ്റ് തുറക്കുക" },
+  "unsupportedUrlHint": { "message": "നിങ്ങൾ വികസിപ്പിക്കുന്ന പേജിലേക്ക് മാറി എക്സ്റ്റൻഷനിൽ വീണ്ടും ക്ലിക്ക് ചെയ്യുക." }
+}

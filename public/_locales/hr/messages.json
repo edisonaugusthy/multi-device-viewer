@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Emulator uređaja i responzivni test" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Besplatan emulator za istodobni pregled i responzivno testiranje weba na telefonu, tabletu, prijenosniku i računalu." },
+  "actionTitle": { "message": "Otvori emulator uređaja Mobile View" },
+  "contextMenuTitle": { "message": "Otvori ovu karticu u Mobile Viewu" },
+  "activeActionTitle": { "message": "Mobile View je aktivan — kliknite za zatvaranje" },
+  "unsupportedActionTitle": { "message": "Najprije otvorite web-mjesto" },
+  "unsupportedUrlHint": { "message": "Otvorite stranicu koju razvijate pa ponovno kliknite proširenje." }
+}

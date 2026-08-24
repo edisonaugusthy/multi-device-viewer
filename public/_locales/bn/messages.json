@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: ডিভাইস এমুলেটর ও রেসপনসিভ টেস্টার" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "ফোন, ট্যাবলেট, ল্যাপটপ ও ডেস্কটপ ভিউ পাশাপাশি পরীক্ষা করার জন্য বিনামূল্যের ডিভাইস এমুলেটর।" },
+  "actionTitle": { "message": "Mobile View ডিভাইস এমুলেটর খুলুন" },
+  "contextMenuTitle": { "message": "এই ট্যাবটি Mobile View-এ খুলুন" },
+  "activeActionTitle": { "message": "Mobile View সক্রিয় — বন্ধ করতে ক্লিক করুন" },
+  "unsupportedActionTitle": { "message": "প্রথমে একটি ওয়েবসাইট খুলুন" },
+  "unsupportedUrlHint": { "message": "আপনি যে পেজটি তৈরি করছেন সেখানে যান, তারপর এক্সটেনশনটিতে আবার ক্লিক করুন।" }
+}

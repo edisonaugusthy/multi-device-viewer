@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Kiigaji cha kifaa na jaribio sikivu" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Kiigaji bila malipo cha kuhakiki na kujaribu tovuti kwa pamoja kwenye simu, kompyuta kibao, laptop na desktop." },
+  "actionTitle": { "message": "Fungua kiigaji cha kifaa cha Mobile View" },
+  "contextMenuTitle": { "message": "Fungua kichupo hiki katika Mobile View" },
+  "activeActionTitle": { "message": "Mobile View inatumika — bofya ili kufunga" },
+  "unsupportedActionTitle": { "message": "Fungua tovuti kwanza" },
+  "unsupportedUrlHint": { "message": "Nenda kwenye ukurasa unaounda, kisha ubofye kiendelezi tena." }
+}

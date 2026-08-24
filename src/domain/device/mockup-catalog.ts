@@ -1020,6 +1020,104 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
+    "id": "google-pixel-11-2026",
+    "localPath": "/mockups/google-pixel-11-2026.png",
+    "sourceUrl": "https://store.google.com/us/config/pixel_11?hl=en-US",
+    "file": "google-pixel-11-2026.png",
+    "bytes": 250048,
+    "width": 1554,
+    "height": 1243,
+    "sourceCrop": { "left": 541, "top": 120, "width": 476, "height": 1005 },
+    "screenInset": { "top": 11.5, "right": 13, "bottom": 12.5, "left": 11.5 },
+    "viewport": {
+      "portrait": {
+        "left": 11.5, "top": 11.5, "width": 213.5, "height": 478.5, "cornerRadius": 28,
+        "occlusions": [{ "kind": "circle", "left": 98.5, "top": 9, "width": 16, "height": 16 }],
+        "paths": {
+          "portrait": "M24.5 0H188.5A25 28.5 0 0 1 213.5 28.5V450.5A25 28 0 0 1 188.5 478.5H25A25 28 0 0 1 0 450.5V28.5A24.5 28.5 0 0 1 24.5 0ZM98.5 17A8 8 0 1 0 114.5 17A8 8 0 1 0 98.5 17Z"
+        },
+        "enableRotation": true
+      },
+      "landscape": {
+        "left": 12.5, "top": 11.5, "width": 478.5, "height": 213.5, "cornerRadius": 28,
+        "occlusions": [{ "kind": "circle", "left": 453.5, "top": 98.5, "width": 16, "height": 16 }],
+        "paths": {
+          "landscape": "M28 0H450A28.5 24.5 0 0 1 478.5 24.5V188.5A28.5 25 0 0 1 450 213.5H28A28 25 0 0 1 0 188.5V25A28 25 0 0 1 28 0ZM453.5 106.5A8 8 0 1 0 469.5 106.5A8 8 0 1 0 453.5 106.5Z"
+        },
+        "enableRotation": true
+      }
+    }
+  },
+  {
+    "id": "google-pixel-11-pro-2026",
+    "localPath": "/mockups/google-pixel-11-pro-2026.png",
+    "sourceUrl": "https://store.google.com/us/config/pixel_11_pro?hl=en-US",
+    "file": "google-pixel-11-pro-2026.png",
+    "bytes": 138167,
+    "width": 1554,
+    "height": 1243,
+    "sourceCrop": { "left": 554, "top": 180, "width": 448, "height": 945 },
+    "screenInset": { "top": 9.5, "right": 11, "bottom": 11, "left": 10.5 },
+    "viewport": {
+      "portrait": {
+        "left": 10.5, "top": 9.5, "width": 202.5, "height": 452, "cornerRadius": 26,
+        "occlusions": [{ "kind": "circle", "left": 93.5, "top": 8.5, "width": 15, "height": 15.5 }],
+        "enableRotation": true
+      },
+      "landscape": {
+        "left": 11, "top": 10.5, "width": 452, "height": 202.5, "cornerRadius": 26,
+        "occlusions": [{ "kind": "circle", "left": 428, "top": 93.5, "width": 15.5, "height": 15 }],
+        "enableRotation": true
+      }
+    }
+  },
+  {
+    "id": "google-pixel-11-pro-xl-2026",
+    "localPath": "/mockups/google-pixel-11-pro-xl-2026.png",
+    "sourceUrl": "https://store.google.com/us/config/pixel_11_pro?hl=en-US",
+    "file": "google-pixel-11-pro-xl-2026.png",
+    "bytes": 149069,
+    "width": 1554,
+    "height": 1243,
+    "sourceCrop": { "left": 541, "top": 119, "width": 475, "height": 1006 },
+    "screenInset": { "top": 10.5, "right": 10.5, "bottom": 10.5, "left": 9.5 },
+    "viewport": {
+      "portrait": {
+        "left": 9.5, "top": 10.5, "width": 217.5, "height": 482, "cornerRadius": 28,
+        "occlusions": [{ "kind": "circle", "left": 101.5, "top": 8, "width": 14, "height": 14 }],
+        "enableRotation": true
+      },
+      "landscape": {
+        "left": 10.5, "top": 9.5, "width": 482, "height": 217.5, "cornerRadius": 28,
+        "occlusions": [{ "kind": "circle", "left": 460, "top": 101.5, "width": 14, "height": 14 }],
+        "enableRotation": true
+      }
+    }
+  },
+  {
+    "id": "google-pixel-11-pro-fold-2026",
+    "localPath": "/mockups/google-pixel-11-pro-fold-2026.png",
+    "sourceUrl": "https://store.google.com/us/config/pixel_11_pro_fold?hl=en-US",
+    "file": "google-pixel-11-pro-fold-2026.png",
+    "bytes": 215187,
+    "width": 1554,
+    "height": 1243,
+    "sourceCrop": { "left": 290, "top": 120, "width": 976, "height": 1006 },
+    "screenInset": { "top": 14, "right": 16, "bottom": 15, "left": 15 },
+    "viewport": {
+      "portrait": {
+        "left": 15, "top": 14, "width": 457, "height": 474, "cornerRadius": 24,
+        "occlusions": [{ "kind": "circle", "left": 429, "top": 9, "width": 17, "height": 17 }],
+        "enableRotation": true
+      },
+      "landscape": {
+        "left": 15, "top": 15, "width": 474, "height": 457, "cornerRadius": 24,
+        "occlusions": [{ "kind": "circle", "left": 448, "top": 429, "width": 17, "height": 17 }],
+        "enableRotation": true
+      }
+    }
+  },
+  {
     "id": "samsung-galaxy-a17-2025",
     "localPath": "/mockups/samsung-galaxy-a17-2025.png",
     "file": "samsung-galaxy-a17-2025.png",
@@ -2786,6 +2884,8 @@ export interface DeviceChromeMeta {
   safeAreaInsetTop?: number;
   /** Additional left padding for status-bar clocks that would overlap an off-centre camera. */
   statusBarInsetLeft?: number;
+  /** Additional right padding for status icons that would overlap an off-centre camera. */
+  statusBarInsetRight?: number;
   devicePixelRatio?: number;
   isPro?: boolean;
 }
@@ -2857,6 +2957,10 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "google-pixel-10-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
   "google-pixel-10-pro-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3.125, isPro: true, safeAreaInsetTop: 36 },
   "google-pixel-10-pro-fold-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 36 },
+  "google-pixel-11-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
+  "google-pixel-11-pro-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 3.125, isPro: true, safeAreaInsetTop: 36 },
+  "google-pixel-11-pro-xl-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "google-pixel-11-pro-fold-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 28, statusBarInsetRight: 44 },
   "samsung-galaxy-a17-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
   "motorola-razr-70-ultra-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
   "infinix-hot-70-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, safeAreaInsetTop: 36 },

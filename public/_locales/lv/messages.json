@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Ierīču emulators un adaptīvais tests" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Bezmaksas emulators vietnes vienlaicīgai priekšskatīšanai un testēšanai tālrunī, planšetē, klēpjdatorā un datorā." },
+  "actionTitle": { "message": "Atvērt Mobile View ierīču emulatoru" },
+  "contextMenuTitle": { "message": "Atvērt šo cilni programmā Mobile View" },
+  "activeActionTitle": { "message": "Mobile View ir aktīvs — noklikšķiniet, lai aizvērtu" },
+  "unsupportedActionTitle": { "message": "Vispirms atveriet vietni" },
+  "unsupportedUrlHint": { "message": "Atveriet izstrādājamo lapu un vēlreiz noklikšķiniet uz paplašinājuma." }
+}

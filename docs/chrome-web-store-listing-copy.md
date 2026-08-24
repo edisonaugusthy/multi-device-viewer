@@ -403,3 +403,603 @@ Mobile View هو محاكي أجهزة وأداة مجانية ومفتوحة ا
 1. اختبر الهاتف والجهاز اللوحي وسطح المكتب جنبًا إلى جنب
 2. استخدم أكثر من 70 ملفًا لأجهزة متجاوبة في مساحة عمل واحدة
 3. قارن الصفحة المباشرة بتصميم معتمد
+
+## `am` — አማርኛ
+
+**Name:** Mobile View፦ የመሣሪያ አስመሳይ እና ምላሽ ሰጪ ሞካሪ
+
+**Summary:** የስልክ፣ ታብሌት እና ዴስክቶፕ እይታዎችን ጎን ለጎን ለመፈተሽ ነፃ የመሣሪያ አስመሳይ።
+
+**ዝርዝር መግለጫ**
+
+Mobile View ለChrome ነፃና ክፍት ምንጭ የመሣሪያ አስመሳይ ነው። አንድ ድር ጣቢያ በስልክ፣ ታብሌት፣ ላፕቶፕና ዴስክቶፕ ላይ እስከ አራት እይታዎች ጎን ለጎን ያሳያል። የመሣሪያ መጠንና አቅጣጫ ይቀይሩ፣ ማሸብለልና አሰሳን ያመሳስሉ፣ ስክሪንሾት ያንሱ እና ከአካባቢያዊ ንድፍ ጋር ያወዳድሩ። ሁሉም ነገር በአሳሹ ውስጥ ይሰራል፤ መለያ፣ ምዝገባ፣ ትንታኔ ወይም የጀርባ አገልጋይ አያስፈልግም።
+
+**የስክሪንሾት መግለጫዎች**
+
+1. ስልክ፣ ታብሌትና ዴስክቶፕ ጎን ለጎን ይፈትሹ
+2. ከ70 በላይ የመሣሪያ መገለጫዎችን ይጠቀሙ
+3. ቀጥታ ገጽን ከተፈቀደ ንድፍ ጋር ያወዳድሩ
+
+## `bg` — Български
+
+**Name:** Mobile View: Емулатор и тест за адаптивност
+
+**Summary:** Безплатен емулатор за паралелен преглед и адаптивно тестване на телефон, таблет, лаптоп и настолен компютър.
+
+**Подробно описание**
+
+Mobile View е безплатен емулатор на устройства с отворен код за Chrome. Преглеждайте сайт в до четири изгледа за телефон, таблет, лаптоп и настолен компютър едновременно. Избирайте реалистични устройства, променяйте ориентация и мащаб, синхронизирайте превъртане и навигация, правете екранни снимки и сравнявайте с локален дизайн. Всичко работи локално в браузъра без профил, абонамент, анализи, телеметрия или сървър.
+
+**Надписи на екранните снимки**
+
+1. Тествайте телефон, таблет и настолен компютър едновременно
+2. Използвайте над 70 профила на устройства в едно работно пространство
+3. Сравнете активна страница с одобрен дизайн
+
+## `bn` — বাংলা
+
+**Name:** Mobile View: ডিভাইস এমুলেটর ও রেসপনসিভ টেস্টার
+
+**Summary:** ফোন, ট্যাবলেট, ল্যাপটপ ও ডেস্কটপ ভিউ পাশাপাশি পরীক্ষা করার জন্য বিনামূল্যের ডিভাইস এমুলেটর।
+
+**বিস্তারিত বিবরণ**
+
+Mobile View হলো Chrome-এর জন্য বিনামূল্যের ওপেন-সোর্স ডিভাইস এমুলেটর। একটি ওয়েবসাইট ফোন, ট্যাবলেট, ল্যাপটপ ও ডেস্কটপের সর্বোচ্চ চারটি ভিউতে পাশাপাশি দেখুন। বাস্তবসম্মত ডিভাইস বেছে নিন, দিক ও জুম বদলান, স্ক্রল ও নেভিগেশন সিঙ্ক করুন, স্ক্রিনশট নিন এবং স্থানীয় ডিজাইনের সঙ্গে তুলনা করুন। সবকিছু ব্রাউজারেই চলে; অ্যাকাউন্ট, সাবস্ক্রিপশন, অ্যানালিটিক্স, টেলিমেট্রি বা ব্যাকএন্ড লাগে না।
+
+**স্ক্রিনশট ক্যাপশন**
+
+1. মোবাইল, ট্যাবলেট ও ডেস্কটপ পাশাপাশি পরীক্ষা করুন
+2. একটি ওয়ার্কস্পেসে ৭০টির বেশি ডিভাইস প্রোফাইল ব্যবহার করুন
+3. লাইভ পেজের সঙ্গে অনুমোদিত ডিজাইন তুলনা করুন
+
+## `ca` — Català
+
+**Name:** Mobile View: Emulador i prova responsiva
+
+**Summary:** Emulador gratuït per previsualitzar i provar alhora webs en mòbil, tauleta, portàtil i escriptori.
+
+**Descripció detallada**
+
+Mobile View és un emulador de dispositius gratuït i de codi obert per a Chrome. Previsualitza un web en fins a quatre vistes de mòbil, tauleta, portàtil i escriptori alhora. Tria dispositius realistes, canvia l’orientació i el zoom, sincronitza el desplaçament i la navegació, captura pantalles i compara-les amb un disseny local. Tot funciona localment al navegador, sense compte, subscripció, analítica, telemetria ni servidor.
+
+**Textos de les captures**
+
+1. Prova mòbil, tauleta i escriptori alhora
+2. Utilitza més de 70 perfils de dispositiu en un espai de treball
+3. Compara una pàgina activa amb un disseny aprovat
+
+## `cs` — Čeština
+
+**Name:** Mobile View: Emulátor zařízení a responzivní test
+
+**Summary:** Bezplatný emulátor pro souběžný náhled a responzivní testování webu na telefonu, tabletu, notebooku a počítači.
+
+**Podrobný popis**
+
+Mobile View je bezplatný open-source emulátor zařízení pro Chrome. Zobrazte web současně až ve čtyřech náhledech telefonu, tabletu, notebooku a počítače. Vybírejte realistická zařízení, měňte orientaci a přiblížení, synchronizujte posouvání a navigaci, pořizujte snímky a porovnávejte je s místním návrhem. Vše běží lokálně v prohlížeči bez účtu, předplatného, analytiky, telemetrie či serveru.
+
+**Popisky snímků**
+
+1. Testujte telefon, tablet a počítač současně
+2. Použijte přes 70 profilů zařízení v jednom prostoru
+3. Porovnejte živou stránku se schváleným návrhem
+
+## `da` — Dansk
+
+**Name:** Mobile View: Enhedsemulator og responsiv test
+
+**Summary:** Gratis emulator til samtidig forhåndsvisning og responsiv test af websites på mobil, tablet, laptop og computer.
+
+**Detaljeret beskrivelse**
+
+Mobile View er en gratis open source-enhedsemulator til Chrome. Se et website i op til fire mobil-, tablet-, laptop- og computervisninger på samme tid. Vælg realistiske enheder, skift retning og zoom, synkroniser rulning og navigation, tag skærmbilleder, og sammenlign med et lokalt design. Alt kører lokalt i browseren uden konto, abonnement, analyse, telemetri eller server.
+
+**Skærmbilledtekster**
+
+1. Test mobil, tablet og computer side om side
+2. Brug over 70 enhedsprofiler i ét arbejdsområde
+3. Sammenlign en live-side med et godkendt design
+
+## `el` — Ελληνικά
+
+**Name:** Mobile View: Εξομοιωτής και responsive έλεγχος
+
+**Summary:** Δωρεάν εξομοιωτής για παράλληλη προεπισκόπηση και responsive δοκιμή ιστοτόπων σε κινητό, tablet, laptop και desktop.
+
+**Αναλυτική περιγραφή**
+
+Το Mobile View είναι δωρεάν εξομοιωτής συσκευών ανοικτού κώδικα για το Chrome. Προβάλετε έναν ιστότοπο ταυτόχρονα σε έως τέσσερις όψεις κινητού, tablet, laptop και desktop. Επιλέξτε ρεαλιστικές συσκευές, αλλάξτε προσανατολισμό και ζουμ, συγχρονίστε κύλιση και πλοήγηση, τραβήξτε στιγμιότυπα και συγκρίνετε με τοπικό σχέδιο. Όλα εκτελούνται τοπικά, χωρίς λογαριασμό, συνδρομή, analytics, τηλεμετρία ή διακομιστή.
+
+**Λεζάντες στιγμιοτύπων**
+
+1. Δοκιμάστε κινητό, tablet και desktop δίπλα-δίπλα
+2. Χρησιμοποιήστε πάνω από 70 προφίλ συσκευών σε έναν χώρο
+3. Συγκρίνετε ζωντανή σελίδα με εγκεκριμένο σχέδιο
+
+## `en_AU` — English (Australia)
+
+**Name:** Mobile View: Device Emulator & Responsive Tester
+
+**Summary:** Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator.
+
+Use the English detailed description and screenshot captions above. Australian English uses the same controlled listing copy so the ranking experiment remains comparable.
+
+## `en_GB` — English (Great Britain)
+
+**Name:** Mobile View: Device Emulator & Responsive Tester
+
+**Summary:** Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator.
+
+Use the English detailed description and screenshot captions above. British English uses the same controlled listing copy so the ranking experiment remains comparable.
+
+## `en_US` — English (USA)
+
+**Name:** Mobile View: Device Emulator & Responsive Tester
+
+**Summary:** Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator.
+
+Use the English detailed description and screenshot captions above. US English uses the same controlled listing copy so the ranking experiment remains comparable.
+
+## `es_419` — Español (Latinoamérica y el Caribe)
+
+**Name:** Mobile View: Emulador móvil y prueba responsiva
+
+**Summary:** Emulador gratuito para previsualizar y probar a la vez sitios en celular, tablet, laptop y escritorio.
+
+**Descripción detallada**
+
+Mobile View es un emulador de dispositivos gratuito y de código abierto para Chrome. Previsualiza un sitio en hasta cuatro vistas de celular, tablet, laptop y escritorio al mismo tiempo. Elige dispositivos realistas, cambia orientación y zoom, sincroniza desplazamiento y navegación, toma capturas y compara con un diseño local. Todo funciona localmente en el navegador, sin cuenta, suscripción, analítica, telemetría ni servidor.
+
+**Textos de capturas**
+
+1. Prueba celular, tablet y escritorio al mismo tiempo
+2. Usa más de 70 perfiles de dispositivos en un espacio de trabajo
+3. Compara una página activa con un diseño aprobado
+
+## `et` — Eesti
+
+**Name:** Mobile View: Seadmeemulaator ja kohanduvustest
+
+**Summary:** Tasuta emulaator veebilehe samaaegseks eelvaateks ja kohanduvuse testimiseks telefonis, tahvlis, sülearvutis ja arvutis.
+
+**Üksikasjalik kirjeldus**
+
+Mobile View on tasuta avatud lähtekoodiga seadmeemulaator Chrome’ile. Vaata veebilehte korraga kuni neljas telefoni, tahvli, sülearvuti ja lauaarvuti vaates. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
+
+**Kuvatõmmiste pealkirjad**
+
+1. Testi telefoni, tahvlit ja arvutit kõrvuti
+2. Kasuta ühes tööruumis üle 70 seadmeprofiili
+3. Võrdle reaalajas lehte kinnitatud kujundusega
+
+## `fa` — فارسی
+
+**Name:** Mobile View: شبیه‌ساز دستگاه و تست واکنش‌گرا
+
+**Summary:** شبیه‌ساز رایگان برای پیش‌نمایش و آزمایش هم‌زمان وب‌سایت در گوشی، تبلت، لپ‌تاپ و دسکتاپ.
+
+**توضیحات کامل**
+
+Mobile View یک شبیه‌ساز رایگان و متن‌باز برای Chrome است. وب‌سایت را هم‌زمان در حداکثر چهار نمای گوشی، تبلت، لپ‌تاپ و دسکتاپ ببینید. دستگاه واقعی انتخاب کنید، جهت و بزرگ‌نمایی را تغییر دهید، پیمایش و ناوبری را همگام کنید، تصویر بگیرید و با طرح محلی مقایسه کنید. همه‌چیز به‌صورت محلی در مرورگر اجرا می‌شود و به حساب، اشتراک، تحلیل، تله‌متری یا سرور نیاز ندارد.
+
+**عنوان تصاویر**
+
+1. گوشی، تبلت و دسکتاپ را کنار هم آزمایش کنید
+2. بیش از ۷۰ نمایه دستگاه را در یک فضای کاری استفاده کنید
+3. صفحه زنده را با طرح تأییدشده مقایسه کنید
+
+## `fi` — Suomi
+
+**Name:** Mobile View: Laite-emulaattori ja responsiivinen testi
+
+**Summary:** Maksuton emulaattori sivuston rinnakkaiseen esikatseluun ja responsiiviseen testaukseen puhelimella, tabletilla ja tietokoneella.
+
+**Tarkka kuvaus**
+
+Mobile View on maksuton avoimen lähdekoodin laite-emulaattori Chromelle. Esikatsele sivustoa yhtä aikaa jopa neljässä puhelin-, tabletti-, kannettava- ja työpöytänäkymässä. Valitse realistisia laitteita, muuta suuntaa ja zoomausta, synkronoi vieritys ja siirtyminen, ota kuvakaappauksia ja vertaa paikalliseen suunnitelmaan. Kaikki toimii paikallisesti ilman tiliä, tilausta, analytiikkaa, telemetriaa tai palvelinta.
+
+**Kuvakaappaustekstit**
+
+1. Testaa puhelin, tabletti ja tietokone rinnakkain
+2. Käytä yli 70 laiteprofiilia yhdessä työtilassa
+3. Vertaa live-sivua hyväksyttyyn suunnitelmaan
+
+## `gu` — ગુજરાતી
+
+**Name:** Mobile View: ડિવાઇસ ઇમ્યુલેટર અને રિસ્પોન્સિવ ટેસ્ટર
+
+**Summary:** ફોન, ટેબ્લેટ, લેપટોપ અને ડેસ્કટોપ વ્યૂને સાથે ચકાસવા માટેનું મફત ડિવાઇસ ઇમ્યુલેટર.
+
+**વિગતવાર વર્ણન**
+
+Mobile View Chrome માટેનું મફત ઓપન-સોર્સ ડિવાઇસ ઇમ્યુલેટર છે. વેબસાઇટને ફોન, ટેબ્લેટ, લેપટોપ અને ડેસ્કટોપના વધુમાં વધુ ચાર વ્યૂમાં સાથે જુઓ. વાસ્તવિક ડિવાઇસ પસંદ કરો, દિશા અને ઝૂમ બદલો, સ્ક્રોલ અને નેવિગેશન સિંક કરો, સ્ક્રીનશૉટ લો અને સ્થાનિક ડિઝાઇન સાથે સરખાવો. બધું બ્રાઉઝરમાં સ્થાનિક રીતે ચાલે છે; એકાઉન્ટ, સબ્સ્ક્રિપ્શન, એનાલિટિક્સ, ટેલિમેટ્રી કે સર્વર જરૂરી નથી.
+
+**સ્ક્રીનશૉટ કૅપ્શન**
+
+1. મોબાઇલ, ટેબ્લેટ અને ડેસ્કટોપ સાથે ચકાસો
+2. એક વર્કસ્પેસમાં 70થી વધુ ડિવાઇસ પ્રોફાઇલ વાપરો
+3. લાઇવ પેજને મંજૂર ડિઝાઇન સાથે સરખાવો
+
+## `he` — עברית
+
+**Name:** Mobile View: אמולטור מכשירים ובדיקת רספונסיביות
+
+**Summary:** אמולטור חינמי לתצוגה ולבדיקה במקביל של אתרים בטלפון, בטאבלט, במחשב נייד ובמחשב שולחני.
+
+**תיאור מפורט**
+
+Mobile View הוא אמולטור מכשירים חינמי ובקוד פתוח ל-Chrome. הציגו אתר בו-זמנית בעד ארבע תצוגות של טלפון, טאבלט, מחשב נייד ושולחני. בחרו מכשירים מציאותיים, שנו כיוון וזום, סנכרנו גלילה וניווט, צלמו והשוו לעיצוב מקומי. הכול פועל מקומית בדפדפן ללא חשבון, מינוי, ניתוח, טלמטריה או שרת.
+
+**כיתובי צילומי מסך**
+
+1. בדקו טלפון, טאבלט ומחשב זה לצד זה
+2. השתמשו ביותר מ-70 פרופילי מכשירים בסביבת עבודה אחת
+3. השוו דף חי לעיצוב מאושר
+
+## `hr` — Hrvatski
+
+**Name:** Mobile View: Emulator uređaja i responzivni test
+
+**Summary:** Besplatan emulator za istodobni pregled i responzivno testiranje weba na telefonu, tabletu, prijenosniku i računalu.
+
+**Detaljan opis**
+
+Mobile View besplatan je emulator uređaja otvorenog koda za Chrome. Prikažite web u do četiri prikaza telefona, tableta, prijenosnika i računala istodobno. Odaberite realistične uređaje, promijenite orijentaciju i zumiranje, sinkronizirajte pomicanje i navigaciju, snimite zaslon i usporedite s lokalnim dizajnom. Sve radi lokalno bez računa, pretplate, analitike, telemetrije ili poslužitelja.
+
+**Opisi snimki zaslona**
+
+1. Testirajte telefon, tablet i računalo istodobno
+2. Koristite više od 70 profila uređaja u jednom prostoru
+3. Usporedite aktivnu stranicu s odobrenim dizajnom
+
+## `hu` — Magyar
+
+**Name:** Mobile View: Eszközemulátor és reszponzív teszt
+
+**Summary:** Ingyenes emulátor webhelyek egyidejű előnézetéhez és reszponzív teszteléséhez telefonon, tableten és számítógépen.
+
+**Részletes leírás**
+
+A Mobile View ingyenes, nyílt forráskódú eszközemulátor Chrome-hoz. Egy webhelyet egyszerre akár négy telefonos, táblagépes, laptopos és asztali nézetben vizsgálhat. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.
+
+**Képernyőkép-feliratok**
+
+1. Teszteljen telefont, táblagépet és számítógépet egymás mellett
+2. Használjon több mint 70 eszközprofilt egy munkaterületen
+3. Hasonlítsa össze az élő oldalt a jóváhagyott tervvel
+
+## `id` — Indonesia
+
+**Name:** Mobile View: Emulator perangkat & penguji responsif
+
+**Summary:** Emulator gratis untuk melihat dan menguji situs secara responsif di ponsel, tablet, laptop, dan desktop secara bersamaan.
+
+**Deskripsi terperinci**
+
+Mobile View adalah emulator perangkat gratis dan sumber terbuka untuk Chrome. Lihat situs dalam hingga empat tampilan ponsel, tablet, laptop, dan desktop sekaligus. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
+
+**Teks tangkapan layar**
+
+1. Uji ponsel, tablet, dan desktop secara berdampingan
+2. Gunakan 70+ profil perangkat dalam satu ruang kerja
+3. Bandingkan halaman langsung dengan desain yang disetujui
+
+## `kn` — ಕನ್ನಡ
+
+**Name:** Mobile View: ಸಾಧನ ಎಮ್ಯುಲೇಟರ್ ಮತ್ತು ರೆಸ್ಪಾನ್ಸಿವ್ ಪರೀಕ್ಷೆ
+
+**Summary:** ಫೋನ್, ಟ್ಯಾಬ್ಲೆಟ್, ಲ್ಯಾಪ್‌ಟಾಪ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್ ವೀಕ್ಷಣೆಗಳನ್ನು ಒಟ್ಟಿಗೆ ಪರೀಕ್ಷಿಸುವ ಉಚಿತ ಸಾಧನ ಎಮ್ಯುಲೇಟರ್.
+
+**ವಿವರವಾದ ವಿವರಣೆ**
+
+Mobile View Chromeಗಾಗಿ ಉಚಿತ ಮುಕ್ತ-ಮೂಲ ಸಾಧನ ಎಮ್ಯುಲೇಟರ್ ಆಗಿದೆ. ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ಫೋನ್, ಟ್ಯಾಬ್ಲೆಟ್, ಲ್ಯಾಪ್‌ಟಾಪ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್‌ನ ಗರಿಷ್ಠ ನಾಲ್ಕು ವೀಕ್ಷಣೆಗಳಲ್ಲಿ ಒಟ್ಟಿಗೆ ನೋಡಿ. ನೈಜ ಸಾಧನಗಳನ್ನು ಆರಿಸಿ, ದಿಕ್ಕು ಮತ್ತು ಝೂಮ್ ಬದಲಿಸಿ, ಸ್ಕ್ರೋಲ್ ಮತ್ತು ನ್ಯಾವಿಗೇಶನ್ ಸಿಂಕ್ ಮಾಡಿ, ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ತೆಗೆದು ಸ್ಥಳೀಯ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ. ಎಲ್ಲವೂ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಥಳೀಯವಾಗಿ ನಡೆಯುತ್ತದೆ; ಖಾತೆ, ಚಂದಾದಾರಿಕೆ, ಅನಾಲಿಟಿಕ್ಸ್, ಟೆಲಿಮೆಟ್ರಿ ಅಥವಾ ಸರ್ವರ್ ಅಗತ್ಯವಿಲ್ಲ.
+
+**ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ಶೀರ್ಷಿಕೆಗಳು**
+
+1. ಮೊಬೈಲ್, ಟ್ಯಾಬ್ಲೆಟ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್ ಅನ್ನು ಜೊತೆಯಾಗಿ ಪರೀಕ್ಷಿಸಿ
+2. ಒಂದೇ ವರ್ಕ್‌ಸ್ಪೇಸ್‌ನಲ್ಲಿ 70ಕ್ಕೂ ಹೆಚ್ಚು ಸಾಧನ ಪ್ರೊಫೈಲ್ ಬಳಸಿ
+3. ಲೈವ್ ಪುಟವನ್ನು ಅನುಮೋದಿತ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ
+
+## `lt` — Lietuvių
+
+**Name:** Mobile View: Įrenginių emuliatorius ir adaptyvus testas
+
+**Summary:** Nemokamas emuliatorius svetainei vienu metu peržiūrėti ir testuoti telefone, planšetėje, nešiojamajame ir staliniame kompiuteryje.
+
+**Išsamus aprašas**
+
+„Mobile View“ – nemokamas atvirojo kodo įrenginių emuliatorius, skirtas „Chrome“. Vienu metu peržiūrėkite svetainę iki keturių telefono, planšetės, nešiojamojo ir stalinio kompiuterio rodinių. Rinkitės tikroviškus įrenginius, keiskite orientaciją bei mastelį, sinchronizuokite slinkimą ir naršymą, fiksuokite ekraną ir lyginkite su vietiniu dizainu. Viskas veikia naršyklėje be paskyros, prenumeratos, analizės, telemetrijos ar serverio.
+
+**Ekrano kopijų antraštės**
+
+1. Testuokite telefoną, planšetę ir kompiuterį greta
+2. Vienoje darbo srityje naudokite daugiau nei 70 įrenginių profilių
+3. Palyginkite veikiančią svetainę su patvirtintu dizainu
+
+## `lv` — Latviešu
+
+**Name:** Mobile View: Ierīču emulators un adaptīvais tests
+
+**Summary:** Bezmaksas emulators vietnes vienlaicīgai priekšskatīšanai un testēšanai tālrunī, planšetē, klēpjdatorā un datorā.
+
+**Detalizēts apraksts**
+
+Mobile View ir bezmaksas atvērtā pirmkoda ierīču emulators pārlūkam Chrome. Vienlaikus skatiet vietni līdz četros tālruņa, planšetes, klēpjdatora un datora skatos. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
+
+**Ekrānattēlu paraksti**
+
+1. Testējiet tālruni, planšeti un datoru blakus
+2. Vienā darbvietā izmantojiet vairāk nekā 70 ierīču profilus
+3. Salīdziniet aktīvu lapu ar apstiprinātu dizainu
+
+## `ml` — മലയാളം
+
+**Name:** Mobile View: ഡിവൈസ് എമുലേറ്ററും റെസ്‌പോൺസീവ് ടെസ്റ്ററും
+
+**Summary:** ഫോൺ, ടാബ്‌ലെറ്റ്, ലാപ്‌ടോപ്പ്, ഡെസ്‌ക്‌ടോപ്പ് കാഴ്ചകൾ ഒരുമിച്ച് പരിശോധിക്കാനുള്ള സൗജന്യ ഡിവൈസ് എമുലേറ്റർ.
+
+**വിശദമായ വിവരണം**
+
+Mobile View Chrome-നുള്ള സൗജന്യ ഓപ്പൺ സോഴ്‌സ് ഡിവൈസ് എമുലേറ്ററാണ്. ഒരു വെബ്‌സൈറ്റ് ഫോൺ, ടാബ്‌ലെറ്റ്, ലാപ്‌ടോപ്പ്, ഡെസ്‌ക്‌ടോപ്പ് എന്നിവയുടെ നാല് കാഴ്ചകളിൽ വരെ ഒരുമിച്ച് കാണുക. യഥാർത്ഥ ഉപകരണങ്ങൾ തിരഞ്ഞെടുക്കുക, ദിശയും സൂമും മാറ്റുക, സ്ക്രോളും നാവിഗേഷനും സമന്വയിപ്പിക്കുക, സ്ക്രീൻഷോട്ട് എടുക്കുക, പ്രാദേശിക ഡിസൈനുമായി താരതമ്യം ചെയ്യുക. അക്കൗണ്ട്, സബ്‌സ്‌ക്രിപ്‌ഷൻ, അനലിറ്റിക്‌സ്, ടെലിമെട്രി, സെർവർ എന്നിവയില്ലാതെ എല്ലാം ബ്രൗസറിൽ പ്രവർത്തിക്കുന്നു.
+
+**സ്ക്രീൻഷോട്ട് അടിക്കുറിപ്പുകൾ**
+
+1. മൊബൈൽ, ടാബ്‌ലെറ്റ്, ഡെസ്‌ക്‌ടോപ്പ് ഒരുമിച്ച് പരിശോധിക്കുക
+2. ഒരു വർക്ക്‌സ്‌പേസിൽ 70-ലധികം ഉപകരണ പ്രൊഫൈലുകൾ ഉപയോഗിക്കുക
+3. ലൈവ് പേജിനെ അംഗീകൃത ഡിസൈനുമായി താരതമ്യം ചെയ്യുക
+
+## `mr` — मराठी
+
+**Name:** Mobile View: डिव्हाइस एम्युलेटर आणि रिस्पॉन्सिव्ह टेस्टर
+
+**Summary:** फोन, टॅबलेट, लॅपटॉप आणि डेस्कटॉप दृश्ये एकत्र तपासण्यासाठी मोफत डिव्हाइस एम्युलेटर.
+
+**तपशीलवार वर्णन**
+
+Mobile View हे Chromeसाठी मोफत आणि मुक्त-स्रोत डिव्हाइस एम्युलेटर आहे. वेबसाइट फोन, टॅबलेट, लॅपटॉप आणि डेस्कटॉपच्या चार दृश्यांपर्यंत एकत्र पहा. वास्तववादी डिव्हाइस निवडा, दिशा व झूम बदला, स्क्रोल व नेव्हिगेशन सिंक करा, स्क्रीनशॉट घ्या आणि स्थानिक डिझाइनशी तुलना करा. सर्व काही ब्राउझरमध्ये स्थानिकरीत्या चालते; खाते, सदस्यता, विश्लेषण, टेलिमेट्री किंवा सर्व्हर लागत नाही.
+
+**स्क्रीनशॉट कॅप्शन**
+
+1. मोबाइल, टॅबलेट आणि डेस्कटॉप एकत्र तपासा
+2. एका वर्कस्पेसमध्ये 70हून अधिक डिव्हाइस प्रोफाइल वापरा
+3. लाइव्ह पेजची मंजूर डिझाइनशी तुलना करा
+
+## `ms` — Bahasa Melayu
+
+**Name:** Mobile View: Emulator peranti & penguji responsif
+
+**Summary:** Emulator percuma untuk pratonton dan ujian responsif laman serentak pada telefon, tablet, komputer riba dan desktop.
+
+**Penerangan terperinci**
+
+Mobile View ialah emulator peranti percuma dan sumber terbuka untuk Chrome. Pratonton laman dalam sehingga empat paparan telefon, tablet, komputer riba dan desktop serentak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.
+
+**Kapsyen tangkapan skrin**
+
+1. Uji telefon, tablet dan desktop sebelah-menyebelah
+2. Gunakan lebih 70 profil peranti dalam satu ruang kerja
+3. Bandingkan halaman langsung dengan reka bentuk diluluskan
+
+## `no` — Norsk
+
+**Name:** Mobile View: Enhetsemulator og responsiv test
+
+**Summary:** Gratis emulator for samtidig forhåndsvisning og responsiv testing av nettsteder på mobil, nettbrett, laptop og datamaskin.
+
+**Detaljert beskrivelse**
+
+Mobile View er en gratis enhetsemulator med åpen kildekode for Chrome. Se et nettsted i opptil fire mobil-, nettbrett-, laptop- og datamaskinvisninger samtidig. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.
+
+**Skjermbildetekster**
+
+1. Test mobil, nettbrett og datamaskin side om side
+2. Bruk over 70 enhetsprofiler i ett arbeidsområde
+3. Sammenlign en live-side med et godkjent design
+
+## `pl` — Polski
+
+**Name:** Mobile View: Emulator urządzeń i test responsywny
+
+**Summary:** Darmowy emulator do równoległego podglądu i testowania stron na telefonie, tablecie, laptopie i komputerze.
+
+**Szczegółowy opis**
+
+Mobile View to darmowy emulator urządzeń open source dla Chrome. Wyświetlaj stronę jednocześnie w maksymalnie czterech widokach telefonu, tabletu, laptopa i komputera. Wybieraj realistyczne urządzenia, zmieniaj orientację i powiększenie, synchronizuj przewijanie i nawigację, rób zrzuty oraz porównuj z lokalnym projektem. Wszystko działa lokalnie w przeglądarce bez konta, subskrypcji, analityki, telemetrii ani serwera.
+
+**Podpisy zrzutów ekranu**
+
+1. Testuj telefon, tablet i komputer obok siebie
+2. Używaj ponad 70 profili urządzeń w jednym obszarze
+3. Porównaj aktywną stronę z zatwierdzonym projektem
+
+## `pt_PT` — Português (Portugal)
+
+**Name:** Mobile View: Emulador móvel e teste responsivo
+
+**Summary:** Emulador gratuito para pré-visualizar e testar sites em simultâneo no telemóvel, tablet, portátil e computador.
+
+**Descrição detalhada**
+
+O Mobile View é um emulador de dispositivos gratuito e de código aberto para Chrome. Pré-visualize um site em até quatro vistas de telemóvel, tablet, portátil e computador ao mesmo tempo. Escolha dispositivos realistas, altere a orientação e o zoom, sincronize o deslocamento e a navegação, capture ecrãs e compare com um design local. Tudo funciona localmente no navegador sem conta, subscrição, análise, telemetria ou servidor.
+
+**Legendas das capturas**
+
+1. Teste telemóvel, tablet e computador lado a lado
+2. Use mais de 70 perfis de dispositivos num espaço de trabalho
+3. Compare uma página ativa com um design aprovado
+
+## `ro` — Română
+
+**Name:** Mobile View: Emulator de dispozitive și test responsiv
+
+**Summary:** Emulator gratuit pentru previzualizarea și testarea simultană a site-urilor pe telefon, tabletă, laptop și desktop.
+
+**Descriere detaliată**
+
+Mobile View este un emulator de dispozitive gratuit și open-source pentru Chrome. Previzualizează un site în până la patru ecrane de telefon, tabletă, laptop și desktop simultan. Alege dispozitive realiste, schimbă orientarea și zoomul, sincronizează derularea și navigarea, capturează ecranul și compară-l cu un design local. Totul rulează local în browser fără cont, abonament, analiză, telemetrie sau server.
+
+**Texte pentru capturi**
+
+1. Testează telefonul, tableta și desktopul alăturat
+2. Folosește peste 70 de profiluri într-un singur spațiu
+3. Compară o pagină activă cu un design aprobat
+
+## `sk` — Slovenčina
+
+**Name:** Mobile View: Emulátor zariadení a responzívny test
+
+**Summary:** Bezplatný emulátor na súbežný náhľad a responzívne testovanie webu v telefóne, tablete, notebooku a počítači.
+
+**Podrobný opis**
+
+Mobile View je bezplatný open-source emulátor zariadení pre Chrome. Zobrazte web súčasne až v štyroch náhľadoch telefónu, tabletu, notebooku a počítača. Vyberajte realistické zariadenia, meňte orientáciu a priblíženie, synchronizujte posúvanie a navigáciu, vytvárajte snímky a porovnávajte ich s lokálnym návrhom. Všetko beží lokálne bez účtu, predplatného, analytiky, telemetrie či servera.
+
+**Popisy snímok**
+
+1. Testujte telefón, tablet a počítač vedľa seba
+2. Použite vyše 70 profilov zariadení v jednom priestore
+3. Porovnajte živú stránku so schváleným návrhom
+
+## `sl` — Slovenščina
+
+**Name:** Mobile View: Emulator naprav in odzivni preizkus
+
+**Summary:** Brezplačen emulator za sočasen predogled in odzivno testiranje strani na telefonu, tablici, prenosniku in računalniku.
+
+**Podroben opis**
+
+Mobile View je brezplačen odprtokodni emulator naprav za Chrome. Spletno mesto si hkrati oglejte v največ štirih pogledih telefona, tablice, prenosnika in računalnika. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.
+
+**Napisi posnetkov zaslona**
+
+1. Preizkusite telefon, tablico in računalnik drug ob drugem
+2. Uporabite več kot 70 profilov naprav v enem prostoru
+3. Primerjajte živo stran z odobrenim dizajnom
+
+## `sr` — Српски
+
+**Name:** Mobile View: Емулатор уређаја и прилагодљиви тест
+
+**Summary:** Бесплатан емулатор за паралелни преглед и тестирање сајта на телефону, таблету, лаптопу и рачунару.
+
+**Детаљан опис**
+
+Mobile View је бесплатан емулатор уређаја отвореног кода за Chrome. Прикажите сајт истовремено у највише четири приказа телефона, таблета, лаптопа и рачунара. Изаберите реалистичне уређаје, промените оријентацију и зумирање, синхронизујте померање и навигацију, снимите екран и упоредите га са локалним дизајном. Све ради локално без налога, претплате, аналитике, телеметрије или сервера.
+
+**Наслови снимака екрана**
+
+1. Тестирајте телефон, таблет и рачунар упоредо
+2. Користите преко 70 профила уређаја у једном простору
+3. Упоредите активну страницу са одобреним дизајном
+
+## `sv` — Svenska
+
+**Name:** Mobile View: Enhetsemulator och responsivt test
+
+**Summary:** Gratis emulator för samtidig förhandsvisning och responsiv testning av webbplatser på mobil, surfplatta, laptop och dator.
+
+**Detaljerad beskrivning**
+
+Mobile View är en kostnadsfri enhetsemulator med öppen källkod för Chrome. Visa en webbplats i upp till fyra mobil-, surfplatte-, laptop- och datorvyer samtidigt. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.
+
+**Skärmbildstexter**
+
+1. Testa mobil, surfplatta och dator sida vid sida
+2. Använd över 70 enhetsprofiler i en arbetsyta
+3. Jämför en live-sida med en godkänd design
+
+## `sw` — Kiswahili
+
+**Name:** Mobile View: Kiigaji cha kifaa na jaribio sikivu
+
+**Summary:** Kiigaji bila malipo cha kuhakiki na kujaribu tovuti kwa pamoja kwenye simu, kompyuta kibao, laptop na desktop.
+
+**Maelezo ya kina**
+
+Mobile View ni kiigaji cha vifaa bila malipo na cha programu huria kwa Chrome. Tazama tovuti katika mionekano hadi minne ya simu, kompyuta kibao, laptop na desktop kwa wakati mmoja. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.
+
+**Maelezo ya picha za skrini**
+
+1. Jaribu simu, kompyuta kibao na desktop pamoja
+2. Tumia zaidi ya wasifu 70 wa vifaa katika nafasi moja
+3. Linganisha ukurasa hai na muundo ulioidhinishwa
+
+## `ta` — தமிழ்
+
+**Name:** Mobile View: சாதன முன்மாதிரி மற்றும் பதிலளிப்பு சோதனை
+
+**Summary:** தொலைபேசி, டேப்லெட், மடிக்கணினி மற்றும் டெஸ்க்டாப் காட்சிகளை ஒன்றாகச் சோதிக்கும் இலவச சாதன முன்மாதிரி.
+
+**விரிவான விளக்கம்**
+
+Mobile View என்பது Chrome-க்கான இலவச திறந்த மூல சாதன முன்மாதிரி. இணையதளத்தை தொலைபேசி, டேப்லெட், மடிக்கணினி மற்றும் டெஸ்க்டாப் ஆகியவற்றின் நான்கு காட்சிகள் வரை ஒரே நேரத்தில் பாருங்கள். உண்மையான சாதனங்களைத் தேர்ந்தெடுத்து, திசை மற்றும் பெரிதாக்கலை மாற்றி, ஸ்க்ரோல் மற்றும் வழிசெலுத்தலை ஒத்திசைத்து, திரைப்பிடிப்பு எடுத்து உள்ளூர் வடிவமைப்புடன் ஒப்பிடுங்கள். கணக்கு, சந்தா, பகுப்பாய்வு, டெலிமெட்ரி அல்லது சேவையகம் இல்லாமல் அனைத்தும் உலாவியிலேயே இயங்கும்.
+
+**திரைப்பிடிப்பு தலைப்புகள்**
+
+1. மொபைல், டேப்லெட் மற்றும் டெஸ்க்டாப்பை அருகருகே சோதிக்கவும்
+2. ஒரே பணியிடத்தில் 70க்கும் மேற்பட்ட சாதன சுயவிவரங்களைப் பயன்படுத்தவும்
+3. நேரடி பக்கத்தை அங்கீகரிக்கப்பட்ட வடிவமைப்புடன் ஒப்பிடவும்
+
+## `te` — తెలుగు
+
+**Name:** Mobile View: పరికర ఎమ్యులేటర్ మరియు రెస్పాన్సివ్ టెస్టర్
+
+**Summary:** ఫోన్, టాబ్లెట్, ల్యాప్‌టాప్ మరియు డెస్క్‌టాప్ వీక్షణలను ఒకేసారి పరీక్షించడానికి ఉచిత పరికర ఎమ్యులేటర్.
+
+**వివరణాత్మక వివరణ**
+
+Mobile View అనేది Chrome కోసం ఉచిత ఓపెన్ సోర్స్ పరికర ఎమ్యులేటర్. వెబ్‌సైట్‌ను ఫోన్, టాబ్లెట్, ల్యాప్‌టాప్ మరియు డెస్క్‌టాప్ నాలుగు వీక్షణల వరకు ఒకేసారి చూడండి. నిజమైన పరికరాలను ఎంచుకోండి, దిశ మరియు జూమ్ మార్చండి, స్క్రోల్ మరియు నావిగేషన్ సమకాలీకరించండి, స్క్రీన్‌షాట్ తీసి స్థానిక డిజైన్‌తో పోల్చండి. ఖాతా, సబ్‌స్క్రిప్షన్, అనలిటిక్స్, టెలిమెట్రీ లేదా సర్వర్ లేకుండా అన్నీ బ్రౌజర్‌లోనే నడుస్తాయి.
+
+**స్క్రీన్‌షాట్ శీర్షికలు**
+
+1. మొబైల్, టాబ్లెట్ మరియు డెస్క్‌టాప్‌ను పక్కపక్కన పరీక్షించండి
+2. ఒక వర్క్‌స్పేస్‌లో 70కి పైగా పరికర ప్రొఫైల్‌లను వాడండి
+3. లైవ్ పేజీని ఆమోదిత డిజైన్‌తో పోల్చండి
+
+## `th` — ไทย
+
+**Name:** Mobile View: โปรแกรมจำลองอุปกรณ์และทดสอบ Responsive
+
+**Summary:** โปรแกรมจำลองฟรีสำหรับดูตัวอย่างและทดสอบเว็บไซต์พร้อมกันบนมือถือ แท็บเล็ต แล็ปท็อป และเดสก์ท็อป
+
+**คำอธิบายโดยละเอียด**
+
+Mobile View เป็นโปรแกรมจำลองอุปกรณ์แบบโอเพนซอร์สฟรีสำหรับ Chrome ดูเว็บไซต์พร้อมกันได้สูงสุดสี่มุมมองบนมือถือ แท็บเล็ต แล็ปท็อป และเดสก์ท็อป เลือกอุปกรณ์จริง เปลี่ยนแนวและซูม ซิงค์การเลื่อนและการนำทาง จับภาพหน้าจอ และเปรียบเทียบกับดีไซน์ในเครื่อง ทุกอย่างทำงานในเบราว์เซอร์โดยไม่ต้องมีบัญชี การสมัครสมาชิก การวิเคราะห์ เทเลเมทรี หรือเซิร์ฟเวอร์
+
+**คำบรรยายภาพหน้าจอ**
+
+1. ทดสอบมือถือ แท็บเล็ต และเดสก์ท็อปพร้อมกัน
+2. ใช้โปรไฟล์อุปกรณ์มากกว่า 70 แบบในพื้นที่ทำงานเดียว
+3. เปรียบเทียบหน้าจริงกับดีไซน์ที่อนุมัติแล้ว
+
+## `tr` — Türkçe
+
+**Name:** Mobile View: Cihaz emülatörü ve duyarlı tasarım testi
+
+**Summary:** Siteleri telefon, tablet, dizüstü ve masaüstünde aynı anda önizlemek ve duyarlı test etmek için ücretsiz emülatör.
+
+**Ayrıntılı açıklama**
+
+Mobile View, Chrome için ücretsiz ve açık kaynaklı bir cihaz emülatörüdür. Bir siteyi aynı anda en fazla dört telefon, tablet, dizüstü ve masaüstü görünümünde izleyin. Gerçekçi cihazlar seçin, yönü ve yakınlaştırmayı değiştirin, kaydırma ve gezinmeyi eşitleyin, ekran görüntüsü alın ve yerel bir tasarımla karşılaştırın. Her şey hesap, abonelik, analiz, telemetri veya sunucu olmadan tarayıcıda yerel olarak çalışır.
+
+**Ekran görüntüsü başlıkları**
+
+1. Mobil, tablet ve masaüstünü yan yana test edin
+2. Tek çalışma alanında 70’ten fazla cihaz profili kullanın
+3. Canlı sayfayı onaylı tasarımla karşılaştırın
+
+## `uk` — Українська
+
+**Name:** Mobile View: Емулятор пристроїв і адаптивний тест
+
+**Summary:** Безкоштовний емулятор для одночасного перегляду й тестування сайту на телефоні, планшеті, ноутбуці та комп’ютері.
+
+**Докладний опис**
+
+Mobile View — безкоштовний емулятор пристроїв із відкритим кодом для Chrome. Переглядайте сайт одночасно в чотирьох варіантах — на телефоні, планшеті, ноутбуці та комп’ютері. Вибирайте реалістичні пристрої, змінюйте орієнтацію й масштаб, синхронізуйте прокручування та навігацію, робіть знімки й порівнюйте з локальним дизайном. Усе працює локально без облікового запису, підписки, аналітики, телеметрії чи сервера.
+
+**Підписи до знімків**
+
+1. Тестуйте телефон, планшет і комп’ютер поруч
+2. Використовуйте понад 70 профілів пристроїв в одному просторі
+3. Порівнюйте активну сторінку із затвердженим дизайном

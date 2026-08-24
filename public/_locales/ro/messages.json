@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Emulator de dispozitive și test responsiv" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Emulator gratuit pentru previzualizarea și testarea simultană a site-urilor pe telefon, tabletă, laptop și desktop." },
+  "actionTitle": { "message": "Deschide emulatorul Mobile View" },
+  "contextMenuTitle": { "message": "Deschide această filă în Mobile View" },
+  "activeActionTitle": { "message": "Mobile View este activ — clic pentru închidere" },
+  "unsupportedActionTitle": { "message": "Deschide mai întâi un site" },
+  "unsupportedUrlHint": { "message": "Accesează pagina pe care o dezvolți, apoi apasă din nou pe extensie." }
+}

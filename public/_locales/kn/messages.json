@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: ಸಾಧನ ಎಮ್ಯುಲೇಟರ್ ಮತ್ತು ರೆಸ್ಪಾನ್ಸಿವ್ ಪರೀಕ್ಷೆ" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "ಫೋನ್, ಟ್ಯಾಬ್ಲೆಟ್, ಲ್ಯಾಪ್‌ಟಾಪ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್ ವೀಕ್ಷಣೆಗಳನ್ನು ಒಟ್ಟಿಗೆ ಪರೀಕ್ಷಿಸುವ ಉಚಿತ ಸಾಧನ ಎಮ್ಯುಲೇಟರ್." },
+  "actionTitle": { "message": "Mobile View ಸಾಧನ ಎಮ್ಯುಲೇಟರ್ ತೆರೆಯಿರಿ" },
+  "contextMenuTitle": { "message": "ಈ ಟ್ಯಾಬ್ ಅನ್ನು Mobile Viewನಲ್ಲಿ ತೆರೆಯಿರಿ" },
+  "activeActionTitle": { "message": "Mobile View ಸಕ್ರಿಯವಾಗಿದೆ — ಮುಚ್ಚಲು ಕ್ಲಿಕ್ ಮಾಡಿ" },
+  "unsupportedActionTitle": { "message": "ಮೊದಲು ವೆಬ್‌ಸೈಟ್ ತೆರೆಯಿರಿ" },
+  "unsupportedUrlHint": { "message": "ನೀವು ಅಭಿವೃದ್ಧಿಪಡಿಸುತ್ತಿರುವ ಪುಟಕ್ಕೆ ಹೋಗಿ, ನಂತರ ವಿಸ್ತರಣೆಯನ್ನು ಮತ್ತೆ ಕ್ಲಿಕ್ ಮಾಡಿ." }
+}

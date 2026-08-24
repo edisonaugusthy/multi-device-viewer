@@ -32,7 +32,8 @@ Browser-local extension storage is used to preserve the working experience. Stor
 - Custom viewports and saved device sets.
 - Scroll-sync and theme preferences.
 - Design-reference images, overlay positions, opacity, and panel size.
-- Welcome and release-note state, local use count, and other dismissed notices.
+- Welcome and release-note state, local use count, and review-prompt milestones
+  and choices.
 - Navigation-sync and recording-interface state.
 
 This data is stored only in the user's browser profile. The extension does not synchronize it through an application account or transmit it to a backend.

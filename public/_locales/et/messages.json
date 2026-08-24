@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Seadmeemulaator ja kohanduvustest" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Tasuta emulaator veebilehe samaaegseks eelvaateks ja kohanduvuse testimiseks telefonis, tahvlis, sülearvutis ja arvutis." },
+  "actionTitle": { "message": "Ava Mobile View seadmeemulaator" },
+  "contextMenuTitle": { "message": "Ava see vahekaart Mobile View’s" },
+  "activeActionTitle": { "message": "Mobile View on aktiivne — sulgemiseks klõpsa" },
+  "unsupportedActionTitle": { "message": "Ava esmalt veebisait" },
+  "unsupportedUrlHint": { "message": "Mine arendatavale lehele ja klõpsa laiendusel uuesti." }
+}

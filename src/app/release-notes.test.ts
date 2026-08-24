@@ -31,15 +31,15 @@ describe("decideStartupNotice", () => {
     expect(release.notes[1]?.description).toContain("focusing one viewport");
   });
 
-  it("highlights record user flow in the 0.2.3 release", () => {
+  it("keeps the 0.2.3 update to devices and the review option", () => {
     const release = releaseNotesFor("0.2.3");
 
     expect(release.notes.map((note) => note.title)).toEqual([
-      "A localized workspace",
-      "Record user flow",
-      "Refined Liquid Glass previews",
+      "New devices",
+      "New review option",
     ]);
-    expect(release.notes[1]?.featured).toBe(true);
-    expect(release.notes[2]?.description).toContain("Liquid Glass");
+    expect(release.summary).toBe("");
+    expect(release.notes[0]?.description).toContain("Pixel 11");
+    expect(release.notes[1]?.description).toContain("honest Chrome Web Store review");
   });
 });

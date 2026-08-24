@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Enhetsemulator og responsiv test" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Gratis emulator for samtidig forhåndsvisning og responsiv testing av nettsteder på mobil, nettbrett, laptop og datamaskin." },
+  "actionTitle": { "message": "Åpne Mobile View-enhetsemulator" },
+  "contextMenuTitle": { "message": "Åpne denne fanen i Mobile View" },
+  "activeActionTitle": { "message": "Mobile View er aktiv — klikk for å lukke" },
+  "unsupportedActionTitle": { "message": "Åpne et nettsted først" },
+  "unsupportedUrlHint": { "message": "Gå til siden du utvikler, og klikk på utvidelsen igjen." }
+}

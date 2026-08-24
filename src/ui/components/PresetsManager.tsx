@@ -20,11 +20,12 @@ interface PresetsManagerProps {
   dark: boolean;
   currentDeviceIds: string[];
   onApply: (deviceIds: string[]) => void;
+  onSaved: () => void;
 }
 
 const STORAGE_KEY = "mdvSavedPresets";
 
-export function PresetsManager({ dark, currentDeviceIds, onApply }: PresetsManagerProps) {
+export function PresetsManager({ dark, currentDeviceIds, onApply, onSaved }: PresetsManagerProps) {
   const { t } = useI18n();
   const [presets, setPresets] = useState<SavedPreset[]>([]);
   const [saveName, setSaveName] = useState("");
@@ -50,6 +51,7 @@ export function PresetsManager({ dark, currentDeviceIds, onApply }: PresetsManag
     };
     persist([preset, ...presets]);
     setSaveName("");
+    onSaved();
   }
 
   function deletePreset(id: string) {

@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Емулятор пристроїв і адаптивний тест" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Безкоштовний емулятор для одночасного перегляду й тестування сайту на телефоні, планшеті, ноутбуці та комп’ютері." },
+  "actionTitle": { "message": "Відкрити емулятор пристроїв Mobile View" },
+  "contextMenuTitle": { "message": "Відкрити цю вкладку в Mobile View" },
+  "activeActionTitle": { "message": "Mobile View активний — натисніть, щоб закрити" },
+  "unsupportedActionTitle": { "message": "Спочатку відкрийте сайт" },
+  "unsupportedUrlHint": { "message": "Перейдіть на сторінку, яку розробляєте, і знову натисніть розширення." }
+}

@@ -1,8 +1,15 @@
 # Chrome Web Store Localizations
 
 Use these translations for the localized Chrome Web Store listing and packaged
-extension metadata. English remains the default locale. Keep feature claims,
-privacy statements, screenshots, and pricing consistent across every language.
+extension metadata. English remains the default locale. The extension now
+packages every locale in Chrome's official supported-locale table: 55 locale
+codes covering 49 base languages, with regional variants for English, Spanish,
+Portuguese, and Chinese. Keep feature claims, privacy statements, screenshots,
+and pricing consistent across every language.
+
+The table below keeps the original launch and SEO-priority markets easy to
+review. Complete copy-and-paste Store listing text for all 55 locales is in
+[`chrome-web-store-listing-copy.md`](./chrome-web-store-listing-copy.md).
 
 | Locale | Language / market | Extension name | Short description |
 |---|---|---|---|
@@ -23,28 +30,32 @@ privacy statements, screenshots, and pricing consistent across every language.
 | `ru` | Russian | Mobile View: эмулятор устройств и адаптивный тест | Бесплатный эмулятор и тест адаптивности: сравнивайте виды телефона, планшета, ноутбука и ПК рядом. |
 | `ar` | Arabic | Mobile View: محاكي أجهزة واختبار تجاوب | محاكي جوال مجاني ومفتوح المصدر لاختبار عروض الهاتف والجهاز اللوحي والحاسوب المحمول وسطح المكتب جنبًا إلى جنب. |
 
-The complete copy-and-paste detailed descriptions and screenshot captions are
-in [`chrome-web-store-listing-copy.md`](./chrome-web-store-listing-copy.md).
+## Complete packaged coverage
+
+`am`, `ar`, `bg`, `bn`, `ca`, `cs`, `da`, `de`, `el`, `en`, `en_AU`, `en_GB`,
+`en_US`, `es`, `es_419`, `et`, `fa`, `fi`, `fil`, `fr`, `gu`, `he`, `hi`, `hr`,
+`hu`, `id`, `it`, `ja`, `kn`, `ko`, `lt`, `lv`, `ml`, `mr`, `ms`, `nl`, `no`,
+`pl`, `pt_BR`, `pt_PT`, `ro`, `ru`, `sk`, `sl`, `sr`, `sv`, `sw`, `ta`, `te`,
+`th`, `tr`, `uk`, `vi`, `zh_CN`, `zh_TW`.
 
 The English row is the 8 August 2026 controlled keyword experiment package. It
 adds multi-device viewer, mobile preview, responsive testing, and mobile
 simulator while the unchanged title protects Mobile View, device emulator, and
 responsive tester. The opening description retains mobile emulator, device
-simulator, and responsive design tester. Measure the direct in-store ranks for 7 and 14 days before
-changing localized summaries. The remaining locales retain their current
-natural translations until the English experiment establishes a winning
-message; then localize the same intent with human review.
+simulator, and responsive design tester. The localized summaries use natural
+equivalents of the established message rather than repeating English keywords.
+Have a native speaker review high-traffic locales before publishing them in the
+Developer Dashboard.
 
-## Initial rollout order
+## Human-review priority
 
-1. Spanish, French, Simplified Chinese, and Traditional Chinese — explicitly
-   requested target markets.
-2. Filipino, Dutch, and Vietnamese — the countries present in the Search
-   Console export dated 25 July 2026.
-3. Brazilian Portuguese, Italian, Japanese, Korean, and Hindi — broader
-   high-reach coverage for the first international release.
-4. Russian and Arabic — the strongest Store-interface signals in the May–July
-   2026 page-title analytics export that were not already packaged.
+1. German, Spanish, Brazilian Portuguese, Japanese, Korean, Simplified Chinese,
+   and Traditional Chinese — first conversion-asset and native-copy review.
+2. French, Italian, Dutch, Polish, Portuguese (Portugal), Turkish, Indonesian,
+   and Vietnamese — second review wave.
+3. All remaining locales — publish only after checking title, summary, detailed
+   description, screenshot captions, line wrapping, and right-to-left layout
+   where applicable.
 
 Chrome chooses a packaged `_locales` translation from the browser language and
 falls back to English. The Store listing translations must also be entered in

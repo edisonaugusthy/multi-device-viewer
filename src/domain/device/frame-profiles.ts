@@ -46,6 +46,8 @@ export interface DeviceFrameProfile {
   safeAreaInsetTop: number;
   /** Extra left padding for image-backed status bars with an off-centre camera. */
   statusBarInsetLeft: number;
+  /** Extra right padding for image-backed status bars with an off-centre camera. */
+  statusBarInsetRight: number;
   /** OS major version parsed from reference data (e.g. 26, 16). */
   osMajor: number;
 }
@@ -237,7 +239,7 @@ function hasDynamicIsland(device: Device) {
   );
 }
 
-function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome" | "chromeVariant" | "safeAreaInsetBottom" | "safeAreaInsetTop" | "statusBarInsetLeft" | "osMajor">): DeviceFrameProfile {
+function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style" | "imageChrome" | "chromeVariant" | "safeAreaInsetBottom" | "safeAreaInsetTop" | "statusBarInsetLeft" | "statusBarInsetRight" | "osMajor">): DeviceFrameProfile {
   const desktopChrome: DeviceFrameStyle["desktopChrome"] =
     isApple(device) && (device.type === "laptop" || device.type === "desktop") ? "safari" : "default";
   const mockupFrameStyle = device.mockupAssets.find((asset) => asset.frameStyle)?.frameStyle;
@@ -263,6 +265,7 @@ function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style"
     safeAreaInsetBottom,
     safeAreaInsetTop,
     statusBarInsetLeft: meta?.statusBarInsetLeft ?? 0,
+    statusBarInsetRight: meta?.statusBarInsetRight ?? 0,
     osMajor
   };
 }

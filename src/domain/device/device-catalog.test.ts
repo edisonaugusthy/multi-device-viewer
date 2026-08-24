@@ -61,12 +61,10 @@ describe("device catalog imports", () => {
         .map((device) => device.id)
         .sort(),
     ).toEqual([
-      "apple-iphone-17e-2026",
-      "apple-macbook-neo-13-2026",
-      "apple-studio-display-xdr-27-2026",
-      "google-pixel-10a-2026",
-      "microsoft-surface-laptop-8-13-8-2026",
-      "samsung-galaxy-s26-plus-2026",
+      "google-pixel-11-2026",
+      "google-pixel-11-pro-2026",
+      "google-pixel-11-pro-fold-2026",
+      "google-pixel-11-pro-xl-2026",
     ]);
   });
 
@@ -98,7 +96,7 @@ describe("device catalog imports", () => {
       type,
       cssViewport: { width, height },
       manufacturerResolution: { width: panelWidth, height: panelHeight },
-      tags: expect.arrayContaining(["new"]),
+      tags: expect.not.arrayContaining(["new"]),
       mockupAssets: [expect.objectContaining({ localPath })],
     });
     const asset = devices.find((device) => device.id === id)?.mockupAssets[0];
@@ -152,6 +150,92 @@ describe("device catalog imports", () => {
     const viewport = device?.mockupAssets[0]?.viewport;
     expect(viewport?.portrait?.paths?.portrait).toContain("M");
     expect(viewport?.landscape?.paths?.landscape).toContain("M");
+  });
+
+  it.each([
+    ["google-pixel-11-2026", "Google Pixel 11", 412, 924, 1080, 2424],
+    ["google-pixel-11-pro-2026", "Google Pixel 11 Pro", 410, 914, 1280, 2856],
+    ["google-pixel-11-pro-xl-2026", "Google Pixel 11 Pro XL", 448, 997, 1344, 2992],
+    ["google-pixel-11-pro-fold-2026", "Google Pixel 11 Pro Fold", 791, 823, 2076, 2160],
+  ])("includes announced Pixel 11 profile %s", (id, name, width, height, resolutionWidth, resolutionHeight) => {
+    expect(devices.find((candidate) => candidate.id === id)).toMatchObject({
+      name,
+      year: 2026,
+      cssViewport: { width, height },
+      manufacturerResolution: { width: resolutionWidth, height: resolutionHeight },
+      tags: expect.arrayContaining(["android", "new"]),
+    });
+  });
+
+  it.each([
+    ["google-pixel-11-2026", "/mockups/google-pixel-11-2026.png", "https://store.google.com/us/config/pixel_11?hl=en-US"],
+    ["google-pixel-11-pro-2026", "/mockups/google-pixel-11-pro-2026.png", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
+    ["google-pixel-11-pro-xl-2026", "/mockups/google-pixel-11-pro-xl-2026.png", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
+    ["google-pixel-11-pro-fold-2026", "/mockups/google-pixel-11-pro-fold-2026.png", "https://store.google.com/us/config/pixel_11_pro_fold?hl=en-US"],
+  ])("uses an official Google Store image for %s", (id, localPath, sourceUrl) => {
+    expect(devices.find((candidate) => candidate.id === id)?.mockupAssets[0]).toMatchObject({
+      localPath,
+      sourceUrl,
+      sourceCrop: expect.objectContaining({ width: expect.any(Number), height: expect.any(Number) }),
+      viewport: {
+        portrait: expect.objectContaining({ width: expect.any(Number), height: expect.any(Number) }),
+        landscape: expect.objectContaining({ width: expect.any(Number), height: expect.any(Number) }),
+      },
+    });
+  });
+
+  it("keeps the Pixel 11 Pro screen and camera aligned to the official front render", () => {
+    const asset = devices.find((device) => device.id === "google-pixel-11-pro-2026")!.mockupAssets[0];
+
+    expect(asset.screenInset).toEqual({ top: 9.5, right: 11, bottom: 11, left: 10.5 });
+    expect(asset.viewport).toMatchObject({
+      portrait: {
+        left: 10.5, top: 9.5, width: 202.5, height: 452,
+        occlusions: [{ kind: "circle", left: 93.5, top: 8.5, width: 15, height: 15.5 }],
+      },
+      landscape: {
+        left: 11, top: 10.5, width: 452, height: 202.5,
+        occlusions: [{ kind: "circle", left: 428, top: 93.5, width: 15.5, height: 15 }],
+      },
+    });
+  });
+
+  it("keeps the Pixel 11 screen and camera aligned to the official front render", () => {
+    const asset = devices.find((device) => device.id === "google-pixel-11-2026")!.mockupAssets[0];
+
+    expect(asset.screenInset).toEqual({ top: 11.5, right: 13, bottom: 12.5, left: 11.5 });
+    expect(asset.viewport).toMatchObject({
+      portrait: {
+        left: 11.5, top: 11.5, width: 213.5, height: 478.5,
+        occlusions: [{ kind: "circle", left: 98.5, top: 9, width: 16, height: 16 }],
+      },
+      landscape: {
+        left: 12.5, top: 11.5, width: 478.5, height: 213.5,
+        occlusions: [{ kind: "circle", left: 453.5, top: 98.5, width: 16, height: 16 }],
+      },
+    });
+    expect(asset.viewport?.portrait?.paths?.portrait).toContain("A25 28.5");
+    expect(asset.viewport?.portrait?.paths?.portrait).toContain("M98.5 17A8 8");
+    expect(asset.viewport?.landscape?.paths?.landscape).toContain("A28.5 24.5");
+    expect(asset.viewport?.landscape?.paths?.landscape).toContain("M453.5 106.5A8 8");
+  });
+
+  it("keeps the Pixel 11 Pro Fold screen, camera, and status icons aligned", () => {
+    const device = devices.find((candidate) => candidate.id === "google-pixel-11-pro-fold-2026")!;
+    const asset = device.mockupAssets[0];
+
+    expect(asset.screenInset).toEqual({ top: 14, right: 16, bottom: 15, left: 15 });
+    expect(asset.viewport).toMatchObject({
+      portrait: {
+        left: 15, top: 14, width: 457, height: 474,
+        occlusions: [{ kind: "circle", left: 429, top: 9, width: 17, height: 17 }],
+      },
+      landscape: {
+        left: 15, top: 15, width: 474, height: 457,
+        occlusions: [{ kind: "circle", left: 448, top: 429, width: 17, height: 17 }],
+      },
+    });
+    expect(getFrameProfile(device).statusBarInsetRight).toBe(44);
   });
 
   it("keeps the first-generation iPhone SE top hardware and classic status bar separate", () => {

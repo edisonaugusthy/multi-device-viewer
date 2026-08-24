@@ -208,6 +208,24 @@ The extension does not sell, transfer, or use user data for any purpose outside 
 
 ---
 
+## Review prompt safeguards
+
+- The first prompt is eligible only after 7 days, 5 qualified sessions, and 3
+  successful actions. A qualified session means at least 60 seconds with two
+  or more viewports open.
+- The full-screen prompt appears only after a successful capture, all-viewport
+  flow check, saved device set, or design-feedback capture. It never appears at
+  startup or over another modal.
+- **Not now** permits one reminder only after another 30 days and 10 additional
+  qualified sessions. The prompt is shown at most twice for the lifetime of the
+  browser profile.
+- Choosing review or **Don't ask again** stops all future prompts.
+  Dismissing the second prompt also stops future prompts.
+- Eligibility and choices stay in browser-local storage. There is no review
+  reward, five-star request, telemetry, or remote tracking.
+
+---
+
 ## Release Checklist
 
 1. Bump `manifest.version` in `wxt.config.ts`.

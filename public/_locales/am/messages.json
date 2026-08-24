@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View፦ የመሣሪያ አስመሳይ እና ምላሽ ሰጪ ሞካሪ" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "የስልክ፣ ታብሌት እና ዴስክቶፕ እይታዎችን ጎን ለጎን ለመፈተሽ ነፃ የመሣሪያ አስመሳይ።" },
+  "actionTitle": { "message": "የMobile View መሣሪያ አስመሳይን ክፈት" },
+  "contextMenuTitle": { "message": "ይህን ትር በMobile View ክፈት" },
+  "activeActionTitle": { "message": "Mobile View ንቁ ነው — ለመዝጋት ጠቅ ያድርጉ" },
+  "unsupportedActionTitle": { "message": "መጀመሪያ ድር ጣቢያ ይክፈቱ" },
+  "unsupportedUrlHint": { "message": "ወደሚያዘጋጁት ገጽ ይሂዱ፣ ከዚያ ቅጥያውን እንደገና ጠቅ ያድርጉ።" }
+}

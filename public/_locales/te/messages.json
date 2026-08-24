@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: పరికర ఎమ్యులేటర్ మరియు రెస్పాన్సివ్ టెస్టర్" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "ఫోన్, టాబ్లెట్, ల్యాప్‌టాప్ మరియు డెస్క్‌టాప్ వీక్షణలను ఒకేసారి పరీక్షించడానికి ఉచిత పరికర ఎమ్యులేటర్." },
+  "actionTitle": { "message": "Mobile View పరికర ఎమ్యులేటర్‌ను తెరవండి" },
+  "contextMenuTitle": { "message": "ఈ ట్యాబ్‌ను Mobile Viewలో తెరవండి" },
+  "activeActionTitle": { "message": "Mobile View సక్రియంగా ఉంది — మూసేందుకు క్లిక్ చేయండి" },
+  "unsupportedActionTitle": { "message": "ముందుగా వెబ్‌సైట్‌ను తెరవండి" },
+  "unsupportedUrlHint": { "message": "మీరు అభివృద్ధి చేస్తున్న పేజీకి వెళ్లి, ఎక్స్‌టెన్షన్‌ను మళ్లీ క్లిక్ చేయండి." }
+}

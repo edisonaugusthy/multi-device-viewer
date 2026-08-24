@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Емулатор уређаја и прилагодљиви тест" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Бесплатан емулатор за паралелни преглед и тестирање сајта на телефону, таблету, лаптопу и рачунару." },
+  "actionTitle": { "message": "Отвори Mobile View емулатор уређаја" },
+  "contextMenuTitle": { "message": "Отвори ову картицу у Mobile View" },
+  "activeActionTitle": { "message": "Mobile View је активан — кликните за затварање" },
+  "unsupportedActionTitle": { "message": "Прво отворите веб-сајт" },
+  "unsupportedUrlHint": { "message": "Идите на страницу коју развијате и поново кликните на проширење." }
+}

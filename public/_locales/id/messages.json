@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Emulator perangkat & penguji responsif" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Emulator gratis untuk melihat dan menguji situs secara responsif di ponsel, tablet, laptop, dan desktop secara bersamaan." },
+  "actionTitle": { "message": "Buka emulator perangkat Mobile View" },
+  "contextMenuTitle": { "message": "Buka tab ini di Mobile View" },
+  "activeActionTitle": { "message": "Mobile View aktif — klik untuk menutup" },
+  "unsupportedActionTitle": { "message": "Buka situs web terlebih dahulu" },
+  "unsupportedUrlHint": { "message": "Buka halaman yang sedang Anda kembangkan, lalu klik ekstensi lagi." }
+}

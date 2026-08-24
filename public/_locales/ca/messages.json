@@ -1,0 +1,10 @@
+{
+  "extensionName": { "message": "Mobile View: Emulador i prova responsiva" },
+  "extensionShortName": { "message": "Mobile View" },
+  "extensionDescription": { "message": "Emulador gratuït per previsualitzar i provar alhora webs en mòbil, tauleta, portàtil i escriptori." },
+  "actionTitle": { "message": "Obre l’emulador de dispositius Mobile View" },
+  "contextMenuTitle": { "message": "Obre aquesta pestanya a Mobile View" },
+  "activeActionTitle": { "message": "Mobile View està actiu — fes clic per tancar" },
+  "unsupportedActionTitle": { "message": "Obre primer un lloc web" },
+  "unsupportedUrlHint": { "message": "Ves a la pàgina que estàs desenvolupant i torna a fer clic a l’extensió." }
+}

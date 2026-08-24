@@ -35,6 +35,7 @@ import {
 } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { SUPPORTED_LOCALES, useI18n, type AppLocale } from "../../app/i18n";
+import { useReviewPrompt } from "../../app/useReviewPrompt";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { PRODUCT_SHORT_NAME } from "../../app/product";
 import {
@@ -70,6 +71,7 @@ import { PresetsManager } from "./PresetsManager";
 import { PermissionsInfoModal } from "./PermissionsInfoModal";
 import { PreviewCard } from "./PreviewCard";
 import { ReviewIssueModal } from "./ReviewIssueModal";
+import { ReviewPromptModal } from "./ReviewPromptModal";
 import { ReleaseNotesModal } from "./ReleaseNotesModal";
 
 const QUICK_DEVICE_SETS = [
@@ -157,12 +159,46 @@ export function SimulatorApp() {
   const [focusedSlotId, setFocusedSlotId] = useState<string | null>(null);
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const previousSlotCount = useRef(slots.length);
+  const lastSuccessfulFlowRun = useRef<string | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const dark = display.darkMode;
+  const standalonePreview = Boolean(
+    (window as Window & { __MDV_STANDALONE_PREVIEW__?: boolean })
+      .__MDV_STANDALONE_PREVIEW__,
+  );
+  const reviewPromptPreview =
+    import.meta.env.DEV &&
+    new URLSearchParams(window.location.search).has("reviewPromptPreview");
+  const reviewPrompt = useReviewPrompt({
+    enabled: !import.meta.env.FIREFOX && !standalonePreview,
+    hasMultipleViewports: slots.length >= 2,
+    canPresent:
+      !annotationOpen &&
+      !showCustomDevice &&
+      !showReviewIssue &&
+      !showPermissions &&
+      !showFirstRun &&
+      !releaseNotes &&
+      !capturing &&
+      !recording &&
+      !flowRecording,
+  });
 
   useEffect(() => {
     void readStore<FlowStep[]>("mdvRecordedFlow", []).then(setRecordedFlow);
   }, []);
+
+  useEffect(() => {
+    if (!flowReplay || lastSuccessfulFlowRun.current === flowReplay.runId) return;
+    const results = Object.values(flowResults);
+    if (
+      results.length !== slots.length ||
+      !results.every((result) => result.status === "passed")
+    )
+      return;
+    lastSuccessfulFlowRun.current = flowReplay.runId;
+    reviewPrompt.noteSuccessfulAction();
+  }, [flowReplay, flowResults, reviewPrompt.noteSuccessfulAction, slots.length]);
 
   useEffect(() => {
     void readStore<{
@@ -347,6 +383,7 @@ export function SimulatorApp() {
       setAnnotationImage(cropped);
       setAnnotationMeta(captureMetaForSlot(slotId));
       setAnnotationOpen(true);
+      reviewPrompt.noteSuccessfulAction();
     } finally {
       setCapturing(false);
       setCapturingSlotId(undefined);
@@ -699,6 +736,7 @@ export function SimulatorApp() {
                       dark={dark}
                       currentDeviceIds={slots.map((slot) => slot.deviceId)}
                       onApply={applyDevicePreset}
+                      onSaved={reviewPrompt.noteSuccessfulAction}
                     />
                   )}
                 </SidebarSection>
@@ -889,6 +927,7 @@ export function SimulatorApp() {
               setAnnotationImage(image);
               setAnnotationMeta(captureMetaForSlot(referenceViewportId));
               setAnnotationOpen(true);
+              reviewPrompt.noteSuccessfulAction();
             }}
           />
         )}
@@ -1007,6 +1046,14 @@ export function SimulatorApp() {
       {showPermissions && <PermissionsInfoModal dark={dark} onClose={() => setShowPermissions(false)} />}
       {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
       {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
+      {(reviewPrompt.visible || reviewPromptPreview) && (
+        <ReviewPromptModal
+          dark={dark}
+          onReview={reviewPrompt.markReviewed}
+          onNotNow={reviewPrompt.postpone}
+          onNever={reviewPrompt.optOut}
+        />
+      )}
     </div>
   );
 }

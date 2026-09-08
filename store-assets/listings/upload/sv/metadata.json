@@ -1,0 +1,11 @@
+{
+  "storeLocale": "sv",
+  "name": "Mobile View: Enhetsemulator och responsivt test",
+  "summary": "Mobilsimulator för responsiva tester. Jämför telefon, surfplatta och dator, synkronisera rullning och ta skärmbilder.",
+  "screenshotCaptions": [
+    "Testa mobil, surfplatta och dator sida vid sida",
+    "Använd över 105 enhetsprofiler i en arbetsyta",
+    "Jämför en live-sida med en godkänd design"
+  ],
+  "screenshotLocale": "en"
+}

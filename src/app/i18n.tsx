@@ -1,3 +1,4 @@
+import { getViewerContext } from "./viewer-context";
 import {
   createContext,
   useCallback,
@@ -49,11 +50,47 @@ export type TranslationValues = Record<string, string | number>;
 const UI_LOCALE_KEY = "mdvUiLocale";
 
 const en = {
+  viewportOptions: "Viewport options",
+  browserAppearance: "Browser appearance",
+  closeBrowserSettings: "Close browser settings",
+  browserVersion: "Browser version",
+  catalogBrowserVersion: "Catalog profile (iOS {version})",
+  browserLayout: "Browser layout",
+  separateTabs: "Separate tabs",
+  compactTabs: "Compact tabs",
+  compactBrowser: "Compact",
+  bottomBrowser: "Bottom",
+  topBrowser: "Top",
+  browserPreviewNote: "These frames approximate Safari’s layout. Validate Safari-specific rendering on a real device.",
+  helpAndFeedback: "Help and feedback",
+  closeHelp: "Close help",
+  helpIntro: "Share your experience or report a problem. You choose what to submit.",
+  leaveStoreReview: "Review on the Chrome Web Store",
+  reportIssueGitHub: "Report an issue on GitHub",
+  openingReview: "Opening…",
+  reviewOpenError: "The page could not be opened. Please try again.",
+  reviewRequestStatus: "Why haven't I seen a review request?",
+  reviewProgress: "Qualified sessions: {sessions}/{requiredsessions} · Completed actions: {actions}/{requiredactions}",
+  reviewStatusDisabled: "Automatic requests are disabled in this browser or preview. Manual help remains available.",
+  reviewStatusError: "Review preferences could not be read or saved. Please reopen the viewer and try again.",
+  reviewStatusLoading: "Loading your local review preferences…",
+  reviewStatusAge: "Requests start seven days after your review preferences are first initialized.",
+  reviewStatusSessions: "A session qualifies after one minute with at least two views. Five sessions are required.",
+  reviewStatusActions: "Complete three captures, saved device sets, design annotations or successful flow checks.",
+  reviewStatusCooldown: "A dismissed request waits at least 30 days before its final reminder.",
+  reviewStatusReturnSessions: "The final reminder requires ten additional qualified sessions.",
+  reviewStatusLimit: "The request limit has been reached. You can still use the manual review link.",
+  reviewStatusOpened: "The review page was opened. Automatic requests have stopped; no submitted review is inferred.",
+  reviewStatusNever: "Your choice to stop requests is saved. The manual links remain available.",
+  reviewStatusDialog: "The request waits while another task or dialog is open.",
+  reviewStatusAction: "You're eligible. The request appears after your next qualifying completed action.",
+  reviewStatusEligible: "The request is ready to appear.",
   language: "Language",
   workspaceSetup: "Workspace setup",
   openWorkspaceSetup: "Open workspace setup",
   closeWorkspaceSetup: "Close workspace setup",
   collapseWorkspaceSetup: "Collapse workspace setup",
+  viewOnly: "View only",
   showWorkspaceControls: "Show workspace controls",
   quickDeviceSets: "Quick device sets",
   openDeviceSet: "Open {name}",
@@ -72,6 +109,10 @@ const en = {
   reloadAll: "Reload all",
   lightTheme: "Light theme",
   darkTheme: "Dark theme",
+  deviceView: "Device",
+  freeView: "Free",
+  previewStyle: "Preview style",
+  tools: "Tools",
   closeViewer: "Close viewer",
   devices: "Devices",
   countOf: "{count} of {max}",
@@ -239,6 +280,7 @@ const en = {
   tourStep: "Tour step {current} of {total}",
   goToTourStep: "Go to step {current}: {title}",
   previousTourStep: "Previous tour step",
+  previousField: "Previous field",
   next: "Next",
   finish: "Finish",
   key: "Key {key}",
@@ -279,7 +321,7 @@ const en = {
   tourWorkspaceHint: "Start with Add viewport, then choose a device in its card.",
   tourCanvasEyebrow: "Clear canvas",
   tourCanvasTitle: "Hide setup when you need more room",
-  tourCanvasText: "Collapse Workspace setup after choosing your devices to give every preview more horizontal space.",
+  tourCanvasText: "Close Workspace setup to uncover the previews, then reopen it whenever you need tools.",
   tourCanvasHint: "Use Open workspace setup whenever you need the sidebar again.",
   releaseScrollTitle: "Scroll without visible scrollbars",
   releaseScrollDescription: "Phone and tablet previews keep native scrolling while hiding browser scrollbar chrome, including cross-origin pages.",
@@ -389,8 +431,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const selected = SUPPORTED_LOCALES.find(({ code }) => code === locale)!;
-    document.documentElement.lang = locale.replace("_", "-");
-    document.documentElement.dir = selected.dir;
+    const languageRoot = getViewerContext()?.root ?? document.documentElement;
+    languageRoot.lang = locale.replace("_", "-");
+    languageRoot.dir = selected.dir;
   }, [locale]);
 
   const setLocale = useCallback((next: AppLocale) => {

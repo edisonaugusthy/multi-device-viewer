@@ -19,3 +19,7 @@ Geometry reference: [Samsung Galaxy Z Fold8 Ultra, Fold8 and Flip8 specification
 | `samsung-galaxy-a27-5g.png` | [Galaxy A27 5G](https://www.samsungmobilepress.com/media-assets/galaxy-a27-5g) | `002-product-galaxy-a27-5g-black-front2.jpg` | `a33dd394c517b01cfc77a6031b0d8570e3bd88aae4b3788295f09023601f8c96` |
 
 The Fold8 and Fold8 Ultra main-display camera holes are deliberately offset to the right, matching the official open-front renders. Their cover-display camera holes remain centered. The Flip8 folded preset also masks the two camera lenses and flash from the usable cover viewport.
+
+## iPad mini outline (September 2026)
+
+`public/mockups/ipad-mini-modern.svg` is an original, code-drawn outline shared by iPad mini 6 and iPad mini (A17 Pro). It replaces the incorrectly reused Home-button shell. Its display opening uses the 744 × 1133 logical screen reference from [Apple's iPad mini 6 specifications](https://support.apple.com/en-us/111886). It is an illustrated frame, not an Apple product photograph; physical bezel, camera and corner-radius calibration remains on the [device checklist](device-validation.md). This is an explicit exception to the photograph-only guidance above.

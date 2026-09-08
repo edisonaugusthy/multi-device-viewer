@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Sync audit fixture</title>
+<style>html{scroll-behavior:smooth}body{margin:0;font:16px system-ui}nav{position:fixed;top:0;left:0;background:white;z-index:2}main{padding-top:90px;width:2400px;height:6000px;background:linear-gradient(#ddd,#8ac)}.panels{display:flex;gap:12px}.panel{height:140px;width:160px;overflow:auto;border:2px solid} .inside{height:1800px;width:800px;background:linear-gradient(#fdd,#ccf)}@media(max-width:500px){main{height:4000px}}</style>
+<nav><button id="spa">SPA next</button><button id="replace">Replace route</button><button id="back">Back</button><button id="forward">Forward</button><a id="full" href="?route=full">Full page</a><a id="hash" href="#section">Hash</a><button id="counter">Count</button><output id="count">0</output></nav>
+<main><div class="panels"><div id="panel-a" class="panel"><div class="inside">Nested A</div></div><div id="panel-b" class="panel"><div class="inside">Nested B</div></div></div><section id="section" style="margin-top:1800px">Anchor</section></main>
+<script>
+window.documentToken=crypto.randomUUID();const loadKey='audit-loads-'+window.name;window.documentLoads=Number(sessionStorage.getItem(loadKey)||0)+1;sessionStorage.setItem(loadKey,String(window.documentLoads));window.originalPushState=history.pushState;
+const native=new URLSearchParams(location.search).has('native');
+const query=route=>'?'+(native?'native=1&':'')+'route='+route;
+document.querySelector('#full').href=query('full');
+document.querySelector('#spa').onclick=()=>history.pushState({},'',query('spa'));
+document.querySelector('#replace').onclick=()=>history.replaceState({},'',query('replace'));
+document.querySelector('#back').onclick=()=>history.back();document.querySelector('#forward').onclick=()=>history.forward();
+document.querySelector('#counter').onclick=()=>document.querySelector('#count').textContent=Number(document.querySelector('#count').textContent)+1;
+window.receivedSync=[];window.addEventListener('message',e=>{if(e.source===parent&&e.data?.type)window.receivedSync.push(e.data.type)});
+</script>
+<script type="module">
+if(!new URLSearchParams(location.search).has('native')){const {setupPreviewBridge}=await import('/src/app/preview-bridge.ts');setupPreviewBridge();}
+</script>
+</html>

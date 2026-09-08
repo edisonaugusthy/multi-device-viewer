@@ -303,25 +303,13 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
     if (!imgReady) return;
     const dataUrl = exportPng();
 
-    // The Clipboard API is blocked by Permissions Policy inside the extension
-    // iframe. Route the write through the content script (page context) via
-    // postMessage, which has clipboard access.
-    const ok = await new Promise<boolean>((resolve) => {
-      const onResult = (e: MessageEvent) => {
-        if (e.data?.type === "COPY_IMAGE_RESULT") {
-          window.removeEventListener("message", onResult);
-          resolve(!!e.data.ok);
-        }
-      };
-      window.addEventListener("message", onResult);
-      // Post to parent content script
-      window.parent.postMessage({ type: "COPY_IMAGE", dataUrl }, "*");
-      // Timeout fallback after 4s
-      setTimeout(() => {
-        window.removeEventListener("message", onResult);
-        resolve(false);
-      }, 4000);
-    });
+    let ok = false;
+    try {
+      // Direct user action in the top-level viewer preserves clipboard activation.
+      const blob = await (await fetch(dataUrl)).blob();
+      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+      ok = true;
+    } catch { /* The download fallback remains available on restricted pages. */ }
 
     if (ok) {
       setCopied(true);

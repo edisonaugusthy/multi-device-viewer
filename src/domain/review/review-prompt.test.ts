@@ -67,12 +67,16 @@ describe("review prompt policy", () => {
   });
 
   it("permanently stops after review or opt-out", () => {
-    for (const outcome of ["reviewed", "never"] as const) {
+    for (const outcome of ["opened", "never"] as const) {
       const state = finishReviewPrompt(eligibleState(), outcome);
       expect(isReviewPromptEligible(state, installedAt + 365 * DAY_MS)).toBe(false);
       expect(recordQualifiedSession(state)).toBe(state);
       expect(recordSuccessfulAction(state)).toBe(state);
     }
+  });
+
+  it("migrates an old review completion to an opened listing", () => {
+    expect(normalizeReviewPromptState({ outcome: "reviewed" }, installedAt).outcome).toBe("opened");
   });
 
   it("preserves a permanent stop for the removed feedback destination", () => {

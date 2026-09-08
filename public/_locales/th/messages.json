@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: โปรแกรมจำลองอุปกรณ์และทดสอบ Responsive" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "โปรแกรมจำลองฟรีสำหรับดูตัวอย่างและทดสอบเว็บไซต์พร้อมกันบนมือถือ แท็บเล็ต แล็ปท็อป และเดสก์ท็อป" },
-  "actionTitle": { "message": "เปิดโปรแกรมจำลองอุปกรณ์ Mobile View" },
-  "contextMenuTitle": { "message": "เปิดแท็บนี้ใน Mobile View" },
-  "activeActionTitle": { "message": "Mobile View ทำงานอยู่ — คลิกเพื่อปิด" },
-  "unsupportedActionTitle": { "message": "เปิดเว็บไซต์ก่อน" },
-  "unsupportedUrlHint": { "message": "ไปยังหน้าที่คุณกำลังพัฒนา แล้วคลิกส่วนขยายอีกครั้ง" }
+  "extensionName": {
+    "message": "Mobile View: โปรแกรมจำลองอุปกรณ์และทดสอบ Responsive"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "โปรแกรมจำลองมือถือสำหรับทดสอบเว็บแบบ responsive เปรียบเทียบมือถือ แท็บเล็ต และเดสก์ท็อป ซิงค์การเลื่อนและจับภาพหน้าจอ"
+  },
+  "actionTitle": {
+    "message": "เปิดโปรแกรมจำลองอุปกรณ์ Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "เปิดแท็บนี้ใน Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View ทำงานอยู่ — คลิกเพื่อปิด"
+  },
+  "unsupportedActionTitle": {
+    "message": "เปิดเว็บไซต์ก่อน"
+  },
+  "unsupportedUrlHint": {
+    "message": "ไปยังหน้าที่คุณกำลังพัฒนา แล้วคลิกส่วนขยายอีกครั้ง"
+  }
 }

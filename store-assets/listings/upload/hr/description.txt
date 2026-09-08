@@ -1,0 +1,7 @@
+Mobile View besplatan je emulator uređaja otvorenog koda za Chrome. Prikažite web u do četiri prikaza telefona, tableta, prijenosnika i računala istodobno. Odaberite realistične uređaje, promijenite orijentaciju i zumiranje, sinkronizirajte pomicanje i navigaciju, snimite zaslon i usporedite s lokalnim dizajnom. Sve radi lokalno bez računa, pretplate, analitike, telemetrije ili poslužitelja.
+
+- Izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.
+- Snimite jedan prikaz ili cijeli radni prostor. Dodajte strelice, okvire, crteže i tekst ili izrežite snimku. Prikažite lokalni dizajn uz stranicu ili kao preklop.
+- Kopirajte strukturiranu uputu za popravak s URL-om, uređajima, dimenzijama i bilješkama o problemu u svoj alat za programiranje.
+
+To su responzivni prikazi u Chromeu, a ne fizički uređaji ni pogon Safari. Pravila prijave i ugrađivanja web-mjesta i dalje vrijede. Izvorna stranica ostaje sačuvana; novi prikazi ne kopiraju nespremljene izmjene.

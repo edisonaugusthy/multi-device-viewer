@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Emulador móvil y prueba responsiva" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Emulador gratuito para previsualizar y probar a la vez sitios en celular, tablet, laptop y escritorio." },
-  "actionTitle": { "message": "Abrir el emulador móvil Mobile View" },
-  "contextMenuTitle": { "message": "Abrir esta pestaña en Mobile View" },
-  "activeActionTitle": { "message": "Mobile View está activo — haz clic para cerrar" },
-  "unsupportedActionTitle": { "message": "Abre primero un sitio web" },
-  "unsupportedUrlHint": { "message": "Ve a la página que estás desarrollando y vuelve a hacer clic en la extensión." }
+  "extensionName": {
+    "message": "Mobile View: Emulador móvil y prueba responsiva"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Simulador móvil y visor multidispositivo para pruebas responsive. Compara vistas, sincroniza el desplazamiento y captura pantallas."
+  },
+  "actionTitle": {
+    "message": "Abrir el emulador móvil Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Abrir esta pestaña en Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View está activo — haz clic para cerrar"
+  },
+  "unsupportedActionTitle": {
+    "message": "Abre primero un sitio web"
+  },
+  "unsupportedUrlHint": {
+    "message": "Ve a la página que estás desarrollando y vuelve a hacer clic en la extensión."
+  }
 }

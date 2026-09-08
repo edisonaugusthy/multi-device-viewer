@@ -1,0 +1,11 @@
+{
+  "storeLocale": "pt-BR",
+  "name": "Mobile View: Emulador móvel e teste responsivo",
+  "summary": "Simulador móvel para testes responsivos. Compare celular, tablet e desktop, sincronize a rolagem e capture telas.",
+  "screenshotCaptions": [
+    "Teste celular, tablet e desktop lado a lado",
+    "Role uma vez. Compare todas as vistas.",
+    "Mostre o problema. Explique a correção."
+  ],
+  "screenshotLocale": "pt_BR"
+}

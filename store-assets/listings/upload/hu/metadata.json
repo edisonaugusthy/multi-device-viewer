@@ -1,0 +1,11 @@
+{
+  "storeLocale": "hu",
+  "name": "Mobile View: Eszközemulátor és reszponzív teszt",
+  "summary": "Mobil szimulátor reszponzív tesztekhez. Hasonlítsa össze a telefont, táblagépet és PC-t, szinkronizáljon és készítsen képernyőképet.",
+  "screenshotCaptions": [
+    "Teszteljen telefont, táblagépet és számítógépet egymás mellett",
+    "Használjon több mint 105 eszközprofilt egy munkaterületen",
+    "Hasonlítsa össze az élő oldalt a jóváhagyott tervvel"
+  ],
+  "screenshotLocale": "en"
+}

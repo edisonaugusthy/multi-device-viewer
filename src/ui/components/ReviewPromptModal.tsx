@@ -1,118 +1,44 @@
-import { ExternalLink } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { ExternalLink, LoaderCircle } from "lucide-react";
+import { useState } from "react";
 import { useI18n } from "../../app/i18n";
+import { FeedbackDialog, FeedbackError } from "./FeedbackDialog";
 
-const CHROME_STORE_URL =
-  "https://chromewebstore.google.com/detail/mobile-view-device-emulat/jfcnekmenjickfihkniaoaklehjmdhdb";
 interface ReviewPromptModalProps {
   dark: boolean;
-  onReview: () => void;
+  storageError?: boolean;
+  onReview: () => Promise<void>;
   onNotNow: () => void;
   onNever: () => void;
 }
 
-export function ReviewPromptModal({
-  dark,
-  onReview,
-  onNotNow,
-  onNever,
-}: ReviewPromptModalProps) {
+export function ReviewPromptModal({ dark, storageError = false, onReview, onNotNow, onNever }: ReviewPromptModalProps) {
   const { t } = useI18n();
-  const dialogRef = useRef<HTMLElement>(null);
-  const reviewButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    reviewButtonRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onNotNow();
-      if (event.key !== "Tab") return;
-      const focusable = Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>(
-          "button:not([disabled]), a[href], [tabindex]:not([tabindex='-1'])",
-        ) ?? [],
-      );
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onNotNow]);
-
-  const openReview = () => {
-    window.open(CHROME_STORE_URL, "_blank", "noopener,noreferrer");
-    onReview();
+  const [opening, setOpening] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const openReview = async () => {
+    if (opening) return;
+    setOpening(true);
+    setFailed(false);
+    try { await onReview(); }
+    catch { setFailed(true); }
+    finally { setOpening(false); }
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[120] overflow-y-auto bg-slate-950/65 p-4 backdrop-blur-sm sm:p-6"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="review-prompt-title"
-      aria-describedby="review-prompt-description"
+    <FeedbackDialog dark={dark} title={t("reviewTitle")} description={t("reviewBody")} busy={opening} onClose={onNotNow}
+      footer={<div className="flex flex-wrap items-center justify-between gap-2">
+        <button type="button" onClick={onNever} disabled={opening}
+          className={`min-h-9 rounded-lg px-2 text-xs font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:opacity-50 ${dark ? "text-slate-400 hover:text-slate-200" : "text-slate-600 hover:text-slate-900"}`}>{t("reviewNever")}</button>
+        <button type="button" onClick={onNotNow} disabled={opening}
+          className={`min-h-9 rounded-lg border px-3 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:opacity-50 ${dark ? "border-slate-600 bg-slate-800/60 hover:bg-slate-700" : "border-slate-300 bg-white hover:bg-slate-100"}`}>{t("reviewNotNow")}</button>
+      </div>}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-xl items-center justify-center">
-        <section
-          ref={dialogRef}
-          className={`w-full rounded-2xl border p-6 shadow-[0_24px_80px_rgba(0,0,0,0.32)] sm:p-9 ${
-            dark
-              ? "border-white/10 bg-[#10141b] text-white"
-              : "border-slate-200 bg-white text-slate-950"
-          }`}
-        >
-          <h2
-            id="review-prompt-title"
-            className="text-2xl font-black leading-tight tracking-[-0.035em] sm:text-3xl"
-          >
-            {t("reviewTitle")}
-          </h2>
-          <p
-            id="review-prompt-description"
-            className={`mt-3 text-sm leading-6 ${
-              dark ? "text-slate-300" : "text-slate-600"
-            }`}
-          >
-            {t("reviewBody")}
-          </p>
-
-          <div className="mt-7">
-            <button
-              ref={reviewButtonRef}
-              type="button"
-              onClick={openReview}
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#0f9f8f] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-[#0c8f81] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24c9b6]"
-            >
-              {t("reviewCta")}
-              <ExternalLink size={15} />
-            </button>
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-semibold">
-            <button
-              type="button"
-              onClick={onNotNow}
-              className={dark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}
-            >
-              {t("reviewNotNow")}
-            </button>
-            <button
-              type="button"
-              onClick={onNever}
-              className={dark ? "text-slate-500 hover:text-slate-200" : "text-slate-400 hover:text-slate-700"}
-            >
-              {t("reviewNever")}
-            </button>
-          </div>
-        </section>
-      </div>
-    </div>
+      <button type="button" onClick={openReview} disabled={opening} aria-busy={opening}
+        className="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-teal-700 bg-teal-700 px-4 py-2.5 text-[13px] font-semibold text-white transition hover:bg-teal-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:cursor-wait disabled:opacity-70">
+        {opening ? <LoaderCircle size={15} className="animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ExternalLink size={15} className="shrink-0" aria-hidden="true" />}
+        {opening ? t("openingReview") : t("reviewCta")}
+      </button>
+      {(failed || storageError) && <FeedbackError dark={dark}>{t(failed ? "reviewOpenError" : "reviewStatusError")}</FeedbackError>}
+    </FeedbackDialog>
   );
 }

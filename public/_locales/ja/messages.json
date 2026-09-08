@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View：デバイスエミュレーター＆レスポンシブテスト" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "無料・オープンソースのモバイルシミュレーター。スマホ、タブレット、ノートPC、デスクトップ表示を並べて確認できます。" },
-  "actionTitle": { "message": "Mobile View デバイスエミュレーターを開く" },
-  "contextMenuTitle": { "message": "このタブを Mobile View で開く" },
-  "activeActionTitle": { "message": "Mobile View は有効です — クリックして閉じる" },
-  "unsupportedActionTitle": { "message": "先にウェブサイトを開いてください" },
-  "unsupportedUrlHint": { "message": "開発中のページに切り替えてから、もう一度拡張機能をクリックしてください。" }
+  "extensionName": {
+    "message": "Mobile View：デバイスエミュレーター＆レスポンシブテスト"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "スマホ・タブレット・PC表示を並べてレスポンシブテスト。モバイルシミュレーターでスクロールを同期し、スクリーンショットに問題点を残せます。"
+  },
+  "actionTitle": {
+    "message": "Mobile View デバイスエミュレーターを開く"
+  },
+  "contextMenuTitle": {
+    "message": "このタブを Mobile View で開く"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View は有効です — クリックして閉じる"
+  },
+  "unsupportedActionTitle": {
+    "message": "先にウェブサイトを開いてください"
+  },
+  "unsupportedUrlHint": {
+    "message": "開発中のページに切り替えてから、もう一度拡張機能をクリックしてください。"
+  }
 }

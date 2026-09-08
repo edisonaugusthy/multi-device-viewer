@@ -1,0 +1,11 @@
+{
+  "storeLocale": "vi",
+  "name": "Mobile View: Trình giả lập thiết bị & kiểm thử responsive",
+  "summary": "Trình mô phỏng di động để kiểm tra web responsive. So sánh điện thoại, máy tính bảng và máy tính; đồng bộ cuộn và chụp màn hình.",
+  "screenshotCaptions": [
+    "Kiểm thử song song trên điện thoại, máy tính bảng và máy tính",
+    "Dùng hơn 105 hồ sơ thiết bị responsive trong một không gian làm việc",
+    "So sánh trang trực tiếp với thiết kế đã duyệt"
+  ],
+  "screenshotLocale": "en"
+}

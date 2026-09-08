@@ -9,6 +9,13 @@ import { supportsOrientation } from "./device-service";
 import { getFrameProfile } from "./frame-profiles";
 
 describe("device catalog imports", () => {
+  it("keeps the Fold7 center crease interactive while retaining the camera cutout", () => {
+    const fold = devices.find(device => device.id === "samsung-galaxy-z-fold7-unfolded-2025")!;
+    const viewport = fold.mockupAssets[0].viewport!.portrait!;
+    expect(viewport.occlusions?.some(hole => hole.kind === "rect" && hole.top === 0 && hole.height >= viewport.height)).toBe(false);
+    expect(viewport.occlusions?.some(hole => hole.kind === "circle")).toBe(true);
+  });
+
   it("uses the latest requested devices for startup and quick presets", () => {
     expect(defaultDeviceIds).toEqual([
       "apple-iphone-17-pro-2025",
@@ -413,7 +420,7 @@ describe("device catalog imports", () => {
       platform: "ios",
       osMajor: 26,
       chromeVariant: "ios-liquid-glass",
-      safeAreaInsetBottom: 90,
+      safeAreaInsetBottom: 34,
       imageChrome: { showSafariBar: true },
     });
   });
@@ -615,9 +622,9 @@ describe("device catalog imports", () => {
   });
 
   it("keeps every image-backed render signature unique", () => {
-    const distinctSameShellDeviceIds = new Set(["apple-iphone-16e-2025"]);
+    const distinctSameShellDeviceIds = new Set(["apple-iphone-16e-2025", "apple-iphone-16-pro-2024", "apple-iphone-17-pro-2025", "apple-ipad-mini-6", "apple-ipad-mini-a17-pro-2024"]);
     const signatures = devices.flatMap((device) => device.mockupAssets
-      .filter((asset) => asset.kind === "transparent-png" && asset.localPath)
+      .filter((asset) => (asset.kind === "transparent-png" || asset.kind === "transparent-svg") && asset.localPath)
       .map((asset) => [
         device.type,
         asset.localPath,
@@ -632,7 +639,7 @@ describe("device catalog imports", () => {
 
   it("uses the matching notch shell and screen geometry for iPhone 16e", () => {
     const device = devices.find((candidate) => candidate.id === "apple-iphone-16e-2025");
-    const asset = device?.mockupAssets.find((candidate) => candidate.kind === "transparent-png");
+    const asset = device?.mockupAssets.find((candidate) => (candidate.kind === "transparent-png" || candidate.kind === "transparent-svg"));
 
     expect(asset).toMatchObject({
       localPath: "/mockups/apple-iphone-14-2022.png",
@@ -649,7 +656,7 @@ describe("device catalog imports", () => {
 
   it("uses the proportional Pixel 10 Pro shell for Pixel 10 Pro XL", () => {
     const device = devices.find((candidate) => candidate.id === "google-pixel-10-pro-xl-2025");
-    const asset = device?.mockupAssets.find((candidate) => candidate.kind === "transparent-png");
+    const asset = device?.mockupAssets.find((candidate) => (candidate.kind === "transparent-png" || candidate.kind === "transparent-svg"));
 
     expect(asset).toMatchObject({
       localPath: "/mockups/google-pixel-10-pro-2026.png",
@@ -702,8 +709,10 @@ describe("device catalog imports", () => {
     expect(getFrameProfile(onePlus).statusBarInsetLeft).toBe(30);
     expect(macbook.mockupAssets[0]).toMatchObject({
       localPath: "/mockups/apple-macbook-pro-16-2021.png",
-      viewport: { portrait: { left: 197, top: 65, width: 1728, height: 1085 } },
+      viewport: { portrait: { left: 197, top: 40, width: 1728, cornerRadius: 8 } },
     });
+    const macbookScreen = macbook.mockupAssets[0].viewport!.portrait!;
+    expect(macbookScreen.width / macbookScreen.height).toBeCloseTo(macbook.cssViewport.width / macbook.cssViewport.height, 8);
   });
 
   it.each([

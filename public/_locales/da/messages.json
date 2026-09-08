@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Enhedsemulator og responsiv test" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Gratis emulator til samtidig forhåndsvisning og responsiv test af websites på mobil, tablet, laptop og computer." },
-  "actionTitle": { "message": "Åbn Mobile View-enhedsemulator" },
-  "contextMenuTitle": { "message": "Åbn denne fane i Mobile View" },
-  "activeActionTitle": { "message": "Mobile View er aktiv — klik for at lukke" },
-  "unsupportedActionTitle": { "message": "Åbn først et website" },
-  "unsupportedUrlHint": { "message": "Gå til den side, du udvikler, og klik derefter på udvidelsen igen." }
+  "extensionName": {
+    "message": "Mobile View: Enhedsemulator og responsiv test"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobilsimulator til responsive tests. Sammenlign telefon, tablet og computer, synkroniser rulning og tag skærmbilleder."
+  },
+  "actionTitle": {
+    "message": "Åbn Mobile View-enhedsemulator"
+  },
+  "contextMenuTitle": {
+    "message": "Åbn denne fane i Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View er aktiv — klik for at lukke"
+  },
+  "unsupportedActionTitle": {
+    "message": "Åbn først et website"
+  },
+  "unsupportedUrlHint": {
+    "message": "Gå til den side, du udvikler, og klik derefter på udvidelsen igen."
+  }
 }

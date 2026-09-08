@@ -9,7 +9,7 @@ describe("captureTabWithOverlay", () => {
   it("forwards the source tab ID to the background capture request", async () => {
     const fakeWindow: { parent?: unknown } = {};
     fakeWindow.parent = fakeWindow;
-    const sendMessage = vi.fn((message, callback) => {
+    const sendMessage = vi.fn((_message, callback) => {
       callback({ dataUrl: "data:image/png;base64,capture" });
     });
 

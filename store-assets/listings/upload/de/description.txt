@@ -1,0 +1,12 @@
+Mobile View ist ein kostenloser Open-Source-Geräte-Emulator und Responsive-Tester für Chrome. Zeige eine Website in bis zu vier Smartphone-, Tablet-, Laptop- und Desktop-Ansichten nebeneinander an, ohne ständig die Fenstergröße zu ändern oder zwischen DevTools-Vorgaben zu wechseln.
+
+- Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.
+- Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.
+- Speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.
+- Erfasse eine Ansicht oder den gesamten Arbeitsbereich und ergänze Stift, Rahmen, Pfeile, Text oder Zuschnitt.
+- Vergleiche einen lokalen Entwurf neben oder über der Live-Website und markiere Feedback ohne Upload.
+- Kopiere einen strukturierten Prompt zur Behebung responsiver Fehler mit URL, Geräten, Viewport-Größen und optionalen Problemdetails.
+
+Alles läuft lokal im Browser. Kein Konto, Abonnement, Analyse-, Telemetrie- oder Anwendungs-Backend ist erforderlich. URLs, Screenshots, Aufnahmen, Entwürfe, Anmerkungen und Einstellungen werden nicht an ein Backend gesendet.
+
+Dies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emulation. Anmelde- und Einbettungsregeln der Websites gelten weiter. Die Originalseite bleibt erhalten; neue Vorschauen übernehmen keine ungespeicherten Änderungen.

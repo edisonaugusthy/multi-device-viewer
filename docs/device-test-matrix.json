@@ -1,0 +1,2191 @@
+{
+  "updated": "2026-09-07",
+  "presets": 105,
+  "orientationCases": 188,
+  "validation": "Chrome rendering of source components; not native devices",
+  "devices": [
+    {
+      "id": "apple-iphone-14-pro-max-2022",
+      "name": "Apple iPhone 14 Pro Max",
+      "category": "phone",
+      "screenCss": {
+        "width": 430,
+        "height": 932
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": "https://support.apple.com/en-us/111846",
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 5.572515227036945e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0.0009887909628230687
+    },
+    {
+      "id": "apple-iphone-air-2025",
+      "name": "Apple iPhone Air (2025)",
+      "category": "phone",
+      "screenCss": {
+        "width": 420,
+        "height": 912
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-17-pro-max-2025",
+      "name": "Apple iPhone 17 Pro Max (2025)",
+      "category": "phone",
+      "screenCss": {
+        "width": 440,
+        "height": 956
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-16-pro-max-2024",
+      "name": "Apple iPhone 16 Pro Max (2024)",
+      "category": "phone",
+      "screenCss": {
+        "width": 440,
+        "height": 956
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-15",
+      "name": "Apple iPhone 15",
+      "category": "phone",
+      "screenCss": {
+        "width": 393,
+        "height": 852
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-14",
+      "name": "Apple iPhone 14",
+      "category": "phone",
+      "screenCss": {
+        "width": 390,
+        "height": 844
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-13-mini",
+      "name": "Apple iPhone 13 Mini",
+      "category": "phone",
+      "screenCss": {
+        "width": 375,
+        "height": 812
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-se-2018",
+      "name": "Apple iPhone SE (1st generation)",
+      "category": "phone",
+      "screenCss": {
+        "width": 320,
+        "height": 568
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s24",
+      "name": "Samsung Galaxy S24",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 780
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s24-ultra",
+      "name": "Samsung Galaxy S24 Ultra",
+      "category": "phone",
+      "screenCss": {
+        "width": 384,
+        "height": 832
+      },
+      "presetDpr": 3.75,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-fold8-ultra-folded-2026",
+      "name": "Samsung Galaxy Z Fold8 Ultra (folded)",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 840
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 1.508979795561416e-05,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-fold8-ultra-unfolded-2026",
+      "name": "Samsung Galaxy Z Fold8 Ultra (unfolded)",
+      "category": "phone",
+      "screenCss": {
+        "width": 902,
+        "height": 1002
+      },
+      "presetDpr": 2.5,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 2.6078632697768e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-fold8-folded-2026",
+      "name": "Samsung Galaxy Z Fold8 (folded)",
+      "category": "phone",
+      "screenCss": {
+        "width": 416,
+        "height": 657
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 4.569889533456717e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-fold8-unfolded-2026",
+      "name": "Samsung Galaxy Z Fold8 (unfolded)",
+      "category": "phone",
+      "screenCss": {
+        "width": 979,
+        "height": 739
+      },
+      "presetDpr": 2.5,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 8.173630239305396e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-flip8-folded-2026",
+      "name": "Samsung Galaxy Z Flip8 (folded)",
+      "category": "phone",
+      "screenCss": {
+        "width": 316,
+        "height": 349
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 5.687147819344318e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-flip8-unfolded-2026",
+      "name": "Samsung Galaxy Z Flip8 (unfolded)",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 840
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 3.3150006961690792e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-a27-5g-2026",
+      "name": "Samsung Galaxy A27 5G",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 780
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 1.8820038349964818e-05,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-8",
+      "name": "Google Pixel 8",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 916
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-11-2026",
+      "name": "Google Pixel 11",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 924
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 1.330725325487947e-05,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-11-pro-2026",
+      "name": "Google Pixel 11 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 410,
+        "height": 914
+      },
+      "presetDpr": 3.125,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 9.715059801074233e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-11-pro-xl-2026",
+      "name": "Google Pixel 11 Pro XL",
+      "category": "phone",
+      "screenCss": {
+        "width": 448,
+        "height": 997
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 2.31842713915853e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-11-pro-fold-2026",
+      "name": "Google Pixel 11 Pro Fold",
+      "category": "phone",
+      "screenCss": {
+        "width": 791,
+        "height": 823
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 2.892436579138291e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-6-pro",
+      "name": "Google Pixel 6 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 892
+      },
+      "presetDpr": 3.5,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 1.020073734370186e-05,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-fold-2",
+      "name": "Samsung Galaxy Z Fold 2",
+      "category": "phone",
+      "screenCss": {
+        "width": 884,
+        "height": 1104
+      },
+      "presetDpr": 2.5,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-ipad-mini-6",
+      "name": "Apple iPad Mini (6th Gen)",
+      "category": "tablet",
+      "screenCss": {
+        "width": 744,
+        "height": 1133
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": "https://support.apple.com/en-us/111886",
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-ipad-air-4",
+      "name": "Apple iPad Air 4",
+      "category": "tablet",
+      "screenCss": {
+        "width": 820,
+        "height": 1180
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-tab-s7",
+      "name": "Samsung Galaxy Tab S7",
+      "category": "tablet",
+      "screenCss": {
+        "width": 800,
+        "height": 1280
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "macbook-pro-16-2021",
+      "name": "Apple MacBook Pro 16 inch",
+      "category": "laptop",
+      "screenCss": {
+        "width": 1728,
+        "height": 1085
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "macbook-air-2020-13",
+      "name": "Apple MacBook Air 13 inch",
+      "category": "laptop",
+      "screenCss": {
+        "width": 1280,
+        "height": 800
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "imac-24-2021",
+      "name": "iMac 24 inch",
+      "category": "desktop",
+      "screenCss": {
+        "width": 2048,
+        "height": 1152
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-watch-series-6-40",
+      "name": "Apple Watch Series 6 (40mm)",
+      "category": "watch",
+      "screenCss": {
+        "width": 162,
+        "height": 197
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-neo-qled-4k-55",
+      "name": "Samsung Smart TV Neo QLED 4K 55 inch",
+      "category": "tv",
+      "screenCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-ipad-pro-11-2018",
+      "name": "Apple iPad Pro 11",
+      "category": "tablet",
+      "screenCss": {
+        "width": 834,
+        "height": 1194
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-11-pro-max",
+      "name": "Apple iPhone 11 Pro Max",
+      "category": "phone",
+      "screenCss": {
+        "width": 414,
+        "height": 896
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-11-pro",
+      "name": "Apple iPhone 11 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 375,
+        "height": 812
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-11",
+      "name": "Apple iPhone 11",
+      "category": "phone",
+      "screenCss": {
+        "width": 414,
+        "height": 896
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-12-mini",
+      "name": "Apple iPhone 12 Mini",
+      "category": "phone",
+      "screenCss": {
+        "width": 375,
+        "height": 812
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": "https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json",
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 1.551038257829873e-05,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0.005213419518478034
+    },
+    {
+      "id": "apple-iphone-12-pro-max",
+      "name": "Apple iPhone 12 Pro Max",
+      "category": "phone",
+      "screenCss": {
+        "width": 428,
+        "height": 926
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-12-pro",
+      "name": "Apple iPhone 12 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 390,
+        "height": 844
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-12",
+      "name": "Apple iPhone 12",
+      "category": "phone",
+      "screenCss": {
+        "width": 390,
+        "height": 844
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-13-2021",
+      "name": "Apple iPhone 13",
+      "category": "phone",
+      "screenCss": {
+        "width": 390,
+        "height": 844
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-13-pro-2021",
+      "name": "Apple iPhone 13 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 390,
+        "height": 844
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-13-pro-max-2021",
+      "name": "Apple iPhone 13 Pro Max",
+      "category": "phone",
+      "screenCss": {
+        "width": 428,
+        "height": 926
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-14-max-2022",
+      "name": "Apple iPhone 14 Plus",
+      "category": "phone",
+      "screenCss": {
+        "width": 428,
+        "height": 926
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-14-pro-2022",
+      "name": "Apple iPhone 14 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 393,
+        "height": 852
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": "https://support.apple.com/en-gb/111849",
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 9.972750913966877e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-15-plus-2023",
+      "name": "Apple iPhone 15 Plus",
+      "category": "phone",
+      "screenCss": {
+        "width": 430,
+        "height": 932
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-15-pro-2023",
+      "name": "Apple iPhone 15 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 393,
+        "height": 852
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-15-pro-max-2023",
+      "name": "Apple iPhone 15 Pro Max",
+      "category": "phone",
+      "screenCss": {
+        "width": 430,
+        "height": 932
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-16-2024",
+      "name": "Apple iPhone 16",
+      "category": "phone",
+      "screenCss": {
+        "width": 393,
+        "height": 852
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-16-plus-2024",
+      "name": "Apple iPhone 16 Plus",
+      "category": "phone",
+      "screenCss": {
+        "width": 430,
+        "height": 932
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-17-2025",
+      "name": "Apple iPhone 17",
+      "category": "phone",
+      "screenCss": {
+        "width": 402,
+        "height": 874
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-17-pro-2025",
+      "name": "Apple iPhone 17 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 402,
+        "height": 874
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": "https://support.apple.com/en-mide/125090",
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 4.3666974480771614e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-5",
+      "name": "Apple iPhone 5",
+      "category": "phone",
+      "screenCss": {
+        "width": 320,
+        "height": 568
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-x",
+      "name": "Apple iPhone X",
+      "category": "phone",
+      "screenCss": {
+        "width": 375,
+        "height": 812
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-xr",
+      "name": "Apple iPhone XR",
+      "category": "phone",
+      "screenCss": {
+        "width": 414,
+        "height": 896
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "dell-latitude-14-3420",
+      "name": "Dell Latitude 14 3420",
+      "category": "laptop",
+      "screenCss": {
+        "width": 1440,
+        "height": 809
+      },
+      "presetDpr": 1,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-5",
+      "name": "Google Pixel 5",
+      "category": "phone",
+      "screenCss": {
+        "width": 393,
+        "height": 851
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "huawei-p30-pro",
+      "name": "Huawei P30 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 780
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "microsoft-surface-duo",
+      "name": "Microsoft Surface Duo",
+      "category": "tablet",
+      "screenCss": {
+        "width": 1114,
+        "height": 705
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "non-branded-android-smartphone",
+      "name": "Non-branded Android Smartphone",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 800
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "oneplus-nord-2",
+      "name": "OnePlus Nord 2",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 915
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "oppo-find-x3-pro",
+      "name": "OPPO Find X3 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 804
+      },
+      "presetDpr": 4,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-a12-2021",
+      "name": "Samsung Galaxy A12",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 800
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-note20-ultra",
+      "name": "Samsung Galaxy Note20 Ultra",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 883
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s20",
+      "name": "Samsung Galaxy S20",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 800
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s21-ultra",
+      "name": "Samsung Galaxy S21 Ultra",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 800
+      },
+      "presetDpr": 4,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s22-2022",
+      "name": "Samsung Galaxy S22",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 780
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s22-plus-2022",
+      "name": "Samsung Galaxy S22 Plus",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 780
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s22-ultra-2022",
+      "name": "Samsung Galaxy S22 Ultra",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 772
+      },
+      "presetDpr": 4,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s26-ultra-2026",
+      "name": "Samsung Galaxy S26 Ultra",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 891
+      },
+      "presetDpr": 4,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-flip3-2021",
+      "name": "Samsung Galaxy Z Flip3",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 880
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "self-service-kiosk",
+      "name": "Self-service Kiosk",
+      "category": "custom",
+      "screenCss": {
+        "width": 1080,
+        "height": 1920
+      },
+      "presetDpr": 1,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "sonoff-nspanel-pro",
+      "name": "Sonoff Nspanel Pro",
+      "category": "custom",
+      "screenCss": {
+        "width": 480,
+        "height": 480
+      },
+      "presetDpr": 1,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "xiaomi-12-2022",
+      "name": "Xiaomi 12",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 800
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "xiaomi-mi-11i",
+      "name": "Xiaomi MI 11i",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 800
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "zebra-mc330",
+      "name": "Zebra MC330",
+      "category": "phone",
+      "screenCss": {
+        "width": 480,
+        "height": 800
+      },
+      "presetDpr": 1,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "zebra-tc78",
+      "name": "Zebra TC78",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 818
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-10-2026",
+      "name": "Google Pixel 10",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 924
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-10-pro-2026",
+      "name": "Google Pixel 10 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 410,
+        "height": 912
+      },
+      "presetDpr": 3.125,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-10-pro-fold-2026",
+      "name": "Google Pixel 10 Pro Fold",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 901
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-a17-2025",
+      "name": "Samsung Galaxy A17",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 892
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "motorola-razr-70-ultra-2026",
+      "name": "Motorola Razr 70 Ultra",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 1008
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "infinix-hot-70-2026",
+      "name": "Infinix Hot 70",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 788
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s26-2026",
+      "name": "Samsung Galaxy S26",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 780
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 1.8127458178973654e-05,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-fold7-unfolded-2025",
+      "name": "Samsung Galaxy Z Fold7 (unfolded)",
+      "category": "phone",
+      "screenCss": {
+        "width": 874,
+        "height": 787
+      },
+      "presetDpr": 2.5,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 2.745502225565133e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-10-pro-xl-2025",
+      "name": "Google Pixel 10 Pro XL",
+      "category": "phone",
+      "screenCss": {
+        "width": 448,
+        "height": 997
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 7.204226526447144e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "modern-laptop-15",
+      "name": "Modern Laptop 15 inch",
+      "category": "laptop",
+      "screenCss": {
+        "width": 1440,
+        "height": 900
+      },
+      "presetDpr": 1,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-16-pro-2024",
+      "name": "Apple iPhone 16 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 402,
+        "height": 874
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-16e-2025",
+      "name": "Apple iPhone 16e",
+      "category": "phone",
+      "screenCss": {
+        "width": 390,
+        "height": 844
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-iphone-17e-2026",
+      "name": "Apple iPhone 17e",
+      "category": "phone",
+      "screenCss": {
+        "width": 390,
+        "height": 844
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 9.045229742987715e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-ipad-pro-13-m4-2024",
+      "name": "Apple iPad Pro 13-inch (M4)",
+      "category": "tablet",
+      "screenCss": {
+        "width": 1032,
+        "height": 1376
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-ipad-air-13-m4-2026",
+      "name": "Apple iPad Air 13-inch (M4)",
+      "category": "tablet",
+      "screenCss": {
+        "width": 1024,
+        "height": 1366
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-ipad-mini-a17-pro-2024",
+      "name": "Apple iPad mini (A17 Pro)",
+      "category": "tablet",
+      "screenCss": {
+        "width": 744,
+        "height": 1133
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": true,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-macbook-pro-14-m5-2025",
+      "name": "Apple MacBook Pro 14-inch (M5)",
+      "category": "laptop",
+      "screenCss": {
+        "width": 1512,
+        "height": 982
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 4.1664190431056625e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-s26-plus-2026",
+      "name": "Samsung Galaxy S26+",
+      "category": "phone",
+      "screenCss": {
+        "width": 384,
+        "height": 832
+      },
+      "presetDpr": 3.75,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 6.688601450477449e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-z-flip7-2025",
+      "name": "Samsung Galaxy Z Flip7",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 840
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-tab-s11-ultra-2025",
+      "name": "Samsung Galaxy Tab S11 Ultra",
+      "category": "tablet",
+      "screenCss": {
+        "width": 924,
+        "height": 1480
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 5.558801030591809e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "samsung-galaxy-xcover7-pro-2025",
+      "name": "Samsung Galaxy XCover7 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 360,
+        "height": 803
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 5.199795949373254e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "google-pixel-10a-2026",
+      "name": "Google Pixel 10a",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 924
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 1.2102102275868276e-05,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "motorola-edge-60-pro-2025",
+      "name": "Motorola Edge 60 Pro",
+      "category": "phone",
+      "screenCss": {
+        "width": 407,
+        "height": 904
+      },
+      "presetDpr": 3,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 8.169252785350523e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "zebra-tc58-2022",
+      "name": "Zebra TC58",
+      "category": "phone",
+      "screenCss": {
+        "width": 412,
+        "height": 823
+      },
+      "presetDpr": 2.625,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 4.41453923416546e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "panasonic-toughbook-s1-2021",
+      "name": "Panasonic Toughbook S1",
+      "category": "tablet",
+      "screenCss": {
+        "width": 533,
+        "height": 853
+      },
+      "presetDpr": 1.5,
+      "orientations": [
+        "portrait",
+        "landscape"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 0,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-macbook-neo-13-2026",
+      "name": "Apple MacBook Neo 13-inch",
+      "category": "laptop",
+      "screenCss": {
+        "width": 1204,
+        "height": 753
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 4.176137213818265e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "microsoft-surface-laptop-8-13-8-2026",
+      "name": "Microsoft Surface Laptop 13.8-inch (8th Edition)",
+      "category": "laptop",
+      "screenCss": {
+        "width": 1152,
+        "height": 768
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 7.446148886369741e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    },
+    {
+      "id": "apple-studio-display-xdr-27-2026",
+      "name": "Apple Studio Display XDR 27-inch",
+      "category": "desktop",
+      "screenCss": {
+        "width": 2560,
+        "height": 1440
+      },
+      "presetDpr": 2,
+      "orientations": [
+        "portrait"
+      ],
+      "reference": null,
+      "ios26Presentation": false,
+      "geometryStatus": "passed",
+      "physicalDeviceStatus": "not-tested",
+      "maxAnisotropyPercent": 4.488961991011564e-06,
+      "maxFixedFooterOverlapCssPx": 0,
+      "maxHeaderOverlapCssPx": 0
+    }
+  ]
+}

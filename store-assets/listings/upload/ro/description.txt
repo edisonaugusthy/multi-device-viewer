@@ -1,0 +1,7 @@
+Mobile View este un emulator de dispozitive gratuit și open-source pentru Chrome. Previzualizează un site în până la patru ecrane de telefon, tabletă, laptop și desktop simultan. Alege dispozitive realiste, schimbă orientarea și zoomul, sincronizează derularea și navigarea, capturează ecranul și compară-l cu un design local. Totul rulează local în browser fără cont, abonament, analiză, telemetrie sau server.
+
+- Creează dimensiuni de viewport personalizate, salvează seturi și dispozitive favorite sau concentrează-te pe o singură vedere. Sincronizează interacțiunile acceptate între vederi corespunzătoare.
+- Capturează o vedere sau întregul spațiu de lucru. Adaugă săgeți, chenare, desene și text sau decupează imaginea. Afișează un design local lângă pagină sau suprapus.
+- Copiază în instrumentul de programare o instrucțiune structurată de remediere cu URL, dispozitive, dimensiuni și note despre problemă.
+
+Acestea sunt previzualizări responsive în Chrome, nu dispozitive fizice sau motorul Safari. Regulile de autentificare și încorporare ale site-urilor rămân valabile. Pagina originală se păstrează; previzualizările noi nu copiază modificările nesalvate.

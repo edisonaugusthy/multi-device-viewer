@@ -1,0 +1,11 @@
+{
+  "storeLocale": "da",
+  "name": "Mobile View: Enhedsemulator og responsiv test",
+  "summary": "Mobilsimulator til responsive tests. Sammenlign telefon, tablet og computer, synkroniser rulning og tag skærmbilleder.",
+  "screenshotCaptions": [
+    "Test mobil, tablet og computer side om side",
+    "Brug over 105 enhedsprofiler i ét arbejdsområde",
+    "Sammenlign en live-side med et godkendt design"
+  ],
+  "screenshotLocale": "en"
+}

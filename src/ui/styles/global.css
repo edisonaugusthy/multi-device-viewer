@@ -1,6 +1,6 @@
 @import "tailwindcss" source("../..");
 
-:root {
+:root, :host {
   color-scheme: light dark;
   --app-bg: #f5f7fb;
   --app-ink: #111827;
@@ -41,11 +41,8 @@ body {
   color: var(--app-ink);
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
+@layer base {
+  button, input, select, textarea { font: inherit; }
 }
 
 button {
@@ -70,4 +67,19 @@ button:disabled {
 
 ::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* Flatten only the decorative frame ancestors in Free view. The iframe stays
+   mounted in the same DOM location, preserving its document, login and draft. */
+[data-free-device-view] :has([data-preview-surface]) {
+  display: contents !important;
+}
+
+[data-free-device-view] :not(:has([data-preview-surface])):not([data-preview-surface]):not([data-preview-surface] *):not([data-mobile-keyboard]):not([data-mobile-keyboard] *) {
+  display: none !important;
+}
+
+[data-free-device-view] [data-preview-surface] {
+  width: var(--mdv-free-width) !important;
+  height: var(--mdv-free-height) !important;
 }

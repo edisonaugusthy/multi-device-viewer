@@ -70,6 +70,15 @@ await expectDimensions(resolve(uploadDirectory, "promo-small-440x280.jpg"), 440,
 await expectDimensions(resolve(uploadDirectory, "promo-marquee-1400x560.jpg"), 1400, 560);
 await expectDimensions(iconPath, 128, 128);
 
+const { locales } = JSON.parse(await readFile('store-assets/listings/locales.json', 'utf8'));
+const screenshotLocales = [...new Set(locales.map(locale => locale.screenshotLocale))];
+for (const locale of screenshotLocales.filter(locale => locale !== 'en')) {
+  const directory = resolve(uploadDirectory, 'localized', locale);
+  const localized = (await readdir(directory)).filter(file => /^screenshot-.*\.(?:jpe?g|png)$/i.test(file));
+  if (localized.length !== screenshots.length) throw new Error(`Missing screenshot in ${locale}.`);
+  for (const screenshot of screenshots) await expectDimensions(resolve(directory, screenshot), 1280, 800);
+}
+
 console.log(
-  `Chrome Web Store asset validation passed: ${screenshots.length} screenshots, small promo, marquee, and 128px icon.`,
+  `Chrome Web Store asset validation passed: ${screenshots.length} screenshots in ${screenshotLocales.length} languages, small promo, marquee, and 128px icon.`,
 );

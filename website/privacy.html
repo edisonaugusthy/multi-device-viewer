@@ -75,6 +75,14 @@
       </p>
       <h2>Websites inside previews</h2>
       <p>
+        Same-site previews use the source page's browser storage context without
+        copying authentication credentials. Each preview is a new document;
+        unsaved edits and in-memory app state stay in the original page.
+        Temporary frame-header rules apply only to sites selected during the
+        viewer session, in its tab, and are removed when the viewer closes or
+        the source page navigates. Other tabs and top-level responses are unaffected.
+      </p>
+      <p>
         Pages loaded inside the responsive workspace can make their normal
         network requests. Those requests go to the websites and services the
         page already uses and remain governed by their own privacy policies.

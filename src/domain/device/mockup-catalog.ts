@@ -1366,7 +1366,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "bytes": 323138,
     "width": 4244,
     "height": 2594,
-    "viewportSourceId": "apple-macbook-pro-16-2021",
     "screenInset": { "top": 10.5, "right": 172, "bottom": 128.5, "left": 171 }
   },
   {
@@ -2660,7 +2659,7 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
     portrait: {
       left: 17.5, top: 16, width: 884, height: 811, enableRotation: false,
       occlusions: [
-        { kind: "rect", left: 440.5, top: 0, width: 2.5, height: 811 },
+        // The crease is touchable display, not a hardware cutout.
         { kind: "circle", left: 582, top: 19, width: 16, height: 16 },
       ],
     },
@@ -2732,8 +2731,8 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
     },
   },
   "apple-ipad-pro-13-m4-2024": {
-    portrait: { left: 55, top: 50.5, width: 1032, height: 1376, enableRotation: true },
-    landscape: { left: 53.5, top: 55, width: 1376, height: 1032, enableRotation: true },
+    portrait: { left: 55, top: 50.5, width: 1032, height: 1376, cornerRadius: 26, enableRotation: true },
+    landscape: { left: 53.5, top: 55, width: 1376, height: 1032, cornerRadius: 26, enableRotation: true },
   },
   "apple-ipad-air-13-m4-2026": {
     portrait: { left: 59, top: 55, width: 1024, height: 1366, enableRotation: true },
@@ -2745,6 +2744,11 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
   },
   "apple-macbook-air-13-m4-2025": {
     portrait: { left: 183, top: 54, width: 1280, height: 800, enableRotation: false },
+  },
+  "apple-macbook-pro-14-m5-2025": {
+    // This shared artwork needs its own 14-inch screen opening. Reusing the
+    // 16-inch rectangle letterboxed the toolbar and page inside a white surface.
+    portrait: { left: 197, top: 40, width: 1728, height: 1728 * 982 / 1512, cornerRadius: 8, enableRotation: false },
   },
   "samsung-galaxy-s26-plus-2026": {
     portrait: {
@@ -2847,6 +2851,17 @@ export function resolveMockupId(deviceId: string): string {
 }
 
 export function getMockupAssets(deviceId: string): MockupAsset[] {
+  if (deviceId === "apple-ipad-mini-6" || deviceId === "apple-ipad-mini-a17-pro-2024") {
+    return [{
+      kind: "transparent-svg", localPath: "/mockups/ipad-mini-modern.svg", width: 840, height: 1218,
+      renderScale: 1, frameOverlay: true, cssViewport: { width: 744, height: 1133 },
+      screenInset: { left: 48, right: 48, top: 42.5, bottom: 42.5 },
+      viewport: {
+        portrait: { left: 48, top: 42.5, width: 744, height: 1133, cornerRadius: 18, enableRotation: true },
+        landscape: { left: 42.5, top: 48, width: 1133, height: 744, cornerRadius: 18, enableRotation: true },
+      },
+    }];
+  }
   const lookupId = resolveMockupId(deviceId);
   const asset = localMockupCatalog.find((candidate) => candidate.id === lookupId);
   if (!asset) return [];

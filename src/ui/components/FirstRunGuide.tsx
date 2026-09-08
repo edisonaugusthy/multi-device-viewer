@@ -1,3 +1,5 @@
+import { getViewerEventTarget } from "../../app/viewer-context";
+import { getViewerRoot } from "../../app/viewer-context";
 import {
   ArrowLeft,
   ArrowRight,
@@ -62,7 +64,7 @@ export function FirstRunGuide({
       setHighlight(null);
       return;
     }
-    const target = document.querySelector<HTMLElement>(step.target);
+    const target = getViewerRoot().querySelector<HTMLElement>(step.target);
     if (!target) {
       setHighlight(null);
       return;
@@ -84,7 +86,7 @@ export function FirstRunGuide({
 
   useLayoutEffect(() => {
     const target = step.target
-      ? document.querySelector<HTMLElement>(step.target)
+      ? getViewerRoot().querySelector<HTMLElement>(step.target)
       : null;
     target?.scrollIntoView({ block: "center", inline: "nearest" });
     const frame = window.requestAnimationFrame(updateHighlight);
@@ -93,7 +95,7 @@ export function FirstRunGuide({
 
   useEffect(() => {
     if (!step.target) return;
-    const target = document.querySelector<HTMLElement>(step.target);
+    const target = getViewerRoot().querySelector<HTMLElement>(step.target);
     if (!target) return;
     const resizeObserver = new ResizeObserver(updateHighlight);
     resizeObserver.observe(target);
@@ -123,8 +125,8 @@ export function FirstRunGuide({
       if (event.key === "ArrowLeft")
         setStepIndex((current) => Math.max(0, current - 1));
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    getViewerEventTarget().addEventListener("keydown", onKeyDown);
+    return () => getViewerEventTarget().removeEventListener("keydown", onKeyDown);
   }, [finalStep, onClose]);
 
   const cardStyle = positionCard(highlight);

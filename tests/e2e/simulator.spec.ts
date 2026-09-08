@@ -5,6 +5,18 @@ async function dismissFirstRunGuide(page: Page) {
   if (await skipTour.isVisible().catch(() => false)) await skipTour.click();
 }
 
+async function openTools(page: Page) {
+  const open = page.getByRole("button", { name: "Open workspace setup", exact: true });
+  if (await open.isVisible()) await open.click();
+}
+
+async function openViewportActions(page: Page, index = 0) {
+  const close = page.getByRole("button", { name: "Collapse workspace setup", exact: true });
+  if (await close.isVisible()) await close.click();
+  const toggle = page.locator("[data-preview-slot-id]").nth(index).getByRole("button", { name: "Viewport options", exact: true });
+  if (await toggle.getAttribute("aria-expanded") !== "true") await toggle.click();
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
   const start = page.getByRole("button", { name: "Start developing" });
@@ -13,18 +25,20 @@ test.beforeEach(async ({ page }) => {
   await dismissFirstRunGuide(page);
 });
 
-test("applies night mode to the emulator without altering the page", async ({ page }) => {
+test("passes night mode to the preview without applying a color filter", async ({ page }) => {
   const darkToggle = page.getByRole("button", { name: "Dark theme" });
   if (await darkToggle.isVisible()) await darkToggle.click();
   await page.waitForTimeout(250);
   await expect(page.getByRole("button", { name: "Light theme" })).toBeVisible();
   await expect(page.locator("[data-preview-slot-id]").first().locator(":scope > div").first()).toHaveCSS("background-color", "rgb(21, 25, 34)");
   const frame = page.locator("iframe").first();
+  await expect(frame).toHaveCSS("color-scheme", "dark");
   await expect(frame).toHaveCSS("filter", "none");
 });
 
 test("shows the simplified navigation controls", async ({ page }) => {
-  await expect(page.getByText("Navigation sync", { exact: true })).toBeVisible();
+  await openTools(page);
+  await expect(page.locator("[data-main-toolbar]").getByRole("button", { name: "Navigation sync", exact: true })).toBeVisible();
   await expect(page.getByLabel("Page direction")).toHaveCount(0);
   await expect(page.getByLabel("Page color scheme")).toHaveCount(0);
   await expect(page.getByText("Responsive review", { exact: true })).toHaveCount(0);
@@ -36,6 +50,7 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
 
+  await openTools(page);
   await page.getByRole("button", { name: "iOS + Android", exact: true }).click();
   await expect(page.locator('[data-device-frame="apple-iphone-17-pro-2025"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="samsung-galaxy-s26-ultra-2026"]')).toBeVisible();
@@ -50,12 +65,12 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   await expect(page.locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
 });
 
-test("opens sidebar and device screenshots in the annotation editor", async ({ page }) => {
+test("opens toolbar and device screenshots without duplicate Tools actions", async ({ page }) => {
   const viewports = page.locator("[data-preview-slot-id]");
   const viewportCount = await viewports.count();
   expect(viewportCount).toBeGreaterThan(0);
   await expect(page.getByRole("button", { name: "Focus this viewport" })).toHaveCount(0);
-  await expect(viewports.getByRole("button", { name: "Screenshot and annotate" })).toHaveCount(viewportCount);
+  await expect(viewports.getByRole("button", { name: "Screenshot and annotate", includeHidden: true })).toHaveCount(viewportCount);
 
   await page.evaluate(() => {
     const canvas = document.createElement("canvas");
@@ -79,6 +94,7 @@ test("opens sidebar and device screenshots in the annotation editor", async ({ p
     });
   });
 
+  await openViewportActions(page, Math.min(1, viewportCount - 1));
   await viewports.nth(Math.min(1, viewportCount - 1)).getByRole("button", { name: "Screenshot and annotate" }).click();
   await expect(page.getByRole("button", { name: "Download" })).toBeVisible();
   const editorCanvas = page.locator("canvas");
@@ -89,7 +105,10 @@ test("opens sidebar and device screenshots in the annotation editor", async ({ p
   expect(captureSize.height).toBeLessThan(windowSize.height);
 
   await page.getByRole("button", { name: "Close", exact: true }).click();
-  await page.getByRole("complementary").getByRole("button", { name: "Screenshot and annotate" }).click();
+  await openTools(page);
+  await expect(page.getByRole("complementary").getByRole("button", { name: "Screenshot and annotate" })).toHaveCount(0);
+  await expect(page.getByRole("complementary").getByRole("button", { name: "Start a new check" })).toHaveCount(0);
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Screenshot and annotate" }).click();
   await expect(page.getByRole("button", { name: "Download" })).toBeVisible();
   await expect(page.locator("canvas")).toBeVisible();
 });
@@ -109,8 +128,9 @@ test("reports a screenshot capture failure instead of leaving a dead button", as
     });
   });
 
+  await openViewportActions(page);
   await page.locator("[data-preview-slot-id]").first().getByRole("button", { name: "Screenshot and annotate" }).click();
-  await expect(page.getByRole("alert")).toHaveText("No screenshot available");
+  await expect(page.getByRole("alert")).toHaveText("Capture unavailable");
 });
 
 test("keeps favorite controls separate from device selection buttons", async ({ page }) => {
@@ -120,6 +140,14 @@ test("keeps favorite controls separate from device selection buttons", async ({ 
   await expect(selection).toBeVisible();
   await expect(selection.locator("button, [role=button]")).toHaveCount(0);
   await expect(selection.locator("xpath=..").getByRole("button", { name: /favorites/ })).toHaveCount(1);
+
+  await selection.locator("xpath=..").getByRole("button", { name: /favorites/ }).click();
+  await expect(selection).toHaveCount(1);
+  await expect(selection.locator("xpath=..").getByRole("button", { name: /favorites/ })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByTestId("device-switcher-panel")).toHaveCount(0);
+  await expect(page.getByTestId("device-switcher-button").first()).toBeFocused();
+  await page.getByTestId("device-switcher-button").first().click();
 
   await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("Fold7 unfolded");
   await expect(page.locator('button[title="Samsung Galaxy Z Fold7 (unfolded)"]')).toBeVisible();
@@ -203,6 +231,7 @@ test("keeps the Galaxy Z Flip7 camera hole inside the display in both orientatio
 
   await expect(screen).toHaveCSS("clip-path", /path\(/);
   await expectScreenInsideFrame();
+  await openViewportActions(page);
   await page.getByRole("button", { name: "Rotate" }).first().click();
   await expect(slot).toContainText("840 × 360");
   await expect(screen).toHaveCSS("clip-path", /path\(/);
@@ -331,26 +360,52 @@ test("does not report standalone previews as blocked when no extension bridge is
   await page.waitForTimeout(6200);
   await expect(page.getByText("This site blocks iframe preview.")).toHaveCount(0);
   await expect(page.locator("iframe").first()).toBeVisible();
+  await page.addInitScript(() => {
+    const registered = window as Window & { previewMessages?: string[] };
+    registered.previewMessages = [];
+    window.addEventListener("message", event => {
+      if (event.source === window.parent && typeof event.data?.type === "string") registered.previewMessages!.push(event.data.type);
+    });
+  });
+  await page.getByRole("button", { name: "Scroll sync", exact: true }).click();
+  const slot = page.locator("[data-preview-slot-id]").first();
+  const original = await (await slot.locator("iframe").elementHandle())!.contentFrame();
+  await original!.evaluate(() => window.parent.postMessage({
+    type: "MDV_PREVIEW_BLOCKED_OR_UNAVAILABLE", slotId: window.name.replace(/^mdv-(?:mobile-)?preview-/, ""),
+  }, "*"));
+  await expect(slot.getByText("This site blocks iframe preview.")).toBeVisible();
+  await openViewportActions(page);
+  await slot.getByRole("button", { name: "Reload preview", exact: true }).first().click();
+  await expect(slot.locator("iframe")).toBeVisible();
+  const reloaded = await (await slot.locator("iframe").elementHandle())!.contentFrame();
+  await expect.poll(() => reloaded!.evaluate(() => (window as Window & { previewMessages?: string[] }).previewMessages ?? [])).toContain("MDV_SCROLL_SYNC_ENABLE");
 });
 
-test("uses the collapsed sidebar as a clean canvas mode", async ({ page }) => {
+test("uses view-only mode as a clean canvas without reloading previews", async ({ page }) => {
   const deviceCount = await page.locator("[data-preview-slot-id]").count();
   await expect(page.locator("[data-main-toolbar]")).toHaveCount(1);
   await expect(page.locator("[data-device-toolbar]")).toHaveCount(deviceCount);
 
-  await page.getByRole("button", { name: "Collapse workspace setup" }).click();
+  const originalFrame = await (await page.locator("iframe").first().elementHandle())!.contentFrame();
+  const token = await originalFrame!.evaluate(() => {
+    (window as Window & { continuity?: string }).continuity = "view-only-draft";
+    return (window as Window & { continuity?: string }).continuity;
+  });
+  await page.getByRole("button", { name: "View only", exact: true }).click();
 
   await expect(page.locator("[data-main-toolbar]")).toHaveCount(0);
   await expect(page.locator("[data-device-toolbar]")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Open workspace setup" })).toBeVisible();
-  await expect(page.getByRole("separator", { name: "Resize adjacent viewports" })).toHaveCount(Math.max(0, deviceCount - 1));
+  await expect(page.getByRole("button", { name: "Show workspace controls" })).toBeVisible();
+  await expect(page.getByRole("separator", { name: "Resize adjacent viewports" })).toHaveCount(0);
 
-  await page.getByRole("button", { name: "Open workspace setup" }).click();
+  await page.getByRole("button", { name: "Show workspace controls" }).click();
+  await expect.poll(() => originalFrame!.evaluate(() => (window as Window & { continuity?: string }).continuity)).toBe(token);
   await expect(page.locator("[data-main-toolbar]")).toHaveCount(1);
   await expect(page.locator("[data-device-toolbar]")).toHaveCount(deviceCount);
 });
 
 test("builds an actionable AI fix prompt with optional context", async ({ page }) => {
+  await openTools(page);
   await page.getByRole("button", { name: "Generate AI fix prompt" }).click();
   await expect(page.getByRole("heading", { name: "Generate AI fix prompt" })).toBeVisible();
 
@@ -391,6 +446,7 @@ test("shows a persistent source-tab recording indicator", async ({ page }) => {
   if (await start.isVisible().catch(() => false)) await start.click();
   await dismissFirstRunGuide(page);
 
+  await openTools(page);
   await page.getByRole("button", { name: "Screen record" }).click();
   await expect(page.getByRole("status")).toContainText("Screen recording in progress · 00:00");
   await expect(page.getByRole("button", { name: "Stop", exact: true })).toBeVisible();
@@ -410,6 +466,7 @@ test("reruns a saved flow without refreshing the previews", async ({ page }) => 
 
   const originalPreview = page.locator("iframe").first();
   await originalPreview.evaluate((iframe) => iframe.setAttribute("data-replay-preview", "original"));
+  await openTools(page);
   await page.getByRole("button", { name: "Rerun · 2 steps", exact: true }).click();
   await page.waitForTimeout(400);
 
@@ -429,6 +486,7 @@ test("returns a moved preview to the recorded flow start page", async ({ page })
 
   const preview = page.locator("iframe").first();
   await expect(preview).toHaveAttribute("src", "https://example.com");
+  await openTools(page);
   await page.getByRole("button", { name: "Rerun · 1 steps", exact: true }).click();
   await expect(preview).toHaveAttribute("src", "https://example.org");
 });

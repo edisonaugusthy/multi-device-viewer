@@ -1,0 +1,11 @@
+{
+  "storeLocale": "hr",
+  "name": "Mobile View: Emulator uređaja i responzivni test",
+  "summary": "Mobilni simulator za responzivno testiranje. Usporedite telefon, tablet i računalo, sinkronizirajte pomicanje i snimite zaslon.",
+  "screenshotCaptions": [
+    "Testirajte telefon, tablet i računalo istodobno",
+    "Koristite više od 105 profila uređaja u jednom prostoru",
+    "Usporedite aktivnu stranicu s odobrenim dizajnom"
+  ],
+  "screenshotLocale": "en"
+}

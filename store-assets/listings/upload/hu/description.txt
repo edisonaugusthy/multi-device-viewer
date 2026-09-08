@@ -1,0 +1,7 @@
+A Mobile View ingyenes, nyílt forráskódú eszközemulátor Chrome-hoz. Egy webhelyet egyszerre akár négy telefonos, táblagépes, laptopos és asztali nézetben vizsgálhat. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.
+
+- Hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.
+- Rögzítsen egy nézetet vagy a teljes munkaterületet. Adjon hozzá nyilakat, kereteket, rajzokat és szöveget, vagy vágja körül a képet. Jelenítsen meg helyi tervet az oldal mellett vagy fedvényként.
+- Másoljon strukturált javítási utasítást a programozóeszközébe az URL-lel, eszközökkel, nézetméretekkel és a probléma jegyzeteivel.
+
+Ezek a Chrome reszponzív nézetei, nem fizikai eszközök vagy Safari-motor. A webhelyek bejelentkezési és beágyazási szabályai továbbra is érvényesek. Az eredeti oldal megmarad; az új nézetek nem másolják a nem mentett módosításokat.

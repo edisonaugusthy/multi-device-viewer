@@ -137,6 +137,11 @@ export async function downloadDataUrl(dataUrl: string, filename: string): Promis
     await chrome.downloads.download({ url: dataUrl, filename, saveAs: true });
     return;
   }
+  if (typeof chrome !== "undefined" && chrome.runtime?.sendMessage) {
+    const result = await chrome.runtime.sendMessage({ type: "MDV_DOWNLOAD", dataUrl, filename });
+    if (!result?.ok) throw new Error(result?.error ?? "Download failed.");
+    return;
+  }
   const anchor = document.createElement("a");
   anchor.href = dataUrl;
   anchor.download = filename;

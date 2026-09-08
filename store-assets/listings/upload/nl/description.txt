@@ -1,0 +1,12 @@
+Mobile View is een gratis opensource apparaatemulator en responsive tester voor Chrome. Bekijk een website in maximaal vier telefoon-, tablet-, laptop- en desktopweergaven naast elkaar, zonder steeds het venster te verkleinen of van DevTools-profiel te wisselen.
+
+- Kies realistische apparaten, wijzig oriëntatie en zoom, laad één voorbeeld opnieuw of maak aangepaste viewportformaten.
+- Synchroniseer scrollen, ondersteunde interacties en navigatie tussen overeenkomende voorbeelden.
+- Bewaar apparaatsets, favorieten en recente apparaten, of focus één viewport voor een detailcontrole.
+- Leg één viewport of de volledige werkruimte vast en voeg pen, kader, pijl, tekst of uitsnede toe.
+- Vergelijk een lokaal ontwerp naast of over de live website en markeer feedback zonder upload.
+- Kopieer een gestructureerde herstelprompt met URL, apparaten, viewportformaten en optionele probleeminformatie naar je codeertool.
+
+Alles draait lokaal in de browser. Geen account, abonnement, analyse, telemetrie of applicatiebackend nodig. URL’s, screenshots, opnamen, ontwerpen, aantekeningen en instellingen worden niet naar een backend gestuurd.
+
+Dit zijn responsive previews in Chrome, geen fysieke apparaten of Safari-engine. De aanmeld- en insluitregels van websites blijven gelden. De oorspronkelijke pagina blijft intact; nieuwe previews kopiëren geen onopgeslagen wijzigingen.

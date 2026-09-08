@@ -1,7 +1,9 @@
+import { getViewerContext } from "./viewer-context";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { defaultDeviceIds } from "../domain/device/device-catalog";
 import { useDeviceCatalog } from "./DeviceCatalogProvider";
 import { supportsOrientation } from "../domain/device/device-service";
+import type { BrowserPreferences } from "../domain/device/browser-geometry";
 import {
   createPreviewSlot,
   maxPreviewSlots,
@@ -12,9 +14,12 @@ import type { DisplaySettings, PreviewSlot, SimulatorState } from "../domain/sim
 import { readStore, writeStore } from "../infrastructure/storage/local-store";
 
 interface SimulatorContextValue extends SimulatorState {
+  ready: boolean;
   setActiveSlot: (slotId: string) => void;
   setSlotDevice: (slotId: string, deviceId: string) => void;
+  setSlotBrowserPreferences: (slotId: string, preferences: BrowserPreferences) => void;
   setSlotUrl: (slotId: string, url: string) => void;
+  observeSlotUrl: (slotId: string, url: string) => void;
   setAllSlotsUrl: (url: string) => void;
   rotateSlot: (slotId: string) => void;
   zoomSlot: (slotId: string, direction: "in" | "out") => void;
@@ -51,6 +56,7 @@ const startupDisplay: DisplaySettings = {
 };
 
 function launchTabIdFromSearch(): number | null {
+  if (getViewerContext()) return getViewerContext()!.sourceTabId ?? null;
   if (typeof window === "undefined") return null;
   const raw = new URLSearchParams(window.location.search).get("sourceTabId");
   if (!raw) return null;
@@ -59,6 +65,7 @@ function launchTabIdFromSearch(): number | null {
 }
 
 function launchUrlFromSearch(): string | null {
+  if (getViewerContext()) return getViewerContext()!.url;
   if (typeof window === "undefined") return null;
   const url = new URLSearchParams(window.location.search).get("url");
   return url ? normalizeUrl(url) : null;
@@ -75,8 +82,18 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     const url = initialUrlFromSearch();
     return defaultDeviceIds.map((deviceId, i) => createPreviewSlot(deviceId, url, i));
   });
+  // Observations must not change iframe src or recreate the live document.
+  const observedUrls = useRef(new Map<string, string>());
+  const observeSlotUrl = useCallback((slotId: string, url: string) => { observedUrls.current.set(slotId, url); }, []);
+  useEffect(() => {
+    const ids = new Set(slots.map(slot => slot.id));
+    for (const id of observedUrls.current.keys()) if (!ids.has(id)) observedUrls.current.delete(id);
+  }, [slots]);
   const [activeSlotId, setActiveSlotId] = useState(slots[0].id);
-  const [display, setDisplay] = useState(defaultDisplay);
+  const [display, setDisplay] = useState(() => ({
+    ...defaultDisplay,
+    darkMode: typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches,
+  }));
   const [useCount, setUseCount] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const [sourceTabId, setSourceTabId] = useState<number | null>(() => launchTabIdFromSearch());
@@ -112,7 +129,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         setSourceTabId(launchTabId);
       }
       setHydrated(true);
-    });
+    }).catch(() => setHydrated(true));
   }, []);
 
   useEffect(() => {
@@ -149,6 +166,10 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setActiveSlotId(slotId);
   }, []);
 
+  const setSlotBrowserPreferences = useCallback((slotId: string, preferences: BrowserPreferences) => {
+    updateSlot(slotId, slot => ({ ...slot, browserPreferences: { ...slot.browserPreferences, ...preferences } }));
+  }, [updateSlot]);
+
   const setSlotDevice = useCallback((slotId: string, deviceId: string) => {
     updateSlot(slotId, (slot) => {
       const currentDevice = devices.find((device) => device.id === slot.deviceId);
@@ -168,11 +189,14 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, [devices, setActiveSlot, updateSlot]);
 
   const setSlotUrl = useCallback((slotId: string, url: string) => {
-    updateSlot(slotId, (slot) => ({ ...slot, url: normalizeUrl(url), reloadToken: slot.reloadToken + 1 }));
+    const normalized = normalizeUrl(url);
+    observedUrls.current.set(slotId, normalized);
+    updateSlot(slotId, (slot) => ({ ...slot, url: normalized, reloadToken: slot.reloadToken + 1 }));
   }, [updateSlot]);
 
   const setAllSlotsUrl = useCallback((url: string) => {
     const normalized = normalizeUrl(url);
+    observedUrls.current.clear();
     setSlots((current) =>
       current.map((slot) => ({ ...slot, url: normalized, reloadToken: slot.reloadToken + 1 }))
     );
@@ -199,17 +223,17 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, [updateSlot]);
 
   const reloadSlot = useCallback((slotId: string) => {
-    updateSlot(slotId, (slot) => ({ ...slot, reloadToken: slot.reloadToken + 1 }));
+    updateSlot(slotId, (slot) => ({ ...slot, url: observedUrls.current.get(slot.id) ?? slot.url, reloadToken: slot.reloadToken + 1 }));
   }, [updateSlot]);
 
   const reloadAllSlots = useCallback(() => {
-    setSlots((current) => current.map((slot) => ({ ...slot, reloadToken: slot.reloadToken + 1 })));
+    setSlots((current) => current.map((slot) => ({ ...slot, url: observedUrls.current.get(slot.id) ?? slot.url, reloadToken: slot.reloadToken + 1 })));
   }, []);
 
   const addSlot = useCallback((deviceId = defaultDeviceIds[0], orientation?: PreviewSlot["orientation"]) => {
     setSlots((current) => {
       if (current.length >= maxPreviewSlots) return current;
-      const slot = createPreviewSlot(deviceId, current[0]?.url ?? initialUrlFromSearch(), current.length);
+      const slot = createPreviewSlot(deviceId, observedUrls.current.get(current[0]?.id) ?? current[0]?.url ?? initialUrlFromSearch(), current.length);
       const device = devices.find((item) => item.id === deviceId);
       if (orientation) slot.orientation = orientation;
       else if (device?.brand === "Custom" && device.cssViewport.width > device.cssViewport.height) slot.orientation = "landscape";
@@ -221,7 +245,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
   const applyDevicePreset = useCallback((deviceIds: string[]) => {
     setSlots((current) => {
-      const url = current[0]?.url ?? initialUrlFromSearch();
+      const url = observedUrls.current.get(current[0]?.id) ?? current[0]?.url ?? initialUrlFromSearch();
       const next = deviceIds.slice(0, 4).map((deviceId, index) => createPreviewSlot(deviceId, url, index));
       setActiveSlotId(next[0]?.id ?? activeSlotId);
       return next.length > 0 ? next : current;
@@ -243,6 +267,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       const source = current.find((slot) => slot.id === activeSlotId) ?? current[0];
       const nextSlot = {
         ...source,
+        url: observedUrls.current.get(source.id) ?? source.url,
         id: `slot-${Date.now()}-${current.length}`,
         deviceId: deviceId ?? source.deviceId,
         zoom: 0.58,
@@ -311,6 +336,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<SimulatorContextValue>(
     () => ({
+      ready: hydrated,
       slots,
       activeSlotId,
       display,
@@ -318,7 +344,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       useCount,
       setActiveSlot,
       setSlotDevice,
+      setSlotBrowserPreferences,
       setSlotUrl,
+      observeSlotUrl,
       setAllSlotsUrl,
       rotateSlot,
       zoomSlot,
@@ -335,6 +363,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSourceTabId,
     }),
     [
+      hydrated,
       activeSlotId,
       addSlot,
       applyDevicePreset,
@@ -349,7 +378,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setActiveSlot,
       setAllSlotsUrl,
       setSlotDevice,
+      setSlotBrowserPreferences,
       setSlotUrl,
+      observeSlotUrl,
       setSlotZoomMode,
       slots,
       sourceTabId,

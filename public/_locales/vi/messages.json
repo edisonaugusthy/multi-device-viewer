@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Trình giả lập thiết bị & kiểm thử responsive" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Trình giả lập di động miễn phí, mã nguồn mở để kiểm thử song song giao diện điện thoại, máy tính bảng, laptop và máy tính." },
-  "actionTitle": { "message": "Mở trình giả lập thiết bị Mobile View" },
-  "contextMenuTitle": { "message": "Mở thẻ này trong Mobile View" },
-  "activeActionTitle": { "message": "Mobile View đang hoạt động — nhấp để đóng" },
-  "unsupportedActionTitle": { "message": "Hãy mở một trang web trước" },
-  "unsupportedUrlHint": { "message": "Chuyển sang trang bạn đang phát triển, rồi nhấp lại vào tiện ích." }
+  "extensionName": {
+    "message": "Mobile View: Trình giả lập thiết bị & kiểm thử responsive"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Trình mô phỏng di động để kiểm tra web responsive. So sánh điện thoại, máy tính bảng và máy tính; đồng bộ cuộn và chụp màn hình."
+  },
+  "actionTitle": {
+    "message": "Mở trình giả lập thiết bị Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Mở thẻ này trong Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View đang hoạt động — nhấp để đóng"
+  },
+  "unsupportedActionTitle": {
+    "message": "Hãy mở một trang web trước"
+  },
+  "unsupportedUrlHint": {
+    "message": "Chuyển sang trang bạn đang phát triển, rồi nhấp lại vào tiện ích."
+  }
 }

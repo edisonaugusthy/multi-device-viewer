@@ -1,0 +1,11 @@
+{
+  "storeLocale": "sl",
+  "name": "Mobile View: Emulator naprav in odzivni preizkus",
+  "summary": "Mobilni simulator za odzivno testiranje. Primerjajte telefon, tablico in računalnik, uskladite drsenje ter zajemite zaslon.",
+  "screenshotCaptions": [
+    "Preizkusite telefon, tablico in računalnik drug ob drugem",
+    "Uporabite več kot 105 profilov naprav v enem prostoru",
+    "Primerjajte živo stran z odobrenim dizajnom"
+  ],
+  "screenshotLocale": "en"
+}

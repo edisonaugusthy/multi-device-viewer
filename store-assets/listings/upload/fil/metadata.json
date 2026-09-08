@@ -1,0 +1,11 @@
+{
+  "storeLocale": "fil",
+  "name": "Mobile View: Device Emulator at Responsive Tester",
+  "summary": "Mobile simulator para sa responsive testing. Ihambing ang phone, tablet at desktop, i-sync ang pag-scroll at kumuha ng screenshot.",
+  "screenshotCaptions": [
+    "Subukan nang sabay ang mobile, tablet, at desktop",
+    "Gumamit ng 105+ responsive device profile sa isang workspace",
+    "Ikumpara ang live page sa aprubadong design"
+  ],
+  "screenshotLocale": "en"
+}

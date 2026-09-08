@@ -1,3 +1,4 @@
+import { getViewerEventTarget } from "../../app/viewer-context";
 import { ClipboardPaste, Eye, GripVertical, ImagePlus, Layers, Lock, Move, Pencil, RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
 import { useEffect, useRef, useState, type DragEvent } from "react";
 import { useI18n } from "../../app/i18n";
@@ -52,8 +53,8 @@ export function DesignReferencePanel(props: DesignReferencePanelProps) {
       const image = Array.from(event.clipboardData?.files ?? []).find((file) => file.type.startsWith("image/"));
       if (image) loadReference(image);
     };
-    window.addEventListener("paste", onPaste);
-    return () => window.removeEventListener("paste", onPaste);
+    getViewerEventTarget().addEventListener("paste", onPaste);
+    return () => getViewerEventTarget().removeEventListener("paste", onPaste);
   }, [activeViewportId]);
 
   function handleDrop(event: DragEvent) {

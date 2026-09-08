@@ -1,6 +1,8 @@
+import { createPreviewSessions } from "../src/app/preview-sessions";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
 import { LAST_SEEN_RELEASE_VERSION_KEY, PENDING_RELEASE_VERSION_KEY } from "../src/app/release-notes";
+import { CHROME_STORE_URL, createReviewCoordinator, isReviewCommand, LEGACY_REVIEW_DISMISSED_KEY, REVIEW_PROMPT_STORAGE_KEY, SUPPORT_URL } from "../src/domain/review/review-coordinator";
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
 const UPDATE_BADGE_TEXT = "NEW";
@@ -11,6 +13,17 @@ const message = (key: string, fallback: string) =>
   chrome.i18n.getMessage(key) || fallback;
 
 export default defineBackground(() => {
+  const previews = createPreviewSessions();
+  void previews.prune().catch(console.error);
+  chrome.tabs.onRemoved.addListener(tabId => { void previews.close(tabId).catch(console.error); });
+  const review = createReviewCoordinator({
+    read: async () => {
+      const stored = await chrome.storage.local.get([REVIEW_PROMPT_STORAGE_KEY, LEGACY_REVIEW_DISMISSED_KEY]);
+      return { state: stored[REVIEW_PROMPT_STORAGE_KEY], legacyDismissed: stored[LEGACY_REVIEW_DISMISSED_KEY] === true };
+    },
+    write: state => chrome.storage.local.set({ [REVIEW_PROMPT_STORAGE_KEY]: state }),
+    openReviewPage: async () => { await chrome.tabs.create({ url: CHROME_STORE_URL }); },
+  });
   createContextMenu();
   syncAllActionStates();
 
@@ -45,6 +58,7 @@ export default defineBackground(() => {
   });
 
   chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
+    if (changeInfo.status === "loading") void previews.close(_tabId).catch(console.error);
     if (changeInfo.url || changeInfo.status === "complete") syncActionState(tab);
   });
 
@@ -202,6 +216,26 @@ export default defineBackground(() => {
   }
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if ((message?.type === "MDV_PREVIEW_HOST" || message?.type === "MDV_PREVIEW_CLOSE") && typeof sender.tab?.id === "number" && sender.frameId === 0) {
+      const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url);
+      void work.then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "MDV_DOWNLOAD" && typeof message.dataUrl === "string" && /^data:image\/(png|jpeg);base64,/.test(message.dataUrl)) {
+      const filename = String(message.filename ?? "mobile-view.png").replace(/[^a-zA-Z0-9_.-]/g, "-").slice(0,160);
+      void chrome.downloads.download({ url: message.dataUrl, filename, saveAs: true }).then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "MDV_REVIEW" && isReviewCommand(message.command)) {
+      void review(message.command).then(result => sendResponse({ ok: true, result }))
+        .catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "MDV_OPEN_SUPPORT") {
+      void chrome.tabs.create({ url: SUPPORT_URL }).then(() => sendResponse({ ok: true }))
+        .catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
     if (message?.type === "OPEN_ACTIVE_TAB_IN_VIEWER") {
       chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
         const tab = tabs[0];

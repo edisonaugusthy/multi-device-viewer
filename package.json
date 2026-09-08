@@ -22,7 +22,11 @@
     "validate:site-seo": "node scripts/validate-site-seo.mjs",
     "validate:chrome-zip": "node scripts/validate-chrome-extension-package.mjs",
     "validate:firefox-zip": "node scripts/validate-firefox-extension-package.mjs",
-    "lint:firefox": "npx --yes addons-linter@10.9.0 --output text --boring"
+    "lint:firefox": "npx --yes addons-linter@10.9.0 --output text --boring",
+    "sync:store-locales": "node scripts/sync-store-locales.mjs",
+    "validate:store-locales": "node scripts/sync-store-locales.mjs --check",
+    "build:live-session-prototype": "node scripts/build-live-session-prototype.mjs",
+    "build:device-audit": "node scripts/build-device-audit.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.561.0",

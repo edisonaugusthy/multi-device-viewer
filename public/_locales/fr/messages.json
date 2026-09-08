@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View : Émulateur mobile et test responsive" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Simulateur mobile gratuit et open source pour tester côte à côte les vues téléphone, tablette, ordinateur portable et bureau." },
-  "actionTitle": { "message": "Ouvrir l’émulateur mobile Mobile View" },
-  "contextMenuTitle": { "message": "Ouvrir cet onglet dans Mobile View" },
-  "activeActionTitle": { "message": "Mobile View est actif — cliquer pour fermer" },
-  "unsupportedActionTitle": { "message": "Ouvrez d’abord un site web" },
-  "unsupportedUrlHint": { "message": "Passez à la page que vous développez, puis cliquez à nouveau sur l’extension." }
+  "extensionName": {
+    "message": "Mobile View : Émulateur mobile et test responsive"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Simulateur mobile pour tests responsive. Comparez téléphone, tablette et bureau, synchronisez le défilement et capturez les vues."
+  },
+  "actionTitle": {
+    "message": "Ouvrir l’émulateur mobile Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Ouvrir cet onglet dans Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View est actif — cliquer pour fermer"
+  },
+  "unsupportedActionTitle": {
+    "message": "Ouvrez d’abord un site web"
+  },
+  "unsupportedUrlHint": {
+    "message": "Passez à la page que vous développez, puis cliquez à nouveau sur l’extension."
+  }
 }

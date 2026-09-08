@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Emulátor zariadení a responzívny test" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Bezplatný emulátor na súbežný náhľad a responzívne testovanie webu v telefóne, tablete, notebooku a počítači." },
-  "actionTitle": { "message": "Otvoriť emulátor zariadení Mobile View" },
-  "contextMenuTitle": { "message": "Otvoriť túto kartu v Mobile View" },
-  "activeActionTitle": { "message": "Mobile View je aktívny — kliknutím zavriete" },
-  "unsupportedActionTitle": { "message": "Najprv otvorte web" },
-  "unsupportedUrlHint": { "message": "Prejdite na vyvíjanú stránku a znova kliknite na rozšírenie." }
+  "extensionName": {
+    "message": "Mobile View: Emulátor zariadení a responzívny test"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobilný simulátor na responzívne testy. Porovnajte telefón, tablet a počítač, synchronizujte posúvanie a snímajte obrazovku."
+  },
+  "actionTitle": {
+    "message": "Otvoriť emulátor zariadení Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Otvoriť túto kartu v Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View je aktívny — kliknutím zavriete"
+  },
+  "unsupportedActionTitle": {
+    "message": "Najprv otvorte web"
+  },
+  "unsupportedUrlHint": {
+    "message": "Prejdite na vyvíjanú stránku a znova kliknite na rozšírenie."
+  }
 }

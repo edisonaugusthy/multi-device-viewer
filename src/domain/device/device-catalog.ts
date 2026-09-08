@@ -1,5 +1,6 @@
 import type { Device, Size } from "./device.types";
 import { getDeviceChromeMeta, getMockupAssets, localMockupCatalog } from "./mockup-catalog";
+import { displayReferences } from "./display-references";
 
 const curatedDevices: Device[] = [
   {
@@ -560,7 +561,12 @@ const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
 export const devices: Device[] = dedupeDevices([
   ...curatedDevices,
   ...createMockupOnlyDevices(curatedDevices)
-]);
+].map(device => {
+  const reference = displayReferences[device.id];
+  return reference ? { ...device, cssViewport: reference.screen, pixelRatio: reference.dpr,
+    manufacturerResolution: reference.panel, resolutionSource: "reference" as const,
+    displayReferenceUrl: reference.source, updatedAt: "2026-09-07" } : device;
+}));
 
 export const defaultDeviceIds = [
   "apple-iphone-17-pro-2025",
@@ -588,16 +594,16 @@ function createMockupOnlyDevices(existing: Device[]): Device[] {
   const usedIds = new Set(existing.map((device) => device.id));
 
   return localMockupCatalog
-    .filter((asset) => !usedIds.has(asset.id))
+    .filter((asset) => !usedIds.has(asset.id) && asset.id !== "apple-ipad-mini")
     .map((asset) => createDeviceFromMockup(asset.id));
 }
 
 function dedupeDevices(candidates: Device[]) {
   const unique = new Map<string, Device>();
-  const distinctSameShellDeviceIds = new Set(["apple-iphone-16e-2025"]);
+  const distinctSameShellDeviceIds = new Set(["apple-iphone-16e-2025", "apple-iphone-16-pro-2024", "apple-iphone-17-pro-2025", "apple-ipad-mini-6", "apple-ipad-mini-a17-pro-2024"]);
 
   for (const candidate of candidates) {
-    const image = candidate.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.localPath);
+    const image = candidate.mockupAssets.find((asset) => (asset.kind === "transparent-png" || asset.kind === "transparent-svg") && asset.localPath);
     // A different marketing name is not a different preview. Keep a model only
     // when its shell, viewport geometry, or supported posture actually differs.
     const key = image
@@ -642,6 +648,7 @@ function createDeviceFromMockup(id: string): Device {
     os,
     cssViewport,
     pixelRatio,
+    resolutionSource: displaySpec ? "catalog" : "derived",
     manufacturerResolution: displaySpec?.manufacturerResolution ?? {
       width: Math.round(cssViewport.width * pixelRatio),
       height: Math.round(cssViewport.height * pixelRatio)

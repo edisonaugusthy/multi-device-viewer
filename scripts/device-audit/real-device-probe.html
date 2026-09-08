@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=auto">
+  <meta id="theme" name="theme-color" content="#133d55">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" href="data:,">
+  <title>Mobile View · Safari frame calibration</title>
+  <script>
+    const fit = new URLSearchParams(location.search).get('fit') === 'cover' ? 'cover' : 'auto';
+    document.getElementById('viewport').content = 'width=device-width, initial-scale=1, viewport-fit=' + fit;
+  </script>
+  <style>
+    :root { color-scheme: light; --page:#eef3f4; --ink:#143442; --edge:#133d55; --edge-ink:#fff; }
+    * { box-sizing:border-box }
+    body { margin:0; background:var(--page); color:var(--ink); font:16px/1.5 system-ui,sans-serif; }
+    #first-row { height:3px; background:#ecbf34; }
+    header { position:sticky; top:0; z-index:2; background:var(--edge); color:var(--edge-ink); padding:12px 18px; }
+    header strong { font-size:16px; } header small { display:block; font-size:12px; opacity:.85; }
+    body.safe header { padding-left:max(18px,env(safe-area-inset-left)); padding-right:max(18px,env(safe-area-inset-right)); }
+    main { max-width:880px; margin:auto; padding:24px 18px 180px; }
+    body.safe main { padding-left:max(18px,env(safe-area-inset-left)); padding-right:max(18px,env(safe-area-inset-right)); }
+    h1 { font-size:28px; line-height:1.15; margin:0 0 16px; letter-spacing:-.5px; } h2 { font-size:20px; }
+    p { margin:12px 0; } small, .note { font-size:13px; }
+    details, section { border:1px solid #b9cbd0; border-radius:12px; padding:16px; margin:18px 0; background:color-mix(in srgb,var(--page),white 35%); }
+    summary { cursor:pointer; font-weight:700; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin-top:16px; }
+    label { display:block; font-size:14px; } input:not([type=checkbox]),select,textarea { width:100%; min-height:42px; padding:8px; margin-top:4px; font:inherit; border:1px solid #91aab4; border-radius:6px; color:var(--ink); background:var(--page); }
+    input[type=checkbox] { width:18px; height:18px; vertical-align:middle; margin-right:6px; }
+    button { padding:11px 14px; margin:4px 6px 4px 0; border:0; border-radius:7px; background:#126454; color:#fff; font:600 15px system-ui; cursor:pointer; }
+    button.secondary { background:#375564; }
+    output { display:block; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.5 ui-monospace,monospace; padding:12px; background:#143442; color:#e6f5f2; border-radius:7px; }
+    #samples { font-size:13px; }
+    .test-block { min-height:270px; background:repeating-linear-gradient(0deg,transparent 0 49px,#aec5ca 49px 50px); padding:20px 0; }
+    .circle { width:100px; height:100px; border:4px solid #126454; border-radius:50%; display:grid; place-items:center; background:var(--page); }
+    footer { position:fixed; z-index:3; bottom:0; left:0; right:0; min-height:56px; padding:8px 12px; background:#b22238; color:white; display:flex; align-items:center; gap:12px; }
+    body.safe footer { padding-left:max(12px,env(safe-area-inset-left)); padding-right:max(12px,env(safe-area-inset-right)); padding-bottom:calc(8px + env(safe-area-inset-bottom)); }
+    footer button { margin:0; background:white; color:#8a1427; min-height:40px; } footer span { font-size:12px; }
+    #safe-probe { visibility:hidden; position:fixed; top:0; left:0; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+    #units { position:fixed; visibility:hidden; width:0; pointer-events:none; top:0; left:0; }
+    dialog { max-width:min(90vw,420px); padding:24px; border:0; border-radius:14px; color:var(--ink); background:var(--page); } dialog::backdrop { background:#142d39a8; }
+    @media (prefers-color-scheme:dark) { :root { --page:#152c35; --ink:#e8f2f5; } }
+  </style>
+</head>
+<body class="safe">
+  <div id="first-row" aria-label="Three-pixel page edge"></div>
+  <header id="header"><strong>Top edge · Safari calibration</strong><small>Check the notch, tint and the first visible page row.</small></header>
+  <main>
+    <h1>Measure the browser you are using.</h1>
+    <p>This page records local viewport measurements. Open it directly in Safari on the test iPhone or iPad. A desktop run measures that desktop; it does not become an iPhone result.</p>
+    <p class="note">No external resources, accounts or uploads. Measurements remain in this tab until you save a JSON file. Identify the device and Safari version manually; the user agent may not expose the actual OS version.</p>
+    <details open>
+      <summary>1 · Identify the physical test</summary>
+      <div class="grid">
+        <label>Device model<input id="model" placeholder="e.g. iPhone 17 Pro"></label>
+        <label>OS and Safari version<input id="version" placeholder="Exact versions from Settings"></label>
+        <label>Safari layout<select id="layout"><option>Compact</option><option>Bottom</option><option>Top</option><option>iPad separate tabs</option><option>iPad compact tabs</option><option>Other / desktop diagnostic</option></select></label>
+        <label>Display Zoom and page zoom<input id="zoom-note" placeholder="e.g. Default display; page 100%"></label>
+        <label>Appearance / text size<input id="appearance" placeholder="Light or dark; text size setting"></label>
+        <label>Browser context<select id="context"><option>Safari tab on physical device</option><option>Installed web app / standalone</option><option>iOS Simulator</option><option>Desktop / extension fixture</option></select></label>
+      </div>
+    </details>
+    <details>
+      <summary>2 · Choose a page case</summary>
+      <div class="grid">
+        <label>Viewport fit (reloads this test page)<select id="fit"><option value="auto">auto — browser default</option><option value="cover">cover — use safe-area padding</option></select></label>
+        <label>Header background<select id="color"><option value="#133d55">Blue</option><option value="#000">Black hex</option><option value="#fff">White hex</option><option value="color(srgb 1 1 1)">White modern CSS</option><option value="oklch(95% 0.01 100)">Light OKLCH</option><option value="rgb(19 61 85 / 50%)">Translucent blue</option></select></label>
+        <label><input id="sticky" type="checkbox" checked>Sticky header</label>
+        <label><input id="show-footer" type="checkbox" checked>Fixed footer</label>
+        <label><input id="use-safe" type="checkbox" checked>Apply CSS safe-area padding</label>
+        <label><input id="meta-color" type="checkbox" checked>Match theme-color metadata</label>
+      </div>
+      <button id="show-dialog" type="button" class="secondary">Open page dialog</button>
+      <p class="note">First compare auto with cover + padding. Cover without padding is deliberately an unsafe page case; hidden content there must not automatically be blamed on the simulator.</p>
+    </details>
+    <section>
+      <h2>3 · Record each state</h2>
+      <label>State label<select id="phase"><option>At top — controls expanded</option><option>Scrolled down — controls collapsed</option><option>Scrolled slightly up — controls returning</option><option>Keyboard open</option><option>Keyboard closed</option><option>After rotation</option><option>Dialog open</option><option>After layout / appearance change</option></select></label>
+      <div><button id="record" type="button">Record measurement</button><button id="save" type="button" class="secondary">Save JSON</button></div>
+      <p id="message" role="status">No measurements recorded.</p>
+      <ol id="samples"></ol>
+      <output id="live" aria-label="Current viewport values"></output>
+      <p class="note">The fixed Continue button also records at any scroll position. Pair each recorded state with a screenshot from the physical device. A measurement alone cannot show blurred controls or whether a button is covered.</p>
+    </section>
+    <section>
+      <h2>Keyboard and edge controls</h2>
+      <label>Focus this dummy field<input id="keyboard-field" placeholder="Only dummy text, please" autocomplete="off"></label>
+      <p>Tap the red fixed footer's button. Its entire hit target should be reachable in the corresponding safe page case. Rotate both ways and inspect the left and right edges.</p>
+      <button type="button" id="record-keyboard">Record keyboard state</button>
+      <div class="circle">100 × 100</div>
+    </section>
+    <div class="test-block"><h2>Scroll down</h2><p>Compare the controls while moving down, then slightly up. The 50-pixel grid and circle make cropping or unequal scaling easier to notice.</p></div>
+    <div class="test-block"><h2>Mid-page state</h2><p>The sticky header should still touch the top edge. Disable it to compare an ordinary page header with a sticky one.</p></div>
+    <div class="test-block"><h2>Bottom-page state</h2><p>Inspect the fixed button, home indicator and browser controls. Repeat with the keyboard open and after closing it.</p><button id="record-bottom" type="button">Record scrolled state</button></div>
+  </main>
+  <footer id="footer"><button id="footer-hit" type="button">Continue · record</button><span id="hit-count">0 taps registered</span></footer>
+  <dialog id="dialog"><h2>Page dialog</h2><p>Check whether the browser tint responds to the visible page surface.</p><button id="record-dialog" type="button">Record dialog state</button><button id="close-dialog" type="button" class="secondary">Close</button></dialog>
+  <div id="safe-probe"></div>
+  <div id="units"><div style="height:100vh" data-unit="vh"></div><div style="height:100svh" data-unit="svh"></div><div style="height:100lvh" data-unit="lvh"></div><div style="height:100dvh" data-unit="dvh"></div></div>
+  <script>
+    const $ = id => document.getElementById(id);
+    const samples = [];
+    let taps = 0;
+    $('fit').value = fit;
+    function box(el) { const r=el.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,top:r.top,bottom:r.bottom,left:r.left,right:r.right}; }
+    function measurement() {
+      const style=getComputedStyle($('safe-probe')), vv=window.visualViewport;
+      return {
+        capturedAt:new Date().toISOString(),
+        identification:{model:$('model').value,osSafariVersion:$('version').value,layout:$('layout').value,displayAndPageZoom:$('zoom-note').value,appearanceTextSize:$('appearance').value,context:$('context').value},
+        phase:$('phase').value,
+        pageCase:{viewportFit:fit,safeAreaPadding:$('use-safe').checked,stickyHeader:$('sticky').checked,fixedFooter:$('show-footer').checked,headerColor:$('color').value,themeColor:$('theme').content,dialogOpen:$('dialog').open},
+        screen:{width:screen.width,height:screen.height,availWidth:screen.availWidth,availHeight:screen.availHeight,orientationType:screen.orientation?.type,orientationAngle:screen.orientation?.angle,legacyOrientation:window.orientation},
+        window:{innerWidth,innerHeight,outerWidth,outerHeight,devicePixelRatio,scrollX,scrollY},
+        document:{clientWidth:document.documentElement.clientWidth,clientHeight:document.documentElement.clientHeight,scrollHeight:document.documentElement.scrollHeight},
+        visualViewport:vv?{width:vv.width,height:vv.height,offsetTop:vv.offsetTop,offsetLeft:vv.offsetLeft,pageTop:vv.pageTop,pageLeft:vv.pageLeft,scale:vv.scale}:null,
+        safeAreaCssPx:{top:parseFloat(style.paddingTop),right:parseFloat(style.paddingRight),bottom:parseFloat(style.paddingBottom),left:parseFloat(style.paddingLeft)},
+        cssViewportUnits:Object.fromEntries([...document.querySelectorAll('[data-unit]')].map(el=>[el.dataset.unit,{supported:CSS.supports('height','100'+el.dataset.unit),height:el.getBoundingClientRect().height}])),
+        elementRects:{header:box($('header')),footer:box($('footer')),footerButton:box($('footer-hit')),firstPageRow:box($('first-row'))},
+        focusedElementId:document.activeElement?.id,footerButtonTaps:taps,
+        reportedUserAgent:navigator.userAgent,
+        prefersDark:matchMedia('(prefers-color-scheme:dark)').matches,standalone:matchMedia('(display-mode:standalone)').matches
+      };
+    }
+    function refresh() { const m=measurement(); $('live').textContent=JSON.stringify({screen:m.screen,window:m.window,visualViewport:m.visualViewport,safeAreaCssPx:m.safeAreaCssPx,cssViewportUnits:m.cssViewportUnits},null,2); }
+    function record(phase) {
+      if(phase) $('phase').value=phase;
+      const m=measurement(); samples.push(m);
+      const li=document.createElement('li'); li.textContent=`${samples.length}. ${m.phase} · ${m.window.innerWidth} × ${m.window.innerHeight} · ${m.screen.orientationType || m.screen.legacyOrientation || 'orientation unreported'}`; $('samples').append(li);
+      $('message').textContent=`${samples.length} local measurements recorded. Save JSON before leaving this page.`;
+      refresh();
+    }
+    $('record').onclick=()=>record();
+    $('record-bottom').onclick=()=>record('Scrolled down — controls collapsed');
+    $('record-keyboard').onpointerdown=e=>e.preventDefault();
+    $('record-keyboard').onclick=()=>record('Keyboard open');
+    $('record-dialog').onclick=()=>record('Dialog open');
+    $('save').onclick=()=>{
+      if(!samples.length) { $('message').textContent='Record a measurement first.'; return; }
+      const a=document.createElement('a'), url=URL.createObjectURL(new Blob([JSON.stringify({schemaVersion:1,tool:'Mobile View real-device probe',samples},null,2)],{type:'application/json'}));
+      a.href=url; a.download='safari-device-measurements-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json'; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),30000);
+    };
+    $('fit').onchange=()=>{ const u=new URL(location.href); u.searchParams.set('fit',$('fit').value); location.assign(u.href); };
+    $('sticky').onchange=()=>{ $('header').style.position=$('sticky').checked?'sticky':'static'; refresh(); };
+    $('show-footer').onchange=()=>{ $('footer').hidden=!$('show-footer').checked; $('footer').style.display=$('show-footer').checked?'flex':'none'; refresh(); };
+    $('use-safe').onchange=()=>{ document.body.classList.toggle('safe',$('use-safe').checked); refresh(); };
+    function updateColor() { const color=$('color').value; document.documentElement.style.setProperty('--edge',color); document.documentElement.style.setProperty('--edge-ink',['#fff','color(srgb 1 1 1)','oklch(95% 0.01 100)'].includes(color)?'#112c38':'#fff'); $('theme').content=$('meta-color').checked?color:''; refresh(); }
+    $('color').onchange=updateColor; $('meta-color').onchange=updateColor;
+    $('footer-hit').onpointerdown=e=>e.preventDefault();
+    $('footer-hit').onclick=()=>{ $('hit-count').textContent=`${++taps} taps registered`; record(document.activeElement?.id==='keyboard-field'?'Keyboard open':undefined); };
+    $('show-dialog').onclick=()=>$('dialog').showModal(); $('close-dialog').onclick=()=>$('dialog').close();
+    let queued=false; function schedule() { if(queued)return; queued=true; requestAnimationFrame(()=>{queued=false;refresh();}); }
+    addEventListener('resize',schedule); addEventListener('scroll',schedule,{passive:true}); addEventListener('orientationchange',schedule);
+    visualViewport?.addEventListener('resize',schedule); visualViewport?.addEventListener('scroll',schedule);
+    matchMedia('(prefers-color-scheme:dark)').addEventListener('change',schedule);
+    refresh();
+  </script>
+</body>
+</html>

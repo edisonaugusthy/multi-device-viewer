@@ -4,7 +4,7 @@ Both promo images and all three screenshot stories have been replaced with actua
 
 | Asset | Dimensions | Purpose |
 |---|---:|---|
-| `webstore-upload/promo-small-440x280.jpg` | 440 × 280 | **Mobile. Tablet. Desktop.** |
+| `webstore-upload/promo-small-440x280.jpg` | 440 × 280 | **Test your site everywhere.** — phone, tablet and laptop captures at equal height, separated by clear gaps with full frame edges and a shared baseline |
 | `webstore-upload/promo-marquee-1400x560.jpg` | 1400 × 560 | **Find layout issues before you ship.** |
 | `webstore-upload/screenshot-01-overview.jpg` | 1280 × 800 | Real phone/tablet/desktop workspace |
 | `webstore-upload/screenshot-02-responsive-workspace.jpg` | 1280 × 800 | Real UI with synchronized scrolling enabled |

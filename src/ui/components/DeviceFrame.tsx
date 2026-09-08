@@ -1,8 +1,12 @@
+import { usesTabletKeyboard, keyboardDecimalSeparator } from "../../domain/device/mobile-keyboard";
+import { extensionAsset } from "../../app/viewer-context";
 import { useEffect, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Copy, BookOpen, Lock, Plus, RefreshCw, Share, Square, Home, MoreVertical } from "lucide-react";
 import type { Device, MockupViewportConfig, Orientation, Size } from "../../domain/device/device.types";
 import { getFrameProfile, type DeviceFrameStyle, type ChromeVariant } from "../../domain/device/frame-profiles";
 import { useI18n } from "../../app/i18n";
+import { getBrowserGeometry, type BrowserPreferences } from "../../domain/device/browser-geometry";
+import { SafariChrome } from "./SafariChrome";
 
 interface FrameSizeInput {
   device: Device;
@@ -26,6 +30,9 @@ export interface MobileKeyboardState {
   autoCapitalize?: string;
   enterKeyHint?: string;
   language?: string;
+  fieldKey?: string;
+  canPrevious?: boolean;
+  canNext?: boolean;
 }
 
 export type MobileKeyboardLayoutMode = "text" | "email" | "url" | "search" | "number" | "decimal" | "phone";
@@ -33,12 +40,15 @@ export type MobileKeyboardLayoutMode = "text" | "email" | "url" | "search" | "nu
 export function resolveMobileKeyboardLayout(state: MobileKeyboardState): MobileKeyboardLayoutMode {
   const inputType = (state.inputType ?? "text").toLowerCase();
   const inputMode = (state.inputMode ?? "").toLowerCase();
-  if (inputType === "tel" || inputMode === "tel") return "phone";
-  if (inputMode === "decimal") return "decimal";
-  if (inputType === "number" || inputMode === "numeric") return "number";
-  if (inputType === "email" || inputMode === "email") return "email";
-  if (inputType === "url" || inputMode === "url") return "url";
-  if (inputType === "search" || inputMode === "search" || state.enterKeyHint === "search") return "search";
+  const modeLayouts: Record<string, MobileKeyboardLayoutMode> = {
+    text: "text", tel: "phone", decimal: "decimal", numeric: "number", email: "email", url: "url", search: "search",
+  };
+  if (modeLayouts[inputMode]) return modeLayouts[inputMode];
+  if (inputType === "tel") return "phone";
+  if (inputType === "number") return "number";
+  if (inputType === "email") return "email";
+  if (inputType === "url") return "url";
+  if (inputType === "search" || state.enterKeyHint === "search") return "search";
   return "text";
 }
 
@@ -46,10 +56,12 @@ export function getMobileKeyboardHeight(
   platform: "ios" | "android",
   landscape: boolean,
   tablet: boolean,
+  viewportHeight = Number.POSITIVE_INFINITY,
 ) {
-  if (landscape) return tablet ? 248 : platform === "ios" ? 214 : 224;
-  if (tablet) return platform === "ios" ? 354 : 338;
-  return platform === "ios" ? 310 : 296;
+  const preferred = landscape ? tablet ? 248 : platform === "ios" ? 214 : 224
+    : tablet ? platform === "ios" ? 354 : 338 : platform === "ios" ? 310 : 296;
+  // Keep room for the focused field and browser safe area on short screens.
+  return Math.min(preferred, Math.max(0, viewportHeight - 140));
 }
 
 export function getMobileKeyboardOcclusion(
@@ -60,16 +72,12 @@ export function getMobileKeyboardOcclusion(
   return platform === "ios" ? Math.max(0, keyboardHeight - bottomBrowserChromeHeight) : 0;
 }
 
-export function getSafariContentBottomInset(variant: ChromeVariant, bottomChromeHeight: number) {
-  return variant === "ios-liquid-glass" ? 0 : Math.max(0, bottomChromeHeight);
+export function getSafariContentBottomInset(_variant: ChromeVariant, bottomChromeHeight: number) {
+  return Math.max(0, bottomChromeHeight);
 }
 
-export function getIosTopSurfaceOverlap(variant: ChromeVariant, deviceId?: string) {
-  if (variant !== "ios-liquid-glass") return 0;
-  // The official 17e overlay is rendered at a fractional scale. One additional
-  // CSS pixel keeps the sampled page color flush with the first content row
-  // instead of exposing a hairline beneath the physical notch mask.
-  return deviceId === "apple-iphone-17e-2026" ? 3 : 2;
+export function getIosTopSurfaceOverlap(_variant: ChromeVariant, _deviceId?: string) {
+  return 0;
 }
 
 export interface BrowserSurfaceColors {
@@ -77,12 +85,13 @@ export interface BrowserSurfaceColors {
   bottom: string;
   topIsDark: boolean;
   bottomIsDark: boolean;
+  viewportFit?: "auto" | "cover";
 }
 
 export type MobileKeyboardAction =
   | { action: "text"; text: string }
   | { action: "enter"; enterKeyHint?: string }
-  | { action: "backspace" | "dismiss" };
+  | { action: "backspace" | "dismiss" | "previous" | "next" };
 
 // ─── Main component ─────────────────────────────────────────────────────────
 export function DeviceFrame({
@@ -100,6 +109,7 @@ export function DeviceFrame({
   keyboard,
   onKeyboardAction,
   pageSurfaces,
+  browserPreferences,
 }: {
   device: Device;
   children: ReactNode;
@@ -115,8 +125,8 @@ export function DeviceFrame({
   keyboard?: MobileKeyboardState;
   onKeyboardAction?: (action: MobileKeyboardAction) => void;
   pageSurfaces?: BrowserSurfaceColors;
+  browserPreferences?: BrowserPreferences;
 }) {
-  const { t } = useI18n();
   const profile = getFrameProfile(device);
   const hostname = safeHostname(url);
   // Derive the rendered posture from the viewport itself. Most handset/tablet
@@ -128,42 +138,39 @@ export function DeviceFrame({
   const innerP = profile.style.innerPadding ?? 0;
   const contentR = profile.style.contentRadius ?? profile.contentRadius;
   const chromeCollapse = clamp(scrollProgress, 0, 1);
-  const topSurfaceColor = pageSurfaces?.top ?? (darkMode ? "#0f172a" : "#ffffff");
-  const bottomSurfaceColor = pageSurfaces?.bottom ?? (darkMode ? "#0f172a" : "#ffffff");
-  const topSurfaceDark = pageSurfaces?.topIsDark ?? darkMode;
-  const bottomSurfaceDark = pageSurfaces?.bottomIsDark ?? darkMode;
+  const topSurfaceColor = pageSurfaces?.top ?? "#ffffff";
+  const bottomSurfaceColor = pageSurfaces?.bottom ?? "#ffffff";
+  const topSurfaceDark = pageSurfaces?.topIsDark ?? false;
+  const bottomSurfaceDark = pageSurfaces?.bottomIsDark ?? false;
   const iosTopSurfaceOverlap = getIosTopSurfaceOverlap(profile.chromeVariant, device.id);
   const keyboardPlatform = profile.platform === "ios" ? "ios" : "android";
   const mobileKeyboardHeight = keyboard && (device.type === "phone" || device.type === "tablet")
-    ? getMobileKeyboardHeight(keyboardPlatform, landscape, device.type === "tablet")
+    ? getMobileKeyboardHeight(keyboardPlatform, landscape, usesTabletKeyboard(device.type, viewportSize), viewportSize.height)
     : 0;
   const androidKeyboardOpen = mobileKeyboardHeight > 0 && keyboardPlatform === "android";
+  const browserGeometry = getBrowserGeometry(device, viewportSize, browserPreferences, {
+    collapsed: chromeCollapse, keyboardHeight: mobileKeyboardHeight, showStatusBar, showUrlBar, viewportFit: pageSurfaces?.viewportFit,
+  });
+  const safariChrome = showUrlBar && profile.platform === "ios" ? <SafariChrome
+    geometry={browserGeometry} hostname={hostname} dark={bottomSurfaceDark} keyboard={Boolean(keyboard)}
+    topColor={topSurfaceColor} bottomColor={bottomSurfaceColor} topDark={topSurfaceDark}
+  /> : null;
 
-  // Reserve the top safe area (status bar + notch / Dynamic Island) so content never
-  // renders under the cutout. In landscape the cutout is on the side, so no top inset.
-  const safeTopCss = orientation === "landscape" ? 0 : profile.safeAreaInsetTop;
-  const statusH = Math.max(
-    showStatusBar ? getStatusHeight(profile.platform, profile.kind, compact) : 0,
-    safeTopCss,
-  );
-  const addrH = showUrlBar && profile.platform === "android" ? 48 : 0;
   const bottomH = showUrlBar ? getBottomHeight(profile.platform, compact) : 0;
   const contentBottomH = profile.platform === "ios"
     ? getSafariContentBottomInset(profile.chromeVariant, bottomH)
     : bottomH;
-  const contentH = Math.max(
-    120,
-    viewportSize.height - statusH - addrH - (androidKeyboardOpen ? mobileKeyboardHeight : contentBottomH),
-  );
-  const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.localPath && asset.width && asset.height);
+  const imageFrame = device.mockupAssets.find((asset) => (asset.kind === "transparent-png" || asset.kind === "transparent-svg") && asset.localPath && asset.width && asset.height);
   const measuredScreenRect = useImageScreenRect(imageFrame?.screenInset ? undefined : imageFrame?.localPath);
   const keyboardOverlay = keyboard && (device.type === "phone" || device.type === "tablet") ? (
     <MobileKeyboard
       platform={profile.platform === "ios" ? "ios" : "android"}
       landscape={landscape}
-      tablet={device.type === "tablet"}
+      tablet={usesTabletKeyboard(device.type, viewportSize)}
       dark={darkMode}
       state={keyboard}
+      height={mobileKeyboardHeight}
+      homeIndicator={profile.safeAreaInsetBottom > 0}
       onAction={onKeyboardAction}
     />
   ) : null;
@@ -178,7 +185,7 @@ export function DeviceFrame({
         <div
           style={{
             width: viewportSize.width,
-            height: androidKeyboardOpen
+            height: mobileKeyboardHeight > 0
               ? Math.max(120, viewportSize.height - mobileKeyboardHeight)
               : viewportSize.height,
           }}
@@ -212,7 +219,7 @@ export function DeviceFrame({
           <div style={{ width: viewportSize.width, height: customContentH, marginTop: customStatusH }}>
             {children}
           </div>
-          {showUrlBar && <SafariBar hostname={hostname} compact={compact} dark={darkMode} variant="ios-classic" />}
+          {showUrlBar && <CustomBrowserBar hostname={hostname} compact={compact} dark={darkMode} />}
           {keyboardOverlay}
         </div>
       </div>
@@ -244,39 +251,28 @@ export function DeviceFrame({
     const mobileChrome = profile.imageChrome;
     // The top safe area = status bar + notch / Dynamic Island clearance. In landscape the
     // notch moves to the side, so no vertical top inset is reserved.
-    const safeTop = landscape ? 0 : profile.safeAreaInsetTop;
-    const imageStatusH = mobileChrome.showStatusBar && showStatusBar
-      ? Math.max(safeTop, statusH)
-      : safeTop;
-    const imageAddrH = mobileChrome.showAndroidTopBar && showUrlBar ? addrH : 0;
-    const imageBottomH = mobileChrome.showBottomBar && showUrlBar ? bottomH : 0;
+    const imageStatusH = browserGeometry.status;
     const screenRadius =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? 8
         : profile.kind === "tablet"
           ? contentR
           : Math.max(16, contentR);
+    const imageScreenRadius = viewportConfig?.cornerRadius ?? Math.max(4, (landscape ? Math.max(10, screenRadius - 6) : screenRadius) * screenFit.radiusScale);
     const desktopToolbarH = showUrlBar && (device.type === "laptop" || device.type === "desktop") ? 36 : 0;
     const useSafariDesktopChrome = showUrlBar && profile.style.desktopChrome === "safari";
     // iPhone chrome borrows the page's sampled colors. The top safe area remains reserved;
-    // iOS 26's round Safari control floats over page content while older bars reserve space.
-    const iosPhoneSurface = profile.platform === "ios" && device.type === "phone";
-    const imageContentBottomH = iosPhoneSurface
-      ? getSafariContentBottomInset(profile.chromeVariant, imageBottomH)
-      : 0;
+    // all Safari controls reserve space so the page's fixed actions stay visible.
+    const iosPhoneSurface = profile.platform === "ios" && (device.type === "phone" || device.type === "tablet");
+    const imageContentBottomH = browserGeometry.bottom;
     const imageContentTop =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? 0
-        : getMobileContentTop(imageStatusH, imageAddrH);
+        : browserGeometry.top;
     const imageContentH =
       device.type === "laptop" || device.type === "desktop" || device.type === "tv"
         ? Math.max(120, viewportSize.height - (useSafariDesktopChrome ? 56 : desktopToolbarH))
-        : Math.max(
-          120,
-          viewportSize.height - imageContentTop - (androidKeyboardOpen
-            ? mobileKeyboardHeight
-            : imageContentBottomH),
-        );
+        : browserGeometry.content.height;
 
     return (
       <div
@@ -296,7 +292,7 @@ export function DeviceFrame({
           }}
         >
           <img
-            src={imageFrame.localPath}
+            src={extensionAsset(imageFrame.localPath)}
             alt=""
             draggable={false}
             className="pointer-events-none absolute select-none"
@@ -319,20 +315,32 @@ export function DeviceFrame({
               width: screenFit.width,
               height: screenFit.height,
               zIndex: 1,
-              borderRadius: viewportClipPath ? undefined : Math.max(4, (landscape ? Math.max(10, screenRadius - 6) : screenRadius) * screenFit.radiusScale),
-              clipPath: viewportClipPath,
+              borderRadius: viewportClipPath ? undefined : imageScreenRadius,
+              // Clip the composed screen as well as its layout overflow. Safari's
+              // backdrop-filter layer can otherwise paint past the rounded bezel
+              // at fractional preview scales.
+              clipPath: viewportClipPath ?? `inset(0 round ${imageScreenRadius}px)`,
+              // The status surface and iframe can land on different fractional
+              // pixels after scaling. Back their join with the top page color;
+              // the separate bottom surface still paints Safari's lower area.
               backgroundColor: iosPhoneSurface
-                ? bottomSurfaceColor
+                ? topSurfaceColor
                 : darkMode
                   ? "#0f172a"
                   : "#ffffff",
             }}
           >
+            {iosPhoneSurface && <div
+              aria-hidden
+              data-ios-top-surface={device.id}
+              className="pointer-events-none absolute inset-x-0 top-0"
+              style={{ height: screenFit.contentTop + (imageStatusH + iosTopSurfaceOverlap) * screenFit.scaleY, backgroundColor: topSurfaceColor }}
+            />}
             <div
               style={{
                 position: "absolute",
-                left: 0,
-                top: 0,
+                left: screenFit.contentLeft,
+                top: screenFit.contentTop,
                 width: viewportSize.width,
                 height: viewportSize.height,
                 transform: `scale(${screenFit.scaleX}, ${screenFit.scaleY})`,
@@ -352,12 +360,6 @@ export function DeviceFrame({
                 <>
                   {iosPhoneSurface && (
                     <>
-                      <div
-                        aria-hidden
-                        data-ios-top-surface={device.id}
-                        className="pointer-events-none absolute inset-x-0 top-0 z-[2]"
-                        style={{ height: imageStatusH + iosTopSurfaceOverlap, backgroundColor: topSurfaceColor }}
-                      />
                       {imageContentBottomH > 0 && (
                         <div
                           aria-hidden
@@ -367,7 +369,7 @@ export function DeviceFrame({
                       )}
                     </>
                   )}
-                  {mobileChrome.showStatusBar && showStatusBar && (
+                  {mobileChrome.showStatusBar && showStatusBar && imageStatusH > 0 && (
                     <StatusBar
                       platform={profile.platform}
                       showBattery={showBattery}
@@ -375,35 +377,26 @@ export function DeviceFrame({
                       dark={iosPhoneSurface ? topSurfaceDark : darkMode}
                       imageBackedKind={device.type === "tablet" ? "tablet" : "phone"}
                       height={imageStatusH || undefined}
-                      chromeVariant={profile.chromeVariant}
+                      chromeVariant={browserGeometry.variant}
                       timeInsetLeft={profile.statusBarInsetLeft}
                       indicatorInsetRight={landscape ? 0 : profile.statusBarInsetRight}
                     />
                   )}
-                  {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={imageStatusH} scrollProgress={chromeCollapse} />}
+                  {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={topSurfaceDark} top topOffset={imageStatusH} scrollProgress={chromeCollapse} />}
                   <div
                     style={{
                       position: "relative",
                       zIndex: 1,
-                      width: viewportSize.width,
+                      width: browserGeometry.content.width,
                       height: imageContentH,
                       marginTop: imageContentTop,
+                      marginLeft: browserGeometry.left,
                     }}
                   >
                     {children}
                   </div>
-                  {!keyboard && mobileChrome.showSafariBar && showUrlBar && (
-                    <SafariBar
-                      hostname={hostname}
-                      compact={compact}
-                      dark={iosPhoneSurface ? bottomSurfaceDark : darkMode}
-                      scrollProgress={chromeCollapse}
-                      variant={profile.chromeVariant}
-                      safeAreaInsetBottom={profile.safeAreaInsetBottom}
-                    />
-                  )}
+                  {mobileChrome.showSafariBar && safariChrome}
                   {!keyboard && mobileChrome.showAndroidBottomBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
-                  {!keyboard && mobileChrome.showHomeIndicator && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
                   {keyboardOverlay}
                 </>
               )}
@@ -536,21 +529,21 @@ export function DeviceFrame({
             className={`relative overflow-hidden ${darkMode ? "bg-[#0f172a]" : "bg-white"}`}
             style={{ borderRadius: landscape ? Math.max(10, contentR - 6) : contentR, width: viewportSize.width, height: screenH }}
           >
-            {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={darkMode} chromeVariant={profile.chromeVariant} height={statusH} />}
-            {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} scrollProgress={chromeCollapse} />}
+            {showStatusBar && browserGeometry.status > 0 && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={isIos ? topSurfaceDark : darkMode} chromeVariant={browserGeometry.variant} height={browserGeometry.status} surfaceOverlay={isIos} />}
+            {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={topSurfaceDark} top topOffset={browserGeometry.status} scrollProgress={chromeCollapse} />}
             <div
               style={{
-                width: viewportSize.width,
-                height: contentH,
-                marginTop: statusH + addrH,
+                width: browserGeometry.content.width,
+                height: browserGeometry.content.height,
+                marginTop: browserGeometry.top,
+                marginLeft: browserGeometry.left,
                 marginBottom: contentBottomH,
               }}
             >
               {children}
             </div>
-            {!keyboard && showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={darkMode} scrollProgress={chromeCollapse} variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
+            {safariChrome}
             {!keyboard && showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
-            {!keyboard && isIos && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
             {keyboardOverlay}
           </div>
         </div>
@@ -577,29 +570,30 @@ export function DeviceFrame({
         className="overflow-hidden bg-black"
         style={{ borderRadius: Math.max(16, profile.radius - shellP), padding: innerP }}
       >
-        <DeviceCutout kind={profile.kind} platform={profile.platform} style={profile.style} />
+        <div className="pointer-events-none absolute z-30" style={{ width: landscape ? viewportSize.height : viewportSize.width, height: landscape ? viewportSize.width : viewportSize.height, transformOrigin: "top left", transform: landscape ? `translateX(${viewportSize.width}px) rotate(90deg)` : undefined }}><DeviceCutout kind={profile.kind} platform={profile.platform} style={profile.style} /></div>
         <div
           className="relative overflow-hidden"
           style={{
             borderRadius: landscape ? Math.max(10, innerR - 6) : innerR,
             width: viewportSize.width,
             height: screenH,
-            backgroundColor: isIos ? bottomSurfaceColor : darkMode ? "#0f172a" : "#ffffff",
+            backgroundColor: isIos ? topSurfaceColor : darkMode ? "#0f172a" : "#ffffff",
           }}
         >
           {isIos && (
             <>
-              <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-[2]" style={{ height: statusH + iosTopSurfaceOverlap, backgroundColor: topSurfaceColor }} />
+              <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-[2]" style={{ height: browserGeometry.status, backgroundColor: topSurfaceColor }} />
               {contentBottomH > 0 && <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-0" style={{ height: contentBottomH, backgroundColor: bottomSurfaceColor }} />}
             </>
           )}
-          {showStatusBar && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={isIos ? topSurfaceDark : darkMode} chromeVariant={profile.chromeVariant} height={statusH} surfaceOverlay={isIos} />}
-          {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} top topOffset={statusH} scrollProgress={chromeCollapse} />}
+          {showStatusBar && browserGeometry.status > 0 && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={isIos ? topSurfaceDark : darkMode} chromeVariant={browserGeometry.variant} height={browserGeometry.status} surfaceOverlay={isIos} />}
+          {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={topSurfaceDark} top topOffset={browserGeometry.status} scrollProgress={chromeCollapse} />}
           <div
             style={{
-              width: viewportSize.width,
-              height: contentH,
-              marginTop: getMobileContentTop(statusH, addrH),
+              width: browserGeometry.content.width,
+              height: browserGeometry.content.height,
+              marginTop: browserGeometry.top,
+              marginLeft: browserGeometry.left,
               marginBottom: contentBottomH,
               position: "relative",
               zIndex: 1,
@@ -607,9 +601,8 @@ export function DeviceFrame({
           >
             {children}
           </div>
-          {!keyboard && showUrlBar && isIos && <SafariBar hostname={hostname} compact={compact} dark={bottomSurfaceDark} scrollProgress={chromeCollapse} variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
+          {safariChrome}
           {!keyboard && showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
-          {!keyboard && isIos && <HomeIndicator variant={profile.chromeVariant} safeAreaInsetBottom={profile.safeAreaInsetBottom} />}
           {keyboardOverlay}
         </div>
       </div>
@@ -623,6 +616,8 @@ function MobileKeyboard({
   tablet,
   dark,
   state,
+  height,
+  homeIndicator,
   onAction,
 }: {
   platform: "ios" | "android";
@@ -630,17 +625,20 @@ function MobileKeyboard({
   tablet: boolean;
   dark: boolean;
   state: MobileKeyboardState;
+  height: number;
+  homeIndicator: boolean;
   onAction?: (action: MobileKeyboardAction) => void;
 }) {
   const { t } = useI18n();
   const ios = platform === "ios";
   const layout = resolveMobileKeyboardLayout(state);
   const alphabeticLayout = ["text", "email", "url", "search"].includes(layout);
-  const startsShifted = alphabeticLayout && !["off", "none"].includes((state.autoCapitalize ?? "sentences").toLowerCase());
+  const startsShifted = alphabeticLayout && !["email", "url"].includes(layout) && state.inputType !== "password" && !["off", "none"].includes((state.autoCapitalize ?? "sentences").toLowerCase());
   const [shifted, setShifted] = useState(startsShifted);
   const [symbolMode, setSymbolMode] = useState(false);
-  const numeric = !alphabeticLayout || symbolMode;
-  const keyboardHeight = getMobileKeyboardHeight(platform, landscape, tablet);
+  const keypad = !alphabeticLayout;
+  const numeric = keypad || symbolMode;
+  const keyboardHeight = height;
   const language = keyboardLanguageLabel(state.language);
   const surface = ios
     ? dark ? "bg-[#484a50]/[0.98] text-white" : "bg-[#d3d5da]/[0.98] text-[#111318]"
@@ -657,31 +655,36 @@ function MobileKeyboard({
     ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
     ["z", "x", "c", "v", "b", "n", "m"],
   ];
-  const decimalKey = layout === "decimal" ? "." : layout === "phone" ? "*" : "-";
+  const decimalSeparator = keyboardDecimalSeparator(state.language);
   const numericRows = [
-    ["1", "2", "3"],
-    ["4", "5", "6"],
-    ["7", "8", "9"],
-    [decimalKey, "0", layout === "phone" ? "#" : "."],
+    ["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"],
+    [layout === "decimal" ? decimalSeparator : layout === "phone" ? "*" : "", "0", layout === "phone" ? "#" : ""],
   ];
+  const symbolRows = [
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+    ["-", "/", ":", ";", "(", ")", "$", "&", "@", '"'],
+    [".", ",", "?", "!", "'", "#", "%"],
+  ];
+  const rows = keypad ? numericRows : symbolMode ? symbolRows
+    : tablet ? [symbolRows[0], ...alphaRows] : alphaRows;
   const phoneHints: Record<string, string> = {
     "2": "ABC", "3": "DEF", "4": "GHI", "5": "JKL", "6": "MNO",
     "7": "PQRS", "8": "TUV", "9": "WXYZ",
   };
 
   const sendText = (value: string) => {
-    onAction?.({ action: "text", text: shifted ? value.toUpperCase() : value });
-    if (shifted) setShifted(false);
+    onAction?.({ action: "text", text: layout === "decimal" && state.inputType === "number" && value === decimalSeparator ? "." : shifted ? value.toUpperCase() : value });
+    if (shifted && state.autoCapitalize !== "characters") setShifted(false);
   };
   const stopFocusChange = (event: ReactPointerEvent<HTMLButtonElement>) => event.preventDefault();
-  const key = (label: string, value = label, wide = false, hint?: string) => (
+  const key = (label: string, value = label, wide = false, hint?: string) => label === "" ? <span key={`blank-${hint}`} className="flex-1"/> : (
     <button
       key={`${label}-${value}`}
       type="button"
       tabIndex={-1}
       aria-label={t("key", { key: label === " " ? t("space") : label })}
       className={`flex min-w-0 flex-1 flex-col items-center justify-center font-medium ${ios ? "rounded-[6px]" : "rounded-[8px]"} ${keySurface} ${activeKey} ${wide ? "basis-[40%]" : ""}`}
-      style={{ fontSize: tablet ? 22 : landscape ? 14 : numeric ? 20 : 18 }}
+      style={{ fontSize: landscape ? 14 : tablet ? 22 : numeric ? 20 : 18 }}
       onPointerDown={stopFocusChange}
       onClick={() => sendText(value)}
     >
@@ -693,7 +696,7 @@ function MobileKeyboard({
     <button
       type="button"
       tabIndex={-1}
-      aria-label={label}
+      aria-label={label === "⇧" ? t("shift") : label === "⌫" ? t("backspace") : label}
       className={`flex min-w-0 items-center justify-center rounded-[7px] px-2 font-medium ${utilitySurface} ${activeKey} ${extraClass}`}
       onPointerDown={stopFocusChange}
       onClick={onClick}
@@ -701,23 +704,24 @@ function MobileKeyboard({
       {label}
     </button>
   );
-  const enterHint = state.multiline ? "return" : (state.enterKeyHint || (layout === "search" ? "search" : "go"));
+  const enterHint = state.enterKeyHint || (state.multiline ? "return" : layout === "search" ? "search" : "go");
   const enterLabel = ios
     ? enterHint.toLowerCase()
     : enterHint.charAt(0).toUpperCase() + enterHint.slice(1).toLowerCase();
   const sendEnter = () => onAction?.({ action: "enter", enterKeyHint: enterHint });
-  const predictions = layout === "url" ? ["www.", ".com", ".org"] : layout === "email" ? ["@", ".com", ".net"] : ["the", "to", "and"];
-  const predictionValue = (prediction: string) => ["text", "search"].includes(layout) ? `${prediction} ` : prediction;
+  const shortcuts = state.inputType === "password" ? [] : layout === "url" ? ["www.", ".com", ".org"] : layout === "email" ? ["@", ".com", ".net"] : ["—", "’", "…"];
 
   useEffect(() => {
     setShifted(startsShifted);
     setSymbolMode(false);
-  }, [layout, startsShifted]);
+  }, [layout, startsShifted, state.fieldKey]);
 
   return (
     <div
       data-mobile-keyboard={platform}
-      data-keyboard-layout={layout}
+      data-keyboard-layout={symbolMode ? "symbols" : layout}
+      data-keyboard-form={tablet ? "tablet" : "phone"}
+      dir="ltr"
       role="group"
       aria-label={t("onScreenKeyboard", { platform: ios ? "iOS" : "Android" })}
       className={`absolute inset-x-0 bottom-0 z-[70] flex flex-col border-t border-black/10 shadow-[0_-12px_32px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-[height] duration-200 ${surface}`}
@@ -727,70 +731,73 @@ function MobileKeyboard({
       {ios ? (
         <>
           <div className={`flex h-9 shrink-0 items-center justify-between border-b px-3 text-[12px] ${dark ? "border-white/10 bg-black/10" : "border-black/10 bg-white/25"}`}>
-            <span className="flex gap-5 text-lg opacity-55" aria-hidden>‹ <span>›</span></span>
-            <button type="button" tabIndex={-1} className="font-semibold text-blue-600 dark:text-blue-300" onPointerDown={stopFocusChange} onClick={() => onAction?.({ action: "dismiss" })}>
+            <span className="flex gap-2">
+              <button type="button" tabIndex={-1} aria-label={t("previousField")} disabled={!state.canPrevious} className="grid h-8 w-8 place-items-center disabled:opacity-25" onPointerDown={stopFocusChange} onClick={() => onAction?.({ action: "previous" })}><ChevronLeft size={18}/></button>
+              <button type="button" tabIndex={-1} aria-label={t("next")} disabled={!state.canNext} className="grid h-8 w-8 place-items-center disabled:opacity-25" onPointerDown={stopFocusChange} onClick={() => onAction?.({ action: "next" })}><ChevronRight size={18}/></button>
+            </span>
+            <button type="button" tabIndex={-1} className={`font-semibold ${dark ? "text-blue-300" : "text-blue-600"}`} onPointerDown={stopFocusChange} onClick={() => onAction?.({ action: "dismiss" })}>
               {t("done")}
             </button>
           </div>
-          {!numeric && (
+          {!numeric && shortcuts.length > 0 && (
             <div className="flex h-8 shrink-0 divide-x divide-black/10 px-2 text-[12px]">
-              {predictions.map((prediction) => (
-                <button key={prediction} type="button" tabIndex={-1} className="flex-1 font-medium" onPointerDown={stopFocusChange} onClick={() => sendText(predictionValue(prediction))}>
-                  {prediction}
+              {shortcuts.map((shortcut) => (
+                <button key={shortcut} type="button" tabIndex={-1} className="flex-1 font-medium" onPointerDown={stopFocusChange} onClick={() => sendText(shortcut)}>
+                  {shortcut}
                 </button>
               ))}
             </div>
           )}
-          <div className="flex min-h-0 flex-1 flex-col gap-2 px-1.5 pb-1.5">
-            {(numeric ? numericRows : alphaRows).map((row, index) => (
+          <div className={`flex min-h-0 flex-1 flex-col gap-2 px-1.5 pb-1.5 ${tablet && keypad ? "mx-auto w-full max-w-[480px]" : ""}`}>
+            {rows.map((row, index) => (
               <div key={index} className={`flex min-h-0 flex-1 justify-center gap-1.5 ${!numeric && index === 1 ? "px-[4%]" : ""}`}>
-                {!numeric && index === 2 && utilityKey("⇧", () => setShifted((value) => !value), `basis-[12%] ${shifted ? "ring-2 ring-blue-500" : ""}`)}
-                {row.map((letter) => key(letter, letter, numeric, layout === "phone" ? phoneHints[letter] : undefined))}
-                {!numeric && index === 2 && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[12%] text-lg")}
+                {!numeric && index === rows.length - 1 && utilityKey("⇧", () => setShifted((value) => !value), `basis-[12%] ${shifted ? "ring-2 ring-blue-500" : ""}`)}
+                {row.map((letter, keyIndex) => key(letter, letter, keypad, letter === "" ? String(keyIndex) : layout === "phone" ? phoneHints[letter] : undefined))}
+                {!keypad && index === rows.length - 1 && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[12%] text-lg")}
               </div>
             ))}
             <div className="flex h-[16%] min-h-0 shrink-0 gap-1.5">
               {numeric && !alphabeticLayout
-                ? key("+")
+                ? layout === "phone" ? key("+") : <span className="flex-1"/>
                 : utilityKey(numeric ? "ABC" : "123", () => setSymbolMode((value) => !value), "basis-[14%]")}
               {!numeric && key(layout === "email" ? "@" : layout === "url" ? "/" : ",")}
-              {!numeric && key(" ", " ", true)}
+              {!keypad && key(" ", " ", true)}
               {!numeric && key(layout === "url" ? ".com" : ".")}
-              {numeric && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[18%] text-lg")}
+              {keypad && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[18%] text-lg")}
               <button type="button" tabIndex={-1} aria-label={t("key", { key: enterLabel })} className="flex basis-[20%] items-center justify-center rounded-[7px] bg-blue-500 px-2 text-[13px] font-semibold text-white active:bg-blue-600" onPointerDown={stopFocusChange} onClick={sendEnter}>
                 {enterLabel}
               </button>
             </div>
           </div>
-          <div className="mx-auto mb-2 h-1 w-[34%] shrink-0 rounded-full bg-current opacity-65" />
+          {homeIndicator && <div className="mx-auto mb-2 h-1 w-[34%] shrink-0 rounded-full bg-current opacity-65" />}
         </>
       ) : (
         <>
           <div className={`flex h-10 shrink-0 items-center gap-1 border-b px-2 ${dark ? "border-white/5" : "border-black/5"}`}>
             <span className="flex h-7 w-8 items-center justify-center text-base opacity-60" aria-hidden>⋮</span>
-            {!numeric ? predictions.map((prediction) => (
-              <button key={prediction} type="button" tabIndex={-1} className="h-8 flex-1 rounded-full px-2 text-[12px] font-medium hover:bg-black/5" onPointerDown={stopFocusChange} onClick={() => sendText(predictionValue(prediction))}>
-                {prediction}
+            {!numeric ? shortcuts.map((shortcut) => (
+              <button key={shortcut} type="button" tabIndex={-1} className="h-8 flex-1 rounded-full px-2 text-[12px] font-medium hover:bg-black/5" onPointerDown={stopFocusChange} onClick={() => sendText(shortcut)}>
+                {shortcut}
               </button>
             )) : <span className="flex-1 text-center text-[11px] font-medium opacity-55">{layout === "phone" ? "Phone keypad" : "Number pad"}</span>}
             <span className="flex h-7 w-8 items-center justify-center text-sm opacity-60" aria-hidden>●</span>
           </div>
-          <div className="flex min-h-0 flex-1 flex-col gap-1.5 px-1.5 py-1.5">
-            {(numeric ? numericRows : alphaRows).map((row, index) => (
+          <div className={`flex min-h-0 flex-1 flex-col gap-1.5 px-1.5 py-1.5 ${tablet && keypad ? "mx-auto w-full max-w-[480px]" : ""}`}>
+            {rows.map((row, index) => (
               <div key={index} className={`flex min-h-0 flex-1 justify-center gap-1.5 ${!numeric && index === 1 ? "px-[4%]" : ""}`}>
-                {!numeric && index === 2 && utilityKey("⇧", () => setShifted((value) => !value), `basis-[12%] rounded-full ${shifted ? "bg-blue-500 text-white" : ""}`)}
-                {row.map((letter) => key(letter, letter, numeric, layout === "phone" ? phoneHints[letter] : undefined))}
-                {!numeric && index === 2 && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[12%] rounded-full text-lg")}
+                {!numeric && index === rows.length - 1 && utilityKey("⇧", () => setShifted((value) => !value), `basis-[12%] rounded-full ${shifted ? "bg-blue-500 text-white" : ""}`)}
+                {row.map((letter, keyIndex) => key(letter, letter, keypad, letter === "" ? String(keyIndex) : layout === "phone" ? phoneHints[letter] : undefined))}
+                {!keypad && index === rows.length - 1 && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[12%] rounded-full text-lg")}
               </div>
             ))}
             <div className="flex h-[17%] min-h-0 shrink-0 gap-1.5">
               {numeric && !alphabeticLayout
-                ? key("+")
+                ? layout === "phone" ? key("+") : <span className="flex-1"/>
                 : utilityKey(numeric ? "ABC" : "?123", () => setSymbolMode((value) => !value), "basis-[15%] rounded-full text-[12px]")}
               {!numeric && key(layout === "email" ? "@" : layout === "url" ? "/" : ",")}
-              {!numeric && key(" ", " ", true)}
+              {!keypad && key(" ", " ", true)}
               {!numeric && key(layout === "url" ? ".com" : ".")}
-              {numeric && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[18%] rounded-full text-lg")}
+              {keypad && utilityKey("⌫", () => onAction?.({ action: "backspace" }), "basis-[18%] rounded-full text-lg")}
               <button type="button" tabIndex={-1} aria-label={t("key", { key: enterLabel })} className="flex basis-[17%] items-center justify-center rounded-full bg-[#c3e7ff] px-2 text-[12px] font-semibold text-[#001d35] active:bg-[#9dd7fa]" onPointerDown={stopFocusChange} onClick={sendEnter}>
                 {enterLabel}
               </button>
@@ -819,7 +826,7 @@ function keyboardLanguageLabel(language?: string) {
 }
 
 // ─── estimateDeviceFrameSize ─────────────────────────────────────────────────
-export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, showUrlBar, viewportSize }: FrameSizeInput): Size {
+export function estimateDeviceFrameSize({ device, showFrame, showUrlBar, viewportSize }: FrameSizeInput): Size {
   if (!showFrame) return viewportSize;
 
   if (device.brand === "Custom") {
@@ -827,7 +834,7 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
   }
 
   const profile = getFrameProfile(device);
-  const imageFrame = device.mockupAssets.find((asset) => asset.kind === "transparent-png" && asset.width && asset.height);
+  const imageFrame = device.mockupAssets.find((asset) => (asset.kind === "transparent-png" || asset.kind === "transparent-svg") && asset.width && asset.height);
   if (imageFrame?.width && imageFrame.height) {
     const assetWidth = imageFrame.sourceCrop?.width ?? imageFrame.width;
     const assetHeight = imageFrame.sourceCrop?.height ?? imageFrame.height;
@@ -866,11 +873,6 @@ export function estimateDeviceFrameSize({ device, showFrame, showStatusBar, show
       height: viewportSize.height + 14,
     };
   }
-
-  const compact = profile.kind === "tablet" || profile.kind === "iphone-classic" || viewportSize.width > viewportSize.height;
-  const statusH = showStatusBar ? getStatusHeight(profile.platform, profile.kind, compact) : 0;
-  const addrH = showUrlBar && profile.platform === "android" ? 48 : 0;
-  const bottomH = showUrlBar ? getBottomHeight(profile.platform, compact) : 0;
 
   const isTablet = profile.kind === "tablet";
   const shellP = profile.style.shellPadding ?? profile.shellPadding;
@@ -976,14 +978,17 @@ function screenRadiusForDevice(device: Device) {
   return 28;
 }
 
-function fitViewportToScreen(viewportSize: Size, screenRect: ScreenRect) {
-  const scaleX = screenRect.width / viewportSize.width;
-  const scaleY = screenRect.height / viewportSize.height;
+export function fitViewportToScreen(viewportSize: Size, screenRect: ScreenRect) {
+  const uniformScale = Math.min(screenRect.width / viewportSize.width, screenRect.height / viewportSize.height);
+  const scaleX = uniformScale;
+  const scaleY = uniformScale;
 
   return {
     scaleX,
     scaleY,
-    radiusScale: Math.min(scaleX, scaleY),
+    radiusScale: uniformScale,
+    contentLeft: (screenRect.width - viewportSize.width * uniformScale) / 2,
+    contentTop: (screenRect.height - viewportSize.height * uniformScale) / 2,
     width: screenRect.width,
     height: screenRect.height,
     left: screenRect.left,
@@ -1023,7 +1028,7 @@ function useImageScreenRect(src?: string): ScreenRect | null {
     img.onerror = () => {
       if (!cancelled) setRect(null);
     };
-    img.src = src;
+    img.src = extensionAsset(src);
 
     return () => {
       cancelled = true;
@@ -1167,14 +1172,6 @@ function DeviceCutout({
     return <div className="pointer-events-none absolute left-1/2 top-[12px] z-30 h-[12px] w-[12px] -translate-x-1/2 rounded-full bg-[#080a0f] ring-[1.5px] ring-black/20" />;
   }
   return null;
-}
-
-function TabletCamera() {
-  return (
-    <div className="pointer-events-none absolute inset-x-0 top-[7px] z-30 flex justify-center">
-      <span className="h-[7px] w-[7px] rounded-full bg-[#050505] ring-[1px] ring-white/10" />
-    </div>
-  );
 }
 
 function resolveImageCutout(style: DeviceFrameStyle, viewportSize: Size) {
@@ -1322,7 +1319,7 @@ function StatusBar({
     <div
       className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between text-[11px] font-bold ${
         iosImageBackedTablet
-          ? "bg-transparent text-slate-950"
+          ? dark ? "bg-transparent text-white" : "bg-transparent text-slate-950"
           : ios
           ? "bg-black text-white"
           : dark
@@ -1341,71 +1338,14 @@ function StatusBar({
   );
 }
 
-function SafariBar({
-  hostname,
-  compact,
-  dark,
-  scrollProgress = 0,
-  variant = "ios-modern",
-  safeAreaInsetBottom = 0,
-}: {
+// Neutral bottom browser controls for user-created viewports.
+function CustomBrowserBar({ hostname, compact, dark }: {
   hostname: string;
   compact: boolean;
   dark: boolean;
-  scrollProgress?: number;
-  variant?: ChromeVariant;
-  safeAreaInsetBottom?: number;
 }) {
-  // safeAreaInsetBottom is in device px (baked at 90 for iOS 26). Scale it down to the
-  // on-screen chrome footprint so the floating bar clears the home-indicator zone.
-  const safeGap = variant === "ios-liquid-glass" ? Math.round(Math.min(24, safeAreaInsetBottom * 0.22)) : 0;
-
-  // ── iOS 26 Liquid Glass — a single translucent floating pill, no bottom tab strip ──
-  // (Static — no scroll collapse, so the page never reflows / jumps while scrolling.)
-  if (variant === "ios-liquid-glass") {
-    const barH = compact ? 40 : 46;
-    return (
-      <div
-        data-safari-style="liquid-glass"
-        className="pointer-events-none absolute inset-x-0 z-20 flex justify-center"
-        style={{ bottom: 10 + safeGap }}
-      >
-        <div
-          className={`relative flex items-center gap-2 overflow-hidden rounded-full px-4 font-medium ring-1 ${
-            dark
-              ? "bg-white/12 text-slate-100 ring-white/15"
-              : "bg-white/55 text-slate-700 ring-black/5"
-          }`}
-          style={{
-            height: barH,
-            width: "82%",
-            fontSize: compact ? 12 : 14,
-            // Liquid Glass sheen
-            backgroundImage: dark
-              ? "linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02))"
-              : "linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.30))",
-            backdropFilter: "blur(22px) saturate(160%)",
-            WebkitBackdropFilter: "blur(22px) saturate(160%)",
-            boxShadow: dark
-              ? "0 10px 30px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(255,255,255,0.05)"
-              : "0 10px 30px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.88), inset 0 -1px 0 rgba(255,255,255,0.28)",
-          }}
-        >
-          <span aria-hidden className="absolute inset-x-3 top-0 h-px bg-white/70" />
-          <ChevronLeft size={16} className={`relative z-[1] ${dark ? "text-slate-200" : "text-slate-500"}`} />
-          <Lock size={11} className={`relative z-[1] shrink-0 ${dark ? "text-slate-300" : "text-slate-500"}`} />
-          <span className="relative z-[1] min-w-0 flex-1 truncate text-center">{hostname}</span>
-          <RefreshCw size={14} className={`relative z-[1] shrink-0 ${dark ? "text-slate-200" : "text-slate-500"}`} />
-        </div>
-      </div>
-    );
-  }
-
-  // ── iOS 15–18 modern + iOS ≤14 classic — real Safari bottom chrome: one contiguous
-  //    frosted bar with the address pill and the toolbar icon row below it. (Static.) ──
   const searchH = compact ? 36 : 40;
   const toolbarH = compact ? 30 : 36;
-  const radius = variant === "ios-classic" ? 9 : 11;
   return (
     <div
       className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end overflow-hidden border-t backdrop-blur-xl ${
@@ -1418,7 +1358,7 @@ function SafariBar({
           className={`flex w-full items-center gap-2 px-3 font-medium ${
             dark ? "bg-white/10 text-slate-200" : "bg-[#e3e3e6] text-slate-700"
           }`}
-          style={{ height: compact ? 28 : 32, borderRadius: radius, fontSize: compact ? 11 : 13 }}
+          style={{ height: compact ? 28 : 32, borderRadius: 9, fontSize: compact ? 11 : 13 }}
         >
           <span className={`text-[13px] font-semibold ${dark ? "text-slate-300" : "text-slate-500"}`}>AA</span>
           <Lock size={10} className={`shrink-0 ${dark ? "text-slate-300" : "text-slate-500"}`} />
@@ -1500,6 +1440,7 @@ function AndroidAddrBar({
   dark,
   top = false,
   topOffset = 0,
+  scrollProgress = 0,
 }: {
   hostname: string;
   dark: boolean;
@@ -1516,7 +1457,7 @@ function AndroidAddrBar({
         className={`pointer-events-none absolute inset-x-0 z-20 flex h-12 items-center gap-2 border-b px-3 text-[12px] font-semibold ${
           dark ? "border-white/10 bg-[#111827] text-slate-300" : "border-slate-100 bg-white text-slate-600"
         }`}
-        style={{ top: topOffset }}
+        style={{ top: topOffset, height: 48 * (1 - clamp(scrollProgress, 0, 1)), opacity: 1 - clamp(scrollProgress, 0, 1), overflow: "hidden" }}
       >
         <Home size={17} className={`shrink-0 ${dark ? "text-slate-100" : "text-slate-800"}`} />
         <span className={`min-w-0 flex-1 truncate rounded-full px-3 py-1.5 ${dark ? "bg-white/10" : "bg-slate-100"}`}>{hostname}</span>
@@ -1533,22 +1474,6 @@ function AndroidAddrBar({
       <span className="grid h-4 w-4 place-items-center"><span className={`h-2 w-2 rounded-full border-[1.5px] ${dark ? "border-slate-100" : "border-slate-800"}`} /></span>
       <span className={`h-[3px] w-14 rounded-full ${dark ? "bg-slate-100" : "bg-slate-800"}`} />
       <Square size={12} strokeWidth={2} className={dark ? "text-slate-100" : "text-slate-800"} />
-    </div>
-  );
-}
-
-function HomeIndicator({
-  variant = "ios-modern",
-  safeAreaInsetBottom = 0,
-}: {
-  variant?: ChromeVariant;
-  safeAreaInsetBottom?: number;
-} = {}) {
-  // On iOS 26 the home indicator sits within the Liquid Glass safe area, slightly higher.
-  const bottom = variant === "ios-liquid-glass" ? Math.max(6, Math.round(Math.min(12, safeAreaInsetBottom * 0.1))) : 6;
-  return (
-    <div className="pointer-events-none absolute inset-x-0 z-30 flex justify-center" style={{ bottom }}>
-      <span className="h-[4px] w-28 rounded-full bg-black/25" />
     </div>
   );
 }

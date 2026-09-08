@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: சாதன முன்மாதிரி மற்றும் பதிலளிப்பு சோதனை" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "தொலைபேசி, டேப்லெட், மடிக்கணினி மற்றும் டெஸ்க்டாப் காட்சிகளை ஒன்றாகச் சோதிக்கும் இலவச சாதன முன்மாதிரி." },
-  "actionTitle": { "message": "Mobile View சாதன முன்மாதிரியைத் திற" },
-  "contextMenuTitle": { "message": "இந்தத் தாவலை Mobile View-இல் திற" },
-  "activeActionTitle": { "message": "Mobile View செயலில் உள்ளது — மூட கிளிக் செய்யவும்" },
-  "unsupportedActionTitle": { "message": "முதலில் ஓர் இணையதளத்தைத் திறக்கவும்" },
-  "unsupportedUrlHint": { "message": "நீங்கள் உருவாக்கும் பக்கத்திற்குச் சென்று, நீட்டிப்பை மீண்டும் கிளிக் செய்யவும்." }
+  "extensionName": {
+    "message": "Mobile View: சாதன முன்மாதிரி மற்றும் பதிலளிப்பு சோதனை"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "ரெஸ்பான்சிவ் சோதனைக்கான மொபைல் சிமுலேட்டர். போன், டேப்லெட், டெஸ்க்டாப் ஒப்பிட்டு ஸ்க்ரோலை ஒத்திசைத்து ஸ்கிரீன்ஷாட் எடுங்கள்."
+  },
+  "actionTitle": {
+    "message": "Mobile View சாதன முன்மாதிரியைத் திற"
+  },
+  "contextMenuTitle": {
+    "message": "இந்தத் தாவலை Mobile View-இல் திற"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View செயலில் உள்ளது — மூட கிளிக் செய்யவும்"
+  },
+  "unsupportedActionTitle": {
+    "message": "முதலில் ஓர் இணையதளத்தைத் திறக்கவும்"
+  },
+  "unsupportedUrlHint": {
+    "message": "நீங்கள் உருவாக்கும் பக்கத்திற்குச் சென்று, நீட்டிப்பை மீண்டும் கிளிக் செய்யவும்."
+  }
 }

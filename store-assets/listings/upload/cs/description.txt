@@ -1,0 +1,7 @@
+Mobile View je bezplatný open-source emulátor zařízení pro Chrome. Zobrazte web současně až ve čtyřech náhledech telefonu, tabletu, notebooku a počítače. Vybírejte realistická zařízení, měňte orientaci a přiblížení, synchronizujte posouvání a navigaci, pořizujte snímky a porovnávejte je s místním návrhem. Vše běží lokálně v prohlížeči bez účtu, předplatného, analytiky, telemetrie či serveru.
+
+- Vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.
+- Zachyťte jeden náhled nebo celý pracovní prostor. Přidejte šipky, rámečky, kresby a text nebo snímek ořízněte. Zobrazte místní návrh vedle stránky nebo jako překryv.
+- Zkopírujte do svého programovacího nástroje strukturované zadání opravy s URL, zařízeními, rozměry a poznámkami k problému.
+
+Jde o responzivní náhledy v Chromu, nikoli fyzická zařízení nebo jádro Safari. Pravidla přihlašování a vkládání webů stále platí. Původní stránka zůstává zachována; nové náhledy nekopírují neuložené změny.

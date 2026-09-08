@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: эмулятор устройств и адаптивный тест" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Бесплатный эмулятор и тест адаптивности: сравнивайте виды телефона, планшета, ноутбука и ПК рядом." },
-  "actionTitle": { "message": "Открыть эмулятор устройств Mobile View" },
-  "contextMenuTitle": { "message": "Открыть эту вкладку в Mobile View" },
-  "activeActionTitle": { "message": "Mobile View активен — нажмите, чтобы закрыть" },
-  "unsupportedActionTitle": { "message": "Сначала откройте сайт" },
-  "unsupportedUrlHint": { "message": "Перейдите на разрабатываемую страницу и снова нажмите значок расширения." }
+  "extensionName": {
+    "message": "Mobile View: эмулятор устройств и адаптивный тест"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Мобильный симулятор для проверки адаптивности. Сравнивайте телефон, планшет и ПК, синхронизируйте прокрутку и делайте снимки."
+  },
+  "actionTitle": {
+    "message": "Открыть эмулятор устройств Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Открыть эту вкладку в Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View активен — нажмите, чтобы закрыть"
+  },
+  "unsupportedActionTitle": {
+    "message": "Сначала откройте сайт"
+  },
+  "unsupportedUrlHint": {
+    "message": "Перейдите на разрабатываемую страницу и снова нажмите значок расширения."
+  }
 }

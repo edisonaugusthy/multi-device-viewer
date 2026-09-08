@@ -33,3 +33,15 @@ export function getKeyboardScrollDelta({
   if (rect.top < topEdge) return rect.top - topEdge;
   return 0;
 }
+
+/** Wide unfolded phones need the same key spacing as tablets, in either orientation. */
+export function usesTabletKeyboard(type: string, viewport: { width: number; height: number }) {
+  return type === "tablet" || (type === "phone" && Math.min(viewport.width, viewport.height) >= 600);
+}
+
+export function keyboardDecimalSeparator(language?: string) {
+  try {
+    return new Intl.NumberFormat(language?.replaceAll("_", "-") || "en").formatToParts(1.1)
+      .find(part => part.type === "decimal")?.value ?? ".";
+  } catch { return "."; }
+}

@@ -47,7 +47,7 @@ export interface MockupFrameStyle {
 }
 
 export interface MockupAsset {
-  kind: "transparent-png" | "frame";
+  kind: "transparent-png" | "transparent-svg" | "frame";
   localPath?: string;
   sourceUrl?: string;
   width?: number;
@@ -86,6 +86,8 @@ export interface Device {
   cssViewport: Size;
   pixelRatio: number;
   manufacturerResolution: Size;
+  resolutionSource?: "reference" | "catalog" | "derived";
+  displayReferenceUrl?: string;
   mockupAssets: MockupAsset[];
   updatedAt: string;
   tags: string[];

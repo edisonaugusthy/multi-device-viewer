@@ -1,0 +1,7 @@
+Mobile View adalah emulator perangkat gratis dan sumber terbuka untuk Chrome. Lihat situs dalam hingga empat tampilan ponsel, tablet, laptop, dan desktop sekaligus. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
+
+- Buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
+- Tangkap satu tampilan atau seluruh ruang kerja. Tambahkan panah, kotak, gambar, dan teks atau potong tangkapan layar. Tampilkan desain lokal di samping halaman atau sebagai overlay.
+- Salin instruksi perbaikan terstruktur berisi URL, perangkat, ukuran viewport, dan catatan masalah ke alat coding Anda.
+
+Ini adalah pratinjau viewport responsif di Chrome, bukan perangkat fisik atau mesin Safari. Aturan masuk dan penyematan situs tetap berlaku. Halaman asli tetap utuh; pratinjau baru tidak menyalin perubahan yang belum disimpan.

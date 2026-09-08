@@ -1,6 +1,7 @@
 import { chromium } from "@playwright/test";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
+import { mkdir } from "node:fs/promises";
 
 const source = pathToFileURL(
   resolve("store-assets/source/store-listing-assets.html"),
@@ -62,21 +63,28 @@ const browser = await chromium.launch({ headless: true });
 
 try {
   for (const asset of selectedAssets) {
+    for (const locale of asset.key.startsWith("screenshot-") ? ["en", "de", "es", "fr", "pt_BR", "ja", "ko", "zh_CN"] : ["en"]) {
     const page = await browser.newPage({
       viewport: { width: asset.width, height: asset.height },
       deviceScaleFactor: 1,
     });
     const url = new URL(source);
     url.searchParams.set("asset", asset.key);
+    url.searchParams.set("locale", locale);
     await page.goto(url.href, { waitUntil: "load" });
+    await page.evaluate(() => Promise.all([...document.images].map(image => image.decode())));
+    await page.evaluate(() => document.fonts.ready);
+    const folder = locale === "en" ? outputDir : resolve(outputDir, "localized", locale);
+    await mkdir(folder, { recursive: true });
     await page.screenshot({
-      path: resolve(outputDir, asset.filename),
+      path: resolve(folder, asset.filename),
       type: asset.type ?? "jpeg",
       quality: asset.type === "png" ? undefined : 94,
       fullPage: false,
     });
     await page.close();
-    console.log(`${asset.filename}: ${asset.width}x${asset.height}`);
+    console.log(`${locale}/${asset.filename}: ${asset.width}x${asset.height}`);
+    }
   }
 } finally {
   await browser.close();

@@ -1,0 +1,176 @@
+{
+  "version": "0.2.5",
+  "capturedWith": "Isolated unpacked Chrome extension, real source page and UI",
+  "sourceSite": "http://127.0.0.1:4188/demo.html",
+  "sourceFixture": "store-assets/source/demo.html",
+  "qaOpenShadow": true,
+  "qaContentScriptSha256": "a7ec09a1e7f4bd1d0a2e6879407ec38da5f743b47c619affb70ab36ccf91d9b1",
+  "productionShadowMode": "closed",
+  "notes": [
+    "Annotation captures import the actual overview PNG using the local design-reference UI and real annotation tools.",
+    "Headers and promotional composition are rendered from store-listing-assets.html; screenshots are not generated illustrations.",
+    "Captured after font correction; subsequent small header-fitting and review-error changes were validated in production."
+  ],
+  "rawCaptures": [
+    {
+      "file": "store-assets/source/captures/annotation-de.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 165774,
+      "sha256": "bb333770c35308ce2548a29d910345e0cda9aaf0844e66cffe1005c1a884141c",
+      "capturedAt": "2026-09-07T13:30:09.537784+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-en.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 164563,
+      "sha256": "5e48059f7f89b4d0cd58eb1f157ec1b4842f754d6f126d3f5ab8c3d99521408c",
+      "capturedAt": "2026-09-07T13:28:48.765153+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-es.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 165649,
+      "sha256": "d5ff6e730533e73ffe1a46ce94d29bd63fdb97830d91fd9cd8c14df11d27ea89",
+      "capturedAt": "2026-09-07T13:30:09.728623+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-fr.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 165742,
+      "sha256": "aaa23ad4540a38aada90a1de8091851d1ba7f47718b630e44a0aa80e895d0962",
+      "capturedAt": "2026-09-07T13:30:09.921440+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-ja.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 165339,
+      "sha256": "bcf173d20789e831f7d368243bcc48dbc3cdfae44a208aa3844a803172ed7b81",
+      "capturedAt": "2026-09-07T13:30:10.321413+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-ko.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 163088,
+      "sha256": "97acfee557fabc84307569f7f4275665dbc36e7da73fbb5576465add707af762",
+      "capturedAt": "2026-09-07T13:30:10.514312+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-pt_BR.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 165335,
+      "sha256": "5e02ccb9b1c6a44f6ea1c58d04e658fc362bb8fbe56063603fd4f878d7fbc341",
+      "capturedAt": "2026-09-07T13:30:10.121977+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-zh_CN.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 163669,
+      "sha256": "6b7cef2247e1754382ce98217886220d3029b467185b6058dc16cd208490711c",
+      "capturedAt": "2026-09-07T13:30:10.713377+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/desktop.png",
+      "width": 387,
+      "height": 238,
+      "bytes": 20282,
+      "sha256": "35e5bd98ead51b7aa438eda41fe73980316552f122ed1c1543de7122426567e9",
+      "capturedAt": "2026-09-07T13:25:35.487402+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/overview.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 167043,
+      "sha256": "2950e9f740e8f59a3e1555bf738643fd643065654d2833a785360dc8dc023b27",
+      "capturedAt": "2026-09-07T13:25:35.352598+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/phone.png",
+      "width": 343,
+      "height": 704,
+      "bytes": 77384,
+      "sha256": "265c61c50602416f3fa9bfe5a7378e6593d38c17053e21f19d8ba557889e2adf",
+      "capturedAt": "2026-09-07T13:25:35.395540+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-de.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 186355,
+      "sha256": "adee46fad14f8b6fcecd9d67ca34bab73df73e80cb27a42fe3e446383318f76c",
+      "capturedAt": "2026-09-07T13:25:37.531802+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-en.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 177777,
+      "sha256": "2c39b48a077ac881791e72d42ad3f6da11b07766b58c2cfbe8378d31a89b0e59",
+      "capturedAt": "2026-09-07T13:25:37.468351+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-es.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 184800,
+      "sha256": "f6425df66e68b2aefcc346a9ee5284a2a78dd78c1b97366ec4d5bc3132cb15b3",
+      "capturedAt": "2026-09-07T13:25:37.591113+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-fr.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 186912,
+      "sha256": "f6ea0a5062b692d4770b73df3dde99f6daa1978693c5791919ea80fdefa977fd",
+      "capturedAt": "2026-09-07T13:25:37.647996+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-ja.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 188522,
+      "sha256": "566e767cfc1eead37212e569c55b624ee4c3c193e387ef5dbfa85f4a9f59e542",
+      "capturedAt": "2026-09-07T13:25:37.764985+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-ko.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 174064,
+      "sha256": "be328239b6b7ba97ad7896ef36553703868ca47f8648b8f1e1657b2026daee03",
+      "capturedAt": "2026-09-07T13:25:37.821423+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-pt_BR.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 187939,
+      "sha256": "b3fae7da9b28163b5686a9b3508221a515c3add3351e9606d2661a0b83a7125c",
+      "capturedAt": "2026-09-07T13:25:37.705600+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/sync-zh_CN.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 177966,
+      "sha256": "8d739fc06eed7d07586567d2429832b153f7465013a65e7c09eb0887bb3b1866",
+      "capturedAt": "2026-09-07T13:25:37.871307+00:00"
+    },
+    {
+      "file": "store-assets/source/captures/tablet.png",
+      "width": 412,
+      "height": 536,
+      "bytes": 57388,
+      "sha256": "125dc3f8f524d7c29097d05e93061d6a498d7253936ab555c3a259874cf0e1e8",
+      "capturedAt": "2026-09-07T13:25:35.444049+00:00"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "storeLocale": "fr",
+  "name": "Mobile View : Émulateur mobile et test responsive",
+  "summary": "Simulateur mobile pour tests responsive. Comparez téléphone, tablette et bureau, synchronisez le défilement et capturez les vues.",
+  "screenshotCaptions": [
+    "Testez mobile, tablette et bureau côte à côte",
+    "Faites défiler. Comparez toutes les vues.",
+    "Montrez le problème. Expliquez la correction."
+  ],
+  "screenshotLocale": "fr"
+}

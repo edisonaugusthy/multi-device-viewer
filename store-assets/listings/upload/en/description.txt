@@ -1,0 +1,16 @@
+Check how your website adapts to phone, tablet, laptop and desktop layouts without repeatedly resizing your browser. Mobile View gives you a mobile preview and up to four device views side by side, with tools to inspect differences and explain the fix.
+
+Use this free, open-source device emulator and responsive design tester to:
+
+- Compare layouts across device presets or custom viewport sizes. Switch portrait and landscape, adjust zoom and focus on a single view.
+- Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different breakpoints.
+- Save useful device sets and favorites for repeat checks during frontend development and design review.
+- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to show what needs attention.
+- Compare the live website with a local design reference, side by side or as an overlay.
+- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
+
+Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.
+
+No Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.
+
+These are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.

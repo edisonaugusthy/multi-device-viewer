@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: डिव्हाइस एम्युलेटर आणि रिस्पॉन्सिव्ह टेस्टर" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "फोन, टॅबलेट, लॅपटॉप आणि डेस्कटॉप दृश्ये एकत्र तपासण्यासाठी मोफत डिव्हाइस एम्युलेटर." },
-  "actionTitle": { "message": "Mobile View डिव्हाइस एम्युलेटर उघडा" },
-  "contextMenuTitle": { "message": "हा टॅब Mobile Viewमध्ये उघडा" },
-  "activeActionTitle": { "message": "Mobile View सक्रिय आहे — बंद करण्यासाठी क्लिक करा" },
-  "unsupportedActionTitle": { "message": "प्रथम वेबसाइट उघडा" },
-  "unsupportedUrlHint": { "message": "तुम्ही विकसित करत असलेल्या पेजवर जा आणि एक्स्टेंशनवर पुन्हा क्लिक करा." }
+  "extensionName": {
+    "message": "Mobile View: डिव्हाइस एम्युलेटर आणि रिस्पॉन्सिव्ह टेस्टर"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "मोबाइल सिम्युलेटरने रिस्पॉन्सिव्ह वेबसाइट तपासा. फोन, टॅबलेट व डेस्कटॉप दृश्यांची तुलना करा आणि स्क्रीनशॉट घ्या."
+  },
+  "actionTitle": {
+    "message": "Mobile View डिव्हाइस एम्युलेटर उघडा"
+  },
+  "contextMenuTitle": {
+    "message": "हा टॅब Mobile Viewमध्ये उघडा"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View सक्रिय आहे — बंद करण्यासाठी क्लिक करा"
+  },
+  "unsupportedActionTitle": {
+    "message": "प्रथम वेबसाइट उघडा"
+  },
+  "unsupportedUrlHint": {
+    "message": "तुम्ही विकसित करत असलेल्या पेजवर जा आणि एक्स्टेंशनवर पुन्हा क्लिक करा."
+  }
 }

@@ -1,0 +1,7 @@
+Mobile View ni kiigaji cha vifaa bila malipo na cha programu huria kwa Chrome. Tazama tovuti katika mionekano hadi minne ya simu, kompyuta kibao, laptop na desktop kwa wakati mmoja. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.
+
+- Unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.
+- Piga picha ya mwonekano mmoja au eneo lote la kazi. Ongeza mishale, visanduku, michoro na maandishi au punguza picha. Onyesha muundo wa ndani kando ya ukurasa au kama tabaka juu yake.
+- Nakili agizo la marekebisho lenye mpangilio, URL, vifaa, vipimo vya mwonekano na maelezo ya tatizo kwenye zana yako ya kuandika msimbo.
+
+Haya ni maonyesho ya mwitikio katika Chrome, si vifaa halisi au injini ya Safari. Kanuni za kuingia na kupachika za tovuti bado zinatumika. Ukurasa wa asili huhifadhiwa; maonyesho mapya hayanukuu mabadiliko ambayo hayajahifadhiwa.

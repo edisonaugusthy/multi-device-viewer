@@ -1,0 +1,3 @@
+Mobile View on maksuton avoimen lähdekoodin laite-emulaattori Chromelle. Esikatsele sivustoa yhtä aikaa jopa neljässä puhelin-, tabletti-, kannettava- ja työpöytänäkymässä. Valitse realistisia laitteita, muuta suuntaa ja zoomausta, synkronoi vieritys ja siirtyminen, ota kuvakaappauksia ja vertaa paikalliseen suunnitelmaan. Kaikki toimii paikallisesti ilman tiliä, tilausta, analytiikkaa, telemetriaa tai palvelinta.
+
+Nämä ovat responsiivisia esikatseluja Chromessa, eivät fyysisiä laitteita tai Safari-moottori. Sivustojen kirjautumis- ja upotussäännöt ovat edelleen voimassa. Alkuperäinen sivu säilyy; uudet esikatselut eivät kopioi tallentamattomia muutoksia.

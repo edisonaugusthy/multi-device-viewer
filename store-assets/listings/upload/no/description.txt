@@ -1,0 +1,3 @@
+Mobile View er en gratis enhetsemulator med åpen kildekode for Chrome. Se et nettsted i opptil fire mobil-, nettbrett-, laptop- og datamaskinvisninger samtidig. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.
+
+Dette er responsive forhåndsvisninger i Chrome, ikke fysiske enheter eller Safari-motoren. Nettstedenes regler for innlogging og innbygging gjelder fortsatt. Originalsiden bevares; nye forhåndsvisninger kopierer ikke ulagrede endringer.

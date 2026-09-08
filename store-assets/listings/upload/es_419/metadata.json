@@ -1,0 +1,11 @@
+{
+  "storeLocale": "es-419",
+  "name": "Mobile View: Emulador móvil y prueba responsiva",
+  "summary": "Simulador móvil y visor multidispositivo para pruebas responsive. Compara vistas, sincroniza el desplazamiento y captura pantallas.",
+  "screenshotCaptions": [
+    "Prueba celular, tablet y escritorio al mismo tiempo",
+    "Usa más de 105 perfiles de dispositivos en un espacio de trabajo",
+    "Compara una página activa con un diseño aprobado"
+  ],
+  "screenshotLocale": "en"
+}

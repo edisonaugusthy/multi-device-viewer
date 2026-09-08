@@ -16,7 +16,7 @@ describe("first-run feature tour", () => {
     ]);
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.title)).toEqual([
       "Add viewport",
-      "Hide the toolbar to make space",
+      "Hide workspace tools",
       "Change the device",
       "Record user flow",
     ]);

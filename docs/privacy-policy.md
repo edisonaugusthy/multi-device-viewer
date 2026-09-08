@@ -1,6 +1,6 @@
 # Mobile View & Responsive Tester — Privacy Policy
 
-Last updated: July 15, 2026
+Last updated: September 7, 2026
 
 ## Summary
 
@@ -62,7 +62,9 @@ The extension formats the user's description with the page URL and selected view
 
 HTTP and HTTPS page access is required because the extension runs the local overlay on the selected page and loads that page in responsive subframes.
 
-Declarative network rules remove `X-Frame-Options` and `Content-Security-Policy` response headers from subframe requests so pages can load in the responsive viewer. The rules run locally in the browser. They do not redirect requests, inspect response bodies, or send network activity to the extension developer.
+Temporary declarative session rules remove `X-Frame-Options` and `Content-Security-Policy` response headers only from subframe requests to sites selected during the current viewer session, in that viewer's tab. The rules are removed when the viewer closes, its source page navigates, or its tab closes. They do not affect other tabs or top-level responses. Rules run locally; they do not redirect requests, inspect response bodies, change cookies, or send network activity to the extension developer. A source page's own frame policy can still prevent a preview; Open in tab is available for that case.
+
+The viewer mounts in a closed shadow root on the existing source page. Same-site previews use that page's browser storage context without copying authentication credentials. Each preview is a new document, so in-memory application state and unsaved form edits are not cloned. Closing the viewer leaves the original source document intact. Cross-site authentication and browser storage restrictions can still affect previews.
 
 ## Permissions
 
@@ -70,7 +72,7 @@ Declarative network rules remove `X-Frame-Options` and `Content-Security-Policy`
 |---|---|
 | `activeTab` | Temporarily captures the visible workspace only after Screenshot and annotate is clicked. It does not grant persistent browsing access. |
 | `contextMenus` | Adds the local shortcut for opening the current page in Responsive Tester. |
-| `declarativeNetRequest` | Applies the packaged subframe-header rules needed for responsive previews. |
+| `declarativeNetRequestWithHostAccess` (Chrome), `declarativeNetRequest` (Firefox) | Applies temporary rules for selected preview hosts in the viewer tab. |
 | `downloads` | Saves screenshots and completed recordings after an explicit user action. |
 | `offscreen` | Runs Chrome's local recording pipeline in an offscreen extension document. |
 | `scripting` | Injects the packaged overlay script into a page that was already open when the extension was installed or reloaded. |

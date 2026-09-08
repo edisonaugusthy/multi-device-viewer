@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: डिवाइस एमुलेटर और रिस्पॉन्सिव टेस्टर" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "फ़ोन, टैबलेट, लैपटॉप और डेस्कटॉप व्यू को साथ-साथ जाँचने के लिए मुफ़्त, ओपन-सोर्स मोबाइल सिम्युलेटर।" },
-  "actionTitle": { "message": "Mobile View डिवाइस एमुलेटर खोलें" },
-  "contextMenuTitle": { "message": "इस टैब को Mobile View में खोलें" },
-  "activeActionTitle": { "message": "Mobile View सक्रिय है — बंद करने के लिए क्लिक करें" },
-  "unsupportedActionTitle": { "message": "पहले कोई वेबसाइट खोलें" },
-  "unsupportedUrlHint": { "message": "जिस पेज पर आप काम कर रहे हैं उसे खोलें, फिर एक्सटेंशन पर दोबारा क्लिक करें।" }
+  "extensionName": {
+    "message": "Mobile View: डिवाइस एमुलेटर और रिस्पॉन्सिव टेस्टर"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "रिस्पॉन्सिव परीक्षण के लिए मोबाइल सिम्युलेटर। फोन, टैबलेट और डेस्कटॉप की तुलना करें, स्क्रॉल सिंक करें और स्क्रीनशॉट लें।"
+  },
+  "actionTitle": {
+    "message": "Mobile View डिवाइस एमुलेटर खोलें"
+  },
+  "contextMenuTitle": {
+    "message": "इस टैब को Mobile View में खोलें"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View सक्रिय है — बंद करने के लिए क्लिक करें"
+  },
+  "unsupportedActionTitle": {
+    "message": "पहले कोई वेबसाइट खोलें"
+  },
+  "unsupportedUrlHint": {
+    "message": "जिस पेज पर आप काम कर रहे हैं उसे खोलें, फिर एक्सटेंशन पर दोबारा क्लिक करें।"
+  }
 }

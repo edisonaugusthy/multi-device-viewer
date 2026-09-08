@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Apparaatemulator & responsive tester" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Gratis opensource mobiele simulator en responsive tester voor telefoon-, tablet-, laptop- en desktopweergaven naast elkaar." },
-  "actionTitle": { "message": "Mobile View-apparaatemulator openen" },
-  "contextMenuTitle": { "message": "Dit tabblad openen in Mobile View" },
-  "activeActionTitle": { "message": "Mobile View is actief — klik om te sluiten" },
-  "unsupportedActionTitle": { "message": "Open eerst een website" },
-  "unsupportedUrlHint": { "message": "Ga naar de pagina die je ontwikkelt en klik daarna opnieuw op de extensie." }
+  "extensionName": {
+    "message": "Mobile View: Apparaatemulator & responsive tester"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobiele simulator voor responsive tests. Vergelijk telefoon, tablet en desktop, synchroniseer scrollen en maak screenshots."
+  },
+  "actionTitle": {
+    "message": "Mobile View-apparaatemulator openen"
+  },
+  "contextMenuTitle": {
+    "message": "Dit tabblad openen in Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View is actief — klik om te sluiten"
+  },
+  "unsupportedActionTitle": {
+    "message": "Open eerst een website"
+  },
+  "unsupportedUrlHint": {
+    "message": "Ga naar de pagina die je ontwikkelt en klik daarna opnieuw op de extensie."
+  }
 }

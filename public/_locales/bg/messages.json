@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Емулатор и тест за адаптивност" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Безплатен емулатор за паралелен преглед и адаптивно тестване на телефон, таблет, лаптоп и настолен компютър." },
-  "actionTitle": { "message": "Отваряне на емулатора Mobile View" },
-  "contextMenuTitle": { "message": "Отваряне на този раздел в Mobile View" },
-  "activeActionTitle": { "message": "Mobile View е активно — щракнете за затваряне" },
-  "unsupportedActionTitle": { "message": "Първо отворете уебсайт" },
-  "unsupportedUrlHint": { "message": "Отворете страницата, която разработвате, и щракнете отново върху разширението." }
+  "extensionName": {
+    "message": "Mobile View: Емулатор и тест за адаптивност"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Мобилен симулатор за адаптивни тестове. Сравнявайте телефон, таблет и компютър, синхронизирайте превъртането и правете снимки."
+  },
+  "actionTitle": {
+    "message": "Отваряне на емулатора Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Отваряне на този раздел в Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View е активно — щракнете за затваряне"
+  },
+  "unsupportedActionTitle": {
+    "message": "Първо отворете уебсайт"
+  },
+  "unsupportedUrlHint": {
+    "message": "Отворете страницата, която разработвате, и щракнете отново върху разширението."
+  }
 }

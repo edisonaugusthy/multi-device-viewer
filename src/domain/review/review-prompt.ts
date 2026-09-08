@@ -11,11 +11,12 @@ export const REVIEW_PROMPT_POLICY = {
 
 export type ReviewPromptOutcome =
   | "pending"
-  | "reviewed"
+  | "opened"
   | "never";
 
 export interface ReviewPromptState {
   version: 1;
+  revision: number;
   installedAt: number;
   qualifiedSessions: number;
   successfulActions: number;
@@ -28,6 +29,7 @@ export interface ReviewPromptState {
 export function createReviewPromptState(now = Date.now()): ReviewPromptState {
   return {
     version: 1,
+    revision: 0,
     installedAt: now,
     qualifiedSessions: 0,
     successfulActions: 0,
@@ -55,12 +57,13 @@ export function normalizeReviewPromptState(
       : fallback;
   const outcomes: ReviewPromptOutcome[] = [
     "pending",
-    "reviewed",
+    "opened",
     "never",
   ];
 
   return {
     version: 1,
+    revision: nonNegativeInteger(candidate.revision),
     installedAt: timestamp(candidate.installedAt, now) ?? now,
     qualifiedSessions: nonNegativeInteger(candidate.qualifiedSessions),
     successfulActions: nonNegativeInteger(candidate.successfulActions),
@@ -71,7 +74,9 @@ export function normalizeReviewPromptState(
     lastPromptAt: timestamp(candidate.lastPromptAt, null),
     sessionsAtLastPrompt: nonNegativeInteger(candidate.sessionsAtLastPrompt),
     outcome:
-      storedOutcome === "feedback"
+      storedOutcome === "reviewed"
+        ? "opened"
+        : storedOutcome === "feedback"
         ? "never"
         : outcomes.includes(storedOutcome as ReviewPromptOutcome)
           ? (storedOutcome as ReviewPromptOutcome)
@@ -97,34 +102,7 @@ export function isReviewPromptEligible(
   state: ReviewPromptState,
   now = Date.now(),
 ): boolean {
-  if (state.outcome !== "pending") return false;
-  if (state.promptCount >= REVIEW_PROMPT_POLICY.maximumPrompts) return false;
-  if (
-    now - state.installedAt <
-    REVIEW_PROMPT_POLICY.minimumInstallAgeMs
-  )
-    return false;
-  if (
-    state.qualifiedSessions <
-    REVIEW_PROMPT_POLICY.minimumQualifiedSessions
-  )
-    return false;
-  if (
-    state.successfulActions <
-    REVIEW_PROMPT_POLICY.minimumSuccessfulActions
-  )
-    return false;
-
-  if (state.promptCount === 0) return true;
-  if (state.lastPromptAt === null) return false;
-  if (
-    now - state.lastPromptAt < REVIEW_PROMPT_POLICY.reminderDelayMs
-  )
-    return false;
-  return (
-    state.qualifiedSessions - state.sessionsAtLastPrompt >=
-    REVIEW_PROMPT_POLICY.reminderAdditionalSessions
-  );
+  return reviewEligibilityReason(state, now) === "eligible";
 }
 
 export function recordPromptShown(
@@ -153,4 +131,19 @@ export function finishReviewPrompt(
   outcome: Exclude<ReviewPromptOutcome, "pending">,
 ): ReviewPromptState {
   return { ...state, outcome };
+}
+
+export type ReviewEligibilityReason = "eligible" | "age" | "sessions" | "actions" | "cooldown" | "return-sessions" | "limit" | "opened" | "never";
+
+export function reviewEligibilityReason(state: ReviewPromptState, now = Date.now()): ReviewEligibilityReason {
+  if (state.outcome !== "pending") return state.outcome;
+  if (state.promptCount >= REVIEW_PROMPT_POLICY.maximumPrompts) return "limit";
+  if (now - state.installedAt < REVIEW_PROMPT_POLICY.minimumInstallAgeMs) return "age";
+  if (state.qualifiedSessions < REVIEW_PROMPT_POLICY.minimumQualifiedSessions) return "sessions";
+  if (state.successfulActions < REVIEW_PROMPT_POLICY.minimumSuccessfulActions) return "actions";
+  if (state.promptCount > 0) {
+    if (state.lastPromptAt === null || now - state.lastPromptAt < REVIEW_PROMPT_POLICY.reminderDelayMs) return "cooldown";
+    if (state.qualifiedSessions - state.sessionsAtLastPrompt < REVIEW_PROMPT_POLICY.reminderAdditionalSessions) return "return-sessions";
+  }
+  return "eligible";
 }

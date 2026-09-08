@@ -1,0 +1,11 @@
+{
+  "storeLocale": "de",
+  "name": "Mobile View: Responsiver Geräte-Emulator",
+  "summary": "Mobiler Simulator für responsive Tests: Smartphone, Tablet und Desktop vergleichen, Scrollen synchronisieren und Screenshots machen.",
+  "screenshotCaptions": [
+    "Smartphone, Tablet und Desktop nebeneinander testen",
+    "Einmal scrollen. Alle Ansichten vergleichen.",
+    "Problem zeigen. Lösung verständlich machen."
+  ],
+  "screenshotLocale": "de"
+}

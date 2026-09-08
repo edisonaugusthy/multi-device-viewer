@@ -27,8 +27,8 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
   },
   {
     eyebrow: "Workspace",
-    title: "Hide the toolbar to make space",
-    text: "Collapse Workspace setup after adding your viewports to give every preview more room.",
+    title: "Hide workspace tools",
+    text: "Close Workspace setup to uncover the previews, then reopen it whenever you need tools.",
     target: '[data-tour="sidebar-collapse"]',
     hint: "Open Workspace setup whenever you need the controls again.",
   },

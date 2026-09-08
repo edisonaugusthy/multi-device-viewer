@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getKeyboardScrollDelta, shouldKeepKeyboardSessionOnBlur } from "./mobile-keyboard";
+import { getKeyboardScrollDelta, shouldKeepKeyboardSessionOnBlur, usesTabletKeyboard, keyboardDecimalSeparator } from "./mobile-keyboard";
 
 describe("mobile keyboard focused-field visibility", () => {
   it("keeps the keyboard session when a simulated key temporarily moves focus outside the iframe", () => {
@@ -50,5 +50,19 @@ describe("mobile keyboard focused-field visibility", () => {
       occludedBottom: 180,
       platform: "ios",
     })).toBe(-30);
+  });
+});
+
+describe("keyboard size and language", () => {
+  it("uses tablet spacing for unfolded phones but not ordinary landscape phones", () => {
+    expect(usesTabletKeyboard("phone", { width: 874, height: 787 })).toBe(true);
+    expect(usesTabletKeyboard("phone", { width: 874, height: 402 })).toBe(false);
+    expect(usesTabletKeyboard("tablet", { width: 600, height: 960 })).toBe(true);
+    expect(usesTabletKeyboard("laptop", { width: 1512, height: 982 })).toBe(false);
+  });
+  it("uses the locale decimal separator with a safe fallback", () => {
+    expect(keyboardDecimalSeparator("de-DE")).toBe(",");
+    expect(keyboardDecimalSeparator("en-US")).toBe(".");
+    expect(keyboardDecimalSeparator("invalid_locale!")).toBe(".");
   });
 });

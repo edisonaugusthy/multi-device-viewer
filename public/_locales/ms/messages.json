@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Emulator peranti & penguji responsif" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Emulator percuma untuk pratonton dan ujian responsif laman serentak pada telefon, tablet, komputer riba dan desktop." },
-  "actionTitle": { "message": "Buka emulator peranti Mobile View" },
-  "contextMenuTitle": { "message": "Buka tab ini dalam Mobile View" },
-  "activeActionTitle": { "message": "Mobile View aktif — klik untuk tutup" },
-  "unsupportedActionTitle": { "message": "Buka laman web dahulu" },
-  "unsupportedUrlHint": { "message": "Pergi ke halaman yang sedang anda bangunkan, kemudian klik sambungan sekali lagi." }
+  "extensionName": {
+    "message": "Mobile View: Emulator peranti & penguji responsif"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Simulator mudah alih untuk ujian responsif. Bandingkan telefon, tablet dan desktop, segerakkan tatal dan ambil tangkapan skrin."
+  },
+  "actionTitle": {
+    "message": "Buka emulator peranti Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Buka tab ini dalam Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View aktif — klik untuk tutup"
+  },
+  "unsupportedActionTitle": {
+    "message": "Buka laman web dahulu"
+  },
+  "unsupportedUrlHint": {
+    "message": "Pergi ke halaman yang sedang anda bangunkan, kemudian klik sambungan sekali lagi."
+  }
 }

@@ -1,0 +1,3 @@
+Mobile View on tasuta avatud lähtekoodiga seadmeemulaator Chrome’ile. Vaata veebilehte korraga kuni neljas telefoni, tahvli, sülearvuti ja lauaarvuti vaates. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
+
+Need on Chrome’i kohanduvad eelvaated, mitte füüsilised seadmed ega Safari mootor. Veebisaitide sisselogimis- ja manustamisreeglid kehtivad edasi. Algne leht säilib; uued eelvaated ei kopeeri salvestamata muudatusi.

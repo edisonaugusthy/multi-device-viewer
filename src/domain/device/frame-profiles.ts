@@ -13,7 +13,7 @@ export type FrameProfileKind =
 
 /**
  * OS chrome generation. Determines how the browser bars / status bar look:
- * - "ios-liquid-glass": iOS 26+ — translucent floating Safari pill + bottom safe area (90px)
+ * - "ios-liquid-glass": iOS 26+ — translucent floating Safari pill + separate browser and hardware insets
  * - "ios-modern": iOS 15–18 — solid Safari bottom bar + notch/island
  * - "ios-classic": iOS ≤14 with notch — legacy Safari bar
  * - "android-modern": Chrome top address bar + gesture nav pill
@@ -36,7 +36,7 @@ export interface DeviceFrameProfile {
   imageChrome: ImageBackedChromeConfig;
   /** OS chrome generation used to select the correct browser/status bar look. */
   chromeVariant: ChromeVariant;
-  /** Bottom safe-area inset in CSS px (iOS 26 Liquid Glass reports 90). */
+  /** Home-indicator safe area in CSS pixels; not the browser toolbar height. */
   safeAreaInsetBottom: number;
   /**
    * Top safe-area inset in CSS px. This is the vertical space reserved for the
@@ -253,9 +253,10 @@ function createProfile(device: Device, profile: Omit<DeviceFrameProfile, "style"
 
   const meta = getDeviceChromeMeta(device.id);
   const osMajor = parseOsMajor(meta?.osVersion ?? device.os);
-  const safeAreaInsetBottom = meta?.safeAreaInsetBottom ?? 0;
-  const chromeVariant = resolveChromeVariant(profile.platform, profile.kind, osMajor, safeAreaInsetBottom);
-  const safeAreaInsetTop = resolveSafeAreaInsetTop(profile.platform, profile.kind, device.type, meta?.safeAreaInsetTop);
+  const safeAreaInsetBottom = profile.platform === "ios" ? profile.kind === "iphone-classic" ? 0 : device.type === "tablet" ? 20 : 34 : meta?.safeAreaInsetBottom ?? 0;
+  const chromeVariant = resolveChromeVariant(profile.platform, profile.kind, osMajor);
+  const legacyNotch = ["apple-iphone-x", "apple-iphone-xr", "apple-iphone-11", "apple-iphone-11-pro", "apple-iphone-11-pro-max"].includes(device.id);
+  const safeAreaInsetTop = resolveSafeAreaInsetTop(profile.platform, profile.kind, device.type, legacyNotch ? 44 : meta?.safeAreaInsetTop);
 
   return {
     ...profile,
@@ -305,13 +306,12 @@ function parseOsMajor(version: string): number {
 function resolveChromeVariant(
   platform: DeviceFrameProfile["platform"],
   kind: FrameProfileKind,
-  osMajor: number,
-  safeAreaInsetBottom: number
+  osMajor: number
 ): ChromeVariant {
   if (platform === "android") return "android-modern";
   if (platform !== "ios") return "none";
-  // iOS 26+ (or any device reporting the Liquid Glass bottom safe area) → Liquid Glass chrome.
-  if (osMajor >= 26 || safeAreaInsetBottom >= 60) return "ios-liquid-glass";
+  // Browser styling follows the OS version, not hardware safe-area dimensions.
+  if (osMajor >= 26) return "ios-liquid-glass";
   if (kind === "iphone-classic") return "ios-classic";
   return "ios-modern";
 }
@@ -337,6 +337,6 @@ function getImageBackedChromeConfig(device: Device, profile: Pick<DeviceFramePro
     showTabletCamera: false,
     showSafariBar: isIos,
     showAndroidBottomBar: isAndroidDevice,
-    showHomeIndicator: isIos
+    showHomeIndicator: isIos && profile.kind !== "iphone-classic"
   };
 }

@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Device Emulator at Responsive Tester" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Libre at open-source na mobile simulator at responsive tester para sa magkatabing phone, tablet, laptop, at desktop view." },
-  "actionTitle": { "message": "Buksan ang Mobile View device emulator" },
-  "contextMenuTitle": { "message": "Buksan ang tab na ito sa Mobile View" },
-  "activeActionTitle": { "message": "Aktibo ang Mobile View — i-click para isara" },
-  "unsupportedActionTitle": { "message": "Magbukas muna ng website" },
-  "unsupportedUrlHint": { "message": "Lumipat sa page na dine-develop mo, pagkatapos ay i-click muli ang extension." }
+  "extensionName": {
+    "message": "Mobile View: Device Emulator at Responsive Tester"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobile simulator para sa responsive testing. Ihambing ang phone, tablet at desktop, i-sync ang pag-scroll at kumuha ng screenshot."
+  },
+  "actionTitle": {
+    "message": "Buksan ang Mobile View device emulator"
+  },
+  "contextMenuTitle": {
+    "message": "Buksan ang tab na ito sa Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Aktibo ang Mobile View — i-click para isara"
+  },
+  "unsupportedActionTitle": {
+    "message": "Magbukas muna ng website"
+  },
+  "unsupportedUrlHint": {
+    "message": "Lumipat sa page na dine-develop mo, pagkatapos ay i-click muli ang extension."
+  }
 }

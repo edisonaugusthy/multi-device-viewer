@@ -27,6 +27,21 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.5": {
+    version: "0.2.5",
+    heading: "A clearer workspace and better device previews",
+    summary: "Design updates, Device and Free views, corrected rendering, and improvements to everyday testing.",
+    notes: [
+      { title: "Updated workspace design", description: "Clearer borders, compact controls and an improved device picker, with familiar button positions and zoom and close controls at the top of each viewport." },
+      { title: "Device, Free and View only", description: "Switch between device frames and a frameless view without reloading your previews. Use View only to hide workspace controls and focus on the page." },
+      { title: "Corrected device rendering", description: "Improved screen fit, dimensions, rounded corners and browser-header alignment across phones, tablets, laptops and desktops, including header seams at smaller zoom levels." },
+      { title: "Improved navigation and scroll sync", description: "More reliable page navigation, reload recovery and nested scrolling, with reduced scroll drift when switching between viewports." },
+      { title: "Reuse your website session", description: "The viewer opens over your existing page. Same-site previews reuse its browser storage context while the original page stays open; some sites may still require sign-in." },
+      { title: "Website dark-mode support", description: "Device appearance now passes the light or dark preference to previewed websites that support system themes, without inverting page colors." },
+      { title: "Better phone and tablet keyboards", description: "Refined iOS and Android keyboard layouts, input-specific keys and focused-field visibility in portrait and landscape." },
+      { title: "Clearer feedback and help", description: "Updated the review prompt styling, made failed review-link actions retryable, and added clearer review and issue-report options in Help." },
+    ],
+  },
   "0.2.4": {
     version: "0.2.4",
     heading: "What’s new",

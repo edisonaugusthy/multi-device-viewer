@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: 기기 에뮬레이터 및 반응형 테스트" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "무료 오픈 소스 모바일 시뮬레이터로 휴대폰, 태블릿, 노트북, 데스크톱 화면을 나란히 테스트하세요." },
-  "actionTitle": { "message": "Mobile View 기기 에뮬레이터 열기" },
-  "contextMenuTitle": { "message": "이 탭을 Mobile View에서 열기" },
-  "activeActionTitle": { "message": "Mobile View가 활성화됨 — 클릭하여 닫기" },
-  "unsupportedActionTitle": { "message": "먼저 웹사이트를 여세요" },
-  "unsupportedUrlHint": { "message": "개발 중인 페이지로 전환한 다음 확장 프로그램을 다시 클릭하세요." }
+  "extensionName": {
+    "message": "Mobile View: 기기 에뮬레이터 및 반응형 테스트"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "모바일 시뮬레이터로 반응형 웹을 테스트하세요. 휴대폰, 태블릿, 데스크톱을 나란히 비교하고 스크롤을 동기화하며 스크린샷에 주석을 남기세요."
+  },
+  "actionTitle": {
+    "message": "Mobile View 기기 에뮬레이터 열기"
+  },
+  "contextMenuTitle": {
+    "message": "이 탭을 Mobile View에서 열기"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View가 활성화됨 — 클릭하여 닫기"
+  },
+  "unsupportedActionTitle": {
+    "message": "먼저 웹사이트를 여세요"
+  },
+  "unsupportedUrlHint": {
+    "message": "개발 중인 페이지로 전환한 다음 확장 프로그램을 다시 클릭하세요."
+  }
 }

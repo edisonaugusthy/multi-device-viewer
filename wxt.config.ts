@@ -11,7 +11,7 @@ export default defineConfig({
     name: "__MSG_extensionName__",
     short_name: "__MSG_extensionShortName__",
     description: "__MSG_extensionDescription__",
-    version: "0.2.4",
+    version: "0.2.5",
     permissions: [
       "activeTab",
       "contextMenus",
@@ -23,15 +23,6 @@ export default defineConfig({
       "storage",
       ...(browser === "firefox" ? [] : ["offscreen", "tabCapture"]),
     ],
-    declarative_net_request: {
-      rule_resources: [
-        {
-          id: "frame-headers",
-          enabled: true,
-          path: "rules/frame-headers.json"
-        }
-      ]
-    },
     host_permissions: ["http://*/*", "https://*/*"],
     icons: {
       16: "/icons/icon-16.png",
@@ -50,7 +41,7 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        resources: ["simulator.html"],
+        resources: ["simulator.html", "mockups/*", "icons/*"],
         matches: ["http://*/*", "https://*/*"]
       }
     ],
@@ -92,9 +83,10 @@ export default defineConfig({
     // Keep generated website/preview bundles out of Mozilla's source archive.
     // Tailwind scans files below the source root, so including these outputs
     // changes the rebuilt extension even when the authored sources are equal.
-    excludeSources: ["dist/**", "dist-site/**"],
+    excludeSources: ["dist/**", "dist-site/**", "output/**", ".playwright-cli/**"],
   },
   vite: () => ({
+    define: { __MDV_OPEN_SHADOW_QA__: JSON.stringify(process.env.MDV_OPEN_SHADOW_QA === "1") },
     plugins: [tailwindcss()],
     resolve: {
       alias: {

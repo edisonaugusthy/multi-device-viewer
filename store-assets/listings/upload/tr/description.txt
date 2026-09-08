@@ -1,0 +1,7 @@
+Mobile View, Chrome için ücretsiz ve açık kaynaklı bir cihaz emülatörüdür. Bir siteyi aynı anda en fazla dört telefon, tablet, dizüstü ve masaüstü görünümünde izleyin. Gerçekçi cihazlar seçin, yönü ve yakınlaştırmayı değiştirin, kaydırma ve gezinmeyi eşitleyin, ekran görüntüsü alın ve yerel bir tasarımla karşılaştırın. Her şey hesap, abonelik, analiz, telemetri veya sunucu olmadan tarayıcıda yerel olarak çalışır.
+
+- Özel görünüm boyutları oluşturun, cihaz setlerini ve favorileri kaydedin veya tek görünüme odaklanın. Eşleşen görünümler arasında desteklenen etkileşimleri eşitleyin.
+- Tek görünümü veya tüm çalışma alanını yakalayın. Ok, kutu, çizim ve metin ekleyin ya da görüntüyü kırpın. Yerel tasarımı sayfanın yanında veya kaplama olarak gösterin.
+- URL, cihazlar, görünüm boyutları ve sorun notlarını içeren yapılandırılmış düzeltme istemini kodlama aracınıza kopyalayın.
+
+Bunlar Chrome üzerinde duyarlı görünüm önizlemeleridir; fiziksel cihazlar veya Safari motoru değildir. Sitelerin oturum açma ve yerleştirme kuralları geçerliliğini korur. Özgün sayfa korunur; yeni önizlemeler kaydedilmemiş değişiklikleri kopyalamaz.

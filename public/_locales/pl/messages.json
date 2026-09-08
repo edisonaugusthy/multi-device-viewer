@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: Emulator urządzeń i test responsywny" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "Darmowy emulator do równoległego podglądu i testowania stron na telefonie, tablecie, laptopie i komputerze." },
-  "actionTitle": { "message": "Otwórz emulator urządzeń Mobile View" },
-  "contextMenuTitle": { "message": "Otwórz tę kartę w Mobile View" },
-  "activeActionTitle": { "message": "Mobile View jest aktywny — kliknij, aby zamknąć" },
-  "unsupportedActionTitle": { "message": "Najpierw otwórz stronę internetową" },
-  "unsupportedUrlHint": { "message": "Przejdź do tworzonej strony, a następnie ponownie kliknij rozszerzenie." }
+  "extensionName": {
+    "message": "Mobile View: Emulator urządzeń i test responsywny"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Symulator telefonu do testów responsywności. Porównuj telefon, tablet i komputer, synchronizuj przewijanie i rób zrzuty."
+  },
+  "actionTitle": {
+    "message": "Otwórz emulator urządzeń Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Otwórz tę kartę w Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View jest aktywny — kliknij, aby zamknąć"
+  },
+  "unsupportedActionTitle": {
+    "message": "Najpierw otwórz stronę internetową"
+  },
+  "unsupportedUrlHint": {
+    "message": "Przejdź do tworzonej strony, a następnie ponownie kliknij rozszerzenie."
+  }
 }

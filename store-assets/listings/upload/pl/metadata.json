@@ -1,0 +1,11 @@
+{
+  "storeLocale": "pl",
+  "name": "Mobile View: Emulator urządzeń i test responsywny",
+  "summary": "Symulator telefonu do testów responsywności. Porównuj telefon, tablet i komputer, synchronizuj przewijanie i rób zrzuty.",
+  "screenshotCaptions": [
+    "Testuj telefon, tablet i komputer obok siebie",
+    "Używaj ponad 105 profili urządzeń w jednym obszarze",
+    "Porównaj aktywną stronę z zatwierdzonym projektem"
+  ],
+  "screenshotLocale": "en"
+}

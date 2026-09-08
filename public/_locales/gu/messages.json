@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: ડિવાઇસ ઇમ્યુલેટર અને રિસ્પોન્સિવ ટેસ્ટર" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "ફોન, ટેબ્લેટ, લેપટોપ અને ડેસ્કટોપ વ્યૂને સાથે ચકાસવા માટેનું મફત ડિવાઇસ ઇમ્યુલેટર." },
-  "actionTitle": { "message": "Mobile View ડિવાઇસ ઇમ્યુલેટર ખોલો" },
-  "contextMenuTitle": { "message": "આ ટૅબ Mobile Viewમાં ખોલો" },
-  "activeActionTitle": { "message": "Mobile View સક્રિય છે — બંધ કરવા ક્લિક કરો" },
-  "unsupportedActionTitle": { "message": "પહેલા વેબસાઇટ ખોલો" },
-  "unsupportedUrlHint": { "message": "તમે જે પેજ બનાવી રહ્યા છો ત્યાં જાઓ અને એક્સ્ટેન્શન પર ફરી ક્લિક કરો." }
+  "extensionName": {
+    "message": "Mobile View: ડિવાઇસ ઇમ્યુલેટર અને રિસ્પોન્સિવ ટેસ્ટર"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "રિસ્પોન્સિવ પરીક્ષણ માટે મોબાઇલ સિમ્યુલેટર. ફોન, ટેબ્લેટ અને ડેસ્કટોપની સરખામણી કરો, સ્ક્રોલ સિંક કરો અને સ્ક્રીનશૉટ લો."
+  },
+  "actionTitle": {
+    "message": "Mobile View ડિવાઇસ ઇમ્યુલેટર ખોલો"
+  },
+  "contextMenuTitle": {
+    "message": "આ ટૅબ Mobile Viewમાં ખોલો"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View સક્રિય છે — બંધ કરવા ક્લિક કરો"
+  },
+  "unsupportedActionTitle": {
+    "message": "પહેલા વેબસાઇટ ખોલો"
+  },
+  "unsupportedUrlHint": {
+    "message": "તમે જે પેજ બનાવી રહ્યા છો ત્યાં જાઓ અને એક્સ્ટેન્શન પર ફરી ક્લિક કરો."
+  }
 }

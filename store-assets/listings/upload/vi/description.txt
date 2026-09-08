@@ -1,0 +1,12 @@
+Mobile View là trình giả lập thiết bị và công cụ kiểm thử responsive miễn phí, mã nguồn mở dành cho Chrome. Xem trước trang web trong tối đa bốn giao diện điện thoại, máy tính bảng, laptop và máy tính để bàn cùng lúc mà không phải liên tục đổi kích thước cửa sổ hoặc cấu hình DevTools.
+
+- Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.
+- Đồng bộ cuộn, tương tác được hỗ trợ và điều hướng giữa các bản xem trước phù hợp.
+- Lưu bộ thiết bị, mục yêu thích và thiết bị gần đây, hoặc tập trung vào một viewport.
+- Chụp một viewport hoặc toàn bộ không gian làm việc rồi thêm nét vẽ, khung, mũi tên, chữ và cắt ảnh.
+- So sánh thiết kế cục bộ bên cạnh hoặc phủ lên trang web trực tiếp và đánh dấu phản hồi mà không cần tải lên.
+- Sao chép prompt sửa lỗi có cấu trúc gồm URL, thiết bị, kích thước viewport và thông tin tùy chọn sang công cụ lập trình.
+
+Mọi thứ chạy cục bộ trong trình duyệt. Không cần tài khoản, thuê bao, phân tích, đo từ xa hay backend ứng dụng. URL, ảnh chụp, bản ghi, thiết kế, chú thích và cài đặt không được gửi đến backend.
+
+Đây là bản xem trước viewport responsive bằng Chrome, không phải thiết bị thật hay bộ máy Safari. Quy tắc đăng nhập và nhúng của trang web vẫn áp dụng. Trang gốc được giữ nguyên; bản xem trước mới không sao chép thay đổi chưa lưu.

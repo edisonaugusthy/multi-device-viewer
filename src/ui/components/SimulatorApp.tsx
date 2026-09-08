@@ -1,5 +1,5 @@
+import { getViewerContext, getViewerEventTarget, getViewerRoot } from "../../app/viewer-context";
 import {
-  Camera,
   CircleHelp,
   Eye,
   Focus,
@@ -7,21 +7,14 @@ import {
   GripVertical,
   Images,
   Languages,
-  Link2,
-  Menu,
-  Moon,
-  PanelLeftClose,
-  PanelLeftOpen,
   PanelsTopLeft,
   Play,
   Plus,
   RefreshCw,
-  RotateCcw,
   Route,
   ScanSearch,
   Settings2,
   Square,
-  Sun,
   Trash2,
   Video,
   X,
@@ -29,6 +22,7 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -64,7 +58,6 @@ import {
   DesignReferencePanel,
   type ReferenceMode,
 } from "./DesignReferencePanel";
-import { BrandMark } from "./BrandMark";
 import { CustomDeviceModal } from "./CustomDeviceModal";
 import { FirstRunGuide } from "./FirstRunGuide";
 import { PresetsManager } from "./PresetsManager";
@@ -73,6 +66,8 @@ import { PreviewCard } from "./PreviewCard";
 import { ReviewIssueModal } from "./ReviewIssueModal";
 import { ReviewPromptModal } from "./ReviewPromptModal";
 import { ReleaseNotesModal } from "./ReleaseNotesModal";
+import { HelpModal } from "./HelpModal";
+import { FocusToolbar } from "./FocusToolbar";
 
 const QUICK_DEVICE_SETS = [
   {
@@ -93,6 +88,7 @@ export function SimulatorApp() {
   const { locale, setLocale, t } = useI18n();
   const { findDevice, customDevices, removeCustomDevice } = useDeviceCatalog();
   const {
+    ready,
     slots,
     activeSlotId,
     display,
@@ -103,7 +99,6 @@ export function SimulatorApp() {
     sourceTabId,
     useCount,
     setSlotDevice,
-    resetSession,
   } = useSimulator();
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
@@ -114,16 +109,16 @@ export function SimulatorApp() {
   }>();
   const [capturing, setCapturing] = useState(false);
   const [capturingSlotId, setCapturingSlotId] = useState<string | undefined>();
-  const [captureError, setCaptureError] = useState(false);
+  const [captureError, setCaptureError] = useState<string | null>(null);
   const [recording, setRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [flowRecording, setFlowRecording] = useState(false);
   const [recordedFlow, setRecordedFlow] = useState<FlowStep[]>([]);
   const [flowReplay, setFlowReplay] = useState<FlowReplayRequest | null>(null);
   const [flowResults, setFlowResults] = useState<Record<string, FlowReplayResult>>({});
-  const [sidebarOpen, setSidebarOpen] = useState(
-    () => typeof window === "undefined" || window.innerWidth > 760,
-  );
+  const [viewOnly, setViewOnly] = useState(false);
+  const [showExitHint, setShowExitHint] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [narrowLayout, setNarrowLayout] = useState(
     () => typeof window !== "undefined" && window.innerWidth <= 760,
   );
@@ -132,6 +127,7 @@ export function SimulatorApp() {
   const [showReviewIssue, setShowReviewIssue] = useState(false);
   const [showDesignReference, setShowDesignReference] = useState(false);
   const [showPermissions, setShowPermissions] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [referenceViewportId, setReferenceViewportId] = useState(
     () => slots[0]?.id ?? "",
   );
@@ -173,10 +169,12 @@ export function SimulatorApp() {
     enabled: !import.meta.env.FIREFOX && !standalonePreview,
     hasMultipleViewports: slots.length >= 2,
     canPresent:
+      !viewOnly &&
       !annotationOpen &&
       !showCustomDevice &&
       !showReviewIssue &&
       !showPermissions &&
+      !showHelp &&
       !showFirstRun &&
       !releaseNotes &&
       !capturing &&
@@ -216,7 +214,6 @@ export function SimulatorApp() {
       .then((saved) => {
         if (saved?.widths?.length === slots.length) setWidths(saved.widths);
         if (saved?.focusedSlotId && slots.some((slot) => slot.id === saved.focusedSlotId)) setFocusedSlotId(saved.focusedSlotId);
-        if (typeof saved?.sidebarOpen === "boolean" && !narrowLayout) setSidebarOpen(saved.sidebarOpen);
         if (saved?.showDesignReference) setShowDesignReference(true);
         if (saved?.referenceViewportId) setReferenceViewportId(saved.referenceViewportId);
         if (saved?.designReferences) setDesignReferences(saved.designReferences);
@@ -255,6 +252,44 @@ export function SimulatorApp() {
       designPanelWidth,
     });
   }, [designPanelWidth, designReferences, focusedSlotId, overlayPlacements, referenceMode, referenceOpacity, referenceViewportId, showDesignReference, sidebarOpen, widths, workspaceHydrated]);
+
+  function enterViewOnly() {
+    setSidebarOpen(false);
+    setViewOnly(true);
+    setShowExitHint(true);
+  }
+
+  useLayoutEffect(() => {
+    if (!viewOnly) return;
+    getViewerRoot().querySelector<HTMLElement>("[data-interface-layout]")?.focus({ preventScroll: true });
+    const timer = window.setTimeout(() => setShowExitHint(false), 2200);
+    const restore = () => {
+      setViewOnly(false);
+      requestAnimationFrame(() => getViewerRoot().querySelector<HTMLButtonElement>("[data-view-only-toggle]")?.focus());
+    };
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") restore(); };
+    const onMessage = (event: MessageEvent) => {
+      if (event.data?.type !== "MDV_PREVIEW_ESCAPE") return;
+      const owned = Array.from(getViewerRoot().querySelectorAll("iframe")).some(frame => frame.contentWindow === event.source);
+      if (owned) restore();
+    };
+    const target = getViewerEventTarget();
+    target.addEventListener("keydown", onKey);
+    window.addEventListener("message", onMessage);
+    return () => { window.clearTimeout(timer); target.removeEventListener("keydown", onKey); window.removeEventListener("message", onMessage); };
+  }, [viewOnly]);
+
+  useEffect(() => {
+    if (!sidebarOpen || showFirstRun) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setSidebarOpen(false);
+      getViewerRoot().querySelector<HTMLButtonElement>("[data-focused-toolbar] [aria-expanded]")?.focus();
+    };
+    const target = getViewerEventTarget();
+    target.addEventListener("keydown", closeOnEscape);
+    return () => target.removeEventListener("keydown", closeOnEscape);
+  }, [sidebarOpen, showFirstRun]);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 760px)");
@@ -364,21 +399,21 @@ export function SimulatorApp() {
     if (capturing) return;
     setCapturing(true);
     setCapturingSlotId(slotId);
-    setCaptureError(false);
+    setCaptureError(null);
     try {
       const capture = await captureTabWithOverlay(sourceTabId);
       if (!capture.dataUrl) {
-        setCaptureError(true);
-        window.setTimeout(() => setCaptureError(false), 4000);
+        setCaptureError(capture.error ?? t("noScreenshot"));
+        window.setTimeout(() => setCaptureError(null), 4000);
         return;
       }
       const card = slotId
-        ? Array.from(document.querySelectorAll<HTMLElement>("[data-preview-slot-id]"))
+        ? Array.from(getViewerRoot().querySelectorAll<HTMLElement>("[data-preview-slot-id]"))
             .find((element) => element.dataset.previewSlotId === slotId)
         : undefined;
       const target = slotId
         ? card?.querySelector<HTMLElement>("[data-device-frame]") ?? card
-        : document.querySelector<HTMLElement>("[data-capture-board]");
+        : getViewerRoot().querySelector<HTMLElement>("[data-capture-board]");
       const cropped = target ? await cropScreenshotToElement(capture.dataUrl, target) : capture.dataUrl;
       setAnnotationImage(cropped);
       setAnnotationMeta(captureMetaForSlot(slotId));
@@ -388,14 +423,6 @@ export function SimulatorApp() {
       setCapturing(false);
       setCapturingSlotId(undefined);
     }
-  }
-
-  function startNewCheck() {
-    setFocusedSlotId(null);
-    setShowDesignReference(false);
-    setDesignReferences({});
-    setOverlayPlacements({});
-    resetSession();
   }
 
   async function toggleRecording() {
@@ -464,6 +491,7 @@ export function SimulatorApp() {
   }
 
   function closeViewer() {
+    if (getViewerContext()) return getViewerContext()!.close();
     if (window.parent !== window)
       return void window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*");
     if (
@@ -481,6 +509,7 @@ export function SimulatorApp() {
 
   function finishFirstRun() {
     setShowFirstRun(false);
+    setSidebarOpen(false);
     void writeStore("responsiveTesterFirstRunComplete", true);
   }
 
@@ -530,103 +559,32 @@ export function SimulatorApp() {
 
   return (
     <div
-      className={`flex h-screen flex-col overflow-hidden font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}
+      data-interface-layout="focus"
+      data-view-only={viewOnly || undefined}
+      tabIndex={-1}
+      className={`flex h-screen flex-col overflow-hidden outline-none font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}
     >
-      {sidebarOpen && <header
-        data-main-toolbar
-        className={`z-20 flex h-10 shrink-0 items-center gap-1.5 border-b px-2 ${dark ? "border-white/[0.08] bg-[#11141a]" : "border-slate-200 bg-white"}`}
-      >
-        <button
-          type="button"
-          className={`grid h-8 w-8 place-items-center rounded-lg lg:hidden ${dark ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
-          onClick={() => setSidebarOpen(true)}
-          aria-label={t("openWorkspaceSetup")}
-        >
-          <Menu size={15} />
-        </button>
-        <div
-          className="flex h-7 w-7 shrink-0 items-center justify-center"
-          title={PRODUCT_SHORT_NAME}
-        >
-          <BrandMark size={27} />
-        </div>
-        <div
-          className="ml-1 hidden items-center gap-1 md:flex"
-          aria-label={t("quickDeviceSets")}
-        >
-          {QUICK_DEVICE_SETS.map((set) => (
-            <button
-              key={set.labelKey}
-              type="button"
-              title={t("openDeviceSet", { name: t(set.labelKey) })}
-              onClick={() => applyDevicePreset([...set.devices])}
-              className={`h-7 rounded-[7px] border px-2 text-[10px] font-bold transition ${dark ? "border-white/10 text-slate-400 hover:border-white/20 hover:bg-white/[0.06] hover:text-white" : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"}`}
-            >
-              {t(set.labelKey)}
-            </button>
-          ))}
-        </div>
-        <div className="min-w-0 flex-1" />
-        <div className="flex shrink-0 items-center gap-0.5">
-          <button
-            type="button"
-            title={
-              display.scrollSync ? t("turnOffScrollSync") : t("turnOnScrollSync")
-            }
-            aria-pressed={display.scrollSync}
-            onClick={() =>
-              updateDisplay((current) => ({
-                ...current,
-                scrollSync: !current.scrollSync,
-              }))
-            }
-            className={`flex h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold ${display.scrollSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
-          >
-            <Link2 size={12} />
-            <span>{t("scrollSync")}</span>
-          </button>
-          <button
-            type="button"
-            title={display.navigationSync ? t("turnOffNavigationSync") : t("turnOnNavigationSync")}
-            aria-pressed={display.navigationSync}
-            onClick={() => updateDisplay((current) => ({ ...current, navigationSync: !current.navigationSync }))}
-            className={`hidden h-7 items-center gap-1.5 rounded-[7px] px-2 text-[10px] font-bold lg:flex ${display.navigationSync ? "bg-[#0f9f8f] text-white" : dark ? "text-slate-500 hover:bg-white/[0.06] hover:text-white" : "text-slate-500 hover:bg-slate-100"}`}
-          >
-            <Route size={12} />
-            <span>{t("navigationSync")}</span>
-          </button>
-        </div>
-        <ToolbarButton label={t("reloadAll")} dark={dark} onClick={reloadAllSlots}>
-          <RefreshCw size={15} />
-        </ToolbarButton>
-        <ToolbarButton
-          label={dark ? t("lightTheme") : t("darkTheme")}
-          dark={dark}
-          onClick={() =>
-            updateDisplay((current) => ({
-              ...current,
-              darkMode: !current.darkMode,
-            }))
-          }
-        >
-          {dark ? <Sun size={15} /> : <Moon size={15} />}
-        </ToolbarButton>
-        <ToolbarButton label={t("closeViewer")} dark={dark} onClick={closeViewer}>
-          <X size={16} />
-        </ToolbarButton>
-      </header>}
-
+      {!viewOnly && <FocusToolbar dark={dark} freeView={display.previewStyle === "free"} scrollSync={display.scrollSync} navigationSync={display.navigationSync} toolsOpen={sidebarOpen}
+        url={slots.find(slot => slot.id === activeSlotId)?.url ?? slots[0]?.url ?? ""}
+        canAdd={slots.length < maxPreviewSlots} capturing={capturing}
+        onViewChange={free => updateDisplay(current => ({ ...current, previewStyle: free ? "free" : "device" }))}
+        onAdd={() => addSlot()} onSync={() => updateDisplay(current => ({ ...current, scrollSync: !current.scrollSync }))}
+        onNavigationSync={() => updateDisplay(current => ({ ...current, navigationSync: !current.navigationSync }))} onReload={reloadAllSlots}
+        onViewOnly={enterViewOnly} onCapture={() => void takeScopedScreenshot()} onTools={() => setSidebarOpen(value => !value)}
+        onTheme={() => updateDisplay(current => ({ ...current, darkMode: !current.darkMode }))} onClose={closeViewer}/>}
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        {sidebarOpen && narrowLayout && (
+        {sidebarOpen && !viewOnly && (
           <button
             type="button"
             aria-label={t("closeWorkspaceSetup")}
-            className="absolute inset-0 z-30 bg-black/40"
+            tabIndex={-1}
+            aria-hidden="true"
+            className="absolute inset-0 z-30 bg-black/15"
             onClick={() => setSidebarOpen(false)}
           />
         )}
         <aside
-          className={`z-40 flex shrink-0 flex-col border-r transition-[width,transform] duration-200 ${dark ? "border-white/[0.08] bg-[#11141a]" : "border-slate-200 bg-white"} ${sidebarOpen ? "w-60 translate-x-0" : "w-0 -translate-x-full overflow-hidden border-r-0"} ${narrowLayout ? "absolute inset-y-0 left-0 shadow-2xl" : "relative"}`}
+          className={`absolute inset-y-3 start-3 z-40 flex shrink-0 flex-col rounded-xl border shadow-xl ${dark ? "border-white/[0.12] bg-[#11141a]" : "border-slate-200 bg-white"} ${sidebarOpen && !viewOnly ? "w-72 max-w-[calc(100%-1.5rem)]" : "hidden"}`}
         >
           {sidebarOpen && (
             <>
@@ -646,10 +604,16 @@ export function SimulatorApp() {
                   className={`grid h-7 w-7 place-items-center rounded-md ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"}`}
                   aria-label={t("collapseWorkspaceSetup")}
                 >
-                  <PanelLeftClose size={14} />
+                  <X size={14}/>
                 </button>
               </div>
-              <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-3">
+              <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">
+                <SidebarSection title={t("quickDeviceSets")} dark={dark}>
+                  {QUICK_DEVICE_SETS.map(set => <ActionRow key={set.labelKey} dark={dark} icon={<PanelsTopLeft size={14}/>} label={t(set.labelKey)} onClick={() => applyDevicePreset([...set.devices])}/>)}
+                  <ActionRow dark={dark} icon={<Route size={14}/>} label={t("navigationSync")} active={display.navigationSync} activeTone="teal" onClick={() => updateDisplay(current => ({ ...current, navigationSync: !current.navigationSync }))}/>
+                  <ActionRow dark={dark} icon={<RefreshCw size={14}/>} label={t("reloadAll")} onClick={reloadAllSlots}/>
+                  <ActionRow dark={dark} icon={<CircleHelp size={14}/>} label={t("helpAndFeedback")} onClick={() => setShowHelp(true)}/>
+                </SidebarSection>
                 <div>
                   <SidebarSection
                     title={t("devices")}
@@ -764,22 +728,6 @@ export function SimulatorApp() {
                   />
                   <ActionRow
                     dark={dark}
-                    icon={<Camera size={14} />}
-                    onClick={() => void takeScopedScreenshot()}
-                    label={
-                      capturing
-                        ? t("capturingComparison")
-                        : t("captureAndAnnotate")
-                    }
-                  />
-                  <ActionRow
-                    dark={dark}
-                    icon={<RotateCcw size={14} />}
-                    onClick={startNewCheck}
-                    label={t("startNewCheck")}
-                  />
-                  <ActionRow
-                    dark={dark}
                     icon={recording ? <Square size={13} fill="currentColor" /> : <Video size={14} />}
                     onClick={() => void toggleRecording()}
                     disabled={!sourceTabId}
@@ -877,19 +825,15 @@ export function SimulatorApp() {
           )}
         </aside>
 
-        {!sidebarOpen && (
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(true)}
-            aria-label={t("openWorkspaceSetup")}
-            title={t("showWorkspaceControls")}
-            className={`absolute left-2 top-2 z-40 grid h-8 w-8 place-items-center rounded-lg border shadow-sm backdrop-blur transition ${dark ? "border-white/10 bg-[#171a21]/90 text-slate-400 hover:border-white/20 hover:text-white" : "border-slate-200 bg-white/90 text-slate-500 hover:border-slate-300 hover:text-slate-900"}`}
-          >
-            <PanelLeftOpen size={15} />
+        {viewOnly && (
+          <button type="button" data-exit-view-only aria-label={t("showWorkspaceControls")} title={`${t("showWorkspaceControls")} (Esc)`}
+            onClick={() => setViewOnly(false)}
+            className={`absolute start-3 top-3 z-50 flex h-9 items-center gap-2 rounded-full border px-3 text-xs font-semibold shadow-sm transition-opacity hover:opacity-100 focus:opacity-100 ${showExitHint ? "opacity-100" : "opacity-0"} ${dark ? "border-white/20 bg-slate-900 text-white" : "border-slate-300 bg-white text-slate-700"}`}>
+            <Settings2 size={14}/>{t("showWorkspaceControls")} <kbd className="text-[10px] opacity-60">Esc</kbd>
           </button>
         )}
 
-        {showDesignReference && (
+        {showDesignReference && !viewOnly && (
           <DesignReferencePanel
             dark={dark}
             viewports={slots.map((slot) => ({
@@ -937,7 +881,7 @@ export function SimulatorApp() {
             data-capture-board
             className={`flex min-h-0 flex-1 ${narrowLayout ? "flex-col" : ""}`}
           >
-            {slots.map((slot, index) => (
+            {ready && slots.map((slot, index) => (
               focusedSlotId && focusedSlotId !== slot.id ? null :
               <div
                 key={slot.id}
@@ -956,7 +900,7 @@ export function SimulatorApp() {
                   slot={slot}
                   device={findDevice(slot.deviceId)}
                   display={display}
-                  showToolbar={sidebarOpen}
+                  showToolbar={!viewOnly}
                   removable={slots.length > 1}
                   onCapture={() => void takeScopedScreenshot(slot.id)}
                   capturePending={capturing && capturingSlotId === slot.id}
@@ -968,7 +912,7 @@ export function SimulatorApp() {
                   onFlowStep={recordFlowStep}
                   onFlowResult={receiveFlowResult}
                   designOverlay={
-                    showDesignReference &&
+                    !viewOnly && showDesignReference &&
                     referenceMode === "overlay" &&
                     referenceViewportId === slot.id &&
                     designReferences[slot.id]
@@ -986,7 +930,7 @@ export function SimulatorApp() {
                       : undefined
                   }
                 />
-                {!focusedSlotId && index < slots.length - 1 && !narrowLayout && (
+                {!viewOnly && !focusedSlotId && index < slots.length - 1 && !narrowLayout && (
                   <div
                     role="separator"
                     aria-label={t("resizeAdjacentViewports")}
@@ -1022,7 +966,7 @@ export function SimulatorApp() {
       )}
       {captureError && (
         <div role="alert" className={`fixed bottom-3 left-1/2 z-[100] -translate-x-1/2 rounded-md border px-3 py-2 text-xs font-semibold shadow-sm ${dark ? "border-white/10 bg-[#171b23] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}>
-          {t("noScreenshot")}
+          {captureError}
         </div>
       )}
       {showCustomDevice && (
@@ -1044,41 +988,19 @@ export function SimulatorApp() {
         />
       )}
       {showPermissions && <PermissionsInfoModal dark={dark} onClose={() => setShowPermissions(false)} />}
+      {showHelp && <HelpModal dark={dark} review={reviewPrompt} onClose={() => setShowHelp(false)} />}
       {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
       {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
       {(reviewPrompt.visible || reviewPromptPreview) && (
         <ReviewPromptModal
           dark={dark}
-          onReview={reviewPrompt.markReviewed}
+          storageError={reviewPrompt.error}
+          onReview={reviewPrompt.openReview}
           onNotNow={reviewPrompt.postpone}
           onNever={reviewPrompt.optOut}
         />
       )}
     </div>
-  );
-}
-
-function ToolbarButton({
-  children,
-  label,
-  dark,
-  onClick,
-}: {
-  children: ReactNode;
-  label: string;
-  dark: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      title={label}
-      aria-label={label}
-      onClick={onClick}
-      className={`grid h-8 w-8 shrink-0 place-items-center rounded-[8px] transition ${dark ? "text-slate-500 hover:bg-white/[0.07] hover:text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"}`}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -1099,11 +1021,11 @@ function SidebarSection({
 }) {
   return (
     <section>
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-1 flex items-center justify-between">
         <h2
           role={active ? "status" : undefined}
           aria-live={active ? "polite" : undefined}
-          className={`flex min-w-0 items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] ${active ? "text-red-500" : dark ? "text-slate-600" : "text-slate-400"}`}
+          className={`flex min-w-0 items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] ${active ? "text-red-500" : dark ? "text-slate-400" : "text-slate-500"}`}
         >
           {active && <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-current" />}
           {title}
@@ -1111,7 +1033,7 @@ function SidebarSection({
         {action ??
           (meta && (
             <span
-              className={`text-[9px] font-bold ${dark ? "text-slate-600" : "text-slate-400"}`}
+              className={`text-[9px] font-bold ${dark ? "text-slate-400" : "text-slate-500"}`}
             >
               {meta}
             </span>
@@ -1129,6 +1051,7 @@ function ActionRow({
   onClick,
   disabled,
   active,
+  activeTone = "red",
 }: {
   icon: ReactNode;
   label: string;
@@ -1136,14 +1059,16 @@ function ActionRow({
   onClick: () => void;
   disabled?: boolean;
   active?: boolean;
+  activeTone?: "red" | "teal";
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      title={label}
       disabled={disabled}
-      aria-pressed={active || undefined}
-      className={`flex h-8 w-full items-center gap-2 rounded-[8px] px-2 text-left text-[11px] font-semibold transition disabled:opacity-35 ${active ? "bg-red-500/10 text-red-500" : dark ? "text-slate-400 hover:bg-white/[0.055] hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
+      aria-pressed={active}
+      className={`flex h-8 w-full items-center gap-2 rounded-[8px] px-2 text-left text-[11px] font-semibold transition disabled:opacity-35 ${active ? activeTone === "teal" ? dark ? "bg-teal-500/10 text-teal-300" : "bg-teal-500/10 text-teal-700" : "bg-red-500/10 text-red-500" : dark ? "text-slate-400 hover:bg-white/[0.055] hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
     >
       <span className="shrink-0">{icon}</span>
       <span className="min-w-0 flex-1 truncate">{label}</span>

@@ -1,10 +1,26 @@
 {
-  "extensionName": { "message": "Mobile View: شبیه‌ساز دستگاه و تست واکنش‌گرا" },
-  "extensionShortName": { "message": "Mobile View" },
-  "extensionDescription": { "message": "شبیه‌ساز رایگان برای پیش‌نمایش و آزمایش هم‌زمان وب‌سایت در گوشی، تبلت، لپ‌تاپ و دسکتاپ." },
-  "actionTitle": { "message": "باز کردن شبیه‌ساز Mobile View" },
-  "contextMenuTitle": { "message": "باز کردن این برگه در Mobile View" },
-  "activeActionTitle": { "message": "Mobile View فعال است — برای بستن کلیک کنید" },
-  "unsupportedActionTitle": { "message": "ابتدا یک وب‌سایت باز کنید" },
-  "unsupportedUrlHint": { "message": "به صفحه‌ای که توسعه می‌دهید بروید و دوباره روی افزونه کلیک کنید." }
+  "extensionName": {
+    "message": "Mobile View: شبیه‌ساز دستگاه و تست واکنش‌گرا"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "شبیه‌ساز موبایل برای آزمون واکنش‌گرایی. نماهای گوشی، تبلت و رایانه را مقایسه کنید، پیمایش را همگام کنید و عکس بگیرید."
+  },
+  "actionTitle": {
+    "message": "باز کردن شبیه‌ساز Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "باز کردن این برگه در Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View فعال است — برای بستن کلیک کنید"
+  },
+  "unsupportedActionTitle": {
+    "message": "ابتدا یک وب‌سایت باز کنید"
+  },
+  "unsupportedUrlHint": {
+    "message": "به صفحه‌ای که توسعه می‌دهید بروید و دوباره روی افزونه کلیک کنید."
+  }
 }

@@ -27,6 +27,14 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.5": {
+    version: "0.2.5",
+    heading: "What’s new",
+    summary: "",
+    notes: [
+      { title: "Scrollable release notes", description: "The changelog now fits within your window and scrolls through longer updates while keeping the close and Start testing buttons visible." },
+    ],
+  },
   "0.2.4": {
     version: "0.2.4",
     heading: "What’s new",

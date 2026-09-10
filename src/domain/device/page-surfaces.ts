@@ -58,11 +58,26 @@ function sampleEdge(bottom: boolean) {
   const y = bottom ? Math.max(0, innerHeight - 1) : 1;
   const points = [0.12, 0.5, 0.88].map(ratio => {
     const element = document.elementFromPoint(Math.min(innerWidth - 1, Math.max(0, innerWidth * ratio)), y);
-    return renderedBackground(element);
+    return { ...renderedBackground(element), pinned: pinnedEdgeBackground(element, y) };
   });
   return { color: { r: points.reduce((n, p) => n + p.color.r, 0) / 3,
     g: points.reduce((n, p) => n + p.color.g, 0) / 3,
-    b: points.reduce((n, p) => n + p.color.b, 0) / 3, a: 1 }, painted: points.some(p => p.painted) };
+    b: points.reduce((n, p) => n + p.color.b, 0) / 3, a: 1 }, painted: points.some(p => p.painted),
+    pinned: points.every(p => p.pinned && JSON.stringify(p.pinned) === JSON.stringify(points[0].pinned))
+      ? points[0].pinned : undefined };
+}
+
+/** Only extend a full-width opaque sticky/fixed surface, never a scrolling post. */
+function pinnedEdgeBackground(start: Element | null, y: number): RgbaColor | undefined {
+  for (let element = start; element; element = element.parentElement) {
+    const style = getComputedStyle(element);
+    if (style.position !== "sticky" && style.position !== "fixed") continue;
+    const rect = element.getBoundingClientRect();
+    if (rect.top > y || rect.bottom <= y || rect.left > 1 || rect.right < innerWidth - 1) continue;
+    const background = resolveCssColor(style.backgroundColor);
+    if (background?.a === 1 && Number(style.opacity) === 1) return renderedBackground(element).color;
+  }
+  return undefined;
 }
 
 function themeColor() {
@@ -83,6 +98,8 @@ export function samplePageSurfaces() {
   const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]')?.content ?? "";
   return {
     topColor: toCss(topColor), bottomColor: toCss(bottom.color),
+    topGuardColor: top.pinned ? toCss(top.pinned) : undefined,
+    bottomGuardColor: bottom.pinned ? toCss(bottom.pinned) : undefined,
     topIsDark: prefersLightIcons(topColor), bottomIsDark: prefersLightIcons(bottom.color),
     viewportFit: /viewport-fit\s*=\s*cover/i.test(viewportMeta) ? "cover" as const : "auto" as const,
   };

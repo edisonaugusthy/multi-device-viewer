@@ -13,6 +13,7 @@ const message = (key: string, fallback: string) =>
   chrome.i18n.getMessage(key) || fallback;
 
 export default defineBackground(() => {
+  const launches = new Map<number, Promise<void>>();
   const previews = createPreviewSessions();
   void previews.prune().catch(console.error);
   chrome.tabs.onRemoved.addListener(tabId => { void previews.close(tabId).catch(console.error); });
@@ -28,7 +29,7 @@ export default defineBackground(() => {
   syncAllActionStates();
 
   chrome.runtime.onMessage.addListener((message, sender) => {
-    if (!message || message.type !== "MDV_OVERLAY_STATE" || typeof sender.tab?.id !== "number") return;
+    if (!message || message.type !== "MDV_OVERLAY_STATE" || typeof sender.tab?.id !== "number" || sender.frameId !== 0) return;
     setActiveIndicator(sender.tab.id, Boolean(message.active));
   });
 
@@ -58,7 +59,10 @@ export default defineBackground(() => {
   });
 
   chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
-    if (changeInfo.status === "loading") void previews.close(_tabId).catch(console.error);
+    if (changeInfo.status === "loading") {
+      setActiveIndicator(_tabId, false);
+      void previews.close(_tabId).catch(console.error);
+    }
     if (changeInfo.url || changeInfo.status === "complete") syncActionState(tab);
   });
 
@@ -114,31 +118,25 @@ export default defineBackground(() => {
 
     // Keep the viewer on the current page. The content script owns the
     // full-screen overlay, so the source page remains underneath it.
-    const message = { type: "OPEN_SIMULATOR", url, sourceTabId: tab.id };
-    const sendMessage = () => {
-      chrome.tabs.sendMessage(tab.id!, message, () => {
-        if (!chrome.runtime.lastError) return;
-        console.error("Mobile View & Responsive Tester could not attach to the current page", chrome.runtime.lastError.message);
-      });
-    };
-
-    chrome.tabs.sendMessage(tab.id, message, () => {
-      if (!chrome.runtime.lastError) return;
-
-      // A tab that was already open when the extension was reloaded does not
-      // automatically receive the content script. Inject it once, then retry
-      // the in-page launch instead of opening a chrome-extension:// tab.
-      chrome.scripting.executeScript(
-        { target: { tabId: tab.id! }, files: ["content-scripts/content.js"] },
-        () => {
-          if (chrome.runtime.lastError) {
-            sendMessage();
-            return;
-          }
-          sendMessage();
-        },
-      );
-    });
+    const tabId = tab.id;
+    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId };
+    // Acknowledge each toggle before processing the next click, including the
+    // first launch into a tab that needs content-script injection.
+    const work = (launches.get(tabId) ?? Promise.resolve()).then(async () => {
+      let response;
+      try {
+        response = await chrome.tabs.sendMessage(tabId, request, { frameId: 0 });
+      } catch (error) {
+        // A disconnected response is not proof that the script is missing:
+        // reinjecting there would register another owner of the same overlay.
+        if (!String(error).includes("Receiving end does not exist")) throw error;
+        await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, files: ["content-scripts/content.js"] });
+        response = await chrome.tabs.sendMessage(tabId, request, { frameId: 0 });
+      }
+      if (response?.ok === false) throw new Error(response.error);
+    }).catch(console.error);
+    launches.set(tabId, work);
+    void work.finally(() => { if (launches.get(tabId) === work) launches.delete(tabId); });
   }
 
   function syncAllActionStates() {
@@ -155,11 +153,15 @@ export default defineBackground(() => {
       tabId: tab.id,
       popup: previewable ? "" : UNSUPPORTED_PAGE_PATH,
     });
-    chrome.action.setTitle({
-      tabId: tab.id,
-      title: previewable
-        ? message("actionTitle", "Open Mobile View device emulator")
-        : message("unsupportedActionTitle", "Open a website first"),
+    if (!previewable) {
+      chrome.action.setBadgeText({ tabId: tab.id, text: "" });
+      chrome.action.setTitle({ tabId: tab.id, title: message("unsupportedActionTitle", "Open a website first") });
+      return;
+    }
+    // Read the live owner, including after service-worker suspension or a tab switch.
+    chrome.tabs.sendMessage(tab.id, { type: "MDV_GET_OVERLAY_STATE" }, { frameId: 0 }, response => {
+      const active = !chrome.runtime.lastError && response?.active === true;
+      setActiveIndicator(tab.id!, active);
     });
   }
 
@@ -268,56 +270,54 @@ export default defineBackground(() => {
       return true;
     }
 
-    if (!import.meta.env.FIREFOX) {
-      if (message?.type === "START_RECORDING") {
-        void (async () => {
-          const tab = await resolveCaptureTab(typeof message.tabId === "number" ? message.tabId : null);
-          if (!tab?.id) {
-            sendResponse({ ok: false, error: "No source tab" });
-            return;
-          }
+    if (message?.type === "START_RECORDING") {
+      void (async () => {
+        const tab = await resolveCaptureTab(typeof message.tabId === "number" ? message.tabId : null);
+        if (!tab?.id) {
+          sendResponse({ ok: false, error: "No source tab" });
+          return;
+        }
 
-          try {
-            await ensureOffscreenRecordingDocument();
-            const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
-            await chrome.storage.session.set({ mdvRecordingActive: true });
-            chrome.runtime.sendMessage({
-              type: "OFFSCREEN_START_RECORDING",
-              streamId,
-              tabId: tab.id,
-              filename: `multi-device-viewer-recording-${Date.now()}.webm`,
-            });
-            sendResponse({ ok: true });
-          } catch (error) {
-            await chrome.storage.session.set({ mdvRecordingActive: false });
-            sendResponse({ ok: false, error: String(error) });
-          }
-        })();
-        return true;
-      }
-
-      if (message?.type === "STOP_RECORDING") {
-        void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
-          chrome.runtime.sendMessage({ type: "OFFSCREEN_STOP_RECORDING" });
+        try {
+          await ensureOffscreenRecordingDocument();
+          const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
+          await chrome.storage.session.set({ mdvRecordingActive: true });
+          chrome.runtime.sendMessage({
+            type: "OFFSCREEN_START_RECORDING",
+            streamId,
+            tabId: tab.id,
+            filename: `multi-device-viewer-recording-${Date.now()}.webm`,
+          });
           sendResponse({ ok: true });
-        });
-        return true;
-      }
+        } catch (error) {
+          await chrome.storage.session.set({ mdvRecordingActive: false });
+          sendResponse({ ok: false, error: String(error) });
+        }
+      })();
+      return true;
+    }
 
-      if (message?.type === "OFFSCREEN_RECORDING_COMPLETE") {
-        void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
-          if (typeof message.blobUrl === "string" && typeof message.filename === "string") {
-            void chrome.downloads.download({
-              url: message.blobUrl,
-              filename: message.filename,
-              saveAs: true,
-            });
-          }
-          void chrome.offscreen.closeDocument().catch(() => undefined);
-          sendResponse({ ok: true });
-        });
-        return true;
-      }
+    if (message?.type === "STOP_RECORDING") {
+      void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
+        chrome.runtime.sendMessage({ type: "OFFSCREEN_STOP_RECORDING" });
+        sendResponse({ ok: true });
+      });
+      return true;
+    }
+
+    if (message?.type === "OFFSCREEN_RECORDING_COMPLETE") {
+      void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
+        if (typeof message.blobUrl === "string" && typeof message.filename === "string") {
+          void chrome.downloads.download({
+            url: message.blobUrl,
+            filename: message.filename,
+            saveAs: true,
+          });
+        }
+        void chrome.offscreen.closeDocument().catch(() => undefined);
+        sendResponse({ ok: true });
+      });
+      return true;
     }
 
     return false;

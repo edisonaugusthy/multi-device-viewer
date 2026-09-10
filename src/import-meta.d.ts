@@ -1,5 +1,4 @@
 interface ImportMetaEnv {
-  readonly FIREFOX: boolean;
   readonly DEV: boolean;
 }
 

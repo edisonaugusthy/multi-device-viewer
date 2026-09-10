@@ -1,176 +1,253 @@
 {
-  "version": "0.2.5",
+  "version": "0.2.6",
   "capturedWith": "Isolated unpacked Chrome extension, real source page and UI",
-  "sourceSite": "http://127.0.0.1:4188/demo.html",
+  "sourceSite": "http://127.0.0.1:4188/store-assets/source/demo.html?marketing=20260910",
   "sourceFixture": "store-assets/source/demo.html",
   "qaOpenShadow": true,
-  "qaContentScriptSha256": "a7ec09a1e7f4bd1d0a2e6879407ec38da5f743b47c619affb70ab36ccf91d9b1",
+  "qaContentScriptSha256": "e568abfe592c8b25c26672f1891af115eb52e21a2bf17e5117502b24dc42f7c3",
   "productionShadowMode": "closed",
   "notes": [
-    "Annotation captures import the actual overview PNG using the local design-reference UI and real annotation tools.",
-    "Headers and promotional composition are rendered from store-listing-assets.html; screenshots are not generated illustrations.",
-    "Captured after font correction; subsequent small header-fitting and review-error changes were validated in production."
+    "All 24 screenshot stories were captured from the current isolated unpacked Chrome extension UI, including each locale’s actual controls.",
+    "Four devices in every story: iPhone 18 Pro in Burgundy, iPhone Duo unfolded in portrait, MacBook Pro 14-inch (M5), and Apple Watch Series 6 (40mm).",
+    "Actual UI divider drags set columns to 205, 295, 613 and 167 px. Main frame heights differ by less than 0.5 px around 350 px; the Watch is about 153 px tall. Frame artwork is uniformly scaled.",
+    "Scroll screenshots use a real 220 px wheel gesture with sync enabled. Resulting scroll offsets: 220, 220, 84 (page end), 220.",
+    "Each annotation capture imports its localized actual overview PNG through the design-reference input and uses the actual Box, Arrow and Text controls. Native activeTab capture permission was not bypassed or claimed validated by this artwork workflow.",
+    "Promo hardware crops and screenshots are real extension output. Only the app icon is a generated illustration based on the previous icon and real-device references.",
+    "Raw crops exclude viewport toolbars. Final artwork and all 24 screenshots retain their specified upload dimensions."
   ],
   "rawCaptures": [
-    {
-      "file": "store-assets/source/captures/annotation-de.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 165774,
-      "sha256": "bb333770c35308ce2548a29d910345e0cda9aaf0844e66cffe1005c1a884141c",
-      "capturedAt": "2026-09-07T13:30:09.537784+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/annotation-en.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 164563,
-      "sha256": "5e48059f7f89b4d0cd58eb1f157ec1b4842f754d6f126d3f5ab8c3d99521408c",
-      "capturedAt": "2026-09-07T13:28:48.765153+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/annotation-es.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 165649,
-      "sha256": "d5ff6e730533e73ffe1a46ce94d29bd63fdb97830d91fd9cd8c14df11d27ea89",
-      "capturedAt": "2026-09-07T13:30:09.728623+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/annotation-fr.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 165742,
-      "sha256": "aaa23ad4540a38aada90a1de8091851d1ba7f47718b630e44a0aa80e895d0962",
-      "capturedAt": "2026-09-07T13:30:09.921440+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/annotation-ja.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 165339,
-      "sha256": "bcf173d20789e831f7d368243bcc48dbc3cdfae44a208aa3844a803172ed7b81",
-      "capturedAt": "2026-09-07T13:30:10.321413+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/annotation-ko.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 163088,
-      "sha256": "97acfee557fabc84307569f7f4275665dbc36e7da73fbb5576465add707af762",
-      "capturedAt": "2026-09-07T13:30:10.514312+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/annotation-pt_BR.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 165335,
-      "sha256": "5e02ccb9b1c6a44f6ea1c58d04e658fc362bb8fbe56063603fd4f878d7fbc341",
-      "capturedAt": "2026-09-07T13:30:10.121977+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/annotation-zh_CN.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 163669,
-      "sha256": "6b7cef2247e1754382ce98217886220d3029b467185b6058dc16cd208490711c",
-      "capturedAt": "2026-09-07T13:30:10.713377+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/desktop.png",
-      "width": 387,
-      "height": 238,
-      "bytes": 20282,
-      "sha256": "35e5bd98ead51b7aa438eda41fe73980316552f122ed1c1543de7122426567e9",
-      "capturedAt": "2026-09-07T13:25:35.487402+00:00"
-    },
     {
       "file": "store-assets/source/captures/overview.png",
       "width": 1280,
       "height": 720,
-      "bytes": 167043,
-      "sha256": "2950e9f740e8f59a3e1555bf738643fd643065654d2833a785360dc8dc023b27",
-      "capturedAt": "2026-09-07T13:25:35.352598+00:00"
+      "bytes": 132825,
+      "sha256": "46093782d8b3f2ddaeebf2a06568a14c333eb74cf4499d92d558b956d09629d8",
+      "capturedAt": "2026-09-10T19:43:42.650Z"
     },
     {
       "file": "store-assets/source/captures/phone.png",
-      "width": 343,
-      "height": 704,
-      "bytes": 77384,
-      "sha256": "265c61c50602416f3fa9bfe5a7378e6593d38c17053e21f19d8ba557889e2adf",
-      "capturedAt": "2026-09-07T13:25:35.395540+00:00"
+      "width": 171,
+      "height": 351,
+      "bytes": 28452,
+      "sha256": "e2dec5335c79a2d1e3d29c7cf6181bdfb8484a82634d72df583c312264db4d23",
+      "capturedAt": "2026-09-10T19:43:40.182Z"
     },
     {
-      "file": "store-assets/source/captures/sync-de.png",
+      "file": "store-assets/source/captures/duo.png",
+      "width": 253,
+      "height": 351,
+      "bytes": 28784,
+      "sha256": "2569d80b1c3863a46ef8278d5f84249234a47990f7f30b6bec9f9ed59d0388db",
+      "capturedAt": "2026-09-10T19:43:40.237Z"
+    },
+    {
+      "file": "store-assets/source/captures/desktop.png",
+      "width": 573,
+      "height": 351,
+      "bytes": 36006,
+      "sha256": "1e5245addcaf9c4981b5e1e9c06ea8c3003f9b2bc77f3ce804803cf10996ff2e",
+      "capturedAt": "2026-09-10T19:43:40.291Z"
+    },
+    {
+      "file": "store-assets/source/captures/watch.png",
+      "width": 89,
+      "height": 153,
+      "bytes": 11444,
+      "sha256": "7a91ae25cebb27c4ce4acab54f8fbc0d6bc80311aea1bb039f7053cb9e8f92d0",
+      "capturedAt": "2026-09-10T19:43:40.335Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-en.png",
       "width": 1280,
       "height": 720,
-      "bytes": 186355,
-      "sha256": "adee46fad14f8b6fcecd9d67ca34bab73df73e80cb27a42fe3e446383318f76c",
-      "capturedAt": "2026-09-07T13:25:37.531802+00:00"
+      "bytes": 132327,
+      "sha256": "5940cb9c59458556b04cafb4887e82069c8daebd979658232d9e378e63dbeb8b",
+      "capturedAt": "2026-09-10T19:43:40.596Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-de.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 134197,
+      "sha256": "9a64c98b9f46db44ca2ca3127e9f568eb92da67dab03fb0bbd26b52c07d13c56",
+      "capturedAt": "2026-09-10T19:43:40.866Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-es.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 134479,
+      "sha256": "afd902fb83b4a22a0676cac9d116a5a5e4626986967aa98dea44a7a938a71385",
+      "capturedAt": "2026-09-10T19:43:41.135Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-fr.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 134156,
+      "sha256": "06c54f1682eb10851c5300a2680bfe0677c56cc42ac37d4bb1088e19e2b4e863",
+      "capturedAt": "2026-09-10T19:43:41.385Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-pt_BR.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 134594,
+      "sha256": "dd8fe2862d48659338756976bdd2e3f15e4bd49c53e0b22ec2663c030f9dde01",
+      "capturedAt": "2026-09-10T19:43:41.637Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-ja.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 133474,
+      "sha256": "e1d60baaf296c49b5022049bdd8889ecf6c1fa3c64c232034d7371f434590de1",
+      "capturedAt": "2026-09-10T19:43:41.920Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-ko.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 132122,
+      "sha256": "0666ff5d5afdee3e8e71c786ce8e2126bf99595c787982b5a4627015041cbdf1",
+      "capturedAt": "2026-09-10T19:43:42.202Z"
+    },
+    {
+      "file": "store-assets/source/captures/overview-zh_CN.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 131756,
+      "sha256": "40b5fd5b4bcb289b6f3f9c170a0a968a3c6a126fbb09742934cdb505add3abaa",
+      "capturedAt": "2026-09-10T19:43:42.568Z"
     },
     {
       "file": "store-assets/source/captures/sync-en.png",
       "width": 1280,
       "height": 720,
-      "bytes": 177777,
-      "sha256": "2c39b48a077ac881791e72d42ad3f6da11b07766b58c2cfbe8378d31a89b0e59",
-      "capturedAt": "2026-09-07T13:25:37.468351+00:00"
+      "bytes": 125826,
+      "sha256": "b02e4158a9e699523196efdc36abf1bd184d8b09f6c027debbf51ea8b549825c",
+      "capturedAt": "2026-09-10T19:43:45.078Z"
+    },
+    {
+      "file": "store-assets/source/captures/sync-de.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 128019,
+      "sha256": "1e3a79d6f9a34da3f3350df32c2563972a625d9bbc003fe44a69891ab81b3f37",
+      "capturedAt": "2026-09-10T19:43:45.324Z"
     },
     {
       "file": "store-assets/source/captures/sync-es.png",
       "width": 1280,
       "height": 720,
-      "bytes": 184800,
-      "sha256": "f6425df66e68b2aefcc346a9ee5284a2a78dd78c1b97366ec4d5bc3132cb15b3",
-      "capturedAt": "2026-09-07T13:25:37.591113+00:00"
+      "bytes": 129083,
+      "sha256": "b0c89aeef61a5e9f761565f1d71ab6e9ceb402d05352225006468ebef53459ec",
+      "capturedAt": "2026-09-10T19:43:45.564Z"
     },
     {
       "file": "store-assets/source/captures/sync-fr.png",
       "width": 1280,
       "height": 720,
-      "bytes": 186912,
-      "sha256": "f6ea0a5062b692d4770b73df3dde99f6daa1978693c5791919ea80fdefa977fd",
-      "capturedAt": "2026-09-07T13:25:37.647996+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/sync-ja.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 188522,
-      "sha256": "566e767cfc1eead37212e569c55b624ee4c3c193e387ef5dbfa85f4a9f59e542",
-      "capturedAt": "2026-09-07T13:25:37.764985+00:00"
-    },
-    {
-      "file": "store-assets/source/captures/sync-ko.png",
-      "width": 1280,
-      "height": 720,
-      "bytes": 174064,
-      "sha256": "be328239b6b7ba97ad7896ef36553703868ca47f8648b8f1e1657b2026daee03",
-      "capturedAt": "2026-09-07T13:25:37.821423+00:00"
+      "bytes": 128313,
+      "sha256": "c1cfd7744beade7aafc83f3431d8f5c2ffb149d157f55b07f1fb610f0583ec4a",
+      "capturedAt": "2026-09-10T19:43:45.811Z"
     },
     {
       "file": "store-assets/source/captures/sync-pt_BR.png",
       "width": 1280,
       "height": 720,
-      "bytes": 187939,
-      "sha256": "b3fae7da9b28163b5686a9b3508221a515c3add3351e9606d2661a0b83a7125c",
-      "capturedAt": "2026-09-07T13:25:37.705600+00:00"
+      "bytes": 129134,
+      "sha256": "17e4c023878b6ec0483a950cea7e64827691072b0dcdfada743fc20a666e1167",
+      "capturedAt": "2026-09-10T19:43:46.067Z"
+    },
+    {
+      "file": "store-assets/source/captures/sync-ja.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 127240,
+      "sha256": "b60ee508555639e30a874db95d963358269c4ed82aea8edd7a27ca9b361895f6",
+      "capturedAt": "2026-09-10T19:43:46.316Z"
+    },
+    {
+      "file": "store-assets/source/captures/sync-ko.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 125371,
+      "sha256": "976b3017228f32379b1d1e3e6ea81285ce501c0d112d48cf5a56490773213524",
+      "capturedAt": "2026-09-10T19:43:46.556Z"
     },
     {
       "file": "store-assets/source/captures/sync-zh_CN.png",
       "width": 1280,
       "height": 720,
-      "bytes": 177966,
-      "sha256": "8d739fc06eed7d07586567d2429832b153f7465013a65e7c09eb0887bb3b1866",
-      "capturedAt": "2026-09-07T13:25:37.871307+00:00"
+      "bytes": 125439,
+      "sha256": "8b86a8f7923acd76bf74a1fa3a2718d0f0ea059c3f04bf8fcd1e276382246118",
+      "capturedAt": "2026-09-10T19:43:46.796Z"
     },
     {
-      "file": "store-assets/source/captures/tablet.png",
-      "width": 412,
-      "height": 536,
-      "bytes": 57388,
-      "sha256": "125dc3f8f524d7c29097d05e93061d6a498d7253936ab555c3a259874cf0e1e8",
-      "capturedAt": "2026-09-07T13:25:35.444049+00:00"
+      "file": "store-assets/source/captures/annotation-en.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 147948,
+      "sha256": "af116bffb9d5c6c3cb333b4e4e4d19c0c095ea4c04c7f728f61e5a2720698aec",
+      "capturedAt": "2026-09-10T19:44:02.417Z"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-de.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 151167,
+      "sha256": "04e8dd2235f369acf067c2d3f7df3e59da456f7559c9583ff44ec97ef904a1dd",
+      "capturedAt": "2026-09-10T19:44:03.161Z"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-es.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 151498,
+      "sha256": "0b6f4260a3ad4f8f5696f62f480611705a5bbed5d418c62a78a0953e3326a2db",
+      "capturedAt": "2026-09-10T19:44:03.905Z"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-fr.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 150881,
+      "sha256": "c0463f018a7583cf5de714bedab0005b15d2d81297ab49fe6ff91bf4810bb51e",
+      "capturedAt": "2026-09-10T19:44:04.668Z"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-pt_BR.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 151734,
+      "sha256": "2aa53a0056d5ddd2960a03cb1a797e8d3926008bf212642aeb3cdb0427a2925a",
+      "capturedAt": "2026-09-10T19:44:05.419Z"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-ja.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 149701,
+      "sha256": "062c5980bedf9ee3d3d36ea359bda2cdc67990078d6b6fe8b67c8cdd4118a686",
+      "capturedAt": "2026-09-10T19:44:06.173Z"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-ko.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 146114,
+      "sha256": "432bec27885785f73f41f49af285559937ee6aadd7413252aaa64a4bb48904bf",
+      "capturedAt": "2026-09-10T19:44:06.924Z"
+    },
+    {
+      "file": "store-assets/source/captures/annotation-zh_CN.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 146704,
+      "sha256": "f930f12599584891c7830d740bf6d7b1ea8ced4649163d98245b2b847ff40731",
+      "capturedAt": "2026-09-10T19:44:07.706Z"
     }
-  ]
+  ],
+  "iconSha256": "592558bf788e5fa5a0d3e257497d3ef342a44108921033c5b5f480f3e937a9d2"
 }

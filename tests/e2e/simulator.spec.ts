@@ -46,21 +46,21 @@ test("shows the simplified navigation controls", async ({ page }) => {
 });
 
 test("opens the latest devices from startup and quick presets", async ({ page }) => {
-  await expect(page.locator('[data-device-frame="apple-iphone-17-pro-2025"]')).toBeVisible();
+  await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
 
   await openTools(page);
   await page.getByRole("button", { name: "iOS + Android", exact: true }).click();
-  await expect(page.locator('[data-device-frame="apple-iphone-17-pro-2025"]')).toBeVisible();
+  await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="samsung-galaxy-s26-ultra-2026"]')).toBeVisible();
 
   await page.getByRole("button", { name: "Phone + tablet", exact: true }).click();
-  await expect(page.locator('[data-device-frame="apple-iphone-17-pro-2025"]')).toBeVisible();
+  await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
 
   await page.getByRole("button", { name: "Mobile + tablet + laptop", exact: true }).click();
-  await expect(page.locator('[data-device-frame="apple-iphone-17-pro-2025"]')).toBeVisible();
+  await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
 });

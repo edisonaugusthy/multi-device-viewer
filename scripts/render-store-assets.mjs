@@ -1,7 +1,7 @@
 import { chromium } from "@playwright/test";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
-import { mkdir } from "node:fs/promises";
+import { copyFile, mkdir } from "node:fs/promises";
 
 const source = pathToFileURL(
   resolve("store-assets/source/store-listing-assets.html"),
@@ -83,6 +83,9 @@ try {
       fullPage: false,
     });
     await page.close();
+    if (asset.key === "screenshot-01" && locale === "en") {
+      await copyFile(resolve(folder, asset.filename), resolve("website/public", asset.filename));
+    }
     console.log(`${locale}/${asset.filename}: ${asset.width}x${asset.height}`);
     }
   }

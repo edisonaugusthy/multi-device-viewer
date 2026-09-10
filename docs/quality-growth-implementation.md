@@ -19,13 +19,13 @@ The latest follow-up adds a default Focus layout with Tools hidden, a Device/Fre
 
 The missing boundaries were a rendering defect: the installed viewer computed border widths as `0px`, even on controls with border classes. Tailwind's `@property` defaults were unavailable inside the viewer's adopted shadow stylesheet. Its non-inheriting property defaults now receive local declarations in the existing low-priority CSS layer; typed zero lengths become `0px` so focus-ring calculations remain valid. This restores the intended borders, shadows, transforms and keyboard outlines without adding styles or property registrations to the source document. This behavior matches [Chrome's documented shadow-root property limitation](https://developer.chrome.com/docs/css-ui/css-names).
 
-The layout, control sizes and spacing are retained. Small sidebar headings and device counts now use stronger text contrast in both themes. Actual extension checks confirmed 1px boundaries, visible menu shadows and an inset 2px keyboard focus ring; the source page's font size, colors and header border remained unchanged. TypeScript and the 38 Chromium/Firefox browser checks passed. Before/after images and computed-style evidence are in `output/playwright/ui-clarity/`.
+The layout, control sizes and spacing are retained. Small sidebar headings and device counts now use stronger text contrast in both themes. Actual extension checks confirmed 1px boundaries, visible menu shadows and an inset 2px keyboard focus ring; the source page's font size, colors and header border remained unchanged. TypeScript and the Chromium browser checks passed. Before/after images and computed-style evidence are in `output/playwright/ui-clarity/`.
 
 ## What caused the feedback problem
 
 There was no written product-feedback submission form behind the automatic request. The automatic dialog is a Chrome Web Store review request; “Mark feedback” is local screenshot annotation. The implementation now makes those routes explicit through **Help and feedback**, with separate review and GitHub issue actions.
 
-The automatic request intentionally needs seven days since initialization, five qualified sessions and three successful actions. A session qualifies after 60 seconds with at least two viewports. A successful action must occur before an eligible prompt can appear. Firefox and the standalone browser preview disable automatic review prompting. The new status panel explains these conditions and shows progress; manual Help actions remain available.
+The automatic request intentionally needs seven days since initialization, five qualified sessions and three successful actions. A session qualifies after 60 seconds with at least two viewports. A successful action must occur before an eligible prompt can appear. The standalone browser preview disables automatic review prompting. The new status panel explains these conditions and shows progress; manual Help actions remain available.
 
 Two defects are fixed: opening failure previously ended future requests, and concurrent viewers could overwrite each other's state or opt-out. Commands now execute serially in the background against current storage. State revisions protect observers from stale results. Failed opening/storage changes remain retryable, opt-outs survive concurrent updates, and ordinary captures/review actions are not treated as proof of a submitted rating. A real review or support issue was not submitted during testing.
 
@@ -47,7 +47,7 @@ Scroll sync also received a regression fix: repeated registration no longer clea
 |---|---|
 | TypeScript | `npm run compile` passed |
 | Unit tests | 301 passed across 18 files |
-| Existing browser suite | 38 passed across Chromium and Firefox |
+| Existing browser suite | Chromium checks passed |
 | Full catalog source rendering | 188/188 supported orientation cases; 105 exact IDs retained |
 | Geometry | 0 cases with >0.1% unequal scale; 0 fixed-footer overlaps; 0 header paint overlaps |
 | Installed Chrome session fixtures | All three previews retained HttpOnly SameSite=Strict signed-in state without exposing the cookie to page JS; signed-out state matched; original document token and unsaved draft survived closing |
@@ -58,8 +58,7 @@ Scroll sync also received a regression fix: repeated registration no longer clea
 | Live Session Check | 393 / 768 / 1280 × 900 captures; signed-in state, source token, draft, scroll and normal 1200 × 737 viewport restored; Stop restores state |
 | Localization and artwork | 55 listing records validated; 3 screenshots × 8 languages, 440 × 280 small promo and 1400 × 560 marquee validated |
 | Website | Build and SEO validation passed for all 11 sitemap pages |
-| Production packages | Chrome and Firefox ZIP validators passed; no debugger permission, global static header rules, QA open shadow root or old MAIN-world spoofer entrypoints |
-| Mozilla lint | 0 errors, 0 notices, 4 warnings about React's generic innerHTML code in bundled framework copies; no authored production innerHTML call sites were found |
+| Production packages | Chrome ZIP validators passed; no debugger permission, global static header rules, QA open shadow root or old MAIN-world spoofer entrypoints |
 
 Raw local evidence is under `output/playwright/`: `device-audit/results.json`, `mdv-compatibility-check.json`, `mdv-surfaces-check.json`, `production-check.json`, `live-session-native-viewport.json`, `live-session-stop.json`, `manual-review-open.json` and associated PNGs. `output/release-boundaries.json` records final ZIP hashes and permission checks. The source ZIP excludes generated QA builds and browser output.
 
@@ -68,12 +67,11 @@ The live store verifier was exercised without publishing: 22 responses were read
 ## Release files and remaining gates
 
 - `.output/multi-device-viewer-0.2.5-chrome.zip`
-- `.output/multi-device-viewer-0.2.5-firefox.zip`
 - `.output/multi-device-viewer-0.2.5-sources.zip`
 - `store-assets/listings/upload/` — 55 per-language descriptions and metadata; English title preserved.
 - `store-assets/webstore-upload/` — global promos, English screenshots and seven additional localized screenshot folders.
 - `output/live-session-prototype/` — isolated, unpacked Chrome lab extension. This is not part of the production package.
 
-Before a public rollout, complete the priority physical Safari cases, review localized copy with native speakers where available, and upload each description to its matching store locale. Package metadata alone does not publish long descriptions. The Live Session Check debugger permission remains a separate distribution decision, as specified in the approved plan. Chrome and Firefox main packages do not request it.
+Before a public rollout, complete the priority physical Safari cases, review localized copy with native speakers where available, and upload each description to its matching store locale. Package metadata alone does not publish long descriptions. The Live Session Check debugger permission remains a separate distribution decision, as specified in the approved plan. Chrome main packages do not request it.
 
 Keep a copy of the currently published text/images and record upload timestamps. Publish the compatibility/feedback release, verify the served copy, then evaluate the artwork and summary changes using the marketing plan's comparable observation windows. Existing signed-in SSO sites should be tested with normal browser login flows; no universal “never blocked” claim is supported.

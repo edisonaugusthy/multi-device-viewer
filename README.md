@@ -1,6 +1,6 @@
 # Mobile View: Responsive Device Emulator
 
-A free, open-source, privacy-first mobile simulator and responsive tester for Chrome and Firefox.
+A free, open-source, privacy-first mobile simulator and responsive tester for Chrome.
 
 Open the current website or local development server in up to four live device viewports. Save code, reload the previews, switch devices quickly, compare the implementation with a local design, and capture annotated visuals when something needs discussion. There is no account, backend, subscription, telemetry, or automatic upload.
 
@@ -81,14 +81,6 @@ npm run dev
 
 Load `.output/chrome-mv3/` as an unpacked extension from `chrome://extensions`.
 
-For Firefox Manifest V3 development:
-
-```bash
-npm run dev:firefox
-```
-
-Or run `npm run build:firefox`, open `about:debugging#/runtime/this-firefox`, choose **Load Temporary Add-on**, and select `.output/firefox-mv3/manifest.json`.
-
 For the standalone simulator UI preview:
 
 ```bash
@@ -103,26 +95,23 @@ Then open [http://localhost:5173/](http://localhost:5173/). Extension-only captu
 npm run compile
 npm test
 npm run build
-npm run build:firefox
 npm run zip
-npm run zip:firefox
 npm run test:e2e
 npm run build:site
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.1-chrome.zip
-npm run validate:firefox-zip -- .output/multi-device-viewer-0.2.1-firefox.zip
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.7-chrome.zip
 ```
 
-The production Chrome and Firefox extensions and zips are written to `.output/`. Firefox packaging also creates the source archive required for Mozilla review. Firefox source-tab recording uses Firefox's native screen/tab picker instead of Chrome's offscreen recording API.
+The production Chrome extension and zip are written to `.output/`.
 
 ## Release process
 
-Chrome Web Store and Firefox Add-ons packages are uploaded manually. Before release:
+Chrome Web Store packages are uploaded manually. Before release:
 
 1. Update the version in `package.json` and `wxt.config.ts`.
 2. Add accurate user-facing changes to `src/app/release-notes.ts`.
 3. Run every quality check and validate the generated zip.
-4. Review the store listing and privacy declarations in [docs/chrome-web-store.md](docs/chrome-web-store.md) and [docs/firefox-add-ons.md](docs/firefox-add-ons.md).
-5. Upload the validated browser package to its store. For Firefox, upload both the add-on zip and matching source archive.
+4. Review the store listing and privacy declarations in [docs/chrome-web-store.md](docs/chrome-web-store.md).
+5. Upload the validated package to the Chrome Web Store.
 
 Fresh installations see the welcome guide. Existing installations see release notes once after an extension update.
 

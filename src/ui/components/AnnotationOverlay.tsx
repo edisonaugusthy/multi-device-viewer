@@ -21,6 +21,7 @@ interface CaptureMeta {
   title: string;
   url: string;
   devices: string[];
+  includeBanner?: boolean;
 }
 
 const COLORS = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#a855f7", "#111827", "#ffffff"];
@@ -258,7 +259,7 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
   // ── Export ────────────────────────────────────────────────────────────────
   function exportPng(): string {
     const source = canvasRef.current!;
-    if (!meta) return source.toDataURL("image/png");
+    if (!meta || meta.includeBanner === false) return source.toDataURL("image/png");
 
     const headerH = 112;
     const pad = 28;

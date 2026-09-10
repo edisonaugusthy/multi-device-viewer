@@ -10,7 +10,7 @@ async(page)=>{
    localStorage.setItem('mdvSimulatorSession',JSON.stringify({slots:selected.map((d,i)=>({id:'audit-'+i,deviceId:d.id,url,orientation:'portrait',zoom:.58,zoomMode:'fit',reloadToken:0,showFrame:true})),activeSlotId:'audit-0',display:{scrollSync:false,navigationSync:false,darkMode:false,previewStyle:'device'}}));
   },{selected,url});
   await page.goto(app);
-  await page.waitForFunction(n=>{const frames=[...document.querySelectorAll('[data-preview-slot-id] iframe')];return frames.length===n&&frames.every(f=>f.style.backgroundColor==='rgb(255, 255, 255)'&&f.contentDocument?.querySelector('header'));},selected.length);
+  await page.waitForFunction(n=>{const frames=[...document.querySelectorAll('[data-preview-slot-id] iframe')];return frames.length===n&&frames.every(f=>f.style.backgroundColor==='rgb(255, 255, 255)'&&f.contentDocument?.querySelector('header')&&f.closest('[data-preview-slot-id]').querySelectorAll('[data-preview-edge]').length===2);},selected.length);
   const skip=page.getByRole('button',{name:'Skip feature tour'});if(await skip.isVisible())await skip.click();
   const tools=page.getByRole('button',{name:'Close workspace setup',exact:true});if(await tools.isVisible())await tools.click();
   for(const zoom of ['fit','smaller']){

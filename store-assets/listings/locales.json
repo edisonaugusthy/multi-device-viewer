@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updated": "2026-09-07",
+  "updated": "2026-09-10",
   "copyPolicy": "Original Mobile View copy. Equivalent feature coverage; native-language review is recommended before publication.",
   "locales": [
     {
@@ -11,7 +11,7 @@
       "summary": "Mobile simulator and multi-device viewer for responsive testing. Sync phone, tablet and desktop previews; capture screenshots.",
       "description": "Check how your website adapts to phone, tablet, laptop and desktop layouts without repeatedly resizing your browser. Mobile View gives you a mobile preview and up to four device views side by side, with tools to inspect differences and explain the fix.\n\nUse this free, open-source device emulator and responsive design tester to:\n\n- Compare layouts across device presets or custom viewport sizes. Switch portrait and landscape, adjust zoom and focus on a single view.\n- Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different breakpoints.\n- Save useful device sets and favorites for repeat checks during frontend development and design review.\n- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to show what needs attention.\n- Compare the live website with a local design reference, side by side or as an overlay.\n- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.\n\nOpen a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.\n\nNo Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.\n\nThese are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.",
       "screenshotCaptions": [
-        "Test mobile, tablet and desktop side by side",
+        "New devices. One responsive workspace.",
         "Scroll once. Compare every view.",
         "Show the issue. Share a clear fix."
       ],
@@ -28,7 +28,7 @@
       "summary": "Mobiler Simulator für responsive Tests: Smartphone, Tablet und Desktop vergleichen, Scrollen synchronisieren und Screenshots machen.",
       "description": "Mobile View ist ein kostenloser Open-Source-Geräte-Emulator und Responsive-Tester für Chrome. Zeige eine Website in bis zu vier Smartphone-, Tablet-, Laptop- und Desktop-Ansichten nebeneinander an, ohne ständig die Fenstergröße zu ändern oder zwischen DevTools-Vorgaben zu wechseln.\n\n- Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.\n- Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.\n- Speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.\n- Erfasse eine Ansicht oder den gesamten Arbeitsbereich und ergänze Stift, Rahmen, Pfeile, Text oder Zuschnitt.\n- Vergleiche einen lokalen Entwurf neben oder über der Live-Website und markiere Feedback ohne Upload.\n- Kopiere einen strukturierten Prompt zur Behebung responsiver Fehler mit URL, Geräten, Viewport-Größen und optionalen Problemdetails.\n\nAlles läuft lokal im Browser. Kein Konto, Abonnement, Analyse-, Telemetrie- oder Anwendungs-Backend ist erforderlich. URLs, Screenshots, Aufnahmen, Entwürfe, Anmerkungen und Einstellungen werden nicht an ein Backend gesendet.\n\nDies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emulation. Anmelde- und Einbettungsregeln der Websites gelten weiter. Die Originalseite bleibt erhalten; neue Vorschauen übernehmen keine ungespeicherten Änderungen.",
       "screenshotCaptions": [
-        "Smartphone, Tablet und Desktop nebeneinander testen",
+        "Neue Geräte. Ein Workspace für responsive Tests.",
         "Einmal scrollen. Alle Ansichten vergleichen.",
         "Problem zeigen. Lösung verständlich machen."
       ],
@@ -45,7 +45,7 @@
       "summary": "Simulador móvil y visor multidispositivo para pruebas responsive. Compara vistas, sincroniza el desplazamiento y captura pantallas.",
       "description": "Mobile View es un emulador de dispositivos y probador responsive gratuito y de código abierto para Chrome. Previsualiza un sitio web en hasta cuatro vistas de teléfono, tablet, portátil y escritorio a la vez, sin redimensionar ventanas ni cambiar continuamente los ajustes de DevTools.\n\n- Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.\n- Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.\n- Guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.\n- Captura una vista o todo el espacio de trabajo y añade trazos, cuadros, flechas, texto o recortes.\n- Compara un diseño local junto a la web activa o superpuesto sobre ella y marca comentarios sin subirlo.\n- Copia a tu herramienta de programación un prompt estructurado con la URL, dispositivos, tamaños y detalles opcionales del problema.\n\nTodo funciona localmente en el navegador. No requiere cuenta, suscripción, analítica, telemetría ni backend. Las URL, capturas, grabaciones, diseños, anotaciones y ajustes no se envían a ningún servidor.\n\nSon vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari. Siguen vigentes las reglas de acceso e integración de cada sitio. La página original se conserva; las nuevas vistas no copian cambios sin guardar.",
       "screenshotCaptions": [
-        "Prueba móvil, tablet y escritorio en paralelo",
+        "Nuevos dispositivos. Un espacio para probar tu web.",
         "Desplázate una vez. Compara todas las vistas.",
         "Muestra el problema. Comparte una solución clara."
       ],
@@ -62,7 +62,7 @@
       "summary": "Simulateur mobile pour tests responsive. Comparez téléphone, tablette et bureau, synchronisez le défilement et capturez les vues.",
       "description": "Mobile View est un émulateur d’appareils et un outil de test responsive gratuit et open source pour Chrome. Prévisualisez un site dans jusqu’à quatre vues téléphone, tablette, ordinateur portable et bureau côte à côte, sans redimensionner sans cesse la fenêtre ni changer de préréglage DevTools.\n\n- Choisissez des appareils réalistes, modifiez l’orientation et le zoom, rechargez une vue ou créez des dimensions personnalisées.\n- Synchronisez le défilement, les interactions prises en charge et la navigation entre les aperçus correspondants.\n- Enregistrez des ensembles, favoris et appareils récents, ou concentrez-vous sur une seule vue.\n- Capturez une vue ou tout l’espace de travail, puis ajoutez tracés, cadres, flèches, texte et recadrage.\n- Comparez une maquette locale à côté ou au-dessus du site et annotez-la sans l’envoyer.\n- Copiez vers votre outil de développement un prompt structuré contenant URL, appareils, dimensions et détails facultatifs du problème.\n\nTout fonctionne localement dans le navigateur. Aucun compte, abonnement, service d’analyse, télémétrie ou backend n’est requis. Les URL, captures, enregistrements, maquettes, annotations et réglages ne sont envoyés à aucun serveur.\n\nCes aperçus responsive utilisent Chrome, pas des appareils physiques ni le moteur Safari. Les règles de connexion et d’intégration des sites restent applicables. La page d’origine est préservée ; les nouveaux aperçus ne copient pas les modifications non enregistrées.",
       "screenshotCaptions": [
-        "Testez mobile, tablette et bureau côte à côte",
+        "Nouveaux appareils. Un espace pour tester votre site.",
         "Faites défiler. Comparez toutes les vues.",
         "Montrez le problème. Expliquez la correction."
       ],
@@ -79,7 +79,7 @@
       "summary": "移动模拟器与多设备查看器：并排测试手机、平板和桌面响应式布局，同步滚动，截图并标注问题。",
       "description": "Mobile View 是一款免费、开源的 Chrome 设备模拟器与响应式测试工具。无需反复调整窗口或切换 DevTools 预设，即可并排预览最多四个手机、平板电脑、笔记本和桌面视图。\n\n- 选择真实设备，切换方向与缩放，单独刷新预览，或创建自定义视口尺寸。\n- 在匹配的预览之间同步滚动、受支持的交互和页面导航。\n- 保存设备组合、收藏和最近使用的设备，也可聚焦单个视口进行细致检查。\n- 截取单个视口或整个工作区，并使用画笔、方框、箭头、文字和裁剪工具标注。\n- 将本地设计稿放在实时网站旁边或叠加显示，无需上传即可标记反馈。\n- 将包含网址、设备、视口尺寸和可选问题说明的结构化修复提示复制到编程工具。\n\n所有功能均在浏览器本地运行，无需账户、订阅、分析、遥测或应用后端。网址、截图、录屏、设计稿、标注和设置都不会发送到后端。\n\n这些是使用 Chrome 的响应式视口预览，并非真机或 Safari 引擎模拟。网站的登录和嵌入规则仍适用。原始页面保持不变；新预览不会复制未保存的编辑。",
       "screenshotCaptions": [
-        "并排测试手机、平板和桌面布局",
+        "新设备，同一个响应式测试工作区。",
         "滚动一次，对比所有视图。",
         "标出问题，清楚说明修改方向。"
       ],
@@ -164,7 +164,7 @@
       "summary": "Simulador móvel para testes responsivos. Compare celular, tablet e desktop, sincronize a rolagem e capture telas.",
       "description": "O Mobile View é um emulador de dispositivos e testador responsivo gratuito e de código aberto para Chrome. Visualize um site em até quatro telas de celular, tablet, notebook e desktop lado a lado, sem redimensionar janelas ou alternar continuamente entre predefinições do DevTools.\n\n- Escolha dispositivos realistas, altere orientação e zoom, recarregue uma visualização ou crie tamanhos personalizados.\n- Sincronize rolagem, interações compatíveis e navegação entre visualizações correspondentes.\n- Salve conjuntos, favoritos e dispositivos recentes ou foque em uma tela para revisão detalhada.\n- Capture uma tela ou todo o espaço de trabalho e use caneta, caixa, seta, texto e recorte.\n- Compare um design local ao lado ou sobre o site ativo e marque comentários sem fazer upload.\n- Copie para sua ferramenta de programação um prompt estruturado com URL, dispositivos, tamanhos e detalhes opcionais do problema.\n\nTudo funciona localmente no navegador. Não exige conta, assinatura, análise, telemetria ou backend. URLs, capturas, gravações, designs, anotações e configurações não são enviados a um servidor.\n\nSão prévias responsivas no Chrome, não dispositivos físicos nem o motor do Safari. As regras de login e incorporação dos sites continuam valendo. A página original é preservada; novas prévias não copiam alterações não salvas.",
       "screenshotCaptions": [
-        "Teste celular, tablet e desktop lado a lado",
+        "Novos dispositivos. Um só espaço para testar seu site.",
         "Role uma vez. Compare todas as vistas.",
         "Mostre o problema. Explique a correção."
       ],
@@ -198,7 +198,7 @@
       "summary": "スマホ・タブレット・PC表示を並べてレスポンシブテスト。モバイルシミュレーターでスクロールを同期し、スクリーンショットに問題点を残せます。",
       "description": "Mobile View は Chrome 向けの無料・オープンソースのデバイスエミュレーター兼レスポンシブテストツールです。ウィンドウサイズや DevTools のプリセットを何度も切り替えずに、スマホ、タブレット、ノートPC、デスクトップの表示を最大4つ並べて確認できます。\n\n- 実在デバイスのプロファイルを選び、向きやズームを変更し、個別に再読み込みしたり独自のビューポートを作成できます。\n- 対応するプレビュー間でスクロール、サポートされる操作、ナビゲーションを同期できます。\n- デバイスセット、お気に入り、最近使った端末を保存し、1つの表示に集中することもできます。\n- 単一の表示またはワークスペース全体をキャプチャし、ペン、枠、矢印、文字、切り抜きで注釈できます。\n- ローカルのデザインをライブサイトの横または上に重ね、アップロードせずにフィードバックを記録できます。\n- URL、端末、表示サイズ、任意の問題説明を含む修正プロンプトを開発ツールへコピーできます。\n\nすべてブラウザ内でローカルに動作します。アカウント、サブスクリプション、分析、テレメトリ、アプリ用バックエンドは不要です。URL、画像、録画、デザイン、注釈、設定がバックエンドへ送信されることはありません。\n\nこれはChromeによるレスポンシブなビューポートのプレビューであり、実機やSafariエンジンのエミュレーションではありません。サイトのログインや埋め込み制限は引き続き適用されます。元のページは保持されますが、新しいプレビューには未保存の編集はコピーされません。",
       "screenshotCaptions": [
-        "スマホ・タブレット・PCを並べてテスト",
+        "新しいデバイスを、ひとつのワークスペースで。",
         "一度のスクロールで、すべての表示を比較。",
         "問題を示して、修正をわかりやすく。"
       ],
@@ -215,7 +215,7 @@
       "summary": "모바일 시뮬레이터로 반응형 웹을 테스트하세요. 휴대폰, 태블릿, 데스크톱을 나란히 비교하고 스크롤을 동기화하며 스크린샷에 주석을 남기세요.",
       "description": "Mobile View는 Chrome용 무료 오픈 소스 기기 에뮬레이터이자 반응형 테스트 도구입니다. 창 크기나 DevTools 프리셋을 반복해서 바꾸지 않고 휴대폰, 태블릿, 노트북, 데스크톱 화면을 최대 4개까지 나란히 미리 볼 수 있습니다.\n\n- 실제 기기 프로필을 선택하고 방향과 확대/축소를 변경하거나 개별 화면을 새로고침하고 사용자 지정 뷰포트를 만드세요.\n- 일치하는 미리보기 사이에서 스크롤, 지원되는 상호작용 및 탐색을 동기화하세요.\n- 기기 세트, 즐겨찾기, 최근 기기를 저장하거나 하나의 뷰포트에 집중하세요.\n- 한 화면 또는 전체 작업 공간을 캡처하고 펜, 상자, 화살표, 텍스트 및 자르기로 주석을 추가하세요.\n- 로컬 디자인을 실시간 웹사이트 옆이나 위에 겹쳐 비교하고 업로드 없이 피드백을 표시하세요.\n- URL, 기기, 뷰포트 크기와 선택적 문제 설명이 포함된 구조화된 수정 프롬프트를 코딩 도구로 복사하세요.\n\n모든 기능은 브라우저에서 로컬로 실행됩니다. 계정, 구독, 분석, 원격 측정 또는 앱 백엔드가 필요 없습니다. URL, 스크린샷, 녹화, 디자인, 주석 및 설정은 백엔드로 전송되지 않습니다.\n\n이 기능은 Chrome의 반응형 뷰포트 미리보기이며 실제 기기나 Safari 엔진 에뮬레이션이 아닙니다. 사이트의 로그인 및 삽입 규칙은 계속 적용됩니다. 원래 페이지는 유지되지만 새 미리보기에는 저장하지 않은 편집 내용이 복사되지 않습니다.",
       "screenshotCaptions": [
-        "모바일, 태블릿, 데스크톱을 나란히 테스트",
+        "새로운 기기를 하나의 작업 공간에서.",
         "한 번 스크롤로 모든 뷰를 비교하세요.",
         "문제를 보여 주고 수정 방향을 명확하게."
       ],

@@ -3,6 +3,113 @@ import { getDeviceChromeMeta, getMockupAssets, localMockupCatalog } from "./mock
 import { displayReferences } from "./display-references";
 
 const curatedDevices: Device[] = [
+  // Apple panel specifications; logical screens use provisional @3x sizing.
+{
+  "id": "apple-iphone-18-pro-2026",
+  "name": "Apple iPhone 18 Pro",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 402,
+    "height": 874
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 1206,
+    "height": 2622
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-18-pro/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-18-pro-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new"
+  ]
+},
+{
+  "id": "apple-iphone-18-pro-max-2026",
+  "name": "Apple iPhone 18 Pro Max",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 440,
+    "height": 956
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 1320,
+    "height": 2868
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-18-pro/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-18-pro-max-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new"
+  ]
+},
+{
+  "id": "apple-iphone-duo-folded-2026",
+  "name": "Apple iPhone Duo (folded)",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 466,
+    "height": 678
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 1398,
+    "height": 2034
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-duo/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-duo-folded-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new",
+    "foldable"
+  ]
+},
+{
+  "id": "apple-iphone-duo-unfolded-2026",
+  "name": "Apple iPhone Duo (unfolded)",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 890,
+    "height": 626
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 2670,
+    "height": 1878
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-duo/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-duo-unfolded-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new",
+    "foldable"
+  ]
+},
   {
     id: "apple-iphone-14-pro-max-2022",
     name: "Apple iPhone 14 Pro Max",
@@ -292,7 +399,7 @@ const curatedDevices: Device[] = [
     manufacturerResolution: { width: resolutionWidth as number, height: resolutionHeight as number },
     mockupAssets: getMockupAssets(id as string),
     updatedAt: "2026-08-14",
-    tags: ["android", "new", ...(String(id).includes("fold") ? ["foldable"] : [])],
+    tags: ["android", ...(String(id).includes("fold") ? ["foldable"] : [])],
   })),
   {
     id: "google-pixel-6-pro",
@@ -569,22 +676,22 @@ export const devices: Device[] = dedupeDevices([
 }));
 
 export const defaultDeviceIds = [
-  "apple-iphone-17-pro-2025",
+  "apple-iphone-18-pro-2026",
   "apple-ipad-pro-13-m4-2024",
   "apple-macbook-pro-14-m5-2025",
 ];
 
 export const quickDevicePresetIds = {
   phoneTablet: [
-    "apple-iphone-17-pro-2025",
+    "apple-iphone-18-pro-2026",
     "apple-ipad-pro-13-m4-2024",
   ],
   iosAndroid: [
-    "apple-iphone-17-pro-2025",
+    "apple-iphone-18-pro-2026",
     "samsung-galaxy-s26-ultra-2026",
   ],
   mobileTabletLaptop: [
-    "apple-iphone-17-pro-2025",
+    "apple-iphone-18-pro-2026",
     "apple-ipad-pro-13-m4-2024",
     "apple-macbook-pro-14-m5-2025",
   ],
@@ -750,11 +857,11 @@ function yearFromId(id: string) {
 
 function tagsFromId(id: string, type: Device["type"], os: string) {
   const latestCatalogIds = new Set([
-    "google-pixel-11-2026",
-    "google-pixel-11-pro-2026",
-    "google-pixel-11-pro-xl-2026",
-    "google-pixel-11-pro-fold-2026",
-  ]);
+    "apple-iphone-18-pro-2026",
+    "apple-iphone-18-pro-max-2026",
+    "apple-iphone-duo-folded-2026",
+    "apple-iphone-duo-unfolded-2026"
+]);
   return [
     type,
     os.toLowerCase(),

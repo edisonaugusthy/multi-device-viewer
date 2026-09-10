@@ -10,6 +10,18 @@ A local fixture now reproduces the actual issue: saturated stripes scroll behind
 
 The strips cover two to three physical pixel rows at the page edge. Decoration in those outermost rows may be covered; this is a presentation guard, not a change to Safari geometry or website CSS. Browser controls and page interactions retain their positions.
 
+## iPhone 18 follow-up, September 10, 2026
+
+The neutral-chrome change initially bypassed `PreviewSurface` for iPhone 18 Pro, Pro Max, and both Duo postures. That removed the blue browser tint but also removed the existing sticky-header seam protection. The scrolling-stripe fixture reproduced 17 colored boundary samples in 32 standard-density cases before this correction.
+
+These devices now seal only opaque, full-width sticky/fixed page headers and footers. The bridge identifies the pinned surface separately from ordinary scrolling content, and `PreviewSurface` refreshes its pixel alignment when those colors arrive. Safari/status surfaces retain their neutral colors; a blue post scrolling to the edge does not create a blue guard strip. Free view remains unguarded.
+
+Validation: 96 device/orientation/zoom/scroll cases passed the boundary pixel check: 32 standard-density light, 32 Retina light, and 32 Retina dark. Header input and button interactions, guard recovery after a header becomes sticky again, and an unpinned blue-content case also passed. These use the local production UI and preview bridge, not physical Safari.
+
+Device screenshots now use the dedicated device capture bounds, round both edges at the captured pixel density, and omit the annotation export's extra metadata banner. Eight PNG exports (four devices at two densities) retained the canvas pixels and exact crop dimensions. Browser screenshots supplied the pixels for this transport-level test; it does not establish native `activeTab` capture permission behavior. iPhone 18 Pro is the mobile preset for fresh startup, adding a device, and the quick device sets.
+
+Evidence: `output/playwright/iphone18-finish/`. TypeScript and 343 unit tests passed.
+
 ## Verified September 7, 2026
 
 - Retina Chromium: all 33 iPhone and six iPad presets, fit/reduced zoom and scroll positions 0/130: **156 sticky-header cases passed**, with no colored content in the sampled header boundary.
@@ -59,4 +71,4 @@ Reproducer and pixel checker: `scripts/header-seam-audit/`. Evidence: `output/pl
 
 ## Loading the fix
 
-Reload the updated extension, then close and reopen the viewer. A viewer already mounted on a page can retain the previous content-script code until reopened. The latest Chrome and Firefox 0.2.5 packages contain the shared fix.
+Reload the updated extension, then close and reopen the viewer. A viewer already mounted on a page can retain the previous content-script code until reopened. The latest Chrome 0.2.5 packages contain the shared fix.

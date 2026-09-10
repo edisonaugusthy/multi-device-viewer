@@ -85,6 +85,8 @@ export interface BrowserSurfaceColors {
   bottom: string;
   topIsDark: boolean;
   bottomIsDark: boolean;
+  topGuardColor?: string;
+  bottomGuardColor?: string;
   viewportFit?: "auto" | "cover";
 }
 
@@ -138,10 +140,6 @@ export function DeviceFrame({
   const innerP = profile.style.innerPadding ?? 0;
   const contentR = profile.style.contentRadius ?? profile.contentRadius;
   const chromeCollapse = clamp(scrollProgress, 0, 1);
-  const topSurfaceColor = pageSurfaces?.top ?? "#ffffff";
-  const bottomSurfaceColor = pageSurfaces?.bottom ?? "#ffffff";
-  const topSurfaceDark = pageSurfaces?.topIsDark ?? false;
-  const bottomSurfaceDark = pageSurfaces?.bottomIsDark ?? false;
   const iosTopSurfaceOverlap = getIosTopSurfaceOverlap(profile.chromeVariant, device.id);
   const keyboardPlatform = profile.platform === "ios" ? "ios" : "android";
   const mobileKeyboardHeight = keyboard && (device.type === "phone" || device.type === "tablet")
@@ -151,9 +149,16 @@ export function DeviceFrame({
   const browserGeometry = getBrowserGeometry(device, viewportSize, browserPreferences, {
     collapsed: chromeCollapse, keyboardHeight: mobileKeyboardHeight, showStatusBar, showUrlBar, viewportFit: pageSurfaces?.viewportFit,
   });
-  const safariChrome = showUrlBar && profile.platform === "ios" ? <SafariChrome
+  // Keep the new Apple browser chrome neutral. Scrolling past a colored post
+  // must not paint that color across the device's status/header area.
+  const neutralColor = darkMode ? "#1c1c1e" : "#ffffff";
+  const topSurfaceColor = browserGeometry.neutralChrome ? neutralColor : pageSurfaces?.top ?? "#ffffff";
+  const bottomSurfaceColor = browserGeometry.neutralChrome ? neutralColor : pageSurfaces?.bottom ?? "#ffffff";
+  const topSurfaceDark = browserGeometry.neutralChrome ? darkMode : pageSurfaces?.topIsDark ?? false;
+  const bottomSurfaceDark = browserGeometry.neutralChrome ? darkMode : pageSurfaces?.bottomIsDark ?? false;
+  const safariChrome = (showUrlBar || (browserGeometry.duoControls && showStatusBar)) && profile.platform === "ios" ? <SafariChrome
     geometry={browserGeometry} hostname={hostname} dark={bottomSurfaceDark} keyboard={Boolean(keyboard)}
-    topColor={topSurfaceColor} bottomColor={bottomSurfaceColor} topDark={topSurfaceDark}
+    topColor={topSurfaceColor} bottomColor={bottomSurfaceColor} topDark={topSurfaceDark} showBattery={showBattery}
   /> : null;
 
   const bottomH = showUrlBar ? getBottomHeight(profile.platform, compact) : 0;
@@ -334,7 +339,7 @@ export function DeviceFrame({
               aria-hidden
               data-ios-top-surface={device.id}
               className="pointer-events-none absolute inset-x-0 top-0"
-              style={{ height: screenFit.contentTop + (imageStatusH + iosTopSurfaceOverlap) * screenFit.scaleY, backgroundColor: topSurfaceColor }}
+              style={{ height: screenFit.contentTop + (Math.min(imageStatusH, browserGeometry.top) + iosTopSurfaceOverlap) * screenFit.scaleY, backgroundColor: topSurfaceColor }}
             />}
             <div
               style={{
@@ -369,7 +374,7 @@ export function DeviceFrame({
                       )}
                     </>
                   )}
-                  {mobileChrome.showStatusBar && showStatusBar && imageStatusH > 0 && (
+                  {!browserGeometry.duoControls && mobileChrome.showStatusBar && showStatusBar && imageStatusH > 0 && (
                     <StatusBar
                       platform={profile.platform}
                       showBattery={showBattery}
@@ -380,6 +385,7 @@ export function DeviceFrame({
                       chromeVariant={browserGeometry.variant}
                       timeInsetLeft={profile.statusBarInsetLeft}
                       indicatorInsetRight={landscape ? 0 : profile.statusBarInsetRight}
+                      cameraWidth={browserGeometry.statusCameraWidth}
                     />
                   )}
                   {mobileChrome.showAndroidTopBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={topSurfaceDark} top topOffset={imageStatusH} scrollProgress={chromeCollapse} />}
@@ -529,7 +535,7 @@ export function DeviceFrame({
             className={`relative overflow-hidden ${darkMode ? "bg-[#0f172a]" : "bg-white"}`}
             style={{ borderRadius: landscape ? Math.max(10, contentR - 6) : contentR, width: viewportSize.width, height: screenH }}
           >
-            {showStatusBar && browserGeometry.status > 0 && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={isIos ? topSurfaceDark : darkMode} chromeVariant={browserGeometry.variant} height={browserGeometry.status} surfaceOverlay={isIos} />}
+            {!browserGeometry.duoControls && showStatusBar && browserGeometry.status > 0 && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={isIos ? topSurfaceDark : darkMode} chromeVariant={browserGeometry.variant} height={browserGeometry.status} surfaceOverlay={isIos} />}
             {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={topSurfaceDark} top topOffset={browserGeometry.status} scrollProgress={chromeCollapse} />}
             <div
               style={{
@@ -586,7 +592,7 @@ export function DeviceFrame({
               {contentBottomH > 0 && <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-0" style={{ height: contentBottomH, backgroundColor: bottomSurfaceColor }} />}
             </>
           )}
-          {showStatusBar && browserGeometry.status > 0 && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={isIos ? topSurfaceDark : darkMode} chromeVariant={browserGeometry.variant} height={browserGeometry.status} surfaceOverlay={isIos} />}
+          {!browserGeometry.duoControls && showStatusBar && browserGeometry.status > 0 && <StatusBar platform={profile.platform} showBattery={showBattery} compact={compact} dark={isIos ? topSurfaceDark : darkMode} chromeVariant={browserGeometry.variant} height={browserGeometry.status} surfaceOverlay={isIos} />}
           {showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={topSurfaceDark} top topOffset={browserGeometry.status} scrollProgress={chromeCollapse} />}
           <div
             style={{
@@ -1227,6 +1233,7 @@ function StatusBar({
   timeInsetLeft = 0,
   indicatorInsetRight = 0,
   surfaceOverlay = false,
+  cameraWidth,
 }: {
   platform: string;
   showBattery: boolean;
@@ -1238,6 +1245,7 @@ function StatusBar({
   timeInsetLeft?: number;
   indicatorInsetRight?: number;
   surfaceOverlay?: boolean;
+  cameraWidth?: number;
 }) {
   const { t } = useI18n();
   const time = "9:41";
@@ -1295,6 +1303,12 @@ function StatusBar({
   }
 
   if (iosSurfacePhone) {
+    if (cameraWidth) return <div aria-hidden data-browser-control="status" data-ios-status-layout="island"
+      className={`pointer-events-none absolute inset-x-0 top-0 z-20 grid items-center text-[15px] font-semibold leading-none ${dark ? "text-white" : "text-slate-950"}`}
+      style={{ height: h, gridTemplateColumns: `minmax(0, 1fr) ${cameraWidth}px minmax(0, 1fr)`, padding: "6px 16px 0" }}>
+      <span data-status-clock className="justify-self-center">{time}</span>
+      <span data-status-indicators className="flex items-center justify-center gap-[5px]" style={{ gridColumn: 3 }}><SignalIcon/><WifiIcon/>{showBattery && <BatteryIcon/>}</span>
+    </div>;
     // The time sits to the LEFT of the notch/island and the indicators to the RIGHT,
     // both vertically centered on the island band (roughly the lower half of the safe area).
     const islandBand = Math.min(h, 44);
@@ -1303,7 +1317,7 @@ function StatusBar({
         className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-end bg-transparent font-semibold ${dark ? "text-white" : "text-slate-950"}`}
         style={{ height: h }}
       >
-        <div className="flex w-full items-center" style={{ height: islandBand }}>
+        <div className="flex w-full items-center" style={{ height: islandBand, paddingLeft: timeInsetLeft, paddingRight: indicatorInsetRight }}>
           <span className="flex h-full flex-1 items-center justify-center pr-[28%] text-[15px] leading-none tracking-tight">{time}</span>
           <span className="flex h-full flex-1 items-center justify-center gap-[5px] pl-[28%]">
             <SignalIcon />

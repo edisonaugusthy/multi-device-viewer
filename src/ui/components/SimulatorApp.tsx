@@ -40,7 +40,6 @@ import {
   type VersionReleaseNotes,
 } from "../../app/release-notes";
 import {
-  LOCAL_RECORDING_COMPLETE_EVENT,
   captureTabWithOverlay,
   startTabRecording,
   stopTabRecording,
@@ -106,6 +105,7 @@ export function SimulatorApp() {
     title: string;
     url: string;
     devices: string[];
+    includeBanner?: boolean;
   }>();
   const [capturing, setCapturing] = useState(false);
   const [capturingSlotId, setCapturingSlotId] = useState<string | undefined>();
@@ -166,7 +166,7 @@ export function SimulatorApp() {
     import.meta.env.DEV &&
     new URLSearchParams(window.location.search).has("reviewPromptPreview");
   const reviewPrompt = useReviewPrompt({
-    enabled: !import.meta.env.FIREFOX && !standalonePreview,
+    enabled: !standalonePreview,
     hasMultipleViewports: slots.length >= 2,
     canPresent:
       !viewOnly &&
@@ -329,16 +329,6 @@ export function SimulatorApp() {
   }, [useCount]);
 
   useEffect(() => {
-    if (showFirstRun) setSidebarOpen(true);
-  }, [showFirstRun]);
-
-  useEffect(() => {
-    const finishLocalRecording = () => setRecording(false);
-    window.addEventListener(LOCAL_RECORDING_COMPLETE_EVENT, finishLocalRecording);
-    return () => window.removeEventListener(LOCAL_RECORDING_COMPLETE_EVENT, finishLocalRecording);
-  }, []);
-
-  useEffect(() => {
     if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
     const listener = (message: unknown) => {
       if (
@@ -400,6 +390,7 @@ export function SimulatorApp() {
     setCapturing(true);
     setCapturingSlotId(slotId);
     setCaptureError(null);
+    setSidebarOpen(false);
     try {
       const capture = await captureTabWithOverlay(sourceTabId);
       if (!capture.dataUrl) {
@@ -412,13 +403,17 @@ export function SimulatorApp() {
             .find((element) => element.dataset.previewSlotId === slotId)
         : undefined;
       const target = slotId
-        ? card?.querySelector<HTMLElement>("[data-device-frame]") ?? card
+        ? card?.querySelector<HTMLElement>("[data-device-capture]")
         : getViewerRoot().querySelector<HTMLElement>("[data-capture-board]");
-      const cropped = target ? await cropScreenshotToElement(capture.dataUrl, target) : capture.dataUrl;
+      if (!target) throw new Error(t("noScreenshot"));
+      const cropped = await cropScreenshotToElement(capture.dataUrl, target);
       setAnnotationImage(cropped);
       setAnnotationMeta(captureMetaForSlot(slotId));
       setAnnotationOpen(true);
       reviewPrompt.noteSuccessfulAction();
+    } catch (error) {
+      setCaptureError(error instanceof Error ? error.message : t("noScreenshot"));
+      window.setTimeout(() => setCaptureError(null), 4000);
     } finally {
       setCapturing(false);
       setCapturingSlotId(undefined);
@@ -541,6 +536,7 @@ export function SimulatorApp() {
       title: `${PRODUCT_SHORT_NAME} · ${device.name}`,
       url: slot.url,
       devices: [`${device.name} (${width}x${height})`],
+      includeBanner: false,
     };
   }
 
@@ -989,7 +985,7 @@ export function SimulatorApp() {
       )}
       {showPermissions && <PermissionsInfoModal dark={dark} onClose={() => setShowPermissions(false)} />}
       {showHelp && <HelpModal dark={dark} review={reviewPrompt} onClose={() => setShowHelp(false)} />}
-      {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
+      {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} toolsOpen={sidebarOpen} compact={narrowLayout} onToolsOpenChange={setSidebarOpen} />}
       {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
       {(reviewPrompt.visible || reviewPromptPreview) && (
         <ReviewPromptModal
@@ -1084,11 +1080,13 @@ async function cropScreenshotToElement(dataUrl: string, element: HTMLElement): P
   const rect = element.getBoundingClientRect();
   const scaleX = image.naturalWidth / window.innerWidth;
   const scaleY = image.naturalHeight / window.innerHeight;
-  const sourceX = Math.max(0, Math.round(rect.left * scaleX));
-  const sourceY = Math.max(0, Math.round(rect.top * scaleY));
-  const sourceWidth = Math.min(image.naturalWidth - sourceX, Math.round(rect.width * scaleX));
-  const sourceHeight = Math.min(image.naturalHeight - sourceY, Math.round(rect.height * scaleY));
-  if (sourceWidth <= 0 || sourceHeight <= 0) return dataUrl;
+  // Preserve every boundary pixel of the scaled device; derive size from both
+  // edges so fractional placement cannot add or drop a bottom/right row.
+  const sourceX = Math.max(0, Math.floor(rect.left * scaleX));
+  const sourceY = Math.max(0, Math.floor(rect.top * scaleY));
+  const sourceWidth = Math.min(image.naturalWidth, Math.ceil(rect.right * scaleX)) - sourceX;
+  const sourceHeight = Math.min(image.naturalHeight, Math.ceil(rect.bottom * scaleY)) - sourceY;
+  if (sourceWidth <= 0 || sourceHeight <= 0) throw new Error("The device is outside the visible area. Zoom out and try again.");
   const canvas = document.createElement("canvas");
   canvas.width = sourceWidth;
   canvas.height = sourceHeight;

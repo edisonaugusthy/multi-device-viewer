@@ -10,7 +10,7 @@ Implemented locally for Mobile View 0.2.5 on 7 September 2026. Toolbar positions
 - READY and iframe load both restore the latest enabled settings. This covers late bridge injection, reloads and new viewports; no off/on retoggle is required. A new document requests a targeted scroll-position snapshot from another viewport.
 - Observed URLs are tracked without changing iframe src or recreating live documents. Added and duplicated viewports, device presets, individual reloads and Reload all use the current page URL instead of the original launch URL.
 - Root and nested scroll containers are queued independently, so two containers moving in the same animation frame both reach peers. Scrolling remains based on equal CSS-pixel movement, with an absolute snapshot when joining sync.
-- Actual applied positions suppress scroll echoes. The previous 120 ms global suppression timer is removed, so another viewport can immediately become the source. Fractional remote destinations are retained across follower-to-source transitions to avoid cumulative rounding drift at Firefox's scaled viewport boundaries.
+- Actual applied positions suppress scroll echoes. The previous 120 ms global suppression timer is removed, so another viewport can immediately become the source. Fractional remote destinations are retained across follower-to-source transitions to avoid cumulative rounding drift at scaled viewport boundaries.
 - Layout clamping at a resized container's boundary is not rebroadcast as user movement. Horizontal scrolling includes RTL containers. Missing or invalid selectors are ignored; they do not scroll an unrelated container.
 - Disabled bridges reject incoming scroll commands, and disabled scroll events keep their baselines current. Enabling does not resample away the first user movement. Different page URLs do not exchange scroll commands.
 - Forwarded interaction commands retain their command type. Links are owned by navigation sync rather than also being replayed as clicks, preventing duplicate link loads when both switches are enabled. Modified link clicks are not copied into other viewports.
@@ -21,9 +21,9 @@ The production bridge is in `src/app/preview-bridge.ts`, imported by the extensi
 
 The reproducible browser audits are in `scripts/sync-audit/`. Evidence is saved under `output/playwright/sync-audit/`.
 
-All four audits passed in the installed Chrome extension and in Firefox with the production bridge. [Installed Chrome results](../output/playwright/sync-audit/installed-chrome.json) · [Firefox results](../output/playwright/sync-audit/firefox.json). TypeScript passed, all 316 unit tests passed, and the existing 38-test Chromium/Firefox regression suite passed.
+All four audits passed in the installed Chrome extension with the production bridge. [Installed Chrome results](../output/playwright/sync-audit/installed-chrome.json). TypeScript passed, all 316 unit tests passed, and the Chromium regression suite passed.
 
-Chrome and Firefox release ZIPs were rebuilt and passed package validation. Their closed shadow roots and existing permission boundaries were verified in the packaged content scripts and manifests.
+Chrome release ZIPs were rebuilt and passed package validation. Their closed shadow roots and existing permission boundaries were verified in the packaged content scripts and manifests.
 
 The audits cover:
 
@@ -43,5 +43,3 @@ This is browser-preview synchronization, not a clone of a website's JavaScript h
 The installed Chrome audit uses a separate QA copy with an open shadow root for automation. Release packages retain a closed shadow root and do not add debugger permissions or global static header rules.
 
 ## Full verification follow-up
-
-The 7 September full review additionally tested rapid source changes at a 4096 × 4096 Firefox workspace. Over 120 alternating moves, maximum inter-viewport spread fell from 2.80 CSS pixels to 0.89 CSS pixels after retaining fractional intent when a follower becomes the source. See [the complete verification report](full-verification-2026-09-07.md) for the current evidence and package results.

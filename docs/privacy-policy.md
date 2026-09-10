@@ -4,7 +4,7 @@ Last updated: September 7, 2026
 
 ## Summary
 
-Mobile View & Responsive Tester is a local-first Chrome and Firefox extension. It does not operate a backend and does not collect, sell, transfer, or share user data. It contains no analytics, telemetry, advertising trackers, remote logging, or behavioral tracking.
+Mobile View & Responsive Tester is a local-first Chrome extension. It does not operate a backend and does not collect, sell, transfer, or share user data. It contains no analytics, telemetry, advertising trackers, remote logging, or behavioral tracking.
 
 Websites, URLs, designs, screenshots, recordings, annotations, prompts, and preferences remain on the user's device unless the user explicitly copies, downloads, or shares an exported result through another application.
 
@@ -72,7 +72,7 @@ The viewer mounts in a closed shadow root on the existing source page. Same-site
 |---|---|
 | `activeTab` | Temporarily captures the visible workspace only after Screenshot and annotate is clicked. It does not grant persistent browsing access. |
 | `contextMenus` | Adds the local shortcut for opening the current page in Responsive Tester. |
-| `declarativeNetRequestWithHostAccess` (Chrome), `declarativeNetRequest` (Firefox) | Applies temporary rules for selected preview hosts in the viewer tab. |
+| `declarativeNetRequestWithHostAccess` | Applies temporary rules for selected preview hosts in the viewer tab. |
 | `downloads` | Saves screenshots and completed recordings after an explicit user action. |
 | `offscreen` | Runs Chrome's local recording pipeline in an offscreen extension document. |
 | `scripting` | Injects the packaged overlay script into a page that was already open when the extension was installed or reloaded. |

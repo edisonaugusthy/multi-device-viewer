@@ -14,7 +14,7 @@ The CSS display sizes remain 1032 × 1376 (iPad portrait), 1376 × 1032 (landsca
 - Every case checks that the logical display fills the screen and that browser-header and iframe widths/left edges match.
 - 72 screenshot edge samples pass at fit/reduced zoom in light UI. Dark chrome lacks sufficient contrast for this pixel check; enlarged previews can extend beyond the workspace, so their geometry is checked without claiming full edge visibility.
 - The prior sticky-header raster regression passes all 156 cases across 39 iPhones/iPads at DPR 2.
-- TypeScript and all 316 unit tests pass. Chrome and Firefox archives rebuilt and package validators run. Firefox visual rendering and physical Apple devices were not tested in this pass.
+- TypeScript and all 316 unit tests pass. Chrome archives rebuilt and package validators run. Physical Apple devices were not tested in this pass.
 
 Re-run `scripts/frame-fit-audit/check.js` through the Playwright CLI against `npm run dev:preview -- --host 127.0.0.1 --port 5174`. Save its result as JSON beside the screenshots under `output/playwright/frame-fit`. Run `scripts/frame-fit-audit/check-pixels.py` with those JSON paths using Python with Pillow.
 

@@ -1,7 +1,7 @@
 import type { Device, Size } from "./device.types";
 import { getFrameProfile, type ChromeVariant } from "./frame-profiles";
 
-export type SafariLayout = "compact" | "bottom" | "top" | "tabs" | "compact-tabs";
+export type SafariLayout = "compact" | "bottom" | "top" | "side" | "tabs" | "compact-tabs";
 export interface BrowserPreferences { version?: "catalog" | "ios26"; layout?: SafariLayout }
 export interface BrowserGeometry {
   family: "iphone" | "ipad" | "android" | "none";
@@ -20,6 +20,11 @@ export interface BrowserGeometry {
   content: Size;
   collapse: number;
   homeIndicator: boolean;
+  duoControls?: "top" | "side";
+  duoToolbarSide?: "left" | "right";
+  statusInsetRight?: number;
+  neutralChrome?: boolean;
+  statusCameraWidth?: number;
 }
 
 const legacyOnly = new Set(["apple-iphone-5", "apple-iphone-se-2018", "apple-iphone-x", "apple-iphone-xr"]);
@@ -42,6 +47,35 @@ export function getBrowserGeometry(device: Device, screen: Size, preferences: Br
   const family = ios ? device.type === "tablet" ? "ipad" : "iphone" : profile.platform === "android" && handheld ? "android" : "none";
   const modern = supportsIos26(device) && preferences.version !== "catalog";
   const variant = modern ? "ios-liquid-glass" : profile.chromeVariant;
+  const neutralChrome = ios && device.type === "phone" && profile.osMajor >= 27;
+  if (device.id.startsWith("apple-iphone-duo-")) {
+    // Apple shows top Safari controls in portrait and side controls in landscape
+    // Split View. Applying that adaptation to this single-page preview is an
+    // approximation; these are not published native Safari viewport metrics.
+    const folded = device.id === "apple-iphone-duo-folded-2026";
+    const controls = options.showUrlBar !== false;
+    const status = options.showStatusBar === false ? 0 : folded && !landscape ? 80 : 64;
+    const collapse = Math.max(0, Math.min(1, options.collapsed ?? 0));
+    const address = controls && !landscape ? 64 : 0;
+    // Collapsing buttons must not change page width and reflow its header.
+    const toolbar = controls && landscape ? 72 : 0;
+    // Only the outer display has a visible camera. In landscape its original
+    // artwork rotates to the right edge; the inner screen needs no sensor inset.
+    // The camera mask extends to ~72 CSS px below the outer screen's top.
+    // Keep eight extra pixels so neither the page nor the header touches it.
+    const top = landscape ? 0 : Math.max(status, address, folded ? 80 : 0);
+    const duoToolbarSide = landscape && !folded ? "right" : "left";
+    const statusSide = landscape ? Math.max(status ? 76 : 12, folded ? 80 : 0) : 0;
+    const left = duoToolbarSide === "right" ? statusSide : toolbar;
+    const right = duoToolbarSide === "right" ? toolbar : statusSide;
+    const bottom = Math.max(landscape ? 0 : 12, options.keyboardHeight ?? 0);
+    return { family, variant, layout: landscape ? "side" : "top", duoControls: landscape ? "side" : "top",
+      duoToolbarSide, statusInsetRight: folded && !landscape ? 80 : 20, neutralChrome,
+      status, address, toolbar, tabStrip: 0, pillHeight: 0, pillBottom: 0,
+      top, bottom, left, right,
+      content: { width: Math.max(1, screen.width - left - right), height: Math.max(1, screen.height - top - bottom) },
+      collapse, homeIndicator: true };
+  }
   const tablet = family === "ipad";
   const defaultLayout: SafariLayout = tablet ? "tabs" : variant === "ios-liquid-glass" ? "compact" : profile.osMajor < 15 ? "top" : "bottom";
   const requested = preferences.layout ?? defaultLayout;
@@ -68,16 +102,16 @@ export function getBrowserGeometry(device: Device, screen: Size, preferences: Br
     } else if (family === "android") { address = mix(48, 0); bottom = 36; }
   }
   const top = status + tabStrip + (family === "iphone" && layout === "bottom" ? 0 : address);
-  // Default Safari pages are inset from landscape sensor housings. Cover pages
-  // intentionally use the whole screen; their native CSS env behavior still
-  // needs Safari validation and is not rewritten in customer stylesheets.
-  const side = family === "iphone" && landscape && options.viewportFit !== "cover" && profile.kind !== "iphone-classic"
+  // The new Apple previews also keep cover pages clear of the sensor: Chromium
+  // does not expose that native Safari safe-area inset to the embedded page.
+  // Older profiles retain their existing cover-page presentation.
+  const side = family === "iphone" && landscape && (options.viewportFit !== "cover" || neutralChrome) && profile.kind !== "iphone-classic"
     ? Math.max(44, profile.safeAreaInsetTop) : 0;
   const keyboardBottom = options.keyboardHeight ? Math.max(bottom, options.keyboardHeight) : bottom;
   return { family, variant, layout, status, address, tabStrip, toolbar, pillHeight, pillBottom, top,
     bottom: keyboardBottom, left: side, right: side,
     content: { width: Math.max(1, screen.width - side * 2), height: Math.max(1, screen.height - top - keyboardBottom) },
-    collapse, homeIndicator };
+    collapse, homeIndicator, neutralChrome, statusCameraWidth: neutralChrome ? 120 : undefined };
 }
 
 /** Quantized transitions avoid reflowing the iframe on every scroll pixel. */

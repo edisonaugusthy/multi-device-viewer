@@ -27,12 +27,12 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
-  "0.2.6": {
-    version: "0.2.6",
+  "0.2.7": {
+    version: "0.2.7",
     heading: "What’s new",
     summary: "",
     notes: [
-      { title: "Compact release notes", description: "Shorter updates in a scrollable popup, with close controls always visible." },
+      { title: "New Apple devices", description: "Added iPhone 18 Pro, iPhone 18 Pro Max, and iPhone Duo with folded and unfolded presets." },
     ],
   },
   "0.2.5": {

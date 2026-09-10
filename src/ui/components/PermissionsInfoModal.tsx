@@ -3,25 +3,19 @@ import { useI18n, type TranslationKey } from "../../app/i18n";
 
 type PermissionExplanation = { name: string; description: TranslationKey };
 
-const CHROME_RECORDING_PERMISSIONS: PermissionExplanation[] = [
-  { name: "tabCapture", description: "permissionTabCapture" },
-  { name: "offscreen", description: "permissionOffscreen" },
-];
-
 const PERMISSIONS: PermissionExplanation[] = [
   { name: "activeTab", description: "permissionActiveTab" },
   { name: "http://*/*, https://*/*", description: "permissionWebsiteAccess" },
   {
-    name: import.meta.env.FIREFOX
-      ? "declarativeNetRequest"
-      : "declarativeNetRequestWithHostAccess",
+    name: "declarativeNetRequestWithHostAccess",
     description: "permissionFrameHeaders",
   },
   { name: "scripting", description: "permissionScripting" },
   { name: "storage", description: "permissionStorage" },
   { name: "downloads", description: "permissionDownloads" },
   { name: "contextMenus", description: "permissionContextMenus" },
-  ...(!import.meta.env.FIREFOX ? CHROME_RECORDING_PERMISSIONS : []),
+  { name: "tabCapture", description: "permissionTabCapture" },
+  { name: "offscreen", description: "permissionOffscreen" },
 ];
 
 export function PermissionsInfoModal({

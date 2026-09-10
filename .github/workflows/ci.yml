@@ -40,9 +40,9 @@ jobs:
         run: npm test
 
       - name: Install browser test runtimes
-        run: npx playwright install --with-deps chromium firefox
+        run: npx playwright install --with-deps chromium
 
-      - name: Run Chrome and Firefox browser tests
+      - name: Run Chrome browser tests
         run: npm run test:e2e
 
       - name: Build extension
@@ -51,29 +51,9 @@ jobs:
       - name: Package extension zip
         run: npm run zip
 
-      - name: Build Firefox extension
-        run: npm run build:firefox
-
-      - name: Package Firefox extension and sources
-        run: npm run zip:firefox
-
       - name: Validate Chrome package
         shell: bash
         run: |
           set -euo pipefail
           version="$(node -p "require('./package.json').version")"
           npm run validate:chrome-zip -- ".output/multi-device-viewer-${version}-chrome.zip"
-
-      - name: Validate Firefox package
-        shell: bash
-        run: |
-          set -euo pipefail
-          version="$(node -p "require('./package.json').version")"
-          npm run validate:firefox-zip -- ".output/multi-device-viewer-${version}-firefox.zip"
-
-      - name: Run Mozilla add-on linter
-        shell: bash
-        run: |
-          set -euo pipefail
-          version="$(node -p "require('./package.json').version")"
-          npm run lint:firefox -- ".output/multi-device-viewer-${version}-firefox.zip"

@@ -32,7 +32,7 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 **Screenshot captions**
 
-1. Test mobile, tablet and desktop side by side
+1. New devices. One responsive workspace.
 2. Scroll once. Compare every view.
 3. Show the issue. Share a clear fix.
 
@@ -61,7 +61,7 @@ Dies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emula
 
 **Screenshot captions**
 
-1. Smartphone, Tablet und Desktop nebeneinander testen
+1. Neue Geräte. Ein Workspace für responsive Tests.
 2. Einmal scrollen. Alle Ansichten vergleichen.
 3. Problem zeigen. Lösung verständlich machen.
 
@@ -90,7 +90,7 @@ Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari.
 
 **Screenshot captions**
 
-1. Prueba móvil, tablet y escritorio en paralelo
+1. Nuevos dispositivos. Un espacio para probar tu web.
 2. Desplázate una vez. Compara todas las vistas.
 3. Muestra el problema. Comparte una solución clara.
 
@@ -119,7 +119,7 @@ Ces aperçus responsive utilisent Chrome, pas des appareils physiques ni le mote
 
 **Screenshot captions**
 
-1. Testez mobile, tablette et bureau côte à côte
+1. Nouveaux appareils. Un espace pour tester votre site.
 2. Faites défiler. Comparez toutes les vues.
 3. Montrez le problème. Expliquez la correction.
 
@@ -148,7 +148,7 @@ Mobile View 是一款免费、开源的 Chrome 设备模拟器与响应式测试
 
 **Screenshot captions**
 
-1. 并排测试手机、平板和桌面布局
+1. 新设备，同一个响应式测试工作区。
 2. 滚动一次，对比所有视图。
 3. 标出问题，清楚说明修改方向。
 
@@ -293,7 +293,7 @@ São prévias responsivas no Chrome, não dispositivos físicos nem o motor do S
 
 **Screenshot captions**
 
-1. Teste celular, tablet e desktop lado a lado
+1. Novos dispositivos. Um só espaço para testar seu site.
 2. Role uma vez. Compare todas as vistas.
 3. Mostre o problema. Explique a correção.
 
@@ -351,7 +351,7 @@ Mobile View は Chrome 向けの無料・オープンソースのデバイスエ
 
 **Screenshot captions**
 
-1. スマホ・タブレット・PCを並べてテスト
+1. 新しいデバイスを、ひとつのワークスペースで。
 2. 一度のスクロールで、すべての表示を比較。
 3. 問題を示して、修正をわかりやすく。
 
@@ -380,7 +380,7 @@ Mobile View는 Chrome용 무료 오픈 소스 기기 에뮬레이터이자 반�
 
 **Screenshot captions**
 
-1. 모바일, 태블릿, 데스크톱을 나란히 테스트
+1. 새로운 기기를 하나의 작업 공간에서.
 2. 한 번 스크롤로 모든 뷰를 비교하세요.
 3. 문제를 보여 주고 수정 방향을 명확하게.
 

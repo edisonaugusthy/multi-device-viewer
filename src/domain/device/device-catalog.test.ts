@@ -18,21 +18,21 @@ describe("device catalog imports", () => {
 
   it("uses the latest requested devices for startup and quick presets", () => {
     expect(defaultDeviceIds).toEqual([
-      "apple-iphone-17-pro-2025",
+      "apple-iphone-18-pro-2026",
       "apple-ipad-pro-13-m4-2024",
       "apple-macbook-pro-14-m5-2025",
     ]);
     expect(quickDevicePresetIds).toEqual({
       phoneTablet: [
-        "apple-iphone-17-pro-2025",
+        "apple-iphone-18-pro-2026",
         "apple-ipad-pro-13-m4-2024",
       ],
       iosAndroid: [
-        "apple-iphone-17-pro-2025",
+        "apple-iphone-18-pro-2026",
         "samsung-galaxy-s26-ultra-2026",
       ],
       mobileTabletLaptop: [
-        "apple-iphone-17-pro-2025",
+        "apple-iphone-18-pro-2026",
         "apple-ipad-pro-13-m4-2024",
         "apple-macbook-pro-14-m5-2025",
       ],
@@ -61,6 +61,34 @@ describe("device catalog imports", () => {
     expect(devices.find((candidate) => candidate.id === id)?.tags).not.toContain("new");
   });
 
+  it.each([
+    ["apple-iphone-18-pro-2026", 402, 874, 1206, 2622],
+    ["apple-iphone-18-pro-max-2026", 440, 956, 1320, 2868],
+    ["apple-iphone-duo-folded-2026", 466, 678, 1398, 2034],
+    ["apple-iphone-duo-unfolded-2026", 890, 626, 2670, 1878],
+  ])("keeps Apple panel geometry and both orientations for %s", (id, width, height, panelWidth, panelHeight) => {
+    const device = devices.find(candidate => candidate.id === id)!;
+    expect(device).toMatchObject({
+      cssViewport: { width, height },
+      manufacturerResolution: { width: panelWidth, height: panelHeight },
+      pixelRatio: 3,
+      displayReferenceUrl: expect.stringMatching(/^https:\/\/www\.apple\.com\/.*\/specs\/$/),
+    });
+    expect(supportsOrientation(device)).toBe(true);
+    expect(getFrameProfile(device).chromeVariant).toBe("ios-liquid-glass");
+    const asset = device.mockupAssets[0];
+    expect(asset.kind).toBe("transparent-svg");
+    expect(asset.sourceUrl).toMatch(/^https:\/\/www\.apple\.com\/v\//);
+    expect(asset.frameOverlay).toBe(true);
+    for (const orientation of ["portrait", "landscape"] as const) {
+      const viewport = asset.viewport![orientation]!;
+      expect(viewport.width).toBeGreaterThan(0);
+      expect(viewport.height).toBeGreaterThan(0);
+      expect(viewport.enableRotation).toBe(true);
+      expect(viewport.width < viewport.height).toBe(orientation === "portrait");
+    }
+  });
+
   it("marks only the latest device batch as new", () => {
     expect(
       devices
@@ -68,10 +96,10 @@ describe("device catalog imports", () => {
         .map((device) => device.id)
         .sort(),
     ).toEqual([
-      "google-pixel-11-2026",
-      "google-pixel-11-pro-2026",
-      "google-pixel-11-pro-fold-2026",
-      "google-pixel-11-pro-xl-2026",
+      "apple-iphone-18-pro-2026",
+      "apple-iphone-18-pro-max-2026",
+      "apple-iphone-duo-folded-2026",
+      "apple-iphone-duo-unfolded-2026",
     ]);
   });
 
@@ -170,7 +198,7 @@ describe("device catalog imports", () => {
       year: 2026,
       cssViewport: { width, height },
       manufacturerResolution: { width: resolutionWidth, height: resolutionHeight },
-      tags: expect.arrayContaining(["android", "new"]),
+      tags: expect.arrayContaining(["android"]),
     });
   });
 

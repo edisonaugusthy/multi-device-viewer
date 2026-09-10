@@ -18,7 +18,6 @@ export default defineConfig({
       responsiveCheckerGuide: resolve(__dirname, "website/guides/responsive-design-checker.html"),
       responsiveWebsiteTestingGuide: resolve(__dirname, "website/guides/responsive-website-testing.html"),
       chromeMobileViewGuide: resolve(__dirname, "website/guides/chrome-mobile-view-extension.html"),
-      firefoxMobileViewGuide: resolve(__dirname, "website/guides/firefox-mobile-view.html"),
       viewportSizesGuide: resolve(__dirname, "website/guides/device-viewport-sizes.html"),
     } },
   },

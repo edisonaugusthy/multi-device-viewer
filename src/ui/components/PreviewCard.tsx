@@ -6,7 +6,6 @@ import { preparePreview } from "../../app/viewer-context";
 import {
   ArrowLeft,
   ArrowRight,
-  Check,
   ChevronDown,
   ExternalLink,
   ImageDown,
@@ -122,6 +121,8 @@ function readPageSurfaces(data: Record<string, unknown>): BrowserSurfaceColors |
     bottom: bottom ?? top!,
     topIsDark: typeof data.topIsDark === "boolean" ? data.topIsDark : false,
     bottomIsDark: typeof data.bottomIsDark === "boolean" ? data.bottomIsDark : false,
+    topGuardColor: typeof data.topGuardColor === "string" && CSS.supports("color", data.topGuardColor) ? data.topGuardColor : undefined,
+    bottomGuardColor: typeof data.bottomGuardColor === "string" && CSS.supports("color", data.bottomGuardColor) ? data.bottomGuardColor : undefined,
   };
 }
 
@@ -693,7 +694,7 @@ export function PreviewCard({
   return (
     <section
       data-preview-slot-id={slot.id}
-      className={`flex h-full min-h-0 flex-col overflow-visible border-t transition-colors ${showToolbar && activeSlotId === slot.id ? "border-t-teal-500" : "border-t-transparent"}`}
+      className={`@container/viewport flex h-full min-h-0 flex-col overflow-visible border-t transition-colors ${showToolbar && activeSlotId === slot.id ? "border-t-teal-500" : "border-t-transparent"}`}
       style={{ minWidth: 0 }}
       onClick={() => setActiveSlot(slot.id)}
       onFocus={() => setActiveSlot(slot.id)}
@@ -716,10 +717,10 @@ export function PreviewCard({
           alignEnd={last}
         />
 
-        <span className={`shrink-0 px-1 text-[9px] font-bold ${display.darkMode ? "text-slate-500" : "text-slate-400"}`}>
+        <span className={`hidden @min-[300px]/viewport:inline shrink-0 px-1 text-[9px] font-bold ${display.darkMode ? "text-slate-500" : "text-slate-400"}`}>
           {viewportSize.width} × {viewportSize.height}
         </span>
-        <div data-viewport-zoom className={`flex shrink-0 items-center rounded-md border ${display.darkMode ? "border-white/15" : "border-slate-200"}`}>
+        <div data-viewport-zoom className={`hidden @min-[240px]/viewport:flex shrink-0 items-center rounded-md border ${display.darkMode ? "border-white/15" : "border-slate-200"}`}>
           <CardBtn dark={display.darkMode} label={t("zoomOut")} onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
           <CardBtn dark={display.darkMode} label={t("zoomIn")} onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
         </div>
@@ -731,14 +732,18 @@ export function PreviewCard({
         <div data-viewport-actions="compact"
           onKeyDown={event => { if (event.key === "Escape") { setControlsOpen(false); setBrowserSettingsOpen(false); } }}
           className={`${controlsOpen ? "flex" : "hidden"} absolute end-2 top-9 z-[60] max-h-[calc(100dvh-120px)] w-64 flex-col gap-1 overflow-y-auto rounded-xl border p-2 shadow-xl ${display.darkMode ? "border-white/15 bg-[#171a21]" : "border-slate-200 bg-white"}`}>
+        <div className="flex @min-[240px]/viewport:hidden">
+          <CardBtn dark={display.darkMode} label={t("zoomOut")} onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
+          <CardBtn dark={display.darkMode} label={t("zoomIn")} onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
+        </div>
         {frameProfile.platform === "ios" && <div className="relative">
           <CardBtn expanded dark={display.darkMode} label={t("browserAppearance")} onClick={() => setBrowserSettingsOpen(value => !value)}><Settings2 size={13}/></CardBtn>
           {browserSettingsOpen && <div role="group" aria-label={t("browserAppearance")} className={`absolute right-0 top-8 z-[60] w-60 rounded-xl border p-3 shadow-xl ${display.darkMode ? "border-white/10 bg-[#171a21] text-white" : "border-slate-200 bg-white text-slate-900"}`}>
             <div className="mb-2 flex items-center justify-between text-xs font-bold">{t("browserAppearance")}<button type="button" aria-label={t("closeBrowserSettings")} onClick={() => setBrowserSettingsOpen(false)}><X size={14}/></button></div>
             {supportsIos26(device) && frameProfile.osMajor < 26 && <label className="mb-2 block text-xs">{t("browserVersion")}<select aria-label={t("browserVersion")} className="mt-1 w-full rounded border border-slate-500/25 bg-transparent p-1.5" value={slot.browserPreferences?.version ?? "ios26"} onChange={event => setSlotBrowserPreferences(slot.id, { version: event.target.value as "catalog" | "ios26", layout: undefined })}><option value="ios26">Safari 26</option><option value="catalog">{t("catalogBrowserVersion", { version: frameProfile.osMajor })}</option></select></label>}
-            <label className="block text-xs">{t("browserLayout")}<select aria-label={t("browserLayout")} className="mt-1 w-full rounded border border-slate-500/25 bg-transparent p-1.5" value={browserGeometry.layout} onChange={event => setSlotBrowserPreferences(slot.id, { layout: event.target.value as SafariLayout })}>
+            {browserGeometry.duoControls ? <div className="text-xs">iPhone Duo · iOS 27</div> : <label className="block text-xs">{t("browserLayout")}<select aria-label={t("browserLayout")} className="mt-1 w-full rounded border border-slate-500/25 bg-transparent p-1.5" value={browserGeometry.layout} onChange={event => setSlotBrowserPreferences(slot.id, { layout: event.target.value as SafariLayout })}>
               {device.type === "tablet" ? <><option value="tabs">{t("separateTabs")}</option><option value="compact-tabs">{t("compactTabs")}</option></> : <>{browserGeometry.variant === "ios-liquid-glass" && <option value="compact">{t("compactBrowser")}</option>}<option value="bottom">{t("bottomBrowser")}</option><option value="top">{t("topBrowser")}</option></>}
-            </select></label>
+            </select></label>}
             <p className="mt-2 text-[10px] leading-4 opacity-60">{t("browserPreviewNote")}</p>
           </div>}
         </div>}
@@ -751,7 +756,7 @@ export function PreviewCard({
           <RefreshCw size={14} className={bridgeStatus === "checking" ? "animate-spin" : ""} />
         </CardBtn>
         {bridgeStatus === "unavailable" && <CardBtn expanded dark={display.darkMode} label={t("openInTab")} onClick={() => window.open(currentPageUrlRef.current || slot.url, "_blank", "noopener,noreferrer")}><ExternalLink size={14}/></CardBtn>}
-        <CardBtn expanded dark={display.darkMode} label={t("captureAndAnnotate")} onClick={onCapture} disabled={capturePending}>
+        <CardBtn expanded dark={display.darkMode} label={t("captureAndAnnotate")} onClick={() => { setControlsOpen(false); setBrowserSettingsOpen(false); onCapture(); }} disabled={capturePending}>
           <ImageDown size={13} className={capturePending ? "animate-pulse" : undefined} />
         </CardBtn>
         {canRotate && (
@@ -780,6 +785,7 @@ export function PreviewCard({
         {containerSize.width > 0 && (
           <div
             className="shrink-0 origin-center"
+            data-device-capture
             data-free-device-view={freeView ? "" : undefined}
             style={{
               width: frameSize.width,
@@ -818,8 +824,8 @@ export function PreviewCard({
               <PreviewSurface
                 guardEdges={!freeView && slot.showFrame}
                 scale={scale}
-                topColor={pageSurfaces?.top ?? "#ffffff"}
-                bottomColor={pageSurfaces?.bottom ?? "#ffffff"}
+                topColor={browserGeometry.neutralChrome ? pageSurfaces?.topGuardColor : pageSurfaces?.top ?? "#ffffff"}
+                bottomColor={browserGeometry.neutralChrome ? pageSurfaces?.bottomGuardColor : pageSurfaces?.bottom ?? "#ffffff"}
               >
                 {blocked ? (
                   <BlockedView
@@ -845,9 +851,11 @@ export function PreviewCard({
                     style={{
                       width: "100%",
                       colorScheme: display.darkMode ? "dark" : "light",
-                      // Match the page at the composited top edge so fractional
-                      // zoom does not reveal a white line under Safari's header.
-                      backgroundColor: pageSurfaces?.top ?? (display.darkMode ? "#0f172a" : "#ffffff"),
+                      // The iframe's own backing can peek through fractional
+                      // raster edges too; keep it neutral on the new Apple frames.
+                      backgroundColor: browserGeometry.neutralChrome
+                        ? display.darkMode ? "#1c1c1e" : "#ffffff"
+                        : pageSurfaces?.top ?? (display.darkMode ? "#0f172a" : "#ffffff"),
                       scrollbarWidth: device.type === "phone" || device.type === "tablet" ? "none" : "auto",
                     }}
                     scrolling="auto"
@@ -897,13 +905,13 @@ type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other"
 type MenuSection = { key: MenuGroupId | "favorite" | "recent" | "search"; label: string; devices: Device[] };
 
 const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other", "custom"];
-function menuGroupFor(device: Device): MenuGroupId {
+export function menuGroupFor(device: Device): MenuGroupId {
   if (device.brand === "Custom") return "custom";
   if (device.type === "tablet") return "tablet";
   if (device.type === "laptop") return "laptop";
   if (device.type === "desktop") return "desktop";
   if (device.type === "phone") {
-    const os = (device.os || "").toLowerCase();
+    const os = device.os.trim().toLowerCase().split(/\s+/)[0];
     if (os === "ios") return "ios";
     if (os === "android") return "android";
   }
@@ -1261,13 +1269,13 @@ const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
         <span className="min-w-0 flex-1">
           <span className="flex min-w-0 items-center gap-1.5">
             <span className="min-w-0 flex-1 line-clamp-2 text-[11px] font-semibold leading-tight">{shortName(device.name)}</span>
+            {device.tags.includes("new") && <span data-device-new={device.id} className={`shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold ${dark ? "bg-emerald-400/15 text-emerald-300" : "bg-emerald-100 text-emerald-700"}`}>{t("newLabel")}</span>}
             {device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[9px] font-medium ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-400" : "bg-slate-100 text-slate-500"}`}>{device.year}</span>}
           </span>
           <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? dark ? "text-teal-300" : "text-teal-700" : dark ? "text-slate-400" : "text-slate-500"}`}>
             {device.os.toLowerCase() === "android" ? `${device.brand} · ` : ""}{device.os} · {device.cssViewport.width} × {device.cssViewport.height}
           </span>
         </span>
-        {active && <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full ${dark ? "bg-teal-400/20 text-teal-300" : "bg-teal-100 text-teal-700"}`}><Check size={12} strokeWidth={2.5} /></span>}
       </button>
       <button
         type="button"

@@ -32,7 +32,7 @@ Use [real-device-probe.html](../scripts/device-audit/real-device-probe.html) on 
 4. Confirm that the notch/island stays inside the hardware mask, status icons remain readable, and browser controls never cover the fixed action in the extension. Native Safari may intentionally overlay controls; record that as a native behavior rather than forcing the fixture to match a guessed constant.
 5. Attach the native screenshot and JSON for each case, then calibrate the browser constants or frame metadata where the difference matters. Preserve measured logical dimensions instead of changing them to fit the artwork.
 
-The extension uses the host Chrome/Firefox rendering engine. It does not emulate Safari's engine, the preset's true DPR, iOS font rendering, `env(safe-area-inset-*)`, all `svh/dvh` behavior or Display Zoom. `viewport-fit=cover` deliberately exposes the full landscape width; the website's native CSS safe-area behavior needs real Safari testing. Apple's guidance and [WebKit's safe-area explanation](https://webkit.org/blog/7929/designing-websites-for-iphone-x/) are references, not evidence of an attached device.
+The extension uses the host Chrome rendering engine. It does not emulate Safari's engine, the preset's true DPR, iOS font rendering, `env(safe-area-inset-*)`, all `svh/dvh` behavior or Display Zoom. `viewport-fit=cover` deliberately exposes the full landscape width; the website's native CSS safe-area behavior needs real Safari testing. Apple's guidance and [WebKit's safe-area explanation](https://webkit.org/blog/7929/designing-websites-for-iphone-x/) are references, not evidence of an attached device.
 
 ## Reproduce the local geometry audit
 

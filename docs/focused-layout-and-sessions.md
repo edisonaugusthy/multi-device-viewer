@@ -18,7 +18,7 @@ Tools opens on the left over the canvas. Quick device sets, Devices, Custom view
 
 Per-device controls retain the earlier Tools-layout arrangement: device selector and dimensions, followed by the labeled viewport options menu and a directly accessible remove button at the top-right of each removable column. The last remaining viewport retains its existing removal protection. The category buttons in the device picker are restored in their original order. Picker rows are compact again, with the original text, size information and favorite button positions. Search normalization, deduplication, keyboard navigation, Escape focus restoration and window-fit positioning remain.
 
-The device picker now has clearer borders, more readable metadata, and distinct selected, hover and keyboard-focus states in light and dark mode. Category buttons support arrow keys and Home/End without changing their order or labels; clearing search keeps focus in the input. Checks covered all three picker anchors at 1280×720, 760×480 and 375×360, plus search, favorites and focus navigation. TypeScript and four targeted Chromium/Firefox regression tests passed. [Light picker](../output/playwright/device-picker-style/light.png) · [Dark picker](../output/playwright/device-picker-style/dark.png) · [Small-window picker](../output/playwright/device-picker-style/compact.png).
+The device picker now has clearer borders, more readable metadata, and distinct selected, hover and keyboard-focus states in light and dark mode. Category buttons support arrow keys and Home/End without changing their order or labels; clearing search keeps focus in the input. Checks covered all three picker anchors at 1280×720, 760×480 and 375×360, plus search, favorites and focus navigation. TypeScript and targeted Chromium regression tests passed. [Light picker](../output/playwright/device-picker-style/light.png) · [Dark picker](../output/playwright/device-picker-style/dark.png) · [Small-window picker](../output/playwright/device-picker-style/compact.png).
 
 Device/Free changes do not recreate preview documents. **View only** hides the toolbar, device controls, Tools, design-reference panel and resize handles while websites remain interactive. Its return control is on the left and fades until hovered or focused. Escape restores controls, including from installed-extension previews.
 
@@ -45,17 +45,17 @@ Navigation and scroll sync have a separate [reliability report and reproducible 
 | Check | Result |
 |---|---|
 | TypeScript and unit suite | Passed; 307 tests across 18 files |
-| Browser regression suite | 38 passed across Chromium and Firefox |
+| Browser regression suite | Chromium checks passed |
 | Installed Chrome session fixture | Three signed-in and three signed-out previews matched the source session; cookie stayed HttpOnly |
 | Preview continuity | Document tokens and an unsaved preview draft survived view, layout and appearance switches |
 | Original page | Document token, unsaved source draft and page background survived viewer close |
-| Native website themes | CSS colors and JavaScript media queries updated in Chrome and Firefox |
+| Native website themes | CSS colors and JavaScript media queries updated in Chrome |
 | Saved dark appearance | All three previews detected dark on first load; exactly three preview document requests |
 | Classic migration | Old layout preference opens the current interface; no Classic control remains |
 | Narrow windows and menus | No toolbar overflow or overlap at 480, 640, 760, 1024 and 1280 CSS pixels; fourth-device selector stayed inside the window |
 | Focus navigation | Escape dismissed Tools and returned keyboard focus; eight consecutive close/reopen cycles each produced one viewer |
 
-Earlier session and theme evidence is in `output/playwright/focused-layout/`: `session-theme-results.json`, `firefox-results.json`, `initial-theme-check.json`, `final-ui-checks.json` and screenshots.
+Earlier session and theme evidence is in `output/playwright/focused-layout/`: `session-theme-results.json`, `initial-theme-check.json`, `final-ui-checks.json` and screenshots.
 
 - [Current workspace](../output/playwright/view-only/workspace.png)
 - [View only with devices](../output/playwright/view-only/device-only.png)
@@ -63,7 +63,7 @@ Earlier session and theme evidence is in `output/playwright/focused-layout/`: `s
 - [Phone and tablet keyboards](../output/playwright/view-only/keyboards.png)
 - [Earlier native dark-mode check](../output/playwright/focused-layout/device-dark.png)
 
-The Chrome screenshots come from an isolated installed-extension QA build; the shipped build retains its closed shadow root. Firefox's additional theme/continuity check used the standalone application. These checks do not establish universal SSO compatibility or native Safari fidelity.
+The Chrome screenshots come from an isolated installed-extension QA build; the shipped build retains its closed shadow root. These checks do not establish universal SSO compatibility or native Safari fidelity.
 
 Current View-only and keyboard evidence is in `output/playwright/view-only/`. Installed Chrome checks cover iPhone 17 Pro, iPad Pro 13-inch (M4) and Galaxy Tab S11 Ultra: email typing, punctuation, decimal and telephone input, inputmode suppression, and focused-field visibility. View-only hides all three types of workspace controls and retains document tokens.
 

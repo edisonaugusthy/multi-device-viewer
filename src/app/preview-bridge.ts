@@ -671,7 +671,7 @@ export function setupPreviewBridge() {
     const previousIntent = remotePositions.get(target);
     if (previousIntent && !snapshot) {
       // A follower becoming the source must keep its fractional remainder.
-      // Dropping it on each takeover accumulates Firefox's raster rounding
+      // Dropping it on each takeover accumulates raster rounding
       // differences even though all previews receive the same CSS delta.
       const maxLeft = Math.max(0, target.scrollWidth - target.clientWidth);
       const rtl = getComputedStyle(target).direction === "rtl";
@@ -820,8 +820,8 @@ export function setupPreviewBridge() {
       left = Math.max(rtl ? -maxLeft : 0, Math.min(rtl ? 0 : maxLeft, left));
       top = Math.max(0, Math.min(Math.max(0, el.scrollHeight - el.clientHeight), top));
       el.scrollTo({ left, top, behavior: "instant" });
-      // Retain fractional remainders between remote moves. Firefox rounds at
-      // device zoom boundaries; adding each delta to its rounded result drifts.
+      // Retain fractional remainders between remote moves so repeated deltas
+      // do not accumulate rounding drift at scaled viewport boundaries.
       remotePositions.set(el, { left, top, actualLeft: el.scrollLeft, actualTop: el.scrollTop });
       // Record the actual clamped result, not the requested position. Its scroll
       // event then has zero delta, while an immediate user takeover still emits.

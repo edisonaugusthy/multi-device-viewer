@@ -10,6 +10,8 @@ const root=createRoot(document.getElementById('frame')!);
 const representativeCases=[
  ['apple-iphone-17-pro-2025','portrait'],['apple-iphone-17-pro-2025','landscape'],
  ['apple-iphone-air-2025','portrait'],['apple-iphone-17e-2026','portrait'],
+ ['apple-iphone-duo-unfolded-2026','portrait'],['apple-iphone-duo-unfolded-2026','landscape'],
+ ['apple-iphone-duo-folded-2026','portrait'],['apple-iphone-duo-folded-2026','landscape'],
  ['apple-iphone-16e-2025','landscape'],['apple-iphone-14-pro-2022','portrait'],
  ['apple-iphone-14-pro-max-2022','portrait'],['apple-iphone-13-mini','portrait'],
  ['apple-iphone-x','landscape'],['apple-ipad-mini-6','portrait'],
@@ -52,7 +54,12 @@ async function measure(){
  const globalFooter={left:fr.left+footer.left*scaleX,right:fr.left+footer.right*scaleX,top:fr.top+footer.top*scaleY,bottom:fr.top+footer.bottom*scaleY};
  const bars=Array.from(document.querySelectorAll<HTMLElement>('[data-browser-control]')).map(el=>el.getBoundingClientRect());
  const bar=bars.find(r=>r.top>fr.top);
- const overlap=Math.max(0,...bars.map(r=>Math.max(0,Math.min(r.bottom,globalFooter.bottom)-Math.max(r.top,globalFooter.top))/scaleY));
+ const overlap=Math.max(0,...bars.map(r=>{
+  const width=Math.min(r.right,globalFooter.right)-Math.max(r.left,globalFooter.left);
+  // Side controls can share the footer's Y range while remaining outside the
+  // iframe. Ignore subpixel edge contact; count only actual 2D intersections.
+  return width>0.5*scaleX?Math.max(0,Math.min(r.bottom,globalFooter.bottom)-Math.max(r.top,globalFooter.top))/scaleY:0;
+ }));
  const edge=doc.getElementById('left-edge')!.getBoundingClientRect();
  const ex=fr.left+(edge.left+4)*scaleX,ey=fr.top+(edge.top+edge.height/2)*scaleY;
  const hit=document.elementFromPoint(ex,ey);

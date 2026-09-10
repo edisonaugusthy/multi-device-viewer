@@ -1,8 +1,8 @@
 # Mobile View: Device Emulator & Responsive Tester
 
-> Mobile View is a free, local-first, open-source Chrome and Firefox extension for testing responsive websites across phone, tablet, laptop, and desktop views in one workspace.
+> Mobile View is a free, local-first, open-source Chrome extension for testing responsive websites across phone, tablet, laptop, and desktop views in one workspace.
 
-The extension is a responsive development and quality-assurance aid. It previews the page already open in Chrome or Firefox across phones, tablets, foldables, laptops, desktops, and custom viewport sizes. It is not a replacement for final testing on physical devices and target browsers.
+The extension is a responsive development and quality-assurance aid. It previews the page already open in Chrome across phones, tablets, foldables, laptops, desktops, and custom viewport sizes. It is not a replacement for final testing on physical devices and target browsers.
 
 Core capabilities include up to four resizable previews, device rotation and zoom, saved device sets, synchronized scrolling and navigation, design comparison, annotated captures, source-tab recording, and locally generated coding-agent fix prompts.
 
@@ -18,7 +18,6 @@ Privacy and licensing facts:
 
 - [Official website](https://edisonaugusthy.github.io/multi-device-viewer/): Product overview, main features, privacy commitments, frequently asked questions, and installation link.
 - [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb): Official Chrome extension listing.
-- [Firefox build instructions](https://github.com/edisonaugusthy/multi-device-viewer#development): Build or temporarily load the Firefox Manifest V3 package.
 - [Source repository](https://github.com/edisonaugusthy/multi-device-viewer): Public source code, implementation history, and contribution surface.
 
 ## Documentation
@@ -27,7 +26,6 @@ Privacy and licensing facts:
 - [Responsive design checker guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-design-checker.html): Explains how to compare representative screen sizes, exercise the same journey, and document a reproducible failure.
 - [Mobile view and device emulator guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/mobile-view-device-emulator.html): Explains responsive viewport testing, a fast comparison workflow, and the limits of device emulation.
 - [Chrome mobile view extension guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/chrome-mobile-view-extension.html): Covers local and authenticated-page testing from the active Chrome tab.
-- [Firefox mobile view guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/firefox-mobile-view.html): Distinguishes Firefox Responsive Design Mode, side-by-side viewport testing, and real Firefox mobile verification.
 - [Device viewport size guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/device-viewport-sizes.html): Provides representative CSS viewport ranges and explains physical pixels, DPR, breakpoints, height, and orientation.
 - [Responsive testing guide](https://edisonaugusthy.github.io/multi-device-viewer/guides/responsive-testing.html): Practical checklist covering viewport selection, layout integrity, interaction, accessibility, evidence, and physical-device validation.
 - [Privacy policy](https://edisonaugusthy.github.io/multi-device-viewer/privacy.html): Plain-language description of extension data handling, browser permissions, local storage, and third-party behavior.

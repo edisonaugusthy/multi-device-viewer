@@ -10,7 +10,7 @@ This fixture deliberately scrolls saturated stripes behind a white, composited s
 
 The runner covers all catalogued iPhones and iPads, fit/reduced zoom, and unscrolled/scrolled pages. It should fail if the website content shows through the website-header edge. Check the captured images visually as well. Header input/button interactions, browser chrome collapse, Free view, and View only require complementary interaction checks.
 
-The boundary guard intentionally paints three to four physical pixel rows inside the page edge, and overlaps outward into the browser surface. It is pointer-transparent and does not resize or move the iframe or modify the website DOM. It can cover decoration in those outermost pixel rows; it is used for all framed device previews. A fully opaque `filter: opacity(1)` composites the iframe and strips together before the hardware mask, preventing Firefox from independently antialiasing their shared boundary. The guard must not be replaced with an iframe clip: Chromium can move its sticky-layer raster seam to the new clip boundary.
+The boundary guard intentionally paints three to four physical pixel rows inside the page edge, and overlaps outward into the browser surface. It is pointer-transparent and does not resize or move the iframe or modify the website DOM. It can cover decoration in those outermost pixel rows; it is used for all framed device previews. The guard must not be replaced with an iframe clip: Chromium can move its sticky-layer raster seam to the new clip boundary.
 
 ## Full catalog regression
 

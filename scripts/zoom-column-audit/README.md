@@ -6,4 +6,4 @@ The audit uses the real device catalog and preview components with the local hea
 
 The 8 September 2026 fix clips only the canvas and gives it explicit zero flex minimums. Toolbars, menus and column resize handles remain outside the clip. The device wrapper cannot flex-shrink; zoom changes its visual scale without distorting its logical viewport. Oversized device edges are cropped at the canvas boundary.
 
-Evidence: `before.png`/`after.png` reproduce the enlarged iPad between an iPhone and MacBook; `catalog.json` records all presets; `interactions.txt` covers zoom buttons, menus, resizing, Device/Free, View only and document continuity. The existing 38 Chromium/Firefox E2E checks and TypeScript compilation also passed.
+Evidence: `before.png`/`after.png` reproduce the enlarged iPad between an iPhone and MacBook; `catalog.json` records all presets; `interactions.txt` covers zoom buttons, menus, resizing, Device/Free, View only and document continuity. The existing Chromium E2E checks and TypeScript compilation also passed.

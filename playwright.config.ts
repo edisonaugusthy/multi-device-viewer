@@ -8,6 +8,5 @@ export default defineConfig({
   webServer: { command: "npm run dev:preview -- --host 127.0.0.1 --port 5174", url: "http://127.0.0.1:5174", reuseExistingServer: true },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
   ],
 });

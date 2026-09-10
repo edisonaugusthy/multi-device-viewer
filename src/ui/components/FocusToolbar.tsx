@@ -13,8 +13,8 @@ export function FocusToolbar({ dark, freeView, scrollSync, navigationSync, tools
 }) {
   const { t } = useI18n();
   const quiet = dark ? "border-white/15 text-slate-300 hover:bg-white/10" : "border-slate-200 text-slate-600 hover:bg-slate-100";
-  const action = (label: string, icon: ReactNode, onClick: () => void, disabled = false) => (
-    <button type="button" title={label} aria-label={label} onClick={onClick} disabled={disabled}
+  const action = (label: string, icon: ReactNode, onClick: () => void, disabled = false, tour?: string) => (
+    <button type="button" data-tour={tour} title={label} aria-label={label} onClick={onClick} disabled={disabled}
       className={`grid h-7 w-8 shrink-0 place-items-center rounded-lg transition focus-visible:outline-2 focus-visible:outline-teal-500 disabled:opacity-40 ${quiet}`}>
       {icon}
     </button>
@@ -32,7 +32,7 @@ export function FocusToolbar({ dark, freeView, scrollSync, navigationSync, tools
           className={`flex h-7 shrink-0 items-center gap-1.5 rounded-lg border px-2 text-[11px] font-semibold ${quiet}`}>
           <Focus size={15}/><span className="hidden md:inline">{t("viewOnly")}</span>
         </button>
-        <span className="hidden sm:contents">{action(t("addViewport"), <Plus size={16}/>, onAdd, !canAdd)}</span>
+        <span className="hidden sm:contents">{action(t("addViewport"), <Plus size={16}/>, onAdd, !canAdd, "add-viewport")}</span>
         <span className="hidden sm:contents">{action(t("captureAndAnnotate"), <Camera size={15}/>, onCapture, capturing)}</span>
       </div>
       <div role="group" aria-label={t("previewStyle")} className={`flex shrink-0 gap-0.5 rounded-lg border p-0.5 ${dark ? "border-white/15 bg-black/20" : "border-slate-200 bg-slate-100/70"}`}>

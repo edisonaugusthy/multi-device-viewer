@@ -14,8 +14,7 @@ Filter: Web search, last three months
 | Pages receiving impressions | 1 |
 | Mobile impressions | 0 |
 
-The only reported query was `firefox mobile`, with three impressions at an
-average position of 23. The homepage received all five impressions. Countries
+The homepage received all five impressions. Countries
 represented were the Philippines, Netherlands, and Vietnam.
 
 This sample is too small for meaningful CTR or ranking conclusions. The first
@@ -26,7 +25,6 @@ priority is broader crawling and indexing across useful, intent-specific pages.
 - `/guides/index.html`
 - `/guides/responsive-design-checker.html`
 - `/guides/chrome-mobile-view-extension.html`
-- `/guides/firefox-mobile-view.html`
 - `/guides/device-viewport-sizes.html`
 - Existing mobile-view and responsive-release guides
 
@@ -53,7 +51,6 @@ Track these query groups separately:
 - `mobile view`, `website mobile view`, `mobile view extension`
 - `responsive tester`, `responsive design checker`, `website responsive tester`
 - `device emulator`, `mobile simulator`, `device viewport sizes`
-- `firefox mobile`, `firefox mobile view`, `firefox responsive design mode`
 
 Judge early progress by indexed pages and impressions by landing page. Only
 optimize CTR after a page has enough impressions for its title and description

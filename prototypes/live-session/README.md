@@ -4,7 +4,7 @@ A separate Chrome prototype: resize the **original live document** to selected w
 
 Build with `npm run build:live-session-prototype`. The unpacked lab extension is written to `output/live-session-prototype/`. Install it only in a test profile for evaluation. Open a normal website tab, close the Mobile View overlay and DevTools, then click the lab action. Choose one to four widths (320–1920 CSS px) and a height (320–1600), and select **Compare current session**. Stop cancels and restores the source; closing the comparison tab also cancels its job.
 
-This lab requires Chrome's `debugger` permission. It is absent from the main production manifests and ZIPs. The approved plan deliberately separates prototype evaluation from the later decision to ship that permission. It is not available in Firefox. Chrome uses its own rendering engine, with `mobile: false` and DPR 1 for these responsive comparisons; it does not reproduce mobile Safari behavior.
+This lab requires Chrome's `debugger` permission. It is absent from the main production manifests and ZIPs. The approved plan deliberately separates prototype evaluation from the later decision to ship that permission. Chrome uses its own rendering engine, with `mobile: false` and DPR 1 for these responsive comparisons; it does not reproduce mobile Safari behavior.
 
 The real-browser check captured 393 × 900, 768 × 900 and 1280 × 900 from a dummy signed-in page. The same document token, unsaved textarea, 210px scroll position and original 1200 × 737 viewport survived the run. The Stop path also restores the original state. Unit tests cover capture failures, cancellation, navigation and attachment refusal.
 

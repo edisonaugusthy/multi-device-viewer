@@ -25,6 +25,190 @@ interface LocalMockupAsset {
 }
 
 export const localMockupCatalog: LocalMockupAsset[] = [
+{
+  "id": "apple-iphone-18-pro-2026",
+  "localPath": "/mockups/apple-iphone-18-pro-2026.svg",
+  "sourceUrl": "https://www.apple.com/v/iphone/compare/am/images/overview/compare_iphone_18_pro_burgundy__mdv9ns7r6oa6_large_2x.jpg",
+  "file": "apple-iphone-18-pro-2026.svg",
+  "bytes": 78408,
+  "width": 316,
+  "height": 650,
+  "renderScale": 1.39171974522293,
+  "previewScale": 0.9,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 402,
+    "height": 874
+  },
+  "screenInset": {
+    "left": 20.87579617834395,
+    "top": 15.30891719745223,
+    "right": 16.70063694267516,
+    "bottom": 15.30891719745223
+  },
+  "viewport": {
+    "portrait": {
+      "left": 20.87579617834395,
+      "top": 15.30891719745223,
+      "width": 402.2070063694268,
+      "height": 874,
+      "cornerRadius": 66.80254777070064,
+      "enableRotation": true,
+      "paths": {
+        "portrait": "M66.80254777070064 0H335.40445859872614Q402.2070063694268 0 402.2070063694268 66.80254777070064V807.1974522292994Q402.2070063694268 874 335.40445859872614 874H66.80254777070064Q0 874 0 807.1974522292994V66.80254777070064Q0 0 66.80254777070064 0Z"
+      }
+    },
+    "landscape": {
+      "left": 15.30891719745223,
+      "top": 20.87579617834395,
+      "width": 874,
+      "height": 402.2070063694268,
+      "cornerRadius": 66.80254777070064,
+      "enableRotation": true,
+      "paths": {
+        "landscape": "M66.80254777070064 0H807.1974522292994Q874 0 874 66.80254777070064V335.40445859872614Q874 402.2070063694268 807.1974522292994 402.2070063694268H66.80254777070064Q0 402.2070063694268 0 335.40445859872614V66.80254777070064Q0 0 66.80254777070064 0Z"
+      }
+    }
+  }
+},
+{
+  "id": "apple-iphone-18-pro-max-2026",
+  "localPath": "/mockups/apple-iphone-18-pro-max-2026.svg",
+  "sourceUrl": "https://www.apple.com/v/iphone/compare/am/images/overview/compare_iphone_18_pro_max_burgundy__dcz67l4005oy_large_2x.jpg",
+  "file": "apple-iphone-18-pro-max-2026.svg",
+  "bytes": 90175,
+  "width": 345,
+  "height": 712,
+  "renderScale": 1.3895348837209303,
+  "previewScale": 0.9,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 440,
+    "height": 956
+  },
+  "screenInset": {
+    "left": 19.453488372093023,
+    "top": 15.284883720930234,
+    "right": 16.674418604651162,
+    "bottom": 18.063953488372093
+  },
+  "viewport": {
+    "portrait": {
+      "left": 19.453488372093023,
+      "top": 15.284883720930234,
+      "width": 443.26162790697674,
+      "height": 956,
+      "cornerRadius": 69.47674418604652,
+      "enableRotation": true,
+      "paths": {
+        "portrait": "M69.47674418604652 0H373.7848837209302Q443.26162790697674 0 443.26162790697674 69.47674418604652V886.5232558139535Q443.26162790697674 956 373.7848837209302 956H69.47674418604652Q0 956 0 886.5232558139535V69.47674418604652Q0 0 69.47674418604652 0Z"
+      }
+    },
+    "landscape": {
+      "left": 18.063953488372093,
+      "top": 19.453488372093023,
+      "width": 956,
+      "height": 443.26162790697674,
+      "cornerRadius": 69.47674418604652,
+      "enableRotation": true,
+      "paths": {
+        "landscape": "M69.47674418604652 0H886.5232558139535Q956 0 956 69.47674418604652V373.7848837209302Q956 443.26162790697674 886.5232558139535 443.26162790697674H69.47674418604652Q0 443.26162790697674 0 373.7848837209302V69.47674418604652Q0 0 69.47674418604652 0Z"
+      }
+    }
+  }
+},
+{
+  "id": "apple-iphone-duo-folded-2026",
+  "localPath": "/mockups/apple-iphone-duo-folded-2026.svg",
+  "sourceUrl": "https://www.apple.com/v/iphone-duo/a/images/overview/product-viewer/closed__3le61imm1w2e_large_2x.jpg",
+  "file": "apple-iphone-duo-folded-2026.svg",
+  "bytes": 236180,
+  "width": 793,
+  "height": 1107,
+  "renderScale": 0.6396226415094339,
+  "previewScale": 0.9,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 466,
+    "height": 678
+  },
+  "screenInset": {
+    "left": 25.58490566037736,
+    "top": 12.79245283018868,
+    "right": 18.549056603773582,
+    "bottom": 17.269811320754716
+  },
+  "viewport": {
+    "portrait": {
+      "left": 25.58490566037736,
+      "top": 12.79245283018868,
+      "width": 463.08679245283014,
+      "height": 678,
+      "cornerRadius": 7.675471698113207,
+      "enableRotation": true,
+      "paths": {
+        "portrait": "M7.675471698113207 0H394.0075471698113Q463.08679245283014 0 463.08679245283014 69.07924528301886V608.9207547169812Q463.08679245283014 678 394.0075471698113 678H7.675471698113207Q0 678 0 670.3245283018867V7.675471698113207Q0 0 7.675471698113207 0Z"
+      }
+    },
+    "landscape": {
+      "left": 17.269811320754716,
+      "top": 25.58490566037736,
+      "width": 678,
+      "height": 463.08679245283014,
+      "cornerRadius": 7.675471698113207,
+      "enableRotation": true,
+      "paths": {
+        "landscape": "M7.675471698113207 0H670.3245283018867Q678 0 678 7.675471698113207V394.0075471698113Q678 463.08679245283014 608.9207547169812 463.08679245283014H69.07924528301886Q0 463.08679245283014 0 394.0075471698113V7.675471698113207Q0 0 7.675471698113207 0Z"
+      }
+    }
+  }
+},
+{
+  "id": "apple-iphone-duo-unfolded-2026",
+  "localPath": "/mockups/apple-iphone-duo-unfolded-2026.svg",
+  "sourceUrl": "https://www.apple.com/v/iphone-duo/a/images/overview/product-viewer/landscape__f7x2oe1oxemy_large_2x.jpg",
+  "file": "apple-iphone-duo-unfolded-2026.svg",
+  "bytes": 506248,
+  "width": 1447,
+  "height": 1037,
+  "renderScale": 0.6427104722792608,
+  "previewScale": 0.9,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 890,
+    "height": 626
+  },
+  "screenInset": {
+    "left": 18.638603696098563,
+    "top": 20.566735112936346,
+    "right": 17.9958932238193,
+    "bottom": 19.924024640657084
+  },
+  "viewport": {
+    "portrait": {
+      "left": 19.924024640657084,
+      "top": 18.638603696098563,
+      "width": 626,
+      "height": 893.3675564681726,
+      "cornerRadius": 57.84394250513348,
+      "enableRotation": true,
+      "paths": {
+        "portrait": "M57.84394250513348 0H568.1560574948666Q626 0 626 57.84394250513348V835.5236139630391Q626 893.3675564681726 568.1560574948666 893.3675564681726H57.84394250513348Q0 893.3675564681726 0 835.5236139630391V57.84394250513348Q0 0 57.84394250513348 0Z"
+      }
+    },
+    "landscape": {
+      "left": 18.638603696098563,
+      "top": 20.566735112936346,
+      "width": 893.3675564681726,
+      "height": 626,
+      "cornerRadius": 57.84394250513348,
+      "enableRotation": true,
+      "paths": {
+        "landscape": "M57.84394250513348 0H835.5236139630391Q893.3675564681726 0 893.3675564681726 57.84394250513348V568.1560574948666Q893.3675564681726 626 835.5236139630391 626H57.84394250513348Q0 626 0 568.1560574948666V57.84394250513348Q0 0 57.84394250513348 0Z"
+      }
+    }
+  }
+},
   {
     "id": "apple-imac-24-inch-2021",
     "localPath": "/mockups/apple-imac-24-inch-2021.png",
@@ -2867,7 +3051,7 @@ export function getMockupAssets(deviceId: string): MockupAsset[] {
   if (!asset) return [];
   const viewportId = asset.viewportSourceId ?? lookupId;
   return [{
-    kind: "transparent-png",
+    kind: asset.localPath.endsWith(".svg") ? "transparent-svg" : "transparent-png",
     localPath: asset.localPath,
     sourceUrl: asset.sourceUrl,
     width: asset.width,
@@ -2910,6 +3094,11 @@ export function getDeviceChromeMeta(deviceId: string): DeviceChromeMeta | undefi
 }
 
 export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
+  // New-device safe areas are presentation estimates pending native Safari validation.
+  "apple-iphone-18-pro-2026": { osName: "iOS", osVersion: "27.0", notch: false, devicePixelRatio: 3 },
+  "apple-iphone-18-pro-max-2026": { osName: "iOS", osVersion: "27.0", notch: false, devicePixelRatio: 3 },
+  "apple-iphone-duo-folded-2026": { osName: "iOS", osVersion: "27.0", notch: false, devicePixelRatio: 3, safeAreaInsetTop: 64, statusBarInsetRight: 64 },
+  "apple-iphone-duo-unfolded-2026": { osName: "iOS", osVersion: "27.0", notch: false, devicePixelRatio: 3 },
   "apple-watch-serie-6": { osName: "watchOS", osVersion: "7.0", notch: false, devicePixelRatio: 2 },
   "samsung-galaxy-s20": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: false, safeAreaInsetTop: 36 },
   "xiaomi-mi-11i": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: false, safeAreaInsetTop: 33 },

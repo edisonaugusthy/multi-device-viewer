@@ -50,11 +50,20 @@ describe("browser content boundaries", () => {
       expect(bare.bottom).toBe(12);
       const normal = getBrowserGeometry(duo, screen);
       const scrolled = getBrowserGeometry(duo, screen, { layout: "top" }, { collapsed: 1 });
-      expect(scrolled.content).toEqual(normal.content);
+      expect(scrolled.content.width).toBe(normal.content.width);
+      expect(scrolled.right).toBe(normal.right);
+      expect(scrolled.duoIconCenterRight).toBe(normal.duoIconCenterRight);
+      expect(scrolled.duoStatusTop).toBe(normal.duoStatusTop);
+      expect(scrolled.address).toBe(24);
+      expect(scrolled.bottom).toBe(36);
+      expect(scrolled.toolbar).toBe(scrolled.duoControls === "side" ? normal.toolbar : 0);
+      expect(scrolled.content.height - normal.content.height).toBe(normal.bottom - scrolled.bottom);
+      expect(scrolled.content.height).toBeGreaterThan(normal.content.height);
       const keyboard = getBrowserGeometry(duo, screen, {}, { keyboardHeight: 260 });
       expect(keyboard.right).toBe(normal.right);
       expect(keyboard.bottom).toBe(260);
       expect(keyboard.content.height + keyboard.top + keyboard.bottom).toBe(screen.height);
+      expect(getBrowserGeometry(duo, screen, {}, { keyboardHeight: 260, collapsed: 1 }).content).toEqual(keyboard.content);
     }
   });
   it.each(["apple-iphone-18-pro-2026", "apple-iphone-18-pro-max-2026"])("keeps %s cover pages outside the landscape camera", id => {

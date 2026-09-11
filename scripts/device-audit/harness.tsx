@@ -5,6 +5,7 @@ import { devices } from '../../src/domain/device/device-catalog';
 import { DeviceFrame } from '../../src/ui/components/DeviceFrame';
 import { getFrameProfile } from '../../src/domain/device/frame-profiles';
 import { supportsOrientation, toLandscapeAwareSize } from '../../src/domain/device/device-service';
+import { nextBrowserCollapse } from '../../src/domain/device/browser-geometry';
 
 const query = new URLSearchParams(location.search);
 const frameHost = document.getElementById('frame')!;
@@ -100,10 +101,21 @@ document.getElementById('run')!.addEventListener('click',async()=>{
  document.getElementById('status')!.textContent=results.length+' source-frame cases measured';
 });
 document.getElementById('landscape')!.addEventListener('click',()=>render(currentId,currentOrientation==='portrait'?'landscape':'portrait',currentScroll));
-document.getElementById('scroll')!.addEventListener('click',()=>{
+function scrollFixture(top:number){
  const frameWindow=frameRoot.querySelector('iframe')?.contentWindow;
- if(glassFixture)frameWindow?.postMessage({type:'device-audit-scroll'},fixtureUrl.origin);
- else frameWindow?.scrollTo(0,800);
- render(currentId,currentOrientation,1);
+ if(glassFixture)frameWindow?.postMessage({type:'device-audit-scroll',top},fixtureUrl.origin);
+ else {frameWindow?.scrollTo(0,top);render(currentId,currentOrientation,top?1:0);}
+}
+document.getElementById('scroll')!.addEventListener('click',()=>scrollFixture(800));
+const restoreButton=document.createElement('button');
+restoreButton.textContent='Scroll up';
+restoreButton.addEventListener('click',()=>scrollFixture(200));
+document.getElementById('scroll')!.after(restoreButton);
+window.addEventListener('message',event=>{
+ if(event.source!==frameRoot.querySelector('iframe')?.contentWindow||event.origin!==fixtureUrl.origin||event.data?.type!=='device-audit-scroll-state')return;
+ const {top,delta}=event.data;
+ if(!Number.isFinite(top)||!Number.isFinite(delta))return;
+ const next=nextBrowserCollapse(currentScroll,top,delta);
+ if(next!==currentScroll)render(currentId,currentOrientation,next);
 });
 render(currentId,cases[0][1]);

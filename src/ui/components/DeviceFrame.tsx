@@ -149,13 +149,14 @@ export function DeviceFrame({
   const browserGeometry = getBrowserGeometry(device, viewportSize, browserPreferences, {
     collapsed: chromeCollapse, keyboardHeight: mobileKeyboardHeight, showStatusBar, showUrlBar, viewportFit: pageSurfaces?.viewportFit,
   });
-  // Duo glass follows page luminance, without painting sampled accent colors
-  // across the chrome. Other new iPhones retain their neutral scroll surface.
+  // Standard iPhones tint both surfaces from the page, independently of the
+  // simulator theme and sensor/edge guards. Duo extends the actual page behind
+  // its glass controls, so only its backing stays neutral.
   const duoGlass = Boolean(browserGeometry.duoControls);
-  const topSurfaceDark = duoGlass ? pageSurfaces?.topIsDark ?? darkMode : browserGeometry.neutralChrome ? darkMode : pageSurfaces?.topIsDark ?? false;
-  const bottomSurfaceDark = duoGlass ? pageSurfaces?.bottomIsDark ?? darkMode : browserGeometry.neutralChrome ? darkMode : pageSurfaces?.bottomIsDark ?? false;
-  const topSurfaceColor = browserGeometry.neutralChrome ? topSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.top ?? "#ffffff";
-  const bottomSurfaceColor = browserGeometry.neutralChrome ? bottomSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.bottom ?? "#ffffff";
+  const topSurfaceDark = pageSurfaces?.topIsDark ?? (duoGlass ? darkMode : false);
+  const bottomSurfaceDark = pageSurfaces?.bottomIsDark ?? (duoGlass ? darkMode : false);
+  const topSurfaceColor = duoGlass ? topSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.top ?? "#ffffff";
+  const bottomSurfaceColor = duoGlass ? bottomSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.bottom ?? "#ffffff";
   const safariChrome = (showUrlBar || (browserGeometry.duoControls && showStatusBar)) && profile.platform === "ios" ? <SafariChrome
     geometry={browserGeometry} hostname={hostname} dark={bottomSurfaceDark} keyboard={Boolean(keyboard)}
     topColor={topSurfaceColor} bottomColor={bottomSurfaceColor} topDark={topSurfaceDark} showBattery={showBattery}
@@ -368,6 +369,7 @@ export function DeviceFrame({
                       {imageContentBottomH > 0 && (
                         <div
                           aria-hidden
+                          data-ios-bottom-surface={device.id}
                           className="pointer-events-none absolute inset-x-0 bottom-0 z-0"
                           style={{ height: imageContentBottomH, backgroundColor: bottomSurfaceColor }}
                         />

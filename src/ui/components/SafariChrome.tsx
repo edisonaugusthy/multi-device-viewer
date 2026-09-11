@@ -3,8 +3,8 @@ import { AlignLeft, X, BookOpen, ChevronLeft, ChevronRight, Copy, Info, Lock, Pl
 import type { BrowserGeometry } from "../../domain/device/browser-geometry";
 
 /** Extend adjacent composited page pixels into a reserved browser edge. */
-function DuoGlassEdge({ edge, size, dark, bottom = 0 }: {
-  edge: "right" | "top" | "bottom"; size: number; dark: boolean; bottom?: number;
+function DuoGlassEdge({ edge, size, dark, bottom = 0, surface = true }: {
+  edge: "right" | "top" | "bottom"; size: number; dark: boolean; bottom?: number; surface?: boolean;
 }) {
   const filterId = useId().replaceAll(":", "");
   const right = edge === "right";
@@ -13,11 +13,11 @@ function DuoGlassEdge({ edge, size, dark, bottom = 0 }: {
     <svg width="0" height="0" className="absolute"><defs>
       <filter id={filterId} x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
         <feOffset dx={right ? size : 0} dy={right ? 0 : top ? -size : size}/>
-        <feGaussianBlur stdDeviation="18"/>
-        <feColorMatrix type="saturate" values="1.35"/>
+        <feGaussianBlur stdDeviation={surface ? 18 : 8}/>
+        <feColorMatrix type="saturate" values={surface ? "1.35" : "1"}/>
       </filter>
     </defs></svg>
-    <div data-duo-glass={edge} className="absolute" style={{
+    <div data-duo-background-extension={edge} data-duo-glass={surface ? edge : undefined} className="absolute" style={{
       // Capture an adjacent strip of the real iframe, then clip the filtered
       // output to the chrome. Unlike box reflections, backdrop filters include
       // cross-origin iframe surfaces. The page viewport remains unobscured.
@@ -26,7 +26,9 @@ function DuoGlassEdge({ edge, size, dark, bottom = 0 }: {
         : { left: 0, right: 0, height: size * 2, ...(top
           ? { top: 0, clipPath: `inset(0 0 ${size}px 0)` }
           : { bottom: 0, clipPath: `inset(${size}px 0 0 0)` }) }),
-      background: dark ? "rgba(24,27,33,.32)" : "rgba(255,255,255,.3)",
+      // Floating controls have local glass; their background extension must
+      // not add a continuous tinted panel along the screen edge.
+      background: surface ? dark ? "rgba(24,27,33,.32)" : "rgba(255,255,255,.3)" : "transparent",
       backdropFilter: `url(#${filterId})`,
       WebkitBackdropFilter: `url(#${filterId})`,
     }}/>
@@ -44,7 +46,8 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
   const bottomGlass = `color-mix(in srgb, ${bottomColor} 15%, ${glass})`;
   if (g.duoControls) {
     const side = g.duoControls === "side";
-    // Duo navigation remains stationary while the webpage scrolls.
+    const minimized = g.collapse > 0.5;
+    // Side navigation remains stationary while the bottom bar minimizes.
     const buttonSize = 36;
     const iconRight = (g.duoIconCenterRight ?? g.right / 2) - buttonSize / 2;
     const frost = (isDark: boolean): CSSProperties => ({
@@ -62,9 +65,9 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
       </div>
     </div>;
     return <div aria-hidden data-safari-style={`duo-${g.duoControls}`} data-browser-collapsed={g.collapse > 0 ? "true" : "false"} className="pointer-events-none absolute inset-0 z-20" style={{ color: topInk }}>
-      {side && g.right > 0 && <DuoGlassEdge edge="right" size={g.right} dark={topDark} bottom={g.bottom}/>}
+      {side && g.right > 0 && <DuoGlassEdge edge="right" size={g.right} dark={topDark} bottom={g.bottom} surface={false}/>}
       {!side && g.top > 0 && <DuoGlassEdge edge="top" size={g.top} dark={topDark}/>}
-      {!keyboard && g.bottom > 0 && <DuoGlassEdge edge="bottom" size={g.bottom} dark={dark}/>}
+      {!keyboard && g.bottom > 0 && <DuoGlassEdge edge="bottom" size={g.bottom} dark={dark} surface={!minimized}/>}
       {g.status > 0 && <div className="absolute flex justify-center" style={{
         top: g.duoStatusTop, right: side ? iconRight : g.statusInsetRight, width: side ? buttonSize : undefined,
       }}>{status}</div>}
@@ -74,7 +77,15 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
         <span style={buttonStyle}><ChevronLeft size={18}/></span>
         <span style={buttonStyle}><BookOpen size={18}/></span>
       </div>}
-      {!keyboard && g.address > 0 && g.duoFullWidthBottom && <>
+      {!keyboard && g.address > 0 && minimized && <div data-browser-control="compact-address" className="absolute flex justify-center" style={{
+        left: 0, right: g.duoFullWidthBottom ? 0 : g.right, bottom: 12, height: g.address, color: ink,
+      }}>
+        <div className="flex min-w-0 items-center justify-center gap-1.5 rounded-full px-3" style={{
+          width: "min(60%, 240px)", height: g.address, ...frost(dark), fontSize: 11,
+          boxShadow: "inset 0 1px 1px #ffffff45, 0 1px 5px #00000012",
+        }}><Lock size={9} className="shrink-0"/><span className="truncate">{hostname}</span></div>
+      </div>}
+      {!keyboard && !minimized && g.address > 0 && g.duoFullWidthBottom && <>
         <div data-browser-control="new-tab" className="absolute grid place-items-center" style={{ right: iconRight, bottom: 12 + g.address, width: buttonSize, height: 44 }}><Plus size={18}/></div>
         <div data-browser-control="bottom-address" className="absolute flex items-center" style={{ left: 0, right: 0, bottom: 12, height: g.address, color: ink }}>
           <div className="flex min-w-0 flex-1 items-center gap-4 px-5" style={{ fontSize: 12 }}>
@@ -83,7 +94,7 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
           <span data-browser-control="tab-switcher" className="grid shrink-0 place-items-center" style={{ width: buttonSize, marginRight: iconRight, height: g.address }}><Copy size={19}/></span>
         </div>
       </>}
-      {!keyboard && g.address > 0 && !g.duoFullWidthBottom && <div data-browser-control="bottom-address" className="absolute flex items-center gap-3 px-4" style={{
+      {!keyboard && !minimized && g.address > 0 && !g.duoFullWidthBottom && <div data-browser-control="bottom-address" className="absolute flex items-center gap-3 px-4" style={{
         left: 0, right: g.right, bottom: 12 + (side ? 0 : g.toolbar), height: g.address, color: ink,
       }}>
         <Info size={17} className="shrink-0"/>

@@ -311,6 +311,64 @@ test("aligns the iPhone 17e Liquid Glass header color with its notch opening", a
   expect(Math.abs(surfaceBox!.y - screenBox!.y)).toBeLessThanOrEqual(1);
 });
 
+for (const model of ["iPhone 18 Pro", "iPhone 18 Pro Max"]) {
+  test(`${model} follows page surface colors through scrolling and rotation`, async ({ page }) => {
+    await page.getByTestId("device-switcher-button").first().click();
+    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill(model);
+    await page.locator(`button[title="Apple ${model}"]`).click();
+    const slot = page.locator("[data-preview-slot-id]").first();
+    const iframe = slot.locator("iframe");
+    const top = slot.locator("[data-ios-top-surface]");
+    const bottom = slot.locator("[data-ios-bottom-surface]");
+    const address = slot.locator('[data-browser-control="bottom-address"]');
+
+    for (let rotation = 0; rotation < 2; rotation++) {
+      if (rotation) {
+        await openViewportActions(page);
+        await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+      }
+      const embedded = await (await iframe.elementHandle())!.contentFrame();
+      // Exercise the real iframe-to-preview message boundary. Swap light/dark
+      // edges while scrolling so neither chrome surface can use the shell theme.
+      for (const collapsed of [false, true]) {
+        const colors = collapsed
+          ? { topColor: "rgb(242, 231, 218)", bottomColor: "rgb(92, 24, 47)", topIsDark: false, bottomIsDark: true }
+          : { topColor: "rgb(18, 96, 180)", bottomColor: "rgb(240, 240, 242)", topIsDark: true, bottomIsDark: false };
+        await embedded!.evaluate(({ colors, collapsed }) => {
+          const slotId = window.name.replace(/^mdv-(?:mobile-)?preview-/, "");
+          parent.postMessage({ type: "MDV_PAGE_SURFACE_COLORS", slotId, ...colors, viewportFit: "cover" }, "*");
+          parent.postMessage({ type: "MDV_BROWSER_SCROLL", slotId, scrollTop: collapsed ? 800 : 0, deltaTop: collapsed ? 40 : -40 }, "*");
+        }, { colors, collapsed });
+        await expect(top).toHaveCSS("background-color", colors.topColor);
+        await expect(bottom).toHaveCSS("background-color", colors.bottomColor);
+        await expect(iframe).toHaveCSS("background-color", colors.topColor);
+        await expect(address).toHaveCSS("color", collapsed ? "rgb(243, 244, 246)" : "rgb(38, 49, 66)");
+        await expect(slot.locator("[data-safari-style]")).toHaveAttribute("data-browser-collapsed", String(collapsed));
+        // A scrolling accent can tint the browser but must not paint a stripe
+        // over the page. Only opaque pinned page edges may get seam guards.
+        await expect(slot.locator("[data-preview-edge]")).toHaveCount(0);
+        const bounds = await slot.evaluate(el => {
+          const content = el.querySelector("iframe")!.getBoundingClientRect();
+          const header = el.querySelector("[data-ios-top-surface]")!.getBoundingClientRect();
+          const footer = el.querySelector("[data-ios-bottom-surface]")!.getBoundingClientRect();
+          return { topGap: content.top - header.bottom, bottomGap: footer.top - content.bottom };
+        });
+        expect(Math.abs(bounds.topGap)).toBeLessThan(1);
+        expect(Math.abs(bounds.bottomGap)).toBeLessThan(1);
+        if (!rotation) {
+          const clock = slot.locator("[data-status-clock]");
+          if (collapsed) await expect(clock).not.toHaveCSS("color", "rgb(255, 255, 255)");
+          else await expect(clock).toHaveCSS("color", "rgb(255, 255, 255)");
+        }
+        const theme = page.getByRole("button", { name: /^(Dark|Light) theme$/ });
+        await theme.click();
+        await expect(top).toHaveCSS("background-color", colors.topColor);
+        await expect(bottom).toHaveCSS("background-color", colors.bottomColor);
+      }
+    }
+  });
+}
+
 test("keeps the Modern Laptop display below the webcam and uses Windows browser controls", async ({ page }) => {
   await page.getByTestId("device-switcher-button").first().click();
   await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("Modern Laptop 15");
@@ -353,6 +411,54 @@ test("keeps native-landscape foldables and their hardware inside the preview can
   expect(frameBox!.y).toBeGreaterThanOrEqual(canvasBox!.y - 1);
   expect(frameBox!.x + frameBox!.width).toBeLessThanOrEqual(canvasBox!.x + canvasBox!.width + 1);
   expect(frameBox!.y + frameBox!.height).toBeLessThanOrEqual(canvasBox!.y + canvasBox!.height + 1);
+});
+
+test("minimizes Duo browser controls on scroll without shifting side icons or covering the page", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  for (const posture of ["folded", "unfolded"]) {
+    await page.getByTestId("device-switcher-button").first().click();
+    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone Duo");
+    await page.locator(`button[title="Apple iPhone Duo (${posture})"]`).click();
+    for (let rotation = 0; rotation < 2; rotation++) {
+      if (rotation) {
+        await openViewportActions(page);
+        await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+      }
+      const iframe = slot.locator("iframe");
+      const expanded = slot.locator('[data-browser-control="bottom-address"]');
+      const compact = slot.locator('[data-browser-control="compact-address"]');
+      await expect(expanded).toBeVisible();
+      const originalSize = await iframe.evaluate(el => ({ width: el.clientWidth, height: el.clientHeight }));
+      const sideControls = slot.locator('[data-browser-control="side-toolbar"], [data-browser-control="duo-status"]');
+      const readSidePositions = () => sideControls.evaluateAll(elements => elements.map(el => {
+        const r = el.getBoundingClientRect();
+        return { x: r.x, y: r.y, width: r.width, height: r.height };
+      }));
+      const originalPositions = await readSidePositions();
+      const embedded = await (await iframe.elementHandle())!.contentFrame();
+      const sendScroll = (scrollTop: number, deltaTop: number) => embedded!.evaluate(({ scrollTop, deltaTop }) => {
+        parent.postMessage({ type: "MDV_BROWSER_SCROLL", slotId: window.name.replace(/^mdv-(?:mobile-)?preview-/, ""), scrollTop, deltaTop }, "*");
+      }, { scrollTop, deltaTop });
+      await sendScroll(800, 40);
+      await expect(compact).toBeVisible();
+      await expect(expanded).toHaveCount(0);
+      await expect(slot.locator('[data-duo-glass="right"]')).toHaveCount(0);
+      const compactSize = await iframe.evaluate(el => ({ width: el.clientWidth, height: el.clientHeight }));
+      expect(compactSize.width).toBe(originalSize.width);
+      expect(compactSize.height).toBeGreaterThan(originalSize.height);
+      expect(await readSidePositions()).toEqual(originalPositions);
+      const pageBox = (await iframe.boundingBox())!;
+      const barBox = (await compact.boundingBox())!;
+      expect(barBox.y).toBeGreaterThanOrEqual(pageBox.y + pageBox.height - 1);
+      await sendScroll(800, 0);
+      await expect(compact).toBeVisible();
+      await sendScroll(760, -40);
+      await expect(expanded).toBeVisible();
+      await expect(compact).toHaveCount(0);
+      expect(await iframe.evaluate(el => ({ width: el.clientWidth, height: el.clientHeight }))).toEqual(originalSize);
+      expect(await readSidePositions()).toEqual(originalPositions);
+    }
+  }
 });
 
 test("does not report standalone previews as blocked when no extension bridge is present", async ({ page }) => {

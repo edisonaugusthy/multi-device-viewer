@@ -851,9 +851,9 @@ export function PreviewCard({
                     style={{
                       width: "100%",
                       colorScheme: display.darkMode ? "dark" : "light",
-                      // The iframe's own backing can peek through fractional
-                      // raster edges too; keep it neutral on the new Apple frames.
-                      backgroundColor: browserGeometry.neutralChrome
+                      // Match the page at fractional raster edges. Duo uses a
+                      // neutral backing beneath its extended glass backdrop.
+                      backgroundColor: browserGeometry.duoControls
                         ? display.darkMode ? "#1c1c1e" : "#ffffff"
                         : pageSurfaces?.top ?? (display.darkMode ? "#0f172a" : "#ffffff"),
                       scrollbarWidth: device.type === "phone" || device.type === "tablet" ? "none" : "auto",

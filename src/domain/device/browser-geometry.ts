@@ -59,8 +59,11 @@ export function getBrowserGeometry(device: Device, screen: Size, preferences: Br
     const controls = options.showUrlBar !== false;
     const status = options.showStatusBar === false ? 0 : 56;
     const collapse = Math.max(0, Math.min(1, options.collapsed ?? 0));
-    const address = controls ? 48 : 0;
-    const toolbar = controls ? side ? 80 : 40 : 0;
+    const minimized = collapse > 0.5;
+    const address = controls ? minimized ? 24 : 48 : 0;
+    // Keep side controls on their camera axis while the lower browser area
+    // shrinks. Only horizontal navigation folds into the compact address bar.
+    const toolbar = controls ? side ? 80 : minimized ? 0 : 40 : 0;
     // Position icons on the camera axis independently of content clearance.
     // Only the icon/camera radius plus a small gap needs to be reserved on
     // the content-facing side; matching padding at the outer edge wastes space.

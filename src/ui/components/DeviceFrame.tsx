@@ -149,13 +149,13 @@ export function DeviceFrame({
   const browserGeometry = getBrowserGeometry(device, viewportSize, browserPreferences, {
     collapsed: chromeCollapse, keyboardHeight: mobileKeyboardHeight, showStatusBar, showUrlBar, viewportFit: pageSurfaces?.viewportFit,
   });
-  // Keep the new Apple browser chrome neutral. Scrolling past a colored post
-  // must not paint that color across the device's status/header area.
-  const neutralColor = darkMode ? "#1c1c1e" : "#ffffff";
-  const topSurfaceColor = browserGeometry.neutralChrome ? neutralColor : pageSurfaces?.top ?? "#ffffff";
-  const bottomSurfaceColor = browserGeometry.neutralChrome ? neutralColor : pageSurfaces?.bottom ?? "#ffffff";
-  const topSurfaceDark = browserGeometry.neutralChrome ? darkMode : pageSurfaces?.topIsDark ?? false;
-  const bottomSurfaceDark = browserGeometry.neutralChrome ? darkMode : pageSurfaces?.bottomIsDark ?? false;
+  // Duo glass follows page luminance, without painting sampled accent colors
+  // across the chrome. Other new iPhones retain their neutral scroll surface.
+  const duoGlass = Boolean(browserGeometry.duoControls);
+  const topSurfaceDark = duoGlass ? pageSurfaces?.topIsDark ?? darkMode : browserGeometry.neutralChrome ? darkMode : pageSurfaces?.topIsDark ?? false;
+  const bottomSurfaceDark = duoGlass ? pageSurfaces?.bottomIsDark ?? darkMode : browserGeometry.neutralChrome ? darkMode : pageSurfaces?.bottomIsDark ?? false;
+  const topSurfaceColor = browserGeometry.neutralChrome ? topSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.top ?? "#ffffff";
+  const bottomSurfaceColor = browserGeometry.neutralChrome ? bottomSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.bottom ?? "#ffffff";
   const safariChrome = (showUrlBar || (browserGeometry.duoControls && showStatusBar)) && profile.platform === "ios" ? <SafariChrome
     geometry={browserGeometry} hostname={hostname} dark={bottomSurfaceDark} keyboard={Boolean(keyboard)}
     topColor={topSurfaceColor} bottomColor={bottomSurfaceColor} topDark={topSurfaceDark} showBattery={showBattery}

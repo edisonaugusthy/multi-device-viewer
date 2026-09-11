@@ -23,50 +23,39 @@ describe("browser content boundaries", () => {
     expect(keyboard.content.height).toBeLessThan(normal.content.height);
     expect(keyboard.bottom).toBe(400);
   });
-  it("adapts Duo Safari to orientation without an inner-display sensor margin", () => {
-    const duo = devices.find(d => d.id === "apple-iphone-duo-unfolded-2026")!;
-    const portrait = getBrowserGeometry(duo, { width: 626, height: 890 });
-    const landscape = getBrowserGeometry(duo, { width: 890, height: 626 });
-    expect(portrait.duoControls).toBe("top");
-    expect(portrait.top).toBe(Math.max(portrait.status, portrait.address));
-    expect(portrait.toolbar).toBe(0);
-    expect(portrait.left + portrait.right).toBe(0);
+  it.each(["apple-iphone-duo-folded-2026", "apple-iphone-duo-unfolded-2026"])("uses posture-specific orientation rules for controls on %s", id => {
+    const duo = devices.find(d => d.id === id)!;
+    const folded = id.includes("-folded-");
+    const portrait = getBrowserGeometry(duo, { width: 466, height: 678 });
+    const landscape = getBrowserGeometry(duo, { width: 678, height: 466 });
+    expect(portrait.duoControls).toBe(folded ? "side" : "bottom");
+    expect(portrait.duoFullWidthBottom).toBe(folded);
+    expect(portrait.top).toBe(folded ? 0 : 40);
+    expect(portrait.left).toBe(0);
+    expect(portrait.right).toBeCloseTo(folded ? Math.ceil(466 * 74 / 724 + 24) : 0);
+    expect(portrait.duoStatusTop).toBe(folded ? 80 : 4);
+    expect(portrait.bottom).toBe(portrait.address + (folded ? 0 : portrait.toolbar) + 12);
     expect(landscape.duoControls).toBe("side");
-    expect(landscape.top + landscape.bottom).toBe(0);
-    expect(landscape.content.height).toBe(626);
-    expect(landscape.duoToolbarSide).toBe("right");
-    expect(landscape.right).toBe(landscape.toolbar);
-    expect(landscape.left).toBe(76);
-    // viewport-fit=cover must not put fixed page actions under our side controls.
-    expect(getBrowserGeometry(duo, { width: 890, height: 626 }, {}, { viewportFit: "cover" })).toEqual(landscape);
-    const bare = getBrowserGeometry(duo, { width: 890, height: 626 }, {}, { showStatusBar: false, showUrlBar: false });
-    expect(bare.right).toBe(0);
-    expect(bare.left).toBeLessThan(20); // home gesture clearance only
-    expect(bare.status).toBe(0);
-  });
-  it("keeps the Duo outer camera clear while allowing the inner page to fill the screen", () => {
-    const folded = devices.find(d => d.id === "apple-iphone-duo-folded-2026")!;
-    const portrait = getBrowserGeometry(folded, { width: 466, height: 678 }, {}, { showStatusBar: false, showUrlBar: false });
-    const landscape = getBrowserGeometry(folded, { width: 678, height: 466 }, {}, { showStatusBar: false, showUrlBar: false, viewportFit: "cover" });
-    expect(portrait.top).toBe(80);
-    expect(portrait.statusInsetRight).toBe(80);
-    expect(landscape.right).toBe(80);
-    expect(landscape.duoToolbarSide).toBe("left");
-  });
-  it("reserves Duo side controls through scrolling and keyboard presentation", () => {
-    const duo = devices.find(d => d.id === "apple-iphone-duo-unfolded-2026")!;
-    const screen = { width: 890, height: 626 };
-    const expanded = getBrowserGeometry(duo, screen);
-    const scrolled = getBrowserGeometry(duo, screen, { layout: "compact" }, { collapsed: 1 });
-    const keyboard = getBrowserGeometry(duo, screen, {}, { keyboardHeight: 260 });
-    expect(scrolled.duoControls).toBe("side"); // old saved phone preferences normalize
-    expect(scrolled.left).toBe(expanded.left);
-    expect(scrolled.right).toBe(expanded.right);
-    expect(scrolled.content.width).toBe(expanded.content.width);
-    expect(scrolled.pillHeight).toBe(0);
-    expect(keyboard.left).toBe(expanded.left);
-    expect(keyboard.right).toBe(expanded.right);
-    expect(keyboard.content.height).toBe(expanded.content.height - 260);
+    expect(landscape.duoFullWidthBottom).toBe(!folded);
+    expect(landscape.left).toBe(0);
+    expect(landscape.right - landscape.duoIconCenterRight!).toBeLessThanOrEqual(28);
+    expect(landscape.right - landscape.duoIconCenterRight!).toBeGreaterThanOrEqual(24);
+    expect(landscape.right).toBeCloseTo(folded ? Math.ceil(678 * 83 / 1060 + 24) : 56);
+    expect(landscape.bottom).toBe(landscape.address + 12);
+    expect(getBrowserGeometry(duo, { width: 678, height: 466 }, {}, { viewportFit: "cover" })).toEqual(landscape);
+    for (const screen of [{ width: 466, height: 678 }, { width: 678, height: 466 }]) {
+      const bare = getBrowserGeometry(duo, screen, {}, { showStatusBar: false, showUrlBar: false });
+      expect(bare.right).toBeCloseTo(folded ? screen.width < screen.height ? Math.ceil(screen.width * 74 / 724 + 24) : Math.ceil(screen.width * 83 / 1060 + 24) : 0);
+      expect(bare.top).toBe(0);
+      expect(bare.bottom).toBe(12);
+      const normal = getBrowserGeometry(duo, screen);
+      const scrolled = getBrowserGeometry(duo, screen, { layout: "top" }, { collapsed: 1 });
+      expect(scrolled.content).toEqual(normal.content);
+      const keyboard = getBrowserGeometry(duo, screen, {}, { keyboardHeight: 260 });
+      expect(keyboard.right).toBe(normal.right);
+      expect(keyboard.bottom).toBe(260);
+      expect(keyboard.content.height + keyboard.top + keyboard.bottom).toBe(screen.height);
+    }
   });
   it.each(["apple-iphone-18-pro-2026", "apple-iphone-18-pro-max-2026"])("keeps %s cover pages outside the landscape camera", id => {
     const phone = devices.find(d => d.id === id)!;

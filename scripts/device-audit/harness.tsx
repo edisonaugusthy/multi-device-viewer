@@ -6,7 +6,16 @@ import { DeviceFrame } from '../../src/ui/components/DeviceFrame';
 import { getFrameProfile } from '../../src/domain/device/frame-profiles';
 import { supportsOrientation, toLandscapeAwareSize } from '../../src/domain/device/device-service';
 
-const root=createRoot(document.getElementById('frame')!);
+const query = new URLSearchParams(location.search);
+const frameHost = document.getElementById('frame')!;
+const frameRoot = query.has('shadow') ? frameHost.attachShadow({mode:'open'}) : frameHost;
+const mount = document.createElement('div');
+if (query.has('shadow')) {
+ const stylesheet = document.createElement('link');
+ stylesheet.rel='stylesheet';stylesheet.href='/style.css';frameRoot.append(stylesheet);
+}
+frameRoot.append(mount);
+const root=createRoot(mount);
 const representativeCases=[
  ['apple-iphone-17-pro-2025','portrait'],['apple-iphone-17-pro-2025','landscape'],
  ['apple-iphone-air-2025','portrait'],['apple-iphone-17e-2026','portrait'],
@@ -19,8 +28,19 @@ const representativeCases=[
  ['samsung-galaxy-s26-ultra-2026','portrait'],['google-pixel-11-2026','portrait'],
  ['samsung-galaxy-z-fold7-unfolded-2025','landscape'],
 ] as const;
-const cases = new URLSearchParams(location.search).has("all") ? devices.flatMap(d => (supportsOrientation(d) ? ["portrait", "landscape"] : ["portrait"]).map(o => [d.id,o] as const)) : representativeCases;
+const glassFixture = query.has('glass');
+const lightGlass = query.get('glass') === 'light';
+const fixtureUrl = new URL(glassFixture ? '/glass.html' : '/probe.html', location.origin);
+if (lightGlass) fixtureUrl.searchParams.set('light', '');
+if (glassFixture && query.has('cross-origin')) fixtureUrl.hostname = location.hostname === 'localhost' ? '127.0.0.1' : 'localhost';
+const cases = query.has("device") ? [[query.get("device")!, query.get("orientation") ?? "portrait"]] as const : query.has("all") ? devices.flatMap(d => (supportsOrientation(d) ? ["portrait", "landscape"] : ["portrait"]).map(o => [d.id,o] as const)) : representativeCases;
 document.getElementById("run")!.textContent = "Measure " + cases.length + " cases";
+if (fixtureUrl.origin !== location.origin) {
+ const button = document.getElementById('run') as HTMLButtonElement;
+ button.disabled = true;
+ button.textContent = 'Cross-origin visual check';
+ button.title = 'Remove cross-origin from the URL to run same-origin DOM measurements.';
+}
 const sleep=(ms:number)=>new Promise(r=>setTimeout(r,ms));
 let currentId=cases[0][0] as string, currentOrientation='portrait', currentScroll=0;
 function render(id:string,orientation:string,scroll=0){
@@ -29,30 +49,30 @@ function render(id:string,orientation:string,scroll=0){
  currentId=id;currentOrientation=orientation;currentScroll=scroll;
  const v=supportsOrientation(d)?toLandscapeAwareSize(d.cssViewport,orientation as any):d.cssViewport;
  document.getElementById('case')!.textContent=d.name+' · '+orientation+' · '+v.width+' × '+v.height;
- root.render(<I18nProvider><DeviceFrame device={d} showFrame showStatusBar showBattery showUrlBar darkMode={false} url="https://fixture.example" viewportSize={v} orientation={orientation as any} scrollProgress={scroll} pageSurfaces={{top:'#133d55',bottom:'#b22238',topIsDark:true,bottomIsDark:true}}>
-   <div style={{position:'relative',width:'100%',height:'100%',overflow:'hidden'}}><iframe key={id+orientation} title="Frame measurement page" src="/probe.html" style={{display:'block',width:'100%',height:'100%',border:0}}/></div>
+ root.render(<I18nProvider><DeviceFrame device={d} showFrame showStatusBar showBattery showUrlBar darkMode={false} url="https://fixture.example" viewportSize={v} orientation={orientation as any} scrollProgress={scroll} pageSurfaces={glassFixture ? {top:lightGlass?'#f5f8fa':'#111318',bottom:lightGlass?'#f5f8fa':'#111318',topIsDark:!lightGlass,bottomIsDark:!lightGlass} : {top:'#133d55',bottom:'#b22238',topIsDark:true,bottomIsDark:true}}>
+   <div style={{position:'relative',width:'100%',height:'100%',overflow:'hidden'}}><iframe key={id+orientation} title="Frame measurement page" src={fixtureUrl.href} style={{display:'block',width:'100%',height:'100%',border:0}}/></div>
  </DeviceFrame></I18nProvider>);
 }
 function rect(r:DOMRect){return{x:r.x,y:r.y,width:r.width,height:r.height,top:r.top,right:r.right,bottom:r.bottom,left:r.left};}
 async function measure(){
  for(let i=0;i<30;i++){
-  const f=document.querySelector('iframe');
-  const imgs=Array.from(document.querySelectorAll<HTMLImageElement>('#frame img'));
+  const f=frameRoot.querySelector('iframe');
+  const imgs=Array.from(frameRoot.querySelectorAll<HTMLImageElement>('img'));
   if(f?.contentDocument?.getElementById('fixed-footer')&&imgs.every(x=>x.complete&&x.naturalWidth>0))break;
   await sleep(50);
  }
  await sleep(80);
- const f=document.querySelector('iframe')!;
- if(Array.from(document.querySelectorAll<HTMLImageElement>('#frame img')).some(x=>!x.complete||!x.naturalWidth))throw new Error('Missing frame artwork: '+currentId);
+ const f=frameRoot.querySelector('iframe')!;
+ if(Array.from(frameRoot.querySelectorAll<HTMLImageElement>('img')).some(x=>!x.complete||!x.naturalWidth))throw new Error('Missing frame artwork: '+currentId);
  const w=f.contentWindow!, doc=f.contentDocument!;
  const d=devices.find(x=>x.id===currentId)!;
- const screen=document.querySelector<HTMLElement>('[data-device-screen]')!;
+ const screen=frameRoot.querySelector<HTMLElement>('[data-device-screen]')!;
  const fr=f.getBoundingClientRect();
  const screenRect=screen?.getBoundingClientRect();
  const footer=doc.getElementById('fixed-footer')!.getBoundingClientRect();
  const scaleX=fr.width/f.clientWidth,scaleY=fr.height/f.clientHeight;
  const globalFooter={left:fr.left+footer.left*scaleX,right:fr.left+footer.right*scaleX,top:fr.top+footer.top*scaleY,bottom:fr.top+footer.bottom*scaleY};
- const bars=Array.from(document.querySelectorAll<HTMLElement>('[data-browser-control]')).map(el=>el.getBoundingClientRect());
+ const bars=Array.from(frameRoot.querySelectorAll<HTMLElement>('[data-browser-control]')).map(el=>el.getBoundingClientRect());
  const bar=bars.find(r=>r.top>fr.top);
  const overlap=Math.max(0,...bars.map(r=>{
   const width=Math.min(r.right,globalFooter.right)-Math.max(r.left,globalFooter.left);
@@ -62,23 +82,28 @@ async function measure(){
  }));
  const edge=doc.getElementById('left-edge')!.getBoundingClientRect();
  const ex=fr.left+(edge.left+4)*scaleX,ey=fr.top+(edge.top+edge.height/2)*scaleY;
- const hit=document.elementFromPoint(ex,ey);
+ const hit=frameRoot instanceof ShadowRoot?frameRoot.elementFromPoint(ex,ey):document.elementFromPoint(ex,ey);
  return {id:d.id,name:d.name,orientation:currentOrientation,profile:getFrameProfile(d).chromeVariant,
   screenCss:d.cssViewport,iframeCss:{width:w.innerWidth,height:w.innerHeight},iframeClient:{width:f.clientWidth,height:f.clientHeight},
   hostDpr:w.devicePixelRatio,presetDpr:d.pixelRatio,safeAreaBottom:doc.getElementById('safe')!.getBoundingClientRect().height,
   scaleX,scaleY,anisotropyPercent:Math.abs(scaleX/scaleY-1)*100,
-  frame:rect(document.querySelector('[data-device-frame]')!.getBoundingClientRect()),
+  frame:rect(frameRoot.querySelector('[data-device-frame]')!.getBoundingClientRect()),
   screen:screenRect?rect(screenRect):null,iframe:rect(fr),liquidGlassBar:bar?rect(bar):null,
   fixedFooterOccludedCssPx:overlap,leftEdgePointHitsIframe:hit===f,
-  headerPaintOverlapCss:document.querySelector<HTMLElement>('[data-ios-top-surface]')?Math.max(0,document.querySelector<HTMLElement>('[data-ios-top-surface]')!.getBoundingClientRect().bottom-fr.top)/scaleY:0};
+  headerPaintOverlapCss:frameRoot.querySelector<HTMLElement>('[data-ios-top-surface]')?Math.max(0,frameRoot.querySelector<HTMLElement>('[data-ios-top-surface]')!.getBoundingClientRect().bottom-fr.top)/scaleY:0};
 }
 document.getElementById('run')!.addEventListener('click',async()=>{
  const results=[];document.getElementById('status')!.textContent='Measuring current source frames';
  for(const [id,orientation] of cases){render(id,orientation);await sleep(80);results.push(await measure());}
  document.getElementById('results')!.textContent=JSON.stringify(results,null,2);
- render(cases[0][0],'portrait');
+ render(cases[0][0],cases[0][1]);
  document.getElementById('status')!.textContent=results.length+' source-frame cases measured';
 });
 document.getElementById('landscape')!.addEventListener('click',()=>render(currentId,currentOrientation==='portrait'?'landscape':'portrait',currentScroll));
-document.getElementById('scroll')!.addEventListener('click',()=>{document.querySelector('iframe')?.contentWindow?.scrollTo(0,800);render(currentId,currentOrientation,1);});
-render(currentId,'portrait');
+document.getElementById('scroll')!.addEventListener('click',()=>{
+ const frameWindow=frameRoot.querySelector('iframe')?.contentWindow;
+ if(glassFixture)frameWindow?.postMessage({type:'device-audit-scroll'},fixtureUrl.origin);
+ else frameWindow?.scrollTo(0,800);
+ render(currentId,currentOrientation,1);
+});
+render(currentId,cases[0][1]);

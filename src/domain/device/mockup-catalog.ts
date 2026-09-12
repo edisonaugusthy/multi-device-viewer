@@ -28,45 +28,43 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 {
   "id": "apple-iphone-18-pro-2026",
   "localPath": "/mockups/apple-iphone-18-pro-2026.svg",
-  "sourceUrl": "https://www.apple.com/v/iphone/compare/am/images/overview/compare_iphone_18_pro_burgundy__mdv9ns7r6oa6_large_2x.jpg",
   "file": "apple-iphone-18-pro-2026.svg",
-  "bytes": 78408,
-  "width": 316,
-  "height": 650,
-  "renderScale": 1.39171974522293,
-  "previewScale": 0.9,
-  "frameOverlay": true,
+  "bytes": 2263,
+  "width": 438,
+  "height": 906,
+  "renderScale": 1,
+  "frameOverlay": false,
   "cssViewport": {
     "width": 402,
     "height": 874
   },
   "screenInset": {
-    "left": 20.87579617834395,
-    "top": 15.30891719745223,
-    "right": 16.70063694267516,
-    "bottom": 15.30891719745223
+    "left": 18,
+    "top": 16,
+    "right": 18,
+    "bottom": 16
   },
   "viewport": {
     "portrait": {
-      "left": 20.87579617834395,
-      "top": 15.30891719745223,
-      "width": 402.2070063694268,
+      "left": 18,
+      "top": 16,
+      "width": 402,
       "height": 874,
-      "cornerRadius": 66.80254777070064,
+      "cornerRadius": 76,
       "enableRotation": true,
       "paths": {
-        "portrait": "M66.80254777070064 0H335.40445859872614Q402.2070063694268 0 402.2070063694268 66.80254777070064V807.1974522292994Q402.2070063694268 874 335.40445859872614 874H66.80254777070064Q0 874 0 807.1974522292994V66.80254777070064Q0 0 66.80254777070064 0Z"
+        "portrait": "M76 0H326C373.12 0 402 28.88 402 76V798C402 845.12 373.12 874 326 874H76C28.88 874 0 845.12 0 798V76C0 28.88 28.88 0 76 0ZM171 14H231A18 18 0 0 1 249 32V32A18 18 0 0 1 231 50H171A18 18 0 0 1 153 32V32A18 18 0 0 1 171 14Z"
       }
     },
     "landscape": {
-      "left": 15.30891719745223,
-      "top": 20.87579617834395,
+      "left": 16,
+      "top": 18,
       "width": 874,
-      "height": 402.2070063694268,
-      "cornerRadius": 66.80254777070064,
+      "height": 402,
+      "cornerRadius": 76,
       "enableRotation": true,
       "paths": {
-        "landscape": "M66.80254777070064 0H807.1974522292994Q874 0 874 66.80254777070064V335.40445859872614Q874 402.2070063694268 807.1974522292994 402.2070063694268H66.80254777070064Q0 402.2070063694268 0 335.40445859872614V66.80254777070064Q0 0 66.80254777070064 0Z"
+        "landscape": "M76 0H798C845.12 0 874 28.88 874 76V326C874 373.12 845.12 402 798 402H76C28.88 402 0 373.12 0 326V76C0 28.88 28.88 0 76 0ZM842 153H842A18 18 0 0 1 860 171V231A18 18 0 0 1 842 249H842A18 18 0 0 1 824 231V171A18 18 0 0 1 842 153Z"
       }
     }
   }
@@ -74,45 +72,43 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 {
   "id": "apple-iphone-18-pro-max-2026",
   "localPath": "/mockups/apple-iphone-18-pro-max-2026.svg",
-  "sourceUrl": "https://www.apple.com/v/iphone/compare/am/images/overview/compare_iphone_18_pro_max_burgundy__dcz67l4005oy_large_2x.jpg",
   "file": "apple-iphone-18-pro-max-2026.svg",
-  "bytes": 90175,
-  "width": 345,
-  "height": 712,
-  "renderScale": 1.3895348837209303,
-  "previewScale": 0.9,
-  "frameOverlay": true,
+  "bytes": 2387,
+  "width": 476,
+  "height": 988,
+  "renderScale": 1,
+  "frameOverlay": false,
   "cssViewport": {
     "width": 440,
     "height": 956
   },
   "screenInset": {
-    "left": 19.453488372093023,
-    "top": 15.284883720930234,
-    "right": 16.674418604651162,
-    "bottom": 18.063953488372093
+    "left": 18,
+    "top": 16,
+    "right": 18,
+    "bottom": 16
   },
   "viewport": {
     "portrait": {
-      "left": 19.453488372093023,
-      "top": 15.284883720930234,
-      "width": 443.26162790697674,
+      "left": 18,
+      "top": 16,
+      "width": 440,
       "height": 956,
-      "cornerRadius": 69.47674418604652,
+      "cornerRadius": 84,
       "enableRotation": true,
       "paths": {
-        "portrait": "M69.47674418604652 0H373.7848837209302Q443.26162790697674 0 443.26162790697674 69.47674418604652V886.5232558139535Q443.26162790697674 956 373.7848837209302 956H69.47674418604652Q0 956 0 886.5232558139535V69.47674418604652Q0 0 69.47674418604652 0Z"
+        "portrait": "M84 0H356C408.08 0 440 31.92 440 84V872C440 924.08 408.08 956 356 956H84C31.92 956 0 924.08 0 872V84C0 31.92 31.92 0 84 0ZM190 14H250A18 18 0 0 1 268 32V32A18 18 0 0 1 250 50H190A18 18 0 0 1 172 32V32A18 18 0 0 1 190 14Z"
       }
     },
     "landscape": {
-      "left": 18.063953488372093,
-      "top": 19.453488372093023,
+      "left": 16,
+      "top": 18,
       "width": 956,
-      "height": 443.26162790697674,
-      "cornerRadius": 69.47674418604652,
+      "height": 440,
+      "cornerRadius": 84,
       "enableRotation": true,
       "paths": {
-        "landscape": "M69.47674418604652 0H886.5232558139535Q956 0 956 69.47674418604652V373.7848837209302Q956 443.26162790697674 886.5232558139535 443.26162790697674H69.47674418604652Q0 443.26162790697674 0 373.7848837209302V69.47674418604652Q0 0 69.47674418604652 0Z"
+        "landscape": "M84 0H872C924.08 0 956 31.92 956 84V356C956 408.08 924.08 440 872 440H84C31.92 440 0 408.08 0 356V84C0 31.92 31.92 0 84 0ZM924 172H924A18 18 0 0 1 942 190V250A18 18 0 0 1 924 268H924A18 18 0 0 1 906 250V190A18 18 0 0 1 924 172Z"
       }
     }
   }
@@ -120,45 +116,43 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 {
   "id": "apple-iphone-duo-folded-2026",
   "localPath": "/mockups/apple-iphone-duo-folded-2026.svg",
-  "sourceUrl": "https://www.apple.com/v/iphone-duo/a/images/overview/product-viewer/closed__3le61imm1w2e_large_2x.jpg",
   "file": "apple-iphone-duo-folded-2026.svg",
-  "bytes": 236180,
-  "width": 793,
-  "height": 1107,
-  "renderScale": 0.6396226415094339,
-  "previewScale": 0.9,
-  "frameOverlay": true,
+  "bytes": 2012,
+  "width": 502,
+  "height": 710,
+  "renderScale": 1,
+  "frameOverlay": false,
   "cssViewport": {
     "width": 466,
     "height": 678
   },
   "screenInset": {
-    "left": 25.58490566037736,
-    "top": 12.79245283018868,
-    "right": 18.549056603773582,
-    "bottom": 17.269811320754716
+    "left": 18,
+    "top": 16,
+    "right": 18,
+    "bottom": 16
   },
   "viewport": {
     "portrait": {
-      "left": 25.58490566037736,
-      "top": 12.79245283018868,
-      "width": 463.08679245283014,
+      "left": 18,
+      "top": 16,
+      "width": 466,
       "height": 678,
-      "cornerRadius": 7.675471698113207,
+      "cornerRadius": 68,
       "enableRotation": true,
       "paths": {
-        "portrait": "M7.675471698113207 0H394.0075471698113Q463.08679245283014 0 463.08679245283014 69.07924528301886V608.9207547169812Q463.08679245283014 678 394.0075471698113 678H7.675471698113207Q0 678 0 670.3245283018867V7.675471698113207Q0 0 7.675471698113207 0Z"
+        "portrait": "M10 0H398C440.16 0 466 25.84 466 68V610C466 652.16 440.16 678 398 678H10C3.8 678 0 674.2 0 668V10C0 3.8 3.8 0 10 0ZM418 35H418A18 18 0 0 1 436 53V53A18 18 0 0 1 418 71H418A18 18 0 0 1 400 53V53A18 18 0 0 1 418 35Z"
       }
     },
     "landscape": {
-      "left": 17.269811320754716,
-      "top": 25.58490566037736,
+      "left": 16,
+      "top": 18,
       "width": 678,
-      "height": 463.08679245283014,
-      "cornerRadius": 7.675471698113207,
+      "height": 466,
+      "cornerRadius": 68,
       "enableRotation": true,
       "paths": {
-        "landscape": "M7.675471698113207 0H670.3245283018867Q678 0 678 7.675471698113207V394.0075471698113Q678 463.08679245283014 608.9207547169812 463.08679245283014H69.07924528301886Q0 463.08679245283014 0 394.0075471698113V7.675471698113207Q0 0 7.675471698113207 0Z"
+        "landscape": "M10 0H668C674.2 0 678 3.8 678 10V398C678 440.16 652.16 466 610 466H68C25.84 466 0 440.16 0 398V10C0 3.8 3.8 0 10 0ZM625 400H625A18 18 0 0 1 643 418V418A18 18 0 0 1 625 436H625A18 18 0 0 1 607 418V418A18 18 0 0 1 625 400Z"
       }
     }
   }
@@ -166,45 +160,43 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 {
   "id": "apple-iphone-duo-unfolded-2026",
   "localPath": "/mockups/apple-iphone-duo-unfolded-2026.svg",
-  "sourceUrl": "https://www.apple.com/v/iphone-duo/a/images/overview/product-viewer/landscape__f7x2oe1oxemy_large_2x.jpg",
   "file": "apple-iphone-duo-unfolded-2026.svg",
-  "bytes": 506248,
-  "width": 1447,
-  "height": 1037,
-  "renderScale": 0.6427104722792608,
-  "previewScale": 0.9,
-  "frameOverlay": true,
+  "bytes": 1765,
+  "width": 926,
+  "height": 658,
+  "renderScale": 1,
+  "frameOverlay": false,
   "cssViewport": {
     "width": 890,
     "height": 626
   },
   "screenInset": {
-    "left": 18.638603696098563,
-    "top": 20.566735112936346,
-    "right": 17.9958932238193,
-    "bottom": 19.924024640657084
+    "left": 18,
+    "top": 16,
+    "right": 18,
+    "bottom": 16
   },
   "viewport": {
-    "portrait": {
-      "left": 19.924024640657084,
-      "top": 18.638603696098563,
-      "width": 626,
-      "height": 893.3675564681726,
-      "cornerRadius": 57.84394250513348,
+    "landscape": {
+      "left": 18,
+      "top": 16,
+      "width": 890,
+      "height": 626,
+      "cornerRadius": 58,
       "enableRotation": true,
       "paths": {
-        "portrait": "M57.84394250513348 0H568.1560574948666Q626 0 626 57.84394250513348V835.5236139630391Q626 893.3675564681726 568.1560574948666 893.3675564681726H57.84394250513348Q0 893.3675564681726 0 835.5236139630391V57.84394250513348Q0 0 57.84394250513348 0Z"
+        "landscape": "M58 0H832C867.96 0 890 22.04 890 58V568C890 603.96 867.96 626 832 626H58C22.04 626 0 603.96 0 568V58C0 22.04 22.04 0 58 0Z"
       }
     },
-    "landscape": {
-      "left": 18.638603696098563,
-      "top": 20.566735112936346,
-      "width": 893.3675564681726,
-      "height": 626,
-      "cornerRadius": 57.84394250513348,
+    "portrait": {
+      "left": 16,
+      "top": 18,
+      "width": 626,
+      "height": 890,
+      "cornerRadius": 58,
       "enableRotation": true,
       "paths": {
-        "landscape": "M57.84394250513348 0H835.5236139630391Q893.3675564681726 0 893.3675564681726 57.84394250513348V568.1560574948666Q893.3675564681726 626 835.5236139630391 626H57.84394250513348Q0 626 0 568.1560574948666V57.84394250513348Q0 0 57.84394250513348 0Z"
+        "portrait": "M58 0H568C603.96 0 626 22.04 626 58V832C626 867.96 603.96 890 568 890H58C22.04 890 0 867.96 0 832V58C0 22.04 22.04 0 58 0Z"
       }
     }
   }

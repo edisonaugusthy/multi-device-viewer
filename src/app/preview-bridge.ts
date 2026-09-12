@@ -25,6 +25,7 @@ export function setupPreviewBridge() {
   let keyboardViewport: { platform: "ios" | "android"; occludedBottom: number } | undefined;
   let surfaceRafPending = false;
   let lastSurfaceSignature = "";
+  let sampleRightSurface = false;
   let pagehideContinuation: { runId: string; nextStep: number } | undefined;
 
   // The iframe name is available as soon as the document starts loading, so
@@ -68,7 +69,7 @@ export function setupPreviewBridge() {
 
   function announceSurfaceColors(force = false) {
     if (!slotId) return;
-    const surfaces = samplePageSurfaces();
+    const surfaces = samplePageSurfaces(sampleRightSurface);
     const signature = JSON.stringify(surfaces);
     if (!force && signature === lastSurfaceSignature) return;
     lastSurfaceSignature = signature;
@@ -88,7 +89,7 @@ export function setupPreviewBridge() {
   const announceReady = () => {
     if (!slotId) return;
     announcedUrl = window.location.href;
-    const surfaces = samplePageSurfaces();
+    const surfaces = samplePageSurfaces(sampleRightSurface);
     lastSurfaceSignature = JSON.stringify(surfaces);
     window.parent.postMessage({
       type: "MDV_PREVIEW_READY",
@@ -788,6 +789,7 @@ export function setupPreviewBridge() {
     if (!data || typeof data !== "object") return;
 
     if (data.type === "MDV_PREVIEW_REGISTER" && typeof data.slotId === "string") {
+      sampleRightSurface = data.sampleRightSurface === true;
       slotId = data.slotId;
       applyPreviewViewportStyle(Boolean(data.hideScrollbars));
       announceReady();

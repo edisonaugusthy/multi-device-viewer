@@ -1,5 +1,13 @@
 # iOS header seam validation
 
+## Translucent header correction, September 12, 2026
+
+The remaining line on iPhone 18 Pro, Pro Max, and Duo was a sticky-layer raster seam, separate from the frame artwork. Extensiq uses a 95% opaque, blurred header. The iOS 27 guard required exactly 100% background opacity, while the 17 Pro already sealed the same edge using its sampled page color. `translucent.html` reproduces the exposed scrolling stripes on both 18 models before the fix.
+
+Full-width pinned headers and footers with background alpha of at least 0.9 now receive the existing seam guard, composited against the page background. Transparent overlays and surfaces that scroll away remain unguarded. This only paints the existing narrow boundary strips; it does not change the website header, iframe size, or scroll position.
+
+Validation: 64 device/orientation/zoom/scroll cases at DPR 1 and 2 passed the boundary pixel check (768 samples). The browser regression covers all four new devices, header input, 50% transparent overlays, and guard removal after the header stops being pinned. All 342 unit tests, three targeted browser tests, TypeScript, and the extension build passed. Evidence: `output/playwright/translucent-header/`.
+
 ## Corrected diagnosis from the Reddit capture
 
 The earlier solid-color audit verified backing colors but missed scrolling content leaking above a composited sticky header. The user's Reddit capture on iPhone 17 Pro, 17e, and 15 Plus demonstrated that the previous fix was incomplete.

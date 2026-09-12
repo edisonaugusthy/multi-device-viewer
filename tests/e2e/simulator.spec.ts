@@ -311,6 +311,40 @@ test("aligns the iPhone 17e Liquid Glass header color with its notch opening", a
   expect(Math.abs(surfaceBox!.y - screenBox!.y)).toBeLessThanOrEqual(1);
 });
 
+test("seals translucent pinned headers on the new iPhones without sealing transparent or scrolling content", async ({ page }) => {
+  await page.locator("[data-preview-slot-id]").first().waitFor();
+  await page.evaluate(() => {
+    const url = `${location.origin}/scripts/header-seam-audit/translucent.html`;
+    localStorage.setItem("mdvSimulatorSession", JSON.stringify({
+      slots: ["apple-iphone-18-pro-2026", "apple-iphone-18-pro-max-2026", "apple-iphone-duo-folded-2026", "apple-iphone-duo-unfolded-2026"].map((deviceId, i) => ({
+        id: `glass-${i}`, deviceId, url, orientation: "portrait", zoom: .58, zoomMode: "fit", reloadToken: 0, showFrame: true,
+      })),
+      activeSlotId: "glass-0", display: { scrollSync: false, navigationSync: false, darkMode: false, previewStyle: "device" },
+    }));
+  });
+  await page.goto("/entrypoints/preview/index.html");
+  const cards = page.locator("[data-preview-slot-id]");
+  await expect(cards).toHaveCount(4);
+  for (const card of await cards.all()) {
+    const top = card.locator('[data-preview-edge="top"]');
+    const bottom = card.locator('[data-preview-edge="bottom"]');
+    await expect(top).toHaveCSS("background-color", "rgb(3, 7, 18)");
+    await expect(bottom).toHaveCSS("background-color", "rgb(3, 7, 18)");
+    const frame = await (await card.locator("iframe").elementHandle())!.contentFrame();
+    await frame!.evaluate(() => window.scrollTo(0, 130));
+    await expect(top).toHaveCSS("background-color", "rgb(3, 7, 18)");
+    await frame!.getByPlaceholder("Search demo").fill("header stays interactive");
+    await expect(frame!.getByPlaceholder("Search demo")).toHaveValue("header stays interactive");
+
+    await frame!.evaluate(() => { document.querySelector("header")!.style.backgroundColor = "rgb(3 7 18 / .5)"; });
+    await expect(top).toHaveCount(0);
+    await frame!.evaluate(() => { document.querySelector("header")!.style.backgroundColor = "rgb(3 7 18 / .95)"; });
+    await expect(top).toHaveCount(1);
+    await frame!.evaluate(() => { document.querySelector("header")!.style.position = "static"; });
+    await expect(top).toHaveCount(0);
+  }
+});
+
 for (const model of ["iPhone 18 Pro", "iPhone 18 Pro Max"]) {
   test(`${model} follows page surface colors through scrolling and rotation`, async ({ page }) => {
     await page.getByTestId("device-switcher-button").first().click();
@@ -413,7 +447,7 @@ test("keeps native-landscape foldables and their hardware inside the preview can
   expect(frameBox!.y + frameBox!.height).toBeLessThanOrEqual(canvasBox!.y + canvasBox!.height + 1);
 });
 
-test("minimizes Duo browser controls on scroll without shifting side icons or covering the page", async ({ page }) => {
+test("resizes Duo side controls with the address bar without moving their anchors or covering the page", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
   for (const posture of ["folded", "unfolded"]) {
     await page.getByTestId("device-switcher-button").first().click();
@@ -428,6 +462,31 @@ test("minimizes Duo browser controls on scroll without shifting side icons or co
       const expanded = slot.locator('[data-browser-control="bottom-address"]');
       const compact = slot.locator('[data-browser-control="compact-address"]');
       await expect(expanded).toBeVisible();
+      await expect(slot.locator('[data-browser-control="bottom-toolbar"]')).toHaveCount(0);
+      // Glass is local to floating controls, never a full screen-edge panel.
+      await expect(slot.locator('[data-duo-background-extension], [data-duo-glass]')).toHaveCount(0);
+      await expect(slot.locator('[data-duo-control-group="status"]')).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+      const sideToolbar = slot.locator('[data-browser-control="side-toolbar"]');
+      if (await sideToolbar.count()) {
+        await expect(sideToolbar).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+        await expect(sideToolbar.locator('[data-duo-glass-group="back"]')).toHaveCSS("border-radius", "50%");
+        await expect(sideToolbar.locator('[data-duo-glass-group="bookmarks"]')).toHaveCSS("border-radius", "50%");
+        await expect(sideToolbar.locator('[data-duo-glass-group="tabs"] [data-browser-control]')).toHaveCount(2);
+        const contentBox = (await iframe.boundingBox())!;
+        const screenBox = (await slot.locator('[data-device-screen]').boundingBox())!;
+        expect(contentBox.x + contentBox.width).toBeLessThan(screenBox.x + screenBox.width - 20);
+        const controlsBox = (await sideToolbar.boundingBox())!;
+        expect(controlsBox.x).toBeGreaterThanOrEqual(contentBox.x + contentBox.width);
+        const upper = (await sideToolbar.locator('[data-duo-glass-group="bookmarks"]').boundingBox())!;
+        const lower = (await sideToolbar.locator('[data-duo-glass-group="tabs"]').boundingBox())!;
+        expect(lower.y).toBeGreaterThan(upper.y + upper.height + 10);
+      }
+      const addressGlass = slot.locator('[data-duo-glass-group="address"]');
+      await expect(addressGlass).toHaveCSS("border-radius", "999px");
+      const addressBounds = (await addressGlass.boundingBox())!;
+      const expandedBounds = (await expanded.boundingBox())!;
+      expect(addressBounds.width).toBeLessThan(expandedBounds.width * .9);
+      expect(addressBounds.x).toBeGreaterThan(expandedBounds.x);
       const originalSize = await iframe.evaluate(el => ({ width: el.clientWidth, height: el.clientHeight }));
       const sideControls = slot.locator('[data-browser-control="side-toolbar"], [data-browser-control="duo-status"]');
       const readSidePositions = () => sideControls.evaluateAll(elements => elements.map(el => {
@@ -439,7 +498,18 @@ test("minimizes Duo browser controls on scroll without shifting side icons or co
       const sendScroll = (scrollTop: number, deltaTop: number) => embedded!.evaluate(({ scrollTop, deltaTop }) => {
         parent.postMessage({ type: "MDV_BROWSER_SCROLL", slotId: window.name.replace(/^mdv-(?:mobile-)?preview-/, ""), scrollTop, deltaTop }, "*");
       }, { scrollTop, deltaTop });
+      const expectSideSize = async (small: boolean) => {
+        if (!(await sideToolbar.count())) return;
+        await expect(sideToolbar).toHaveAttribute("data-controls-size", small ? "compact" : "expanded");
+        for (const group of ["back", "bookmarks", "tabs"]) {
+          const control = sideToolbar.locator(`[data-duo-glass-group="${group}"]`);
+          await expect(control).toHaveCSS("transform", small ? "matrix(0.7, 0, 0, 0.7, 0, 0)" : "matrix(1, 0, 0, 1, 0, 0)");
+          await expect(control).toHaveCSS("opacity", "1");
+        }
+        await expect(slot.locator('[data-browser-control="duo-status"]')).toBeVisible();
+      };
       await sendScroll(800, 40);
+      await expectSideSize(true);
       await expect(compact).toBeVisible();
       await expect(expanded).toHaveCount(0);
       await expect(slot.locator('[data-duo-glass="right"]')).toHaveCount(0);
@@ -451,12 +521,82 @@ test("minimizes Duo browser controls on scroll without shifting side icons or co
       const barBox = (await compact.boundingBox())!;
       expect(barBox.y).toBeGreaterThanOrEqual(pageBox.y + pageBox.height - 1);
       await sendScroll(800, 0);
+      // Stopping longer than the former idle timer and tiny direction changes
+      // must keep the side actions in the same compact state as the address.
+      await page.waitForTimeout(450);
+      await sendScroll(801, 1);
+      await sendScroll(800, -1);
       await expect(compact).toBeVisible();
+      await expectSideSize(true);
+      // Rapid reversals interrupt the visual transition, not the shared state.
       await sendScroll(760, -40);
+      await sendScroll(840, 40);
+      await expectSideSize(true);
+      await sendScroll(760, -40);
+      await expectSideSize(false);
       await expect(expanded).toBeVisible();
       await expect(compact).toHaveCount(0);
+      await expect(slot.locator('[data-browser-control="bottom-toolbar"]')).toHaveCount(0);
       expect(await iframe.evaluate(el => ({ width: el.clientWidth, height: el.clientHeight }))).toEqual(originalSize);
       expect(await readSidePositions()).toEqual(originalPositions);
+      if (await sideToolbar.count()) {
+        let previousTint = "";
+        for (const dark of [true, false]) {
+          const bottomColor = dark ? "rgb(24, 35, 65)" : "rgb(226, 238, 220)";
+          await embedded!.evaluate(({ bottomColor, dark }) => {
+            parent.postMessage({ type: "MDV_PAGE_SURFACE_COLORS", slotId: window.name.replace(/^mdv-(?:mobile-)?preview-/, ""),
+              topColor: dark ? "rgb(245, 245, 245)" : "rgb(20, 20, 20)", topIsDark: !dark,
+              bottomColor, bottomIsDark: dark }, "*");
+          }, { bottomColor, dark });
+          await expect(slot.locator('[data-ios-bottom-surface]')).toHaveCSS("background-color", bottomColor);
+          const tint = await addressGlass.evaluate(el => getComputedStyle(el).backgroundColor);
+          expect(tint).not.toBe(previousTint);
+          previousTint = tint;
+          for (const group of ["back", "bookmarks", "tabs"]) {
+            await expect(sideToolbar.locator(`[data-duo-glass-group="${group}"]`)).toHaveCSS("background-color", tint);
+            await expect(sideToolbar.locator(`[data-duo-glass-group="${group}"]`)).toHaveCSS("color", dark ? "rgb(243, 244, 246)" : "rgb(38, 49, 66)");
+          }
+        }
+      }
+    }
+  }
+});
+
+test("continues Duo page sections into the right gutter and adapts control contrast", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  for (const posture of ["folded", "unfolded"]) {
+    await page.getByTestId("device-switcher-button").first().click();
+    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone Duo");
+    await page.locator(`button[title="Apple iPhone Duo (${posture})"]`).click();
+    for (let rotation = 0; rotation < 2; rotation++) {
+      if (rotation) {
+        await openViewportActions(page);
+        await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+      }
+      if (!(await slot.locator('[data-browser-control="side-toolbar"]').count())) continue;
+      const iframe = slot.locator("iframe");
+      const embedded = await (await iframe.elementHandle())!.contentFrame();
+      await embedded!.goto(new URL("/scripts/header-seam-audit/duo-surfaces.html", page.url()).href);
+      const surface = slot.locator("[data-duo-side-surface]");
+      await expect(surface).toHaveCSS("background-image", /rgb\(241, 245, 249\)/);
+      const readLightBoundary = () => surface.evaluate(el => {
+        const match = (el as HTMLElement).style.backgroundImage.match(/rgb\(241, 245, 249\) ([\d.]+)%/);
+        return match ? Number(match[1]) / 100 * el.clientHeight : -1;
+      });
+      await expect.poll(async () => Math.abs(await readLightBoundary() - 300)).toBeLessThan(1);
+      const back = slot.locator('[data-duo-glass-group="back"]');
+      const tabs = slot.locator('[data-duo-glass-group="tabs"]');
+      await expect(back).toHaveCSS("color", "rgb(243, 244, 246)");
+      await expect(tabs).toHaveCSS("color", "rgb(38, 49, 66)");
+      await embedded!.evaluate(() => window.scrollTo(0, 260));
+      // The pinned header stays dark; the light section starts just below it.
+      await expect.poll(async () => Math.abs(await readLightBoundary() - 76)).toBeLessThan(1);
+      await expect(back).toHaveCSS("color", "rgb(38, 49, 66)");
+      await expect(tabs).toHaveCSS("color", "rgb(38, 49, 66)");
+      const bodyWidth = await iframe.evaluate(el => el.clientWidth);
+      await embedded!.evaluate(() => window.scrollTo(0, 220));
+      await expect(slot.locator('[data-browser-control="bottom-address"]')).toBeVisible();
+      expect(await iframe.evaluate(el => el.clientWidth)).toBe(bodyWidth);
     }
   }
 });

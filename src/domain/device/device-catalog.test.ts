@@ -78,14 +78,23 @@ describe("device catalog imports", () => {
     expect(getFrameProfile(device).chromeVariant).toBe("ios-liquid-glass");
     const asset = device.mockupAssets[0];
     expect(asset.kind).toBe("transparent-svg");
-    expect(asset.sourceUrl).toMatch(/^https:\/\/www\.apple\.com\/v\//);
-    expect(asset.frameOverlay).toBe(true);
+    // Generated frames back the live screen with opaque glass. A second
+    // transparent aperture would expose a halo at fractional preview scales.
+    expect(asset.sourceUrl).toBeUndefined();
+    expect(asset.frameOverlay).toBe(false);
     for (const orientation of ["portrait", "landscape"] as const) {
       const viewport = asset.viewport![orientation]!;
       expect(viewport.width).toBeGreaterThan(0);
       expect(viewport.height).toBeGreaterThan(0);
       expect(viewport.enableRotation).toBe(true);
       expect(viewport.width < viewport.height).toBe(orientation === "portrait");
+      const logical = orientation === "portrait"
+        ? { width: Math.min(width, height), height: Math.max(width, height) }
+        : { width: Math.max(width, height), height: Math.min(width, height) };
+      expect({ width: viewport.width, height: viewport.height }).toEqual(logical);
+      const frame = estimateDeviceFrameSize({ device, viewportSize: logical, showFrame: true, showStatusBar: true, showUrlBar: true });
+      expect(viewport.left).toBe((frame.width - viewport.width) / 2);
+      expect(viewport.top).toBe((frame.height - viewport.height) / 2);
     }
   });
 

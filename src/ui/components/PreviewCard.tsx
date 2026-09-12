@@ -123,6 +123,11 @@ function readPageSurfaces(data: Record<string, unknown>): BrowserSurfaceColors |
     bottomIsDark: typeof data.bottomIsDark === "boolean" ? data.bottomIsDark : false,
     topGuardColor: typeof data.topGuardColor === "string" && CSS.supports("color", data.topGuardColor) ? data.topGuardColor : undefined,
     bottomGuardColor: typeof data.bottomGuardColor === "string" && CSS.supports("color", data.bottomGuardColor) ? data.bottomGuardColor : undefined,
+    rightBands: Array.isArray(data.rightBands) && data.rightBands.length > 0 && data.rightBands.length <= 128 && data.rightBands.every((band, i, bands) =>
+      band && typeof band.offset === "number" && Number.isFinite(band.offset) && band.offset >= 0 && band.offset <= 1 &&
+      (i === 0 ? band.offset === 0 : band.offset > bands[i - 1].offset) &&
+      typeof band.color === "string" && CSS.supports("color", band.color) && typeof band.isDark === "boolean")
+      ? data.rightBands.map(({ offset, color, isDark }) => ({ offset, color, isDark })) : undefined,
   };
 }
 
@@ -424,6 +429,7 @@ export function PreviewCard({
           type: "MDV_PREVIEW_REGISTER",
           slotId: slot.id,
           hideScrollbars: device.type === "phone" || device.type === "tablet",
+          sampleRightSurface: device.id.startsWith("apple-iphone-duo-"),
         },
         "*",
       );
@@ -449,7 +455,7 @@ export function PreviewCard({
       iframe.removeEventListener("load", register);
       window.clearTimeout(bridgeStatusTimer.current);
     };
-  }, [blocked, containerSize.width, device.type, flowRecording, slot.id, slot.reloadToken, slot.url, standalonePreview]);
+  }, [blocked, containerSize.width, device.id, device.type, flowRecording, slot.id, slot.reloadToken, slot.url, standalonePreview]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -458,7 +464,9 @@ export function PreviewCard({
       if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
       if (data.type === "MDV_BROWSER_SCROLL") {
         const top = Number(data.scrollTop), delta = Number(data.deltaTop);
-        if (Number.isFinite(top) && Number.isFinite(delta)) setBrowserCollapsed(current => nextBrowserCollapse(current, top, delta));
+        if (Number.isFinite(top) && Number.isFinite(delta)) {
+          setBrowserCollapsed(current => nextBrowserCollapse(current, top, delta));
+        }
         return;
       }
 
@@ -576,7 +584,7 @@ export function PreviewCard({
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [device.type, frameProfile.platform, display.navigationSync, display.scrollSync, flowRecording, flowReplay, onFlowResult, onFlowStep, observeSlotUrl, slot.id, slot.url]);
+  }, [device.id, device.type, frameProfile.platform, display.navigationSync, display.scrollSync, flowRecording, flowReplay, onFlowResult, onFlowStep, observeSlotUrl, slot.id, slot.url]);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -851,11 +859,9 @@ export function PreviewCard({
                     style={{
                       width: "100%",
                       colorScheme: display.darkMode ? "dark" : "light",
-                      // Match the page at fractional raster edges. Duo uses a
-                      // neutral backing beneath its extended glass backdrop.
-                      backgroundColor: browserGeometry.duoControls
-                        ? display.darkMode ? "#1c1c1e" : "#ffffff"
-                        : pageSurfaces?.top ?? (display.darkMode ? "#0f172a" : "#ffffff"),
+                      // Match the page at fractional raster edges, including
+                      // the clear gaps between Duo's floating glass groups.
+                      backgroundColor: pageSurfaces?.top ?? (display.darkMode ? "#0f172a" : "#ffffff"),
                       scrollbarWidth: device.type === "phone" || device.type === "tablet" ? "none" : "auto",
                     }}
                     scrolling="auto"

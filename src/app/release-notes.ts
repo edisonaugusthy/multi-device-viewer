@@ -27,6 +27,14 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.8": {
+    version: "0.2.8",
+    heading: "What’s new",
+    summary: "",
+    notes: [
+      { title: "Fixed Duo alignments", description: "Fixed alignment issues in iPhone Duo folded and unfolded views." },
+    ],
+  },
   "0.2.7": {
     version: "0.2.7",
     heading: "What’s new",

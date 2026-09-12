@@ -33,14 +33,14 @@ describe("browser content boundaries", () => {
     expect(portrait.top).toBe(folded ? 0 : 40);
     expect(portrait.left).toBe(0);
     expect(portrait.right).toBeCloseTo(folded ? Math.ceil(466 * 74 / 724 + 24) : 0);
+    expect(portrait.content.width).toBe(466 - portrait.right);
     expect(portrait.duoStatusTop).toBe(folded ? 80 : 4);
     expect(portrait.bottom).toBe(portrait.address + (folded ? 0 : portrait.toolbar) + 12);
     expect(landscape.duoControls).toBe("side");
     expect(landscape.duoFullWidthBottom).toBe(!folded);
     expect(landscape.left).toBe(0);
-    expect(landscape.right - landscape.duoIconCenterRight!).toBeLessThanOrEqual(28);
-    expect(landscape.right - landscape.duoIconCenterRight!).toBeGreaterThanOrEqual(24);
     expect(landscape.right).toBeCloseTo(folded ? Math.ceil(678 * 83 / 1060 + 24) : 56);
+    expect(landscape.content.width).toBe(678 - landscape.right);
     expect(landscape.bottom).toBe(landscape.address + 12);
     expect(getBrowserGeometry(duo, { width: 678, height: 466 }, {}, { viewportFit: "cover" })).toEqual(landscape);
     for (const screen of [{ width: 466, height: 678 }, { width: 678, height: 466 }]) {

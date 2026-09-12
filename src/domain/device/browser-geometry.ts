@@ -35,8 +35,8 @@ export function supportsIos26(device: Device) {
 }
 
 /** Chrome-side presentation geometry, not a claim of native Safari engine emulation.
- * Controls and content share these dimensions so fixed page actions cannot be
- * accidentally covered by our own browser UI. Physical Safari baselines live
+ * Controls reserve page space; Duo side controls float over a page-colored gutter.
+ * Physical Safari baselines live
  * in docs/device-validation.md; profile constants remain reference approximations.
  */
 export function getBrowserGeometry(device: Device, screen: Size, preferences: BrowserPreferences = {}, options: {
@@ -51,8 +51,8 @@ export function getBrowserGeometry(device: Device, screen: Size, preferences: Br
   const variant = modern ? "ios-liquid-glass" : profile.chromeVariant;
   const neutralChrome = ios && device.type === "phone" && profile.osMajor >= 27;
   if (device.id.startsWith("apple-iphone-duo-")) {
-    // The outer display keeps a right rail; unfolded uses it horizontally.
-    // The opposite orientation places navigation at the bottom. Dimensions
+    // The outer display keeps floating right controls; unfolded uses them horizontally.
+    // The opposite orientation uses one floating address bar. Dimensions
     // are preview layout constants, not published native Safari metrics.
     const folded = device.id === "apple-iphone-duo-folded-2026";
     const side = folded || landscape;
@@ -61,12 +61,9 @@ export function getBrowserGeometry(device: Device, screen: Size, preferences: Br
     const collapse = Math.max(0, Math.min(1, options.collapsed ?? 0));
     const minimized = collapse > 0.5;
     const address = controls ? minimized ? 24 : 48 : 0;
-    // Keep side controls on their camera axis while the lower browser area
-    // shrinks. Only horizontal navigation folds into the compact address bar.
-    const toolbar = controls ? side ? 80 : minimized ? 0 : 40 : 0;
-    // Position icons on the camera axis independently of content clearance.
-    // Only the icon/camera radius plus a small gap needs to be reserved on
-    // the content-facing side; matching padding at the outer edge wastes space.
+    // Side controls keep their camera axis; portrait has no second bottom row.
+    const toolbar = controls && side ? 80 : 0;
+    // Keep the page clear of floating controls and the folded camera.
     const cameraCenterRight = landscape
       ? screen.width * (103 - 20) / 1060
       : screen.width * (764 - 690) / 724;
@@ -74,7 +71,7 @@ export function getBrowserGeometry(device: Device, screen: Size, preferences: Br
     const right = folded ? Math.ceil(cameraCenterRight + 24) : side && (controls || status) ? 56 : 0;
     const left = 0;
     const top = !side && status ? 40 : 0;
-    const bottom = Math.max(12 + address + (side ? 0 : toolbar), options.keyboardHeight ?? 0);
+    const bottom = Math.max(12 + address, options.keyboardHeight ?? 0);
     return { family, variant, layout: side ? "side" : "bottom", duoControls: side ? "side" : "bottom",
       duoIconCenterRight,
       duoFullWidthBottom: side && !(folded && landscape),

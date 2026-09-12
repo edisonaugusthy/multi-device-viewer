@@ -1,43 +1,11 @@
-import { useId, type CSSProperties } from "react";
-import { AlignLeft, X, BookOpen, ChevronLeft, ChevronRight, Copy, Info, Lock, Plus, RefreshCw, Share, Wifi } from "lucide-react";
+import { type CSSProperties } from "react";
+import { AlignLeft, BookOpen, ChevronLeft, ChevronRight, Copy, Lock, Plus, RefreshCw, Share, Wifi } from "lucide-react";
 import type { BrowserGeometry } from "../../domain/device/browser-geometry";
-
-/** Extend adjacent composited page pixels into a reserved browser edge. */
-function DuoGlassEdge({ edge, size, dark, bottom = 0, surface = true }: {
-  edge: "right" | "top" | "bottom"; size: number; dark: boolean; bottom?: number; surface?: boolean;
-}) {
-  const filterId = useId().replaceAll(":", "");
-  const right = edge === "right";
-  const top = edge === "top";
-  return <>
-    <svg width="0" height="0" className="absolute"><defs>
-      <filter id={filterId} x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
-        <feOffset dx={right ? size : 0} dy={right ? 0 : top ? -size : size}/>
-        <feGaussianBlur stdDeviation={surface ? 18 : 8}/>
-        <feColorMatrix type="saturate" values={surface ? "1.35" : "1"}/>
-      </filter>
-    </defs></svg>
-    <div data-duo-background-extension={edge} data-duo-glass={surface ? edge : undefined} className="absolute" style={{
-      // Capture an adjacent strip of the real iframe, then clip the filtered
-      // output to the chrome. Unlike box reflections, backdrop filters include
-      // cross-origin iframe surfaces. The page viewport remains unobscured.
-      ...(right
-        ? { top: 0, right: 0, bottom, width: size * 2, clipPath: `inset(0 0 0 ${size}px)` }
-        : { left: 0, right: 0, height: size * 2, ...(top
-          ? { top: 0, clipPath: `inset(0 0 ${size}px 0)` }
-          : { bottom: 0, clipPath: `inset(${size}px 0 0 0)` }) }),
-      // Floating controls have local glass; their background extension must
-      // not add a continuous tinted panel along the screen edge.
-      background: surface ? dark ? "rgba(24,27,33,.32)" : "rgba(255,255,255,.3)" : "transparent",
-      backdropFilter: `url(#${filterId})`,
-      WebkitBackdropFilter: `url(#${filterId})`,
-    }}/>
-  </>;
-}
+import type { SideSurfaceBand } from "../../domain/device/page-surfaces";
 
 /** Decorative browser controls use the very same geometry as the page viewport. */
-export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, bottomColor, topDark, showBattery = true }: {
-  geometry: BrowserGeometry; hostname: string; dark: boolean; keyboard: boolean; topColor: string; bottomColor: string; topDark: boolean; showBattery?: boolean;
+export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, bottomColor, topDark, rightBands, showBattery = true }: {
+  geometry: BrowserGeometry; hostname: string; dark: boolean; keyboard: boolean; topColor: string; bottomColor: string; topDark: boolean; rightBands?: SideSurfaceBand[]; showBattery?: boolean;
 }) {
   const glass = dark ? "rgba(35,38,43,.92)" : "rgba(246,247,250,.93)";
   const ink = dark ? "#f3f4f6" : "#263142";
@@ -48,14 +16,35 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
     const side = g.duoControls === "side";
     const minimized = g.collapse > 0.5;
     // Side navigation remains stationary while the bottom bar minimizes.
-    const buttonSize = 36;
+    const buttonSize = 28;
     const iconRight = (g.duoIconCenterRight ?? g.right / 2) - buttonSize / 2;
-    const frost = (isDark: boolean): CSSProperties => ({
-      background: isDark ? "rgba(24,27,33,.32)" : "rgba(255,255,255,.3)",
-      backdropFilter: "blur(18px) saturate(1.35)",
-      WebkitBackdropFilter: "blur(18px) saturate(1.35)",
+    // The same glass treatment follows the page behind each control group.
+    const glassFor = (color: string, isDark: boolean): CSSProperties => ({
+      background: `color-mix(in srgb, ${color} 30%, ${isDark ? "rgba(35,38,43,.28)" : "rgba(255,255,255,.26)"})`,
+      color: isDark ? "#f3f4f6" : "#263142",
+      backdropFilter: "blur(16px) saturate(1.5)",
+      WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+      boxShadow: "inset 0 1px 1px #ffffff70, inset 0 -1px 1px #ffffff20, 0 2px 8px #00000010",
+      borderRadius: 16,
     });
-    const buttonStyle: CSSProperties = { width: buttonSize, height: buttonSize, flexShrink: 0, borderRadius: "50%", display: "grid", placeItems: "center", ...frost(topDark), boxShadow: "inset 0 1px 1px #ffffff65, inset 0 -1px 1px #00000018, 0 2px 8px #00000018" };
+    const floatingGlass = glassFor(bottomColor, dark);
+    const surfaceAt = (y: number) => rightBands?.findLast(band => band.offset <= (y - g.top) / g.content.height);
+    const sideGlassAt = (y: number) => {
+      const surface = surfaceAt(y);
+      // Use the address bar's state, including its direction/jitter thresholds.
+      // Scale the controls without changing their anchors or the page width.
+      return { ...(surface ? glassFor(surface.color, surface.isDark) : floatingGlass), transform: minimized ? "scale(.7)" : "scale(1)" };
+    };
+    const controlsTop = (g.duoStatusTop ?? 24) + g.status + 24;
+    const controlsBottom = g.duoFullWidthBottom ? 76 : 96;
+    const screenHeight = g.top + g.content.height + g.bottom;
+    const statusSurface = side ? surfaceAt((g.duoStatusTop ?? 0) + g.status / 2) : undefined;
+    const sideBackground = rightBands?.length
+      ? `linear-gradient(to bottom, ${rightBands.map((band, i) => `${band.color} ${band.offset * 100}% ${(rightBands[i + 1]?.offset ?? 1) * 100}%`).join(", ")})`
+      : `linear-gradient(to bottom, ${topColor} ${controlsTop}px, ${bottomColor} ${controlsTop}px)`;
+    const groupWidth = 36;
+    const groupRight = iconRight - (groupWidth - buttonSize) / 2;
+    const buttonStyle: CSSProperties = { width: buttonSize, height: buttonSize, flexShrink: 0, display: "grid", placeItems: "center" };
     const status = <div data-browser-control="duo-status" className="flex shrink-0 items-center gap-2" style={{ flexDirection: side ? "column" : "row", justifySelf: "end" }}>
       <span style={{ fontSize: 12, lineHeight: "16px", fontWeight: 600, whiteSpace: "nowrap" }}>9:41</span>
       <div style={{ position: "relative", width: 32, height: 32, display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -65,47 +54,47 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
       </div>
     </div>;
     return <div aria-hidden data-safari-style={`duo-${g.duoControls}`} data-browser-collapsed={g.collapse > 0 ? "true" : "false"} className="pointer-events-none absolute inset-0 z-20" style={{ color: topInk }}>
-      {side && g.right > 0 && <DuoGlassEdge edge="right" size={g.right} dark={topDark} bottom={g.bottom} surface={false}/>}
-      {!side && g.top > 0 && <DuoGlassEdge edge="top" size={g.top} dark={topDark}/>}
-      {!keyboard && g.bottom > 0 && <DuoGlassEdge edge="bottom" size={g.bottom} dark={dark} surface={!minimized}/>}
-      {g.status > 0 && <div className="absolute flex justify-center" style={{
-        top: g.duoStatusTop, right: side ? iconRight : g.statusInsetRight, width: side ? buttonSize : undefined,
+      {side && g.right > 0 && <div data-duo-side-surface className="absolute right-0" style={{
+        // Seal independently rasterized iframe edges at fractional preview scales.
+        top: g.top, height: g.content.height + 1, width: g.right + 1, backgroundImage: sideBackground,
+      }}/>}
+      {g.status > 0 && <div data-duo-control-group="status" className="absolute flex justify-center" style={{
+        top: g.duoStatusTop, right: side ? groupRight : g.statusInsetRight,
+        width: side ? groupWidth : undefined, padding: side ? "4px 0" : "0 8px",
+        color: statusSurface ? statusSurface.isDark ? "#f3f4f6" : "#263142" : topInk,
+        // Keep thin status strokes legible when a section boundary passes them.
+        filter: `drop-shadow(0 0 .6px ${(statusSurface?.isDark ?? topDark) ? "#000000" : "#ffffff"})`,
       }}>{status}</div>}
-      {side && g.toolbar > 0 && <div data-browser-control="side-toolbar" className="absolute flex flex-col items-center gap-3" style={{
-        top: (g.duoStatusTop ?? 24) + g.status + 24, right: iconRight, width: buttonSize,
+      {side && g.toolbar > 0 && <div data-browser-control="side-toolbar" data-duo-control-group="navigation" data-controls-size={minimized ? "compact" : "expanded"} className="absolute flex flex-col items-center justify-between" style={{
+        top: controlsTop, right: groupRight, width: groupWidth,
+        // Independent upper buttons and a lower tab group share the page background.
+        // Keep their positions stable on scroll and clear of the rotated camera.
+        bottom: controlsBottom,
       }}>
-        <span style={buttonStyle}><ChevronLeft size={18}/></span>
-        <span style={buttonStyle}><BookOpen size={18}/></span>
-      </div>}
-      {!keyboard && g.address > 0 && minimized && <div data-browser-control="compact-address" className="absolute flex justify-center" style={{
-        left: 0, right: g.duoFullWidthBottom ? 0 : g.right, bottom: 12, height: g.address, color: ink,
-      }}>
-        <div className="flex min-w-0 items-center justify-center gap-1.5 rounded-full px-3" style={{
-          width: "min(60%, 240px)", height: g.address, ...frost(dark), fontSize: 11,
-          boxShadow: "inset 0 1px 1px #ffffff45, 0 1px 5px #00000012",
-        }}><Lock size={9} className="shrink-0"/><span className="truncate">{hostname}</span></div>
-      </div>}
-      {!keyboard && !minimized && g.address > 0 && g.duoFullWidthBottom && <>
-        <div data-browser-control="new-tab" className="absolute grid place-items-center" style={{ right: iconRight, bottom: 12 + g.address, width: buttonSize, height: 44 }}><Plus size={18}/></div>
-        <div data-browser-control="bottom-address" className="absolute flex items-center" style={{ left: 0, right: 0, bottom: 12, height: g.address, color: ink }}>
-          <div className="flex min-w-0 flex-1 items-center gap-4 px-5" style={{ fontSize: 12 }}>
-            <AlignLeft size={17} className="shrink-0"/><span className="min-w-0 flex-1 truncate text-center">{hostname}</span><X size={16} className="shrink-0"/>
-          </div>
-          <span data-browser-control="tab-switcher" className="grid shrink-0 place-items-center" style={{ width: buttonSize, marginRight: iconRight, height: g.address }}><Copy size={19}/></span>
+        <div className="flex flex-col items-center gap-2">
+          <span data-duo-glass-group="back" className="transition-transform duration-200 ease-out motion-reduce:transition-none" style={{ ...buttonStyle, ...sideGlassAt(controlsTop + groupWidth / 2), width: groupWidth, height: groupWidth, borderRadius: "50%" }}><ChevronLeft size={16}/></span>
+          <span data-duo-glass-group="bookmarks" className="transition-transform duration-200 ease-out motion-reduce:transition-none" style={{ ...buttonStyle, ...sideGlassAt(controlsTop + groupWidth * 1.5 + 8), width: groupWidth, height: groupWidth, borderRadius: "50%" }}><BookOpen size={16}/></span>
         </div>
-      </>}
-      {!keyboard && !minimized && g.address > 0 && !g.duoFullWidthBottom && <div data-browser-control="bottom-address" className="absolute flex items-center gap-3 px-4" style={{
-        left: 0, right: g.right, bottom: 12 + (side ? 0 : g.toolbar), height: g.address, color: ink,
-      }}>
-        <Info size={17} className="shrink-0"/>
-        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full px-3" style={{ height: 34, ...frost(dark), fontSize: 12 }}>
-          <Lock size={10} className="shrink-0"/><span className="min-w-0 flex-1 truncate text-center">{hostname}</span><RefreshCw size={12} className="shrink-0"/>
-        </div>
-        <Plus size={18} className="shrink-0"/>
+        {!keyboard && <div data-duo-glass-group="tabs" className="flex origin-bottom flex-col items-center p-1 transition-transform duration-200 ease-out motion-reduce:transition-none" style={{ ...sideGlassAt(screenHeight - controlsBottom - (buttonSize + 4) * (minimized ? .7 : 1)), borderRadius: groupWidth / 2 }}>
+          <span data-browser-control="new-tab" style={buttonStyle}><Plus size={16}/></span>
+          <span data-browser-control="tab-switcher" style={buttonStyle}><Copy size={16}/></span>
+        </div>}
       </div>}
-      {!side && !keyboard && g.toolbar > 0 && <div data-browser-control="bottom-toolbar" className="absolute flex items-center justify-around" style={{
-        left: 0, right: g.right, bottom: 12, height: g.toolbar, color: ink,
-      }}><ChevronLeft size={18}/><ChevronRight size={18}/><Share size={17}/><BookOpen size={17}/><Copy size={17}/></div>}
+      {!keyboard && g.address > 0 && <div data-browser-control={minimized ? "compact-address" : "bottom-address"} className="absolute flex justify-center" style={{
+        left: 0, right: g.duoFullWidthBottom ? 0 : g.right,
+        bottom: minimized ? 12 : 16,
+        height: minimized ? g.address : g.address - 8, color: ink,
+      }}>
+        <div data-duo-glass-group="address" className="flex min-w-0 items-center gap-2 rounded-full px-4" style={{
+          width: minimized ? "min(60%, 240px)" : "min(82%, 640px)", height: "100%", ...floatingGlass,
+          borderRadius: 999, fontSize: minimized ? 11 : 13,
+        }}>
+          {!minimized && <AlignLeft size={17} className="shrink-0"/>}
+          <Lock size={minimized ? 9 : 10} className="shrink-0"/>
+          <span className="min-w-0 flex-1 truncate text-center">{hostname}</span>
+          {!minimized && <RefreshCw size={14} className="shrink-0"/>}
+        </div>
+      </div>}
       {!keyboard && g.homeIndicator && <div data-browser-control="home-indicator" className="absolute rounded-full" style={{
         bottom: 4, left: "42%", width: "16%", height: 4, background: ink, opacity: .5,
       }}/>}

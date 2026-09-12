@@ -7,6 +7,7 @@ import { getFrameProfile, type DeviceFrameStyle, type ChromeVariant } from "../.
 import { useI18n } from "../../app/i18n";
 import { getBrowserGeometry, type BrowserPreferences } from "../../domain/device/browser-geometry";
 import { SafariChrome } from "./SafariChrome";
+import type { SideSurfaceBand } from "../../domain/device/page-surfaces";
 
 interface FrameSizeInput {
   device: Device;
@@ -85,6 +86,7 @@ export interface BrowserSurfaceColors {
   bottom: string;
   topIsDark: boolean;
   bottomIsDark: boolean;
+  rightBands?: SideSurfaceBand[];
   topGuardColor?: string;
   bottomGuardColor?: string;
   viewportFit?: "auto" | "cover";
@@ -149,17 +151,17 @@ export function DeviceFrame({
   const browserGeometry = getBrowserGeometry(device, viewportSize, browserPreferences, {
     collapsed: chromeCollapse, keyboardHeight: mobileKeyboardHeight, showStatusBar, showUrlBar, viewportFit: pageSurfaces?.viewportFit,
   });
-  // Standard iPhones tint both surfaces from the page, independently of the
-  // simulator theme and sensor/edge guards. Duo extends the actual page behind
-  // its glass controls, so only its backing stays neutral.
+  // Match the page at reserved screen edges. Duo glass belongs to the small
+  // floating control groups; a neutral backing would leave a visible rail.
   const duoGlass = Boolean(browserGeometry.duoControls);
   const topSurfaceDark = pageSurfaces?.topIsDark ?? (duoGlass ? darkMode : false);
   const bottomSurfaceDark = pageSurfaces?.bottomIsDark ?? (duoGlass ? darkMode : false);
-  const topSurfaceColor = duoGlass ? topSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.top ?? "#ffffff";
-  const bottomSurfaceColor = duoGlass ? bottomSurfaceDark ? "#1c1c1e" : "#ffffff" : pageSurfaces?.bottom ?? "#ffffff";
+  const topSurfaceColor = pageSurfaces?.top ?? (duoGlass && topSurfaceDark ? "#1c1c1e" : "#ffffff");
+  const bottomSurfaceColor = pageSurfaces?.bottom ?? (duoGlass && bottomSurfaceDark ? "#1c1c1e" : "#ffffff");
   const safariChrome = (showUrlBar || (browserGeometry.duoControls && showStatusBar)) && profile.platform === "ios" ? <SafariChrome
     geometry={browserGeometry} hostname={hostname} dark={bottomSurfaceDark} keyboard={Boolean(keyboard)}
     topColor={topSurfaceColor} bottomColor={bottomSurfaceColor} topDark={topSurfaceDark} showBattery={showBattery}
+    rightBands={pageSurfaces?.rightBands}
   /> : null;
 
   const bottomH = showUrlBar ? getBottomHeight(profile.platform, compact) : 0;

@@ -1,4 +1,5 @@
 export interface RgbaColor { r: number; g: number; b: number; a: number }
+export interface SideSurfaceBand { offset: number; color: string; isDark: boolean }
 const WHITE: RgbaColor = { r: 255, g: 255, b: 255, a: 1 };
 const colors = new Map<string, RgbaColor>();
 let context: CanvasRenderingContext2D | null | undefined;
@@ -67,7 +68,7 @@ function sampleEdge(bottom: boolean) {
       ? points[0].pinned : undefined };
 }
 
-/** Only extend a full-width opaque sticky/fixed surface, never a scrolling post. */
+/** Extend a full-width, nearly opaque pinned surface, never a scrolling post. */
 function pinnedEdgeBackground(start: Element | null, y: number): RgbaColor | undefined {
   for (let element = start; element; element = element.parentElement) {
     const style = getComputedStyle(element);
@@ -75,7 +76,12 @@ function pinnedEdgeBackground(start: Element | null, y: number): RgbaColor | und
     const rect = element.getBoundingClientRect();
     if (rect.top > y || rect.bottom <= y || rect.left > 1 || rect.right < innerWidth - 1) continue;
     const background = resolveCssColor(style.backgroundColor);
-    if (background?.a === 1 && Number(style.opacity) === 1) return renderedBackground(element).color;
+    // Common glass headers (for example bg-slate-950/95 + backdrop-blur)
+    // have the same independently rounded sticky-layer edge as opaque ones.
+    // Requiring alpha === 1 leaves that edge exposed on the newer iPhones.
+    // Composite against the page before sealing it, as we do for browser tint;
+    // keep genuinely transparent overlays unguarded.
+    if (background && background.a >= 0.9 && Number(style.opacity) === 1) return renderedBackground(element).color;
   }
   return undefined;
 }
@@ -89,18 +95,46 @@ function themeColor() {
   return undefined;
 }
 
-export function samplePageSurfaces() {
+const toCss = (color: RgbaColor) => `rgb(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)})`;
+
+/** Background colors beside the Duo gutter, with section boundaries refined to a pixel. */
+function sampleRightEdge(): SideSurfaceBand[] {
+  const height = Math.max(1, innerHeight);
+  const sample = (y: number) => renderedBackground(document.elementFromPoint(Math.max(0, innerWidth - 1), Math.min(height - 1, y))).color;
+  let previousY = 0;
+  let previous = sample(0);
+  const bands: SideSurfaceBand[] = [{ offset: 0, color: toCss(previous), isDark: prefersLightIcons(previous) }];
+  // Bound DOM reads even on unusually tall custom viewports.
+  const step = Math.max(16, Math.ceil(height / 64));
+  for (let y = Math.min(step, height - 1); y > previousY; y = Math.min(y + step, height - 1)) {
+    const current = sample(y);
+    if (toCss(current) !== toCss(previous)) {
+      let low = previousY, high = y;
+      while (high - low > 0.5) {
+        const middle = (low + high) / 2;
+        if (toCss(sample(middle)) === toCss(previous)) low = middle;
+        else high = middle;
+      }
+      bands.push({ offset: Math.round(high) / height, color: toCss(current), isDark: prefersLightIcons(current) });
+    }
+    previous = current;
+    previousY = y;
+  }
+  return bands;
+}
+
+export function samplePageSurfaces(includeRightEdge = false) {
   const top = sampleEdge(false), bottom = sampleEdge(true);
   // Sample what is actually at the edge. A header elsewhere in the document
   // must not continue tinting the browser after it has scrolled out of view.
   const topColor = top.painted ? top.color : themeColor() ?? top.color;
-  const toCss = (color: RgbaColor) => `rgb(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)})`;
   const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]')?.content ?? "";
   return {
     topColor: toCss(topColor), bottomColor: toCss(bottom.color),
     topGuardColor: top.pinned ? toCss(top.pinned) : undefined,
     bottomGuardColor: bottom.pinned ? toCss(bottom.pinned) : undefined,
     topIsDark: prefersLightIcons(topColor), bottomIsDark: prefersLightIcons(bottom.color),
+    rightBands: includeRightEdge ? sampleRightEdge() : undefined,
     viewportFit: /viewport-fit\s*=\s*cover/i.test(viewportMeta) ? "cover" as const : "auto" as const,
   };
 }

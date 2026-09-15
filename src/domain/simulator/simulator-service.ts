@@ -1,4 +1,5 @@
 import type { PreviewSlot } from "./simulator.types";
+import { devices } from "../device/device-catalog";
 
 export const maxPreviewSlots = 4;
 
@@ -11,11 +12,12 @@ export function normalizeUrl(input: string): string {
 }
 
 export function createPreviewSlot(deviceId: string, url: string, index: number): PreviewSlot {
+  const device = devices.find((candidate) => candidate.id === deviceId);
   return {
     id: `slot-${Date.now()}-${index}`,
     deviceId,
     url: normalizeUrl(url),
-    orientation: "portrait",
+    orientation: device && device.cssViewport.width > device.cssViewport.height ? "landscape" : "portrait",
     zoom: 0.58,
     zoomMode: "fit",
     reloadToken: 0,

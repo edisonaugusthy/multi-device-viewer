@@ -177,10 +177,11 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       const canPreserveOrientation = currentDevice && nextDevice && supportsOrientation(currentDevice) && supportsOrientation(nextDevice);
 
       const naturalOrientation = nextDevice && nextDevice.cssViewport.width > nextDevice.cssViewport.height ? "landscape" : "portrait";
+      const useNaturalOrientation = nextDevice?.brand === "Custom" || deviceId === "apple-iphone-duo-unfolded-2026";
       return {
         ...slot,
         deviceId,
-        orientation: nextDevice?.brand === "Custom" ? naturalOrientation : canPreserveOrientation ? slot.orientation : naturalOrientation,
+        orientation: useNaturalOrientation ? naturalOrientation : canPreserveOrientation ? slot.orientation : naturalOrientation,
         zoom: 0.58,
         zoomMode: "fit",
       };

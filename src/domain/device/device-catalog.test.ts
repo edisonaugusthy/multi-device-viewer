@@ -19,7 +19,7 @@ describe("device catalog imports", () => {
   it("uses the latest requested devices for startup and quick presets", () => {
     expect(defaultDeviceIds).toEqual([
       "apple-iphone-18-pro-2026",
-      "apple-ipad-pro-13-m4-2024",
+      "apple-iphone-duo-unfolded-2026",
       "apple-macbook-pro-14-m5-2025",
     ]);
     expect(quickDevicePresetIds).toEqual({

@@ -46,9 +46,26 @@ test("shows the simplified navigation controls", async ({ page }) => {
 });
 
 test("opens the latest devices from startup and quick presets", async ({ page }) => {
-  await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
-  await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
-  await expect(page.locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
+  const slots = page.locator("[data-preview-slot-id]");
+  await expect(slots).toHaveCount(3);
+  await expect(slots.nth(0).locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
+  await expect(slots.nth(1).locator('[data-device-frame="apple-iphone-duo-unfolded-2026"]')).toBeVisible();
+  await expect(slots.nth(2).locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
+  const phoneScreen = slots.nth(0).locator('[data-device-screen="apple-iphone-18-pro-2026"]');
+  await expect(phoneScreen).toHaveCSS("width", "402px");
+  await expect(phoneScreen).toHaveCSS("height", "874px");
+  const duoScreen = slots.nth(1).locator('[data-device-screen="apple-iphone-duo-unfolded-2026"]');
+  await expect(duoScreen).toHaveCSS("width", "890px");
+  await expect(duoScreen).toHaveCSS("height", "626px");
+  await expect(slots.nth(1).locator('[data-browser-control="side-toolbar"]')).toBeVisible();
+
+  // A user's saved rotation must survive reopening the simulator.
+  await openViewportActions(page, 1);
+  await slots.nth(1).getByRole("button", { name: "Rotate", exact: true }).click();
+  await expect(duoScreen).toHaveCSS("width", "626px");
+  await page.reload();
+  await expect(duoScreen).toHaveCSS("width", "626px");
+  await expect(duoScreen).toHaveCSS("height", "890px");
 
   await openTools(page);
   await page.getByRole("button", { name: "iOS + Android", exact: true }).click();
@@ -63,6 +80,20 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
+});
+
+test("selects Duo unfolded in landscape from a portrait phone and allows manual rotation", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  const duoScreen = slot.locator('[data-device-screen="apple-iphone-duo-unfolded-2026"]');
+  await page.getByTestId("device-switcher-button").first().click();
+  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone Duo");
+  await page.locator('button[title="Apple iPhone Duo (unfolded)"]').click();
+  await expect(duoScreen).toHaveCSS("width", "890px");
+  await expect(duoScreen).toHaveCSS("height", "626px");
+  await openViewportActions(page);
+  await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+  await expect(duoScreen).toHaveCSS("width", "626px");
+  await expect(duoScreen).toHaveCSS("height", "890px");
 });
 
 test("opens toolbar and device screenshots without duplicate Tools actions", async ({ page }) => {

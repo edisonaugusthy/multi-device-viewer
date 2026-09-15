@@ -27,6 +27,14 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.9": {
+    version: "0.2.9",
+    heading: "What’s new",
+    summary: "",
+    notes: [
+      { title: "Updated startup devices", description: "Start with iPhone 18 Pro, iPhone Duo unfolded, and MacBook Pro. Duo unfolded opens in landscape by default and can be rotated to portrait." },
+    ],
+  },
   "0.2.8": {
     version: "0.2.8",
     heading: "What’s new",

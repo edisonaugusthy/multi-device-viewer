@@ -1,8 +1,22 @@
 # Device asset sources
 
-Device frames must come from a manufacturer-owned product or press source. Do not use a generic frame for a named device and do not use generated artwork.
+Use the corresponding downloaded Mobile FIRST mockup where this catalog has one. For devices missing from that library, retain the existing frame and calibration. Manufacturer-owned product or press sources remain the fallback; do not substitute a different model or generated artwork.
 
 The derived PNGs below only crop the official front render, isolate it from any companion rear render, scale it for the simulator, and remove the studio background. The product body, bezel, hinge, buttons, cameras, and display proportions are not redrawn.
+
+## Mobile FIRST recent mockups (4 October 2026)
+
+Downloaded the free transparent PNGs for all 16 matching 2025/2026 entries in the [Mobile FIRST mockup library](https://www.webmobilefirst.com/en/mockups/): iPhone 17, 17 Pro, 17 Pro Max, Air, 18 Pro, 18 Pro Max, Duo folded and unfolded; Pixel 10, 10 Pro and 10 Fold folded; Galaxy A17 and S26 Ultra; Infinix Hot 70; Motorola Razr 70 Ultra; and MacBook Neo. Presets not represented in this batch keep their existing artwork. The retained Razr 60 alias follows the same frame as before, preserving its suppression as a duplicate preset.
+
+Each downloaded PNG replaces its canonical file under `public/mockups/`. The app's existing catalog uses local paths only; no remote image URLs, external catalog or additional source manifest is used. Superseded SVGs and source JPEGs were removed. Attribution stays in this document; see the [source license](https://www.webmobilefirst.com/en/license-agreement/).
+
+`renderScale` converts the measured transparent opening into frame coordinates close to the existing logical viewport. The live page retains its configured CSS dimensions and scales uniformly inside that opening. Raster-derived aperture masks and camera occlusions rotate with the downloaded hardware; insets account for asymmetric hinges, bezels and laptop bases. Hardware overlays the page. The unfolded Duo has no camera occlusion. Folded Duo side controls align to the camera metadata, with a stable content gutter while scrolling. New Pro status columns reserve the downloaded Dynamic Island width plus icon clearance.
+
+Rotate toggles between portrait and landscape. Changing devices always starts from the new device's natural screen orientation; a previous device's manual rotation is not retained. Existing saved upside-down states migrate to the corresponding portrait or landscape state. Hardware, aperture masks and camera bounds follow the selected orientation while page content and controls stay upright. One local PNG serves both orientations.
+
+Validation: TypeScript, the Chrome production build, 438 unit tests and 28 Chromium browser regression cases passed. Orientation regressions cover repeated two-way rotation, saved-session migration, and switching between regular phones, both Duo postures and a wide Galaxy Fold without retaining the previous device's rotation. Earlier frame measurements checked both supported orientations across the catalog. Downloaded bytes match the 16 canonical local PNGs. The production asset directory matches `public/mockups/` with no duplicate image hashes or stale replacement files. Superseded artwork removal saves 1,131,868 bytes in mockup assets. Evidence remains in ignored `output/playwright/mobile-first/`; these checks use desktop Chromium fixtures.
+
+The following Apple source/crop descriptions record earlier artwork and validation. The four iPhone 18/Duo SVGs and MacBook Neo manufacturer crop have been superseded for live previews by the downloaded PNGs above; their old calibration is historical.
 
 ## Samsung 2026 devices
 
@@ -24,7 +38,7 @@ The Fold8 and Fold8 Ultra main-display camera holes are deliberately offset to t
 
 `public/mockups/ipad-mini-modern.svg` is an original, code-drawn outline shared by iPad mini 6 and iPad mini (A17 Pro). It replaces the incorrectly reused Home-button shell. Its display opening uses the 744 × 1133 logical screen reference from [Apple's iPad mini 6 specifications](https://support.apple.com/en-us/111886). It is an illustrated frame, not an Apple product photograph; physical bezel, camera and corner-radius calibration remains on the [device checklist](device-validation.md). This is an explicit exception to the photograph-only guidance above.
 
-## Apple September 2026
+## Apple September 2026 validation history
 
 Added iPhone 18 Pro, iPhone 18 Pro Max, and iPhone Duo in folded and unfolded postures. Sources checked 10 September 2026: [Pro specifications](https://www.apple.com/iphone-18-pro/specs/) and [Duo specifications](https://www.apple.com/iphone-duo/specs/).
 
@@ -37,30 +51,19 @@ Added iPhone 18 Pro, iPhone 18 Pro Max, and iPhone Duo in folded and unfolded po
 
 Apple publishes the body dimensions and panel resolutions. Logical screens are provisional panel ÷ 3 estimates, not Apple-published CSS viewport measurements. Duo's inner panel is recorded in its wide orientation; portrait and landscape previews use the corresponding rotated opening. DPR, Safari controls, safe areas and Display Zoom still require native-device validation. The Pro models reuse the Liquid Glass presentation. Duo has the separate adaptive presentation described below; neither emulates the native Safari engine.
 
-The Pro and Pro Max use Apple’s Burgundy finish. Their unmodified source JPEGs are retained as `public/mockups/apple-iphone-18-pro-burgundy-original.jpg` and `public/mockups/apple-iphone-18-pro-max-burgundy-original.jpg`.
-
-The SVG files embed the unmodified official JPEG bytes. Vector masks isolate each straight-on front, hide the marketing screen for live content, and preserve visible camera pixels. No generated or replacement hardware artwork is used. Mask boundaries and corners are calibrated from these renders, not physical measurements. Apple artwork proportions and logical screen proportions remain independent; the shared fitter uses uniform scaling.
-
-| Asset | Original Apple image | Original SHA-256 | Source crop x, y, w, h | Screen opening within crop x, y, w, h |
-| --- | --- | --- | --- | --- |
-| `apple-iphone-18-pro-2026.svg` | [Apple image](https://www.apple.com/v/iphone/compare/am/images/overview/compare_iphone_18_pro_burgundy__mdv9ns7r6oa6_large_2x.jpg) | `7942326e4e0281f647fe085a56ed5b50ffa34a18cc9d1a8f40c8eabc794dbbd6` | 259, 108, 316, 650 | 15, 11, 289, 628 |
-| `apple-iphone-18-pro-max-2026.svg` | [Apple image](https://www.apple.com/v/iphone/compare/am/images/overview/compare_iphone_18_pro_max_burgundy__dcz67l4005oy_large_2x.jpg) | `ca3ad819a0362f1be76f5654ffb80624bc1038d20b92c0a53c0d0543a9f0624d` | 251, 48, 345, 712 | 14, 11, 319, 688 |
-| `apple-iphone-duo-folded-2026.svg` | [Apple image](https://www.apple.com/v/iphone-duo/a/images/overview/product-viewer/closed__3le61imm1w2e_large_2x.jpg) | `d54634540d1ae2845aaa26c3f63eaeef2d395bc4a23f78772a80e5ea5820cc0f` | 1530, 203, 793, 1107 | 40, 20, 724, 1060 |
-| `apple-iphone-duo-unfolded-2026.svg` | [Apple image](https://www.apple.com/v/iphone-duo/a/images/overview/product-viewer/landscape__f7x2oe1oxemy_large_2x.jpg) | `0f2d12c2e5db693192a00eed800bed8d61cb910188f1601c388ef06a34d4c707` | 1200, 242, 1447, 1037 | 29, 32, 1390, 974 |
-
-Initial frame validation: TypeScript and Chrome production build passed; all 324 unit tests passed. The eight new source-component orientation cases loaded their local artwork, showed less than 0.00001% unequal scaling, zero fixed-footer overlap, and less than 0.01 CSS px header overlap (subpixel rounding). Screenshots and measurements are in `output/playwright/apple-*`; these are desktop fixture results, not physical Safari certification.
+Earlier Apple JPEG/SVG artwork was replaced by the local PNGs above, and its duplicate files were removed. The old illustrated-frame generator was also removed so it cannot recreate superseded assets.
 
 ### Duo Safari presentation
 
 [Apple’s launch description](https://www.apple.com/uk/newsroom/2026/09/apple-unveils-iphone-duo/) describes side navigation and a circular corner status system. Its [landscape Safari and Siri Split View image](https://www.apple.com/newsroom/images/2026/09/apple-unveils-iphone-duo/article/Apple-iPhone-Duo-multitasking-Safari-and-Siri-app-260909_big.jpg.large_2x.jpg) shows Safari back, information, share, and search controls on the left. The [portrait Safari product image](https://www.apple.com/v/iphone-duo/a/images/overview/product-stories/versatility/media__ccpeh3rqgupe_large_2x.jpg) shows a top row and corner status, with a Siri confirmation obscuring the central toolbar.
 
-The simulator combines the user-supplied references with Apple's [Raise the bar with iPhone Duo](https://developer.apple.com/videos/play/tech-talks/111462/) guidance. The folded display uses right-side status and navigation in both orientations; unfolded landscape also uses the right side. Unfolded portrait retains the requested bottom navigation and upper-right status. Apple's portrait Safari photo shows a top navigation row, partly obscured by Siri, so the selected bottom arrangement is a preview preference rather than a verified exact native Safari configuration.
+The earlier simulator combined the user-supplied references with Apple's [Raise the bar with iPhone Duo](https://developer.apple.com/videos/play/tech-talks/111462/) guidance. The folded display uses right-side status and navigation in both orientations; unfolded landscape also uses the right side. Unfolded portrait retains the requested bottom navigation and upper-right status. Apple's portrait Safari photo shows a top navigation row, partly obscured by Siri, so the selected bottom arrangement is a preview preference rather than a verified exact native Safari configuration.
 
 The right rail is centered on the folded artwork camera: icons remain approximately 47.6 logical pixels from the right upright and 53.1 pixels rotated, while content clearance is only 72 and 78 pixels respectively. Unfolded landscape uses a 56-pixel rail, with no camera hole. The folded upright and unfolded landscape address bars span the screen with a tab switcher at the right and a new-tab icon above it. Folded landscape leaves the bottom-right camera clear. Apple's [outer-display landscape image](https://www.apple.com/v/iphone-duo/a/images/overview/product-viewer/tent__68ysumotbs2m_large.jpg) confirms that camera position, although it depicts StandBy, not Safari.
 
 Browser dimensions remain preview approximations: the expanded address row is 48 logical pixels and the horizontal navigation row, where present, is 40 pixels. Downward scrolling minimizes these to a 24-pixel domain pill; upward scrolling restores them. A horizontal home indicator occupies a 12-pixel bottom region. Side navigation and status retain their camera alignment throughout. Keyboard space replaces the lower browser area as needed. Controls remain outside the page viewport, including for viewport-fit=cover, to protect fixed page actions. Native Safari may overlay controls or expose different safe-area metrics. Other iPhones retain their existing browser choices.
 
-The open frame stays free of a visible camera hole. The Camera app, Live Activities, Split View, and native iOS behavior are not simulated. Control artwork is a code-rendered approximation; the hardware frame remains the original Apple raster.
+The open frame stays free of a visible camera hole. The Camera app, Live Activities, Split View, and native iOS behavior are not simulated. Control artwork is a code-rendered approximation; the hardware frame now uses the downloaded local PNG.
 
 Duo Safari validation: TypeScript, Chrome production build, and all 327 unit tests passed. Sixteen browser fixture cases covered both postures and orientations with expanded controls, scrolled controls, keyboard, and hidden browser UI. All had zero fixed-footer/control overlap; top-surface contact remained below 0.01 logical pixels from rounding, and unequal scaling below 0.000014%. Captures are `output/playwright/duo-safari-{open,closed}-{portrait,landscape}.png`; the measurement log is `output/playwright/duo-safari-measurements.txt`. These are desktop fixture checks, not native Safari certification.
 

@@ -1,3 +1,4 @@
+import { getDefaultOrientation } from "../device/device-service";
 import type { PreviewSlot } from "./simulator.types";
 import { devices } from "../device/device-catalog";
 
@@ -17,7 +18,7 @@ export function createPreviewSlot(deviceId: string, url: string, index: number):
     id: `slot-${Date.now()}-${index}`,
     deviceId,
     url: normalizeUrl(url),
-    orientation: device && device.cssViewport.width > device.cssViewport.height ? "landscape" : "portrait",
+    orientation: getDefaultOrientation(device),
     zoom: 0.58,
     zoomMode: "fit",
     reloadToken: 0,

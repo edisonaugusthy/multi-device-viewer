@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "Ridimensiona l'altezza di sovrapposizione del disegno",
   "resizeOverlayBoth": "Ridimensiona la larghezza e l'altezza della sovrapposizione del disegno",
   "chooseDevice": "Scegli un dispositivo",
+  "previousDevice": "Dispositivo precedente",
+  "nextDevice": "Dispositivo successivo",
   "results": "{count} risultati",
   "searchDevice": "Cerca nome, sistema operativo, tipo o dimensione",
   "clearDeviceSearch": "Cancella la ricerca del dispositivo",

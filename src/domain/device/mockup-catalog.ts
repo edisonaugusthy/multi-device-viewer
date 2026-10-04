@@ -3,7 +3,6 @@ import type { MockupAsset, MockupFrameStyle, MockupViewportConfig, Orientation, 
 interface LocalMockupAsset {
   id: string;
   localPath: string;
-  sourceUrl?: string;
   file: string;
   bytes: number;
   width: number;
@@ -24,179 +23,231 @@ interface LocalMockupAsset {
   frameStyle?: MockupFrameStyle;
 }
 
+// Mobile FIRST PNGs remain unmodified. Insets, aperture masks, and camera bounds
+// are measured from their alpha channel; CSS viewports stay independent.
 export const localMockupCatalog: LocalMockupAsset[] = [
 {
   "id": "apple-iphone-18-pro-2026",
-  "localPath": "/mockups/apple-iphone-18-pro-2026.svg",
-  "file": "apple-iphone-18-pro-2026.svg",
-  "bytes": 2263,
-  "width": 438,
-  "height": 906,
-  "renderScale": 1,
-  "frameOverlay": false,
+  "localPath": "/mockups/apple-iphone-18-pro-2026.png",
+  "file": "apple-iphone-18-pro-2026.png",
+  "bytes": 67746,
+  "width": 389,
+  "height": 800,
+  "renderScale": 1.1292134831460674,
+  "frameOverlay": true,
   "cssViewport": {
     "width": 402,
     "height": 874
   },
   "screenInset": {
-    "left": 18,
-    "top": 16,
-    "right": 18,
-    "bottom": 16
+    "left": 19.196629,
+    "top": 14.679775,
+    "right": 18.067416,
+    "bottom": 14.679775
   },
   "viewport": {
     "portrait": {
-      "left": 18,
-      "top": 16,
+      "left": 19.196629,
+      "top": 14.679775,
       "width": 402,
-      "height": 874,
-      "cornerRadius": 76,
+      "height": 874.011236,
       "enableRotation": true,
       "paths": {
-        "portrait": "M76 0H326C373.12 0 402 28.88 402 76V798C402 845.12 373.12 874 326 874H76C28.88 874 0 845.12 0 798V76C0 28.88 28.88 0 76 0ZM171 14H231A18 18 0 0 1 249 32V32A18 18 0 0 1 231 50H171A18 18 0 0 1 153 32V32A18 18 0 0 1 171 14Z"
-      }
+        "portrait": "M0 60.9775L1.1292 51.9438L2.2584 46.2978L3.3876 41.7809L4.5169 38.3933L6.7753 32.7472L10.1629 27.1011L12.4213 23.7135L23.7135 12.4213L27.1011 10.1629L36.1348 5.6461L42.9101 3.3876L47.427 2.2584L54.2022 1.1292L68.882 0L333.118 0L347.7978 1.1292L354.573 2.2584L359.0899 3.3876L362.4775 4.5169L368.1236 6.7753L373.7697 10.1629L378.2865 13.5506L388.4494 23.7135L391.8371 28.2303L396.3539 37.264L399.7416 47.427L400.8708 53.073L402 62.1067L402 811.9045L400.8708 820.9382L399.7416 826.5843L398.6124 831.1011L396.3539 837.8764L394.0955 842.3933L390.7079 848.0393L385.0618 854.8146L382.8034 857.073L377.1573 861.5899L370.382 866.1067L368.1236 867.236L362.4775 869.4944L359.0899 870.6236L347.7978 872.882L333.118 874.0112L68.882 874.0112L54.2022 872.882L47.427 871.7528L42.9101 870.6236L36.1348 868.3652L27.1011 863.8483L23.7135 861.5899L12.4213 850.2978L10.1629 846.9101L6.7753 841.264L4.5169 835.618L3.3876 832.2303L2.2584 827.7135L1.1292 822.0674L0 813.0337ZM156.9607 14.6798H245.0393A18.0674 18.0674 0 0 1 263.1067 32.7472V32.7472A18.0674 18.0674 0 0 1 245.0393 50.8146H156.9607A18.0674 18.0674 0 0 1 138.8933 32.7472V32.7472A18.0674 18.0674 0 0 1 156.9607 14.6798Z"
+      },
+      "occlusions": [
+        {
+          "kind": "rounded-rect",
+          "left": 138.893258,
+          "top": 14.679775,
+          "width": 124.213483,
+          "height": 36.134831,
+          "radius": 18.067416
+        }
+      ]
     },
     "landscape": {
-      "left": 16,
-      "top": 18,
-      "width": 874,
+      "left": 14.679775,
+      "top": 19.196629,
+      "width": 874.011236,
       "height": 402,
-      "cornerRadius": 76,
       "enableRotation": true,
       "paths": {
-        "landscape": "M76 0H798C845.12 0 874 28.88 874 76V326C874 373.12 845.12 402 798 402H76C28.88 402 0 373.12 0 326V76C0 28.88 28.88 0 76 0ZM842 153H842A18 18 0 0 1 860 171V231A18 18 0 0 1 842 249H842A18 18 0 0 1 824 231V171A18 18 0 0 1 842 153Z"
-      }
+        "landscape": "M813.0337 0L822.0674 1.1292L827.7135 2.2584L832.2303 3.3876L835.618 4.5169L841.264 6.7753L846.9101 10.1629L850.2978 12.4213L861.5899 23.7135L863.8483 27.1011L868.3652 36.1348L870.6236 42.9101L871.7528 47.427L872.882 54.2022L874.0112 68.882L874.0112 333.118L872.882 347.7978L871.7528 354.573L870.6236 359.0899L869.4944 362.4775L867.236 368.1236L863.8483 373.7697L860.4607 378.2865L850.2978 388.4494L845.7809 391.8371L836.7472 396.3539L826.5843 399.7416L820.9382 400.8708L811.9045 402L62.1067 402L53.073 400.8708L47.427 399.7416L42.9101 398.6124L36.1348 396.3539L31.618 394.0955L25.9719 390.7079L19.1966 385.0618L16.9382 382.8034L12.4213 377.1573L7.9045 370.382L6.7753 368.1236L4.5169 362.4775L3.3876 359.0899L1.1292 347.7978L0 333.118L0 68.882L1.1292 54.2022L2.2584 47.427L3.3876 42.9101L5.6461 36.1348L10.1629 27.1011L12.4213 23.7135L23.7135 12.4213L27.1011 10.1629L32.7472 6.7753L38.3933 4.5169L41.7809 3.3876L46.2978 2.2584L51.9438 1.1292L60.9775 0ZM841.264 138.8933H841.264A18.0674 18.0674 0 0 1 859.3315 156.9607V245.0393A18.0674 18.0674 0 0 1 841.264 263.1067H841.264A18.0674 18.0674 0 0 1 823.1966 245.0393V156.9607A18.0674 18.0674 0 0 1 841.264 138.8933Z"
+      },
+      "occlusions": [
+        {
+          "kind": "rounded-rect",
+          "left": 823.19663,
+          "top": 138.893258,
+          "width": 36.134831,
+          "height": 124.213483,
+          "radius": 18.067416
+        }
+      ]
     }
   }
 },
 {
   "id": "apple-iphone-18-pro-max-2026",
-  "localPath": "/mockups/apple-iphone-18-pro-max-2026.svg",
-  "file": "apple-iphone-18-pro-max-2026.svg",
-  "bytes": 2387,
-  "width": 476,
-  "height": 988,
-  "renderScale": 1,
-  "frameOverlay": false,
+  "localPath": "/mockups/apple-iphone-18-pro-max-2026.png",
+  "file": "apple-iphone-18-pro-max-2026.png",
+  "bytes": 36488,
+  "width": 389,
+  "height": 800,
+  "renderScale": 1.2367399741267788,
+  "frameOverlay": true,
   "cssViewport": {
     "width": 440,
     "height": 956
   },
   "screenInset": {
-    "left": 18,
-    "top": 16,
-    "right": 18,
-    "bottom": 16
+    "left": 21.02458,
+    "top": 17.31436,
+    "right": 19.78784,
+    "bottom": 16.07762
   },
   "viewport": {
     "portrait": {
-      "left": 18,
-      "top": 16,
-      "width": 440,
+      "left": 21.02458,
+      "top": 17.31436,
+      "width": 440.279431,
       "height": 956,
-      "cornerRadius": 84,
       "enableRotation": true,
       "paths": {
-        "portrait": "M84 0H356C408.08 0 440 31.92 440 84V872C440 924.08 408.08 956 356 956H84C31.92 956 0 924.08 0 872V84C0 31.92 31.92 0 84 0ZM190 14H250A18 18 0 0 1 268 32V32A18 18 0 0 1 250 50H190A18 18 0 0 1 172 32V32A18 18 0 0 1 190 14Z"
-      }
+        "portrait": "M0 65.5472L1.2367 55.6533L2.4735 49.4696L6.1837 38.3389L9.8939 30.9185L12.3674 27.2083L16.0776 22.2613L23.4981 14.8409L28.445 11.1307L34.6287 7.4204L40.8124 4.947L48.2329 2.4735L54.4166 1.2367L63.0737 0L377.2057 0L385.8629 1.2367L395.7568 3.7102L401.9405 6.1837L404.414 7.4204L410.5977 11.1307L418.0181 17.3144L421.7283 21.0246L426.6753 27.2083L431.6223 34.6287L432.859 37.1022L435.3325 43.2859L436.5692 46.9961L437.806 51.9431L439.0427 58.1268L440.2794 70.4942L440.2794 885.5058L439.0427 897.8732L437.806 904.0569L436.5692 909.0039L435.3325 912.7141L432.859 918.8978L431.6223 921.3713L426.6753 928.7917L420.4916 936.2122L419.2549 937.4489L413.0712 942.3959L405.6507 947.3428L403.1772 948.5796L396.9935 951.053L393.2833 952.2898L388.3364 953.5265L380.9159 954.7633L366.075 956L72.9677 956L58.1268 954.7633L51.9431 953.5265L46.9961 952.2898L39.5757 949.8163L29.6818 944.8693L25.9715 942.3959L13.6041 930.0285L11.1307 926.3182L7.4204 920.1345L4.947 913.9508L3.7102 910.2406L2.4735 905.2937L1.2367 899.11L0 889.216ZM171.2885 16.0776H268.9909A19.1695 19.1695 0 0 1 288.1604 35.2471V35.2471A19.1695 19.1695 0 0 1 268.9909 54.4166H171.2885A19.1695 19.1695 0 0 1 152.119 35.2471V35.2471A19.1695 19.1695 0 0 1 171.2885 16.0776Z"
+      },
+      "occlusions": [
+        {
+          "kind": "rounded-rect",
+          "left": 152.119017,
+          "top": 16.07762,
+          "width": 136.041397,
+          "height": 38.338939,
+          "radius": 19.16947
+        }
+      ]
     },
     "landscape": {
-      "left": 16,
-      "top": 18,
+      "left": 16.07762,
+      "top": 21.02458,
       "width": 956,
-      "height": 440,
-      "cornerRadius": 84,
+      "height": 440.279431,
       "enableRotation": true,
       "paths": {
-        "landscape": "M84 0H872C924.08 0 956 31.92 956 84V356C956 408.08 924.08 440 872 440H84C31.92 440 0 408.08 0 356V84C0 31.92 31.92 0 84 0ZM924 172H924A18 18 0 0 1 942 190V250A18 18 0 0 1 924 268H924A18 18 0 0 1 906 250V190A18 18 0 0 1 924 172Z"
-      }
+        "landscape": "M890.4528 0L900.3467 1.2367L906.5304 2.4735L917.6611 6.1837L925.0815 9.8939L928.7917 12.3674L933.7387 16.0776L941.1591 23.4981L944.8693 28.445L948.5796 34.6287L951.053 40.8124L953.5265 48.2329L954.7633 54.4166L956 63.0737L956 377.2057L954.7633 385.8629L952.2898 395.7568L949.8163 401.9405L948.5796 404.414L944.8693 410.5977L938.6856 418.0181L934.9754 421.7283L928.7917 426.6753L921.3713 431.6223L918.8978 432.859L912.7141 435.3325L909.0039 436.5692L904.0569 437.806L897.8732 439.0427L885.5058 440.2794L70.4942 440.2794L58.1268 439.0427L51.9431 437.806L46.9961 436.5692L43.2859 435.3325L37.1022 432.859L34.6287 431.6223L27.2083 426.6753L19.7878 420.4916L18.5511 419.2549L13.6041 413.0712L8.6572 405.6507L7.4204 403.1772L4.947 396.9935L3.7102 393.2833L2.4735 388.3364L1.2367 380.9159L0 366.075L0 72.9677L1.2367 58.1268L2.4735 51.9431L3.7102 46.9961L6.1837 39.5757L11.1307 29.6818L13.6041 25.9715L25.9715 13.6041L29.6818 11.1307L35.8655 7.4204L42.0492 4.947L45.7594 3.7102L50.7063 2.4735L56.89 1.2367L66.784 0ZM920.7529 152.119H920.7529A19.1695 19.1695 0 0 1 939.9224 171.2885V268.9909A19.1695 19.1695 0 0 1 920.7529 288.1604H920.7529A19.1695 19.1695 0 0 1 901.5834 268.9909V171.2885A19.1695 19.1695 0 0 1 920.7529 152.119Z"
+      },
+      "occlusions": [
+        {
+          "kind": "rounded-rect",
+          "left": 901.583441,
+          "top": 152.119017,
+          "width": 38.338939,
+          "height": 136.041397,
+          "radius": 19.16947
+        }
+      ]
     }
   }
 },
 {
   "id": "apple-iphone-duo-folded-2026",
-  "localPath": "/mockups/apple-iphone-duo-folded-2026.svg",
-  "file": "apple-iphone-duo-folded-2026.svg",
-  "bytes": 2012,
-  "width": 502,
-  "height": 710,
-  "renderScale": 1,
-  "frameOverlay": false,
+  "localPath": "/mockups/apple-iphone-duo-folded-2026.png",
+  "file": "apple-iphone-duo-folded-2026.png",
+  "bytes": 82232,
+  "width": 573,
+  "height": 800,
+  "renderScale": 0.8921052631578947,
+  "frameOverlay": true,
   "cssViewport": {
     "width": 466,
     "height": 678
   },
   "screenInset": {
-    "left": 18,
-    "top": 16,
-    "right": 18,
-    "bottom": 16
+    "left": 26.763158,
+    "top": 20.518421,
+    "right": 17.842105,
+    "bottom": 15.165789
   },
   "viewport": {
     "portrait": {
-      "left": 18,
-      "top": 16,
-      "width": 466,
+      "left": 26.763158,
+      "top": 20.518421,
+      "width": 466.571053,
       "height": 678,
-      "cornerRadius": 68,
       "enableRotation": true,
       "paths": {
-        "portrait": "M10 0H398C440.16 0 466 25.84 466 68V610C466 652.16 440.16 678 398 678H10C3.8 678 0 674.2 0 668V10C0 3.8 3.8 0 10 0ZM418 35H418A18 18 0 0 1 436 53V53A18 18 0 0 1 418 71H418A18 18 0 0 1 400 53V53A18 18 0 0 1 418 35Z"
-      }
+        "portrait": "M0 6.2447L0.8921 3.5684L3.5684 0.8921L5.3526 0L411.2605 0L418.3974 0.8921L425.5342 2.6763L430.8868 4.4605L435.3474 6.2447L437.1316 7.1368L441.5921 9.8132L445.1605 12.4895L454.0816 21.4105L457.65 26.7632L461.2184 33.9L463.8947 41.9289L464.7868 45.4974L465.6789 50.85L466.5711 61.5553L466.5711 615.5526L465.6789 627.15L463.8947 636.0711L462.1105 641.4237L460.3263 645.8842L458.5421 649.4526L454.9737 654.8053L452.2974 658.3737L446.9447 663.7263L443.3763 666.4026L438.0237 669.9711L434.4553 671.7553L429.9947 673.5395L424.6421 675.3237L421.0737 676.2158L415.7211 677.1079L405.9079 678L6.2447 678L2.6763 676.2158L1.7842 675.3237L0.8921 673.5395L0 670.8632ZM418.8434 29.4395H418.8434A18.2882 18.2882 0 0 1 437.1316 47.7276V47.7276A18.2882 18.2882 0 0 1 418.8434 66.0158H418.8434A18.2882 18.2882 0 0 1 400.5553 47.7276V47.7276A18.2882 18.2882 0 0 1 418.8434 29.4395Z"
+      },
+      "occlusions": [
+        {
+          "kind": "circle",
+          "left": 400.555263,
+          "top": 29.439474,
+          "width": 36.576316,
+          "height": 36.576316
+        }
+      ]
     },
     "landscape": {
-      "left": 16,
-      "top": 18,
+      "left": 15.165789,
+      "top": 26.763158,
       "width": 678,
-      "height": 466,
-      "cornerRadius": 68,
+      "height": 466.571053,
       "enableRotation": true,
       "paths": {
-        "landscape": "M10 0H668C674.2 0 678 3.8 678 10V398C678 440.16 652.16 466 610 466H68C25.84 466 0 440.16 0 398V10C0 3.8 3.8 0 10 0ZM625 400H625A18 18 0 0 1 643 418V418A18 18 0 0 1 625 436H625A18 18 0 0 1 607 418V418A18 18 0 0 1 625 400Z"
-      }
+        "landscape": "M671.7553 0L674.4316 0.8921L677.1079 3.5684L678 5.3526L678 411.2605L677.1079 418.3974L675.3237 425.5342L673.5395 430.8868L671.7553 435.3474L670.8632 437.1316L668.1868 441.5921L665.5105 445.1605L656.5895 454.0816L651.2368 457.65L644.1 461.2184L636.0711 463.8947L632.5026 464.7868L627.15 465.6789L616.4447 466.5711L62.4474 466.5711L50.85 465.6789L41.9289 463.8947L36.5763 462.1105L32.1158 460.3263L28.5474 458.5421L23.1947 454.9737L19.6263 452.2974L14.2737 446.9447L11.5974 443.3763L8.0289 438.0237L6.2447 434.4553L4.4605 429.9947L2.6763 424.6421L1.7842 421.0737L0.8921 415.7211L0 405.9079L0 6.2447L1.7842 2.6763L2.6763 1.7842L4.4605 0.8921L7.1368 0ZM630.2724 400.5553H630.2724A18.2882 18.2882 0 0 1 648.5605 418.8434V418.8434A18.2882 18.2882 0 0 1 630.2724 437.1316H630.2724A18.2882 18.2882 0 0 1 611.9842 418.8434V418.8434A18.2882 18.2882 0 0 1 630.2724 400.5553Z"
+      },
+      "occlusions": [
+        {
+          "kind": "circle",
+          "left": 611.98421,
+          "top": 400.555263,
+          "width": 36.576316,
+          "height": 36.576316
+        }
+      ]
     }
   }
 },
 {
   "id": "apple-iphone-duo-unfolded-2026",
-  "localPath": "/mockups/apple-iphone-duo-unfolded-2026.svg",
-  "file": "apple-iphone-duo-unfolded-2026.svg",
-  "bytes": 1765,
-  "width": 926,
-  "height": 658,
-  "renderScale": 1,
-  "frameOverlay": false,
+  "localPath": "/mockups/apple-iphone-duo-unfolded-2026.png",
+  "file": "apple-iphone-duo-unfolded-2026.png",
+  "bytes": 51095,
+  "width": 800,
+  "height": 575,
+  "renderScale": 1.1635687732342008,
+  "frameOverlay": true,
   "cssViewport": {
     "width": 890,
     "height": 626
   },
   "screenInset": {
-    "left": 18,
-    "top": 16,
-    "right": 18,
-    "bottom": 16
+    "left": 18.6171,
+    "top": 23.271375,
+    "right": 22.107807,
+    "bottom": 19.780669
   },
   "viewport": {
     "landscape": {
-      "left": 18,
-      "top": 16,
-      "width": 890,
+      "left": 18.6171,
+      "top": 23.271375,
+      "width": 890.130112,
       "height": 626,
-      "cornerRadius": 58,
       "enableRotation": true,
       "paths": {
-        "landscape": "M58 0H832C867.96 0 890 22.04 890 58V568C890 603.96 867.96 626 832 626H58C22.04 626 0 603.96 0 568V58C0 22.04 22.04 0 58 0Z"
+        "landscape": "M0 46.5428L1.1636 38.3978L2.3271 33.7435L4.6543 27.9257L5.8178 25.5985L10.4721 18.6171L18.6171 10.4721L23.2714 6.9814L30.2528 3.4907L37.2342 1.1636L41.8885 0L848.2416 0L854.0595 1.1636L857.5502 2.3271L863.368 4.6543L869.1859 8.145L876.1673 13.9628L880.8216 19.7807L883.1487 23.2714L887.803 32.5799L888.9665 36.0706L890.1301 41.8885L890.1301 584.1115L888.9665 588.7658L886.6394 595.7472L883.1487 602.7286L879.658 607.3829L871.513 615.5279L864.5316 620.1822L862.2045 621.3457L856.3866 623.6729L851.7323 624.8364L844.7509 626L45.3792 626L38.3978 624.8364L31.4164 622.5093L24.4349 619.0186L20.9442 616.6914L16.29 613.2007L12.7993 609.71L9.3086 605.0558L6.9814 601.5651L3.4907 594.5836L2.3271 591.0929L1.1636 586.4387L0 579.4572Z"
       }
     },
     "portrait": {
-      "left": 16,
-      "top": 18,
+      "left": 19.780669,
+      "top": 18.6171,
       "width": 626,
-      "height": 890,
-      "cornerRadius": 58,
+      "height": 890.130112,
       "enableRotation": true,
       "paths": {
-        "portrait": "M58 0H568C603.96 0 626 22.04 626 58V832C626 867.96 603.96 890 568 890H58C22.04 890 0 867.96 0 832V58C0 22.04 22.04 0 58 0Z"
+        "portrait": "M579.4572 0L587.6022 1.1636L592.2565 2.3271L598.0743 4.6543L600.4015 5.8178L607.3829 10.4721L615.5279 18.6171L619.0186 23.2714L622.5093 30.2528L624.8364 37.2342L626 41.8885L626 848.2416L624.8364 854.0595L623.6729 857.5502L621.3457 863.368L617.855 869.1859L612.0372 876.1673L606.2193 880.8216L602.7286 883.1487L593.4201 887.803L589.9294 888.9665L584.1115 890.1301L41.8885 890.1301L37.2342 888.9665L30.2528 886.6394L23.2714 883.1487L18.6171 879.658L10.4721 871.513L5.8178 864.5316L4.6543 862.2045L2.3271 856.3866L1.1636 851.7323L0 844.7509L0 45.3792L1.1636 38.3978L3.4907 31.4164L6.9814 24.4349L9.3086 20.9442L12.7993 16.29L16.29 12.7993L20.9442 9.3086L24.4349 6.9814L31.4164 3.4907L34.9071 2.3271L39.5613 1.1636L46.5428 0Z"
       }
     }
   }
@@ -594,47 +645,65 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
-    "id": "apple-iphone-17-2025",
-    "localPath": "/mockups/apple-iphone-17-2025.png",
-    "file": "apple-iphone-17-2025.png",
-    "bytes": 67744,
-    "width": 877,
-    "height": 1808,
-    "screenInset": {
-      "top": 8,
-      "right": 11,
-      "bottom": 8,
-      "left": 12.5
-    }
+  "id": "apple-iphone-17-2025",
+  "localPath": "/mockups/apple-iphone-17-2025.png",
+  "file": "apple-iphone-17-2025.png",
+  "bytes": 66125,
+  "width": 388,
+  "height": 800,
+  "renderScale": 1.1292134831460674,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 402,
+    "height": 874
   },
+  "screenInset": {
+    "left": 18.067416,
+    "top": 14.679775,
+    "right": 18.067416,
+    "bottom": 14.679775
+  }
+},
   {
-    "id": "apple-iphone-17-pro-2025",
-    "localPath": "/mockups/apple-iphone-17-pro-2025.png",
-    "file": "apple-iphone-17-pro-2025.png",
-    "bytes": 61726,
-    "width": 878,
-    "height": 1806,
-    "screenInset": {
-      "top": 10.5,
-      "right": 12,
-      "bottom": 8.5,
-      "left": 12
-    }
+  "id": "apple-iphone-17-pro-2025",
+  "localPath": "/mockups/apple-iphone-17-pro-2025.png",
+  "file": "apple-iphone-17-pro-2025.png",
+  "bytes": 76617,
+  "width": 389,
+  "height": 800,
+  "renderScale": 1.1292134831460674,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 402,
+    "height": 873
   },
+  "screenInset": {
+    "left": 19.196629,
+    "top": 14.679775,
+    "right": 18.067416,
+    "bottom": 14.679775
+  }
+},
   {
-    "id": "apple-iphone-17-pro-max-2025",
-    "localPath": "/mockups/apple-iphone-17-pro-max-2025.png",
-    "file": "apple-iphone-17-pro-max-2025.png",
-    "bytes": 78432,
-    "width": 963,
-    "height": 1978,
-    "screenInset": {
-      "top": 12.5,
-      "right": 13,
-      "bottom": 10,
-      "left": 14.5
-    }
+  "id": "apple-iphone-17-pro-max-2025",
+  "localPath": "/mockups/apple-iphone-17-pro-max-2025.png",
+  "file": "apple-iphone-17-pro-max-2025.png",
+  "bytes": 49325,
+  "width": 389,
+  "height": 800,
+  "renderScale": 1.2367399741267788,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 440,
+    "height": 956
   },
+  "screenInset": {
+    "left": 21.02458,
+    "top": 17.31436,
+    "right": 19.78784,
+    "bottom": 16.07762
+  }
+},
   {
     "id": "apple-iphone-5",
     "localPath": "/mockups/apple-iphone-5.png",
@@ -650,19 +719,25 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
-    "id": "apple-iphone-air-2025",
-    "localPath": "/mockups/apple-iphone-air-2025.png",
-    "file": "apple-iphone-air-2025.png",
-    "bytes": 41648,
-    "width": 912,
-    "height": 1882,
-    "screenInset": {
-      "top": 8,
-      "right": 11,
-      "bottom": 7.5,
-      "left": 11.5
-    }
+  "id": "apple-iphone-air-2025",
+  "localPath": "/mockups/apple-iphone-air-2025.png",
+  "file": "apple-iphone-air-2025.png",
+  "bytes": 47132,
+  "width": 388,
+  "height": 800,
+  "renderScale": 1.176774193548387,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 420,
+    "height": 912
   },
+  "screenInset": {
+    "left": 17.651613,
+    "top": 15.298065,
+    "right": 17.651613,
+    "bottom": 14.12129
+  }
+},
   {
     "id": "apple-iphone-se",
     "localPath": "/mockups/apple-iphone-se.png",
@@ -1014,19 +1089,25 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
-    "id": "samsung-galaxy-s26-ultra-2026",
-    "localPath": "/mockups/samsung-galaxy-s26-ultra-2026.png",
-    "file": "samsung-galaxy-s26-ultra-2026.png",
-    "bytes": 27833,
-    "width": 882,
-    "height": 1832,
-    "screenInset": {
-      "top": 5.5,
-      "right": 9.5,
-      "bottom": 6.5,
-      "left": 6.5
-    }
+  "id": "samsung-galaxy-s26-ultra-2026",
+  "localPath": "/mockups/samsung-galaxy-s26-ultra-2026.png",
+  "file": "samsung-galaxy-s26-ultra-2026.png",
+  "bytes": 33923,
+  "width": 385,
+  "height": 800,
+  "renderScale": 1.1444444444444444,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 412,
+    "height": 891
   },
+  "screenInset": {
+    "left": 12.588889,
+    "top": 11.444444,
+    "right": 16.022222,
+    "bottom": 12.588889
+  }
+},
   {
     "id": "samsung-galaxy-tab-s7",
     "localPath": "/mockups/samsung-galaxy-tab-s7.png",
@@ -1154,51 +1235,68 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
-    "id": "google-pixel-10-2026",
-    "localPath": "/mockups/google-pixel-10-2026.png",
-    "file": "google-pixel-10-2026.png",
-    "bytes": 18649,
-    "width": 918,
-    "height": 1938,
-    "screenInset": {
-      "top": 12.5,
-      "right": 12,
-      "bottom": 10.5,
-      "left": 9
-    }
+  "id": "google-pixel-10-2026",
+  "localPath": "/mockups/google-pixel-10-2026.png",
+  "file": "google-pixel-10-2026.png",
+  "bytes": 31895,
+  "width": 379,
+  "height": 800,
+  "renderScale": 1.2117647058823529,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 412,
+    "height": 924
   },
+  "screenInset": {
+    "left": 21.811765,
+    "top": 23.023529,
+    "right": 25.447059,
+    "bottom": 21.811765
+  }
+},
   {
-    "id": "google-pixel-10-pro-2026",
-    "localPath": "/mockups/google-pixel-10-pro-2026.png",
-    "file": "google-pixel-10-pro-2026.png",
-    "bytes": 19738,
-    "width": 900,
-    "height": 1894,
-    "screenInset": {
-      "top": 7,
-      "right": 4,
-      "bottom": 7.5,
-      "left": 7
-    }
+  "id": "google-pixel-10-pro-2026",
+  "localPath": "/mockups/google-pixel-10-pro-2026.png",
+  "file": "google-pixel-10-pro-2026.png",
+  "bytes": 33641,
+  "width": 380,
+  "height": 800,
+  "renderScale": 1.1849710982658959,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 410,
+    "height": 912
   },
+  "screenInset": {
+    "left": 17.774566,
+    "top": 16.589595,
+    "right": 22.514451,
+    "bottom": 17.774566
+  }
+},
   {
-    "id": "google-pixel-10-pro-fold-2026",
-    "localPath": "/mockups/google-pixel-10-pro-fold-2026.png",
-    "file": "google-pixel-10-pro-fold-2026.png",
-    "bytes": 38849,
-    "width": 940,
-    "height": 1902,
-    "screenInset": {
-      "top": 12,
-      "right": 12.5,
-      "bottom": 11,
-      "left": 15
-    }
+  "id": "google-pixel-10-pro-fold-2026",
+  "localPath": "/mockups/google-pixel-10-pro-fold-2026.png",
+  "file": "google-pixel-10-pro-fold-2026.png",
+  "bytes": 63488,
+  "width": 395,
+  "height": 800,
+  "renderScale": 1.1907514450867052,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 412,
+    "height": 901
   },
+  "screenInset": {
+    "left": 30.959538,
+    "top": 25.00578,
+    "right": 27.387283,
+    "bottom": 25.00578
+  }
+},
   {
     "id": "google-pixel-11-2026",
     "localPath": "/mockups/google-pixel-11-2026.png",
-    "sourceUrl": "https://store.google.com/us/config/pixel_11?hl=en-US",
     "file": "google-pixel-11-2026.png",
     "bytes": 250048,
     "width": 1554,
@@ -1227,7 +1325,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   {
     "id": "google-pixel-11-pro-2026",
     "localPath": "/mockups/google-pixel-11-pro-2026.png",
-    "sourceUrl": "https://store.google.com/us/config/pixel_11_pro?hl=en-US",
     "file": "google-pixel-11-pro-2026.png",
     "bytes": 138167,
     "width": 1554,
@@ -1250,7 +1347,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   {
     "id": "google-pixel-11-pro-xl-2026",
     "localPath": "/mockups/google-pixel-11-pro-xl-2026.png",
-    "sourceUrl": "https://store.google.com/us/config/pixel_11_pro?hl=en-US",
     "file": "google-pixel-11-pro-xl-2026.png",
     "bytes": 149069,
     "width": 1554,
@@ -1273,7 +1369,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   {
     "id": "google-pixel-11-pro-fold-2026",
     "localPath": "/mockups/google-pixel-11-pro-fold-2026.png",
-    "sourceUrl": "https://store.google.com/us/config/pixel_11_pro_fold?hl=en-US",
     "file": "google-pixel-11-pro-fold-2026.png",
     "bytes": 215187,
     "width": 1554,
@@ -1294,47 +1389,65 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
-    "id": "samsung-galaxy-a17-2025",
-    "localPath": "/mockups/samsung-galaxy-a17-2025.png",
-    "file": "samsung-galaxy-a17-2025.png",
-    "bytes": 26123,
-    "width": 918,
-    "height": 1912,
-    "screenInset": {
-      "top": 11.5,
-      "right": 15.5,
-      "bottom": 10,
-      "left": 10
-    }
+  "id": "samsung-galaxy-a17-2025",
+  "localPath": "/mockups/samsung-galaxy-a17-2025.png",
+  "file": "samsung-galaxy-a17-2025.png",
+  "bytes": 50023,
+  "width": 384,
+  "height": 800,
+  "renderScale": 1.197674418604651,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 412,
+    "height": 892
   },
+  "screenInset": {
+    "left": 21.55814,
+    "top": 21.55814,
+    "right": 26.348837,
+    "bottom": 41.918605
+  }
+},
   {
-    "id": "motorola-razr-70-ultra-2026",
-    "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
-    "file": "motorola-razr-70-ultra-2026.png",
-    "bytes": 46907,
-    "width": 936,
-    "height": 2130,
-    "screenInset": {
-      "top": 5,
-      "right": 11.5,
-      "bottom": 4,
-      "left": 6
-    }
+  "id": "motorola-razr-70-ultra-2026",
+  "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
+  "file": "motorola-razr-70-ultra-2026.png",
+  "bytes": 51571,
+  "width": 352,
+  "height": 800,
+  "renderScale": 1.331571994715984,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 412,
+    "height": 1008
   },
+  "screenInset": {
+    "left": 27.963012,
+    "top": 27.963012,
+    "right": 27.963012,
+    "bottom": 29.294584
+  }
+},
   {
-    "id": "infinix-hot-70-2026",
-    "localPath": "/mockups/infinix-hot-70-2026.png",
-    "file": "infinix-hot-70-2026.png",
-    "bytes": 26666,
-    "width": 796,
-    "height": 1680,
-    "screenInset": {
-      "top": 11,
-      "right": 7.5,
-      "bottom": 5.5,
-      "left": 5
-    }
+  "id": "infinix-hot-70-2026",
+  "localPath": "/mockups/infinix-hot-70-2026.png",
+  "file": "infinix-hot-70-2026.png",
+  "bytes": 57140,
+  "width": 379,
+  "height": 800,
+  "renderScale": 1.0506666666666666,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 360,
+    "height": 788
   },
+  "screenInset": {
+    "left": 17.861333,
+    "top": 22.064,
+    "right": 19.962667,
+    "bottom": 30.469333
+  }
+},
   {
     "id": "samsung-galaxy-s26-2026",
     "localPath": "/mockups/samsung-galaxy-s26.png",
@@ -1436,16 +1549,26 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "screenInset": { "top": 25, "right": 28, "bottom": 30, "left": 24 }
   },
   {
-    "id": "google-pixel-10-pro-xl-2025",
-    "localPath": "/mockups/google-pixel-10-pro-2026.png",
-    "file": "google-pixel-10-pro-2026.png",
-    "bytes": 19738,
-    "width": 900,
-    "height": 1894,
-    "cssViewport": { "width": 448, "height": 997 },
-    "screenInset": { "top": 7, "right": 4, "bottom": 7.5, "left": 7 },
-    "viewportSourceId": "google-pixel-10-pro-2026"
+  "id": "google-pixel-10-pro-xl-2025",
+  "localPath": "/mockups/google-pixel-10-pro-2026.png",
+  "file": "google-pixel-10-pro-2026.png",
+  "bytes": 33641,
+  "width": 380,
+  "height": 800,
+  "renderScale": 1.1849710982658959,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 448,
+    "height": 997
   },
+  "screenInset": {
+    "left": 17.774566,
+    "top": 16.589595,
+    "right": 22.514451,
+    "bottom": 17.774566
+  },
+  "viewportSourceId": "google-pixel-10-pro-2026"
+},
   {
     "id": "modern-laptop-15",
     "localPath": "/mockups/modern-laptop-15.png",
@@ -1462,15 +1585,26 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
-    "id": "apple-iphone-16-pro-2024",
-    "localPath": "/mockups/apple-iphone-17-pro-2025.png",
-    "file": "apple-iphone-17-pro-2025.png",
-    "bytes": 61726,
-    "width": 878,
-    "height": 1806,
-    "cssViewport": { "width": 402, "height": 874 },
-    "screenInset": { "top": 10.5, "right": 12, "bottom": 8.5, "left": 12 }
+  "id": "apple-iphone-16-pro-2024",
+  "localPath": "/mockups/apple-iphone-17-pro-2025.png",
+  "file": "apple-iphone-17-pro-2025.png",
+  "bytes": 76617,
+  "width": 389,
+  "height": 800,
+  "renderScale": 1.1292134831460674,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 402,
+    "height": 874
   },
+  "screenInset": {
+    "left": 19.196629,
+    "top": 14.679775,
+    "right": 18.067416,
+    "bottom": 14.679775
+  },
+  "viewportSourceId": "apple-iphone-17-pro-2025"
+},
   {
     "id": "apple-iphone-16e-2025",
     "localPath": "/mockups/apple-iphone-14-2022.png",
@@ -1485,7 +1619,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   {
     "id": "apple-iphone-17e-2026",
     "localPath": "/mockups/apple-iphone-17e-2026.png",
-    "sourceUrl": "https://www.apple.com/v/iphone-17e/d/images/overview/camera/storage_hw__cx0gdpi4auuu_large_2x.png",
     "file": "apple-iphone-17e-2026.png",
     "bytes": 102865,
     "width": 696,
@@ -1547,7 +1680,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   {
     "id": "samsung-galaxy-s26-plus-2026",
     "localPath": "/mockups/samsung-galaxy-s26-plus-2026.png",
-    "sourceUrl": "https://www.samsung.com/us/smartphones/galaxy-s26/",
     "file": "samsung-galaxy-s26-plus-2026.png",
     "bytes": 496694,
     "width": 1920,
@@ -1592,7 +1724,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   {
     "id": "google-pixel-10a-2026",
     "localPath": "/mockups/google-pixel-10a-2026.webp",
-    "sourceUrl": "https://store.google.com/product/pixel_10a?hl=en-US",
     "file": "google-pixel-10a-2026.webp",
     "bytes": 23526,
     "width": 1200,
@@ -1626,14 +1757,26 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "screenInset": { "top": 10.5, "right": 14, "bottom": 11.5, "left": 11 }
   },
   {
-    "id": "motorola-razr-60-ultra-2025",
-    "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
-    "file": "motorola-razr-70-ultra-2026.png",
-    "bytes": 46907,
-    "width": 936,
-    "height": 2130,
-    "screenInset": { "top": 5, "right": 11.5, "bottom": 4, "left": 6 }
+  "id": "motorola-razr-60-ultra-2025",
+  "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
+  "file": "motorola-razr-70-ultra-2026.png",
+  "bytes": 51571,
+  "width": 352,
+  "height": 800,
+  "renderScale": 1.331571994715984,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 412,
+    "height": 1008
   },
+  "screenInset": {
+    "left": 27.963012,
+    "top": 27.963012,
+    "right": 27.963012,
+    "bottom": 29.294584
+  },
+  "viewportSourceId": "motorola-razr-70-ultra-2026"
+},
   {
     "id": "zebra-tc58-2022",
     "localPath": "/mockups/zebra-tc58.png",
@@ -1685,23 +1828,28 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "screenInset": { "top": 7.86, "right": 134.02, "bottom": 212.23, "left": 134.02 }
   },
   {
-    "id": "apple-macbook-neo-13-2026",
-    "localPath": "/mockups/apple-macbook-neo-13-2026.png",
-    "sourceUrl": "https://www.apple.com/shop/buy-mac/macbook-neo",
-    "file": "apple-macbook-neo-13-2026.png",
-    "bytes": 543813,
-    "width": 1800,
-    "height": 1100,
-    "renderScale": 1,
-    "previewScale": 0.88,
-    "sourceCrop": { "left": 420, "top": 260, "width": 960, "height": 620 },
-    "cssViewport": { "width": 1204, "height": 753 },
-    "screenInset": { "top": 57, "right": 145, "bottom": 140, "left": 144 }
+  "id": "apple-macbook-neo-13-2026",
+  "localPath": "/mockups/apple-macbook-neo-13-2026.png",
+  "file": "apple-macbook-neo-13-2026.png",
+  "bytes": 48999,
+  "width": 800,
+  "height": 488,
+  "renderScale": 1.873134328358209,
+  "frameOverlay": true,
+  "cssViewport": {
+    "width": 1204,
+    "height": 753
   },
+  "screenInset": {
+    "left": 146.104478,
+    "top": 41.208955,
+    "right": 146.104478,
+    "bottom": 119.880597
+  }
+},
   {
     "id": "microsoft-surface-laptop-8-13-8-2026",
     "localPath": "/mockups/microsoft-surface-laptop-8-13-8-2026.png",
-    "sourceUrl": "https://www.microsoft.com/en-us/surface/devices/surface-laptop",
     "file": "microsoft-surface-laptop-8-13-8-2026.png",
     "bytes": 752654,
     "width": 1440,
@@ -1715,7 +1863,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   {
     "id": "apple-studio-display-xdr-27-2026",
     "localPath": "/mockups/apple-studio-display-xdr-27-2026.png",
-    "sourceUrl": "https://www.apple.com/shop/buy-mac/studio-display-xdr",
     "file": "apple-studio-display-xdr-27-2026.png",
     "bytes": 312798,
     "width": 1800,
@@ -2333,69 +2480,173 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
     },
   },
   "apple-iphone-17-2025": {
-    portrait: {
-      left: 18, top: 15, width: 402, height: 874,
-      paths: {
-        portrait: "M328.153 0C350.085 5.26404e-05 368.797 3.60991 383.4 18.0469C398 32.4802 401.998 49.4111 402 73.833C402 73.8382 402.001 73.8434 402.001 73.8486L402.002 800.148C402.002 824.58 398.005 841.516 383.401 855.953C368.798 870.39 350.086 874 328.154 874H309.275V873.998H92.7266V874H73.8477C51.9155 874 33.2038 870.39 18.6006 855.953C3.99738 841.516 9.99415e-06 824.58 0 800.148V73.833C0.00203389 49.4112 4.00111 32.4802 18.6006 18.0469C32.7476 4.0609 50.7505 0.237046 71.8018 0.0117188L73.8486 0H328.153ZM156.478 14.8711C146.63 14.8711 138.646 22.8542 138.646 32.7021C138.646 42.5503 146.629 50.5342 156.478 50.5342H245.436C255.284 50.5341 263.267 42.5502 263.267 32.7021C263.266 22.8542 255.283 14.8712 245.436 14.8711H156.478Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 18.067416,
+    "top": 14.679775,
+    "width": 402.0,
+    "height": 874.011236,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 62.1067L1.1292 51.9438L2.2584 46.2978L5.6461 36.1348L9.0337 29.3596L11.2921 25.9719L15.809 20.3258L20.3258 15.809L24.8427 12.4213L28.2303 10.1629L39.5225 4.5169L47.427 2.2584L54.2022 1.1292L64.3652 0L337.6348 0L347.7978 1.1292L354.573 2.2584L359.0899 3.3876L362.4775 4.5169L373.7697 10.1629L377.1573 12.4213L381.6742 15.809L386.191 20.3258L390.7079 25.9719L392.9663 29.3596L396.3539 36.1348L399.7416 46.2978L400.8708 51.9438L402 62.1067L402 811.9045L400.8708 822.0674L399.7416 827.7135L396.3539 837.8764L392.9663 844.6517L390.7079 848.0393L386.191 853.6854L381.6742 858.2022L377.1573 861.5899L373.7697 863.8483L362.4775 869.4944L359.0899 870.6236L354.573 871.7528L347.7978 872.882L337.6348 874.0112L64.3652 874.0112L54.2022 872.882L47.427 871.7528L42.9101 870.6236L39.5225 869.4944L28.2303 863.8483L24.8427 861.5899L20.3258 858.2022L15.809 853.6854L11.2921 848.0393L9.0337 844.6517L5.6461 837.8764L2.2584 827.7135L1.1292 822.0674L0 811.9045ZM156.9607 14.6798H245.0393A18.0674 18.0674 0 0 1 263.1067 32.7472V32.7472A18.0674 18.0674 0 0 1 245.0393 50.8146H156.9607A18.0674 18.0674 0 0 1 138.8933 32.7472V32.7472A18.0674 18.0674 0 0 1 156.9607 14.6798Z"
     },
-    landscape: {
-      left: 15, top: 18, width: 874, height: 402,
-      paths: {
-        landscape: "M-1.4344e-05 73.8486C3.73377e-05 51.9165 3.60989 33.2048 18.0469 18.6016C32.4802 4.00207 49.4111 0.00398486 73.833 0.0019499C73.8382 0.00194881 73.8434 0.000973348 73.8486 0.000973334L800.148 -3.49756e-05C824.58 -2.60494e-05 841.516 3.99734 855.953 18.6005C870.39 33.2038 874 51.9154 874 73.8476L874 92.7265L873.998 92.7265L873.998 309.275L874 309.275L874 328.154C874 350.086 870.39 368.798 855.953 383.401C841.516 398.005 824.58 402.002 800.148 402.002L73.833 402.002C49.4112 402 32.4802 398.001 18.0469 383.401C4.0609 369.254 0.237044 351.251 0.0117156 330.2L-3.22803e-06 328.153L-1.4344e-05 73.8486ZM14.8711 245.524C14.8711 255.372 22.8541 263.356 32.7021 263.356C42.5503 263.356 50.5342 255.373 50.5342 245.524L50.5342 156.566C50.5341 146.718 42.5502 138.735 32.7021 138.735C22.8542 138.735 14.8712 146.718 14.8711 156.566L14.8711 245.524Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 138.893258,
+        "top": 14.679775,
+        "width": 124.213483,
+        "height": 36.134831,
+        "radius": 18.067416
+      }
+    ]
   },
+  "landscape": {
+    "left": 14.679775,
+    "top": 18.067416,
+    "width": 874.011236,
+    "height": 402.0,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M811.9045 0L822.0674 1.1292L827.7135 2.2584L837.8764 5.6461L844.6517 9.0337L848.0393 11.2921L853.6854 15.809L858.2022 20.3258L861.5899 24.8427L863.8483 28.2303L869.4944 39.5225L871.7528 47.427L872.882 54.2022L874.0112 64.3652L874.0112 337.6348L872.882 347.7978L871.7528 354.573L870.6236 359.0899L869.4944 362.4775L863.8483 373.7697L861.5899 377.1573L858.2022 381.6742L853.6854 386.191L848.0393 390.7079L844.6517 392.9663L837.8764 396.3539L827.7135 399.7416L822.0674 400.8708L811.9045 402L62.1067 402L51.9438 400.8708L46.2978 399.7416L36.1348 396.3539L29.3596 392.9663L25.9719 390.7079L20.3258 386.191L15.809 381.6742L12.4213 377.1573L10.1629 373.7697L4.5169 362.4775L3.3876 359.0899L2.2584 354.573L1.1292 347.7978L0 337.6348L0 64.3652L1.1292 54.2022L2.2584 47.427L3.3876 42.9101L4.5169 39.5225L10.1629 28.2303L12.4213 24.8427L15.809 20.3258L20.3258 15.809L25.9719 11.2921L29.3596 9.0337L36.1348 5.6461L46.2978 2.2584L51.9438 1.1292L62.1067 0ZM841.264 138.8933H841.264A18.0674 18.0674 0 0 1 859.3315 156.9607V245.0393A18.0674 18.0674 0 0 1 841.264 263.1067H841.264A18.0674 18.0674 0 0 1 823.1966 245.0393V156.9607A18.0674 18.0674 0 0 1 841.264 138.8933Z"
+    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 823.19663,
+        "top": 138.893258,
+        "width": 36.134831,
+        "height": 124.213483,
+        "radius": 18.067416
+      }
+    ]
+  }
+},
   "apple-iphone-air-2025": {
-    portrait: {
-      left: 18, top: 15, width: 420, height: 912,
-      paths: {
-        portrait: "M339.479 0C364.679 1.35325e-05 385.245 1.73931 402.045 18.5527C418.845 35.3664 420.004 55.3693 420.004 80.5898V831.409C420.004 856.63 418.845 876.633 402.045 893.446C385.297 910.207 364.808 911.987 339.716 911.998C339.637 911.998 339.557 912 339.478 912H80.5244C80.444 912 80.3636 911.998 80.2832 911.998C55.1941 911.987 34.7069 910.206 17.9609 893.446C1.26899 876.741 0.017371 856.887 0.00195312 831.896C0.00123837 831.756 4.62832e-07 831.616 0 831.476V80.5244C2.90207e-07 80.384 0.00123521 80.2437 0.00195312 80.1035C0.017371 55.1119 1.26899 35.2582 17.9609 18.5527C34.7601 1.74018 55.3244 0.000193307 80.5225 0H339.479ZM165.859 20.7559C155.941 20.7559 147.901 28.8104 147.9 38.7285C147.9 48.6468 155.941 56.7021 165.859 56.7021H254.494C264.412 56.7021 272.453 48.6468 272.453 38.7285C272.453 28.8104 264.412 20.7559 254.494 20.7559H165.859Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 17.651613,
+    "top": 15.298065,
+    "width": 421.285161,
+    "height": 912.0,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 74.1368L1.1768 54.1316L2.3535 47.071L3.5303 42.3639L4.7071 38.8335L7.0606 32.9497L8.2374 30.5961L12.9445 23.5355L23.5355 12.9445L30.5961 8.2374L35.3032 5.8839L41.1871 3.5303L50.6013 1.1768L58.8387 0L362.4465 0L370.6839 1.1768L380.0981 3.5303L385.9819 5.8839L390.689 8.2374L397.7497 12.9445L408.3406 23.5355L413.0477 30.5961L414.2245 32.9497L416.5781 38.8335L417.7548 42.3639L418.9316 47.071L420.1084 54.1316L421.2852 74.1368L421.2852 837.8632L420.1084 857.8684L417.7548 869.6361L416.5781 873.1665L410.6942 884.9342L408.3406 888.4645L397.7497 899.0555L390.689 903.7626L385.9819 906.1161L375.391 909.6465L369.5071 910.8232L360.0929 912L61.1923 912L51.7781 910.8232L45.8942 909.6465L38.8335 907.2929L32.9497 904.9394L27.0658 901.409L23.5355 899.0555L14.1213 889.6413L10.591 884.9342L4.7071 873.1665L3.5303 869.6361L1.1768 857.8684L0 837.8632ZM166.5135 20.0052H254.7716A18.24 18.24 0 0 1 273.0116 38.2452V38.2452A18.24 18.24 0 0 1 254.7716 56.4852H166.5135A18.24 18.24 0 0 1 148.2735 38.2452V38.2452A18.24 18.24 0 0 1 166.5135 20.0052Z"
     },
-    landscape: {
-      left: 15, top: 18, width: 912, height: 420,
-      paths: {
-        landscape: "M0.00193829 80.5225C0.00195072 55.3226 1.74125 34.757 18.5547 17.957C35.3684 1.15695 55.3712 -0.00195236 80.5918 -0.00195665L831.411 -0.00198947C856.632 -0.00198738 876.635 1.15691 893.448 17.957C910.209 34.7044 911.989 55.1939 912 80.2861C912 80.3654 912.002 80.445 912.002 80.5244L912.002 339.477C912.002 339.558 912 339.638 912 339.719C911.989 364.808 910.208 385.295 893.448 402.041C876.743 418.733 856.889 419.985 831.897 420C831.758 420.001 831.618 420.002 831.478 420.002L80.5264 420.002C80.386 420.002 80.2457 420.001 80.1055 420C55.1139 419.985 35.2602 418.733 18.5547 402.041C1.74213 385.242 0.00214401 364.678 0.00194961 339.479L0.00193829 80.5225ZM20.7578 254.143C20.7578 264.061 28.8123 272.101 38.7305 272.102C48.6488 272.102 56.7041 264.061 56.7041 254.143L56.7041 165.508C56.7041 155.589 48.6488 147.549 38.7305 147.549C28.8123 147.549 20.7578 155.59 20.7578 165.508L20.7578 254.143Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 148.273548,
+        "top": 20.005161,
+        "width": 124.738065,
+        "height": 36.48,
+        "radius": 18.24
+      }
+    ]
   },
+  "landscape": {
+    "left": 14.12129,
+    "top": 17.651613,
+    "width": 912.0,
+    "height": 421.285161,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M837.8632 0L857.8684 1.1768L864.929 2.3535L869.6361 3.5303L873.1665 4.7071L879.0503 7.0606L881.4039 8.2374L888.4645 12.9445L899.0555 23.5355L903.7626 30.5961L906.1161 35.3032L908.4697 41.1871L910.8232 50.6013L912 58.8387L912 362.4465L910.8232 370.6839L908.4697 380.0981L906.1161 385.9819L903.7626 390.689L899.0555 397.7497L888.4645 408.3406L881.4039 413.0477L879.0503 414.2245L873.1665 416.5781L869.6361 417.7548L864.929 418.9316L857.8684 420.1084L837.8632 421.2852L74.1368 421.2852L54.1316 420.1084L42.3639 417.7548L38.8335 416.5781L27.0658 410.6942L23.5355 408.3406L12.9445 397.7497L8.2374 390.689L5.8839 385.9819L2.3535 375.391L1.1768 369.5071L0 360.0929L0 61.1923L1.1768 51.7781L2.3535 45.8942L4.7071 38.8335L7.0606 32.9497L10.591 27.0658L12.9445 23.5355L22.3587 14.1213L27.0658 10.591L38.8335 4.7071L42.3639 3.5303L54.1316 1.1768L74.1368 0ZM873.7548 148.2735H873.7548A18.24 18.24 0 0 1 891.9948 166.5135V254.7716A18.24 18.24 0 0 1 873.7548 273.0116H873.7548A18.24 18.24 0 0 1 855.5148 254.7716V166.5135A18.24 18.24 0 0 1 873.7548 148.2735Z"
+    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 855.514839,
+        "top": 148.273548,
+        "width": 36.48,
+        "height": 124.738065,
+        "radius": 18.24
+      }
+    ]
+  }
+},
   "apple-iphone-17-pro-2025": {
-    portrait: {
-      left: 19, top: 15, width: 402, height: 873,
-      paths: {
-        portrait: "M325.626 0.00195312C355.311 0.0461999 369.005 4.39275 382.819 18.0713C396.862 31.9756 402.002 47.6422 402.002 76.7354V197.398H401.999V675.602H402.002V796.265C402.002 825.358 397.14 841.302 383.098 855.206C369.272 868.895 353.087 872.963 325.527 872.998C325.441 872.998 325.355 873 325.269 873H76.7305C76.6616 873 76.5923 872.998 76.5234 872.998C48.9323 872.97 32.4858 869.182 18.6523 855.484C4.61009 841.58 6.59339e-05 825.358 0 796.265V76.7002C0.00367649 47.6289 4.61578 31.4144 18.6523 17.5156C32.4777 3.82618 48.9126 0.0337073 76.4746 0.000976562C76.5597 0.000699059 76.6453 0 76.7305 0H325.269C325.388 0 325.507 0.00141116 325.626 0.00195312ZM156.798 14.4551C146.971 14.4551 139.005 22.4226 139.005 32.249C139.005 42.0755 146.971 50.043 156.798 50.043H244.926C254.752 50.043 262.718 42.0755 262.718 32.249C262.718 22.4226 254.752 14.4551 244.926 14.4551H156.798Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 19.196629,
+    "top": 14.679775,
+    "width": 402.0,
+    "height": 874.011236,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 60.9775L1.1292 51.9438L2.2584 46.2978L3.3876 41.7809L4.5169 38.3933L6.7753 32.7472L10.1629 27.1011L12.4213 23.7135L23.7135 12.4213L27.1011 10.1629L36.1348 5.6461L42.9101 3.3876L47.427 2.2584L54.2022 1.1292L68.882 0L333.118 0L347.7978 1.1292L354.573 2.2584L359.0899 3.3876L362.4775 4.5169L368.1236 6.7753L373.7697 10.1629L378.2865 13.5506L388.4494 23.7135L391.8371 28.2303L396.3539 37.264L399.7416 47.427L400.8708 53.073L402 62.1067L402 811.9045L400.8708 820.9382L399.7416 826.5843L398.6124 831.1011L396.3539 837.8764L394.0955 842.3933L390.7079 848.0393L385.0618 854.8146L382.8034 857.073L377.1573 861.5899L370.382 866.1067L368.1236 867.236L362.4775 869.4944L359.0899 870.6236L347.7978 872.882L333.118 874.0112L68.882 874.0112L54.2022 872.882L47.427 871.7528L42.9101 870.6236L36.1348 868.3652L27.1011 863.8483L23.7135 861.5899L12.4213 850.2978L10.1629 846.9101L6.7753 841.264L4.5169 835.618L3.3876 832.2303L2.2584 827.7135L1.1292 822.0674L0 813.0337ZM156.9607 14.6798H245.0393A18.0674 18.0674 0 0 1 263.1067 32.7472V32.7472A18.0674 18.0674 0 0 1 245.0393 50.8146H156.9607A18.0674 18.0674 0 0 1 138.8933 32.7472V32.7472A18.0674 18.0674 0 0 1 156.9607 14.6798Z"
     },
-    landscape: {
-      left: 15, top: 19, width: 873, height: 402,
-      paths: {
-        landscape: "M0.00193889 76.376C0.0461843 46.6911 4.39273 32.997 18.0713 19.1826C31.9755 5.14044 47.6422 -2.08251e-06 76.7353 -3.35421e-06L197.398 -8.62856e-06L197.398 0.00292106L675.602 0.00290016L675.602 -2.95315e-05L796.265 -3.48058e-05C825.358 3.34527e-05 841.302 4.86203 855.206 18.9043C868.895 32.7295 872.963 48.9149 872.998 76.4746C872.998 76.5607 873 76.6472 873 76.7334L873 325.271C873 325.34 872.998 325.41 872.998 325.478C872.97 353.07 869.182 369.516 855.484 383.35C841.58 397.392 825.358 402.002 796.265 402.002L76.7002 402.002C47.6289 401.998 31.4144 397.386 17.5156 383.35C3.82618 369.524 0.0337051 353.089 0.00097322 325.527C0.000695713 325.442 -3.35027e-06 325.357 -3.354e-06 325.271L-1.42179e-05 76.7334C-1.42231e-05 76.6143 0.00139693 76.4949 0.00193889 76.376ZM14.4551 245.204C14.4551 255.031 22.4226 262.997 32.249 262.997C42.0755 262.997 50.043 255.031 50.043 245.204L50.043 157.076C50.043 147.25 42.0755 139.284 32.249 139.284C22.4225 139.284 14.4551 147.25 14.4551 157.076L14.4551 245.204Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 138.893258,
+        "top": 14.679775,
+        "width": 124.213483,
+        "height": 36.134831,
+        "radius": 18.067416
+      }
+    ]
   },
+  "landscape": {
+    "left": 14.679775,
+    "top": 19.196629,
+    "width": 874.011236,
+    "height": 402.0,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M813.0337 0L822.0674 1.1292L827.7135 2.2584L832.2303 3.3876L835.618 4.5169L841.264 6.7753L846.9101 10.1629L850.2978 12.4213L861.5899 23.7135L863.8483 27.1011L868.3652 36.1348L870.6236 42.9101L871.7528 47.427L872.882 54.2022L874.0112 68.882L874.0112 333.118L872.882 347.7978L871.7528 354.573L870.6236 359.0899L869.4944 362.4775L867.236 368.1236L863.8483 373.7697L860.4607 378.2865L850.2978 388.4494L845.7809 391.8371L836.7472 396.3539L826.5843 399.7416L820.9382 400.8708L811.9045 402L62.1067 402L53.073 400.8708L47.427 399.7416L42.9101 398.6124L36.1348 396.3539L31.618 394.0955L25.9719 390.7079L19.1966 385.0618L16.9382 382.8034L12.4213 377.1573L7.9045 370.382L6.7753 368.1236L4.5169 362.4775L3.3876 359.0899L1.1292 347.7978L0 333.118L0 68.882L1.1292 54.2022L2.2584 47.427L3.3876 42.9101L5.6461 36.1348L10.1629 27.1011L12.4213 23.7135L23.7135 12.4213L27.1011 10.1629L32.7472 6.7753L38.3933 4.5169L41.7809 3.3876L46.2978 2.2584L51.9438 1.1292L60.9775 0ZM841.264 138.8933H841.264A18.0674 18.0674 0 0 1 859.3315 156.9607V245.0393A18.0674 18.0674 0 0 1 841.264 263.1067H841.264A18.0674 18.0674 0 0 1 823.1966 245.0393V156.9607A18.0674 18.0674 0 0 1 841.264 138.8933Z"
+    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 823.19663,
+        "top": 138.893258,
+        "width": 36.134831,
+        "height": 124.213483,
+        "radius": 18.067416
+      }
+    ]
+  }
+},
   "apple-iphone-17-pro-max-2025": {
-    portrait: {
-      left: 21, top: 17, width: 440, height: 956,
-      paths: {
-        portrait: "M356.305 0.000976562C388.867 0.0395027 403.871 4.79496 419.008 19.79C434.377 35.0162 440.004 52.1713 440.004 84.0303V216.166H440.001V739.834H440.004V871.969C440.004 903.828 434.682 921.288 419.312 936.514C404.273 951.413 386.681 955.902 356.852 955.994C356.574 955.997 356.296 956 356.018 956H83.9834C83.7553 956 83.5275 955.997 83.2998 955.995C53.3758 955.923 35.4805 951.742 20.416 936.818C5.04628 921.592 5.41729e-05 903.828 0 871.969V83.9492C0.00858399 52.1411 5.05946 34.3939 20.416 19.1807C35.5455 4.19262 53.5301 0.0383268 83.6875 0.000976562C83.7861 0.000636162 83.8847 3.40204e-07 83.9834 0H356.018C356.113 0 356.209 0.000656835 356.305 0.000976562ZM171.621 15.8311C160.866 15.8311 152.146 24.561 152.146 35.3164C152.147 46.0716 160.866 54.8018 171.621 54.8018H268.08C278.835 54.8018 287.554 46.0716 287.555 35.3164C287.555 24.561 278.836 15.8311 268.08 15.8311H171.621Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 21.02458,
+    "top": 17.31436,
+    "width": 440.279431,
+    "height": 956.0,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 65.5472L1.2367 55.6533L2.4735 49.4696L6.1837 38.3389L9.8939 30.9185L12.3674 27.2083L16.0776 22.2613L23.4981 14.8409L28.445 11.1307L34.6287 7.4204L40.8124 4.947L48.2329 2.4735L54.4166 1.2367L63.0737 0L377.2057 0L385.8629 1.2367L395.7568 3.7102L401.9405 6.1837L404.414 7.4204L410.5977 11.1307L418.0181 17.3144L421.7283 21.0246L426.6753 27.2083L431.6223 34.6287L432.859 37.1022L435.3325 43.2859L436.5692 46.9961L437.806 51.9431L439.0427 58.1268L440.2794 70.4942L440.2794 885.5058L439.0427 897.8732L437.806 904.0569L436.5692 909.0039L435.3325 912.7141L432.859 918.8978L431.6223 921.3713L426.6753 928.7917L420.4916 936.2122L419.2549 937.4489L413.0712 942.3959L405.6507 947.3428L403.1772 948.5796L396.9935 951.053L393.2833 952.2898L388.3364 953.5265L380.9159 954.7633L366.075 956L72.9677 956L58.1268 954.7633L51.9431 953.5265L46.9961 952.2898L39.5757 949.8163L29.6818 944.8693L25.9715 942.3959L13.6041 930.0285L11.1307 926.3182L7.4204 920.1345L4.947 913.9508L3.7102 910.2406L2.4735 905.2937L1.2367 899.11L0 889.216ZM171.2885 16.0776H268.9909A19.1695 19.1695 0 0 1 288.1604 35.2471V35.2471A19.1695 19.1695 0 0 1 268.9909 54.4166H171.2885A19.1695 19.1695 0 0 1 152.119 35.2471V35.2471A19.1695 19.1695 0 0 1 171.2885 16.0776Z"
     },
-    landscape: {
-      left: 17, top: 21, width: 956, height: 440,
-      paths: {
-        landscape: "M0.000960988 83.6992C0.0394857 51.1365 4.79495 36.1325 19.79 20.9961C35.0162 5.62654 52.1712 2.69873e-05 84.0303 -3.67308e-06L216.166 -9.44892e-06L216.166 0.00292024L739.834 0.00289735L739.834 -3.23392e-05L871.969 -3.8115e-05C903.828 1.76162e-05 921.288 5.32182 936.514 20.6914C951.413 35.7311 955.902 53.3225 955.994 83.1523C955.997 83.4299 956 83.7081 956 83.9863L956 356.02C956 356.249 955.997 356.476 955.995 356.704C955.923 386.628 951.742 404.523 936.818 419.588C921.592 434.958 903.828 440.004 871.969 440.004L83.9492 440.004C52.1411 439.995 34.3939 434.944 19.1807 419.588C4.19262 404.458 0.0383244 386.474 0.000972904 356.316C0.000632499 356.218 -3.32651e-06 356.119 -3.67103e-06 356.021L-1.5562e-05 83.9863C-1.55662e-05 83.8907 0.000641265 83.7948 0.000960988 83.6992ZM15.831 268.383C15.831 279.138 24.561 287.857 35.3164 287.857C46.0716 287.857 54.8018 279.138 54.8018 268.383L54.8017 171.924C54.8017 161.169 46.0716 152.449 35.3164 152.449C24.561 152.449 15.831 161.168 15.831 171.924L15.831 268.383Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 152.119017,
+        "top": 16.07762,
+        "width": 136.041397,
+        "height": 38.338939,
+        "radius": 19.16947
+      }
+    ]
   },
+  "landscape": {
+    "left": 16.07762,
+    "top": 21.02458,
+    "width": 956.0,
+    "height": 440.279431,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M890.4528 0L900.3467 1.2367L906.5304 2.4735L917.6611 6.1837L925.0815 9.8939L928.7917 12.3674L933.7387 16.0776L941.1591 23.4981L944.8693 28.445L948.5796 34.6287L951.053 40.8124L953.5265 48.2329L954.7633 54.4166L956 63.0737L956 377.2057L954.7633 385.8629L952.2898 395.7568L949.8163 401.9405L948.5796 404.414L944.8693 410.5977L938.6856 418.0181L934.9754 421.7283L928.7917 426.6753L921.3713 431.6223L918.8978 432.859L912.7141 435.3325L909.0039 436.5692L904.0569 437.806L897.8732 439.0427L885.5058 440.2794L70.4942 440.2794L58.1268 439.0427L51.9431 437.806L46.9961 436.5692L43.2859 435.3325L37.1022 432.859L34.6287 431.6223L27.2083 426.6753L19.7878 420.4916L18.5511 419.2549L13.6041 413.0712L8.6572 405.6507L7.4204 403.1772L4.947 396.9935L3.7102 393.2833L2.4735 388.3364L1.2367 380.9159L0 366.075L0 72.9677L1.2367 58.1268L2.4735 51.9431L3.7102 46.9961L6.1837 39.5757L11.1307 29.6818L13.6041 25.9715L25.9715 13.6041L29.6818 11.1307L35.8655 7.4204L42.0492 4.947L45.7594 3.7102L50.7063 2.4735L56.89 1.2367L66.784 0ZM920.7529 152.119H920.7529A19.1695 19.1695 0 0 1 939.9224 171.2885V268.9909A19.1695 19.1695 0 0 1 920.7529 288.1604H920.7529A19.1695 19.1695 0 0 1 901.5834 268.9909V171.2885A19.1695 19.1695 0 0 1 920.7529 152.119Z"
+    },
+    "occlusions": [
+      {
+        "kind": "rounded-rect",
+        "left": 901.583441,
+        "top": 152.119017,
+        "width": 38.338939,
+        "height": 136.041397,
+        "radius": 19.16947
+      }
+    ]
+  }
+},
   "apple-macbook-pro-16-2021": {
     portrait: {
       left: 197, top: 65, width: 1728, height: 1085,
@@ -2626,21 +2877,45 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
     },
   },
   "samsung-galaxy-s26-ultra-2026": {
-    portrait: {
-      left: 13, top: 12, width: 412, height: 891,
-      paths: {
-        portrait: "M382.064 0C398.597 0 412 13.4027 412 29.9355V861.064C412 877.597 398.598 891 382.065 891H29.9355C13.4027 891 0 877.597 0 861.064V29.9355C0 13.4027 13.4027 0 29.9355 0H382.064ZM206 12.2139C200.092 12.2139 195.303 17.1351 195.303 23.2061C195.303 29.277 200.092 34.1982 206 34.1982C211.908 34.1982 216.697 29.277 216.697 23.2061C216.697 17.1351 211.908 12.2139 206 12.2139Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 12.588889,
+    "top": 11.444444,
+    "width": 412.0,
+    "height": 891.522222,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 26.3222L1.1444 21.7444L2.2889 18.3111L4.5778 13.7333L13.7333 4.5778L18.3111 2.2889L21.7444 1.1444L28.6111 0L383.3889 0L390.2556 1.1444L393.6889 2.2889L398.2667 4.5778L401.7 6.8667L406.2778 11.4444L408.5667 14.8778L409.7111 17.1667L412 24.0333L412 867.4889L410.8556 872.0667L408.5667 876.6444L406.2778 880.0778L400.5556 885.8L391.4 890.3778L385.6778 891.5222L27.4667 891.5222L21.7444 890.3778L18.3111 889.2333L13.7333 886.9444L9.1556 883.5111L8.0111 882.3667L4.5778 877.7889L2.2889 873.2111L1.1444 869.7778L0 865.2ZM206.5722 12.5889H206.5722A10.8722 10.8722 0 0 1 217.4444 23.4611V23.4611A10.8722 10.8722 0 0 1 206.5722 34.3333H206.5722A10.8722 10.8722 0 0 1 195.7 23.4611V23.4611A10.8722 10.8722 0 0 1 206.5722 12.5889Z"
     },
-    landscape: {
-      left: 12, top: 13, width: 891, height: 412,
-      paths: {
-        landscape: "M-1.67006e-05 29.9355C-1.74232e-05 13.4027 13.4027 -5.85851e-07 29.9355 -1.30852e-06L861.064 -3.76383e-05C877.597 -3.8361e-05 891 13.4019 891 29.9345L891 382.064C891 398.597 877.597 412 861.064 412L29.9355 412C13.4027 412 -5.85851e-07 398.597 -1.30852e-06 382.064L-1.67006e-05 29.9355ZM12.2139 206C12.2139 211.908 17.1351 216.697 23.206 216.697C29.277 216.697 34.1982 211.908 34.1982 206C34.1982 200.092 29.277 195.303 23.206 195.303C17.1351 195.303 12.2139 200.092 12.2139 206Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 195.7,
+        "top": 12.588889,
+        "width": 21.744444,
+        "height": 21.744444
+      }
+    ]
   },
+  "landscape": {
+    "left": 12.588889,
+    "top": 12.588889,
+    "width": 891.522222,
+    "height": 412.0,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M865.2 0L869.7778 1.1444L873.2111 2.2889L877.7889 4.5778L886.9444 13.7333L889.2333 18.3111L890.3778 21.7444L891.5222 28.6111L891.5222 383.3889L890.3778 390.2556L889.2333 393.6889L886.9444 398.2667L884.6556 401.7L880.0778 406.2778L876.6444 408.5667L874.3556 409.7111L867.4889 412L24.0333 412L19.4556 410.8556L14.8778 408.5667L11.4444 406.2778L5.7222 400.5556L1.1444 391.4L0 385.6778L0 27.4667L1.1444 21.7444L2.2889 18.3111L4.5778 13.7333L8.0111 9.1556L9.1556 8.0111L13.7333 4.5778L18.3111 2.2889L21.7444 1.1444L26.3222 0ZM868.0611 195.7H868.0611A10.8722 10.8722 0 0 1 878.9333 206.5722V206.5722A10.8722 10.8722 0 0 1 868.0611 217.4444H868.0611A10.8722 10.8722 0 0 1 857.1889 206.5722V206.5722A10.8722 10.8722 0 0 1 868.0611 195.7Z"
+    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 857.188889,
+        "top": 195.7,
+        "width": 21.744444,
+        "height": 21.744444
+      }
+    ]
+  }
+},
   "apple-imac-24-inch-2021": {
     portrait: {
       left: 54, top: 54, width: 2048, height: 1152,
@@ -2701,101 +2976,227 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
     },
   },
   "google-pixel-10-2026": {
-    portrait: {
-      left: 22, top: 23, width: 412, height: 924,
-      paths: {
-        portrait: "M353 0C385.585 0 412 26.4152 412 59L412 865C412 897.585 385.585 924 353 924L59 924C26.4152 924 0 897.585 0 865L0 59C0 26.4152 26.4152 0 59 0L353 0ZM206.055 17.9697C197.684 17.9697 190.898 24.7554 190.898 33.126C190.899 41.4963 197.684 48.2822 206.055 48.2822C214.425 48.282 221.211 41.4962 221.211 33.126C221.211 24.7556 214.425 17.97 206.055 17.9697Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 21.811765,
+    "top": 23.023529,
+    "width": 412.0,
+    "height": 924.576471,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 52.1059L1.2118 46.0471L2.4235 41.2L3.6353 37.5647L8.4824 27.8706L10.9059 24.2353L14.5412 19.3882L19.3882 14.5412L25.4471 9.6941L37.5647 3.6353L44.8353 1.2118L50.8941 0L361.1059 0L367.1647 1.2118L372.0118 2.4235L375.6471 3.6353L385.3412 8.4824L390.1882 12.1176L401.0941 23.0235L403.5176 26.6588L409.5765 38.7765L412 48.4706L412 876.1059L410.7882 880.9529L408.3647 888.2235L403.5176 897.9176L399.8824 902.7647L390.1882 912.4588L382.9176 917.3059L378.0706 919.7294L367.1647 923.3647L359.8941 924.5765L53.3176 924.5765L46.0471 923.3647L41.2 922.1529L37.5647 920.9412L27.8706 916.0941L24.2353 913.6706L18.1765 908.8235L15.7529 906.4L10.9059 900.3412L8.4824 896.7059L3.6353 887.0118L2.4235 883.3765L1.2118 878.5294L0 871.2588ZM206.6059 18.1765H206.6059A15.1471 15.1471 0 0 1 221.7529 33.3235V33.3235A15.1471 15.1471 0 0 1 206.6059 48.4706H206.6059A15.1471 15.1471 0 0 1 191.4588 33.3235V33.3235A15.1471 15.1471 0 0 1 206.6059 18.1765Z"
     },
-    landscape: {
-      left: 23, top: 22, width: 924, height: 412,
-      paths: {
-        landscape: "M0 59C0 26.415 26.4152 0 59 0L865 0C897.585 0 924 26.415 924 59L924 353C924 385.5848 897.585 412 865 412L59 412C26.4152 412 0 385.5848 0 353L0 59ZM17.9697 205.945C17.9697 214.316 24.7554 221.102 33.126 221.102C41.4963 221.101 48.2822 214.316 48.2822 205.945C48.282 197.575 41.4962 190.789 33.126 190.789C24.7556 190.789 17.97 197.575 17.9697 205.945Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 191.458824,
+        "top": 18.176471,
+        "width": 30.294118,
+        "height": 30.294118
+      }
+    ]
   },
+  "landscape": {
+    "left": 21.811765,
+    "top": 21.811765,
+    "width": 924.576471,
+    "height": 412.0,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M872.4706 0L878.5294 1.2118L883.3765 2.4235L887.0118 3.6353L896.7059 8.4824L900.3412 10.9059L905.1882 14.5412L910.0353 19.3882L914.8824 25.4471L920.9412 37.5647L923.3647 44.8353L924.5765 50.8941L924.5765 361.1059L923.3647 367.1647L922.1529 372.0118L920.9412 375.6471L916.0941 385.3412L912.4588 390.1882L901.5529 401.0941L897.9176 403.5176L885.8 409.5765L876.1059 412L48.4706 412L43.6235 410.7882L36.3529 408.3647L26.6588 403.5176L21.8118 399.8824L12.1176 390.1882L7.2706 382.9176L4.8471 378.0706L1.2118 367.1647L0 359.8941L0 53.3176L1.2118 46.0471L2.4235 41.2L3.6353 37.5647L8.4824 27.8706L10.9059 24.2353L15.7529 18.1765L18.1765 15.7529L24.2353 10.9059L27.8706 8.4824L37.5647 3.6353L41.2 2.4235L46.0471 1.2118L53.3176 0ZM891.2529 191.4588H891.2529A15.1471 15.1471 0 0 1 906.4 206.6059V206.6059A15.1471 15.1471 0 0 1 891.2529 221.7529H891.2529A15.1471 15.1471 0 0 1 876.1059 206.6059V206.6059A15.1471 15.1471 0 0 1 891.2529 191.4588Z"
+    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 876.105882,
+        "top": 191.458824,
+        "width": 30.294118,
+        "height": 30.294118
+      }
+    ]
+  }
+},
   "google-pixel-10-pro-2026": {
-    portrait: {
-      left: 18, top: 17, width: 410, height: 912,
-      paths: {
-        portrait: "M356 0C385.823 0 410 24.1766 410 54L410 858C410 887.823 385.823 912 356 912L54 912C24.1766 912 0 887.823 0 858L0 54C0 24.1766 24.1766 0 54 0L356 0ZM205.25 17.4004C197.656 17.4004 191.5 23.5565 191.5 31.1504C191.5 38.7441 197.656 44.9004 205.25 44.9004C212.844 44.9004 219 38.7441 219 31.1504C219 23.5565 212.844 17.4004 205.25 17.4004Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 17.774566,
+    "top": 16.589595,
+    "width": 410.0,
+    "height": 913.612717,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 48.5838L1.185 41.474L3.5549 34.3642L8.2948 24.8844L10.6647 21.3295L21.3295 10.6647L24.8844 8.2948L34.3642 3.5549L37.9191 2.3699L42.659 1.185L50.9538 0L359.0462 0L368.526 1.185L379.1908 4.7399L383.9306 7.1098L387.4855 9.4798L392.2254 13.0347L398.1503 18.9595L401.7052 23.6994L405.2601 29.6243L406.4451 31.9942L408.815 39.104L410 43.8439L410 869.7688L408.815 874.5087L406.4451 881.6185L404.0751 886.3584L399.3353 893.4682L391.0405 901.763L383.9306 906.5029L376.8208 910.0578L373.2659 911.2428L368.526 912.4277L361.4162 913.6127L48.5838 913.6127L41.474 912.4277L34.3642 910.0578L24.8844 905.3179L21.3295 902.948L10.6647 892.2832L5.9249 885.1734L4.7399 882.8035L2.3699 876.8786L1.185 872.1387L0 866.2139ZM205.5925 17.7746H205.5925A13.6272 13.6272 0 0 1 219.2197 31.4017V31.4017A13.6272 13.6272 0 0 1 205.5925 45.0289H205.5925A13.6272 13.6272 0 0 1 191.9653 31.4017V31.4017A13.6272 13.6272 0 0 1 205.5925 17.7746Z"
     },
-    landscape: {
-      left: 17, top: 18, width: 912, height: 410,
-      paths: {
-        landscape: "M0 54C0 24.177 24.1766 0 54 0L858 0C887.823 0 912 24.177 912 54L912 356C912 385.8234 887.823 410 858 410L54 410C24.1766 410 0 385.8234 0 356L0 54ZM17.4004 204.75C17.4004 212.344 23.5565 218.5 31.1504 218.5C38.7441 218.5 44.9004 212.344 44.9004 204.75C44.9004 197.156 38.7441 191 31.1504 191C23.5565 191 17.4004 197.156 17.4004 204.75Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 191.965318,
+        "top": 17.774566,
+        "width": 27.254335,
+        "height": 27.254335
+      }
+    ]
   },
+  "landscape": {
+    "left": 17.774566,
+    "top": 17.774566,
+    "width": 913.612717,
+    "height": 410.0,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M865.0289 0L872.1387 1.185L879.2486 3.5549L888.7283 8.2948L892.2832 10.6647L902.948 21.3295L905.3179 24.8844L910.0578 34.3642L911.2428 37.9191L912.4277 42.659L913.6127 50.9538L913.6127 359.0462L912.4277 368.526L908.8728 379.1908L906.5029 383.9306L904.1329 387.4855L900.578 392.2254L894.6532 398.1503L889.9133 401.7052L883.9884 405.2601L881.6185 406.4451L874.5087 408.815L869.7688 410L43.8439 410L39.104 408.815L31.9942 406.4451L27.2543 404.0751L20.1445 399.3353L11.8497 391.0405L7.1098 383.9306L3.5549 376.8208L2.3699 373.2659L1.185 368.526L0 361.4162L0 48.5838L1.185 41.474L3.5549 34.3642L8.2948 24.8844L10.6647 21.3295L21.3295 10.6647L28.4393 5.9249L30.8092 4.7399L36.7341 2.3699L41.474 1.185L47.3988 0ZM882.211 191.9653H882.211A13.6272 13.6272 0 0 1 895.8382 205.5925V205.5925A13.6272 13.6272 0 0 1 882.211 219.2197H882.211A13.6272 13.6272 0 0 1 868.5838 205.5925V205.5925A13.6272 13.6272 0 0 1 882.211 191.9653Z"
+    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 868.583816,
+        "top": 191.965318,
+        "width": 27.254335,
+        "height": 27.254335
+      }
+    ]
+  }
+},
   "google-pixel-10-pro-fold-2026": {
-    portrait: {
-      left: 31, top: 25, width: 412, height: 901,
-      paths: {
-        portrait: "M355 0C386.48 0 412 25.5198 412 57L412 844C412 875.48 386.48 901 355 901L57 901C25.5198 901 0 875.48 0 844L0 57C0 25.5198 25.5198 0 57 0L355 0ZM205.101 17.2002C198.197 17.2002 192.601 22.7966 192.601 29.7002C192.601 36.6038 198.197 42.2002 205.101 42.2002C212.004 42.1999 217.601 36.6036 217.601 29.7002C217.601 22.7968 212.004 17.2005 205.101 17.2002Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 30.959538,
+    "top": 25.00578,
+    "width": 412.0,
+    "height": 902.589595,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 47.6301L2.3815 38.104L4.763 32.1503L5.9538 29.7688L10.7168 22.6243L22.6243 10.7168L26.1965 8.3353L35.7225 3.5723L42.8671 1.1908L48.8208 0L363.1792 0L369.1329 1.1908L373.896 2.3815L379.8497 4.763L384.6127 7.1445L388.185 9.526L392.948 13.0983L400.0925 20.2428L404.8555 27.3873L409.6185 36.9133L410.8092 40.4855L412 45.2486L412 857.341L410.8092 862.104L409.6185 865.6763L404.8555 875.2023L400.0925 882.3468L392.948 889.4913L388.185 893.0636L384.6127 895.4451L379.8497 897.8266L373.896 900.2081L369.1329 901.3988L363.1792 902.5896L48.8208 902.5896L42.8671 901.3988L35.7225 899.0173L26.1965 894.2543L22.6243 891.8728L10.7168 879.9653L5.9538 872.8208L4.763 870.4393L2.3815 864.4855L0 854.9595ZM205.4046 17.8613H205.4046A12.5029 12.5029 0 0 1 217.9075 30.3642V30.3642A12.5029 12.5029 0 0 1 205.4046 42.8671H205.4046A12.5029 12.5029 0 0 1 192.9017 30.3642V30.3642A12.5029 12.5029 0 0 1 205.4046 17.8613Z"
     },
-    landscape: {
-      left: 25, top: 31, width: 901, height: 412,
-      paths: {
-        landscape: "M0 57C0 25.52 25.5198 0 57 0L844 0C875.48 0 901 25.52 901 57L901 355C901 386.4802 875.48 412 844 412L57 412C25.5198 412 0 386.4802 0 355L0 57ZM17.2002 206.899C17.2002 213.803 22.7966 219.399 29.7002 219.399C36.6038 219.399 42.2002 213.803 42.2002 206.899C42.1999 199.996 36.6036 194.399 29.7002 194.399C22.7968 194.399 17.2005 199.996 17.2002 206.899Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 192.901734,
+        "top": 17.861272,
+        "width": 25.00578,
+        "height": 25.00578
+      }
+    ]
   },
+  "landscape": {
+    "left": 25.00578,
+    "top": 30.959538,
+    "width": 902.589595,
+    "height": 412.0,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M854.9595 0L864.4855 2.3815L870.4393 4.763L872.8208 5.9538L879.9653 10.7168L891.8728 22.6243L894.2543 26.1965L899.0173 35.7225L901.3988 42.8671L902.5896 48.8208L902.5896 363.1792L901.3988 369.1329L900.2081 373.896L897.8266 379.8497L895.4451 384.6127L893.0636 388.185L889.4913 392.948L882.3468 400.0925L875.2023 404.8555L865.6763 409.6185L862.104 410.8092L857.341 412L45.2486 412L40.4855 410.8092L36.9133 409.6185L27.3873 404.8555L20.2428 400.0925L13.0983 392.948L9.526 388.185L7.1445 384.6127L4.763 379.8497L2.3815 373.896L1.1908 369.1329L0 363.1792L0 48.8208L1.1908 42.8671L3.5723 35.7225L8.3353 26.1965L10.7168 22.6243L22.6243 10.7168L29.7688 5.9538L32.1503 4.763L38.104 2.3815L47.6301 0ZM872.2254 192.9017H872.2254A12.5029 12.5029 0 0 1 884.7283 205.4046V205.4046A12.5029 12.5029 0 0 1 872.2254 217.9075H872.2254A12.5029 12.5029 0 0 1 859.7225 205.4046V205.4046A12.5029 12.5029 0 0 1 872.2254 192.9017Z"
+    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 859.722543,
+        "top": 192.901734,
+        "width": 25.00578,
+        "height": 25.00578
+      }
+    ]
+  }
+},
   "samsung-galaxy-a17-2025": {
-    portrait: {
-      left: 21, top: 22, width: 412, height: 892,
-      paths: {
-        portrait: "M371 0C393.644 0 412 18.3563 412 41V851C412 873.644 393.644 892 371 892H41C18.3563 892 0 873.644 0 851V41C0 18.3563 18.3563 7.24793e-07 41 0H172.7C174.512 9.41244e-05 178.686 1.39792 181.466 6.03418C182.904 8.43358 183.324 11.7004 184.214 16.0898C185.068 20.074 186.785 24.1112 189.716 27.6553C193.817 32.6137 200.043 35.7002 205.7 35.7002C211.357 35.7001 217.584 32.6137 221.685 27.6553C224.615 24.1112 226.332 20.074 227.187 16.0898C228.077 11.7003 228.496 8.43359 229.935 6.03418C232.715 1.39776 236.888 0 238.7 0H371Z",
-      },
-      enableRotation: true,
-    },
-    landscape: {
-      left: 22, top: 21, width: 892, height: 412,
-      paths: {
-        landscape: "M0 41C0 18.356 18.3563 0 41 0L851 0C873.644 0 892 18.356 892 41L892 371C892 393.6437 873.644 412 851 412L41 412C18.3563 412 0 393.6437 0 371L0 239.3C0.0001 237.488 1.3979 233.314 6.0342 230.534C8.4336 229.096 11.7004 228.676 16.0898 227.786C20.074 226.932 24.1112 225.215 27.6553 222.284C32.6137 218.183 35.7002 211.957 35.7002 206.3C35.7001 200.643 32.6137 194.416 27.6553 190.315C24.1112 187.385 20.074 185.668 16.0898 184.813C11.7003 183.923 8.4336 183.504 6.0342 182.065C1.3978 179.285 0 175.112 0 173.3L0 41Z",
-      },
-      enableRotation: true,
-    },
+  "portrait": {
+    "left": 21.55814,
+    "top": 21.55814,
+    "width": 412.0,
+    "height": 894.662791,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 32.3372L1.1977 27.5465L5.9884 17.9651L16.7674 7.186L26.3488 2.3953L31.1395 1.1977L39.5233 0L372.4767 0L380.8605 1.1977L385.6512 2.3953L392.8372 5.9884L396.4302 8.3837L404.814 16.7674L407.2093 20.3605L409.6047 25.1512L410.8023 28.7442L412 33.5349L412 862.3256L409.6047 869.5116L406.0116 876.6977L395.2326 887.4767L391.6395 889.8721L389.2442 891.0698L382.0581 893.4651L376.0698 894.6628L34.7326 894.6628L29.9419 893.4651L22.7558 891.0698L20.3605 889.8721L16.7674 887.4767L11.9767 883.8837L9.5814 881.4884L5.9884 876.6977L1.1977 867.1163L0 863.5233Z"
+    }
   },
+  "landscape": {
+    "left": 41.918605,
+    "top": 21.55814,
+    "width": 894.662791,
+    "height": 412.0,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M862.3256 0L867.1163 1.1977L876.6977 5.9884L887.4767 16.7674L892.2674 26.3488L893.4651 31.1395L894.6628 39.5233L894.6628 372.4767L893.4651 380.8605L892.2674 385.6512L888.6744 392.8372L886.2791 396.4302L877.8953 404.814L874.3023 407.2093L869.5116 409.6047L865.9186 410.8023L861.1279 412L32.3372 412L25.1512 409.6047L17.9651 406.0116L7.186 395.2326L4.7907 391.6395L3.593 389.2442L1.1977 382.0581L0 376.0698L0 34.7326L1.1977 29.9419L3.593 22.7558L4.7907 20.3605L7.186 16.7674L10.7791 11.9767L13.1744 9.5814L17.9651 5.9884L27.5465 1.1977L31.1395 0Z"
+    }
+  }
+},
   "motorola-razr-70-ultra-2026": {
-    portrait: {
-      left: 28, top: 28, width: 412, height: 1008,
-      paths: {
-        portrait: "M375.108 0C395.483 0.0002 412 16.5169 412 36.8916L412 971.107C412 991.48 395.483 1008 375.108 1008L36.8926 1008C16.5176 1008 0 991.48 0 971.107L0 36.8916C0.0002 16.5168 16.5177 0 36.8926 0L375.108 0ZM206 8.25C198.406 8.2501 192.25 14.4062 192.25 22C192.25 29.5938 198.406 35.7499 206 35.75C213.594 35.75 219.75 29.5938 219.75 22C219.75 14.4061 213.594 8.25 206 8.25Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 27.963012,
+    "top": 27.963012,
+    "width": 412.787318,
+    "height": 1008.0,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 31.9577L1.3316 26.6314L2.6631 22.6367L5.3263 17.3104L7.9894 13.3157L14.6473 6.6579L25.2999 1.3316L30.6262 0L382.1612 0L387.4875 1.3316L398.14 6.6579L404.7979 13.3157L407.461 17.3104L410.1242 22.6367L411.4557 26.6314L412.7873 31.9577L412.7873 976.0423L411.4557 982.7001L406.1295 993.3527L398.14 1001.3421L394.1453 1004.0053L388.819 1006.6684L383.4927 1008L29.2946 1008L23.9683 1006.6684L18.642 1004.0053L14.6473 1001.3421L6.6579 993.3527L1.3316 982.7001L0 976.0423ZM207.0594 7.9894H205.7279A13.9815 13.9815 0 0 1 219.7094 21.9709V21.9709A13.9815 13.9815 0 0 1 205.7279 35.9524H207.0594A13.9815 13.9815 0 0 1 193.0779 21.9709V21.9709A13.9815 13.9815 0 0 1 207.0594 7.9894Z"
     },
-    landscape: {
-      left: 28, top: 28, width: 1008, height: 412,
-      paths: {
-        landscape: "M0 36.892C0.0002 16.517 16.5169 0 36.8916 0L971.107 0C991.48 0 1008 16.517 1008 36.892L1008 375.1074C1008 395.4824 991.48 412 971.107 412L36.8916 412C16.5168 411.9998 0 395.4823 0 375.1074L0 36.892ZM8.25 206C8.2501 213.594 14.4062 219.75 22 219.75C29.5938 219.75 35.7499 213.594 35.75 206C35.75 198.406 29.5938 192.25 22 192.25C14.4061 192.25 8.25 198.406 8.25 206Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 193.077939,
+        "top": 7.989432,
+        "width": 26.63144,
+        "height": 27.963012
+      }
+    ]
   },
+  "landscape": {
+    "left": 29.294584,
+    "top": 27.963012,
+    "width": 1008.0,
+    "height": 412.787318,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M976.0423 0L981.3686 1.3316L985.3633 2.6631L990.6896 5.3263L994.6843 7.9894L1001.3421 14.6473L1006.6684 25.2999L1008 30.6262L1008 382.1612L1006.6684 387.4875L1001.3421 398.14L994.6843 404.7979L990.6896 407.461L985.3633 410.1242L981.3686 411.4557L976.0423 412.7873L31.9577 412.7873L25.2999 411.4557L14.6473 406.1295L6.6579 398.14L3.9947 394.1453L1.3316 388.819L0 383.4927L0 29.2946L1.3316 23.9683L3.9947 18.642L6.6579 14.6473L14.6473 6.6579L25.2999 1.3316L31.9577 0ZM985.3633 193.0779H986.6948A13.3157 13.3157 0 0 1 1000.0106 206.3937V206.3937A13.3157 13.3157 0 0 1 986.6948 219.7094H985.3633A13.3157 13.3157 0 0 1 972.0476 206.3937V206.3937A13.3157 13.3157 0 0 1 985.3633 193.0779Z"
+    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 972.047556,
+        "top": 193.077939,
+        "width": 27.963012,
+        "height": 26.63144
+      }
+    ]
+  }
+},
   "infinix-hot-70-2026": {
-    portrait: {
-      left: 18, top: 22, width: 360, height: 788,
-      paths: {
-        portrait: "M318.898 0C341.598 0 360 18.4018 360 41.1016L360 746.898C360 769.598 341.598 788 318.898 788L41.1016 788C18.4018 788 0 769.598 0 746.898L0 41.1016C0 18.4018 18.4018 0 41.1016 0L318.898 0ZM180 10C173.925 10 169 14.9249 169 21C169 27.0751 173.925 32 180 32C186.075 32 191 27.0751 191 21C191 14.9249 186.075 10 180 10Z",
-      },
-      enableRotation: true,
+  "portrait": {
+    "left": 17.861333,
+    "top": 22.064,
+    "width": 360.378667,
+    "height": 788.0,
+    "enableRotation": true,
+    "paths": {
+      "portrait": "M0 35.7227L1.0507 30.4693L3.152 24.1653L5.2533 19.9627L7.3547 16.8107L16.8107 7.3547L19.9627 5.2533L26.2667 2.1013L29.4187 1.0507L34.672 0L325.7067 0L330.96 1.0507L334.112 2.1013L342.5173 6.304L347.7707 10.5067L349.872 12.608L353.024 16.8107L355.1253 19.9627L358.2773 26.2667L359.328 29.4187L360.3787 34.672L360.3787 753.328L359.328 758.5813L358.2773 761.7333L354.0747 770.1387L351.9733 773.2907L345.6693 779.5947L341.4667 782.7467L335.1627 785.8987L332.0107 786.9493L327.808 788L32.5707 788L28.368 786.9493L25.216 785.8987L21.0133 783.7973L14.7093 779.5947L9.456 774.3413L6.304 770.1387L2.1013 761.7333L1.0507 758.5813L0 753.328ZM180.1893 9.456H180.1893A11.032 11.032 0 0 1 191.2213 20.488V20.488A11.032 11.032 0 0 1 180.1893 31.52H180.1893A11.032 11.032 0 0 1 169.1573 20.488V20.488A11.032 11.032 0 0 1 180.1893 9.456Z"
     },
-    landscape: {
-      left: 22, top: 18, width: 788, height: 360,
-      paths: {
-        landscape: "M0 41.102C0 18.402 18.4018 0 41.1016 0L746.898 0C769.598 0 788 18.402 788 41.102L788 318.8984C788 341.5982 769.598 360 746.898 360L41.1016 360C18.4018 360 0 341.5982 0 318.8984L0 41.102ZM10 180C10 186.075 14.9249 191 21 191C27.0751 191 32 186.075 32 180C32 173.925 27.0751 169 21 169C14.9249 169 10 173.925 10 180Z",
-      },
-      enableRotation: true,
-    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 169.157333,
+        "top": 9.456,
+        "width": 22.064,
+        "height": 22.064
+      }
+    ]
   },
+  "landscape": {
+    "left": 30.469333,
+    "top": 17.861333,
+    "width": 788.0,
+    "height": 360.378667,
+    "enableRotation": true,
+    "paths": {
+      "landscape": "M752.2773 0L757.5307 1.0507L763.8347 3.152L768.0373 5.2533L771.1893 7.3547L780.6453 16.8107L782.7467 19.9627L785.8987 26.2667L786.9493 29.4187L788 34.672L788 325.7067L786.9493 330.96L785.8987 334.112L781.696 342.5173L777.4933 347.7707L775.392 349.872L771.1893 353.024L768.0373 355.1253L761.7333 358.2773L758.5813 359.328L753.328 360.3787L34.672 360.3787L29.4187 359.328L26.2667 358.2773L17.8613 354.0747L14.7093 351.9733L8.4053 345.6693L5.2533 341.4667L2.1013 335.1627L1.0507 332.0107L0 327.808L0 32.5707L1.0507 28.368L2.1013 25.216L4.2027 21.0133L8.4053 14.7093L13.6587 9.456L17.8613 6.304L26.2667 2.1013L29.4187 1.0507L34.672 0ZM767.512 169.1573H767.512A11.032 11.032 0 0 1 778.544 180.1893V180.1893A11.032 11.032 0 0 1 767.512 191.2213H767.512A11.032 11.032 0 0 1 756.48 180.1893V180.1893A11.032 11.032 0 0 1 767.512 169.1573Z"
+    },
+    "occlusions": [
+      {
+        "kind": "circle",
+        "left": 756.48,
+        "top": 169.157333,
+        "width": 22.064,
+        "height": 22.064
+      }
+    ]
+  }
+},
   "sonoff-nspanel-pro": {
     portrait: {
       left: 42, top: 45, width: 480, height: 480,
@@ -2995,8 +3396,17 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
     },
   },
   "apple-macbook-neo-13-2026": {
-    portrait: { left: 144, top: 57, width: 671, height: 423, cornerRadius: 14, enableRotation: false },
-  },
+  "portrait": {
+    "left": 146.104478,
+    "top": 41.208955,
+    "width": 1206.298507,
+    "height": 753.0,
+    "enableRotation": false,
+    "paths": {
+      "portrait": "M0 11.2388L1.8731 7.4925L7.4925 1.8731L11.2388 0L1195.0597 0L1198.806 1.8731L1204.4254 7.4925L1206.2985 11.2388L1206.2985 753L0 753Z"
+    }
+  }
+},
   "microsoft-surface-laptop-8-13-8-2026": {
     portrait: { left: 208, top: 48, width: 860, height: 598, cornerRadius: 4, enableRotation: false },
   },
@@ -3006,6 +3416,7 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
 };
 
 const aliases: Record<string, string> = {
+  "motorola-razr-60-ultra-2025": "motorola-razr-70-ultra-2026",
   "apple-iphone-14": "apple-iphone-14-2022",
   "apple-iphone-15": "apple-iphone-15-2023",
   "apple-iphone-13-mini": "apple-iphone-13-mini-2021",
@@ -3045,7 +3456,6 @@ export function getMockupAssets(deviceId: string): MockupAsset[] {
   return [{
     kind: asset.localPath.endsWith(".svg") ? "transparent-svg" : "transparent-png",
     localPath: asset.localPath,
-    sourceUrl: asset.sourceUrl,
     width: asset.width,
     height: asset.height,
     renderScale: asset.renderScale,
@@ -3150,15 +3560,15 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "samsung-galaxy-s24-2024": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 35 },
   "samsung-galaxy-s24-ultra-2024": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, isPro: true, safeAreaInsetTop: 34 },
   "samsung-galaxy-s26-ultra-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 4, isPro: true, safeAreaInsetTop: 42 },
-  "google-pixel-10-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
-  "google-pixel-10-pro-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3.125, isPro: true, safeAreaInsetTop: 36 },
-  "google-pixel-10-pro-fold-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 36 },
+  "google-pixel-10-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 54 },
+  "google-pixel-10-pro-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3.125, isPro: true, safeAreaInsetTop: 50 },
+  "google-pixel-10-pro-fold-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 48 },
   "google-pixel-11-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
   "google-pixel-11-pro-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 3.125, isPro: true, safeAreaInsetTop: 36 },
   "google-pixel-11-pro-xl-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
   "google-pixel-11-pro-fold-2026": { osName: "Android", osVersion: "17.0", notch: false, devicePixelRatio: 2.625, isPro: true, safeAreaInsetTop: 28, statusBarInsetRight: 44 },
   "samsung-galaxy-a17-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.625, safeAreaInsetTop: 36 },
-  "motorola-razr-70-ultra-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
+  "motorola-razr-70-ultra-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 40 },
   "infinix-hot-70-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2, safeAreaInsetTop: 36 },
   "samsung-galaxy-s26-2026": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 3, isPro: true, safeAreaInsetTop: 36 },
   "samsung-galaxy-z-fold7-unfolded-2025": { osName: "Android", osVersion: "16.0", notch: false, devicePixelRatio: 2.5, isPro: true, safeAreaInsetTop: 28 },

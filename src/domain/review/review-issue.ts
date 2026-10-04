@@ -1,8 +1,9 @@
+import type { Orientation } from "../device/device.types";
 export interface ReviewDevice {
   name: string;
   width: number;
   height: number;
-  orientation: "portrait" | "landscape";
+  orientation: Orientation;
 }
 
 export interface ResponsiveIssue {

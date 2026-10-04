@@ -1,5 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 
+async function expectScreenSize(screen: ReturnType<Page["locator"]>, width: number, height: number) {
+  // Downloaded raster openings can differ fractionally from the logical viewport.
+  await expect.poll(() => screen.evaluate((el, target) => Math.abs(parseFloat(getComputedStyle(el).width) - target), width)).toBeLessThan(2);
+  await expect.poll(() => screen.evaluate((el, target) => Math.abs(parseFloat(getComputedStyle(el).height) - target), height)).toBeLessThan(2);
+}
+
 async function dismissFirstRunGuide(page: Page) {
   const skipTour = page.getByRole("button", { name: "Skip feature tour" });
   if (await skipTour.isVisible().catch(() => false)) await skipTour.click();
@@ -23,6 +29,75 @@ test.beforeEach(async ({ page }) => {
   await start.waitFor({ state: "visible", timeout: 1200 }).catch(() => undefined);
   if (await start.isVisible().catch(() => false)) await start.click();
   await dismissFirstRunGuide(page);
+});
+
+test("toggles only portrait and landscape with local hardware and saved rotation", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  const hardware = slot.locator('[data-device-frame="apple-iphone-18-pro-2026"] img');
+  const screen = slot.locator('[data-device-screen="apple-iphone-18-pro-2026"]');
+  const originalSrc = await hardware.getAttribute("src");
+  expect(new URL(originalSrc!, page.url()).origin).toBe(new URL(page.url()).origin);
+  expect(originalSrc).toContain("/mockups/apple-iphone-18-pro-2026.png");
+  for (let turn = 1; turn <= 4; turn++) {
+    await openViewportActions(page);
+    await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+    await expectScreenSize(screen, turn % 2 ? 874 : 402, turn % 2 ? 402 : 874);
+    await expect.poll(() => hardware.evaluate(el => el.parentElement!.style.transform)).toContain(`rotate(${turn % 2 * 90}deg)`);
+    await expect(hardware).toHaveAttribute("src", originalSrc!);
+    await expect(slot.locator("iframe")).toHaveCSS("transform", "none");
+    if (turn === 1) {
+      await page.reload();
+      await expect.poll(() => hardware.evaluate(el => el.parentElement!.style.transform)).toContain("rotate(90deg)");
+      await expectScreenSize(screen, 874, 402);
+    }
+  }
+});
+
+test("resets orientation when switching between phones and wide unfolded devices", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  await openViewportActions(page);
+  await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+  const cases = [
+    ["Apple iPhone Duo (folded)", "apple-iphone-duo-folded-2026", 466, 678, true],
+    ["Apple iPhone Duo (unfolded)", "apple-iphone-duo-unfolded-2026", 890, 626, true],
+    ["Samsung Galaxy Z Fold8 (unfolded)", "samsung-galaxy-z-fold8-unfolded-2026", 979, 739, false],
+    ["Google Pixel 10 Pro Fold", "google-pixel-10-pro-fold-2026", 412, 901, true],
+    ["Apple iPhone 18 Pro", "apple-iphone-18-pro-2026", 402, 874, true],
+  ] as const;
+  for (const [name, id, width, height, rotatable] of cases) {
+    await slot.getByTestId("device-switcher-button").click();
+    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill(name);
+    await page.locator(`button[title="${name}"]`).click();
+    const screen = slot.locator(`[data-device-screen="${id}"]`);
+    await expect(slot.getByText(`${width} × ${height}`, { exact: true })).toBeVisible();
+    await expect.poll(() => screen.evaluate(el => parseFloat(getComputedStyle(el).width) > parseFloat(getComputedStyle(el).height))).toBe(width > height);
+    await openViewportActions(page);
+    if (!rotatable) {
+      await expect(slot.getByRole("button", { name: "Rotate", exact: true })).toHaveCount(0);
+      await slot.getByRole("button", { name: "Viewport options", exact: true }).click();
+      continue;
+    }
+    await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+    await expect(slot.getByText(`${height} × ${width}`, { exact: true })).toBeVisible();
+    await expect.poll(() => screen.evaluate(el => parseFloat(getComputedStyle(el).width) > parseFloat(getComputedStyle(el).height))).toBe(height > width);
+  }
+  await page.reload();
+  await expectScreenSize(slot.locator('[data-device-screen="apple-iphone-18-pro-2026"]'), 874, 402);
+});
+
+test("migrates saved four-direction rotations to portrait and landscape", async ({ page }) => {
+  await expect(page.locator("[data-preview-slot-id]")).toHaveCount(3);
+  await expect.poll(() => page.evaluate(() => Boolean(localStorage.getItem("mdvSimulatorSession")))).toBe(true);
+  await page.evaluate(() => {
+    const session = JSON.parse(localStorage.getItem("mdvSimulatorSession")!);
+    session.slots[0].orientation = "portrait-inverted";
+    session.slots[1].orientation = "landscape-inverted";
+    localStorage.setItem("mdvSimulatorSession", JSON.stringify(session));
+  });
+  await page.reload();
+  await expectScreenSize(page.locator('[data-device-screen="apple-iphone-18-pro-2026"]'), 402, 874);
+  await expectScreenSize(page.locator('[data-device-screen="apple-iphone-duo-unfolded-2026"]'), 890, 626);
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("mdvSimulatorSession")!).slots.slice(0, 2).map((slot: { orientation: string }) => slot.orientation))).toEqual(["portrait", "landscape"]);
 });
 
 test("passes night mode to the preview without applying a color filter", async ({ page }) => {
@@ -52,20 +127,17 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   await expect(slots.nth(1).locator('[data-device-frame="apple-iphone-duo-unfolded-2026"]')).toBeVisible();
   await expect(slots.nth(2).locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
   const phoneScreen = slots.nth(0).locator('[data-device-screen="apple-iphone-18-pro-2026"]');
-  await expect(phoneScreen).toHaveCSS("width", "402px");
-  await expect(phoneScreen).toHaveCSS("height", "874px");
+  await expectScreenSize(phoneScreen, 402, 874);
   const duoScreen = slots.nth(1).locator('[data-device-screen="apple-iphone-duo-unfolded-2026"]');
-  await expect(duoScreen).toHaveCSS("width", "890px");
-  await expect(duoScreen).toHaveCSS("height", "626px");
+  await expectScreenSize(duoScreen, 890, 626);
   await expect(slots.nth(1).locator('[data-browser-control="side-toolbar"]')).toBeVisible();
 
   // A user's saved rotation must survive reopening the simulator.
   await openViewportActions(page, 1);
   await slots.nth(1).getByRole("button", { name: "Rotate", exact: true }).click();
-  await expect(duoScreen).toHaveCSS("width", "626px");
+  await expectScreenSize(duoScreen, 626, 890);
   await page.reload();
-  await expect(duoScreen).toHaveCSS("width", "626px");
-  await expect(duoScreen).toHaveCSS("height", "890px");
+  await expectScreenSize(duoScreen, 626, 890);
 
   await openTools(page);
   await page.getByRole("button", { name: "iOS + Android", exact: true }).click();
@@ -88,12 +160,10 @@ test("selects Duo unfolded in landscape from a portrait phone and allows manual 
   await page.getByTestId("device-switcher-button").first().click();
   await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone Duo");
   await page.locator('button[title="Apple iPhone Duo (unfolded)"]').click();
-  await expect(duoScreen).toHaveCSS("width", "890px");
-  await expect(duoScreen).toHaveCSS("height", "626px");
+  await expectScreenSize(duoScreen, 890, 626);
   await openViewportActions(page);
   await slot.getByRole("button", { name: "Rotate", exact: true }).click();
-  await expect(duoScreen).toHaveCSS("width", "626px");
-  await expect(duoScreen).toHaveCSS("height", "890px");
+  await expectScreenSize(duoScreen, 626, 890);
 });
 
 test("opens toolbar and device screenshots without duplicate Tools actions", async ({ page }) => {

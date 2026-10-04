@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "调整设计叠加高度",
   "resizeOverlayBoth": "调整设计叠加的宽度和高度",
   "chooseDevice": "选择设备",
+  "previousDevice": "上一个设备",
+  "nextDevice": "下一个设备",
   "results": "{count}结果",
   "searchDevice": "搜索名称、操作系统、类型或大小",
   "clearDeviceSearch": "清除设备搜索",

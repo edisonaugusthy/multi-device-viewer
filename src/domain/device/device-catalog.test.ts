@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   estimateDeviceFrameSize,
@@ -5,7 +6,7 @@ import {
   getStatusHeight,
 } from "../../ui/components/DeviceFrame";
 import { defaultDeviceIds, devices, quickDevicePresetIds } from "./device-catalog";
-import { supportsOrientation } from "./device-service";
+import { getDefaultOrientation, getMockupViewport, nextOrientation, normalizeOrientation, orientations, supportsOrientation, toLandscapeAwareSize } from "./device-service";
 import { getFrameProfile } from "./frame-profiles";
 
 describe("device catalog imports", () => {
@@ -77,11 +78,8 @@ describe("device catalog imports", () => {
     expect(supportsOrientation(device)).toBe(true);
     expect(getFrameProfile(device).chromeVariant).toBe("ios-liquid-glass");
     const asset = device.mockupAssets[0];
-    expect(asset.kind).toBe("transparent-svg");
-    // Generated frames back the live screen with opaque glass. A second
-    // transparent aperture would expose a halo at fractional preview scales.
-    expect(asset.sourceUrl).toBeUndefined();
-    expect(asset.frameOverlay).toBe(false);
+    expect(asset.kind).toBe("transparent-png");
+    expect(asset.frameOverlay).toBe(true);
     for (const orientation of ["portrait", "landscape"] as const) {
       const viewport = asset.viewport![orientation]!;
       expect(viewport.width).toBeGreaterThan(0);
@@ -91,10 +89,14 @@ describe("device catalog imports", () => {
       const logical = orientation === "portrait"
         ? { width: Math.min(width, height), height: Math.max(width, height) }
         : { width: Math.max(width, height), height: Math.min(width, height) };
-      expect({ width: viewport.width, height: viewport.height }).toEqual(logical);
+      // Raster apertures include subpixel rounding; live CSS geometry stays independent.
+      expect(Math.abs(viewport.width / logical.width - 1)).toBeLessThan(0.002);
+      expect(Math.abs(viewport.height / logical.height - 1)).toBeLessThan(0.002);
       const frame = estimateDeviceFrameSize({ device, viewportSize: logical, showFrame: true, showStatusBar: true, showUrlBar: true });
-      expect(viewport.left).toBe((frame.width - viewport.width) / 2);
-      expect(viewport.top).toBe((frame.height - viewport.height) / 2);
+      expect(viewport.left).toBeGreaterThan(0);
+      expect(viewport.top).toBeGreaterThan(0);
+      expect(viewport.left + viewport.width).toBeLessThanOrEqual(frame.width);
+      expect(viewport.top + viewport.height).toBeLessThanOrEqual(frame.height);
     }
   });
 
@@ -144,10 +146,14 @@ describe("device catalog imports", () => {
       mockupAssets: [expect.objectContaining({ localPath })],
     });
     const asset = devices.find((device) => device.id === id)?.mockupAssets[0];
-    expect(asset?.sourceCrop).toBeDefined();
+    if (id === "apple-macbook-neo-13-2026") {
+      expect(asset?.sourceCrop).toBeUndefined();
+      expect(asset?.frameOverlay).toBe(true);
+    } else {
+      expect(asset?.sourceCrop).toBeDefined();
+      expect(asset?.previewScale).toBeLessThan(1);
+    }
     expect(asset?.renderScale).toBeGreaterThanOrEqual(0.5);
-    expect(asset?.previewScale).toBeLessThan(1);
-    expect(asset?.sourceUrl).toMatch(/^https:\/\//);
   });
 
   it("uses the official iPhone hardware as the notch overlay", () => {
@@ -158,10 +164,55 @@ describe("device catalog imports", () => {
     expect(asset.viewport?.landscape?.occlusions).toBeUndefined();
   });
 
-  it("links Studio Display XDR to the XDR manufacturer page", () => {
-    const asset = devices.find((device) => device.id === "apple-studio-display-xdr-27-2026")?.mockupAssets[0];
+  it("loads every mockup from an existing local asset without remote sources", () => {
+    for (const device of devices) for (const asset of device.mockupAssets) {
+      expect(asset).not.toHaveProperty("sourceUrl");
+      if (asset.localPath) {
+        expect(asset.localPath).toMatch(/^\/mockups\//);
+        expect(existsSync(`public${asset.localPath}`), asset.localPath).toBe(true);
+      }
+    }
+  });
 
-    expect(asset?.sourceUrl).toBe("https://www.apple.com/shop/buy-mac/studio-display-xdr");
+  it("starts phones upright and wide unfolded displays in landscape", () => {
+    for (const [id, expected] of [
+      ["apple-iphone-18-pro-2026", "portrait"],
+      ["apple-iphone-duo-folded-2026", "portrait"],
+      ["apple-iphone-duo-unfolded-2026", "landscape"],
+      ["samsung-galaxy-z-fold8-unfolded-2026", "landscape"],
+    ]) {
+      expect(getDefaultOrientation(devices.find(device => device.id === id))).toBe(expected);
+    }
+  });
+
+  it("migrates previously saved inverted orientations to the two supported states", () => {
+    expect(normalizeOrientation("portrait-inverted")).toBe("portrait");
+    expect(normalizeOrientation("landscape-inverted")).toBe("landscape");
+    const wide = devices.find(device => device.id === "apple-iphone-duo-unfolded-2026")!;
+    expect(normalizeOrientation("unknown", wide)).toBe("landscape");
+  });
+
+  it.each(devices.filter(supportsOrientation))("rotates $id between portrait and landscape using the same local image", device => {
+    let orientation = device.cssViewport.width > device.cssViewport.height ? "landscape" as const : "portrait" as const;
+    const first = orientation;
+    const visited = new Set<string>();
+    for (let turn = 0; turn < 2; turn++) {
+      visited.add(orientation);
+      const viewport = getMockupViewport(device.mockupAssets[0], orientation);
+      const size = toLandscapeAwareSize(device.cssViewport, orientation);
+      expect(size.width > size.height).toBe(orientation.startsWith("landscape"));
+      if (device.mockupAssets[0]?.viewport) {
+        expect(viewport).toBeDefined();
+        expect(viewport!.width).toBeGreaterThan(0);
+        expect(viewport!.height).toBeGreaterThan(0);
+        const upright = getMockupViewport(device.mockupAssets[0], orientation.startsWith("landscape") ? "landscape" : "portrait")!;
+        expect(viewport!.width).toBe(upright.width);
+        expect(viewport!.height).toBe(upright.height);
+      }
+      orientation = nextOrientation(orientation) as typeof orientation;
+    }
+    expect([...visited].sort()).toEqual([...orientations].sort());
+    expect(orientation).toBe(first);
   });
 
   it("keeps unfolded foldables free of synthetic hinge seams", () => {
@@ -216,10 +267,9 @@ describe("device catalog imports", () => {
     ["google-pixel-11-pro-2026", "/mockups/google-pixel-11-pro-2026.png", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
     ["google-pixel-11-pro-xl-2026", "/mockups/google-pixel-11-pro-xl-2026.png", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
     ["google-pixel-11-pro-fold-2026", "/mockups/google-pixel-11-pro-fold-2026.png", "https://store.google.com/us/config/pixel_11_pro_fold?hl=en-US"],
-  ])("uses an official Google Store image for %s", (id, localPath, sourceUrl) => {
+  ])("uses an official Google Store image for %s", (id, localPath) => {
     expect(devices.find((candidate) => candidate.id === id)?.mockupAssets[0]).toMatchObject({
       localPath,
-      sourceUrl,
       sourceCrop: expect.objectContaining({ width: expect.any(Number), height: expect.any(Number) }),
       viewport: {
         portrait: expect.objectContaining({ width: expect.any(Number), height: expect.any(Number) }),
@@ -695,16 +745,9 @@ describe("device catalog imports", () => {
     const device = devices.find((candidate) => candidate.id === "google-pixel-10-pro-xl-2025");
     const asset = device?.mockupAssets.find((candidate) => (candidate.kind === "transparent-png" || candidate.kind === "transparent-svg"));
 
-    expect(asset).toMatchObject({
-      localPath: "/mockups/google-pixel-10-pro-2026.png",
-      width: 900,
-      height: 1894,
-      screenInset: { top: 7, right: 4, bottom: 7.5, left: 7 },
-      viewport: {
-        portrait: { left: 18, top: 17, width: 410, height: 912 },
-        landscape: { left: 17, top: 18, width: 912, height: 410 },
-      },
-    });
+    const pro = devices.find(candidate => candidate.id === "google-pixel-10-pro-2026")!.mockupAssets[0];
+    expect(asset).toMatchObject({ localPath: pro.localPath, width: pro.width, height: pro.height, viewport: pro.viewport });
+    expect(device!.cssViewport).toEqual({ width: 448, height: 997 });
     expect(asset?.viewport?.portrait?.paths?.portrait).toBeTruthy();
   });
 

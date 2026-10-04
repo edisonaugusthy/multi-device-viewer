@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "Redimensionar a altura da sobreposição do design",
   "resizeOverlayBoth": "Redimensionar largura e altura da sobreposição de design",
   "chooseDevice": "Escolha um dispositivo",
+  "previousDevice": "Dispositivo anterior",
+  "nextDevice": "Próximo dispositivo",
   "results": "{count} resultados",
   "searchDevice": "Pesquise nome, sistema operacional, tipo ou tamanho",
   "clearDeviceSearch": "Limpar pesquisa de dispositivos",

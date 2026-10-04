@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "디자인 오버레이 높이 크기 조정",
   "resizeOverlayBoth": "디자인 오버레이 너비 및 높이 크기 조정",
   "chooseDevice": "기기를 선택하세요",
+  "previousDevice": "이전 기기",
+  "nextDevice": "다음 기기",
   "results": "{count} 결과",
   "searchDevice": "이름, OS, 유형, 크기 검색",
   "clearDeviceSearch": "기기 검색 지우기",

@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "Thay đổi kích thước chiều cao lớp phủ thiết kế",
   "resizeOverlayBoth": "Thay đổi kích thước chiều rộng và chiều cao lớp phủ thiết kế",
   "chooseDevice": "Chọn một thiết bị",
+  "previousDevice": "Thiết bị trước",
+  "nextDevice": "Thiết bị tiếp theo",
   "results": "{count} kết quả",
   "searchDevice": "Tìm kiếm tên, hệ điều hành, loại hoặc kích thước",
   "clearDeviceSearch": "Xóa tìm kiếm thiết bị",

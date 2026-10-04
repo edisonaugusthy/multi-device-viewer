@@ -4,7 +4,7 @@ import { I18nProvider } from '../../src/app/i18n';
 import { devices } from '../../src/domain/device/device-catalog';
 import { DeviceFrame } from '../../src/ui/components/DeviceFrame';
 import { getFrameProfile } from '../../src/domain/device/frame-profiles';
-import { supportsOrientation, toLandscapeAwareSize } from '../../src/domain/device/device-service';
+import { nextOrientation, orientations, supportsOrientation, toLandscapeAwareSize } from '../../src/domain/device/device-service';
 import { nextBrowserCollapse } from '../../src/domain/device/browser-geometry';
 
 const query = new URLSearchParams(location.search);
@@ -34,7 +34,7 @@ const lightGlass = query.get('glass') === 'light';
 const fixtureUrl = new URL(glassFixture ? '/glass.html' : '/probe.html', location.origin);
 if (lightGlass) fixtureUrl.searchParams.set('light', '');
 if (glassFixture && query.has('cross-origin')) fixtureUrl.hostname = location.hostname === 'localhost' ? '127.0.0.1' : 'localhost';
-const cases = query.has("device") ? [[query.get("device")!, query.get("orientation") ?? "portrait"]] as const : query.has("all") ? devices.flatMap(d => (supportsOrientation(d) ? ["portrait", "landscape"] : ["portrait"]).map(o => [d.id,o] as const)) : representativeCases;
+const cases = query.has("device") ? [[query.get("device")!, query.get("orientation") ?? "portrait"]] as const : query.has("all") ? devices.flatMap(d => (supportsOrientation(d) ? orientations : ["portrait"]).map(o => [d.id,o] as const)) : representativeCases;
 document.getElementById("run")!.textContent = "Measure " + cases.length + " cases";
 if (fixtureUrl.origin !== location.origin) {
  const button = document.getElementById('run') as HTMLButtonElement;
@@ -100,7 +100,7 @@ document.getElementById('run')!.addEventListener('click',async()=>{
  render(cases[0][0],cases[0][1]);
  document.getElementById('status')!.textContent=results.length+' source-frame cases measured';
 });
-document.getElementById('landscape')!.addEventListener('click',()=>render(currentId,currentOrientation==='portrait'?'landscape':'portrait',currentScroll));
+document.getElementById('landscape')!.addEventListener('click',()=>render(currentId,nextOrientation(currentOrientation as any),currentScroll));
 function scrollFixture(top:number){
  const frameWindow=frameRoot.querySelector('iframe')?.contentWindow;
  if(glassFixture)frameWindow?.postMessage({type:'device-audit-scroll',top},fixtureUrl.origin);

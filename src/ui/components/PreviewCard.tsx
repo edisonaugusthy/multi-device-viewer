@@ -10,7 +10,7 @@ import {
   ExternalLink,
   ImageDown,
   Minus,
-  MoreHorizontal,
+  MoreVertical,
   Plus,
   RefreshCw,
   RotateCw,
@@ -215,7 +215,7 @@ export function PreviewCard({
   const keyboardHeight = keyboard
     ? getMobileKeyboardHeight(keyboardPlatform, keyboardLandscape, usesTabletKeyboard(device.type, viewportSize), viewportSize.height)
     : 0;
-  const browserGeometry = getBrowserGeometry(device, viewportSize, slot.browserPreferences, { collapsed: browserCollapsed, keyboardHeight, viewportFit: pageSurfaces?.viewportFit });
+  const browserGeometry = getBrowserGeometry(device, viewportSize, slot.browserPreferences, { orientation: effectiveOrientation, collapsed: browserCollapsed, keyboardHeight, viewportFit: pageSurfaces?.viewportFit });
   // The current frame resizes its usable viewport for the simulated keyboard.
   const keyboardOcclusion = 0;
 
@@ -711,7 +711,7 @@ export function PreviewCard({
       {showToolbar && <div
         ref={toolbarRef}
         data-device-toolbar
-        className={`relative flex h-9 shrink-0 flex-nowrap items-center gap-0.5 border-b px-2 transition-colors ${
+        className={`relative flex h-8 shrink-0 flex-nowrap items-center gap-1 border-b px-2 transition-colors ${
           display.darkMode
             ? "border-white/10 bg-[#151922]"
             : "border-black/[0.06] bg-white"
@@ -725,21 +725,21 @@ export function PreviewCard({
           alignEnd={last}
         />
 
-        <span className={`hidden @min-[300px]/viewport:inline shrink-0 px-1 text-[9px] font-bold ${display.darkMode ? "text-slate-500" : "text-slate-400"}`}>
+        <span className={`hidden @min-[300px]/viewport:inline shrink-0 px-1 text-[9px] font-medium ${display.darkMode ? "text-slate-500" : "text-slate-400"}`}>
           {viewportSize.width} × {viewportSize.height}
         </span>
-        <div data-viewport-zoom className={`hidden @min-[240px]/viewport:flex shrink-0 items-center rounded-md border ${display.darkMode ? "border-white/15" : "border-slate-200"}`}>
+        <div data-viewport-zoom className="hidden @min-[240px]/viewport:flex shrink-0 items-center">
           <CardBtn dark={display.darkMode} label={t("zoomOut")} onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
           <CardBtn dark={display.darkMode} label={t("zoomIn")} onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
         </div>
         <button type="button" aria-label={t("viewportOptions")} title={t("viewportOptions")} aria-expanded={controlsOpen} onClick={() => setControlsOpen(value => !value)}
-          className={`grid h-7 w-7 shrink-0 place-items-center rounded-md border ${display.darkMode ? "border-white/15 text-slate-400 hover:bg-white/10" : "border-slate-200 text-slate-500 hover:bg-slate-100"}`}><MoreHorizontal size={15}/></button>
+          className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-teal-500 ${controlsOpen ? display.darkMode ? "bg-teal-400/10 text-teal-300" : "bg-teal-50 text-teal-700" : display.darkMode ? "text-slate-400 hover:bg-white/10 hover:text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"}`}><MoreVertical size={15}/></button>
         {removable && <button type="button" data-remove-viewport aria-label={t("removeDevice")} title={t("removeDevice")}
           onClick={event => { event.stopPropagation(); removeSlot(slot.id); }}
-          className={`grid h-7 w-7 shrink-0 place-items-center rounded-md border transition focus-visible:outline-2 focus-visible:outline-teal-500 ${display.darkMode ? "border-white/15 text-slate-400 hover:border-red-400/40 hover:bg-red-400/10 hover:text-red-300" : "border-slate-200 text-slate-500 hover:border-red-300 hover:bg-red-50 hover:text-red-600"}`}><X size={14}/></button>}
+          className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition focus-visible:outline-2 focus-visible:outline-teal-500 ${display.darkMode ? "text-slate-400 hover:bg-red-400/10 hover:text-red-300" : "text-slate-500 hover:bg-red-50 hover:text-red-600"}`}><X size={14}/></button>}
         <div data-viewport-actions="compact"
           onKeyDown={event => { if (event.key === "Escape") { setControlsOpen(false); setBrowserSettingsOpen(false); } }}
-          className={`${controlsOpen ? "flex" : "hidden"} absolute end-2 top-9 z-[60] max-h-[calc(100dvh-120px)] w-64 flex-col gap-1 overflow-y-auto rounded-xl border p-2 shadow-xl ${display.darkMode ? "border-white/15 bg-[#171a21]" : "border-slate-200 bg-white"}`}>
+          className={`${controlsOpen ? "flex" : "hidden"} absolute end-2 top-8 z-[60] max-h-[calc(100dvh-120px)] w-64 flex-col gap-1 overflow-y-auto rounded-xl border p-2 shadow-xl ${display.darkMode ? "border-white/15 bg-[#171a21]" : "border-slate-200 bg-white"}`}>
         <div className="flex @min-[240px]/viewport:hidden">
           <CardBtn dark={display.darkMode} label={t("zoomOut")} onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
           <CardBtn dark={display.darkMode} label={t("zoomIn")} onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
@@ -908,7 +908,7 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
 // Special-purpose hardware (kiosks, control panels, watches, TVs, custom) stays
 // in Other instead of being mixed with tablets and computers.
 type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other" | "custom";
-type MenuSection = { key: MenuGroupId | "favorite" | "recent" | "search"; label: string; devices: Device[] };
+type MenuSection = { key: MenuGroupId | "favorite" | "recent" | "search"; devices: Device[] };
 
 const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other", "custom"];
 export function menuGroupFor(device: Device): MenuGroupId {
@@ -932,6 +932,73 @@ function newestDevicesFirst(left: Device, right: Device): number {
 }
 
 const RECENT_LIMIT = 4;
+
+// The picker and header navigation share one ordering rule.
+export function getDeviceMenuSections({
+  devices, favorites, recents, currentDeviceId, activeGroup, query = "",
+}: {
+  devices: Device[];
+  favorites: string[];
+  recents: string[];
+  currentDeviceId: string;
+  activeGroup: MenuGroupId;
+  query?: string;
+}): MenuSection[] {
+  const normalize = (value: string) => value.normalize("NFKD").toLowerCase().replace(/\p{M}/gu, "").replace(/×/g, "x").replace(/(\d)\s*x\s*(?=\d)/g, "$1x").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const q = normalize(query);
+  const queryTerms = q.split(/\s+/).filter(Boolean);
+  const filterByQuery = (list: Device[]): Device[] =>
+    q
+      ? list.filter((device) => {
+        const haystack = normalize(`${device.name} ${device.brand} ${device.family} ${device.os} ${device.type} ${device.year ?? ""} ${device.tags.join(" ")} ${device.cssViewport.width}x${device.cssViewport.height} ${device.cssViewport.height}x${device.cssViewport.width}`);
+        return queryTerms.every((term) => haystack.includes(term));
+      })
+      : list;
+
+  const findById = (id: string) => devices.find((device) => device.id === id);
+  const favoriteDevices = favorites
+    .map(findById)
+    .filter((device): device is Device => !!device && menuGroupFor(device) === activeGroup);
+  const favoriteSection: MenuSection | null = favoriteDevices.length > 0
+    ? { key: "favorite", devices: filterByQuery(favoriteDevices) }
+    : null;
+
+  // Keep promoted devices in the same order as the picker, without duplicates.
+  const usedInRecents = new Set<string>();
+  const recentDevices = recents
+    .map(findById)
+    .filter((d): d is Device => (
+      !!d
+      && menuGroupFor(d) === activeGroup
+      && !usedInRecents.has(d.id)
+      && (usedInRecents.add(d.id), true)
+    ))
+    .filter(device => !favorites.includes(device.id))
+    .slice(0, RECENT_LIMIT);
+  const recentSection: MenuSection | null = (() => {
+    const filtered = filterByQuery(recentDevices).filter(
+      (d) => d.id !== currentDeviceId,
+    );
+    if (filtered.length === 0) return null;
+    return { key: "recent", devices: filtered };
+  })();
+
+  if (q) {
+    const matches = filterByQuery(devices).sort(newestDevicesFirst);
+    return matches.length > 0 ? [{ key: "search", devices: matches }] : [];
+  }
+
+  const promoted = new Set([...(favoriteSection?.devices ?? []), ...(recentSection?.devices ?? [])].map(device => device.id));
+  const categoryDevices = devices
+    .filter((device) => menuGroupFor(device) === activeGroup && !promoted.has(device.id))
+    .sort(newestDevicesFirst);
+  const categorySection: MenuSection = {
+    key: activeGroup,
+    devices: categoryDevices,
+  };
+
+  return [favoriteSection, recentSection, categorySection].filter((section): section is MenuSection => !!section && section.devices.length > 0);
+}
 
 function DeviceSwitcher({
   currentDevice,
@@ -1032,63 +1099,35 @@ function DeviceSwitcher({
     if (open && listRef.current) listRef.current.scrollTop = 0;
   }, [query, activeGroup]);
 
-  const sections = useMemo<MenuSection[]>(() => {
-    const normalize = (value: string) => value.normalize("NFKD").toLowerCase().replace(/\p{M}/gu, "").replace(/×/g, "x").replace(/(\d)\s*x\s*(?=\d)/g, "$1x").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
-    const q = normalize(query);
-    const queryTerms = q.split(/\s+/).filter(Boolean);
-    const filterByQuery = (list: Device[]): Device[] =>
-      q
-        ? list.filter((device) => {
-          const haystack = normalize(`${device.name} ${device.brand} ${device.family} ${device.os} ${device.type} ${device.year ?? ""} ${device.tags.join(" ")} ${device.cssViewport.width}x${device.cssViewport.height} ${device.cssViewport.height}x${device.cssViewport.width}`);
-          return queryTerms.every((term) => haystack.includes(term));
-        })
-        : list;
+  const sections = useMemo(() => getDeviceMenuSections({
+    devices, favorites, recents, currentDeviceId: currentDevice.id, activeGroup, query,
+  }), [activeGroup, devices, favorites, query, recents, currentDevice.id]);
 
-    const findById = (id: string) => devices.find((device) => device.id === id);
-    const favoriteDevices = favorites
-      .map(findById)
-      .filter((device): device is Device => !!device && menuGroupFor(device) === activeGroup);
-    const favoriteSection: MenuSection | null = favoriteDevices.length > 0
-      ? { key: "favorite", label: t("favorites"), devices: filterByQuery(favoriteDevices) }
-      : null;
-
-    // Recently used — most recent first, capped, never reorder when picking.
-    const usedInRecents = new Set<string>();
-    const recentDevices = recents
-      .map(findById)
-      .filter((d): d is Device => (
-        !!d
-        && menuGroupFor(d) === activeGroup
-        && !usedInRecents.has(d.id)
-        && (usedInRecents.add(d.id), true)
-      ))
-      .filter(device => !favorites.includes(device.id))
-      .slice(0, RECENT_LIMIT);
-    const recentSection: MenuSection | null = (() => {
-      const filtered = filterByQuery(recentDevices).filter(
-        (d) => d.id !== currentDevice.id,
-      );
-      if (filtered.length === 0) return null;
-      return { key: "recent", label: t("recentlyUsed"), devices: filtered };
-    })();
-
-    if (q) {
-      const matches = filterByQuery(devices).sort(newestDevicesFirst);
-      return matches.length > 0 ? [{ key: "search", label: t("searchResults"), devices: matches }] : [];
-    }
-
-    const promoted = new Set([...(favoriteSection?.devices ?? []), ...(recentSection?.devices ?? [])].map(device => device.id));
-    const categoryDevices = devices
-      .filter((device) => menuGroupFor(device) === activeGroup && !promoted.has(device.id))
-      .sort(newestDevicesFirst);
-    const categorySection: MenuSection = {
-      key: activeGroup,
-      label: groupLabels[activeGroup],
-      devices: categoryDevices,
-    };
-
-    return [favoriteSection, recentSection, categorySection].filter((section): section is MenuSection => !!section && section.devices.length > 0);
-  }, [activeGroup, devices, favorites, query, recents, currentDevice.id, t]);
+  // Freeze the chosen list: recording each click in recents must not reorder it.
+  const [browseList, setBrowseList] = useState<{ ids: string[]; currentId: string } | null>(null);
+  useEffect(() => {
+    if (browseList && browseList.currentId !== currentDevice.id) setBrowseList(null);
+  }, [currentDevice.id, browseList]);
+  const defaultBrowseIds = useMemo(() => getDeviceMenuSections({
+    devices, favorites, recents, currentDeviceId: currentDevice.id,
+    activeGroup: menuGroupFor(currentDevice),
+  }).flatMap(section => section.devices.map(device => device.id)), [devices, favorites, recents, currentDevice]);
+  const availableIds = new Set(devices.map(device => device.id));
+  const browseIds = (browseList?.currentId === currentDevice.id ? browseList.ids : defaultBrowseIds)
+    .filter(id => availableIds.has(id));
+  const browseIndex = browseIds.indexOf(currentDevice.id);
+  const previousDevice = browseIndex > 0 ? devices.find(device => device.id === browseIds[browseIndex - 1]) : undefined;
+  const nextDevice = browseIndex >= 0 ? devices.find(device => device.id === browseIds[browseIndex + 1]) : undefined;
+  function stepDevice(device: Device | undefined) {
+    if (!device) return;
+    setBrowseList({ ids: browseIds, currentId: device.id });
+    addRecent(device.id);
+    onSwitch(device.id);
+    setOpen(false);
+  }
+  const sectionLabels: Record<MenuSection["key"], string> = {
+    ...groupLabels, favorite: t("favorites"), recent: t("recentlyUsed"), search: t("searchResults"),
+  };
 
   const groupCounts = useMemo(() => Object.fromEntries(
     MENU_GROUP_ORDER.map((group) => [group, devices.filter((device) => menuGroupFor(device) === group).length]),
@@ -1097,35 +1136,56 @@ function DeviceSwitcher({
   const visibleGroups = MENU_GROUP_ORDER.filter(group => groupCounts[group] > 0);
 
   return (
-    <div ref={ref} className="relative min-w-0 flex-[1.45]">
-      <button
-        type="button"
-        data-tour={tourTarget}
-        ref={triggerRef}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        aria-controls={open ? panelId : undefined}
-        title={`${t("chooseDevice")}: ${currentDevice.name}`}
-        data-testid="device-switcher-button"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!open) { setQuery(""); setActiveGroup(menuGroupFor(currentDevice)); }
-          setOpen((v) => !v);
-        }}
-        className={`flex h-7 w-full min-w-0 items-center gap-1 whitespace-nowrap rounded-[7px] border px-1.5 text-[11px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-teal-500 ${open ? dark ? "border-teal-400/60 bg-teal-400/10 text-white" : "border-teal-500 bg-teal-50 text-teal-900" :
-          dark
-            ? "border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]"
-            : "border-slate-200 bg-slate-50 text-slate-800 hover:bg-slate-100"
-        }`}
-      >
-        <span className="min-w-0 flex-1 truncate">
-          {shortName(currentDevice.name)}
-        </span>
-        <ChevronDown
-          size={14}
-          className={`shrink-0 transition-transform ${open ? "rotate-180" : ""} ${dark ? "text-slate-400" : "text-slate-500"}`}
-        />
-      </button>
+    <div ref={ref} className="@container/device-picker relative min-w-0 flex-[1.45]">
+      <div className="flex min-w-0 items-center gap-0.5">
+        <button
+          type="button"
+          aria-label={t("previousDevice")}
+          title={previousDevice ? `${t("previousDevice")}: ${previousDevice.name}` : t("previousDevice")}
+          disabled={!previousDevice}
+          data-testid="previous-device-button"
+          onClick={event => { event.stopPropagation(); stepDevice(previousDevice); }}
+          className={`hidden h-7 w-6 shrink-0 place-items-center rounded-[6px] transition-colors @min-[180px]/device-picker:grid focus-visible:outline-2 focus-visible:outline-teal-500 disabled:opacity-30 disabled:hover:bg-transparent ${dark ? "text-slate-300 hover:bg-white/10" : "text-slate-600 hover:bg-slate-100"}`}
+        ><ArrowLeft size={13} className="rtl:rotate-180" aria-hidden="true" /></button>
+        <button
+          type="button"
+          data-tour={tourTarget}
+          ref={triggerRef}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+          aria-controls={open ? panelId : undefined}
+          title={`${t("chooseDevice")}: ${currentDevice.name}`}
+          data-testid="device-switcher-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!open) { setQuery(""); setActiveGroup(menuGroupFor(currentDevice)); }
+            setOpen((v) => !v);
+          }}
+          className={`flex h-7 min-w-0 flex-1 items-center gap-1 whitespace-nowrap rounded-[7px] border border-transparent px-1.5 text-start text-[11px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-teal-500 ${open ? dark ? "bg-teal-400/10 text-white" : "bg-teal-50 text-teal-900" :
+            dark
+              ? "text-slate-200 hover:bg-white/[0.08]"
+              : "text-slate-800 hover:bg-slate-100"
+          }`}
+        >
+          <span aria-live="polite" aria-atomic="true" className="min-w-0 flex-1 truncate">
+            {shortName(currentDevice.name)}
+          </span>
+          <ChevronDown
+            size={14}
+            className={`shrink-0 transition-transform ${open ? "rotate-180" : ""} ${dark ? "text-slate-400" : "text-slate-500"}`}
+          />
+        </button>
+
+        <button
+          type="button"
+          aria-label={t("nextDevice")}
+          title={nextDevice ? `${t("nextDevice")}: ${nextDevice.name}` : t("nextDevice")}
+          disabled={!nextDevice}
+          data-testid="next-device-button"
+          onClick={event => { event.stopPropagation(); stepDevice(nextDevice); }}
+          className={`hidden h-7 w-6 shrink-0 place-items-center rounded-[6px] transition-colors @min-[180px]/device-picker:grid focus-visible:outline-2 focus-visible:outline-teal-500 disabled:opacity-30 disabled:hover:bg-transparent ${dark ? "text-slate-300 hover:bg-white/10" : "text-slate-600 hover:bg-slate-100"}`}
+        ><ArrowRight size={13} className="rtl:rotate-180" aria-hidden="true" /></button>
+      </div>
 
       {open && (
         <div
@@ -1205,7 +1265,7 @@ function DeviceSwitcher({
             {sections.map((section) => (
               <div key={section.key}>
                 {(section.key !== activeGroup || sections.length > 1) && <p className={`flex items-center justify-between px-3 pb-1 pt-2 text-[9px] font-bold uppercase tracking-wider ${dark ? "text-slate-400" : "text-slate-500"}`}>
-                  <span>{section.label}</span><span>{section.devices.length}</span>
+                  <span>{sectionLabels[section.key]}</span><span>{section.devices.length}</span>
                 </p>}
                 <div className="flex flex-col gap-0.5 px-1.5">
                   {section.devices.map((d) => (
@@ -1221,6 +1281,7 @@ function DeviceSwitcher({
                         requestAnimationFrame(() => listRef.current?.querySelector<HTMLButtonElement>(`[data-device-favorite="${CSS.escape(d.id)}"]`)?.focus());
                       }}
                       onPick={() => {
+                        setBrowseList({ ids: sections.flatMap(section => section.devices.map(device => device.id)), currentId: d.id });
                         addRecent(d.id);
                         onSwitch(d.id);
                         closePicker();

@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "Cambiar el tamaño de la altura de superposición del diseño",
   "resizeOverlayBoth": "Cambiar el tamaño del ancho y alto de la superposición de diseño",
   "chooseDevice": "Elige un dispositivo",
+  "previousDevice": "Dispositivo anterior",
+  "nextDevice": "Siguiente dispositivo",
   "results": "{count} resultados",
   "searchDevice": "Buscar nombre, sistema operativo, tipo o tamaño",
   "clearDeviceSearch": "Borrar búsqueda de dispositivos",

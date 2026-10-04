@@ -1,3 +1,4 @@
+import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
 import { getViewerContext, getViewerEventTarget, getViewerRoot } from "../../app/viewer-context";
 import {
   CircleHelp,
@@ -529,9 +530,7 @@ export function SimulatorApp() {
     const slot = slots.find((item) => item.id === slotId);
     if (!slot) return captureMeta;
     const device = findDevice(slot.deviceId);
-    const portrait = device.cssViewport;
-    const width = slot.orientation === "landscape" ? portrait.height : portrait.width;
-    const height = slot.orientation === "landscape" ? portrait.width : portrait.height;
+    const { width, height } = supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport;
     return {
       title: `${PRODUCT_SHORT_NAME} · ${device.name}`,
       url: slot.url,
@@ -542,13 +541,11 @@ export function SimulatorApp() {
 
   const reviewDevices = slots.map((slot) => {
     const device = findDevice(slot.deviceId);
-    const portrait = device.cssViewport;
+    const size = supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport;
     return {
       name: device.name,
-      width:
-        slot.orientation === "landscape" ? portrait.height : portrait.width,
-      height:
-        slot.orientation === "landscape" ? portrait.width : portrait.height,
+      width: size.width,
+      height: size.height,
       orientation: slot.orientation,
     };
   });

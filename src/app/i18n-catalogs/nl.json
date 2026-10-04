@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "Wijzig de hoogte van de ontwerpoverlay",
   "resizeOverlayBoth": "Wijzig de breedte en hoogte van de ontwerpoverlay",
   "chooseDevice": "Kies een apparaat",
+  "previousDevice": "Vorig apparaat",
+  "nextDevice": "Volgend apparaat",
   "results": "{count} resultaten",
   "searchDevice": "Zoek op naam, besturingssysteem, type of grootte",
   "clearDeviceSearch": "Apparaatzoekopdracht wissen",

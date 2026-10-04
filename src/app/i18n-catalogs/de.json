@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "Größe der Design-Overlay-Höhe ändern",
   "resizeOverlayBoth": "Ändern Sie die Breite und Höhe des Design-Overlays",
   "chooseDevice": "Wählen Sie ein Gerät",
+  "previousDevice": "Vorheriges Gerät",
+  "nextDevice": "Nächstes Gerät",
   "results": "{count} Ergebnisse",
   "searchDevice": "Suchen Sie nach Name, Betriebssystem, Typ oder Größe",
   "clearDeviceSearch": "Gerätesuche löschen",

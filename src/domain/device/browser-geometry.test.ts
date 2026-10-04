@@ -2,8 +2,21 @@ import { describe, expect, it } from "vitest";
 import { devices } from "./device-catalog";
 import { getBrowserGeometry, nextBrowserCollapse, supportsIos26 } from "./browser-geometry";
 import { fitViewportToScreen } from "../../ui/components/DeviceFrame";
+import { orientations, toLandscapeAwareSize } from "./device-service";
 
 describe("browser content boundaries", () => {
+  it.each(["apple-iphone-18-pro-2026", "google-pixel-10-2026", "apple-iphone-duo-folded-2026"])("keeps %s cameras clear of the page and lower controls", id => {
+    const device = devices.find(d => d.id === id)!;
+    for (const orientation of orientations) for (const collapsed of [0, 1]) {
+      const size = toLandscapeAwareSize(device.cssViewport, orientation);
+      const geometry = getBrowserGeometry(device, size, {}, { orientation, collapsed });
+      expect(geometry.top + geometry.content.height + geometry.bottom).toBe(size.height);
+      expect(geometry.left + geometry.content.width + geometry.right).toBe(size.width);
+      const keyboard = getBrowserGeometry(device, size, {}, { orientation, collapsed, keyboardHeight: 240 });
+      expect(keyboard.bottom).toBeGreaterThanOrEqual(240 + (keyboard.cameraBottomInset ?? 0));
+      expect(keyboard.top + keyboard.content.height + keyboard.bottom).toBe(size.height);
+    }
+  });
   it("keeps all 109 device identities available", () => { expect(devices).toHaveLength(109); });
   it.each(devices.filter(device => device.type === "phone" || device.type === "tablet").map(d => [d.id, d] as const))("keeps fixed page actions above controls on %s", (_id, device) => {
     for (const landscape of [false, true]) for (const collapsed of [0, 1]) for (const layout of ["compact", "bottom", "top", "side", "tabs", "compact-tabs"] as const) {
@@ -32,20 +45,20 @@ describe("browser content boundaries", () => {
     expect(portrait.duoFullWidthBottom).toBe(folded);
     expect(portrait.top).toBe(folded ? 0 : 40);
     expect(portrait.left).toBe(0);
-    expect(portrait.right).toBeCloseTo(folded ? Math.ceil(466 * 74 / 724 + 24) : 0);
+    expect(portrait.right).toBe(folded ? 72 : 0);
     expect(portrait.content.width).toBe(466 - portrait.right);
-    expect(portrait.duoStatusTop).toBe(folded ? 80 : 4);
+    expect(portrait.duoStatusTop).toBe(folded ? 81 : 4);
     expect(portrait.bottom).toBe(portrait.address + (folded ? 0 : portrait.toolbar) + 12);
     expect(landscape.duoControls).toBe("side");
     expect(landscape.duoFullWidthBottom).toBe(!folded);
     expect(landscape.left).toBe(0);
-    expect(landscape.right).toBeCloseTo(folded ? Math.ceil(678 * 83 / 1060 + 24) : 56);
+    expect(landscape.right).toBe(folded ? 72 : 56);
     expect(landscape.content.width).toBe(678 - landscape.right);
     expect(landscape.bottom).toBe(landscape.address + 12);
     expect(getBrowserGeometry(duo, { width: 678, height: 466 }, {}, { viewportFit: "cover" })).toEqual(landscape);
     for (const screen of [{ width: 466, height: 678 }, { width: 678, height: 466 }]) {
       const bare = getBrowserGeometry(duo, screen, {}, { showStatusBar: false, showUrlBar: false });
-      expect(bare.right).toBeCloseTo(folded ? screen.width < screen.height ? Math.ceil(screen.width * 74 / 724 + 24) : Math.ceil(screen.width * 83 / 1060 + 24) : 0);
+      expect(bare.right).toBe(folded ? 72 : 0);
       expect(bare.top).toBe(0);
       expect(bare.bottom).toBe(12);
       const normal = getBrowserGeometry(duo, screen);
@@ -74,6 +87,13 @@ describe("browser content boundaries", () => {
     expect(cover.left).toBeGreaterThanOrEqual(59);
     expect(cover.content.width).toBe(normal.content.width);
     expect(cover.neutralChrome).toBe(true);
+  });
+  it.each(["google-pixel-10-2026", "google-pixel-10-pro-2026", "google-pixel-10-pro-fold-2026", "motorola-razr-70-ultra-2026"])("keeps the downloaded %s camera above the address bar", id => {
+    const phone = devices.find(d => d.id === id)!;
+    const aperture = phone.mockupAssets[0].viewport!.portrait!;
+    const camera = aperture.occlusions![0];
+    const cameraBottom = (camera.top + camera.height) * phone.cssViewport.height / aperture.height;
+    expect(getBrowserGeometry(phone, phone.cssViewport).status).toBeGreaterThan(cameraBottom + 4);
   });
   it("does not assign iOS 26 to incompatible iPhones", () => {
     expect(devices.filter(d => d.type === "phone" && supportsIos26(d))).toHaveLength(33);

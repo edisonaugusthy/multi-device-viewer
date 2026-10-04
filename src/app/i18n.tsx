@@ -175,6 +175,8 @@ const en = {
   resizeOverlayHeight: "Resize design overlay height",
   resizeOverlayBoth: "Resize design overlay width and height",
   chooseDevice: "Choose a device",
+  previousDevice: "Previous device",
+  nextDevice: "Next device",
   results: "{count} results",
   searchDevice: "Search name, OS, type, or size",
   clearDeviceSearch: "Clear device search",

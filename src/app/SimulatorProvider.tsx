@@ -2,7 +2,7 @@ import { getViewerContext } from "./viewer-context";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { defaultDeviceIds } from "../domain/device/device-catalog";
 import { useDeviceCatalog } from "./DeviceCatalogProvider";
-import { supportsOrientation } from "../domain/device/device-service";
+import { getDefaultOrientation, nextOrientation, normalizeOrientation, supportsOrientation } from "../domain/device/device-service";
 import type { BrowserPreferences } from "../domain/device/browser-geometry";
 import {
   createPreviewSlot,
@@ -111,7 +111,10 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setUseCount(next);
       void writeStore("mdvUseCount", next);
       if (session) {
-        const restoredSlots = session.slots.length > 0 ? session.slots : slots;
+        const restoredSlots = (session.slots.length > 0 ? session.slots : slots).map(slot => ({
+          ...slot,
+          orientation: normalizeOrientation(slot.orientation, devices.find(device => device.id === slot.deviceId)),
+        }));
         const nextSlots = launchUrl
           ? restoredSlots.map((slot) => ({
               ...slot,
@@ -172,16 +175,11 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
   const setSlotDevice = useCallback((slotId: string, deviceId: string) => {
     updateSlot(slotId, (slot) => {
-      const currentDevice = devices.find((device) => device.id === slot.deviceId);
       const nextDevice = devices.find((device) => device.id === deviceId);
-      const canPreserveOrientation = currentDevice && nextDevice && supportsOrientation(currentDevice) && supportsOrientation(nextDevice);
-
-      const naturalOrientation = nextDevice && nextDevice.cssViewport.width > nextDevice.cssViewport.height ? "landscape" : "portrait";
-      const useNaturalOrientation = nextDevice?.brand === "Custom" || deviceId === "apple-iphone-duo-unfolded-2026";
       return {
         ...slot,
         deviceId,
-        orientation: useNaturalOrientation ? naturalOrientation : canPreserveOrientation ? slot.orientation : naturalOrientation,
+        orientation: getDefaultOrientation(nextDevice),
         zoom: 0.58,
         zoomMode: "fit",
       };
@@ -207,9 +205,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     updateSlot(slotId, (slot) => {
       const device = devices.find((item) => item.id === slot.deviceId);
       if (!device || !supportsOrientation(device)) return slot;
-      return { ...slot, orientation: slot.orientation === "portrait" ? "landscape" : "portrait" };
+      return { ...slot, orientation: nextOrientation(slot.orientation) };
     });
-  }, [updateSlot]);
+  }, [devices, updateSlot]);
 
   const zoomSlot = useCallback((slotId: string, direction: "in" | "out") => {
     updateSlot(slotId, (slot) => ({ ...slot, zoom: nextZoom(slot.zoom, direction), zoomMode: "custom" }));
@@ -237,7 +235,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       const slot = createPreviewSlot(deviceId, observedUrls.current.get(current[0]?.id) ?? current[0]?.url ?? initialUrlFromSearch(), current.length);
       const device = devices.find((item) => item.id === deviceId);
       if (orientation) slot.orientation = orientation;
-      else if (device?.brand === "Custom" && device.cssViewport.width > device.cssViewport.height) slot.orientation = "landscape";
+      else slot.orientation = getDefaultOrientation(device);
       const next = [...current, slot];
       setActiveSlotId(next[next.length - 1].id);
       return next;

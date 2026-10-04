@@ -49,7 +49,6 @@ export interface MockupFrameStyle {
 export interface MockupAsset {
   kind: "transparent-png" | "transparent-svg" | "frame";
   localPath?: string;
-  sourceUrl?: string;
   width?: number;
   height?: number;
   /** CSS pixels per source-image pixel. Legacy catalog assets default to 0.5. */

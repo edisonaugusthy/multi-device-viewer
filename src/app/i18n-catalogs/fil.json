@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "Baguhin ang laki ng taas ng overlay ng disenyo",
   "resizeOverlayBoth": "Baguhin ang laki ng lapad at taas ng overlay ng disenyo",
   "chooseDevice": "Pumili ng device",
+  "previousDevice": "Nakaraang device",
+  "nextDevice": "Susunod na device",
   "results": "{count} resulta",
   "searchDevice": "Pangalan ng paghahanap, OS, uri, o laki",
   "clearDeviceSearch": "I-clear ang paghahanap ng device",

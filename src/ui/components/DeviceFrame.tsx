@@ -1,3 +1,4 @@
+import { getMockupViewport } from "../../domain/device/device-service";
 import { usesTabletKeyboard, keyboardDecimalSeparator } from "../../domain/device/mobile-keyboard";
 import { extensionAsset } from "../../app/viewer-context";
 import { useEffect, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
@@ -149,7 +150,7 @@ export function DeviceFrame({
     : 0;
   const androidKeyboardOpen = mobileKeyboardHeight > 0 && keyboardPlatform === "android";
   const browserGeometry = getBrowserGeometry(device, viewportSize, browserPreferences, {
-    collapsed: chromeCollapse, keyboardHeight: mobileKeyboardHeight, showStatusBar, showUrlBar, viewportFit: pageSurfaces?.viewportFit,
+    orientation, collapsed: chromeCollapse, keyboardHeight: mobileKeyboardHeight, showStatusBar, showUrlBar, viewportFit: pageSurfaces?.viewportFit,
   });
   // Match the page at reserved screen edges. Duo glass belongs to the small
   // floating control groups; a neutral backing would leave a visible rail.
@@ -178,6 +179,7 @@ export function DeviceFrame({
       dark={darkMode}
       state={keyboard}
       height={mobileKeyboardHeight}
+      insets={showFrame ? { left: browserGeometry.left, right: browserGeometry.right, bottom: browserGeometry.cameraBottomInset ?? 0 } : undefined}
       homeIndicator={profile.safeAreaInsetBottom > 0}
       onAction={onKeyboardAction}
     />
@@ -244,7 +246,7 @@ export function DeviceFrame({
     const rotateImage = (device.type === "phone" || device.type === "tablet") && assetLandscape !== landscape;
     const frameW = rotateImage ? baseFrameH : baseFrameW;
     const frameH = rotateImage ? baseFrameW : baseFrameH;
-    const viewportConfig = imageFrame.viewport?.[orientation];
+    const viewportConfig = getMockupViewport(imageFrame, orientation);
     const catalogScreenRect = screenRectFromInset(imageFrame.screenInset, frameW, frameH);
     const resolvedMeasuredScreenRect = catalogScreenRect ?? measuredScreenRect;
     const waitForMeasuredScreen = !viewportConfig && device.type !== "phone" && !resolvedMeasuredScreenRect;
@@ -295,7 +297,7 @@ export function DeviceFrame({
             height: baseFrameH,
             left: "50%",
             top: "50%",
-            transform: `translate(-50%, -50%)${rotateImage ? " rotate(90deg)" : ""}`,
+            transform: `translate(-50%, -50%) rotate(${rotateImage ? 90 : 0}deg)`,
             zIndex: imageFrame.frameOverlay ? 2 : 0,
           }}
         >
@@ -387,8 +389,8 @@ export function DeviceFrame({
                       imageBackedKind={device.type === "tablet" ? "tablet" : "phone"}
                       height={imageStatusH || undefined}
                       chromeVariant={browserGeometry.variant}
-                      timeInsetLeft={profile.statusBarInsetLeft}
-                      indicatorInsetRight={landscape ? 0 : profile.statusBarInsetRight}
+                      timeInsetLeft={landscape && profile.platform === "android" ? Math.max(32, profile.statusBarInsetLeft) : profile.statusBarInsetLeft}
+                      indicatorInsetRight={landscape ? profile.platform === "android" ? 32 : 0 : profile.statusBarInsetRight}
                       cameraWidth={browserGeometry.statusCameraWidth}
                     />
                   )}
@@ -406,7 +408,7 @@ export function DeviceFrame({
                     {children}
                   </div>
                   {mobileChrome.showSafariBar && safariChrome}
-                  {!keyboard && mobileChrome.showAndroidBottomBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
+                  {!keyboard && mobileChrome.showAndroidBottomBar && showUrlBar && <AndroidAddrBar hostname={hostname} dark={darkMode} bottomOffset={browserGeometry.cameraBottomInset} scrollProgress={chromeCollapse} />}
                   {keyboardOverlay}
                 </>
               )}
@@ -553,7 +555,7 @@ export function DeviceFrame({
               {children}
             </div>
             {safariChrome}
-            {!keyboard && showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
+            {!keyboard && showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} bottomOffset={browserGeometry.cameraBottomInset} scrollProgress={chromeCollapse} />}
             {keyboardOverlay}
           </div>
         </div>
@@ -612,7 +614,7 @@ export function DeviceFrame({
             {children}
           </div>
           {safariChrome}
-          {!keyboard && showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} scrollProgress={chromeCollapse} />}
+          {!keyboard && showUrlBar && profile.platform === "android" && <AndroidAddrBar hostname={hostname} dark={darkMode} bottomOffset={browserGeometry.cameraBottomInset} scrollProgress={chromeCollapse} />}
           {keyboardOverlay}
         </div>
       </div>
@@ -628,6 +630,7 @@ function MobileKeyboard({
   state,
   height,
   homeIndicator,
+  insets,
   onAction,
 }: {
   platform: "ios" | "android";
@@ -637,6 +640,7 @@ function MobileKeyboard({
   state: MobileKeyboardState;
   height: number;
   homeIndicator: boolean;
+  insets?: { left: number; right: number; bottom: number };
   onAction?: (action: MobileKeyboardAction) => void;
 }) {
   const { t } = useI18n();
@@ -735,7 +739,7 @@ function MobileKeyboard({
       role="group"
       aria-label={t("onScreenKeyboard", { platform: ios ? "iOS" : "Android" })}
       className={`absolute inset-x-0 bottom-0 z-[70] flex flex-col border-t border-black/10 shadow-[0_-12px_32px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-[height] duration-200 ${surface}`}
-      style={{ height: keyboardHeight }}
+      style={{ height: keyboardHeight, left: insets?.left ?? 0, right: insets?.right ?? 0, bottom: insets?.bottom ?? 0 }}
       onPointerDown={(event) => event.stopPropagation()}
     >
       {ios ? (
@@ -1266,7 +1270,8 @@ function StatusBar({
   //    solid Chrome-coloured background that stays fixed while the page scrolls beneath. ──
   if (androidImageBacked) {
     // The clock/indicators sit in the lower ~26px band so they line up with the camera dot.
-    const rowH = 26;
+    // Short landscape status rows stay inside the strip and clear rounded corners.
+    const rowH = Math.min(26, h);
     return (
       <div
         className={`pointer-events-none absolute inset-x-0 top-0 z-20 flex items-end ${
@@ -1458,12 +1463,14 @@ function AndroidAddrBar({
   dark,
   top = false,
   topOffset = 0,
+  bottomOffset = 0,
   scrollProgress = 0,
 }: {
   hostname: string;
   dark: boolean;
   top?: boolean;
   topOffset?: number;
+  bottomOffset?: number;
   scrollProgress?: number;
 }) {
   if (top) {
@@ -1487,7 +1494,7 @@ function AndroidAddrBar({
   return (
     <div
       className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-6 ${dark ? "bg-[#111827]/95" : "bg-white/95"}`}
-      style={{ height: 36 }}
+      style={{ height: 36, bottom: bottomOffset }}
     >
       <span className="grid h-4 w-4 place-items-center"><span className={`h-2 w-2 rounded-full border-[1.5px] ${dark ? "border-slate-100" : "border-slate-800"}`} /></span>
       <span className={`h-[3px] w-14 rounded-full ${dark ? "bg-slate-100" : "bg-slate-800"}`} />

@@ -1,10 +1,36 @@
-import type { CustomDeviceInput, Device, Orientation, Size } from "./device.types";
+import type { CustomDeviceInput, Device, MockupAsset, MockupViewportConfig, Orientation, Size } from "./device.types";
 
 const CUSTOM_PREFIX = "custom-";
 
+export const orientations: readonly Orientation[] = ["portrait", "landscape"];
+
+export function isLandscapeOrientation(orientation: Orientation): boolean {
+  return orientation === "landscape";
+}
+
+export function getDefaultOrientation(device?: Pick<Device, "cssViewport">): Orientation {
+  return device && device.cssViewport.width > device.cssViewport.height ? "landscape" : "portrait";
+}
+
+export function nextOrientation(orientation: Orientation): Orientation {
+  return orientation === "portrait" ? "landscape" : "portrait";
+}
+
+/** Migrate older saved turns without reintroducing upside-down rendering. */
+export function normalizeOrientation(value: unknown, device?: Device): Orientation {
+  if (device && !supportsOrientation(device)) return getDefaultOrientation(device);
+  if (value === "portrait" || value === "portrait-inverted") return "portrait";
+  if (value === "landscape" || value === "landscape-inverted") return "landscape";
+  return getDefaultOrientation(device);
+}
+
+export function getMockupViewport(asset: MockupAsset | undefined, orientation: Orientation): MockupViewportConfig | undefined {
+  return asset?.viewport?.[orientation];
+}
+
 export function toLandscapeAwareSize(size: Size, orientation: Orientation): Size {
-  const width = orientation === "landscape" ? Math.max(size.width, size.height) : Math.min(size.width, size.height);
-  const height = orientation === "landscape" ? Math.min(size.width, size.height) : Math.max(size.width, size.height);
+  const width = isLandscapeOrientation(orientation) ? Math.max(size.width, size.height) : Math.min(size.width, size.height);
+  const height = isLandscapeOrientation(orientation) ? Math.min(size.width, size.height) : Math.max(size.width, size.height);
   return { width, height };
 }
 

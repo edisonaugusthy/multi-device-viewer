@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "デザインオーバーレイの高さのサイズを変更する",
   "resizeOverlayBoth": "デザインオーバーレイの幅と高さのサイズを変更する",
   "chooseDevice": "デバイスを選択してください",
+  "previousDevice": "前のデバイス",
+  "nextDevice": "次のデバイス",
   "results": "{count} の結果",
   "searchDevice": "名前、OS、タイプ、サイズを検索します",
   "clearDeviceSearch": "デバイス検索のクリア",

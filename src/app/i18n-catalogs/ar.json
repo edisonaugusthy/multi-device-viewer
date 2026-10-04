@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "تغيير حجم ارتفاع تراكب التصميم",
   "resizeOverlayBoth": "تغيير حجم تصميم تراكب العرض والارتفاع",
   "chooseDevice": "اختر جهازًا",
+  "previousDevice": "الجهاز السابق",
+  "nextDevice": "الجهاز التالي",
   "results": "{count} النتائج",
   "searchDevice": "ابحث عن الاسم أو نظام التشغيل أو النوع أو الحجم",
   "clearDeviceSearch": "مسح البحث عن الجهاز",

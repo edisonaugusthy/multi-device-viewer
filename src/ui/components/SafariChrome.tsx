@@ -14,6 +14,8 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
   const bottomGlass = `color-mix(in srgb, ${bottomColor} 15%, ${glass})`;
   if (g.duoControls) {
     const side = g.duoControls === "side";
+    const edge = g.duoControlsEdge ?? "right";
+    const gutter = edge === "left" ? g.left : g.right;
     const minimized = g.collapse > 0.5;
     // Side navigation remains stationary while the bottom bar minimizes.
     const buttonSize = 28;
@@ -28,7 +30,7 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
       borderRadius: 16,
     });
     const floatingGlass = glassFor(bottomColor, dark);
-    const surfaceAt = (y: number) => rightBands?.findLast(band => band.offset <= (y - g.top) / g.content.height);
+    const surfaceAt = (y: number) => (edge === "right" ? rightBands : undefined)?.findLast(band => band.offset <= (y - g.top) / g.content.height);
     const sideGlassAt = (y: number) => {
       const surface = surfaceAt(y);
       // Use the address bar's state, including its direction/jitter thresholds.
@@ -39,7 +41,7 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
     const controlsBottom = g.duoFullWidthBottom ? 76 : 96;
     const screenHeight = g.top + g.content.height + g.bottom;
     const statusSurface = side ? surfaceAt((g.duoStatusTop ?? 0) + g.status / 2) : undefined;
-    const sideBackground = rightBands?.length
+    const sideBackground = edge === "right" && rightBands?.length
       ? `linear-gradient(to bottom, ${rightBands.map((band, i) => `${band.color} ${band.offset * 100}% ${(rightBands[i + 1]?.offset ?? 1) * 100}%`).join(", ")})`
       : `linear-gradient(to bottom, ${topColor} ${controlsTop}px, ${bottomColor} ${controlsTop}px)`;
     const groupWidth = 36;
@@ -54,19 +56,20 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
       </div>
     </div>;
     return <div aria-hidden data-safari-style={`duo-${g.duoControls}`} data-browser-collapsed={g.collapse > 0 ? "true" : "false"} className="pointer-events-none absolute inset-0 z-20" style={{ color: topInk }}>
-      {side && g.right > 0 && <div data-duo-side-surface className="absolute right-0" style={{
+      {side && gutter > 0 && <div data-duo-side-surface className="absolute" style={{
+        [edge]: 0,
         // Seal independently rasterized iframe edges at fractional preview scales.
-        top: g.top, height: g.content.height + 1, width: g.right + 1, backgroundImage: sideBackground,
+        top: g.top, height: g.content.height + 1, width: gutter + 1, backgroundImage: sideBackground,
       }}/>}
       {g.status > 0 && <div data-duo-control-group="status" className="absolute flex justify-center" style={{
-        top: g.duoStatusTop, right: side ? groupRight : g.statusInsetRight,
+        top: g.duoStatusTop, [side ? edge : "right"]: side ? groupRight : g.statusInsetRight,
         width: side ? groupWidth : undefined, padding: side ? "4px 0" : "0 8px",
         color: statusSurface ? statusSurface.isDark ? "#f3f4f6" : "#263142" : topInk,
         // Keep thin status strokes legible when a section boundary passes them.
         filter: `drop-shadow(0 0 .6px ${(statusSurface?.isDark ?? topDark) ? "#000000" : "#ffffff"})`,
       }}>{status}</div>}
       {side && g.toolbar > 0 && <div data-browser-control="side-toolbar" data-duo-control-group="navigation" data-controls-size={minimized ? "compact" : "expanded"} className="absolute flex flex-col items-center justify-between" style={{
-        top: controlsTop, right: groupRight, width: groupWidth,
+        top: controlsTop, [edge]: groupRight, width: groupWidth,
         // Independent upper buttons and a lower tab group share the page background.
         // Keep their positions stable on scroll and clear of the rotated camera.
         bottom: controlsBottom,
@@ -81,7 +84,7 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
         </div>}
       </div>}
       {!keyboard && g.address > 0 && <div data-browser-control={minimized ? "compact-address" : "bottom-address"} className="absolute flex justify-center" style={{
-        left: 0, right: g.duoFullWidthBottom ? 0 : g.right,
+        left: g.duoFullWidthBottom ? 0 : g.left, right: g.duoFullWidthBottom ? 0 : g.right,
         bottom: minimized ? 12 : 16,
         height: minimized ? g.address : g.address - 8, color: ink,
       }}>

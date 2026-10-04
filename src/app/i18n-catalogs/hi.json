@@ -84,6 +84,8 @@
   "resizeOverlayHeight": "डिज़ाइन ओवरले ऊंचाई का आकार बदलें",
   "resizeOverlayBoth": "डिज़ाइन ओवरले की चौड़ाई और ऊंचाई का आकार बदलें",
   "chooseDevice": "एक उपकरण चुनें",
+  "previousDevice": "पिछला डिवाइस",
+  "nextDevice": "अगला डिवाइस",
   "results": "{count} परिणाम",
   "searchDevice": "नाम, ओएस, प्रकार या आकार खोजें",
   "clearDeviceSearch": "उपकरण खोज साफ़ करें",

@@ -1,7 +1,7 @@
 {
   "storeLocale": "en-US",
   "name": "Mobile View: Device Emulator & Responsive Tester",
-  "summary": "Mobile simulator and multi-device viewer for responsive testing. Sync phone, tablet and desktop previews; capture screenshots.",
+  "summary": "Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots.",
   "screenshotCaptions": [
     "Test mobile, tablet and desktop side by side",
     "Scroll once. Compare every view.",

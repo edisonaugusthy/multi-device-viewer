@@ -1,4 +1,8 @@
-Mobile View ir bezmaksas atvērtā pirmkoda ierīču emulators pārlūkam Chrome. Vienlaikus skatiet vietni līdz četros tālruņa, planšetes, klēpjdatora un datora skatos. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
+Mobile View ir bezmaksas atvērtā pirmkoda mobilais simulators un ierīču emulators pārlūkam Chrome. Vienlaikus skatiet vietni līdz četros tālruņa, planšetes, klēpjdatora un datora skatos. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
+
+Izmantojiet mobilo priekšskatījumu responsīvu vietņu testēšanai. Salīdziniet mobilās ierīces un datorus, pārbaudot izvēlnes, tekstu un atstarpes lūzuma punktos. Šis responsīvā dizaina testēšanas rīks apvieno responsīvos testus vienā darbvietā.
+
+Priekšskatiet iPhone 18 Pro, salocītu un atvērtu iPhone Duo, MacBook un Apple Watch. Pārvietojieties pa izvēlēto ierīču kategoriju ar iepriekšējās un nākamās ierīces bultiņām.
 
 - Izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
 - Uzņemiet vienu skatu vai visu darbvietu. Pievienojiet bultas, rāmjus, zīmējumus un tekstu vai apgrieziet attēlu. Parādiet lokālu dizainu blakus lapai vai kā pārklājumu.

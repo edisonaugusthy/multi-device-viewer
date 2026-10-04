@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Mobilni simulator za odzivno testiranje. Primerjajte telefon, tablico in računalnik, uskladite drsenje ter zajemite zaslon."
+    "message": "Mobilni simulator za preizkušanje odzivnega oblikovanja. Primerjajte poglede, uskladite drsenje in zajemite zaslonske slike."
   },
   "actionTitle": {
     "message": "Odpri emulator naprav Mobile View"

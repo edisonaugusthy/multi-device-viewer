@@ -1,4 +1,8 @@
-A Mobile View ingyenes, nyílt forráskódú eszközemulátor Chrome-hoz. Egy webhelyet egyszerre akár négy telefonos, táblagépes, laptopos és asztali nézetben vizsgálhat. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.
+A Mobile View ingyenes, nyílt forráskódú mobil szimulátor és eszközemulátor a Chrome-hoz. Egy webhelyet egyszerre akár négy telefonos, táblagépes, laptopos és asztali nézetben vizsgálhat. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.
+
+Használd a mobil előnézetet reszponzív weboldalak teszteléséhez. Hasonlítsd össze a mobileszközöket és az asztali nézeteket, majd ellenőrizd a menüket, szöveget és térközöket a töréspontoknál. Ez a reszponzív webdesign tesztelő eszköz egy munkaterületre gyűjti a reszponzív teszteket.
+
+Nézd meg az iPhone 18 Pro, az összecsukott és kinyitott iPhone Duo, a MacBook és az Apple Watch előnézetét. Az előző és következő nyíllal válthatsz a kiválasztott kategória eszközei között.
 
 - Hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.
 - Rögzítsen egy nézetet vagy a teljes munkaterületet. Adjon hozzá nyilakat, kereteket, rajzokat és szöveget, vagy vágja körül a képet. Jelenítsen meg helyi tervet az oldal mellett vagy fedvényként.

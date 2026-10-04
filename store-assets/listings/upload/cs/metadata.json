@@ -1,7 +1,7 @@
 {
   "storeLocale": "cs",
   "name": "Mobile View: Emulátor zařízení a responzivní test",
-  "summary": "Mobilní simulátor pro responzivní testy. Porovnejte telefon, tablet a počítač, synchronizujte posouvání a pořizujte snímky.",
+  "summary": "Mobilní simulátor pro testování responzivního designu. Porovnejte náhledy, synchronizujte posouvání a pořizujte snímky obrazovky.",
   "screenshotCaptions": [
     "Testujte telefon, tablet a počítač současně",
     "Použijte přes 105 profilů zařízení v jednom prostoru",

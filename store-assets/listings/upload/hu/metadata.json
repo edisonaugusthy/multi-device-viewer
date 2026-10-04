@@ -1,7 +1,7 @@
 {
   "storeLocale": "hu",
   "name": "Mobile View: Eszközemulátor és reszponzív teszt",
-  "summary": "Mobil szimulátor reszponzív tesztekhez. Hasonlítsa össze a telefont, táblagépet és PC-t, szinkronizáljon és készítsen képernyőképet.",
+  "summary": "Mobil szimulátor reszponzív webdesign teszteléséhez. Hasonlítsd össze a nézeteket, szinkronizáld a görgetést, készíts képernyőképet.",
   "screenshotCaptions": [
     "Teszteljen telefont, táblagépet és számítógépet egymás mellett",
     "Használjon több mint 105 eszközprofilt egy munkaterületen",

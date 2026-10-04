@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "行動模擬器與多裝置檢視器：並排測試手機、平板和桌面響應式版面，同步捲動，擷取畫面並註記問題。"
+    "message": "行動模擬器與響應式設計測試工具：並排比較裝置預覽，同步捲動，擷取畫面並註記問題。"
   },
   "actionTitle": {
     "message": "開啟 Mobile View 裝置模擬器"

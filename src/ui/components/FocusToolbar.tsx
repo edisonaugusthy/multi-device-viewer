@@ -23,7 +23,7 @@ export function FocusToolbar({ dark, freeView, scrollSync, navigationSync, tools
     <header data-main-toolbar data-focused-toolbar
       className={`relative z-30 grid grid-cols-[minmax(max-content,1fr)_auto_minmax(max-content,1fr)] h-10 shrink-0 items-center gap-1.5 border-b px-2 sm:px-3 ${dark ? "border-white/10 bg-[#11141a]" : "border-slate-200 bg-white"}`}>
       <div className="flex shrink-0 items-center gap-1">
-        <span title={url} className="me-1 hidden shrink-0 min-[480px]:inline"><BrandMark size={25}/></span>
+        <span title={url} className="me-1 hidden shrink-0 min-[480px]:inline"><BrandMark size={25} dark={dark}/></span>
         <button type="button" aria-label={toolsOpen ? t("closeWorkspaceSetup") : t("openWorkspaceSetup")} aria-expanded={toolsOpen} onClick={onTools}
           className={`flex h-7 shrink-0 items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-semibold transition ${toolsOpen ? `${dark ? "text-teal-300" : "text-teal-700"} border-teal-500/35 bg-teal-500/10` : quiet}`}>
           <Settings2 size={14}/><span className="hidden sm:inline">{t("tools")}</span>

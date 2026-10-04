@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "移动模拟器与多设备查看器：并排测试手机、平板和桌面响应式布局，同步滚动，截图并标注问题。"
+    "message": "移动模拟器与响应式设计测试工具：并排对比设备预览，同步滚动，截取并标注屏幕画面。"
   },
   "actionTitle": {
     "message": "打开 Mobile View 设备模拟器"

@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "모바일 시뮬레이터로 반응형 웹을 테스트하세요. 휴대폰, 태블릿, 데스크톱을 나란히 비교하고 스크롤을 동기화하며 스크린샷에 주석을 남기세요."
+    "message": "모바일 시뮬레이터로 반응형 웹 디자인을 테스트하세요. 기기별 화면을 비교하고 스크롤을 동기화하며 스크린샷을 촬영하세요."
   },
   "actionTitle": {
     "message": "Mobile View 기기 에뮬레이터 열기"

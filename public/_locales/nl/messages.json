@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Mobiele simulator voor responsive tests. Vergelijk telefoon, tablet en desktop, synchroniseer scrollen en maak screenshots."
+    "message": "Mobiele simulator voor responsive designtests. Vergelijk apparaatweergaven, synchroniseer scrollen en maak screenshots."
   },
   "actionTitle": {
     "message": "Mobile View-apparaatemulator openen"

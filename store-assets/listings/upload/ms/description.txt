@@ -1,4 +1,8 @@
-Mobile View ialah emulator peranti percuma dan sumber terbuka untuk Chrome. Pratonton laman dalam sehingga empat paparan telefon, tablet, komputer riba dan desktop serentak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.
+Mobile View ialah simulator mudah alih dan emulator peranti percuma serta sumber terbuka untuk Chrome. Pratonton laman dalam sehingga empat paparan telefon, tablet, komputer riba dan desktop serentak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.
+
+Gunakan pratonton mudah alih untuk ujian laman web responsif. Bandingkan peranti mudah alih dan desktop untuk menyemak menu, teks dan jarak pada titik perubahan susun atur. Alat penguji reka bentuk responsif ini menggabungkan ujian responsif dalam satu ruang kerja.
+
+Pratonton iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan anak panah peranti sebelumnya dan seterusnya dalam kategori yang dipilih.
 
 - Cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.
 - Tangkap satu paparan atau seluruh ruang kerja. Tambah anak panah, kotak, lukisan dan teks atau pangkas imej. Paparkan reka bentuk setempat di sebelah halaman atau sebagai tindanan.

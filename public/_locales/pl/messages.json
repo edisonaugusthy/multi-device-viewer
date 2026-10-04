@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Symulator telefonu do testów responsywności. Porównuj telefon, tablet i komputer, synchronizuj przewijanie i rób zrzuty."
+    "message": "Symulator mobilny do testowania responsywnego projektu. Porównuj widoki, synchronizuj przewijanie i rób zrzuty ekranu."
   },
   "actionTitle": {
     "message": "Otwórz emulator urządzeń Mobile View"

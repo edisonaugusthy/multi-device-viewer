@@ -1,4 +1,8 @@
-Mobile View és un emulador de dispositius gratuït i de codi obert per a Chrome. Previsualitza un web en fins a quatre vistes de mòbil, tauleta, portàtil i escriptori alhora. Tria dispositius realistes, canvia l’orientació i el zoom, sincronitza el desplaçament i la navegació, captura pantalles i compara-les amb un disseny local. Tot funciona localment al navegador, sense compte, subscripció, analítica, telemetria ni servidor.
+Mobile View és un simulador mòbil i emulador de dispositius gratuït i de codi obert per a Chrome. Previsualitza un web en fins a quatre vistes de mòbil, tauleta, portàtil i escriptori alhora. Tria dispositius realistes, canvia l’orientació i el zoom, sincronitza el desplaçament i la navegació, captura pantalles i compara-les amb un disseny local. Tot funciona localment al navegador, sense compte, subscripció, analítica, telemetria ni servidor.
+
+Fes servir la previsualització mòbil per a proves de webs responsives. Compara dispositius mòbils i escriptori per revisar menús, text i espais als punts de ruptura. Aquesta eina de prova de disseny responsiu reuneix les proves responsives en un mateix espai de treball.
+
+Previsualitza iPhone 18 Pro, iPhone Duo plegat i desplegat, MacBook i Apple Watch. Recorre la categoria seleccionada amb les fletxes de dispositiu anterior i següent.
 
 - Crea mides de visualització pròpies, desa conjunts i dispositius preferits o centra’t en una sola vista. Sincronitza les interaccions compatibles entre vistes coincidents.
 - Captura una vista o tot l’espai de treball. Afegeix fletxes, quadres, traços i text o retalla la captura. Mostra un disseny local al costat de la pàgina o superposat.

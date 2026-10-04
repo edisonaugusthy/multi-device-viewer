@@ -1,3 +1,9 @@
-Mobile View är en kostnadsfri enhetsemulator med öppen källkod för Chrome. Visa en webbplats i upp till fyra mobil-, surfplatte-, laptop- och datorvyer samtidigt. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.
+Mobile View är en kostnadsfri mobilsimulator och enhetsemulator med öppen källkod för Chrome. Visa en webbplats i upp till fyra mobil-, surfplatte-, laptop- och datorvyer samtidigt. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.
+
+Använd mobilförhandsvisning för test av responsiva webbplatser. Jämför mobilenheter och datorer och kontrollera menyer, text och avstånd vid brytpunkterna. Det här verktyget för test av responsiv webbdesign samlar dina responsiva tester i en arbetsyta.
+
+Förhandsvisa iPhone 18 Pro, hopvikt och utfälld iPhone Duo, MacBook och Apple Watch. Använd pilarna för föregående och nästa enhet i den valda kategorin.
+
+Spara enhetsuppsättningar och favoriter eller skapa egna skärmstorlekar. Ta en bild av en vy eller hela arbetsytan och lägg till pilar, ramar och text. Jämför en lokal design bredvid eller ovanpå webbplatsen och kopiera ett korrigeringsförslag med URL, enheter, skärmstorlekar och anteckningar till ditt kodverktyg.
 
 Detta är responsiva förhandsvisningar i Chrome, inte fysiska enheter eller Safari-motorn. Webbplatsernas regler för inloggning och inbäddning gäller fortfarande. Originalsidan bevaras; nya förhandsvisningar kopierar inte osparade ändringar.

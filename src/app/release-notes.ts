@@ -27,12 +27,27 @@ export function decideStartupNotice(input: { useCount: number; firstRunComplete:
 }
 
 const RELEASE_NOTES: Record<string, VersionReleaseNotes> = {
+  "0.2.10": {
+    version: "0.2.10",
+    heading: "What’s new",
+    summary: "",
+    notes: [
+      { title: "A simpler Mobile View icon", description: "A plain laptop, tablet, phone and watch icon now appears in the workspace and Chrome toolbar." },
+      { title: "Clearer device previews in the Store", description: "Refreshed promo images and screenshots show iPhone 18 Pro, folded iPhone Duo, MacBook and Apple Watch. The marquee also shows Duo unfolded." },
+      { title: "Clearer descriptions in every Store language", description: "Updated all 55 localized listings to explain mobile previews, responsive website testing, synchronized scrolling and screenshot feedback." },
+    ],
+  },
   "0.2.9": {
     version: "0.2.9",
     heading: "What’s new",
     summary: "",
     notes: [
-      { title: "Updated startup devices", description: "Start with iPhone 18 Pro, iPhone Duo unfolded, and MacBook Pro. Duo unfolded opens in landscape by default and can be rotated to portrait." },
+      { title: "Updated startup devices", description: "Start with iPhone 18 Pro, iPhone Duo unfolded, and MacBook Pro. Duo unfolded opens in landscape and can be rotated to portrait." },
+      { title: "Refreshed device frames", description: "Updated frames for iPhone 18 Pro, iPhone Duo, Pixel 10 Pro Fold, MacBook Neo and other devices." },
+      { title: "Quicker device switching", description: "Move through your selected device group with previous and next arrows." },
+      { title: "Predictable rotation", description: "Switch between portrait and landscape on supported devices. Choosing another device restores its default orientation." },
+      { title: "Cleaner viewport controls", description: "Compact headers and settings buttons leave more room for previews." },
+      { title: "Refreshed look", description: "A simpler Mobile View icon, plus updated promo images and screenshots featuring the folded Duo." },
     ],
   },
   "0.2.8": {

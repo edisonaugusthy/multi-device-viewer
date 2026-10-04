@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Simulador móvel para testes responsivos. Compare celular, tablet e desktop, sincronize a rolagem e capture telas."
+    "message": "Simulador móvel para testar design responsivo. Compare telas de dispositivos, sincronize a rolagem e faça capturas."
   },
   "actionTitle": {
     "message": "Abrir o emulador de dispositivos Mobile View"

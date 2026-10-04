@@ -14,71 +14,35 @@ Mobile View: Device Emulator & Responsive Tester
 
 ### Short description (132 chars max)
 
-Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator.
+Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots.
 
 ### Detailed description
 
-Mobile View is a free, open-source multi-device viewer and responsive website testing tool for Chrome. Preview a website in phone, tablet, laptop, and desktop views side by side with a mobile emulator, device simulator, and responsive design tester in one workspace.
+Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
 
-Use this mobile simulator and responsive tester to catch breakpoint, overflow, navigation, and content issues while you build. Everything runs locally in your browser: no account, subscription, analytics, telemetry, or remote application backend.
+Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
 
-Click the extension icon or use the Chrome context menu to open the current website inside realistic device frames. The multi-device preview appears over the current tab, so you can check mobile view and desktop breakpoints in one workspace and return to the page when you close it.
+- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
+- Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
+- Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
+- Save device sets and favorites for repeat checks during frontend development and design review.
+- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
+- Compare the live website with a local design reference, side by side or as an overlay.
+- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 
-**Responsive website and mobile view testing**
-- Compare up to four device previews side by side in resizable panels.
-- Test phone, tablet, laptop, and desktop layouts at realistic viewport sizes.
-- Switch device, orientation, zoom level, and reload state independently.
-- Synchronize page and matching nested-container scrolling across previews when checking long pages.
-- Create custom viewport sizes for project-specific breakpoints.
+Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.
 
-**Realistic device previews**
-- Preview iPhone, Android, iPad, tablet, MacBook, laptop, and desktop layouts.
-- Use device frames with platform-appropriate status and browser chrome.
-- See viewport dimensions and resize comparison panels directly.
+No Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.
 
-**One-click comparison sets**
-- Open Phone + Tablet, iOS + Android, or Mobile + Tablet + Laptop comparisons from the toolbar.
-- Save named device sets for repeated responsive QA.
-- Reuse custom device configurations from local Chrome storage.
-- Favorite frequently used devices, reopen recent devices, reorder viewports, or focus one viewport without rebuilding the workspace.
-
-**Screenshots and annotations**
-- Capture the active viewport or complete multi-device comparison.
-- Annotate with pen, rectangle, arrow, text, and crop tools.
-- Copy the result to the clipboard or download it locally.
-
-**Responsive behavior**
-- Synchronize scrolling, supported interactions, and navigation across matching previews.
-- Save reusable device sets for repeatable checks.
-
-**Generate a responsive fix prompt**
-- Describe the expected and actual behavior once.
-- Automatically include the optional selector, device names, viewport sizes, orientation, and page URL.
-- Copy a structured fix prompt to Codex, Copilot, Cursor, Claude, or another coding tool.
-- Nothing is uploaded; the handoff uses your local clipboard.
-
-**Compare a reference with the live website**
-- Place a previous screenshot or approved design on the left.
-- Keep the current website interactive in the device previews on the right.
-- Import local design references for each viewport, compare them beside or over the live page, manually align overlays, and mark feedback locally.
-- Reference images and overlay settings stay in local Chrome storage so the workspace can resume; nothing is uploaded.
-
-**Privacy-first by design**
-- Free to use.
-- Open source under the MIT license.
-- No account required.
-- No backend service.
-- No analytics, telemetry, or remote logging.
-- Screenshots, recordings, URLs, annotations, designs, and settings are never sent to a backend.
-- Preferences, presets, recents, custom devices, design references, and UI state are saved locally in Chrome storage.
+These are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
 
 ### Screenshot order and captions
 
 Use current UI captures at 1280×800 or 640×400. Keep text overlays short and readable.
 
-1. **Test mobile, tablet, and desktop side by side** — `screenshot-01-overview.jpg`.
-2. **Use 70+ responsive device profiles in one workspace** — `screenshot-02-responsive-workspace.jpg`.
-3. **Compare a live page with an approved design** — `screenshot-03-design-comparison.jpg`.
+1. **New devices. One responsive workspace.** — `screenshot-01-overview.jpg`.
+2. **Scroll once. Compare every view.** — `screenshot-02-responsive-workspace.jpg`.
+3. **Show the issue. Share a clear fix.** — `screenshot-03-design-comparison.jpg`.
 
 Do not reuse screenshots from the previous sidebar or URL-bar design; outdated images can reduce listing clarity and conversion.
 
@@ -87,36 +51,34 @@ Do not reuse screenshots from the previous sidebar or URL-bar design; outdated i
 - **Small promo tile (440×280 JPEG)** — `promo-small-440x280.jpg`.
 - **Marquee promo tile (1400×560 JPEG)** — `promo-marquee-1400x560.jpg`.
 
-Both promotional images lead with the responsive-testing use case and present
-**Free** and **Open source** as separate, high-contrast proof marks. Keep browser
-and platform names out of this artwork so the value remains immediately clear.
+The approved artwork uses the current plain icon and a MacBook behind the
+foreground devices. The small tile shows iPhone 18 Pro, folded iPhone Duo and
+Apple Watch; the marquee also includes unfolded iPhone Duo.
 
-### Day 1 responsive-testing experiment
+### Current copy review — 4 October 2026
 
-This is the first controlled Store-copy experiment after the August 1 baseline.
-Publish the English summary above and the following opening paragraph together;
-do not change the title or screenshots in the same release:
+The current copy replaces the August experiment package. All 55 summaries and
+detailed descriptions are generated from `store-assets/listings/locales.json`.
+See [the Extensiq keyword review](./chrome-web-store-localizations.md#extensiq-copy-review--4-october-2026)
+for observed positions, missing wording, placement changes and evidence IDs.
+The title is retained; the short description now includes `responsive design
+tester`, and the detailed opening explicitly describes `responsive website
+testing`. The revised copy and approved artwork are ready for local review and
+upload; packaging alone does not publish Store descriptions.
 
-> Mobile View is a responsive website testing tool, responsive design tester,
-> mobile simulator, and device emulator for Chrome. Preview websites across
-> multiple phone, tablet, laptop, and desktop viewports at once.
-
-Measure direct in-store ranks for 7 and 14 days. The primary success condition
-is entry into the top 10 for at least 10 locales across the responsive-testing
-queries while the protected `multi device viewer` median does not worsen by
-more than two positions. This experiment changes one copy package only; it
-does not prove causality until the Store listing is actually published.
+Compare like-for-like search captures after the listing is published. No
+ranking improvement or causal effect is established by changing these files.
 
 ### Search-positioning terms
 
 Use these phrases naturally in the name, summary, and first paragraphs; do not
 append a keyword list to the public description:
 
-- Primary: `mobile view`, `device emulator`, `responsive tester`,
-  `mobile simulator`.
-- Secondary: `mobile emulator`, `device simulator`, `responsive viewer`,
-  `mobile preview`, `multi-device preview`, `website mobile view`,
-  `phone and tablet simulator`, `responsive website testing`.
+- Established tracked terms: `mobile view`, `device emulator`, `mobile preview`,
+  `responsive tester`, `mobile simulator`, `responsive design tester`.
+- Tracked testing gaps: `responsive testing`, `responsive website testing`.
+- Relevant wording addition: `mobile device`; competitor use is observed,
+  but search demand and a rank for this phrase are not established here.
 - Feature-led: `multiple devices side by side`, `synced scrolling`,
   `custom viewport sizes`, `responsive screenshot`, `design comparison`.
 
@@ -161,9 +123,7 @@ Developer Tools
 
 ### Language
 
-English default, plus German, Spanish, French, Simplified Chinese, Traditional
-Chinese, Filipino, Dutch, Vietnamese, Brazilian Portuguese, Italian, Japanese,
-Korean, Hindi, Russian, and Arabic. Use
+English default, plus all 54 additional supported Chrome locales. Use
 [`docs/chrome-web-store-localizations.md`](./chrome-web-store-localizations.md)
 for the locale overview and
 [`docs/chrome-web-store-listing-copy.md`](./chrome-web-store-listing-copy.md)

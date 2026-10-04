@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Mobiilisimulaattori responsiivisiin testeihin. Vertaa puhelinta, tablettia ja tietokonetta, synkronoi vieritys ja ota kuvia."
+    "message": "Mobiilisimulaattori responsiivisen verkkosuunnittelun testaukseen. Vertaa näkymiä, synkronoi vieritys ja ota kuvakaappauksia."
   },
   "actionTitle": {
     "message": "Avaa Mobile View -laite-emulaattori"

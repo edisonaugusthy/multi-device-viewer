@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Mobilní simulátor pro responzivní testy. Porovnejte telefon, tablet a počítač, synchronizujte posouvání a pořizujte snímky."
+    "message": "Mobilní simulátor pro testování responzivního designu. Porovnejte náhledy, synchronizujte posouvání a pořizujte snímky obrazovky."
   },
   "actionTitle": {
     "message": "Otevřít emulátor zařízení Mobile View"

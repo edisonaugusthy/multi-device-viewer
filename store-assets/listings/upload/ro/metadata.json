@@ -1,7 +1,7 @@
 {
   "storeLocale": "ro",
   "name": "Mobile View: Emulator de dispozitive și test responsiv",
-  "summary": "Simulator mobil pentru teste responsive. Compară telefonul, tableta și desktopul, sincronizează derularea și capturează ecranul.",
+  "summary": "Simulator mobil pentru testarea designului responsive. Compară vizualizări, sincronizează derularea și fă capturi de ecran.",
   "screenshotCaptions": [
     "Testează telefonul, tableta și desktopul alăturat",
     "Folosește peste 105 de profiluri într-un singur spațiu",

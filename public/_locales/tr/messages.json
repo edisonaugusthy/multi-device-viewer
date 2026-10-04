@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Mobil simülatörle duyarlı tasarımı test edin. Cihazları karşılaştırın, kaydırmayı eşitleyin ve ekran görüntüsü alın."
+    "message": "Duyarlı web tasarımını test etmek için mobil simülatör. Görünümleri karşılaştırın, kaydırmayı eşitleyin ve ekran görüntüsü alın."
   },
   "actionTitle": {
     "message": "Mobile View cihaz emülatörünü aç"

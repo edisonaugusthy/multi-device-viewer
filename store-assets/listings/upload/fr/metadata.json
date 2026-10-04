@@ -1,7 +1,7 @@
 {
   "storeLocale": "fr",
   "name": "Mobile View : Émulateur mobile et test responsive",
-  "summary": "Simulateur mobile pour tests responsive. Comparez téléphone, tablette et bureau, synchronisez le défilement et capturez les vues.",
+  "summary": "Simulateur mobile pour tester le design responsive. Comparez les vues, synchronisez le défilement et faites des captures.",
   "screenshotCaptions": [
     "Nouveaux appareils. Un espace pour tester votre site.",
     "Faites défiler. Comparez toutes les vues.",

@@ -1,4 +1,8 @@
-Ang Mobile View ay libre at open-source na device emulator at responsive tester para sa Chrome. Tingnan ang website sa hanggang apat na phone, tablet, laptop, at desktop view nang sabay, nang hindi paulit-ulit na binabago ang laki ng window o DevTools preset.
+Ang Mobile View ay libre at open-source na mobile simulator at device emulator para sa Chrome. Tingnan ang website sa hanggang apat na phone, tablet, laptop, at desktop view nang sabay, nang hindi paulit-ulit na binabago ang laki ng window o DevTools preset.
+
+Gamitin ang mobile preview para sa responsive website testing. Ihambing ang mga mobile device at desktop para suriin ang menu, text at spacing sa iba’t ibang breakpoint. Bilang responsive design tester, pinagsasama nito ang responsive testing sa iisang workspace.
+
+I-preview ang iPhone 18 Pro, nakatiklop at nakabukas na iPhone Duo, MacBook at Apple Watch. Gamitin ang previous at next arrow para lumipat sa napiling device category.
 
 - Pumili ng makatotohanang device, baguhin ang orientation at zoom, i-reload ang isang preview, o gumawa ng custom viewport.
 - I-sync ang pag-scroll, suportadong interaction, at navigation sa magkatugmang preview.

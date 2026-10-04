@@ -1,253 +1,263 @@
 {
-  "version": "0.2.6",
+  "version": "0.2.9",
   "capturedWith": "Isolated unpacked Chrome extension, real source page and UI",
-  "sourceSite": "http://127.0.0.1:4188/store-assets/source/demo.html?marketing=20260910",
+  "sourceSite": "http://127.0.0.1:4188/store-assets/source/demo.html?marketing=20261004",
   "sourceFixture": "store-assets/source/demo.html",
   "qaOpenShadow": true,
-  "qaContentScriptSha256": "e568abfe592c8b25c26672f1891af115eb52e21a2bf17e5117502b24dc42f7c3",
+  "qaContentScriptSha256": "d0cbd066ea64ba4306cc45d914fc8ceca90bed995b9323ad3c194809ad704c79",
   "productionShadowMode": "closed",
   "notes": [
     "All 24 screenshot stories were captured from the current isolated unpacked Chrome extension UI, including each locale’s actual controls.",
-    "Four devices in every story: iPhone 18 Pro in Burgundy, iPhone Duo unfolded in portrait, MacBook Pro 14-inch (M5), and Apple Watch Series 6 (40mm).",
-    "Actual UI divider drags set columns to 205, 295, 613 and 167 px. Main frame heights differ by less than 0.5 px around 350 px; the Watch is about 153 px tall. Frame artwork is uniformly scaled.",
+    "Four devices in every screenshot story: iPhone 18 Pro in Burgundy, iPhone Duo folded in portrait, MacBook Pro 14-inch (M5), and Apple Watch Series 6 (40mm). The marquee also shows the unfolded Duo as a supported model.",
+    "Actual UI divider drags set columns to 205, 295, 613 and 167 px. Main frame heights are 350 px; the Watch is 153 px tall. Frame artwork is uniformly scaled.",
     "Scroll screenshots use a real 220 px wheel gesture with sync enabled. Resulting scroll offsets: 220, 220, 84 (page end), 220.",
     "Each annotation capture imports its localized actual overview PNG through the design-reference input and uses the actual Box, Arrow and Text controls. Native activeTab capture permission was not bypassed or claimed validated by this artwork workflow.",
-    "Promo hardware crops and screenshots are real extension output. Only the app icon is a generated illustration based on the previous icon and real-device references.",
-    "Raw crops exclude viewport toolbars. Final artwork and all 24 screenshots retain their specified upload dimensions."
+    "Promo hardware crops and screenshots are real extension output. All logo placements use the plain transparent four-device SVG and its PNG exports.",
+    "Raw promo crops exclude viewport toolbars and are individually captured at higher resolution. Screenshot stories have been recaptured with the folded Duo and presented in a consistent inset frame with rounded corners. All 24 final screenshots retain 1280 × 800 upload dimensions. The approved small promo and marquee are preserved."
   ],
   "rawCaptures": [
     {
       "file": "store-assets/source/captures/overview.png",
       "width": 1280,
       "height": 720,
-      "bytes": 132825,
-      "sha256": "46093782d8b3f2ddaeebf2a06568a14c333eb74cf4499d92d558b956d09629d8",
-      "capturedAt": "2026-09-10T19:43:42.650Z"
+      "bytes": 138509,
+      "sha256": "c021c1b4fcef8da7e1ec22d4511a76c375885faa4b9f7a8a8e572c2f9e8acf2c",
+      "capturedAt": "2026-10-04T20:19:29.302Z"
     },
     {
       "file": "store-assets/source/captures/phone.png",
-      "width": 171,
-      "height": 351,
-      "bytes": 28452,
-      "sha256": "e2dec5335c79a2d1e3d29c7cf6181bdfb8484a82634d72df583c312264db4d23",
-      "capturedAt": "2026-09-10T19:43:40.182Z"
+      "width": 308,
+      "height": 632,
+      "bytes": 76301,
+      "sha256": "137482b7a6212637281ff9e499f64a27ade116d84f33ab236ad613b1996e4f2f",
+      "capturedAt": "2026-10-04T20:01:30.317Z"
     },
     {
       "file": "store-assets/source/captures/duo.png",
-      "width": 253,
-      "height": 351,
-      "bytes": 28784,
-      "sha256": "2569d80b1c3863a46ef8278d5f84249234a47990f7f30b6bec9f9ed59d0388db",
-      "capturedAt": "2026-09-10T19:43:40.237Z"
+      "width": 454,
+      "height": 631,
+      "bytes": 68567,
+      "sha256": "b2c2730d273da8d13ad4b506f10e824f7877acddfac4ff1ec0eeba6677acca86",
+      "capturedAt": "2026-10-04T20:01:31.008Z"
     },
     {
       "file": "store-assets/source/captures/desktop.png",
-      "width": 573,
-      "height": 351,
-      "bytes": 36006,
-      "sha256": "1e5245addcaf9c4981b5e1e9c06ea8c3003f9b2bc77f3ce804803cf10996ff2e",
-      "capturedAt": "2026-09-10T19:43:40.291Z"
+      "width": 1034,
+      "height": 631,
+      "bytes": 101380,
+      "sha256": "e402517471ed3e4147047a088a57c3b03192df192c09c7f56dd803aee47554cc",
+      "capturedAt": "2026-10-04T20:01:31.713Z"
     },
     {
       "file": "store-assets/source/captures/watch.png",
-      "width": 89,
-      "height": 153,
-      "bytes": 11444,
-      "sha256": "7a91ae25cebb27c4ce4acab54f8fbc0d6bc80311aea1bb039f7053cb9e8f92d0",
-      "capturedAt": "2026-09-10T19:43:40.335Z"
+      "width": 226,
+      "height": 389,
+      "bytes": 61607,
+      "sha256": "f7094bfba7ea09513722e1bb24c9e82d0fdad8075961665d3fa12f5d5ed241c5",
+      "capturedAt": "2026-10-04T20:01:32.392Z"
     },
     {
       "file": "store-assets/source/captures/overview-en.png",
       "width": 1280,
       "height": 720,
-      "bytes": 132327,
-      "sha256": "5940cb9c59458556b04cafb4887e82069c8daebd979658232d9e378e63dbeb8b",
-      "capturedAt": "2026-09-10T19:43:40.596Z"
+      "bytes": 138010,
+      "sha256": "92cac5dc1b5e9fc752422c59ab7a398b9d824ffe00cb0d13179e6e928ba55c93",
+      "capturedAt": "2026-10-04T20:19:27.343Z"
     },
     {
       "file": "store-assets/source/captures/overview-de.png",
       "width": 1280,
       "height": 720,
-      "bytes": 134197,
-      "sha256": "9a64c98b9f46db44ca2ca3127e9f568eb92da67dab03fb0bbd26b52c07d13c56",
-      "capturedAt": "2026-09-10T19:43:40.866Z"
+      "bytes": 140134,
+      "sha256": "86c7393386bfe688ffbd359051d81da1b43181bf4e720db9de6414ddd232c4c8",
+      "capturedAt": "2026-10-04T20:19:27.608Z"
     },
     {
       "file": "store-assets/source/captures/overview-es.png",
       "width": 1280,
       "height": 720,
-      "bytes": 134479,
-      "sha256": "afd902fb83b4a22a0676cac9d116a5a5e4626986967aa98dea44a7a938a71385",
-      "capturedAt": "2026-09-10T19:43:41.135Z"
+      "bytes": 140224,
+      "sha256": "751f9c145c9dcfbd36d425a782bdaca939ea9cef1b8d5b7892cc54328c71aabd",
+      "capturedAt": "2026-10-04T20:19:27.864Z"
     },
     {
       "file": "store-assets/source/captures/overview-fr.png",
       "width": 1280,
       "height": 720,
-      "bytes": 134156,
-      "sha256": "06c54f1682eb10851c5300a2680bfe0677c56cc42ac37d4bb1088e19e2b4e863",
-      "capturedAt": "2026-09-10T19:43:41.385Z"
+      "bytes": 139968,
+      "sha256": "cd87c9a52cb2d88c5f5afb7e34d05d3264b2456bb4081b8603e7daa883ea6f93",
+      "capturedAt": "2026-10-04T20:19:28.116Z"
     },
     {
       "file": "store-assets/source/captures/overview-pt_BR.png",
       "width": 1280,
       "height": 720,
-      "bytes": 134594,
-      "sha256": "dd8fe2862d48659338756976bdd2e3f15e4bd49c53e0b22ec2663c030f9dde01",
-      "capturedAt": "2026-09-10T19:43:41.637Z"
+      "bytes": 140408,
+      "sha256": "5aaf53536cd38b52839a7385e00c8026867ea988104ae9b3237d23aabf2c94d9",
+      "capturedAt": "2026-10-04T20:19:28.367Z"
     },
     {
       "file": "store-assets/source/captures/overview-ja.png",
       "width": 1280,
       "height": 720,
-      "bytes": 133474,
-      "sha256": "e1d60baaf296c49b5022049bdd8889ecf6c1fa3c64c232034d7371f434590de1",
-      "capturedAt": "2026-09-10T19:43:41.920Z"
+      "bytes": 139155,
+      "sha256": "74eb85647a861e0d6e66ac0c4806461d933b9e0b743bf2590462050cfe8ec685",
+      "capturedAt": "2026-10-04T20:19:28.638Z"
     },
     {
       "file": "store-assets/source/captures/overview-ko.png",
       "width": 1280,
       "height": 720,
-      "bytes": 132122,
-      "sha256": "0666ff5d5afdee3e8e71c786ce8e2126bf99595c787982b5a4627015041cbdf1",
-      "capturedAt": "2026-09-10T19:43:42.202Z"
+      "bytes": 137763,
+      "sha256": "c44f1776e8e7528a7581375e5ffdd8f3d0a67ac6fd2c85e20ba98a137d020f6f",
+      "capturedAt": "2026-10-04T20:19:28.918Z"
     },
     {
       "file": "store-assets/source/captures/overview-zh_CN.png",
       "width": 1280,
       "height": 720,
-      "bytes": 131756,
-      "sha256": "40b5fd5b4bcb289b6f3f9c170a0a968a3c6a126fbb09742934cdb505add3abaa",
-      "capturedAt": "2026-09-10T19:43:42.568Z"
+      "bytes": 137441,
+      "sha256": "92fd4503599d4b63c47e951eb4f1bbb93ef3a0e7db2d96c62405f69d5c4a58b9",
+      "capturedAt": "2026-10-04T20:19:29.219Z"
     },
     {
       "file": "store-assets/source/captures/sync-en.png",
       "width": 1280,
       "height": 720,
-      "bytes": 125826,
-      "sha256": "b02e4158a9e699523196efdc36abf1bd184d8b09f6c027debbf51ea8b549825c",
-      "capturedAt": "2026-09-10T19:43:45.078Z"
+      "bytes": 132557,
+      "sha256": "c6f5aacb9e8be35e723a53601c2a588c00f3bef6c56a82dc9babd026fdba0af4",
+      "capturedAt": "2026-10-04T20:19:46.728Z"
     },
     {
       "file": "store-assets/source/captures/sync-de.png",
       "width": 1280,
       "height": 720,
-      "bytes": 128019,
-      "sha256": "1e3a79d6f9a34da3f3350df32c2563972a625d9bbc003fe44a69891ab81b3f37",
-      "capturedAt": "2026-09-10T19:43:45.324Z"
+      "bytes": 134852,
+      "sha256": "0e0192f0f0671e0a964ec9d2796e6ac19a80db40b215c51c3ddc8ca9e0c24dc3",
+      "capturedAt": "2026-10-04T20:19:46.990Z"
     },
     {
       "file": "store-assets/source/captures/sync-es.png",
       "width": 1280,
       "height": 720,
-      "bytes": 129083,
-      "sha256": "b0c89aeef61a5e9f761565f1d71ab6e9ceb402d05352225006468ebef53459ec",
-      "capturedAt": "2026-09-10T19:43:45.564Z"
+      "bytes": 135683,
+      "sha256": "263f19ae5e89b568357de9b95539b4f26e2a841fe305980c717beef2c8bf5e0a",
+      "capturedAt": "2026-10-04T20:19:47.246Z"
     },
     {
       "file": "store-assets/source/captures/sync-fr.png",
       "width": 1280,
       "height": 720,
-      "bytes": 128313,
-      "sha256": "c1cfd7744beade7aafc83f3431d8f5c2ffb149d157f55b07f1fb610f0583ec4a",
-      "capturedAt": "2026-09-10T19:43:45.811Z"
+      "bytes": 134989,
+      "sha256": "cd1636f1452e8c28a6fb5f23cbb570fb87afa8d996d84d2fe3fa844f541b0bf1",
+      "capturedAt": "2026-10-04T20:19:47.514Z"
     },
     {
       "file": "store-assets/source/captures/sync-pt_BR.png",
       "width": 1280,
       "height": 720,
-      "bytes": 129134,
-      "sha256": "17e4c023878b6ec0483a950cea7e64827691072b0dcdfada743fc20a666e1167",
-      "capturedAt": "2026-09-10T19:43:46.067Z"
+      "bytes": 135789,
+      "sha256": "b22a6146e17f1cd3c9a8561b296fd3c377398ada6af314ce34342459f3841580",
+      "capturedAt": "2026-10-04T20:19:47.778Z"
     },
     {
       "file": "store-assets/source/captures/sync-ja.png",
       "width": 1280,
       "height": 720,
-      "bytes": 127240,
-      "sha256": "b60ee508555639e30a874db95d963358269c4ed82aea8edd7a27ca9b361895f6",
-      "capturedAt": "2026-09-10T19:43:46.316Z"
+      "bytes": 133932,
+      "sha256": "48ecfc5b8e5d25700b747bb694bcb924e076d9da8aef4cbe6f4c245f414829f5",
+      "capturedAt": "2026-10-04T20:19:48.031Z"
     },
     {
       "file": "store-assets/source/captures/sync-ko.png",
       "width": 1280,
       "height": 720,
-      "bytes": 125371,
-      "sha256": "976b3017228f32379b1d1e3e6ea81285ce501c0d112d48cf5a56490773213524",
-      "capturedAt": "2026-09-10T19:43:46.556Z"
+      "bytes": 132044,
+      "sha256": "fd3866a16a0562d2f41073cadf18d61bcb2e79dfad3a0dc7b1907f5a66080875",
+      "capturedAt": "2026-10-04T20:19:48.286Z"
     },
     {
       "file": "store-assets/source/captures/sync-zh_CN.png",
       "width": 1280,
       "height": 720,
-      "bytes": 125439,
-      "sha256": "8b86a8f7923acd76bf74a1fa3a2718d0f0ea059c3f04bf8fcd1e276382246118",
-      "capturedAt": "2026-09-10T19:43:46.796Z"
+      "bytes": 132114,
+      "sha256": "ea102e91890cd6dfadc8bfb84244053751699f6f911ef58363b8f449461cd786",
+      "capturedAt": "2026-10-04T20:19:48.526Z"
     },
     {
       "file": "store-assets/source/captures/annotation-en.png",
       "width": 1280,
       "height": 720,
-      "bytes": 147948,
-      "sha256": "af116bffb9d5c6c3cb333b4e4e4d19c0c095ea4c04c7f728f61e5a2720698aec",
-      "capturedAt": "2026-09-10T19:44:02.417Z"
+      "bytes": 148545,
+      "sha256": "de0857736b1a79bc137d00e276a4c265c7e4f67f78c529b80b3287394d86187f",
+      "capturedAt": "2026-10-04T20:19:51.591Z"
     },
     {
       "file": "store-assets/source/captures/annotation-de.png",
       "width": 1280,
       "height": 720,
-      "bytes": 151167,
-      "sha256": "04e8dd2235f369acf067c2d3f7df3e59da456f7559c9583ff44ec97ef904a1dd",
-      "capturedAt": "2026-09-10T19:44:03.161Z"
+      "bytes": 151412,
+      "sha256": "32698e64cdb687fbcd801616e77016fd460c5116d66f8c54850171c7800719fd",
+      "capturedAt": "2026-10-04T20:19:52.345Z"
     },
     {
       "file": "store-assets/source/captures/annotation-es.png",
       "width": 1280,
       "height": 720,
-      "bytes": 151498,
-      "sha256": "0b6f4260a3ad4f8f5696f62f480611705a5bbed5d418c62a78a0953e3326a2db",
-      "capturedAt": "2026-09-10T19:44:03.905Z"
+      "bytes": 151886,
+      "sha256": "efb0f69e5c9fa3960cefb58125808970cc03f28ac2585e28224a4eb9563aeffe",
+      "capturedAt": "2026-10-04T20:19:53.084Z"
     },
     {
       "file": "store-assets/source/captures/annotation-fr.png",
       "width": 1280,
       "height": 720,
-      "bytes": 150881,
-      "sha256": "c0463f018a7583cf5de714bedab0005b15d2d81297ab49fe6ff91bf4810bb51e",
-      "capturedAt": "2026-09-10T19:44:04.668Z"
+      "bytes": 151277,
+      "sha256": "1953fba54b9d0a9f790b14f44b2fbda3dc42f3f6c63bfff4a9786e803c5f68e6",
+      "capturedAt": "2026-10-04T20:19:53.838Z"
     },
     {
       "file": "store-assets/source/captures/annotation-pt_BR.png",
       "width": 1280,
       "height": 720,
-      "bytes": 151734,
-      "sha256": "2aa53a0056d5ddd2960a03cb1a797e8d3926008bf212642aeb3cdb0427a2925a",
-      "capturedAt": "2026-09-10T19:44:05.419Z"
+      "bytes": 151900,
+      "sha256": "eee16c802385aab4d785e3b3b27581f2ba5bd01a8f44c4728de9b792495879da",
+      "capturedAt": "2026-10-04T20:19:54.575Z"
     },
     {
       "file": "store-assets/source/captures/annotation-ja.png",
       "width": 1280,
       "height": 720,
-      "bytes": 149701,
-      "sha256": "062c5980bedf9ee3d3d36ea359bda2cdc67990078d6b6fe8b67c8cdd4118a686",
-      "capturedAt": "2026-09-10T19:44:06.173Z"
+      "bytes": 150003,
+      "sha256": "2b50af237e3648f60de1f08fa7baf9ced18c6f9b6dcceb8c16115b100483c2dc",
+      "capturedAt": "2026-10-04T20:19:55.310Z"
     },
     {
       "file": "store-assets/source/captures/annotation-ko.png",
       "width": 1280,
       "height": 720,
-      "bytes": 146114,
-      "sha256": "432bec27885785f73f41f49af285559937ee6aadd7413252aaa64a4bb48904bf",
-      "capturedAt": "2026-09-10T19:44:06.924Z"
+      "bytes": 146365,
+      "sha256": "937a599844307ea11a9af351b05e2bb3679a55e2fdfbbcdfc10c3461f2ee92a9",
+      "capturedAt": "2026-10-04T20:19:56.037Z"
     },
     {
       "file": "store-assets/source/captures/annotation-zh_CN.png",
       "width": 1280,
       "height": 720,
-      "bytes": 146704,
-      "sha256": "f930f12599584891c7830d740bf6d7b1ea8ced4649163d98245b2b847ff40731",
-      "capturedAt": "2026-09-10T19:44:07.706Z"
+      "bytes": 147029,
+      "sha256": "b700b6310696ae58f0b7d2aade588003a70dc1ebdeb32efa8b7c77d4f4b2da76",
+      "capturedAt": "2026-10-04T20:19:56.770Z"
+    },
+    {
+      "file": "store-assets/source/captures/duo-folded.png",
+      "width": 452,
+      "height": 632,
+      "bytes": 83353,
+      "sha256": "02ba73cdbadb9528c394f1e3aae2bdae602621f1dda44c6ff2b9a0f3c32bbf72",
+      "capturedAt": "2026-10-04T20:01:29.609Z"
     }
   ],
-  "iconSha256": "592558bf788e5fa5a0d3e257497d3ef342a44108921033c5b5f480f3e937a9d2"
+  "iconSha256": "024ff1ac2606fae2d5a817b47627da3670935a83acafa0131896d48a6dba2870",
+  "iconSource": "public/icons/icon.svg",
+  "iconSourceSha256": "0ede95a40e443f9c014f43f184ad11d1a45d3e431571d5f16c6f43b8c560a3cb"
 }

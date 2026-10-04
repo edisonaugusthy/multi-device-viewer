@@ -1,4 +1,8 @@
-Mobile View adalah emulator perangkat gratis dan sumber terbuka untuk Chrome. Lihat situs dalam hingga empat tampilan ponsel, tablet, laptop, dan desktop sekaligus. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
+Mobile View adalah simulator seluler dan emulator perangkat gratis serta sumber terbuka untuk Chrome. Lihat situs dalam hingga empat tampilan ponsel, tablet, laptop, dan desktop sekaligus. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
+
+Gunakan pratinjau seluler untuk pengujian situs web responsif. Bandingkan perangkat seluler dan desktop untuk memeriksa menu, teks dan jarak pada breakpoint. Alat penguji desain responsif ini menyatukan pengujian responsif dalam satu ruang kerja.
+
+Pratinjau iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan panah perangkat sebelumnya dan berikutnya dalam kategori yang dipilih.
 
 - Buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
 - Tangkap satu tampilan atau seluruh ruang kerja. Tambahkan panah, kotak, gambar, dan teks atau potong tangkapan layar. Tampilkan desain lokal di samping halaman atau sebagai overlay.

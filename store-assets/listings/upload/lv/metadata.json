@@ -1,7 +1,7 @@
 {
   "storeLocale": "lv",
   "name": "Mobile View: Ierīču emulators un adaptīvais tests",
-  "summary": "Mobilais simulators adaptīviem testiem. Salīdziniet tālruni, planšeti un datoru, sinhronizējiet ritināšanu un uzņemiet ekrānattēlus.",
+  "summary": "Mobilais simulators responsīvā dizaina testēšanai. Salīdziniet skatus, sinhronizējiet ritināšanu un veidojiet ekrānuzņēmumus.",
   "screenshotCaptions": [
     "Testējiet tālruni, planšeti un datoru blakus",
     "Vienā darbvietā izmantojiet vairāk nekā 105 ierīču profilus",

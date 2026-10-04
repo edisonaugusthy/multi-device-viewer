@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Simulatore mobile per test responsive. Confronta telefono, tablet e desktop, sincronizza lo scorrimento e acquisisci screenshot."
+    "message": "Simulatore mobile per testare il design responsive. Confronta le viste, sincronizza lo scorrimento e acquisisci screenshot."
   },
   "actionTitle": {
     "message": "Apri l’emulatore mobile Mobile View"

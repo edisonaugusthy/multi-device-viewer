@@ -1,11 +1,12 @@
-Check how your website adapts to phone, tablet, laptop and desktop layouts without repeatedly resizing your browser. Mobile View gives you a mobile preview and up to four device views side by side, with tools to inspect differences and explain the fix.
+Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
 
-Use this free, open-source device emulator and responsive design tester to:
+Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
 
-- Compare layouts across device presets or custom viewport sizes. Switch portrait and landscape, adjust zoom and focus on a single view.
-- Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different breakpoints.
-- Save useful device sets and favorites for repeat checks during frontend development and design review.
-- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to show what needs attention.
+- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
+- Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
+- Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
+- Save device sets and favorites for repeat checks during frontend development and design review.
+- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
 - Compare the live website with a local design reference, side by side or as an overlay.
 - Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 

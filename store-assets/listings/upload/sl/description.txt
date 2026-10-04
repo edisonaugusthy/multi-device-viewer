@@ -1,4 +1,8 @@
-Mobile View je brezplačen odprtokodni emulator naprav za Chrome. Spletno mesto si hkrati oglejte v največ štirih pogledih telefona, tablice, prenosnika in računalnika. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.
+Mobile View je brezplačen odprtokodni mobilni simulator in emulator naprav za Chrome. Spletno mesto si hkrati oglejte v največ štirih pogledih telefona, tablice, prenosnika in računalnika. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.
+
+Uporabite mobilni predogled za preizkušanje odzivnih spletnih mest. Primerjajte mobilne naprave in računalnike ter preverite menije, besedilo in razmike na prelomnih točkah. To orodje za preizkušanje odzivnega oblikovanja združuje odzivne preizkuse v enem delovnem prostoru.
+
+Predoglejte iPhone 18 Pro, zložen in odprt iPhone Duo, MacBook in Apple Watch. Po izbrani kategoriji se premikajte s puščicama za prejšnjo in naslednjo napravo.
 
 - Ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.
 - Zajemite en pogled ali celotno delovno površino. Dodajte puščice, okvirje, risbe in besedilo ali obrežite sliko. Prikažite lokalni dizajn ob strani ali kot prekrivanje.

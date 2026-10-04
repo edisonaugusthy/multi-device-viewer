@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Simulator ponsel untuk uji responsif. Bandingkan ponsel, tablet, dan desktop; sinkronkan gulir dan ambil tangkapan layar."
+    "message": "Simulator seluler untuk menguji desain responsif. Bandingkan tampilan perangkat, sinkronkan gulir dan ambil tangkapan layar."
   },
   "actionTitle": {
     "message": "Buka emulator perangkat Mobile View"

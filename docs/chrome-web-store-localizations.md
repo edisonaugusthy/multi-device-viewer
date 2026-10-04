@@ -13,22 +13,22 @@ review. Complete copy-and-paste Store listing text for all 55 locales is in
 
 | Locale | Language / market | Extension name | Short description |
 |---|---|---|---|
-| `en` | English | Mobile View: Device Emulator & Responsive Tester | Multi-device viewer and mobile preview for phone, tablet and desktop—with responsive testing, mobile simulator and device emulator. |
-| `de` | German | Mobile View: Responsiver Geräte-Emulator | Kostenloser Open-Source-Simulator zum Testen von Websites in Smartphone-, Tablet-, Laptop- und Desktop-Ansichten. |
-| `es` | Spanish | Mobile View: Emulador móvil y prueba responsive | Simulador móvil gratuito y de código abierto para probar vistas de teléfono, tablet, portátil y escritorio en paralelo. |
-| `fr` | French | Mobile View : Émulateur mobile et test responsive | Simulateur mobile gratuit et open source pour tester côte à côte les vues téléphone, tablette, ordinateur portable et bureau. |
-| `zh_CN` | Simplified Chinese | Mobile View：移动设备模拟器与响应式测试 | 免费开源的移动设备模拟器和响应式测试工具，可并排预览手机、平板电脑、笔记本和桌面布局。 |
-| `zh_TW` | Traditional Chinese | Mobile View：行動裝置模擬器與響應式測試 | 免費開源的行動裝置模擬器與響應式測試工具，可並排預覽手機、平板、筆電和桌面版面。 |
-| `fil` | Filipino | Mobile View: Device Emulator at Responsive Tester | Libre at open-source na mobile simulator at responsive tester para sa magkatabing phone, tablet, laptop, at desktop view. |
-| `nl` | Dutch | Mobile View: Apparaatemulator & responsive tester | Gratis opensource mobiele simulator en responsive tester voor telefoon-, tablet-, laptop- en desktopweergaven naast elkaar. |
-| `vi` | Vietnamese | Mobile View: Trình giả lập thiết bị & kiểm thử responsive | Trình giả lập di động miễn phí, mã nguồn mở để kiểm thử song song giao diện điện thoại, máy tính bảng, laptop và máy tính. |
-| `pt_BR` | Brazilian Portuguese | Mobile View: Emulador móvel e teste responsivo | Simulador móvel gratuito e de código aberto para testar lado a lado layouts de celular, tablet, notebook e desktop. |
-| `it` | Italian | Mobile View: Emulatore mobile e test responsive | Simulatore mobile gratuito e open source per testare affiancate le viste telefono, tablet, laptop e desktop. |
-| `ja` | Japanese | Mobile View：デバイスエミュレーター＆レスポンシブテスト | 無料・オープンソースのモバイルシミュレーター。スマホ、タブレット、ノートPC、デスクトップ表示を並べて確認できます。 |
-| `ko` | Korean | Mobile View: 기기 에뮬레이터 및 반응형 테스트 | 무료 오픈 소스 모바일 시뮬레이터로 휴대폰, 태블릿, 노트북, 데스크톱 화면을 나란히 테스트하세요. |
-| `hi` | Hindi | Mobile View: डिवाइस एमुलेटर और रिस्पॉन्सिव टेस्टर | फ़ोन, टैबलेट, लैपटॉप और डेस्कटॉप व्यू को साथ-साथ जाँचने के लिए मुफ़्त, ओपन-सोर्स मोबाइल सिम्युलेटर। |
-| `ru` | Russian | Mobile View: эмулятор устройств и адаптивный тест | Бесплатный эмулятор и тест адаптивности: сравнивайте виды телефона, планшета, ноутбука и ПК рядом. |
-| `ar` | Arabic | Mobile View: محاكي أجهزة واختبار تجاوب | محاكي جوال مجاني ومفتوح المصدر لاختبار عروض الهاتف والجهاز اللوحي والحاسوب المحمول وسطح المكتب جنبًا إلى جنب. |
+| `en` | English | Mobile View: Device Emulator & Responsive Tester | Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots. |
+| `de` | German | Mobile View: Responsiver Geräte-Emulator | Mobiler Simulator für responsive Webdesign-Tests. Vergleiche Geräteansichten, synchronisiere Scrollen und mache Screenshots. |
+| `es` | Spanish | Mobile View: Emulador móvil y prueba responsive | Simulador móvil para probar diseños responsive. Compara vistas de dispositivos, sincroniza el desplazamiento y captura pantallas. |
+| `fr` | French | Mobile View : Émulateur mobile et test responsive | Simulateur mobile pour tester le design responsive. Comparez les vues, synchronisez le défilement et faites des captures. |
+| `zh_CN` | Simplified Chinese | Mobile View：移动设备模拟器与响应式测试 | 移动模拟器与响应式设计测试工具：并排对比设备预览，同步滚动，截取并标注屏幕画面。 |
+| `zh_TW` | Traditional Chinese | Mobile View：行動裝置模擬器與響應式測試 | 行動模擬器與響應式設計測試工具：並排比較裝置預覽，同步捲動，擷取畫面並註記問題。 |
+| `fil` | Filipino | Mobile View: Device Emulator at Responsive Tester | Mobile simulator at responsive design tester. Ihambing ang mga device view, i-sync ang pag-scroll at kumuha ng screenshot. |
+| `nl` | Dutch | Mobile View: Apparaatemulator & responsive tester | Mobiele simulator voor responsive designtests. Vergelijk apparaatweergaven, synchroniseer scrollen en maak screenshots. |
+| `vi` | Vietnamese | Mobile View: Trình giả lập thiết bị & kiểm thử responsive | Mô phỏng di động và kiểm thử thiết kế responsive. So sánh các màn hình, đồng bộ cuộn và chụp màn hình. |
+| `pt_BR` | Brazilian Portuguese | Mobile View: Emulador móvel e teste responsivo | Simulador móvel para testar design responsivo. Compare telas de dispositivos, sincronize a rolagem e faça capturas. |
+| `it` | Italian | Mobile View: Emulatore mobile e test responsive | Simulatore mobile per testare il design responsive. Confronta le viste, sincronizza lo scorrimento e acquisisci screenshot. |
+| `ja` | Japanese | Mobile View：デバイスエミュレーター＆レスポンシブテスト | モバイルシミュレーターでレスポンシブデザインをテスト。端末ごとの表示を比較し、スクロールを同期してスクリーンショットを撮影できます。 |
+| `ko` | Korean | Mobile View: 기기 에뮬레이터 및 반응형 테스트 | 모바일 시뮬레이터로 반응형 웹 디자인을 테스트하세요. 기기별 화면을 비교하고 스크롤을 동기화하며 스크린샷을 촬영하세요. |
+| `hi` | Hindi | Mobile View: डिवाइस एमुलेटर और रिस्पॉन्सिव टेस्टर | मोबाइल सिम्युलेटर से रिस्पॉन्सिव वेब डिज़ाइन जाँचें। डिवाइस व्यू की तुलना करें, स्क्रॉल सिंक करें और स्क्रीनशॉट लें। |
+| `ru` | Russian | Mobile View: эмулятор устройств и адаптивный тест | Мобильный симулятор для тестирования адаптивного дизайна. Сравнивайте экраны, синхронизируйте прокрутку и делайте снимки. |
+| `ar` | Arabic | Mobile View: محاكي أجهزة واختبار تجاوب | محاكي جوال لاختبار تصميم الويب المتجاوب. قارن عروض الأجهزة، وزامن التمرير والتقط لقطات الشاشة. |
 
 ## Complete packaged coverage
 
@@ -38,14 +38,78 @@ review. Complete copy-and-paste Store listing text for all 55 locales is in
 `pl`, `pt_BR`, `pt_PT`, `ro`, `ru`, `sk`, `sl`, `sr`, `sv`, `sw`, `ta`, `te`,
 `th`, `tr`, `uk`, `vi`, `zh_CN`, `zh_TW`.
 
-The English row is the 8 August 2026 controlled keyword experiment package. It
-adds multi-device viewer, mobile preview, responsive testing, and mobile
-simulator while the unchanged title protects Mobile View, device emulator, and
-responsive tester. The opening description retains mobile emulator, device
-simulator, and responsive design tester. The localized summaries use natural
-equivalents of the established message rather than repeating English keywords.
-Have a native speaker review high-traffic locales before publishing them in the
-Developer Dashboard.
+## Extensiq copy review — 4 October 2026
+
+The live English listing captured at `2026-10-04T01:00:03.539Z` matches the
+previous English master copy. Its short description is included automatically
+above the long description; a phrase in either field already belongs to the
+public listing. The audit distinguishes missing wording from weak placement.
+
+The latest completed US English searches were captured on 3 October around
+22:00 UTC (4 October around 00:00 in Berlin). These are observed positions,
+not search-volume estimates or forecasts of how this wording will perform.
+
+| Tracked phrase | Latest US position | Before this edit | Copy change |
+|---|---:|---|---|
+| `device emulator` | 2 | Title and detailed description | Retained in the title and opening |
+| `mobile preview` | 3 | Detailed description | Retained near the opening |
+| `mobile view` | 3 | Title and detailed description | Existing titles retained in all locales |
+| `responsive tester` | 4 | Title | Existing title retained |
+| `mobile simulator` | 7 | Summary | Retained in the summary and added to the detailed opening |
+| `responsive design tester` | 7 | Detailed description only | Placed in the English summary and retained in the detailed testing use case |
+| `responsive testing` | Outside collected top 50 | Summary only | Added to the detailed testing use case |
+| `responsive website testing` | Outside collected top 50 | Missing from the live English listing and master | Added to the English opening |
+
+The captured listing also lacks `mobile device`. Extensiq flags this as a
+competitor wording gap, and the MSIM and Bezel captures confirm use of the term.
+It fits our preview workflow, so it is now used naturally in the English body.
+It is not one of the eight verified US keyword searches above, and competitor
+usage does not establish demand or a future rank.
+
+All 55 locales now have updated short and detailed descriptions. Translations
+use natural equivalents of responsive design testing, website testing and
+mobile-device previews rather than an English keyword list. The established
+brand and localized titles are retained. Device examples include iPhone 18 Pro,
+folded and unfolded iPhone Duo, MacBook and Apple Watch, with the new category
+navigation described in each language. The five previously shorter Danish,
+Estonian, Finnish, Norwegian and Swedish descriptions now also explain saved
+sets, annotated screenshots, design comparison and the fix-prompt workflow.
+
+The keyword follow-up explicitly includes native equivalents of `mobile
+simulator`, `device emulator`, `mobile preview`, `responsive website testing`,
+`responsive testing` and `responsive design tester` in every detailed
+description. `Mobile View` remains the brand; existing titles also retain their
+responsive tester/test equivalents. The opening describes the product, then
+the testing paragraph explains menus, text, spacing and breakpoints. These are
+feature sentences rather than a public keyword list. English variants retain
+the English terms; other locales use their own language and established
+technical vocabulary.
+
+Source of truth: `store-assets/listings/locales.json`. `npm run sync:store-locales`
+regenerates all upload descriptions, upload metadata, packaged short descriptions
+and the complete copy guide. These local files do not publish the Store listing.
+`publishedAt` and `publicVerificationHash` remain unset for the revised copy;
+non-English text remains marked `native-review-recommended`.
+
+Use each relevant term in meaningful feature or benefit sentences, following
+[Chrome's listing requirements](https://developer.chrome.com/docs/webstore/program-policies/listing-requirements/)
+and [listing guidance](https://developer.chrome.com/docs/webstore/best-listing).
+After publishing, compare the same keyword, locale, country and search depth at
+7 and 14 days. Track the already strong terms alongside the two testing gaps.
+Copy changes and the new artwork may affect conversion together; these snapshots
+cannot isolate causality or guarantee better rankings.
+
+Extensiq provenance: workspace `b1ee217f-971a-4a48-b20b-b930c9983db0`, subject
+`jfcnekmenjickfihkniaoaklehjmdhdb`, readiness evidence
+`5068f8fd-3020-4006-834a-9daa12e08c96`; US ranking evidence
+`35352b18-d9e4-49d3-b083-bab4be5e3a6b` (device emulator),
+`fdca550f-491e-4cdc-8a66-2ee5f3d61cad` (mobile preview),
+`9bed2837-68ec-4555-93a5-e7d7ced6b2e1` (mobile view),
+`ff687a48-80bf-4882-a2ed-d5213d6d9285` (responsive tester),
+`60ac3049-408a-46e0-8ac8-7da96d7ee256` (mobile simulator),
+`afc4f5ab-7766-4dce-a1ba-45a25c005bbd` (responsive design tester),
+`91b7dff1-4d06-47fa-992c-04a4a62d2bbd` (responsive testing), and
+`eb777f00-e23a-48b4-90a1-f3d235400d81` (responsive website testing).
 
 ## Human-review priority
 

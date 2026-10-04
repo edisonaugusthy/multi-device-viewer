@@ -1,7 +1,7 @@
 {
   "storeLocale": "et",
   "name": "Mobile View: Seadmeemulaator ja kohanduvustest",
-  "summary": "Mobiilisimulaator kohanduva veebi testimiseks. Võrdle telefoni, tahvli ja arvuti vaateid, sünkrooni kerimine ja tee kuvatõmmiseid.",
+  "summary": "Mobiilisimulaator kohanduva veebidisaini testimiseks. Võrdle seadmevaateid, sünkrooni kerimine ja tee kuvatõmmiseid.",
   "screenshotCaptions": [
     "Testi telefoni, tahvlit ja arvutit kõrvuti",
     "Kasuta ühes tööruumis üle 105 seadmeprofiili",

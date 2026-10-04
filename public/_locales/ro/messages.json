@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Simulator mobil pentru teste responsive. Compară telefonul, tableta și desktopul, sincronizează derularea și capturează ecranul."
+    "message": "Simulator mobil pentru testarea designului responsive. Compară vizualizări, sincronizează derularea și fă capturi de ecran."
   },
   "actionTitle": {
     "message": "Deschide emulatorul Mobile View"

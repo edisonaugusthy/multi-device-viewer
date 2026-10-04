@@ -1,7 +1,7 @@
 {
   "storeLocale": "fi",
   "name": "Mobile View: Laite-emulaattori ja responsiivinen testi",
-  "summary": "Mobiilisimulaattori responsiivisiin testeihin. Vertaa puhelinta, tablettia ja tietokonetta, synkronoi vieritys ja ota kuvia.",
+  "summary": "Mobiilisimulaattori responsiivisen verkkosuunnittelun testaukseen. Vertaa näkymiä, synkronoi vieritys ja ota kuvakaappauksia.",
   "screenshotCaptions": [
     "Testaa puhelin, tabletti ja tietokone rinnakkain",
     "Käytä yli 105 laiteprofiilia yhdessä työtilassa",

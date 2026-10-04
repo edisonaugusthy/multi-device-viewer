@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Simulador mòbil per provar webs responsives. Compara mòbil, tauleta i escriptori, sincronitza el desplaçament i captura pantalles."
+    "message": "Simulador mòbil per provar dissenys responsius. Compara vistes de dispositius, sincronitza el desplaçament i captura pantalles."
   },
   "actionTitle": {
     "message": "Obre l’emulador de dispositius Mobile View"

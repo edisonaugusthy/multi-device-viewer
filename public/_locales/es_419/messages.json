@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Simulador móvil y visor multidispositivo para pruebas responsive. Compara vistas, sincroniza el desplazamiento y captura pantallas."
+    "message": "Simulador móvil para probar diseños responsive. Compara vistas de dispositivos, sincroniza el desplazamiento y captura pantallas."
   },
   "actionTitle": {
     "message": "Abrir el emulador móvil Mobile View"

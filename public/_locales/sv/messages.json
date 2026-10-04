@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Mobilsimulator för responsiva tester. Jämför telefon, surfplatta och dator, synkronisera rullning och ta skärmbilder."
+    "message": "Mobilsimulator för test av responsiv webbdesign. Jämför enhetsvyer, synkronisera rullning och ta skärmbilder."
   },
   "actionTitle": {
     "message": "Öppna Mobile View-enhetsemulatorn"

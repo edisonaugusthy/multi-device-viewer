@@ -6,7 +6,7 @@
     "message": "Mobile View"
   },
   "extensionDescription": {
-    "message": "Trình mô phỏng di động để kiểm tra web responsive. So sánh điện thoại, máy tính bảng và máy tính; đồng bộ cuộn và chụp màn hình."
+    "message": "Mô phỏng di động và kiểm thử thiết kế responsive. So sánh các màn hình, đồng bộ cuộn và chụp màn hình."
   },
   "actionTitle": {
     "message": "Mở trình giả lập thiết bị Mobile View"

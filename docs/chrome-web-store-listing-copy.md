@@ -36,6 +36,7 @@ These are responsive viewport previews using Chrome, not physical devices or the
 1. New devices. One responsive workspace.
 2. Scroll once. Compare every view.
 3. Show the issue. Share a clear fix.
+4. Every device. One click.
 
 ## `de` — Deutsch
 
@@ -69,6 +70,7 @@ Dies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emula
 1. Neue Geräte. Ein Workspace für responsive Tests.
 2. Einmal scrollen. Alle Ansichten vergleichen.
 3. Problem zeigen. Lösung verständlich machen.
+4. Every device. One click.
 
 ## `es` — Español
 
@@ -102,6 +104,7 @@ Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari.
 1. Nuevos dispositivos. Un espacio para probar tu web.
 2. Desplázate una vez. Compara todas las vistas.
 3. Muestra el problema. Comparte una solución clara.
+4. Every device. One click.
 
 ## `fr` — Français
 
@@ -135,6 +138,7 @@ Ces aperçus responsive utilisent Chrome, pas des appareils physiques ni le mote
 1. Nouveaux appareils. Un espace pour tester votre site.
 2. Faites défiler. Comparez toutes les vues.
 3. Montrez le problème. Expliquez la correction.
+4. Every device. One click.
 
 ## `zh_CN` — 简体中文
 
@@ -168,6 +172,7 @@ Mobile View 是一款免费、开源的 Chrome 移动模拟器与设备模拟器
 1. 新设备，同一个响应式测试工作区。
 2. 滚动一次，对比所有视图。
 3. 标出问题，清楚说明修改方向。
+4. Every device. One click.
 
 ## `zh_TW` — 繁體中文
 
@@ -201,6 +206,7 @@ Mobile View 是免費、開源的 Chrome 行動模擬器與裝置模擬器。 �
 1. 並排測試手機、平板與桌面版面
 2. 在單一工作區使用 105 多種響應式裝置設定
 3. 比較即時頁面與已核准的設計稿
+4. Every device. One click.
 
 ## `fil` — Filipino
 
@@ -234,6 +240,7 @@ Mga responsive viewport preview ito sa Chrome, hindi totoong device o Safari eng
 1. Subukan nang sabay ang mobile, tablet, at desktop
 2. Gumamit ng 105+ responsive device profile sa isang workspace
 3. Ikumpara ang live page sa aprubadong design
+4. Every device. One click.
 
 ## `nl` — Nederlands
 
@@ -267,6 +274,7 @@ Dit zijn responsive previews in Chrome, geen fysieke apparaten of Safari-engine.
 1. Test mobiel, tablet en desktop naast elkaar
 2. Gebruik meer dan 105 responsive apparaatprofielen in één werkruimte
 3. Vergelijk een live pagina met een goedgekeurd ontwerp
+4. Every device. One click.
 
 ## `vi` — Tiếng Việt
 
@@ -300,6 +308,7 @@ Mọi thứ chạy cục bộ trong trình duyệt. Không cần tài khoản, t
 1. Kiểm thử song song trên điện thoại, máy tính bảng và máy tính
 2. Dùng hơn 105 hồ sơ thiết bị responsive trong một không gian làm việc
 3. So sánh trang trực tiếp với thiết kế đã duyệt
+4. Every device. One click.
 
 ## `pt_BR` — Português (Brasil)
 
@@ -333,6 +342,7 @@ São prévias responsivas no Chrome, não dispositivos físicos nem o motor do S
 1. Novos dispositivos. Um só espaço para testar seu site.
 2. Role uma vez. Compare todas as vistas.
 3. Mostre o problema. Explique a correção.
+4. Every device. One click.
 
 ## `it` — Italiano
 
@@ -366,6 +376,7 @@ Sono anteprime responsive in Chrome, non dispositivi fisici né il motore Safari
 1. Testa mobile, tablet e desktop affiancati
 2. Usa oltre 105 profili responsive in un’unica area di lavoro
 3. Confronta una pagina attiva con un design approvato
+4. Every device. One click.
 
 ## `ja` — 日本語
 
@@ -399,6 +410,7 @@ iPhone 18 Pro、折りたたみ時と展開時のiPhone Duo、MacBook、Apple Wa
 1. 新しいデバイスを、ひとつのワークスペースで。
 2. 一度のスクロールで、すべての表示を比較。
 3. 問題を示して、修正をわかりやすく。
+4. Every device. One click.
 
 ## `ko` — 한국어
 
@@ -432,6 +444,7 @@ iPhone 18 Pro, 접거나 펼친 iPhone Duo, MacBook과 Apple Watch를 미리 보
 1. 새로운 기기를 하나의 작업 공간에서.
 2. 한 번 스크롤로 모든 뷰를 비교하세요.
 3. 문제를 보여 주고 수정 방향을 명확하게.
+4. Every device. One click.
 
 ## `hi` — हिन्दी
 
@@ -465,6 +478,7 @@ iPhone 18 Pro, बंद और खुले iPhone Duo, MacBook और Apple Wa
 1. मोबाइल, टैबलेट और डेस्कटॉप को साथ-साथ जाँचें
 2. एक वर्कस्पेस में 105 से अधिक रिस्पॉन्सिव डिवाइस प्रोफ़ाइल इस्तेमाल करें
 3. लाइव पेज की स्वीकृत डिज़ाइन से तुलना करें
+4. Every device. One click.
 
 ## `ru` — Русский
 
@@ -498,6 +512,7 @@ Mobile View — бесплатный мобильный симулятор и э
 1. Проверяйте телефон, планшет и компьютер рядом
 2. Используйте более 105 профилей устройств в одной рабочей области
 3. Сравнивайте действующую страницу с утвержденным макетом
+4. Every device. One click.
 
 ## `ar` — العربية
 
@@ -531,6 +546,7 @@ Mobile View هو محاكي جوال ومحاكي أجهزة مجاني ومفت
 1. اختبر الهاتف والجهاز اللوحي وسطح المكتب جنبًا إلى جنب
 2. استخدم أكثر من 105 ملفًا لأجهزة متجاوبة في مساحة عمل واحدة
 3. قارن الصفحة المباشرة بتصميم معتمد
+4. Every device. One click.
 
 ## `am` — አማርኛ
 
@@ -559,6 +575,7 @@ iPhone 18 Pro፣ የታጠፈና የተከፈተ iPhone Duo፣ MacBook እና Ap
 1. ስልክ፣ ታብሌትና ዴስክቶፕ ጎን ለጎን ይፈትሹ
 2. ከ105 በላይ የመሣሪያ መገለጫዎችን ይጠቀሙ
 3. ቀጥታ ገጽን ከተፈቀደ ንድፍ ጋር ያወዳድሩ
+4. Every device. One click.
 
 ## `bg` — Български
 
@@ -587,6 +604,7 @@ Mobile View е безплатен мобилен симулатор и емул�
 1. Тествайте телефон, таблет и настолен компютър едновременно
 2. Използвайте над 105 профила на устройства в едно работно пространство
 3. Сравнете активна страница с одобрен дизайн
+4. Every device. One click.
 
 ## `bn` — বাংলা
 
@@ -615,6 +633,7 @@ iPhone 18 Pro, ভাঁজ করা ও খোলা iPhone Duo, MacBook এ�
 1. মোবাইল, ট্যাবলেট ও ডেস্কটপ পাশাপাশি পরীক্ষা করুন
 2. একটি ওয়ার্কস্পেসে ৭০টির বেশি ডিভাইস প্রোফাইল ব্যবহার করুন
 3. লাইভ পেজের সঙ্গে অনুমোদিত ডিজাইন তুলনা করুন
+4. Every device. One click.
 
 ## `ca` — Català
 
@@ -643,6 +662,7 @@ Són previsualitzacions responsives amb Chrome, no dispositius físics ni el mot
 1. Prova mòbil, tauleta i escriptori alhora
 2. Utilitza més de 105 perfils de dispositiu en un espai de treball
 3. Compara una pàgina activa amb un disseny aprovat
+4. Every device. One click.
 
 ## `cs` — Čeština
 
@@ -671,6 +691,7 @@ Jde o responzivní náhledy v Chromu, nikoli fyzická zařízení nebo jádro Sa
 1. Testujte telefon, tablet a počítač současně
 2. Použijte přes 105 profilů zařízení v jednom prostoru
 3. Porovnejte živou stránku se schváleným návrhem
+4. Every device. One click.
 
 ## `da` — Dansk
 
@@ -697,6 +718,7 @@ Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motore
 1. Test mobil, tablet og computer side om side
 2. Brug over 105 enhedsprofiler i ét arbejdsområde
 3. Sammenlign en live-side med et godkendt design
+4. Every device. One click.
 
 ## `el` — Ελληνικά
 
@@ -725,6 +747,7 @@ Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motore
 1. Δοκιμάστε κινητό, tablet και desktop δίπλα-δίπλα
 2. Χρησιμοποιήστε πάνω από 105 προφίλ συσκευών σε έναν χώρο
 3. Συγκρίνετε ζωντανή σελίδα με εγκεκριμένο σχέδιο
+4. Every device. One click.
 
 ## `en_AU` — English (Australia)
 
@@ -759,6 +782,7 @@ These are responsive viewport previews using Chrome, not physical devices or the
 1. Test mobile, tablet and desktop side by side
 2. Scroll once. Compare every view.
 3. Show the issue. Share a clear fix.
+4. Every device. One click.
 
 ## `en_GB` — English (Great Britain)
 
@@ -793,6 +817,7 @@ These are responsive viewport previews using Chrome, not physical devices or the
 1. Test mobile, tablet and desktop side by side
 2. Scroll once. Compare every view.
 3. Show the issue. Share a clear fix.
+4. Every device. One click.
 
 ## `en_US` — English (USA)
 
@@ -827,6 +852,7 @@ These are responsive viewport previews using Chrome, not physical devices or the
 1. Test mobile, tablet and desktop side by side
 2. Scroll once. Compare every view.
 3. Show the issue. Share a clear fix.
+4. Every device. One click.
 
 ## `es_419` — Español (Latinoamérica y el Caribe)
 
@@ -860,6 +886,7 @@ Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari.
 1. Prueba celular, tablet y escritorio al mismo tiempo
 2. Usa más de 105 perfiles de dispositivos en un espacio de trabajo
 3. Compara una página activa con un diseño aprobado
+4. Every device. One click.
 
 ## `et` — Eesti
 
@@ -886,6 +913,7 @@ Need on Chrome’i kohanduvad eelvaated, mitte füüsilised seadmed ega Safari m
 1. Testi telefoni, tahvlit ja arvutit kõrvuti
 2. Kasuta ühes tööruumis üle 105 seadmeprofiili
 3. Võrdle reaalajas lehte kinnitatud kujundusega
+4. Every device. One click.
 
 ## `fa` — فارسی
 
@@ -914,6 +942,7 @@ Mobile View یک شبیه‌ساز موبایل و شبیه‌ساز دستگا�
 1. گوشی، تبلت و دسکتاپ را کنار هم آزمایش کنید
 2. بیش از ۷۰ نمایه دستگاه را در یک فضای کاری استفاده کنید
 3. صفحه زنده را با طرح تأییدشده مقایسه کنید
+4. Every device. One click.
 
 ## `fi` — Suomi
 
@@ -940,6 +969,7 @@ Nämä ovat responsiivisia esikatseluja Chromessa, eivät fyysisiä laitteita ta
 1. Testaa puhelin, tabletti ja tietokone rinnakkain
 2. Käytä yli 105 laiteprofiilia yhdessä työtilassa
 3. Vertaa live-sivua hyväksyttyyn suunnitelmaan
+4. Every device. One click.
 
 ## `gu` — ગુજરાતી
 
@@ -968,6 +998,7 @@ iPhone 18 Pro, વાળેલા અને ખુલ્લા iPhone Duo, MacBo
 1. મોબાઇલ, ટેબ્લેટ અને ડેસ્કટોપ સાથે ચકાસો
 2. એક વર્કસ્પેસમાં 105થી વધુ ડિવાઇસ પ્રોફાઇલ વાપરો
 3. લાઇવ પેજને મંજૂર ડિઝાઇન સાથે સરખાવો
+4. Every device. One click.
 
 ## `he` — עברית
 
@@ -996,6 +1027,7 @@ Mobile View הוא סימולטור נייד ואמולטור מכשירים ח�
 1. בדקו טלפון, טאבלט ומחשב זה לצד זה
 2. השתמשו ביותר מ-105 פרופילי מכשירים בסביבת עבודה אחת
 3. השוו דף חי לעיצוב מאושר
+4. Every device. One click.
 
 ## `hr` — Hrvatski
 
@@ -1024,6 +1056,7 @@ To su responzivni prikazi u Chromeu, a ne fizički uređaji ni pogon Safari. Pra
 1. Testirajte telefon, tablet i računalo istodobno
 2. Koristite više od 105 profila uređaja u jednom prostoru
 3. Usporedite aktivnu stranicu s odobrenim dizajnom
+4. Every device. One click.
 
 ## `hu` — Magyar
 
@@ -1052,6 +1085,7 @@ Ezek a Chrome reszponzív nézetei, nem fizikai eszközök vagy Safari-motor. A 
 1. Teszteljen telefont, táblagépet és számítógépet egymás mellett
 2. Használjon több mint 105 eszközprofilt egy munkaterületen
 3. Hasonlítsa össze az élő oldalt a jóváhagyott tervvel
+4. Every device. One click.
 
 ## `id` — Indonesia
 
@@ -1080,6 +1114,7 @@ Ini adalah pratinjau viewport responsif di Chrome, bukan perangkat fisik atau me
 1. Uji ponsel, tablet, dan desktop secara berdampingan
 2. Gunakan 105+ profil perangkat dalam satu ruang kerja
 3. Bandingkan halaman langsung dengan desain yang disetujui
+4. Every device. One click.
 
 ## `kn` — ಕನ್ನಡ
 
@@ -1108,6 +1143,7 @@ iPhone 18 Pro, ಮಡಚಿದ ಮತ್ತು ತೆರೆದ iPhone Duo, MacBo
 1. ಮೊಬೈಲ್, ಟ್ಯಾಬ್ಲೆಟ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್ ಅನ್ನು ಜೊತೆಯಾಗಿ ಪರೀಕ್ಷಿಸಿ
 2. ಒಂದೇ ವರ್ಕ್‌ಸ್ಪೇಸ್‌ನಲ್ಲಿ 105ಕ್ಕೂ ಹೆಚ್ಚು ಸಾಧನ ಪ್ರೊಫೈಲ್ ಬಳಸಿ
 3. ಲೈವ್ ಪುಟವನ್ನು ಅನುಮೋದಿತ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ
+4. Every device. One click.
 
 ## `lt` — Lietuvių
 
@@ -1136,6 +1172,7 @@ Tai adaptyvios peržiūros naršyklėje Chrome, o ne fiziniai įrenginiai ar Saf
 1. Testuokite telefoną, planšetę ir kompiuterį greta
 2. Vienoje darbo srityje naudokite daugiau nei 105 įrenginių profilių
 3. Palyginkite veikiančią svetainę su patvirtintu dizainu
+4. Every device. One click.
 
 ## `lv` — Latviešu
 
@@ -1164,6 +1201,7 @@ Tie ir adaptīvi priekšskatījumi pārlūkā Chrome, nevis fiziskas ierīces va
 1. Testējiet tālruni, planšeti un datoru blakus
 2. Vienā darbvietā izmantojiet vairāk nekā 105 ierīču profilus
 3. Salīdziniet aktīvu lapu ar apstiprinātu dizainu
+4. Every device. One click.
 
 ## `ml` — മലയാളം
 
@@ -1192,6 +1230,7 @@ iPhone 18 Pro, മടക്കിയതും തുറന്നതുമായ 
 1. മൊബൈൽ, ടാബ്‌ലെറ്റ്, ഡെസ്‌ക്‌ടോപ്പ് ഒരുമിച്ച് പരിശോധിക്കുക
 2. ഒരു വർക്ക്‌സ്‌പേസിൽ 105-ലധികം ഉപകരണ പ്രൊഫൈലുകൾ ഉപയോഗിക്കുക
 3. ലൈവ് പേജിനെ അംഗീകൃത ഡിസൈനുമായി താരതമ്യം ചെയ്യുക
+4. Every device. One click.
 
 ## `mr` — मराठी
 
@@ -1220,6 +1259,7 @@ iPhone 18 Pro, दुमडलेल्या आणि उघडलेल्य
 1. मोबाइल, टॅबलेट आणि डेस्कटॉप एकत्र तपासा
 2. एका वर्कस्पेसमध्ये 105हून अधिक डिव्हाइस प्रोफाइल वापरा
 3. लाइव्ह पेजची मंजूर डिझाइनशी तुलना करा
+4. Every device. One click.
 
 ## `ms` — Bahasa Melayu
 
@@ -1248,6 +1288,7 @@ Ini pratonton viewport responsif dalam Chrome, bukan peranti fizikal atau enjin 
 1. Uji telefon, tablet dan desktop sebelah-menyebelah
 2. Gunakan lebih 105 profil peranti dalam satu ruang kerja
 3. Bandingkan halaman langsung dengan reka bentuk diluluskan
+4. Every device. One click.
 
 ## `no` — Norsk
 
@@ -1274,6 +1315,7 @@ Dette er responsive forhåndsvisninger i Chrome, ikke fysiske enheter eller Safa
 1. Test mobil, nettbrett og datamaskin side om side
 2. Bruk over 105 enhetsprofiler i ett arbeidsområde
 3. Sammenlign en live-side med et godkjent design
+4. Every device. One click.
 
 ## `pl` — Polski
 
@@ -1302,6 +1344,7 @@ To responsywne podglądy w Chrome, a nie fizyczne urządzenia ani silnik Safari.
 1. Testuj telefon, tablet i komputer obok siebie
 2. Używaj ponad 105 profili urządzeń w jednym obszarze
 3. Porównaj aktywną stronę z zatwierdzonym projektem
+4. Every device. One click.
 
 ## `pt_PT` — Português (Portugal)
 
@@ -1330,6 +1373,7 @@ São pré-visualizações responsivas no Chrome, não dispositivos físicos nem 
 1. Teste telemóvel, tablet e computador lado a lado
 2. Use mais de 105 perfis de dispositivos num espaço de trabalho
 3. Compare uma página ativa com um design aprovado
+4. Every device. One click.
 
 ## `ro` — Română
 
@@ -1358,6 +1402,7 @@ Acestea sunt previzualizări responsive în Chrome, nu dispozitive fizice sau mo
 1. Testează telefonul, tableta și desktopul alăturat
 2. Folosește peste 105 de profiluri într-un singur spațiu
 3. Compară o pagină activă cu un design aprobat
+4. Every device. One click.
 
 ## `sk` — Slovenčina
 
@@ -1386,6 +1431,7 @@ Ide o responzívne náhľady v Chrome, nie fyzické zariadenia ani jadro Safari.
 1. Testujte telefón, tablet a počítač vedľa seba
 2. Použite vyše 105 profilov zariadení v jednom priestore
 3. Porovnajte živú stránku so schváleným návrhom
+4. Every device. One click.
 
 ## `sl` — Slovenščina
 
@@ -1414,6 +1460,7 @@ To so odzivni predogledi v Chromu, ne fizične naprave ali pogon Safari. Pravila
 1. Preizkusite telefon, tablico in računalnik drug ob drugem
 2. Uporabite več kot 105 profilov naprav v enem prostoru
 3. Primerjajte živo stran z odobrenim dizajnom
+4. Every device. One click.
 
 ## `sr` — Српски
 
@@ -1442,6 +1489,7 @@ Mobile View је бесплатан мобилни симулатор и ему�
 1. Тестирајте телефон, таблет и рачунар упоредо
 2. Користите преко 105 профила уређаја у једном простору
 3. Упоредите активну страницу са одобреним дизајном
+4. Every device. One click.
 
 ## `sv` — Svenska
 
@@ -1468,6 +1516,7 @@ Detta är responsiva förhandsvisningar i Chrome, inte fysiska enheter eller Saf
 1. Testa mobil, surfplatta och dator sida vid sida
 2. Använd över 105 enhetsprofiler i en arbetsyta
 3. Jämför en live-sida med en godkänd design
+4. Every device. One click.
 
 ## `sw` — Kiswahili
 
@@ -1496,6 +1545,7 @@ Haya ni maonyesho ya mwitikio katika Chrome, si vifaa halisi au injini ya Safari
 1. Jaribu simu, kompyuta kibao na desktop pamoja
 2. Tumia zaidi ya wasifu 105 wa vifaa katika nafasi moja
 3. Linganisha ukurasa hai na muundo ulioidhinishwa
+4. Every device. One click.
 
 ## `ta` — தமிழ்
 
@@ -1524,6 +1574,7 @@ iPhone 18 Pro, மடிக்கப்பட்ட மற்றும் தி
 1. மொபைல், டேப்லெட் மற்றும் டெஸ்க்டாப்பை அருகருகே சோதிக்கவும்
 2. ஒரே பணியிடத்தில் 105க்கும் மேற்பட்ட சாதன சுயவிவரங்களைப் பயன்படுத்தவும்
 3. நேரடி பக்கத்தை அங்கீகரிக்கப்பட்ட வடிவமைப்புடன் ஒப்பிடவும்
+4. Every device. One click.
 
 ## `te` — తెలుగు
 
@@ -1552,6 +1603,7 @@ iPhone 18 Pro, మడిచిన మరియు తెరిచిన iPhone D
 1. మొబైల్, టాబ్లెట్ మరియు డెస్క్‌టాప్‌ను పక్కపక్కన పరీక్షించండి
 2. ఒక వర్క్‌స్పేస్‌లో 105కి పైగా పరికర ప్రొఫైల్‌లను వాడండి
 3. లైవ్ పేజీని ఆమోదిత డిజైన్‌తో పోల్చండి
+4. Every device. One click.
 
 ## `th` — ไทย
 
@@ -1580,6 +1632,7 @@ Mobile View เป็นโปรแกรมจำลองมือถือ�
 1. ทดสอบมือถือ แท็บเล็ต และเดสก์ท็อปพร้อมกัน
 2. ใช้โปรไฟล์อุปกรณ์มากกว่า 105 แบบในพื้นที่ทำงานเดียว
 3. เปรียบเทียบหน้าจริงกับดีไซน์ที่อนุมัติแล้ว
+4. Every device. One click.
 
 ## `tr` — Türkçe
 
@@ -1608,6 +1661,7 @@ Bunlar Chrome üzerinde duyarlı görünüm önizlemeleridir; fiziksel cihazlar 
 1. Mobil, tablet ve masaüstünü yan yana test edin
 2. Tek çalışma alanında 105’ten fazla cihaz profili kullanın
 3. Canlı sayfayı onaylı tasarımla karşılaştırın
+4. Every device. One click.
 
 ## `uk` — Українська
 
@@ -1636,3 +1690,4 @@ Mobile View — безкоштовний мобільний симулятор �
 1. Тестуйте телефон, планшет і комп’ютер поруч
 2. Використовуйте понад 105 профілів пристроїв в одному просторі
 3. Порівнюйте активну сторінку із затвердженим дизайном
+4. Every device. One click.

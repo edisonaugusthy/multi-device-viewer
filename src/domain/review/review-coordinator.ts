@@ -5,6 +5,7 @@ import {
   postponeReviewPrompt,
   recordPromptShown,
   recordQualifiedSession,
+  recordReviewPageOpened,
   recordSuccessfulAction,
   type ReviewPromptState,
 } from "./review-prompt";
@@ -41,12 +42,12 @@ export function createReviewCoordinator(dependencies: ReviewDependencies) {
           presented = isReviewPromptEligible(state, now);
           if (presented) state = recordPromptShown(state, now);
           break;
-        case "postpone": state = postponeReviewPrompt(state); break;
+        case "postpone": state = postponeReviewPrompt(state, now); break;
         case "never": state = finishReviewPrompt(state, "never"); break;
         case "open":
           // A successful tab creation is evidence of an opened listing, not a submitted review.
           await dependencies.openReviewPage();
-          if (state.outcome !== "never") state = finishReviewPrompt(state, "opened");
+          state = recordReviewPageOpened(state, now);
           break;
       }
       state = { ...state, revision: state.revision + 1 };

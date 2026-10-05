@@ -172,9 +172,8 @@ export function SimulatorApp() {
     new URLSearchParams(window.location.search).has("reviewPromptPreview");
   const reviewPrompt = useReviewPrompt({
     enabled: !standalonePreview,
-    hasMultipleViewports: slots.length >= 2,
+    hasMultipleViewports: (slots.length >= 2 || allDevicesUrl !== null) && !showFirstRun && !releaseNotes,
     canPresent:
-      allDevicesUrl === null &&
       !viewOnly &&
       !annotationOpen &&
       !showCustomDevice &&

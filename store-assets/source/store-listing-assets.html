@@ -33,9 +33,9 @@ const lineup='<div class="lineup">'+[['phone','iPhone 18 Pro'],['duo','iPhone Du
 const captions=window.MDV_STORE_CAPTIONS;
 const art=document.querySelector('#art');document.documentElement.lang=locale.replace('_','-');
 if(asset.startsWith('screenshot-')){
- const index=Number(asset.slice(-2))-1; const shot=(index===0?'overview':index===1?'sync':'annotation')+'-'+locale;
+ const index=Number(asset.slice(-2))-1; const shot=index===3?'all-devices-en':(index===0?'overview':index===1?'sync':'annotation')+'-'+locale;
  art.className='screen';art.innerHTML='<header><h1></h1>'+brand+'</header><img class="capture" alt="Actual four-device Mobile View extension workspace">';
- art.querySelector('h1').textContent=(captions[locale]||captions.en)[index];art.querySelector('.capture').src='captures/'+shot+'.png';
+ art.querySelector('h1').textContent=(captions[locale]||captions.en)[index];art.querySelector('.capture').alt=index===3?'Actual Mobile View All devices gallery':'Actual four-device Mobile View extension workspace';art.querySelector('.capture').src='captures/'+shot+'.png';
 }else if(asset==='promo-small'){
  art.className='small';art.innerHTML=brand+'<h1>Your site. Every screen.</h1><img class="promo-device desktop" src="captures/desktop.png" alt="MacBook preview"><img class="promo-device phone" src="captures/phone.png" alt="iPhone 18 Pro preview"><img class="promo-device folded" src="captures/duo-folded.png" alt="Folded iPhone Duo preview"><img class="promo-device watch" src="captures/watch.png" alt="Apple Watch preview">';
 }else if(asset==='promo-marquee'){

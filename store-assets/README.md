@@ -1,6 +1,6 @@
-# Mobile View store assets — 0.2.10
+# Mobile View store assets — 0.2.11
 
-Both promo images and all three screenshot stories have been replaced with actual running-extension captures. The fictional Orbit demo is local and contains no customer data or remote assets.
+Both promo images and all four screenshot stories use actual running-extension captures. The fictional Orbit demo is local and contains no customer data or remote assets.
 
 | Asset | Dimensions | Purpose |
 |---|---:|---|
@@ -9,9 +9,10 @@ Both promo images and all three screenshot stories have been replaced with actua
 | `webstore-upload/screenshot-01-overview.jpg` | 1280 × 800 | Four-device workspace with iPhone 18 Pro and folded Duo |
 | `webstore-upload/screenshot-02-responsive-workspace.jpg` | 1280 × 800 | Real UI with synchronized scrolling enabled |
 | `webstore-upload/screenshot-03-design-comparison.jpg` | 1280 × 800 | Real annotation editor with a box, arrow and issue note |
+| `webstore-upload/screenshot-04-all-devices.jpg` | 1280 × 800 | **Every device. One click.** — grouped, scrollable All devices gallery |
 | `../website/public/og.png` | 1200 × 630 | Matching website/social preview |
 
-English screenshots are at the upload root. German, Spanish, French, Brazilian Portuguese, Japanese, Korean and Simplified Chinese are under `webstore-upload/localized/`. There are 24 screenshot files and two global promos. The demo website content remains fictional English copy; the screenshot captions and supported extension controls are localized. All three stories now use a separate capture for each language, including localized viewport controls.
+English screenshots are at the upload root. German, Spanish, French, Brazilian Portuguese, Japanese, Korean and Simplified Chinese are under `webstore-upload/localized/`. There are 32 screenshot files and two global promos. The first three stories use separate captures for each language, including localized captions and viewport controls. The approved fourth screenshot uses the same English headline and gallery capture in all eight sets. The demo website content remains fictional English copy.
 
 ## Capture provenance
 
@@ -28,6 +29,8 @@ The icon keeps the overlapping laptop, landscape tablet, portrait phone and smal
 The old illustrated source files have been removed. All 24 localized screenshots, both promos, the website overview, and the social preview have been refreshed with the current icon.
 
 The approved small promo and marquee are preserved. All 24 screenshot stories were recaptured on October 4, 2026 with the folded Duo and a consistent inset frame; the website overview uses the same updated English capture. The social preview retains its preceding composition.
+
+The fourth story was approved on October 5, 2026. Its raw capture, `source/captures/all-devices-en.png`, comes from an isolated unpacked Chrome 0.2.11 build after all 109 gallery previews loaded. It shows the category tabs, device controls and the next row in the scrollable list. Rebuild just this image with `npm run render:store-assets -- screenshot-04`.
 
 ## Rebuild and publish
 

@@ -13,7 +13,8 @@
     "Scroll screenshots use a real 220 px wheel gesture with sync enabled. Resulting scroll offsets: 220, 220, 84 (page end), 220.",
     "Each annotation capture imports its localized actual overview PNG through the design-reference input and uses the actual Box, Arrow and Text controls. Native activeTab capture permission was not bypassed or claimed validated by this artwork workflow.",
     "Promo hardware crops and screenshots are real extension output. All logo placements use the plain transparent four-device SVG and its PNG exports.",
-    "Raw promo crops exclude viewport toolbars and are individually captured at higher resolution. Screenshot stories have been recaptured with the folded Duo and presented in a consistent inset frame with rounded corners. All 24 final screenshots retain 1280 × 800 upload dimensions. The approved small promo and marquee are preserved."
+    "Raw promo crops exclude viewport toolbars and are individually captured at higher resolution. Screenshot stories have been recaptured with the folded Duo and presented in a consistent inset frame with rounded corners. All 24 final screenshots retain 1280 × 800 upload dimensions. The approved small promo and marquee are preserved.",
+    "The approved fourth story, Every device. One click., was captured on October 5, 2026 from the 0.2.11 All devices gallery after all 109 previews loaded. The same approved English capture and headline are included in all eight screenshot sets; the first three stories retain their localized controls and captions."
   ],
   "rawCaptures": [
     {
@@ -255,6 +256,20 @@
       "bytes": 83353,
       "sha256": "02ba73cdbadb9528c394f1e3aae2bdae602621f1dda44c6ff2b9a0f3c32bbf72",
       "capturedAt": "2026-10-04T20:01:29.609Z"
+    },
+    {
+      "file": "store-assets/source/captures/all-devices-en.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 204827,
+      "sha256": "7e8281275b7b5b03ad87b5fcbf5ae8dcfeaa9c7dddd67a5e2621480fa9634427",
+      "capturedAt": "2026-10-05T18:16:39.998493+00:00",
+      "version": "0.2.11",
+      "locale": "en",
+      "qaOpenShadow": true,
+      "qaContentScriptSha256": "dd4f28b764c781758fadee9040c0ed7fdb16a3d64e3b834727c24d7a016ff314",
+      "loadedPreviews": 109,
+      "totalPreviews": 109
     }
   ],
   "iconSha256": "024ff1ac2606fae2d5a817b47627da3670935a83acafa0131896d48a6dba2870",

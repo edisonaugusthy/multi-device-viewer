@@ -1,6 +1,6 @@
 # Mobile View & Responsive Tester — Privacy Policy
 
-Last updated: September 7, 2026
+Last updated: October 5, 2026
 
 ## Summary
 
@@ -33,7 +33,9 @@ Browser-local extension storage is used to preserve the working experience. Stor
 - Scroll-sync and theme preferences.
 - Design-reference images, overlay positions, opacity, and panel size.
 - Welcome and release-note state, local use count, and review-prompt milestones
-  and choices.
+  and choices, including counts and timestamps of requests, postponements, and
+  review-page openings. These stay on the device and do not confirm that a
+  review was submitted.
 - Navigation-sync and recording-interface state.
 
 This data is stored only in the user's browser profile. The extension does not synchronize it through an application account or transmit it to a backend.

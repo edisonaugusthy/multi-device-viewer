@@ -9,10 +9,9 @@ import { FeedbackDialog, FeedbackError } from "./FeedbackDialog";
 
 const reasonLabels: Record<string, TranslationKey> = {
   disabled: "reviewStatusDisabled", error: "reviewStatusError", loading: "reviewStatusLoading",
-  age: "reviewStatusAge", sessions: "reviewStatusSessions", actions: "reviewStatusActions",
+  age: "reviewStatusAge", sessions: "reviewStatusSessions", testing: "reviewStatusTesting",
   cooldown: "reviewStatusCooldown", "return-sessions": "reviewStatusReturnSessions",
-  limit: "reviewStatusLimit", opened: "reviewStatusOpened", never: "reviewStatusNever",
-  dialog: "reviewStatusDialog", action: "reviewStatusAction", eligible: "reviewStatusEligible",
+  limit: "reviewStatusLimit", never: "reviewStatusNever", eligible: "reviewStatusEligible",
 };
 
 export function HelpModal({ dark, review, onClose }: {
@@ -38,7 +37,11 @@ export function HelpModal({ dark, review, onClose }: {
     footer={<details className="text-xs">
       <summary className={`cursor-pointer rounded font-medium leading-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 ${dark ? "text-slate-400 hover:text-slate-200" : "text-slate-600 hover:text-slate-900"}`}>{t("reviewRequestStatus")}</summary>
       <p className={`mt-2 leading-5 ${dark ? "text-slate-300" : "text-slate-600"}`}>{t(reasonLabels[review.reason] ?? "reviewStatusLoading")}</p>
-      {review.state && <p className={`mt-2 leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>{t("reviewProgress", { sessions: review.state.qualifiedSessions, requiredsessions: REVIEW_PROMPT_POLICY.minimumQualifiedSessions, actions: review.state.successfulActions, requiredactions: REVIEW_PROMPT_POLICY.minimumSuccessfulActions })}</p>}
+      {review.state && <div className={`mt-2 space-y-1 leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
+        <p>{t("reviewProgress", { sessions: review.state.qualifiedSessions, requiredsessions: REVIEW_PROMPT_POLICY.minimumQualifiedSessions })}</p>
+        <p>{t("reviewTracking", { prompts: review.state.promptCount, limit: REVIEW_PROMPT_POLICY.maximumPrompts, opens: review.state.openedCount, dismissals: review.state.postponedCount })}</p>
+        <p>{t("reviewTrackingNote")}</p>
+      </div>}
     </details>}
   >
     <div className="grid gap-2">

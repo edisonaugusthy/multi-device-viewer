@@ -13,7 +13,8 @@
       "screenshotCaptions": [
         "New devices. One responsive workspace.",
         "Scroll once. Compare every view.",
-        "Show the issue. Share a clear fix."
+        "Show the issue. Share a clear fix.",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "editor-reviewed",
@@ -30,7 +31,8 @@
       "screenshotCaptions": [
         "Neue Geräte. Ein Workspace für responsive Tests.",
         "Einmal scrollen. Alle Ansichten vergleichen.",
-        "Problem zeigen. Lösung verständlich machen."
+        "Problem zeigen. Lösung verständlich machen.",
+        "Every device. One click."
       ],
       "screenshotLocale": "de",
       "languageReviewStatus": "native-review-recommended",
@@ -47,7 +49,8 @@
       "screenshotCaptions": [
         "Nuevos dispositivos. Un espacio para probar tu web.",
         "Desplázate una vez. Compara todas las vistas.",
-        "Muestra el problema. Comparte una solución clara."
+        "Muestra el problema. Comparte una solución clara.",
+        "Every device. One click."
       ],
       "screenshotLocale": "es",
       "languageReviewStatus": "native-review-recommended",
@@ -64,7 +67,8 @@
       "screenshotCaptions": [
         "Nouveaux appareils. Un espace pour tester votre site.",
         "Faites défiler. Comparez toutes les vues.",
-        "Montrez le problème. Expliquez la correction."
+        "Montrez le problème. Expliquez la correction.",
+        "Every device. One click."
       ],
       "screenshotLocale": "fr",
       "languageReviewStatus": "native-review-recommended",
@@ -81,7 +85,8 @@
       "screenshotCaptions": [
         "新设备，同一个响应式测试工作区。",
         "滚动一次，对比所有视图。",
-        "标出问题，清楚说明修改方向。"
+        "标出问题，清楚说明修改方向。",
+        "Every device. One click."
       ],
       "screenshotLocale": "zh_CN",
       "languageReviewStatus": "native-review-recommended",
@@ -98,7 +103,8 @@
       "screenshotCaptions": [
         "並排測試手機、平板與桌面版面",
         "在單一工作區使用 105 多種響應式裝置設定",
-        "比較即時頁面與已核准的設計稿"
+        "比較即時頁面與已核准的設計稿",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -115,7 +121,8 @@
       "screenshotCaptions": [
         "Subukan nang sabay ang mobile, tablet, at desktop",
         "Gumamit ng 105+ responsive device profile sa isang workspace",
-        "Ikumpara ang live page sa aprubadong design"
+        "Ikumpara ang live page sa aprubadong design",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -132,7 +139,8 @@
       "screenshotCaptions": [
         "Test mobiel, tablet en desktop naast elkaar",
         "Gebruik meer dan 105 responsive apparaatprofielen in één werkruimte",
-        "Vergelijk een live pagina met een goedgekeurd ontwerp"
+        "Vergelijk een live pagina met een goedgekeurd ontwerp",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -149,7 +157,8 @@
       "screenshotCaptions": [
         "Kiểm thử song song trên điện thoại, máy tính bảng và máy tính",
         "Dùng hơn 105 hồ sơ thiết bị responsive trong một không gian làm việc",
-        "So sánh trang trực tiếp với thiết kế đã duyệt"
+        "So sánh trang trực tiếp với thiết kế đã duyệt",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -166,7 +175,8 @@
       "screenshotCaptions": [
         "Novos dispositivos. Um só espaço para testar seu site.",
         "Role uma vez. Compare todas as vistas.",
-        "Mostre o problema. Explique a correção."
+        "Mostre o problema. Explique a correção.",
+        "Every device. One click."
       ],
       "screenshotLocale": "pt_BR",
       "languageReviewStatus": "native-review-recommended",
@@ -183,7 +193,8 @@
       "screenshotCaptions": [
         "Testa mobile, tablet e desktop affiancati",
         "Usa oltre 105 profili responsive in un’unica area di lavoro",
-        "Confronta una pagina attiva con un design approvato"
+        "Confronta una pagina attiva con un design approvato",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -200,7 +211,8 @@
       "screenshotCaptions": [
         "新しいデバイスを、ひとつのワークスペースで。",
         "一度のスクロールで、すべての表示を比較。",
-        "問題を示して、修正をわかりやすく。"
+        "問題を示して、修正をわかりやすく。",
+        "Every device. One click."
       ],
       "screenshotLocale": "ja",
       "languageReviewStatus": "native-review-recommended",
@@ -217,7 +229,8 @@
       "screenshotCaptions": [
         "새로운 기기를 하나의 작업 공간에서.",
         "한 번 스크롤로 모든 뷰를 비교하세요.",
-        "문제를 보여 주고 수정 방향을 명확하게."
+        "문제를 보여 주고 수정 방향을 명확하게.",
+        "Every device. One click."
       ],
       "screenshotLocale": "ko",
       "languageReviewStatus": "native-review-recommended",
@@ -234,7 +247,8 @@
       "screenshotCaptions": [
         "मोबाइल, टैबलेट और डेस्कटॉप को साथ-साथ जाँचें",
         "एक वर्कस्पेस में 105 से अधिक रिस्पॉन्सिव डिवाइस प्रोफ़ाइल इस्तेमाल करें",
-        "लाइव पेज की स्वीकृत डिज़ाइन से तुलना करें"
+        "लाइव पेज की स्वीकृत डिज़ाइन से तुलना करें",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -251,7 +265,8 @@
       "screenshotCaptions": [
         "Проверяйте телефон, планшет и компьютер рядом",
         "Используйте более 105 профилей устройств в одной рабочей области",
-        "Сравнивайте действующую страницу с утвержденным макетом"
+        "Сравнивайте действующую страницу с утвержденным макетом",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -268,7 +283,8 @@
       "screenshotCaptions": [
         "اختبر الهاتف والجهاز اللوحي وسطح المكتب جنبًا إلى جنب",
         "استخدم أكثر من 105 ملفًا لأجهزة متجاوبة في مساحة عمل واحدة",
-        "قارن الصفحة المباشرة بتصميم معتمد"
+        "قارن الصفحة المباشرة بتصميم معتمد",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -285,7 +301,8 @@
       "screenshotCaptions": [
         "ስልክ፣ ታብሌትና ዴስክቶፕ ጎን ለጎን ይፈትሹ",
         "ከ105 በላይ የመሣሪያ መገለጫዎችን ይጠቀሙ",
-        "ቀጥታ ገጽን ከተፈቀደ ንድፍ ጋር ያወዳድሩ"
+        "ቀጥታ ገጽን ከተፈቀደ ንድፍ ጋር ያወዳድሩ",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -302,7 +319,8 @@
       "screenshotCaptions": [
         "Тествайте телефон, таблет и настолен компютър едновременно",
         "Използвайте над 105 профила на устройства в едно работно пространство",
-        "Сравнете активна страница с одобрен дизайн"
+        "Сравнете активна страница с одобрен дизайн",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -319,7 +337,8 @@
       "screenshotCaptions": [
         "মোবাইল, ট্যাবলেট ও ডেস্কটপ পাশাপাশি পরীক্ষা করুন",
         "একটি ওয়ার্কস্পেসে ৭০টির বেশি ডিভাইস প্রোফাইল ব্যবহার করুন",
-        "লাইভ পেজের সঙ্গে অনুমোদিত ডিজাইন তুলনা করুন"
+        "লাইভ পেজের সঙ্গে অনুমোদিত ডিজাইন তুলনা করুন",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -336,7 +355,8 @@
       "screenshotCaptions": [
         "Prova mòbil, tauleta i escriptori alhora",
         "Utilitza més de 105 perfils de dispositiu en un espai de treball",
-        "Compara una pàgina activa amb un disseny aprovat"
+        "Compara una pàgina activa amb un disseny aprovat",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -353,7 +373,8 @@
       "screenshotCaptions": [
         "Testujte telefon, tablet a počítač současně",
         "Použijte přes 105 profilů zařízení v jednom prostoru",
-        "Porovnejte živou stránku se schváleným návrhem"
+        "Porovnejte živou stránku se schváleným návrhem",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -370,7 +391,8 @@
       "screenshotCaptions": [
         "Test mobil, tablet og computer side om side",
         "Brug over 105 enhedsprofiler i ét arbejdsområde",
-        "Sammenlign en live-side med et godkendt design"
+        "Sammenlign en live-side med et godkendt design",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -387,7 +409,8 @@
       "screenshotCaptions": [
         "Δοκιμάστε κινητό, tablet και desktop δίπλα-δίπλα",
         "Χρησιμοποιήστε πάνω από 105 προφίλ συσκευών σε έναν χώρο",
-        "Συγκρίνετε ζωντανή σελίδα με εγκεκριμένο σχέδιο"
+        "Συγκρίνετε ζωντανή σελίδα με εγκεκριμένο σχέδιο",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -404,7 +427,8 @@
       "screenshotCaptions": [
         "Test mobile, tablet and desktop side by side",
         "Scroll once. Compare every view.",
-        "Show the issue. Share a clear fix."
+        "Show the issue. Share a clear fix.",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "editor-reviewed",
@@ -421,7 +445,8 @@
       "screenshotCaptions": [
         "Test mobile, tablet and desktop side by side",
         "Scroll once. Compare every view.",
-        "Show the issue. Share a clear fix."
+        "Show the issue. Share a clear fix.",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "editor-reviewed",
@@ -438,7 +463,8 @@
       "screenshotCaptions": [
         "Test mobile, tablet and desktop side by side",
         "Scroll once. Compare every view.",
-        "Show the issue. Share a clear fix."
+        "Show the issue. Share a clear fix.",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "editor-reviewed",
@@ -455,7 +481,8 @@
       "screenshotCaptions": [
         "Prueba celular, tablet y escritorio al mismo tiempo",
         "Usa más de 105 perfiles de dispositivos en un espacio de trabajo",
-        "Compara una página activa con un diseño aprobado"
+        "Compara una página activa con un diseño aprobado",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -472,7 +499,8 @@
       "screenshotCaptions": [
         "Testi telefoni, tahvlit ja arvutit kõrvuti",
         "Kasuta ühes tööruumis üle 105 seadmeprofiili",
-        "Võrdle reaalajas lehte kinnitatud kujundusega"
+        "Võrdle reaalajas lehte kinnitatud kujundusega",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -489,7 +517,8 @@
       "screenshotCaptions": [
         "گوشی، تبلت و دسکتاپ را کنار هم آزمایش کنید",
         "بیش از ۷۰ نمایه دستگاه را در یک فضای کاری استفاده کنید",
-        "صفحه زنده را با طرح تأییدشده مقایسه کنید"
+        "صفحه زنده را با طرح تأییدشده مقایسه کنید",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -506,7 +535,8 @@
       "screenshotCaptions": [
         "Testaa puhelin, tabletti ja tietokone rinnakkain",
         "Käytä yli 105 laiteprofiilia yhdessä työtilassa",
-        "Vertaa live-sivua hyväksyttyyn suunnitelmaan"
+        "Vertaa live-sivua hyväksyttyyn suunnitelmaan",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -523,7 +553,8 @@
       "screenshotCaptions": [
         "મોબાઇલ, ટેબ્લેટ અને ડેસ્કટોપ સાથે ચકાસો",
         "એક વર્કસ્પેસમાં 105થી વધુ ડિવાઇસ પ્રોફાઇલ વાપરો",
-        "લાઇવ પેજને મંજૂર ડિઝાઇન સાથે સરખાવો"
+        "લાઇવ પેજને મંજૂર ડિઝાઇન સાથે સરખાવો",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -540,7 +571,8 @@
       "screenshotCaptions": [
         "בדקו טלפון, טאבלט ומחשב זה לצד זה",
         "השתמשו ביותר מ-105 פרופילי מכשירים בסביבת עבודה אחת",
-        "השוו דף חי לעיצוב מאושר"
+        "השוו דף חי לעיצוב מאושר",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -557,7 +589,8 @@
       "screenshotCaptions": [
         "Testirajte telefon, tablet i računalo istodobno",
         "Koristite više od 105 profila uređaja u jednom prostoru",
-        "Usporedite aktivnu stranicu s odobrenim dizajnom"
+        "Usporedite aktivnu stranicu s odobrenim dizajnom",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -574,7 +607,8 @@
       "screenshotCaptions": [
         "Teszteljen telefont, táblagépet és számítógépet egymás mellett",
         "Használjon több mint 105 eszközprofilt egy munkaterületen",
-        "Hasonlítsa össze az élő oldalt a jóváhagyott tervvel"
+        "Hasonlítsa össze az élő oldalt a jóváhagyott tervvel",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -591,7 +625,8 @@
       "screenshotCaptions": [
         "Uji ponsel, tablet, dan desktop secara berdampingan",
         "Gunakan 105+ profil perangkat dalam satu ruang kerja",
-        "Bandingkan halaman langsung dengan desain yang disetujui"
+        "Bandingkan halaman langsung dengan desain yang disetujui",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -608,7 +643,8 @@
       "screenshotCaptions": [
         "ಮೊಬೈಲ್, ಟ್ಯಾಬ್ಲೆಟ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್ ಅನ್ನು ಜೊತೆಯಾಗಿ ಪರೀಕ್ಷಿಸಿ",
         "ಒಂದೇ ವರ್ಕ್‌ಸ್ಪೇಸ್‌ನಲ್ಲಿ 105ಕ್ಕೂ ಹೆಚ್ಚು ಸಾಧನ ಪ್ರೊಫೈಲ್ ಬಳಸಿ",
-        "ಲೈವ್ ಪುಟವನ್ನು ಅನುಮೋದಿತ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ"
+        "ಲೈವ್ ಪುಟವನ್ನು ಅನುಮೋದಿತ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -625,7 +661,8 @@
       "screenshotCaptions": [
         "Testuokite telefoną, planšetę ir kompiuterį greta",
         "Vienoje darbo srityje naudokite daugiau nei 105 įrenginių profilių",
-        "Palyginkite veikiančią svetainę su patvirtintu dizainu"
+        "Palyginkite veikiančią svetainę su patvirtintu dizainu",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -642,7 +679,8 @@
       "screenshotCaptions": [
         "Testējiet tālruni, planšeti un datoru blakus",
         "Vienā darbvietā izmantojiet vairāk nekā 105 ierīču profilus",
-        "Salīdziniet aktīvu lapu ar apstiprinātu dizainu"
+        "Salīdziniet aktīvu lapu ar apstiprinātu dizainu",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -659,7 +697,8 @@
       "screenshotCaptions": [
         "മൊബൈൽ, ടാബ്‌ലെറ്റ്, ഡെസ്‌ക്‌ടോപ്പ് ഒരുമിച്ച് പരിശോധിക്കുക",
         "ഒരു വർക്ക്‌സ്‌പേസിൽ 105-ലധികം ഉപകരണ പ്രൊഫൈലുകൾ ഉപയോഗിക്കുക",
-        "ലൈവ് പേജിനെ അംഗീകൃത ഡിസൈനുമായി താരതമ്യം ചെയ്യുക"
+        "ലൈവ് പേജിനെ അംഗീകൃത ഡിസൈനുമായി താരതമ്യം ചെയ്യുക",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -676,7 +715,8 @@
       "screenshotCaptions": [
         "मोबाइल, टॅबलेट आणि डेस्कटॉप एकत्र तपासा",
         "एका वर्कस्पेसमध्ये 105हून अधिक डिव्हाइस प्रोफाइल वापरा",
-        "लाइव्ह पेजची मंजूर डिझाइनशी तुलना करा"
+        "लाइव्ह पेजची मंजूर डिझाइनशी तुलना करा",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -693,7 +733,8 @@
       "screenshotCaptions": [
         "Uji telefon, tablet dan desktop sebelah-menyebelah",
         "Gunakan lebih 105 profil peranti dalam satu ruang kerja",
-        "Bandingkan halaman langsung dengan reka bentuk diluluskan"
+        "Bandingkan halaman langsung dengan reka bentuk diluluskan",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -710,7 +751,8 @@
       "screenshotCaptions": [
         "Test mobil, nettbrett og datamaskin side om side",
         "Bruk over 105 enhetsprofiler i ett arbeidsområde",
-        "Sammenlign en live-side med et godkjent design"
+        "Sammenlign en live-side med et godkjent design",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -727,7 +769,8 @@
       "screenshotCaptions": [
         "Testuj telefon, tablet i komputer obok siebie",
         "Używaj ponad 105 profili urządzeń w jednym obszarze",
-        "Porównaj aktywną stronę z zatwierdzonym projektem"
+        "Porównaj aktywną stronę z zatwierdzonym projektem",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -744,7 +787,8 @@
       "screenshotCaptions": [
         "Teste telemóvel, tablet e computador lado a lado",
         "Use mais de 105 perfis de dispositivos num espaço de trabalho",
-        "Compare uma página ativa com um design aprovado"
+        "Compare uma página ativa com um design aprovado",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -761,7 +805,8 @@
       "screenshotCaptions": [
         "Testează telefonul, tableta și desktopul alăturat",
         "Folosește peste 105 de profiluri într-un singur spațiu",
-        "Compară o pagină activă cu un design aprobat"
+        "Compară o pagină activă cu un design aprobat",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -778,7 +823,8 @@
       "screenshotCaptions": [
         "Testujte telefón, tablet a počítač vedľa seba",
         "Použite vyše 105 profilov zariadení v jednom priestore",
-        "Porovnajte živú stránku so schváleným návrhom"
+        "Porovnajte živú stránku so schváleným návrhom",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -795,7 +841,8 @@
       "screenshotCaptions": [
         "Preizkusite telefon, tablico in računalnik drug ob drugem",
         "Uporabite več kot 105 profilov naprav v enem prostoru",
-        "Primerjajte živo stran z odobrenim dizajnom"
+        "Primerjajte živo stran z odobrenim dizajnom",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -812,7 +859,8 @@
       "screenshotCaptions": [
         "Тестирајте телефон, таблет и рачунар упоредо",
         "Користите преко 105 профила уређаја у једном простору",
-        "Упоредите активну страницу са одобреним дизајном"
+        "Упоредите активну страницу са одобреним дизајном",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -829,7 +877,8 @@
       "screenshotCaptions": [
         "Testa mobil, surfplatta och dator sida vid sida",
         "Använd över 105 enhetsprofiler i en arbetsyta",
-        "Jämför en live-sida med en godkänd design"
+        "Jämför en live-sida med en godkänd design",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -846,7 +895,8 @@
       "screenshotCaptions": [
         "Jaribu simu, kompyuta kibao na desktop pamoja",
         "Tumia zaidi ya wasifu 105 wa vifaa katika nafasi moja",
-        "Linganisha ukurasa hai na muundo ulioidhinishwa"
+        "Linganisha ukurasa hai na muundo ulioidhinishwa",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -863,7 +913,8 @@
       "screenshotCaptions": [
         "மொபைல், டேப்லெட் மற்றும் டெஸ்க்டாப்பை அருகருகே சோதிக்கவும்",
         "ஒரே பணியிடத்தில் 105க்கும் மேற்பட்ட சாதன சுயவிவரங்களைப் பயன்படுத்தவும்",
-        "நேரடி பக்கத்தை அங்கீகரிக்கப்பட்ட வடிவமைப்புடன் ஒப்பிடவும்"
+        "நேரடி பக்கத்தை அங்கீகரிக்கப்பட்ட வடிவமைப்புடன் ஒப்பிடவும்",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -880,7 +931,8 @@
       "screenshotCaptions": [
         "మొబైల్, టాబ్లెట్ మరియు డెస్క్‌టాప్‌ను పక్కపక్కన పరీక్షించండి",
         "ఒక వర్క్‌స్పేస్‌లో 105కి పైగా పరికర ప్రొఫైల్‌లను వాడండి",
-        "లైవ్ పేజీని ఆమోదిత డిజైన్‌తో పోల్చండి"
+        "లైవ్ పేజీని ఆమోదిత డిజైన్‌తో పోల్చండి",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -897,7 +949,8 @@
       "screenshotCaptions": [
         "ทดสอบมือถือ แท็บเล็ต และเดสก์ท็อปพร้อมกัน",
         "ใช้โปรไฟล์อุปกรณ์มากกว่า 105 แบบในพื้นที่ทำงานเดียว",
-        "เปรียบเทียบหน้าจริงกับดีไซน์ที่อนุมัติแล้ว"
+        "เปรียบเทียบหน้าจริงกับดีไซน์ที่อนุมัติแล้ว",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -914,7 +967,8 @@
       "screenshotCaptions": [
         "Mobil, tablet ve masaüstünü yan yana test edin",
         "Tek çalışma alanında 105’ten fazla cihaz profili kullanın",
-        "Canlı sayfayı onaylı tasarımla karşılaştırın"
+        "Canlı sayfayı onaylı tasarımla karşılaştırın",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",
@@ -931,7 +985,8 @@
       "screenshotCaptions": [
         "Тестуйте телефон, планшет і комп’ютер поруч",
         "Використовуйте понад 105 профілів пристроїв в одному просторі",
-        "Порівнюйте активну сторінку із затвердженим дизайном"
+        "Порівнюйте активну сторінку із затвердженим дизайном",
+        "Every device. One click."
       ],
       "screenshotLocale": "en",
       "languageReviewStatus": "native-review-recommended",

@@ -27,6 +27,13 @@ const assets = [
     filename: "screenshot-03-design-comparison.jpg",
   },
   {
+    key: "screenshot-04",
+    width: 1280,
+    height: 800,
+    filename: "screenshot-04-all-devices.jpg",
+    quality: 95,
+  },
+  {
     key: "promo-small",
     width: 440,
     height: 280,
@@ -79,7 +86,7 @@ try {
     await page.screenshot({
       path: resolve(folder, asset.filename),
       type: asset.type ?? "jpeg",
-      quality: asset.type === "png" ? undefined : 94,
+      quality: asset.type === "png" ? undefined : asset.quality ?? 94,
       fullPage: false,
     });
     await page.close();

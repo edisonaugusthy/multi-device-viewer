@@ -58,6 +58,13 @@ Open the current website or local development server in up to four live device v
 - Record the source tab when a short video explains the behavior better than a still image.
 - Generate a structured fix prompt containing the URL, selected devices, dimensions, orientation, expected result, and actual result. The extension only prepares the text; it never sends it to an AI service.
 
+### Reviews and feedback
+
+- **Help and feedback** provides direct links to the Chrome Web Store and GitHub issues.
+- Regular multi-device testing qualifies for a review request after seven days and five sessions with at least one minute of visible use. No capture or saved layout is required. Requests wait for a quiet pause and stay out of other dialogs and ongoing captures or recordings.
+- At most two requests appear. A reminder requires 14 days and three more qualified sessions; **Don't ask again** permanently stops requests.
+- Request, postponement, and Store-opening counts are visible in Help and stay on the device. Opening the Store starts a cooldown and does not confirm a submitted review.
+
 ## Privacy
 
 - No accounts, analytics, telemetry, advertising, remote logging, or behavioral tracking.

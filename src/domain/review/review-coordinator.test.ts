@@ -38,7 +38,9 @@ describe("shared review commands", () => {
     f.open.mockRejectedValueOnce(new Error("Tab creation failed"));
     await expect(f.command("open")).rejects.toThrow("Tab creation failed");
     expect(f.stored().outcome).toBe("pending");
-    expect((await f.command("open")).state.outcome).toBe("opened");
+    expect(f.stored()).toMatchObject({ openedCount: 0, lastOpenedAt: null });
+    expect((await f.command("open")).state).toMatchObject({ outcome: "pending", openedCount: 1, lastOpenedAt: now });
+    expect((await f.command("present")).presented).toBe(false);
     expect(f.open).toHaveBeenCalledTimes(2);
   });
   it("preserves legacy suppression while allowing a manual review", async () => {
@@ -47,5 +49,31 @@ describe("shared review commands", () => {
     await f.command("open");
     expect(f.open).toHaveBeenCalledOnce();
     expect(f.stored().outcome).toBe("never");
+    expect(f.stored().openedCount).toBe(1);
+  });
+  it("tracks concurrent Store openings without resetting the shown prompt count", async () => {
+    const f = fixture();
+    await f.command("present");
+    await Promise.all([f.command("open"), f.command("open")]);
+    expect(f.stored()).toMatchObject({ promptCount: 1, openedCount: 2, outcome: "pending" });
+  });
+  it("records dismissal once when close commands arrive together", async () => {
+    const f = fixture();
+    await f.command("present");
+    await Promise.all([f.command("postpone"), f.command("postpone")]);
+    expect(f.stored()).toMatchObject({ promptCount: 1, postponedCount: 1, lastPostponedAt: now, outcome: "pending" });
+  });
+  it("initializes install age once and preserves state across later loads", async () => {
+    let time = now;
+    let stored: unknown;
+    const command = createReviewCoordinator({
+      now: () => time,
+      read: async () => ({ state: stored, legacyDismissed: false }),
+      write: async state => { stored = structuredClone(state); },
+      openReviewPage: async () => undefined,
+    });
+    expect((await command("load")).state.installedAt).toBe(now);
+    time += 86400000;
+    expect((await command("load")).state.installedAt).toBe(now);
   });
 });

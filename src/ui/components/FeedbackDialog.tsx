@@ -6,7 +6,7 @@ import { useI18n } from "../../app/i18n";
 export function FeedbackDialog({ dark, title, description, busy = false, dismissOnBackdrop = false, onClose, children, footer }: {
   dark: boolean;
   title: string;
-  description: string;
+  description: ReactNode;
   busy?: boolean;
   dismissOnBackdrop?: boolean;
   onClose: () => void;

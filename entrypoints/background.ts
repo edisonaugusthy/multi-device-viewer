@@ -41,6 +41,7 @@ export default defineBackground(() => {
     createContextMenu();
     const version = chrome.runtime.getManifest().version;
     if (details.reason === "install") {
+      void review("load").catch(console.error);
       void chrome.storage.local.set({
         [LAST_SEEN_RELEASE_VERSION_KEY]: version,
         [PENDING_RELEASE_VERSION_KEY]: null,

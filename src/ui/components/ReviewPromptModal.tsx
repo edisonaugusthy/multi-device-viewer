@@ -25,7 +25,9 @@ export function ReviewPromptModal({ dark, storageError = false, onReview, onNotN
   };
 
   return (
-    <FeedbackDialog dark={dark} title={t("reviewTitle")} description={t("reviewBody")} busy={opening} onClose={onNotNow}
+    <FeedbackDialog dark={dark} title={t("reviewTitle")}
+      description={<><strong className={`font-semibold ${dark ? "text-slate-100" : "text-slate-900"}`}>{t("reviewOpenSource")}</strong>{" "}{t("reviewBody")}</>}
+      busy={opening} onClose={onNotNow}
       footer={<div className="flex flex-wrap items-center justify-between gap-2">
         <button type="button" onClick={onNever} disabled={opening}
           className={`min-h-9 rounded-lg px-2 text-xs font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:opacity-50 ${dark ? "text-slate-400 hover:text-slate-200" : "text-slate-600 hover:text-slate-900"}`}>{t("reviewNever")}</button>

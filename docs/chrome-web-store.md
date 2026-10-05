@@ -43,6 +43,7 @@ Use current UI captures at 1280×800 or 640×400. Keep text overlays short and r
 1. **New devices. One responsive workspace.** — `screenshot-01-overview.jpg`.
 2. **Scroll once. Compare every view.** — `screenshot-02-responsive-workspace.jpg`.
 3. **Show the issue. Share a clear fix.** — `screenshot-03-design-comparison.jpg`.
+4. **Every device. One click.** — `screenshot-04-all-devices.jpg`, showing the grouped All devices gallery.
 
 Do not reuse screenshots from the previous sidebar or URL-bar design; outdated images can reduce listing clarity and conversion.
 

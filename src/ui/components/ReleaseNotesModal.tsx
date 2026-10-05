@@ -1,23 +1,6 @@
 import { X } from "lucide-react";
 import type { VersionReleaseNotes } from "../../app/release-notes";
-import { useI18n, type TranslationKey } from "../../app/i18n";
-
-const RELEASE_NOTE_KEYS: Record<string, [TranslationKey, TranslationKey]> = {
-  "Scroll without visible scrollbars": ["releaseScrollTitle", "releaseScrollDescription"],
-  "Four new 2026 Galaxy devices, with every posture": ["releaseGalaxyTitle", "releaseGalaxyDescription"],
-  "A guided first run": ["releaseTourTitle", "releaseTourDescription"],
-  "Correct emulator night mode": ["releaseNightTitle", "releaseNightDescription"],
-  "More current devices": ["releaseDevicesTitle", "releaseDevicesDescription"],
-  "Clearer synchronized testing": ["releaseSyncTitle", "releaseSyncDescription"],
-  "Actionable AI handoff": ["releaseAiTitle", "releaseAiDescription"],
-  "Visible recording state": ["releaseRecordingTitle", "releaseRecordingDescription"],
-  "Faster device switching": ["releaseSwitchingTitle", "releaseSwitchingDescription"],
-  "Cleaner development workspace": ["releaseWorkspaceTitle", "releaseWorkspaceDescription"],
-  "More reliable linked scrolling": ["releaseLinkedScrollTitle", "releaseLinkedScrollDescription"],
-  "Capture and share clearly": ["releaseCaptureTitle", "releaseCaptureDescription"],
-  "Flexible design references": ["releaseDesignTitle", "releaseDesignDescription"],
-  "Latest improvements": ["releaseLatestTitle", "releaseLatestDescription"],
-};
+import { useI18n } from "../../app/i18n";
 
 export function ReleaseNotesModal({ dark, release, onClose }: { dark: boolean; release: VersionReleaseNotes; onClose: () => void }) {
   const { t } = useI18n();
@@ -37,8 +20,8 @@ export function ReleaseNotesModal({ dark, release, onClose }: { dark: boolean; r
               key={note.title}
               className={`py-3 ${note.featured ? "my-2 rounded-xl border border-[#18b5a4]/25 bg-[#18b5a4]/10 px-3" : ""}`}
             >
-              <h3 className={`text-sm font-semibold ${note.featured ? "text-[#0f9f8f]" : ""}`}>{RELEASE_NOTE_KEYS[note.title] ? t(RELEASE_NOTE_KEYS[note.title][0]) : note.title}</h3>
-              <p className={`mt-1 text-xs leading-5 ${dark ? "text-slate-400" : "text-slate-600"}`}>{RELEASE_NOTE_KEYS[note.title] ? t(RELEASE_NOTE_KEYS[note.title][1]) : note.description}</p>
+              <h3 className={`text-sm font-semibold ${note.featured ? "text-[#0f9f8f]" : ""}`}>{t(note.title)}</h3>
+              <p className={`mt-1 text-xs leading-5 ${dark ? "text-slate-400" : "text-slate-600"}`}>{t(note.description)}</p>
             </section>
           ))}
         </div>

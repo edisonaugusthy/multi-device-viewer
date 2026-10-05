@@ -31,6 +31,7 @@ const TOUR_TRANSLATION_KEYS: Array<{
   { eyebrow: "devices", title: "addViewport", text: "tourWorkspaceText", hint: "tourWorkspaceHint" },
   { eyebrow: "workspaceSetup", title: "collapseWorkspaceSetup", text: "tourCanvasText", hint: "tourCanvasHint" },
   { eyebrow: "devices", title: "chooseDevice", text: "searchDevice" },
+  { eyebrow: "devices", title: "allDevices", text: "tourAllDevicesText", hint: "tourAllDevicesHint" },
   { eyebrow: "flowRecorder", title: "recordAFlow", text: "recordFlowToRerun" },
 ];
 
@@ -66,8 +67,8 @@ export function FirstRunGuide({
   const finalStep = stepIndex === FIRST_RUN_TOUR_STEPS.length - 1;
 
   useLayoutEffect(() => {
-    onToolsOpenChange(stepIndex === 1 || stepIndex === 3 || (stepIndex === 0 && compact));
-  }, [stepIndex, compact, onToolsOpenChange]);
+    onToolsOpenChange(baseStep.openTools === true || (baseStep.openTools === "compact" && compact));
+  }, [baseStep.openTools, compact, onToolsOpenChange]);
 
   const findTarget = useCallback(() => {
     if (!step.target) return null;

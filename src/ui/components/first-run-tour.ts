@@ -6,6 +6,7 @@ export interface ProductTourStep {
   text: string;
   target?: string;
   hint?: string;
+  openTools?: boolean | "compact";
 }
 
 export interface HighlightRect {
@@ -21,9 +22,10 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
   {
     eyebrow: "Devices",
     title: "Add viewport",
-    text: "Add a phone, tablet, laptop, display, or your own custom viewport.",
+    text: "Fresh sessions start with iPhone 18 Pro, iPhone Duo folded, and MacBook Pro. Add a viewport to compare another screen.",
     target: '[data-tour="add-viewport"]',
     hint: "Start with Add viewport, then choose the screen you need.",
+    openTools: "compact",
   },
   {
     eyebrow: "Workspace",
@@ -31,6 +33,7 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
     text: "Close Workspace setup to uncover the previews, then reopen it whenever you need tools.",
     target: '[data-tour="sidebar-collapse"]',
     hint: "Open Workspace setup whenever you need the controls again.",
+    openTools: true,
   },
   {
     eyebrow: "Devices",
@@ -39,10 +42,18 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
     target: '[data-tour="change-device"]',
   },
   {
+    eyebrow: "Devices",
+    title: "All devices",
+    text: "Preview the page on every available device in one click. Sections run from iOS and Android phones to tablets, computers, and watches, with smaller screens first.",
+    target: '[data-all-devices-toggle]',
+    hint: "Zoom or expand a card for a closer look. Refresh all restores every preview to its starting page and default view.",
+  },
+  {
     eyebrow: "User flow",
     title: "Record user flow",
     text: "Record a journey once so you can rerun the same interactions across your viewports.",
     target: '[data-tour="record-user-flow"]',
+    openTools: true,
   },
 ];
 

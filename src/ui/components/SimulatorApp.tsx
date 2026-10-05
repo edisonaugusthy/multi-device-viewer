@@ -37,7 +37,7 @@ import {
   LAST_SEEN_RELEASE_VERSION_KEY,
   PENDING_RELEASE_VERSION_KEY,
   decideStartupNotice,
-  releaseNotesFor,
+  CURRENT_RELEASE_NOTES,
   type VersionReleaseNotes,
 } from "../../app/release-notes";
 import {
@@ -68,6 +68,7 @@ import { ReviewPromptModal } from "./ReviewPromptModal";
 import { ReleaseNotesModal } from "./ReleaseNotesModal";
 import { HelpModal } from "./HelpModal";
 import { FocusToolbar } from "./FocusToolbar";
+import { AllDevicesView } from "./AllDevicesView";
 
 const QUICK_DEVICE_SETS = [
   {
@@ -99,6 +100,8 @@ export function SimulatorApp() {
     sourceTabId,
     useCount,
     setSlotDevice,
+    setSlotUrl,
+    getSlotUrl,
   } = useSimulator();
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
@@ -120,6 +123,7 @@ export function SimulatorApp() {
   const [viewOnly, setViewOnly] = useState(false);
   const [showExitHint, setShowExitHint] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [allDevicesUrl, setAllDevicesUrl] = useState<string | null>(null);
   const [narrowLayout, setNarrowLayout] = useState(
     () => typeof window !== "undefined" && window.innerWidth <= 760,
   );
@@ -170,6 +174,7 @@ export function SimulatorApp() {
     enabled: !standalonePreview,
     hasMultipleViewports: slots.length >= 2,
     canPresent:
+      allDevicesUrl === null &&
       !viewOnly &&
       !annotationOpen &&
       !showCustomDevice &&
@@ -321,7 +326,7 @@ export function SimulatorApp() {
         return;
       }
       if (notice.kind !== "release") return;
-      setReleaseNotes(releaseNotesFor(notice.version));
+      setReleaseNotes(CURRENT_RELEASE_NOTES);
       void Promise.all([
         writeStore(LAST_SEEN_RELEASE_VERSION_KEY, notice.version),
         writeStore<string | null>(PENDING_RELEASE_VERSION_KEY, null),
@@ -516,6 +521,24 @@ export function SimulatorApp() {
     removeCustomDevice(deviceId);
   }
 
+  function openAllDevices() {
+    if (flowRecording) toggleFlowRecording();
+    setFlowReplay(null);
+    setSidebarOpen(false);
+    setAllDevicesUrl(getSlotUrl(activeSlotId));
+  }
+
+  const closeAllDevices = useCallback(() => {
+    setAllDevicesUrl(null);
+    requestAnimationFrame(() => getViewerRoot().querySelector<HTMLButtonElement>("[data-all-devices-toggle]")?.focus());
+  }, []);
+
+  const openGalleryDevice = useCallback((deviceId: string, url: string) => {
+    setSlotDevice(activeSlotId, deviceId);
+    if (getSlotUrl(activeSlotId) !== url) setSlotUrl(activeSlotId, url);
+    closeAllDevices();
+  }, [activeSlotId, closeAllDevices, getSlotUrl, setSlotDevice, setSlotUrl]);
+
   const captureMeta = {
     title: `${PRODUCT_SHORT_NAME} QA capture`,
     url: slots[0]?.url ?? "",
@@ -555,15 +578,16 @@ export function SimulatorApp() {
       data-interface-layout="focus"
       data-view-only={viewOnly || undefined}
       tabIndex={-1}
-      className={`flex h-screen flex-col overflow-hidden outline-none font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}
+      className={`relative flex h-screen flex-col overflow-hidden outline-none font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}
     >
+      <div className={`flex min-h-0 flex-1 flex-col ${allDevicesUrl !== null ? "invisible" : ""}`} inert={allDevicesUrl !== null} aria-hidden={allDevicesUrl !== null || undefined}>
       {!viewOnly && <FocusToolbar dark={dark} freeView={display.previewStyle === "free"} scrollSync={display.scrollSync} navigationSync={display.navigationSync} toolsOpen={sidebarOpen}
         url={slots.find(slot => slot.id === activeSlotId)?.url ?? slots[0]?.url ?? ""}
         canAdd={slots.length < maxPreviewSlots} capturing={capturing}
         onViewChange={free => updateDisplay(current => ({ ...current, previewStyle: free ? "free" : "device" }))}
         onAdd={() => addSlot()} onSync={() => updateDisplay(current => ({ ...current, scrollSync: !current.scrollSync }))}
         onNavigationSync={() => updateDisplay(current => ({ ...current, navigationSync: !current.navigationSync }))} onReload={reloadAllSlots}
-        onViewOnly={enterViewOnly} onCapture={() => void takeScopedScreenshot()} onTools={() => setSidebarOpen(value => !value)}
+        onViewOnly={enterViewOnly} onAllDevices={openAllDevices} onCapture={() => void takeScopedScreenshot()} onTools={() => setSidebarOpen(value => !value)}
         onTheme={() => updateDisplay(current => ({ ...current, darkMode: !current.darkMode }))} onClose={closeViewer}/>}
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
         {sidebarOpen && !viewOnly && (
@@ -602,6 +626,7 @@ export function SimulatorApp() {
               </div>
               <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">
                 <SidebarSection title={t("quickDeviceSets")} dark={dark}>
+                  <ActionRow dark={dark} icon={<PanelsTopLeft size={14}/>} label={t("allDevices")} onClick={openAllDevices}/>
                   {QUICK_DEVICE_SETS.map(set => <ActionRow key={set.labelKey} dark={dark} icon={<PanelsTopLeft size={14}/>} label={t(set.labelKey)} onClick={() => applyDevicePreset([...set.devices])}/>)}
                   <ActionRow dark={dark} icon={<Route size={14}/>} label={t("navigationSync")} active={display.navigationSync} activeTone="teal" onClick={() => updateDisplay(current => ({ ...current, navigationSync: !current.navigationSync }))}/>
                   <ActionRow dark={dark} icon={<RefreshCw size={14}/>} label={t("reloadAll")} onClick={reloadAllSlots}/>
@@ -892,7 +917,7 @@ export function SimulatorApp() {
                 <PreviewCard
                   slot={slot}
                   device={findDevice(slot.deviceId)}
-                  display={display}
+                  display={allDevicesUrl !== null ? { ...display, scrollSync: false, navigationSync: false } : display}
                   showToolbar={!viewOnly}
                   removable={slots.length > 1}
                   onCapture={() => void takeScopedScreenshot(slot.id)}
@@ -946,6 +971,9 @@ export function SimulatorApp() {
           </div>
         </main>
       </div>
+      </div>
+
+      {allDevicesUrl !== null && <AllDevicesView key={allDevicesUrl} url={allDevicesUrl} onClose={closeAllDevices} onOpenDevice={openGalleryDevice}/>}
 
       {annotationOpen && (
         <AnnotationOverlay

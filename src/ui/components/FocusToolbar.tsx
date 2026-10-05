@@ -1,13 +1,14 @@
-import { Camera, Focus, Link2, Moon, Plus, RefreshCw, Route, Settings2, Smartphone, Square, Sun, X } from "lucide-react";
+import { Camera, Focus, Grid2X2, Link2, Moon, Plus, RefreshCw, Route, Settings2, Smartphone, Square, Sun, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import { BrandMark } from "./BrandMark";
 
-export function FocusToolbar({ dark, freeView, scrollSync, navigationSync, toolsOpen, url, canAdd, capturing, onViewChange, onViewOnly, onAdd, onSync, onNavigationSync, onReload, onCapture, onTools, onTheme, onClose }: {
+export function FocusToolbar({ dark, freeView, scrollSync, navigationSync, toolsOpen, url, canAdd, capturing, onViewChange, onViewOnly, onAllDevices, onAdd, onSync, onNavigationSync, onReload, onCapture, onTools, onTheme, onClose }: {
   dark: boolean; freeView: boolean; scrollSync: boolean; navigationSync: boolean; toolsOpen: boolean;
   url: string; canAdd: boolean; capturing: boolean;
   onViewChange: (free: boolean) => void;
   onViewOnly: () => void;
+  onAllDevices: () => void;
   onAdd: () => void; onSync: () => void; onNavigationSync: () => void; onReload: () => void; onCapture: () => void;
   onTools: () => void; onTheme: () => void; onClose: () => void;
 }) {
@@ -34,6 +35,10 @@ export function FocusToolbar({ dark, freeView, scrollSync, navigationSync, tools
         </button>
         <span className="hidden sm:contents">{action(t("addViewport"), <Plus size={16}/>, onAdd, !canAdd, "add-viewport")}</span>
         <span className="hidden sm:contents">{action(t("captureAndAnnotate"), <Camera size={15}/>, onCapture, capturing)}</span>
+        <button type="button" data-all-devices-toggle aria-label={t("allDevices")} title={t("allDevices")} onClick={onAllDevices} disabled={capturing}
+          className={`flex h-7 shrink-0 items-center gap-1.5 rounded-lg border px-2 text-[11px] font-semibold transition focus-visible:outline-2 focus-visible:outline-teal-500 disabled:opacity-40 ${quiet}`}>
+          <Grid2X2 size={14}/><span className="hidden xl:inline">{t("allDevices")}</span>
+        </button>
       </div>
       <div role="group" aria-label={t("previewStyle")} className={`flex shrink-0 gap-0.5 rounded-lg border p-0.5 ${dark ? "border-white/15 bg-black/20" : "border-slate-200 bg-slate-100/70"}`}>
         {[{free: false, label: t("deviceView"), icon: <Smartphone size={13}/>}, {free: true, label: t("freeView"), icon: <Square size={13}/>}].map(({free, label, icon}) => (

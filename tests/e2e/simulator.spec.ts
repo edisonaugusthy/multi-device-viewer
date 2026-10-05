@@ -91,6 +91,7 @@ test("migrates saved four-direction rotations to portrait and landscape", async 
   await page.evaluate(() => {
     const session = JSON.parse(localStorage.getItem("mdvSimulatorSession")!);
     session.slots[0].orientation = "portrait-inverted";
+    session.slots[1].deviceId = "apple-iphone-duo-unfolded-2026";
     session.slots[1].orientation = "landscape-inverted";
     localStorage.setItem("mdvSimulatorSession", JSON.stringify(session));
   });
@@ -124,20 +125,19 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   const slots = page.locator("[data-preview-slot-id]");
   await expect(slots).toHaveCount(3);
   await expect(slots.nth(0).locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
-  await expect(slots.nth(1).locator('[data-device-frame="apple-iphone-duo-unfolded-2026"]')).toBeVisible();
+  await expect(slots.nth(1).locator('[data-device-frame="apple-iphone-duo-folded-2026"]')).toBeVisible();
   await expect(slots.nth(2).locator('[data-device-frame="apple-macbook-pro-14-m5-2025"]')).toBeVisible();
   const phoneScreen = slots.nth(0).locator('[data-device-screen="apple-iphone-18-pro-2026"]');
   await expectScreenSize(phoneScreen, 402, 874);
-  const duoScreen = slots.nth(1).locator('[data-device-screen="apple-iphone-duo-unfolded-2026"]');
-  await expectScreenSize(duoScreen, 890, 626);
-  await expect(slots.nth(1).locator('[data-browser-control="side-toolbar"]')).toBeVisible();
+  const duoScreen = slots.nth(1).locator('[data-device-screen="apple-iphone-duo-folded-2026"]');
+  await expectScreenSize(duoScreen, 466, 678);
 
   // A user's saved rotation must survive reopening the simulator.
   await openViewportActions(page, 1);
   await slots.nth(1).getByRole("button", { name: "Rotate", exact: true }).click();
-  await expectScreenSize(duoScreen, 626, 890);
+  await expectScreenSize(duoScreen, 678, 466);
   await page.reload();
-  await expectScreenSize(duoScreen, 626, 890);
+  await expectScreenSize(duoScreen, 678, 466);
 
   await openTools(page);
   await page.getByRole("button", { name: "iOS + Android", exact: true }).click();

@@ -1,4 +1,5 @@
 import { PreviewSurface } from "./PreviewSurface";
+import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
@@ -25,7 +26,7 @@ import {
   toLandscapeAwareSize,
 } from "../../domain/device/device-service";
 import { getFrameProfile } from "../../domain/device/frame-profiles";
-import { getBrowserGeometry, nextBrowserCollapse, supportsIos26, type SafariLayout } from "../../domain/device/browser-geometry";
+import { getBrowserGeometry, nextBrowserCollapse } from "../../domain/device/browser-geometry";
 import type { Device, Size } from "../../domain/device/device.types";
 import type { FlowReplayRequest, FlowReplayResult, FlowStep } from "../../domain/flow/flow.types";
 import type {
@@ -90,8 +91,10 @@ interface PreviewCardProps {
   device: Device;
   display: DisplaySettings;
   showToolbar?: boolean;
+  onScaleChange?: (scale: number) => void;
+  onLoadStateChange?: (id: string, status: "loaded" | "error") => void;
   removable: boolean;
-  onCapture: () => void;
+  onCapture?: () => void;
   capturePending?: boolean;
   focused: boolean;
   first: boolean;
@@ -136,6 +139,8 @@ export function PreviewCard({
   device,
   display,
   showToolbar = true,
+  onScaleChange,
+  onLoadStateChange,
   removable,
   onCapture,
   capturePending = false,
@@ -172,18 +177,23 @@ export function PreviewCard({
   const [preparedUrl, setPreparedUrl] = useState<string | null>(null);
   useEffect(() => {
     let active = true;
-    void preparePreview(slot.url).then(() => { if (active) setPreparedUrl(slot.url); }).catch(() => { if (active) setBlocked(true); });
+    setBlocked(false);
+    void preparePreview(slot.url).then(() => { if (active) setPreparedUrl(slot.url); }).catch(() => {
+      if (active) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
+    });
     return () => { active = false; };
-  }, [slot.url, slot.reloadToken]);
+  }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange]);
   const [blocked, setBlocked] = useState(false);
   useEffect(() => {
     const onPolicy = (event: SecurityPolicyViolationEvent) => {
       if (event.effectiveDirective !== "frame-src" && event.effectiveDirective !== "child-src") return;
-      try { if (new URL(event.blockedURI).origin === new URL(slot.url).origin) setBlocked(true); } catch { /* Non-URL policy reports cannot identify this preview. */ }
+      try {
+        if (new URL(event.blockedURI).origin === new URL(slot.url).origin) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
+      } catch { /* Non-URL policy reports cannot identify this preview. */ }
     };
     window.addEventListener("securitypolicyviolation", onPolicy);
     return () => window.removeEventListener("securitypolicyviolation", onPolicy);
-  }, [slot.url]);
+  }, [slot.url, slot.id, onLoadStateChange]);
   const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("checking");
   const [keyboard, setKeyboard] = useState<MobileKeyboardState | undefined>();
   const [pageSurfaces, setPageSurfaces] = useState<BrowserSurfaceColors | undefined>();
@@ -197,7 +207,6 @@ export function PreviewCard({
     rotateSlot,
     zoomSlot,
     setSlotDevice,
-    setSlotBrowserPreferences,
     setSlotUrl,
     observeSlotUrl,
     reloadSlot,
@@ -249,6 +258,8 @@ export function PreviewCard({
       : slot.zoomMode === "fit"
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
+
+  useLayoutEffect(() => { onScaleChange?.(scale); }, [onScaleChange, scale]);
 
   const fittedOverlayPlacement = {
     x: containerSize.width > 0 ? ((containerSize.width - frameSize.width * scale) / 2 / containerSize.width) * 100 : 0,
@@ -747,12 +758,7 @@ export function PreviewCard({
         {frameProfile.platform === "ios" && <div className="relative">
           <CardBtn expanded dark={display.darkMode} label={t("browserAppearance")} onClick={() => setBrowserSettingsOpen(value => !value)}><Settings2 size={13}/></CardBtn>
           {browserSettingsOpen && <div role="group" aria-label={t("browserAppearance")} className={`absolute right-0 top-8 z-[60] w-60 rounded-xl border p-3 shadow-xl ${display.darkMode ? "border-white/10 bg-[#171a21] text-white" : "border-slate-200 bg-white text-slate-900"}`}>
-            <div className="mb-2 flex items-center justify-between text-xs font-bold">{t("browserAppearance")}<button type="button" aria-label={t("closeBrowserSettings")} onClick={() => setBrowserSettingsOpen(false)}><X size={14}/></button></div>
-            {supportsIos26(device) && frameProfile.osMajor < 26 && <label className="mb-2 block text-xs">{t("browserVersion")}<select aria-label={t("browserVersion")} className="mt-1 w-full rounded border border-slate-500/25 bg-transparent p-1.5" value={slot.browserPreferences?.version ?? "ios26"} onChange={event => setSlotBrowserPreferences(slot.id, { version: event.target.value as "catalog" | "ios26", layout: undefined })}><option value="ios26">Safari 26</option><option value="catalog">{t("catalogBrowserVersion", { version: frameProfile.osMajor })}</option></select></label>}
-            {browserGeometry.duoControls ? <div className="text-xs">iPhone Duo · iOS 27</div> : <label className="block text-xs">{t("browserLayout")}<select aria-label={t("browserLayout")} className="mt-1 w-full rounded border border-slate-500/25 bg-transparent p-1.5" value={browserGeometry.layout} onChange={event => setSlotBrowserPreferences(slot.id, { layout: event.target.value as SafariLayout })}>
-              {device.type === "tablet" ? <><option value="tabs">{t("separateTabs")}</option><option value="compact-tabs">{t("compactTabs")}</option></> : <>{browserGeometry.variant === "ios-liquid-glass" && <option value="compact">{t("compactBrowser")}</option>}<option value="bottom">{t("bottomBrowser")}</option><option value="top">{t("topBrowser")}</option></>}
-            </select></label>}
-            <p className="mt-2 text-[10px] leading-4 opacity-60">{t("browserPreviewNote")}</p>
+            <BrowserAppearanceSettings device={device} slot={slot} geometry={browserGeometry} onClose={() => setBrowserSettingsOpen(false)}/>
           </div>}
         </div>}
 
@@ -764,9 +770,9 @@ export function PreviewCard({
           <RefreshCw size={14} className={bridgeStatus === "checking" ? "animate-spin" : ""} />
         </CardBtn>
         {bridgeStatus === "unavailable" && <CardBtn expanded dark={display.darkMode} label={t("openInTab")} onClick={() => window.open(currentPageUrlRef.current || slot.url, "_blank", "noopener,noreferrer")}><ExternalLink size={14}/></CardBtn>}
-        <CardBtn expanded dark={display.darkMode} label={t("captureAndAnnotate")} onClick={() => { setControlsOpen(false); setBrowserSettingsOpen(false); onCapture(); }} disabled={capturePending}>
+        {onCapture && <CardBtn expanded dark={display.darkMode} label={t("captureAndAnnotate")} onClick={() => { setControlsOpen(false); setBrowserSettingsOpen(false); onCapture(); }} disabled={capturePending}>
           <ImageDown size={13} className={capturePending ? "animate-pulse" : undefined} />
-        </CardBtn>
+        </CardBtn>}
         {canRotate && (
           <CardBtn expanded
             dark={display.darkMode}
@@ -853,6 +859,7 @@ export function PreviewCard({
                     }
                     title={t("devicePreview", { name: device.name })}
                     src={preparedUrl === slot.url ? preparedUrl : "about:blank"}
+                    loading="eager"
                     className={`block h-full w-full overflow-auto border-0 ${
                       display.darkMode ? "bg-[#0f172a]" : "bg-white"
                     }`}
@@ -865,8 +872,16 @@ export function PreviewCard({
                       scrollbarWidth: device.type === "phone" || device.type === "tablet" ? "none" : "auto",
                     }}
                     scrolling="auto"
-                    sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-                    onError={() => setBlocked(true)}
+                    sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-storage-access-by-user-activation"
+                    onLoad={event => {
+                      const frame = event.currentTarget;
+                      if (frame.getAttribute("src") === "about:blank") return;
+                      // Preparing the frame initially creates an empty document.
+                      // Its load event must not release a website's queue slot.
+                      try { if (frame.contentDocument?.URL === "about:blank") return; } catch { /* Cross-origin website. */ }
+                      onLoadStateChange?.(slot.id, "loaded");
+                    }}
+                    onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
                   />
                 )}
               </PreviewSurface>
@@ -1362,7 +1377,7 @@ function BlockedView({
   url,
 }: {
   dark: boolean;
-  onCapture: () => void;
+  onCapture?: () => void;
   onReload: () => void;
   url: string;
 }) {
@@ -1393,13 +1408,13 @@ function BlockedView({
         >
           <RefreshCw size={13} /> {t("reloadPreview")}
         </button>
-        <button
+        {onCapture && <button
           type="button"
           className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold ${dark ? "border-white/10 bg-white/[0.06] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
           onClick={onCapture}
         >
           {t("captureCurrentTab")}
-        </button>
+        </button>}
       </div>
     </div>
   );

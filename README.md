@@ -17,6 +17,9 @@ Open the current website or local development server in up to four live device v
 ### Live responsive workspace
 
 - Up to four live phone, tablet, laptop, desktop, watch, TV, kiosk, or custom viewports.
+- One-click **All devices** view with vertically scrollable sections: iOS phones, Android phones, tablets, laptops, desktops, TVs, custom viewports, then watches. Each section is ordered by CSS viewport width and height. A compact single-row toolbar includes loading progress and refresh-all, which restores every preview's starting page, fit zoom, and initial browser appearance. Category tabs switch to a selector in smaller windows. Responsive rows show up to four taller cards, with device names, CSS dimensions, zoom controls, refresh, and expand in one compact header. The large popup preserves the live page and grid position. Safari appearance, browser chrome on scroll, keyboard behavior, device/free view, and scroll/navigation sync use the same preview features as the workspace.
+- Every all-device preview loads in the background through a paced queue, with nearby cards first. Scrolling keeps pages mounted, preserving in-progress loads and page state; only visible previews participate in synchronized scrolling. Navigation sync also updates offscreen previews through the queue. Returning to the selected-device workspace preserves its live previews.
+- Each device card includes **Open in tab** for sites that require sign-in or verification. Site security checks can still appear; the extension does not bypass them.
 - Categorized device chooser with search, latest devices first, favorites, and recents.
 - Quick comparison sets and locally saved device sets with JSON import and export.
 - Custom viewport creation, reuse, and deletion.
@@ -98,7 +101,7 @@ npm run build
 npm run zip
 npm run test:e2e
 npm run build:site
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.10-chrome.zip
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.2.11-chrome.zip
 ```
 
 The production Chrome extension and zip are written to `.output/`.
@@ -108,7 +111,7 @@ The production Chrome extension and zip are written to `.output/`.
 Chrome Web Store packages are uploaded manually. Before release:
 
 1. Update the version in `package.json` and `wxt.config.ts`.
-2. Add accurate user-facing changes to `src/app/release-notes.ts`.
+2. Replace the current entries in `src/app/release-notes.ts` and their translations with accurate user-facing changes. Only the latest release ships in the extension; past notes remain in Git history. Update the first-run tour when adding a feature.
 3. Run every quality check and validate the generated zip.
 4. Review the store listing and privacy declarations in [docs/chrome-web-store.md](docs/chrome-web-store.md).
 5. Upload the validated package to the Chrome Web Store.

@@ -20,6 +20,7 @@ interface SimulatorContextValue extends SimulatorState {
   setSlotBrowserPreferences: (slotId: string, preferences: BrowserPreferences) => void;
   setSlotUrl: (slotId: string, url: string) => void;
   observeSlotUrl: (slotId: string, url: string) => void;
+  getSlotUrl: (slotId: string) => string;
   setAllSlotsUrl: (url: string) => void;
   rotateSlot: (slotId: string) => void;
   zoomSlot: (slotId: string, direction: "in" | "out") => void;
@@ -85,6 +86,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   // Observations must not change iframe src or recreate the live document.
   const observedUrls = useRef(new Map<string, string>());
   const observeSlotUrl = useCallback((slotId: string, url: string) => { observedUrls.current.set(slotId, url); }, []);
+  const getSlotUrl = useCallback((slotId: string) => observedUrls.current.get(slotId) ?? slots.find(slot => slot.id === slotId)?.url ?? "", [slots]);
   useEffect(() => {
     const ids = new Set(slots.map(slot => slot.id));
     for (const id of observedUrls.current.keys()) if (!ids.has(id)) observedUrls.current.delete(id);
@@ -346,6 +348,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSlotBrowserPreferences,
       setSlotUrl,
       observeSlotUrl,
+      getSlotUrl,
       setAllSlotsUrl,
       rotateSlot,
       zoomSlot,
@@ -380,6 +383,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSlotBrowserPreferences,
       setSlotUrl,
       observeSlotUrl,
+      getSlotUrl,
       setSlotZoomMode,
       slots,
       sourceTabId,
@@ -396,4 +400,15 @@ export function useSimulator() {
   const value = useContext(SimulatorContext);
   if (!value) throw new Error("useSimulator must be used inside SimulatorProvider");
   return value;
+}
+
+// A temporary preview surface can own its slots without replacing or saving
+// the user's comparison workspace. It shares only the surrounding settings.
+export function SimulatorScopeProvider({ value, children }: {
+  value: Partial<SimulatorContextValue>;
+  children: ReactNode;
+}) {
+  const parent = useSimulator();
+  const scoped = useMemo(() => ({ ...parent, ...value }), [parent, value]);
+  return <SimulatorContext.Provider value={scoped}>{children}</SimulatorContext.Provider>;
 }

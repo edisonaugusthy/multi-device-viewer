@@ -1,57 +1,37 @@
 import { describe, expect, it } from "vitest";
-import { decideStartupNotice, releaseNotesFor } from "./release-notes";
+import { CURRENT_RELEASE_NOTES, decideStartupNotice } from "./release-notes";
 
 describe("decideStartupNotice", () => {
+  it("waits for startup storage to load", () => {
+    expect(decideStartupNotice({ useCount: 0, firstRunComplete: false, pendingVersion: CURRENT_RELEASE_NOTES.version, lastSeenVersion: null })).toEqual({ kind: "none" });
+  });
+
   it("shows only welcome on a fresh install", () => {
-    expect(decideStartupNotice({ useCount: 1, firstRunComplete: false, pendingVersion: null, lastSeenVersion: "0.1.4" })).toEqual({ kind: "welcome" });
+    expect(decideStartupNotice({ useCount: 1, firstRunComplete: false, pendingVersion: null, lastSeenVersion: CURRENT_RELEASE_NOTES.version })).toEqual({ kind: "welcome" });
   });
 
-  it("shows release notes on the first open after an update", () => {
-    expect(decideStartupNotice({ useCount: 4, firstRunComplete: true, pendingVersion: "0.1.5", lastSeenVersion: "0.1.4" })).toEqual({ kind: "release", version: "0.1.5" });
+  it.each(["0.1.5", "0.2.9", "0.2.10", CURRENT_RELEASE_NOTES.version])("shows only current notes when the pending version is %s", pendingVersion => {
+    expect(decideStartupNotice({ useCount: 4, firstRunComplete: true, pendingVersion, lastSeenVersion: "0.1.4" })).toEqual({ kind: "release", version: CURRENT_RELEASE_NOTES.version });
   });
 
-  it("does not repeat release notes after that version is seen", () => {
-    expect(decideStartupNotice({ useCount: 5, firstRunComplete: true, pendingVersion: null, lastSeenVersion: "0.1.5" })).toEqual({ kind: "none" });
+  it.each([null, "0.2.10", CURRENT_RELEASE_NOTES.version])("does not repeat the current notes with pending version %s", pendingVersion => {
+    expect(decideStartupNotice({ useCount: 5, firstRunComplete: true, pendingVersion, lastSeenVersion: CURRENT_RELEASE_NOTES.version })).toEqual({ kind: "none" });
+  });
+
+  it("does not open release notes on an ordinary visit", () => {
+    expect(decideStartupNotice({ useCount: 4, firstRunComplete: true, pendingVersion: null, lastSeenVersion: "0.2.10" })).toEqual({ kind: "none" });
   });
 
   it("prioritizes welcome if an update arrives before first use", () => {
-    expect(decideStartupNotice({ useCount: 1, firstRunComplete: false, pendingVersion: "0.1.5", lastSeenVersion: "0.1.4" })).toEqual({ kind: "welcome" });
+    expect(decideStartupNotice({ useCount: 1, firstRunComplete: false, pendingVersion: CURRENT_RELEASE_NOTES.version, lastSeenVersion: "0.2.10" })).toEqual({ kind: "welcome" });
   });
 
-  it("keeps the 0.2.1 update concise", () => {
-    const release = releaseNotesFor("0.2.1");
-
-    expect(release.heading).toBe("What’s new");
-    expect(release.notes.map((note) => note.title)).toEqual([
-      "Four new 2026 Galaxy devices, with every posture",
-      "A guided first run",
+  it("keeps the current update focused on All devices, its controls, and startup", () => {
+    expect(CURRENT_RELEASE_NOTES.notes.map(note => note.title)).toEqual([
+      "releaseAllDevicesTitle",
+      "releaseGalleryControlsTitle",
+      "releaseStartupTitle",
     ]);
-    expect(release.notes[0]?.description).toContain("marked NEW");
-    expect(release.notes[1]?.description).toContain("eight-step");
-    expect(release.notes[1]?.description).toContain("focusing one viewport");
-  });
-
-  it("highlights record user flow in the 0.2.3 release", () => {
-    const release = releaseNotesFor("0.2.3");
-
-    expect(release.notes.map((note) => note.title)).toEqual([
-      "A localized workspace",
-      "Record user flow",
-      "Refined Liquid Glass previews",
-    ]);
-    expect(release.notes[1]?.featured).toBe(true);
-    expect(release.notes[2]?.description).toContain("Liquid Glass");
-  });
-
-  it("keeps the 0.2.4 update to devices and the review option", () => {
-    const release = releaseNotesFor("0.2.4");
-
-    expect(release.notes.map((note) => note.title)).toEqual([
-      "New devices",
-      "New review option",
-    ]);
-    expect(release.summary).toBe("");
-    expect(release.notes[0]?.description).toContain("Pixel 11");
-    expect(release.notes[1]?.description).toContain("honest Chrome Web Store review");
+    expect(CURRENT_RELEASE_NOTES.notes[0]?.featured).toBe(true);
   });
 });

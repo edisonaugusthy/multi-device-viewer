@@ -4,6 +4,7 @@ Folosește previzualizarea mobilă pentru testarea site-urilor responsive. Compa
 
 Previzualizează iPhone 18 Pro, iPhone Duo pliat și deschis, MacBook și Apple Watch. Parcurge categoria selectată cu săgețile pentru dispozitivul anterior și următor.
 
+- Deschide toate dispozitivele cu un clic. Previzualizările sunt grupate după tipul dispozitivului și ordonate de la ecrane mai mici la ecrane mai mari.
 - Creează dimensiuni de viewport personalizate, salvează seturi și dispozitive favorite sau concentrează-te pe o singură vedere. Sincronizează interacțiunile acceptate între vederi corespunzătoare.
 - Capturează o vedere sau întregul spațiu de lucru. Adaugă săgeți, chenare, desene și text sau decupează imaginea. Afișează un design local lângă pagină sau suprapus.
 - Copiază în instrumentul de programare o instrucțiune structurată de remediere cu URL, dispozitive, dimensiuni și note despre problemă.

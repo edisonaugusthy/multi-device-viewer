@@ -4,6 +4,7 @@ Gebruik de mobiele preview om responsive websites te testen. Vergelijk mobiele a
 
 Bekijk iPhone 18 Pro, dichtgevouwen en opengevouwen iPhone Duo, MacBook en Apple Watch. Blader met de vorige- en volgende-pijlen door de geselecteerde apparaatcategorie.
 
+- Open alle apparaten met één klik. De voorbeelden zijn gegroepeerd op apparaattype en gesorteerd van kleine naar grote schermen.
 - Kies realistische apparaten, wijzig oriëntatie en zoom, laad één voorbeeld opnieuw of maak aangepaste viewportformaten.
 - Synchroniseer scrollen, ondersteunde interacties en navigatie tussen overeenkomende voorbeelden.
 - Bewaar apparaatsets, favorieten en recente apparaten, of focus één viewport voor een detailcontrole.

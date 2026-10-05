@@ -4,6 +4,7 @@ Használd a mobil előnézetet reszponzív weboldalak teszteléséhez. Hasonlít
 
 Nézd meg az iPhone 18 Pro, az összecsukott és kinyitott iPhone Duo, a MacBook és az Apple Watch előnézetét. Az előző és következő nyíllal válthatsz a kiválasztott kategória eszközei között.
 
+- Nyissa meg az összes eszközt egyetlen kattintással. Az előnézetek eszköztípus szerint vannak csoportosítva, és a kisebb képernyőktől a nagyobbak felé rendezve.
 - Hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.
 - Rögzítsen egy nézetet vagy a teljes munkaterületet. Adjon hozzá nyilakat, kereteket, rajzokat és szöveget, vagy vágja körül a képet. Jelenítsen meg helyi tervet az oldal mellett vagy fedvényként.
 - Másoljon strukturált javítási utasítást a programozóeszközébe az URL-lel, eszközökkel, nézetméretekkel és a probléma jegyzeteivel.

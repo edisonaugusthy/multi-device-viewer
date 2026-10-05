@@ -4,6 +4,7 @@ Używaj podglądu mobilnego do testowania responsywnych stron internetowych. Por
 
 Wyświetlaj iPhone 18 Pro, złożony i rozłożony iPhone Duo, MacBook i Apple Watch. Przeglądaj wybraną kategorię strzałkami poprzedniego i następnego urządzenia.
 
+- Otwórz wszystkie urządzenia jednym kliknięciem. Podglądy są pogrupowane według typu urządzenia i uporządkowane od mniejszych ekranów do większych.
 - Twórz własne rozmiary widoku, zapisuj zestawy i ulubione urządzenia lub skup się na jednym widoku. Synchronizuj obsługiwane interakcje między odpowiadającymi sobie podglądami.
 - Przechwytuj jeden widok lub całą przestrzeń roboczą. Dodawaj strzałki, ramki, rysunki i tekst albo przycinaj obraz. Wyświetlaj lokalny projekt obok strony lub jako nakładkę.
 - Kopiuj uporządkowany prompt naprawy z adresem URL, urządzeniami, rozmiarami i notatkami o problemie do swojego narzędzia programistycznego.

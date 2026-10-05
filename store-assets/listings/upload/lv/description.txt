@@ -4,6 +4,7 @@ Izmantojiet mobilo priekšskatījumu responsīvu vietņu testēšanai. Salīdzin
 
 Priekšskatiet iPhone 18 Pro, salocītu un atvērtu iPhone Duo, MacBook un Apple Watch. Pārvietojieties pa izvēlēto ierīču kategoriju ar iepriekšējās un nākamās ierīces bultiņām.
 
+- Atveriet visas ierīces ar vienu klikšķi. Priekšskatījumi ir grupēti pēc ierīces veida un sakārtoti no mazākiem ekrāniem līdz lielākiem.
 - Izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
 - Uzņemiet vienu skatu vai visu darbvietu. Pievienojiet bultas, rāmjus, zīmējumus un tekstu vai apgrieziet attēlu. Parādiet lokālu dizainu blakus lapai vai kā pārklājumu.
 - Kopējiet strukturētu labošanas uzvedni ar URL, ierīcēm, skata izmēriem un piezīmēm par problēmu savā programmēšanas rīkā.

@@ -4,6 +4,7 @@ Usa la vista previa móvil para las pruebas de sitios web responsive. Compara di
 
 Previsualiza iPhone 18 Pro, iPhone Duo plegado y desplegado, MacBook y Apple Watch. Recorre la categoría seleccionada con las flechas de dispositivo anterior y siguiente.
 
+- Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
 - Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.
 - Guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.

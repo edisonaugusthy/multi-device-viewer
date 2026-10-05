@@ -4,6 +4,7 @@ Koristite mobilni pregled za testiranje responzivnih web-stranica. Usporedite mo
 
 Pregledajte iPhone 18 Pro, sklopljeni i otvoreni iPhone Duo, MacBook i Apple Watch. Strelicama za prethodni i sljedeći uređaj prolazite kroz odabranu kategoriju.
 
+- Otvorite sve uređaje jednim klikom. Pretpregledi su grupirani prema vrsti uređaja i poredani od manjih zaslona prema većima.
 - Izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.
 - Snimite jedan prikaz ili cijeli radni prostor. Dodajte strelice, okvire, crteže i tekst ili izrežite snimku. Prikažite lokalni dizajn uz stranicu ili kao preklop.
 - Kopirajte strukturiranu uputu za popravak s URL-om, uređajima, dimenzijama i bilješkama o problemu u svoj alat za programiranje.

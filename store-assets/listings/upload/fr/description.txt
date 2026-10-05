@@ -4,6 +4,7 @@ Utilisez l’aperçu mobile pour les tests de sites web responsive. Comparez les
 
 Prévisualisez iPhone 18 Pro, iPhone Duo plié et déplié, MacBook et Apple Watch. Parcourez la catégorie sélectionnée avec les flèches vers l’appareil précédent ou suivant.
 
+- Affichez tous les appareils en un clic. Les aperçus sont regroupés par type d’appareil et classés du plus petit au plus grand écran.
 - Choisissez des appareils réalistes, modifiez l’orientation et le zoom, rechargez une vue ou créez des dimensions personnalisées.
 - Synchronisez le défilement, les interactions prises en charge et la navigation entre les aperçus correspondants.
 - Enregistrez des ensembles, favoris et appareils récents, ou concentrez-vous sur une seule vue.

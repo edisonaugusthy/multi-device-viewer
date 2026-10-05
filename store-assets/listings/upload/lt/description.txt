@@ -4,6 +4,7 @@ Naudokite mobiliąją peržiūrą adaptyvių svetainių testavimui. Palyginkite 
 
 Peržiūrėkite iPhone 18 Pro, sulenktą ir išskleistą iPhone Duo, MacBook bei Apple Watch. Pasirinktoje įrenginių kategorijoje judėkite ankstesnio ir kito įrenginio rodyklėmis.
 
+- Atverkite visus įrenginius vienu spustelėjimu. Peržiūros sugrupuotos pagal įrenginio tipą ir surikiuotos nuo mažesnių ekranų iki didesnių.
 - Kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.
 - Fiksuokite vieną vaizdą arba visą darbo sritį. Pridėkite rodykles, rėmelius, piešinius ir tekstą arba apkirpkite vaizdą. Rodykite vietinį dizainą šalia puslapio arba kaip perdangą.
 - Nukopijuokite struktūruotą taisymo užklausą su URL, įrenginiais, peržiūros dydžiais ir problemos pastabomis į savo programavimo įrankį.

@@ -4,6 +4,7 @@ Používejte mobilní náhled pro testování responzivních webů. Porovnávejt
 
 Prohlédněte si iPhone 18 Pro, složený a rozložený iPhone Duo, MacBook a Apple Watch. Mezi zařízeními ve vybrané kategorii přecházejte šipkami pro předchozí a další zařízení.
 
+- Otevřete všechna zařízení jedním kliknutím. Náhledy jsou seskupeny podle typu zařízení a seřazeny od menších obrazovek po větší.
 - Vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.
 - Zachyťte jeden náhled nebo celý pracovní prostor. Přidejte šipky, rámečky, kresby a text nebo snímek ořízněte. Zobrazte místní návrh vedle stránky nebo jako překryv.
 - Zkopírujte do svého programovacího nástroje strukturované zadání opravy s URL, zařízeními, rozměry a poznámkami k problému.

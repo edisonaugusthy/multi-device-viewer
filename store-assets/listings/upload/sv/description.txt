@@ -2,6 +2,8 @@ Mobile View är en kostnadsfri mobilsimulator och enhetsemulator med öppen käl
 
 Använd mobilförhandsvisning för test av responsiva webbplatser. Jämför mobilenheter och datorer och kontrollera menyer, text och avstånd vid brytpunkterna. Det här verktyget för test av responsiv webbdesign samlar dina responsiva tester i en arbetsyta.
 
+Öppna alla enheter med ett klick. Förhandsvisningarna är grupperade efter enhetstyp och sorterade från mindre till större skärmar.
+
 Förhandsvisa iPhone 18 Pro, hopvikt och utfälld iPhone Duo, MacBook och Apple Watch. Använd pilarna för föregående och nästa enhet i den valda kategorin.
 
 Spara enhetsuppsättningar och favoriter eller skapa egna skärmstorlekar. Ta en bild av en vy eller hela arbetsytan och lägg till pilar, ramar och text. Jämför en lokal design bredvid eller ovanpå webbplatsen och kopiera ett korrigeringsförslag med URL, enheter, skärmstorlekar och anteckningar till ditt kodverktyg.

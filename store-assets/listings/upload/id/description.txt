@@ -4,6 +4,7 @@ Gunakan pratinjau seluler untuk pengujian situs web responsif. Bandingkan perang
 
 Pratinjau iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan panah perangkat sebelumnya dan berikutnya dalam kategori yang dipilih.
 
+- Buka semua perangkat dengan satu klik. Pratinjau dikelompokkan berdasarkan jenis perangkat dan diurutkan dari layar kecil ke besar.
 - Buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
 - Tangkap satu tampilan atau seluruh ruang kerja. Tambahkan panah, kotak, gambar, dan teks atau potong tangkapan layar. Tampilkan desain lokal di samping halaman atau sebagai overlay.
 - Salin instruksi perbaikan terstruktur berisi URL, perangkat, ukuran viewport, dan catatan masalah ke alat coding Anda.

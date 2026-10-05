@@ -4,6 +4,7 @@ Gunakan pratonton mudah alih untuk ujian laman web responsif. Bandingkan peranti
 
 Pratonton iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan anak panah peranti sebelumnya dan seterusnya dalam kategori yang dipilih.
 
+- Buka semua peranti dengan satu klik. Pratonton dikumpulkan mengikut jenis peranti dan disusun daripada skrin yang lebih kecil kepada yang lebih besar.
 - Cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.
 - Tangkap satu paparan atau seluruh ruang kerja. Tambah anak panah, kotak, lukisan dan teks atau pangkas imej. Paparkan reka bentuk setempat di sebelah halaman atau sebagai tindanan.
 - Salin arahan pembaikan berstruktur dengan URL, peranti, saiz viewport dan nota masalah ke alat pengekodan anda.

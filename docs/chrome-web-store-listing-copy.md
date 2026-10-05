@@ -17,6 +17,7 @@ Mobile View is a free, open-source mobile simulator and device emulator for resp
 
 Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
 
+- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
@@ -54,6 +55,7 @@ Nutze die mobile Vorschau für Tests responsiver Websites. Vergleiche mobile Ger
 
 Nutze Vorschauen für iPhone 18 Pro, iPhone Duo im zugeklappten und aufgeklappten Zustand, MacBook und Apple Watch. Wechsle mit den Vor- und Zurück-Pfeilen durch die ausgewählte Gerätekategorie.
 
+- Öffne alle Geräte mit einem Klick. Die Vorschauen sind nach Gerätetyp gruppiert und von kleinen zu großen Bildschirmen sortiert.
 - Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.
 - Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.
 - Speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.
@@ -88,6 +90,7 @@ Usa la vista previa móvil para las pruebas de sitios web responsive. Compara di
 
 Previsualiza iPhone 18 Pro, iPhone Duo plegado y desplegado, MacBook y Apple Watch. Recorre la categoría seleccionada con las flechas de dispositivo anterior y siguiente.
 
+- Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
 - Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.
 - Guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.
@@ -122,6 +125,7 @@ Utilisez l’aperçu mobile pour les tests de sites web responsive. Comparez les
 
 Prévisualisez iPhone 18 Pro, iPhone Duo plié et déplié, MacBook et Apple Watch. Parcourez la catégorie sélectionnée avec les flèches vers l’appareil précédent ou suivant.
 
+- Affichez tous les appareils en un clic. Les aperçus sont regroupés par type d’appareil et classés du plus petit au plus grand écran.
 - Choisissez des appareils réalistes, modifiez l’orientation et le zoom, rechargez une vue ou créez des dimensions personnalisées.
 - Synchronisez le défilement, les interactions prises en charge et la navigation entre les aperçus correspondants.
 - Enregistrez des ensembles, favoris et appareils récents, ou concentrez-vous sur une seule vue.
@@ -156,6 +160,7 @@ Mobile View 是一款免费、开源的 Chrome 移动模拟器与设备模拟器
 
 预览 iPhone 18 Pro、折叠和展开的 iPhone Duo、MacBook 与 Apple Watch。使用上一个和下一个箭头浏览所选设备类别。
 
+- 一键查看所有设备。预览按设备类型分组，并按屏幕尺寸从小到大排列。
 - 选择真实设备，切换方向与缩放，单独刷新预览，或创建自定义视口尺寸。
 - 在匹配的预览之间同步滚动、受支持的交互和页面导航。
 - 保存设备组合、收藏和最近使用的设备，也可聚焦单个视口进行细致检查。
@@ -190,6 +195,7 @@ Mobile View 是免費、開源的 Chrome 行動模擬器與裝置模擬器。 �
 
 預覽 iPhone 18 Pro、摺疊與展開的 iPhone Duo、MacBook 和 Apple Watch。使用上一個與下一個箭頭瀏覽所選裝置類別。
 
+- 一鍵查看所有裝置。預覽依裝置類型分組，並按螢幕尺寸由小到大排列。
 - 選擇真實裝置、切換方向與縮放、個別重新載入預覽，或建立自訂視區尺寸。
 - 在相符的預覽之間同步捲動、支援的互動與頁面導覽。
 - 儲存裝置組合、收藏與最近使用的裝置，或聚焦單一視區進行詳細檢查。
@@ -224,6 +230,7 @@ Gamitin ang mobile preview para sa responsive website testing. Ihambing ang mga 
 
 I-preview ang iPhone 18 Pro, nakatiklop at nakabukas na iPhone Duo, MacBook at Apple Watch. Gamitin ang previous at next arrow para lumipat sa napiling device category.
 
+- Buksan ang lahat ng device sa isang click. Nakapangkat ang mga preview ayon sa uri ng device at nakaayos mula sa mas maliit hanggang sa mas malaking screen.
 - Pumili ng makatotohanang device, baguhin ang orientation at zoom, i-reload ang isang preview, o gumawa ng custom viewport.
 - I-sync ang pag-scroll, suportadong interaction, at navigation sa magkatugmang preview.
 - Mag-save ng device set, paborito, at recent device, o tumutok sa isang viewport.
@@ -258,6 +265,7 @@ Gebruik de mobiele preview om responsive websites te testen. Vergelijk mobiele a
 
 Bekijk iPhone 18 Pro, dichtgevouwen en opengevouwen iPhone Duo, MacBook en Apple Watch. Blader met de vorige- en volgende-pijlen door de geselecteerde apparaatcategorie.
 
+- Open alle apparaten met één klik. De voorbeelden zijn gegroepeerd op apparaattype en gesorteerd van kleine naar grote schermen.
 - Kies realistische apparaten, wijzig oriëntatie en zoom, laad één voorbeeld opnieuw of maak aangepaste viewportformaten.
 - Synchroniseer scrollen, ondersteunde interacties en navigatie tussen overeenkomende voorbeelden.
 - Bewaar apparaatsets, favorieten en recente apparaten, of focus één viewport voor een detailcontrole.
@@ -292,6 +300,7 @@ Dùng bản xem trước trên di động để kiểm thử website responsive.
 
 Xem trước iPhone 18 Pro, iPhone Duo ở trạng thái gập và mở, MacBook cùng Apple Watch. Dùng mũi tên trước và sau để chuyển thiết bị trong danh mục đã chọn.
 
+- Mở tất cả thiết bị chỉ với một cú nhấp. Các bản xem trước được nhóm theo loại thiết bị và sắp xếp từ màn hình nhỏ đến lớn.
 - Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.
 - Đồng bộ cuộn, tương tác được hỗ trợ và điều hướng giữa các bản xem trước phù hợp.
 - Lưu bộ thiết bị, mục yêu thích và thiết bị gần đây, hoặc tập trung vào một viewport.
@@ -326,6 +335,7 @@ Use a prévia móvel para testes de sites responsivos. Compare dispositivos móv
 
 Visualize iPhone 18 Pro, iPhone Duo dobrado e aberto, MacBook e Apple Watch. Percorra a categoria selecionada com as setas de dispositivo anterior e seguinte.
 
+- Abra todos os dispositivos com um clique. As visualizações são agrupadas por tipo de dispositivo e ordenadas das telas menores às maiores.
 - Escolha dispositivos realistas, altere orientação e zoom, recarregue uma visualização ou crie tamanhos personalizados.
 - Sincronize rolagem, interações compatíveis e navegação entre visualizações correspondentes.
 - Salve conjuntos, favoritos e dispositivos recentes ou foque em uma tela para revisão detalhada.
@@ -360,6 +370,7 @@ Usa l’anteprima mobile per i test di siti web responsive. Confronta dispositiv
 
 Visualizza iPhone 18 Pro, iPhone Duo chiuso e aperto, MacBook e Apple Watch. Scorri la categoria selezionata con le frecce per il dispositivo precedente e successivo.
 
+- Apri tutti i dispositivi con un clic. Le anteprime sono raggruppate per tipo di dispositivo e ordinate dagli schermi più piccoli ai più grandi.
 - Scegli dispositivi realistici, modifica orientamento e zoom, ricarica una singola anteprima o crea viewport personalizzate.
 - Sincronizza scorrimento, interazioni supportate e navigazione tra anteprime corrispondenti.
 - Salva set, preferiti e dispositivi recenti oppure concentra l’analisi su una sola viewport.
@@ -394,6 +405,7 @@ Mobile View は Chrome 向けの無料・オープンソースのモバイルシ
 
 iPhone 18 Pro、折りたたみ時と展開時のiPhone Duo、MacBook、Apple Watchをプレビューできます。前後の矢印で選択中のカテゴリ内の端末を切り替えられます。
 
+- ワンクリックですべてのデバイスを表示できます。プレビューはデバイスの種類ごとにグループ化され、画面サイズの小さい順に並びます。
 - 実在デバイスのプロファイルを選び、向きやズームを変更し、個別に再読み込みしたり独自のビューポートを作成できます。
 - 対応するプレビュー間でスクロール、サポートされる操作、ナビゲーションを同期できます。
 - デバイスセット、お気に入り、最近使った端末を保存し、1つの表示に集中することもできます。
@@ -428,6 +440,7 @@ Mobile View는 Chrome용 무료 오픈 소스 모바일 시뮬레이터이자 �
 
 iPhone 18 Pro, 접거나 펼친 iPhone Duo, MacBook과 Apple Watch를 미리 보세요. 이전 및 다음 화살표로 선택한 기기 카테고리 안에서 기기를 바꿀 수 있습니다.
 
+- 한 번의 클릭으로 모든 기기를 확인하세요. 미리보기는 기기 유형별로 묶이며 작은 화면부터 큰 화면 순으로 정렬됩니다.
 - 실제 기기 프로필을 선택하고 방향과 확대/축소를 변경하거나 개별 화면을 새로고침하고 사용자 지정 뷰포트를 만드세요.
 - 일치하는 미리보기 사이에서 스크롤, 지원되는 상호작용 및 탐색을 동기화하세요.
 - 기기 세트, 즐겨찾기, 최근 기기를 저장하거나 하나의 뷰포트에 집중하세요.
@@ -462,6 +475,7 @@ Mobile View Chrome के लिए मुफ़्त और ओपन-सो�
 
 iPhone 18 Pro, बंद और खुले iPhone Duo, MacBook और Apple Watch का प्रीव्यू देखें। पिछले और अगले तीर से चुनी हुई डिवाइस श्रेणी में डिवाइस बदलें।
 
+- एक क्लिक में सभी डिवाइस खोलें। प्रीव्यू डिवाइस के प्रकार के अनुसार समूहों में और छोटी से बड़ी स्क्रीन के क्रम में दिखते हैं।
 - वास्तविक डिवाइस चुनें, दिशा और ज़ूम बदलें, किसी एक प्रीव्यू को रीलोड करें या कस्टम व्यूपोर्ट बनाएँ।
 - मेल खाते प्रीव्यू में स्क्रॉल, समर्थित इंटरैक्शन और नेविगेशन सिंक करें।
 - डिवाइस सेट, पसंदीदा और हाल के डिवाइस सहेजें या किसी एक व्यूपोर्ट पर ध्यान दें।
@@ -496,6 +510,7 @@ Mobile View — бесплатный мобильный симулятор и э
 
 Просматривайте iPhone 18 Pro, сложенный и раскрытый iPhone Duo, MacBook и Apple Watch. Переключайте устройства в выбранной категории стрелками «назад» и «вперёд».
 
+- Откройте все устройства одним нажатием. Предпросмотры сгруппированы по типу устройства и упорядочены от меньших экранов к большим.
 - Выбирайте реалистичные устройства, меняйте ориентацию и масштаб, перезагружайте отдельные виды и создавайте собственные размеры области просмотра.
 - Синхронизируйте прокрутку, поддерживаемые действия и навигацию между соответствующими видами.
 - Сохраняйте наборы, избранные и недавние устройства или сосредоточьтесь на одной области просмотра.
@@ -530,6 +545,7 @@ Mobile View هو محاكي جوال ومحاكي أجهزة مجاني ومفت
 
 عاين iPhone 18 Pro وiPhone Duo مطويًا ومفتوحًا وMacBook وApple Watch. تنقّل بين أجهزة الفئة المحددة باستخدام سهمَي الجهاز السابق والتالي.
 
+- افتح جميع الأجهزة بنقرة واحدة. تُجمع المعاينات حسب نوع الجهاز وتُرتب من الشاشات الأصغر إلى الأكبر.
 - اختر أجهزة واقعية، وغيّر الاتجاه والتكبير، وأعد تحميل معاينة منفردة، أو أنشئ أحجام عرض مخصصة.
 - زامن التمرير والتفاعلات المدعومة والتنقل بين المعاينات المتطابقة.
 - احفظ مجموعات الأجهزة والمفضلة والأجهزة الحديثة، أو ركّز على واجهة واحدة للفحص التفصيلي.
@@ -564,6 +580,7 @@ Mobile View ለChrome ነፃና ክፍት ምንጭ የሞባይል አስመሳ
 
 iPhone 18 Pro፣ የታጠፈና የተከፈተ iPhone Duo፣ MacBook እና Apple Watch ቅድመ እይታዎችን ይመልከቱ። በተመረጠው የመሣሪያ ምድብ ውስጥ በቀዳሚና ቀጣይ ቀስቶች ይቀያይሩ።
 
+- ሁሉንም መሣሪያዎች በአንድ ጠቅታ ይክፈቱ። ቅድመ እይታዎች በመሣሪያ ዓይነት ይመደባሉ፣ ከትንሽ ወደ ትልቅ ማያ ገጽም ይደረደራሉ።
 - የራስዎን የእይታ መጠኖች ይፍጠሩ፣ የመሣሪያ ስብስቦችንና ተወዳጆችን ያስቀምጡ ወይም በአንድ እይታ ላይ ያተኩሩ። በተዛማጅ እይታዎች የሚደገፉ ግንኙነቶችን ያመሳስሉ።
 - አንድ እይታ ወይም ሙሉ የሥራ ቦታ ይቅረጹ። ቀስቶች፣ ሳጥኖችና ጽሑፍ ያክሉ ወይም ይከርክሙ። የአካባቢ ንድፍን ከገጹ አጠገብ ወይም በላዩ ያሳዩ።
 - የገጽ አድራሻ፣ መሣሪያዎች፣ የእይታ መጠኖችና የችግር ማስታወሻዎች ያሉበትን የማስተካከያ መመሪያ ወደ ኮድ መሣሪያዎ ይቅዱ።
@@ -593,6 +610,7 @@ Mobile View е безплатен мобилен симулатор и емул�
 
 Преглеждайте iPhone 18 Pro, сгънат и разгънат iPhone Duo, MacBook и Apple Watch. Сменяйте устройствата в избраната категория със стрелките за предишно и следващо устройство.
 
+- Отворете всички устройства с едно щракване. Визуализациите са групирани по тип устройство и подредени от по-малки към по-големи екрани.
 - Създавайте собствени размери на изгледа, запазвайте комплекти и любими устройства или фокусирайте един изглед. Синхронизирайте поддържаните взаимодействия между съответстващи изгледи.
 - Заснемайте един изглед или цялото работно пространство. Добавяйте стрелки, рамки, рисунки и текст или изрязвайте снимката. Показвайте локален дизайн до страницата или като наслагване.
 - Копирайте структурирана инструкция за поправка с URL, устройства, размери и бележки за проблема в инструмента си за програмиране.
@@ -622,6 +640,7 @@ Mobile View হলো Chrome-এর জন্য বিনামূল্যে�
 
 iPhone 18 Pro, ভাঁজ করা ও খোলা iPhone Duo, MacBook এবং Apple Watch-এর প্রিভিউ দেখুন। আগের ও পরের তীর দিয়ে নির্বাচিত ডিভাইস বিভাগে ডিভাইস বদলান।
 
+- এক ক্লিকেই সব ডিভাইস খুলুন। প্রিভিউগুলো ডিভাইসের ধরন অনুযায়ী গোষ্ঠীবদ্ধ এবং ছোট থেকে বড় স্ক্রিনের ক্রমে সাজানো থাকে।
 - নিজস্ব ভিউপোর্টের মাপ তৈরি করুন, ডিভাইস সেট ও পছন্দের ডিভাইস সংরক্ষণ করুন অথবা একটি ভিউতে মনোযোগ দিন। মিল থাকা ভিউগুলোর সমর্থিত ইন্টারঅ্যাকশন সিঙ্ক করুন।
 - একটি ভিউ বা পুরো কর্মক্ষেত্রের ছবি নিন। তীর, বক্স, আঁকা ও লেখা যোগ করুন বা ছবি কাটুন। স্থানীয় ডিজাইন পৃষ্ঠার পাশে বা ওভারলে হিসেবে দেখুন।
 - URL, ডিভাইস, ভিউপোর্টের মাপ ও সমস্যার নোটসহ সাজানো সংশোধন প্রম্পট আপনার কোডিং টুলে কপি করুন।
@@ -651,6 +670,7 @@ Fes servir la previsualització mòbil per a proves de webs responsives. Compara
 
 Previsualitza iPhone 18 Pro, iPhone Duo plegat i desplegat, MacBook i Apple Watch. Recorre la categoria seleccionada amb les fletxes de dispositiu anterior i següent.
 
+- Obre tots els dispositius amb un clic. Les previsualitzacions s’agrupen per tipus de dispositiu i s’ordenen de pantalles petites a grans.
 - Crea mides de visualització pròpies, desa conjunts i dispositius preferits o centra’t en una sola vista. Sincronitza les interaccions compatibles entre vistes coincidents.
 - Captura una vista o tot l’espai de treball. Afegeix fletxes, quadres, traços i text o retalla la captura. Mostra un disseny local al costat de la pàgina o superposat.
 - Copia a la teva eina de programació una instrucció de correcció estructurada amb l’URL, els dispositius, les mides i les notes del problema.
@@ -680,6 +700,7 @@ Používejte mobilní náhled pro testování responzivních webů. Porovnávejt
 
 Prohlédněte si iPhone 18 Pro, složený a rozložený iPhone Duo, MacBook a Apple Watch. Mezi zařízeními ve vybrané kategorii přecházejte šipkami pro předchozí a další zařízení.
 
+- Otevřete všechna zařízení jedním kliknutím. Náhledy jsou seskupeny podle typu zařízení a seřazeny od menších obrazovek po větší.
 - Vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.
 - Zachyťte jeden náhled nebo celý pracovní prostor. Přidejte šipky, rámečky, kresby a text nebo snímek ořízněte. Zobrazte místní návrh vedle stránky nebo jako překryv.
 - Zkopírujte do svého programovacího nástroje strukturované zadání opravy s URL, zařízeními, rozměry a poznámkami k problému.
@@ -706,6 +727,8 @@ Jde o responzivní náhledy v Chromu, nikoli fyzická zařízení nebo jádro Sa
 Mobile View er en gratis open source-mobilsimulator og enhedsemulator til Chrome. Se et website i op til fire mobil-, tablet-, laptop- og computervisninger på samme tid. Vælg realistiske enheder, skift retning og zoom, synkroniser rulning og navigation, tag skærmbilleder, og sammenlign med et lokalt design. Alt kører lokalt i browseren uden konto, abonnement, analyse, telemetri eller server.
 
 Brug mobilforhåndsvisning til test af responsive websites. Sammenlign mobilenheder og computere, og kontrollér menuer, tekst og afstande ved hvert breakpoint. Dette værktøj til test af responsivt webdesign samler dine responsive tests i ét arbejdsområde.
+
+Åbn alle enheder med ét klik. Forhåndsvisningerne er grupperet efter enhedstype og sorteret fra mindre til større skærme.
 
 Se forhåndsvisninger af iPhone 18 Pro, foldet og udfoldet iPhone Duo, MacBook og Apple Watch. Brug pilene til forrige og næste enhed i den valgte kategori.
 
@@ -736,6 +759,7 @@ Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motore
 
 Δείτε προεπισκοπήσεις iPhone 18 Pro, διπλωμένου και ανοιχτού iPhone Duo, MacBook και Apple Watch. Αλλάξτε συσκευή στην επιλεγμένη κατηγορία με τα βέλη προηγούμενου και επόμενου.
 
+- Ανοίξτε όλες τις συσκευές με ένα κλικ. Οι προεπισκοπήσεις ομαδοποιούνται ανά τύπο συσκευής και ταξινομούνται από τις μικρότερες στις μεγαλύτερες οθόνες.
 - Δημιουργήστε προσαρμοσμένα μεγέθη viewport, αποθηκεύστε σύνολα και αγαπημένες συσκευές ή εστιάστε σε μία προβολή. Συγχρονίστε υποστηριζόμενες αλληλεπιδράσεις μεταξύ αντίστοιχων προβολών.
 - Καταγράψτε μία προβολή ή ολόκληρο τον χώρο εργασίας. Προσθέστε βέλη, πλαίσια, σχέδια και κείμενο ή περικόψτε την εικόνα. Εμφανίστε ένα τοπικό σχέδιο δίπλα στη σελίδα ή ως επικάλυψη.
 - Αντιγράψτε στο εργαλείο προγραμματισμού σας μια δομημένη οδηγία διόρθωσης με URL, συσκευές, διαστάσεις και σημειώσεις προβλήματος.
@@ -763,6 +787,7 @@ Mobile View is a free, open-source mobile simulator and device emulator for resp
 
 Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
 
+- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
@@ -798,6 +823,7 @@ Mobile View is a free, open-source mobile simulator and device emulator for resp
 
 Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
 
+- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
@@ -833,6 +859,7 @@ Mobile View is a free, open-source mobile simulator and device emulator for resp
 
 Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
 
+- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
@@ -870,6 +897,7 @@ Usa la vista previa móvil para las pruebas de sitios web responsive. Compara di
 
 Previsualiza iPhone 18 Pro, iPhone Duo plegado y desplegado, MacBook y Apple Watch. Recorre la categoría seleccionada con las flechas de dispositivo anterior y siguiente.
 
+- Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
 - Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.
 - Guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.
@@ -902,6 +930,8 @@ Mobile View on tasuta avatud lähtekoodiga mobiilisimulaator ja seadmeemulaator 
 
 Kasuta mobiilset eelvaadet kohanduvate veebisaitide testimiseks. Võrdle mobiilseadmeid ja arvuteid ning kontrolli menüüsid, teksti ja vahesid eri murdepunktides. See kohanduva veebidisaini testimise tööriist koondab kohanduvustestid ühte tööalasse.
 
+Avage kõik seadmed ühe klõpsuga. Eelvaated on rühmitatud seadmetüübi järgi ja järjestatud väiksematest ekraanidest suuremateni.
+
 Vaata iPhone 18 Pro, volditud ja avatud iPhone Duo, MacBooki ning Apple Watchi eelvaateid. Liigu valitud seadmekategoorias eelmise ja järgmise seadme nooltega.
 
 Salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.
@@ -931,6 +961,7 @@ Mobile View یک شبیه‌ساز موبایل و شبیه‌ساز دستگا�
 
 پیش‌نمایش iPhone 18 Pro، حالت بسته و باز iPhone Duo، MacBook و Apple Watch را ببینید. با پیکان‌های قبلی و بعدی بین دستگاه‌های دسته انتخاب‌شده جابه‌جا شوید.
 
+- همه دستگاه‌ها را با یک کلیک باز کنید. پیش‌نمایش‌ها بر اساس نوع دستگاه گروه‌بندی شده‌اند و از صفحه‌نمایش کوچک‌تر به بزرگ‌تر مرتب می‌شوند.
 - اندازه‌های دلخواه نما بسازید، مجموعه‌ها و دستگاه‌های محبوب را ذخیره کنید یا روی یک نما تمرکز کنید. تعاملات پشتیبانی‌شده را بین نماهای متناظر همگام کنید.
 - از یک نما یا تمام فضای کار عکس بگیرید. پیکان، کادر، نقاشی و متن اضافه کنید یا تصویر را برش دهید. طرح محلی را کنار صفحه یا به‌صورت لایه روی آن نمایش دهید.
 - یک دستور اصلاح ساختاریافته شامل URL، دستگاه‌ها، اندازه‌های نما و یادداشت‌های مشکل را در ابزار کدنویسی خود کپی کنید.
@@ -957,6 +988,8 @@ Mobile View یک شبیه‌ساز موبایل و شبیه‌ساز دستگا�
 Mobile View on maksuton avoimen lähdekoodin mobiilisimulaattori ja laite-emulaattori Chromelle. Esikatsele sivustoa yhtä aikaa jopa neljässä puhelin-, tabletti-, kannettava- ja työpöytänäkymässä. Valitse realistisia laitteita, muuta suuntaa ja zoomausta, synkronoi vieritys ja siirtyminen, ota kuvakaappauksia ja vertaa paikalliseen suunnitelmaan. Kaikki toimii paikallisesti ilman tiliä, tilausta, analytiikkaa, telemetriaa tai palvelinta.
 
 Käytä mobiiliesikatselua responsiivisten verkkosivustojen testaukseen. Vertaa mobiililaitteita ja tietokoneita ja tarkista valikot, teksti ja välit eri katkaisukohdissa. Tämä responsiivisen verkkosuunnittelun testaustyökalu kokoaa responsiiviset testit samaan työtilaan.
+
+Avaa kaikki laitteet yhdellä napsautuksella. Esikatselut on ryhmitelty laitetyypin mukaan ja järjestetty pienemmistä näytöistä suurempiin.
 
 Esikatsele iPhone 18 Prota, taitettua ja avattua iPhone Duoa, MacBookia ja Apple Watchia. Selaa valitun laiteluokan laitteita edellisen ja seuraavan laitteen nuolilla.
 
@@ -987,6 +1020,7 @@ Mobile View Chrome માટે મફત અને ઓપન-સોર્સ �
 
 iPhone 18 Pro, વાળેલા અને ખુલ્લા iPhone Duo, MacBook અને Apple Watchનું પૂર્વાવલોકન જુઓ. અગાઉના અને આગળના તીરથી પસંદ કરેલી ઉપકરણ શ્રેણીમાં ઉપકરણ બદલો.
 
+- એક ક્લિકમાં બધા ડિવાઇસ ખોલો. પ્રીવ્યૂ ડિવાઇસના પ્રકાર પ્રમાણે જૂથમાં ગોઠવાય છે અને નાનીથી મોટી સ્ક્રીનના ક્રમમાં દેખાય છે.
 - પોતાના વ્યૂપોર્ટ માપ બનાવો, ઉપકરણ સેટ અને મનપસંદ ઉપકરણો સાચવો અથવા એક દૃશ્ય પર ધ્યાન આપો. મેળ ખાતાં દૃશ્યોમાં સમર્થિત ક્રિયાઓ સિંક કરો.
 - એક દૃશ્ય અથવા આખા કાર્યક્ષેત્રનો સ્ક્રીનશૉટ લો. તીર, બૉક્સ, રેખાંકન અને લખાણ ઉમેરો અથવા ચિત્ર કાપો. સ્થાનિક ડિઝાઇન પૃષ્ઠની બાજુમાં અથવા ઓવરલે તરીકે બતાવો.
 - URL, ઉપકરણો, વ્યૂપોર્ટ માપ અને સમસ્યાની નોંધો સાથેનો ગોઠવાયેલ સુધારા પ્રોમ્પ્ટ તમારા કોડિંગ ટૂલમાં કૉપિ કરો.
@@ -1016,6 +1050,7 @@ Mobile View הוא סימולטור נייד ואמולטור מכשירים ח�
 
 הציגו תצוגות מקדימות של iPhone 18 Pro, ‏iPhone Duo מקופל ופתוח, MacBook ו-Apple Watch. עברו בין מכשירים בקטגוריה שנבחרה בעזרת החיצים למכשיר הקודם והבא.
 
+- פתחו את כל המכשירים בלחיצה אחת. התצוגות המקדימות מקובצות לפי סוג המכשיר ומסודרות ממסכים קטנים לגדולים.
 - צרו גדלי תצוגה מותאמים, שמרו קבוצות ומכשירים מועדפים או התמקדו בתצוגה אחת. סנכרנו אינטראקציות נתמכות בין תצוגות תואמות.
 - צלמו תצוגה אחת או את כל סביבת העבודה. הוסיפו חצים, מסגרות, ציורים וטקסט או חתכו את התמונה. הציגו עיצוב מקומי לצד העמוד או כשכבה מעליו.
 - העתיקו לכלי התכנות שלכם הנחיית תיקון מובנית עם כתובת URL, מכשירים, מידות התצוגה והערות על הבעיה.
@@ -1045,6 +1080,7 @@ Koristite mobilni pregled za testiranje responzivnih web-stranica. Usporedite mo
 
 Pregledajte iPhone 18 Pro, sklopljeni i otvoreni iPhone Duo, MacBook i Apple Watch. Strelicama za prethodni i sljedeći uređaj prolazite kroz odabranu kategoriju.
 
+- Otvorite sve uređaje jednim klikom. Pretpregledi su grupirani prema vrsti uređaja i poredani od manjih zaslona prema većima.
 - Izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.
 - Snimite jedan prikaz ili cijeli radni prostor. Dodajte strelice, okvire, crteže i tekst ili izrežite snimku. Prikažite lokalni dizajn uz stranicu ili kao preklop.
 - Kopirajte strukturiranu uputu za popravak s URL-om, uređajima, dimenzijama i bilješkama o problemu u svoj alat za programiranje.
@@ -1074,6 +1110,7 @@ Használd a mobil előnézetet reszponzív weboldalak teszteléséhez. Hasonlít
 
 Nézd meg az iPhone 18 Pro, az összecsukott és kinyitott iPhone Duo, a MacBook és az Apple Watch előnézetét. Az előző és következő nyíllal válthatsz a kiválasztott kategória eszközei között.
 
+- Nyissa meg az összes eszközt egyetlen kattintással. Az előnézetek eszköztípus szerint vannak csoportosítva, és a kisebb képernyőktől a nagyobbak felé rendezve.
 - Hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.
 - Rögzítsen egy nézetet vagy a teljes munkaterületet. Adjon hozzá nyilakat, kereteket, rajzokat és szöveget, vagy vágja körül a képet. Jelenítsen meg helyi tervet az oldal mellett vagy fedvényként.
 - Másoljon strukturált javítási utasítást a programozóeszközébe az URL-lel, eszközökkel, nézetméretekkel és a probléma jegyzeteivel.
@@ -1103,6 +1140,7 @@ Gunakan pratinjau seluler untuk pengujian situs web responsif. Bandingkan perang
 
 Pratinjau iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan panah perangkat sebelumnya dan berikutnya dalam kategori yang dipilih.
 
+- Buka semua perangkat dengan satu klik. Pratinjau dikelompokkan berdasarkan jenis perangkat dan diurutkan dari layar kecil ke besar.
 - Buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
 - Tangkap satu tampilan atau seluruh ruang kerja. Tambahkan panah, kotak, gambar, dan teks atau potong tangkapan layar. Tampilkan desain lokal di samping halaman atau sebagai overlay.
 - Salin instruksi perbaikan terstruktur berisi URL, perangkat, ukuran viewport, dan catatan masalah ke alat coding Anda.
@@ -1132,6 +1170,7 @@ Mobile View ಎಂಬುದು Chromeಗಾಗಿ ಉಚಿತ ಓಪನ್ ಸ�
 
 iPhone 18 Pro, ಮಡಚಿದ ಮತ್ತು ತೆರೆದ iPhone Duo, MacBook ಹಾಗೂ Apple Watch ಪೂರ್ವವೀಕ್ಷಣೆಗಳನ್ನು ನೋಡಿ. ಹಿಂದಿನ ಮತ್ತು ಮುಂದಿನ ಬಾಣಗಳಿಂದ ಆಯ್ಕೆ ಮಾಡಿದ ಸಾಧನ ವರ್ಗದಲ್ಲಿ ಸಾಧನ ಬದಲಿಸಿ.
 
+- ಒಂದೇ ಕ್ಲಿಕ್‌ನಲ್ಲಿ ಎಲ್ಲಾ ಸಾಧನಗಳನ್ನು ತೆರೆಯಿರಿ. ಪೂರ್ವವೀಕ್ಷಣೆಗಳನ್ನು ಸಾಧನದ ಪ್ರಕಾರ ಗುಂಪು ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಚಿಕ್ಕ ಪರದೆಗಳಿಂದ ದೊಡ್ಡ ಪರದೆಗಳವರೆಗೆ ಕ್ರಮವಾಗಿ ಜೋಡಿಸಲಾಗಿದೆ.
 - ನಿಮ್ಮದೇ ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳನ್ನು ರಚಿಸಿ, ಸಾಧನ ಸೆಟ್‌ಗಳು ಮತ್ತು ಮೆಚ್ಚಿನವುಗಳನ್ನು ಉಳಿಸಿ ಅಥವಾ ಒಂದೇ ವೀಕ್ಷಣೆಯ ಮೇಲೆ ಗಮನ ಕೊಡಿ. ಹೊಂದುವ ವೀಕ್ಷಣೆಗಳ ನಡುವೆ ಬೆಂಬಲಿತ ಸಂವಹನಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿ.
 - ಒಂದು ವೀಕ್ಷಣೆ ಅಥವಾ ಸಂಪೂರ್ಣ ಕಾರ್ಯಸ್ಥಳವನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ. ಬಾಣಗಳು, ಬಾಕ್ಸ್‌ಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ಪಠ್ಯ ಸೇರಿಸಿ ಅಥವಾ ಚಿತ್ರ ಕತ್ತರಿಸಿ. ಸ್ಥಳೀಯ ವಿನ್ಯಾಸವನ್ನು ಪುಟದ ಪಕ್ಕದಲ್ಲಿ ಅಥವಾ ಓವರ್‌ಲೇ ಆಗಿ ತೋರಿಸಿ.
 - URL, ಸಾಧನಗಳು, ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳು ಮತ್ತು ಸಮಸ್ಯೆಯ ಟಿಪ್ಪಣಿಗಳಿರುವ ರಚನಾತ್ಮಕ ತಿದ್ದುಪಡಿ ಪ್ರಾಂಪ್ಟ್ ಅನ್ನು ನಿಮ್ಮ ಕೋಡಿಂಗ್ ಸಾಧನಕ್ಕೆ ನಕಲಿಸಿ.
@@ -1161,6 +1200,7 @@ Naudokite mobiliąją peržiūrą adaptyvių svetainių testavimui. Palyginkite 
 
 Peržiūrėkite iPhone 18 Pro, sulenktą ir išskleistą iPhone Duo, MacBook bei Apple Watch. Pasirinktoje įrenginių kategorijoje judėkite ankstesnio ir kito įrenginio rodyklėmis.
 
+- Atverkite visus įrenginius vienu spustelėjimu. Peržiūros sugrupuotos pagal įrenginio tipą ir surikiuotos nuo mažesnių ekranų iki didesnių.
 - Kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.
 - Fiksuokite vieną vaizdą arba visą darbo sritį. Pridėkite rodykles, rėmelius, piešinius ir tekstą arba apkirpkite vaizdą. Rodykite vietinį dizainą šalia puslapio arba kaip perdangą.
 - Nukopijuokite struktūruotą taisymo užklausą su URL, įrenginiais, peržiūros dydžiais ir problemos pastabomis į savo programavimo įrankį.
@@ -1190,6 +1230,7 @@ Izmantojiet mobilo priekšskatījumu responsīvu vietņu testēšanai. Salīdzin
 
 Priekšskatiet iPhone 18 Pro, salocītu un atvērtu iPhone Duo, MacBook un Apple Watch. Pārvietojieties pa izvēlēto ierīču kategoriju ar iepriekšējās un nākamās ierīces bultiņām.
 
+- Atveriet visas ierīces ar vienu klikšķi. Priekšskatījumi ir grupēti pēc ierīces veida un sakārtoti no mazākiem ekrāniem līdz lielākiem.
 - Izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
 - Uzņemiet vienu skatu vai visu darbvietu. Pievienojiet bultas, rāmjus, zīmējumus un tekstu vai apgrieziet attēlu. Parādiet lokālu dizainu blakus lapai vai kā pārklājumu.
 - Kopējiet strukturētu labošanas uzvedni ar URL, ierīcēm, skata izmēriem un piezīmēm par problēmu savā programmēšanas rīkā.
@@ -1219,6 +1260,7 @@ Mobile View Chrome-നുള്ള സൗജന്യ ഓപ്പൺ സോഴ�
 
 iPhone 18 Pro, മടക്കിയതും തുറന്നതുമായ iPhone Duo, MacBook, Apple Watch എന്നിവ പ്രിവ്യൂ ചെയ്യൂ. മുമ്പത്തെയും അടുത്തതെയും അമ്പുകൾ ഉപയോഗിച്ച് തിരഞ്ഞെടുത്ത ഉപകരണ വിഭാഗത്തിൽ മാറൂ.
 
+- ഒറ്റ ക്ലിക്കിൽ എല്ലാ ഉപകരണങ്ങളും തുറക്കുക. പ്രിവ്യൂകൾ ഉപകരണത്തിന്റെ തരം അനുസരിച്ച് ഗ്രൂപ്പുകളാക്കി, ചെറിയ സ്ക്രീനുകളിൽ നിന്ന് വലിയ സ്ക്രീനുകളിലേക്ക് ക്രമീകരിച്ചിരിക്കുന്നു.
 - സ്വന്തം വ്യൂപോർട്ട് വലുപ്പങ്ങൾ സൃഷ്ടിക്കൂ, ഉപകരണ സെറ്റുകളും പ്രിയപ്പെട്ടവയും സൂക്ഷിക്കൂ, അല്ലെങ്കിൽ ഒരു കാഴ്ചയിൽ ശ്രദ്ധ കേന്ദ്രീകരിക്കൂ. അനുയോജ്യമായ കാഴ്ചകളിലെ പിന്തുണയ്ക്കുന്ന ഇടപെടലുകൾ സമന്വയിപ്പിക്കൂ.
 - ഒരു കാഴ്ചയോ മുഴുവൻ പ്രവർത്തനസ്ഥലമോ പകർത്തൂ. അമ്പുകൾ, ബോക്സുകൾ, വരകൾ, എഴുത്ത് എന്നിവ ചേർക്കൂ അല്ലെങ്കിൽ ചിത്രം മുറിക്കൂ. പ്രാദേശിക ഡിസൈൻ പേജിന് അരികിലോ മുകളിലെ ഓവർലേയായോ കാണിക്കൂ.
 - URL, ഉപകരണങ്ങൾ, വ്യൂപോർട്ട് വലുപ്പങ്ങൾ, പ്രശ്നക്കുറിപ്പുകൾ എന്നിവയുള്ള ക്രമപ്പെടുത്തിയ പരിഹാര നിർദേശം നിങ്ങളുടെ കോഡിങ് ടൂളിലേക്ക് പകർത്തൂ.
@@ -1248,6 +1290,7 @@ Mobile View हे Chromeसाठी मोफत आणि मुक्त-स
 
 iPhone 18 Pro, दुमडलेल्या आणि उघडलेल्या iPhone Duo, MacBook आणि Apple Watchची पूर्वदृश्ये पहा. मागील आणि पुढील बाणांनी निवडलेल्या डिव्हाइस श्रेणीत उपकरण बदला.
 
+- एका क्लिकमध्ये सर्व डिव्हाइस उघडा. प्रीव्ह्यू डिव्हाइसच्या प्रकारानुसार गटांमध्ये आणि लहान ते मोठ्या स्क्रीनच्या क्रमाने दिसतात.
 - स्वतःचे व्ह्यूपोर्ट आकार तयार करा, उपकरण संच व आवडती उपकरणे जतन करा किंवा एका दृश्यावर लक्ष केंद्रित करा. जुळणाऱ्या दृश्यांमध्ये समर्थित क्रिया समक्रमित करा.
 - एक दृश्य किंवा पूर्ण कार्यक्षेत्राचा स्क्रीनशॉट घ्या. बाण, चौकटी, रेखाचित्रे व मजकूर जोडा किंवा प्रतिमा कापा. स्थानिक डिझाइन पानाशेजारी किंवा ओव्हरले म्हणून दाखवा.
 - URL, उपकरणे, व्ह्यूपोर्ट आकार व समस्येच्या नोंदी असलेला संरचित दुरुस्ती प्रॉम्प्ट तुमच्या कोडिंग साधनात कॉपी करा.
@@ -1277,6 +1320,7 @@ Gunakan pratonton mudah alih untuk ujian laman web responsif. Bandingkan peranti
 
 Pratonton iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan anak panah peranti sebelumnya dan seterusnya dalam kategori yang dipilih.
 
+- Buka semua peranti dengan satu klik. Pratonton dikumpulkan mengikut jenis peranti dan disusun daripada skrin yang lebih kecil kepada yang lebih besar.
 - Cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.
 - Tangkap satu paparan atau seluruh ruang kerja. Tambah anak panah, kotak, lukisan dan teks atau pangkas imej. Paparkan reka bentuk setempat di sebelah halaman atau sebagai tindanan.
 - Salin arahan pembaikan berstruktur dengan URL, peranti, saiz viewport dan nota masalah ke alat pengekodan anda.
@@ -1303,6 +1347,8 @@ Ini pratonton viewport responsif dalam Chrome, bukan peranti fizikal atau enjin 
 Mobile View er en gratis mobilsimulator og enhetsemulator med åpen kildekode for Chrome. Se et nettsted i opptil fire mobil-, nettbrett-, laptop- og datamaskinvisninger samtidig. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.
 
 Bruk mobilforhåndsvisning til testing av responsive nettsteder. Sammenlign mobilenheter og datamaskiner, og kontroller menyer, tekst og avstander ved bruddpunktene. Dette verktøyet for testing av responsivt webdesign samler de responsive testene i ett arbeidsområde.
+
+Åpne alle enheter med ett klikk. Forhåndsvisningene er gruppert etter enhetstype og sortert fra mindre til større skjermer.
 
 Forhåndsvis iPhone 18 Pro, sammenfoldet og utfoldet iPhone Duo, MacBook og Apple Watch. Bruk pilene for forrige og neste enhet i den valgte kategorien.
 
@@ -1333,6 +1379,7 @@ Używaj podglądu mobilnego do testowania responsywnych stron internetowych. Por
 
 Wyświetlaj iPhone 18 Pro, złożony i rozłożony iPhone Duo, MacBook i Apple Watch. Przeglądaj wybraną kategorię strzałkami poprzedniego i następnego urządzenia.
 
+- Otwórz wszystkie urządzenia jednym kliknięciem. Podglądy są pogrupowane według typu urządzenia i uporządkowane od mniejszych ekranów do większych.
 - Twórz własne rozmiary widoku, zapisuj zestawy i ulubione urządzenia lub skup się na jednym widoku. Synchronizuj obsługiwane interakcje między odpowiadającymi sobie podglądami.
 - Przechwytuj jeden widok lub całą przestrzeń roboczą. Dodawaj strzałki, ramki, rysunki i tekst albo przycinaj obraz. Wyświetlaj lokalny projekt obok strony lub jako nakładkę.
 - Kopiuj uporządkowany prompt naprawy z adresem URL, urządzeniami, rozmiarami i notatkami o problemie do swojego narzędzia programistycznego.
@@ -1362,6 +1409,7 @@ Use a pré-visualização móvel para testes de sites responsivos. Compare dispo
 
 Pré-visualize iPhone 18 Pro, iPhone Duo dobrado e aberto, MacBook e Apple Watch. Percorra a categoria selecionada com as setas do dispositivo anterior e seguinte.
 
+- Abra todos os dispositivos com um clique. As pré-visualizações são agrupadas por tipo de dispositivo e ordenadas dos ecrãs mais pequenos aos maiores.
 - Crie dimensões de visualização próprias, guarde conjuntos e dispositivos favoritos ou concentre-se numa vista. Sincronize as interações suportadas entre vistas correspondentes.
 - Capture uma vista ou toda a área de trabalho. Adicione setas, caixas, desenhos e texto ou recorte a imagem. Apresente um design local ao lado da página ou sobreposto.
 - Copie para a sua ferramenta de programação uma instrução de correção estruturada com o URL, os dispositivos, as dimensões e as notas do problema.
@@ -1391,6 +1439,7 @@ Folosește previzualizarea mobilă pentru testarea site-urilor responsive. Compa
 
 Previzualizează iPhone 18 Pro, iPhone Duo pliat și deschis, MacBook și Apple Watch. Parcurge categoria selectată cu săgețile pentru dispozitivul anterior și următor.
 
+- Deschide toate dispozitivele cu un clic. Previzualizările sunt grupate după tipul dispozitivului și ordonate de la ecrane mai mici la ecrane mai mari.
 - Creează dimensiuni de viewport personalizate, salvează seturi și dispozitive favorite sau concentrează-te pe o singură vedere. Sincronizează interacțiunile acceptate între vederi corespunzătoare.
 - Capturează o vedere sau întregul spațiu de lucru. Adaugă săgeți, chenare, desene și text sau decupează imaginea. Afișează un design local lângă pagină sau suprapus.
 - Copiază în instrumentul de programare o instrucțiune structurată de remediere cu URL, dispozitive, dimensiuni și note despre problemă.
@@ -1420,6 +1469,7 @@ Používajte mobilný náhľad na testovanie responzívnych webov. Porovnávajte
 
 Zobrazte si iPhone 18 Pro, zložený a rozložený iPhone Duo, MacBook a Apple Watch. Vybranou kategóriou prechádzajte šípkami pre predchádzajúce a ďalšie zariadenie.
 
+- Otvorte všetky zariadenia jedným kliknutím. Náhľady sú zoskupené podľa typu zariadenia a zoradené od menších obrazoviek po väčšie.
 - Vytvárajte vlastné rozmery viewportu, ukladajte súpravy a obľúbené zariadenia alebo sa sústreďte na jeden náhľad. Synchronizujte podporované interakcie medzi zodpovedajúcimi náhľadmi.
 - Zachyťte jeden náhľad alebo celý pracovný priestor. Pridajte šípky, rámčeky, kresby a text alebo obrázok orežte. Zobrazte miestny návrh vedľa stránky alebo ako prekrytie.
 - Skopírujte štruktúrované zadanie opravy s URL, zariadeniami, rozmermi a poznámkami k problému do svojho programovacieho nástroja.
@@ -1449,6 +1499,7 @@ Uporabite mobilni predogled za preizkušanje odzivnih spletnih mest. Primerjajte
 
 Predoglejte iPhone 18 Pro, zložen in odprt iPhone Duo, MacBook in Apple Watch. Po izbrani kategoriji se premikajte s puščicama za prejšnjo in naslednjo napravo.
 
+- Odprite vse naprave z enim klikom. Predogledi so združeni po vrsti naprave in razvrščeni od manjših zaslonov do večjih.
 - Ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.
 - Zajemite en pogled ali celotno delovno površino. Dodajte puščice, okvirje, risbe in besedilo ali obrežite sliko. Prikažite lokalni dizajn ob strani ali kot prekrivanje.
 - Kopirajte strukturirano navodilo za popravek z URL-jem, napravami, dimenzijami in opombami o težavi v svoje programsko orodje.
@@ -1478,6 +1529,7 @@ Mobile View је бесплатан мобилни симулатор и ему�
 
 Прегледајте iPhone 18 Pro, склопљен и отворен iPhone Duo, MacBook и Apple Watch. Стрелицама за претходни и следећи уређај пролазите кроз изабрану категорију.
 
+- Отворите све уређаје једним кликом. Прегледи су груписани по типу уређаја и поређани од мањих екрана ка већим.
 - Направите прилагођене величине приказа, сачувајте скупове и омиљене уређаје или се усредсредите на један приказ. Ускладите подржане интеракције између одговарајућих приказа.
 - Снимите један приказ или цео радни простор. Додајте стрелице, оквире, цртеже и текст или исеците слику. Прикажите локални дизајн поред странице или као преклоп.
 - Копирајте структурисано упутство за исправку са URL-ом, уређајима, димензијама и белешкама о проблему у свој алат за програмирање.
@@ -1504,6 +1556,8 @@ Mobile View је бесплатан мобилни симулатор и ему�
 Mobile View är en kostnadsfri mobilsimulator och enhetsemulator med öppen källkod för Chrome. Visa en webbplats i upp till fyra mobil-, surfplatte-, laptop- och datorvyer samtidigt. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.
 
 Använd mobilförhandsvisning för test av responsiva webbplatser. Jämför mobilenheter och datorer och kontrollera menyer, text och avstånd vid brytpunkterna. Det här verktyget för test av responsiv webbdesign samlar dina responsiva tester i en arbetsyta.
+
+Öppna alla enheter med ett klick. Förhandsvisningarna är grupperade efter enhetstyp och sorterade från mindre till större skärmar.
 
 Förhandsvisa iPhone 18 Pro, hopvikt och utfälld iPhone Duo, MacBook och Apple Watch. Använd pilarna för föregående och nästa enhet i den valda kategorin.
 
@@ -1534,6 +1588,7 @@ Tumia hakiki ya simu kupima tovuti zinazobadilika kulingana na ukubwa wa skrini.
 
 Hakiki iPhone 18 Pro, iPhone Duo iliyokunjwa na iliyofunguliwa, MacBook na Apple Watch. Tumia mishale ya kifaa kilichotangulia na kinachofuata katika aina iliyochaguliwa.
 
+- Fungua vifaa vyote kwa mbofyo mmoja. Muonekano wa awali umepangwa kwa aina ya kifaa na kuanzia skrini ndogo hadi kubwa.
 - Unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.
 - Piga picha ya mwonekano mmoja au eneo lote la kazi. Ongeza mishale, visanduku, michoro na maandishi au punguza picha. Onyesha muundo wa ndani kando ya ukurasa au kama tabaka juu yake.
 - Nakili agizo la marekebisho lenye mpangilio, URL, vifaa, vipimo vya mwonekano na maelezo ya tatizo kwenye zana yako ya kuandika msimbo.
@@ -1563,6 +1618,7 @@ Mobile View என்பது Chrome-க்கான இலவச திறந�
 
 iPhone 18 Pro, மடிக்கப்பட்ட மற்றும் திறந்த iPhone Duo, MacBook, Apple Watch ஆகியவற்றை முன்னோட்டமிடவும். முந்தைய மற்றும் அடுத்த அம்புகளால் தேர்ந்தெடுத்த சாதன வகையில் சாதனத்தை மாற்றவும்.
 
+- ஒரே கிளிக்கில் எல்லா சாதனங்களையும் திறக்கவும். முன்னோட்டங்கள் சாதன வகையின்படி குழுவாக்கப்பட்டு, சிறிய திரைகளிலிருந்து பெரிய திரைகள் வரை வரிசைப்படுத்தப்பட்டுள்ளன.
 - விருப்ப வியூபோர்ட் அளவுகளை உருவாக்கி, சாதனத் தொகுப்புகளையும் விருப்பங்களையும் சேமிக்கவும் அல்லது ஒரு காட்சியில் கவனம் செலுத்தவும். பொருந்தும் காட்சிகளில் ஆதரிக்கப்படும் தொடர்புகளை ஒத்திசைக்கவும்.
 - ஒரு காட்சியையோ முழுப் பணிப்பகுதியையோ படமெடுக்கவும். அம்புகள், பெட்டிகள், வரைபடங்கள், உரை சேர்க்கவும் அல்லது படத்தை வெட்டவும். உள்ளூர் வடிவமைப்பைப் பக்கத்தின் அருகில் அல்லது மேலடுக்காகக் காட்டவும்.
 - URL, சாதனங்கள், வியூபோர்ட் அளவுகள், சிக்கல் குறிப்புகள் அடங்கிய ஒழுங்கமைந்த திருத்த வழிமுறையை உங்கள் நிரலாக்கக் கருவிக்கு நகலெடுக்கவும்.
@@ -1592,6 +1648,7 @@ Mobile View అనేది Chrome కోసం ఉచిత ఓపెన్ స
 
 iPhone 18 Pro, మడిచిన మరియు తెరిచిన iPhone Duo, MacBook, Apple Watch ప్రివ్యూలను చూడండి. మునుపటి, తదుపరి బాణాలతో ఎంచుకున్న పరికర వర్గంలో పరికరం మార్చండి.
 
+- ఒకే క్లిక్‌తో అన్ని పరికరాలను తెరవండి. ప్రివ్యూలు పరికర రకం ప్రకారం సమూహాలుగా, చిన్న స్క్రీన్‌ల నుంచి పెద్ద స్క్రీన్‌ల వరకు క్రమంగా అమర్చబడతాయి.
 - మీ స్వంత వ్యూపోర్ట్ పరిమాణాలు సృష్టించండి, పరికర సెట్లు, ఇష్టమైనవి సేవ్ చేయండి లేదా ఒక వీక్షణపై దృష్టి పెట్టండి. సరిపోలే వీక్షణల్లో మద్దతు ఉన్న పరస్పర చర్యలను సమకాలీకరించండి.
 - ఒక వీక్షణ లేదా మొత్తం పని ప్రదేశాన్ని క్యాప్చర్ చేయండి. బాణాలు, బాక్సులు, చిత్రాలు, వచనం జోడించండి లేదా చిత్రాన్ని కత్తిరించండి. స్థానిక డిజైన్‌ను పేజీ పక్కన లేదా ఓవర్‌లేగా చూపించండి.
 - URL, పరికరాలు, వ్యూపోర్ట్ పరిమాణాలు, సమస్య గమనికలతో నిర్మాణాత్మక సవరణ ప్రాంప్ట్‌ను మీ కోడింగ్ సాధనానికి కాపీ చేయండి.
@@ -1621,6 +1678,7 @@ Mobile View เป็นโปรแกรมจำลองมือถือ�
 
 ดูตัวอย่าง iPhone 18 Pro, iPhone Duo แบบพับและกาง, MacBook และ Apple Watch ใช้ลูกศรก่อนหน้าและถัดไปเพื่อเปลี่ยนอุปกรณ์ในหมวดที่เลือก
 
+- เปิดอุปกรณ์ทั้งหมดได้ในคลิกเดียว ตัวอย่างจะจัดกลุ่มตามประเภทอุปกรณ์และเรียงจากหน้าจอขนาดเล็กไปใหญ่
 - สร้างขนาดวิวพอร์ตเอง บันทึกชุดอุปกรณ์และรายการโปรด หรือโฟกัสมุมมองเดียว ซิงค์การโต้ตอบที่รองรับระหว่างมุมมองที่ตรงกัน
 - จับภาพมุมมองเดียวหรือทั้งพื้นที่ทำงาน เพิ่มลูกศร กรอบ ภาพวาด และข้อความ หรือตัดภาพ แสดงดีไซน์ในเครื่องข้างหน้าเว็บหรือเป็นภาพซ้อนทับ
 - คัดลอกคำสั่งแก้ไขที่จัดโครงสร้างพร้อม URL อุปกรณ์ ขนาดวิวพอร์ต และบันทึกปัญหาไปยังเครื่องมือเขียนโค้ดของคุณ
@@ -1650,6 +1708,7 @@ Duyarlı web sitesi testi için mobil önizlemeyi kullanın. Kırılma noktalar�
 
 iPhone 18 Pro, katlanmış ve açılmış iPhone Duo, MacBook ve Apple Watch önizlemelerini görün. Önceki ve sonraki oklarıyla seçili kategorideki cihazlar arasında geçiş yapın.
 
+- Tüm cihazları tek tıklamayla açın. Önizlemeler cihaz türüne göre gruplandırılır ve küçük ekranlardan büyük ekranlara doğru sıralanır.
 - Özel görünüm boyutları oluşturun, cihaz setlerini ve favorileri kaydedin veya tek görünüme odaklanın. Eşleşen görünümler arasında desteklenen etkileşimleri eşitleyin.
 - Tek görünümü veya tüm çalışma alanını yakalayın. Ok, kutu, çizim ve metin ekleyin ya da görüntüyü kırpın. Yerel tasarımı sayfanın yanında veya kaplama olarak gösterin.
 - URL, cihazlar, görünüm boyutları ve sorun notlarını içeren yapılandırılmış düzeltme istemini kodlama aracınıza kopyalayın.
@@ -1679,6 +1738,7 @@ Mobile View — безкоштовний мобільний симулятор �
 
 Переглядайте iPhone 18 Pro, складений і розгорнутий iPhone Duo, MacBook та Apple Watch. Переходьте між пристроями вибраної категорії стрілками попереднього й наступного пристрою.
 
+- Відкрийте всі пристрої одним натисканням. Попередні перегляди згруповано за типом пристрою та впорядковано від менших екранів до більших.
 - Створюйте власні розміри перегляду, зберігайте набори й улюблені пристрої або зосередьтеся на одному вікні. Синхронізуйте підтримувані взаємодії між відповідними переглядами.
 - Знімайте одне вікно або весь робочий простір. Додавайте стрілки, рамки, малюнки й текст або обрізайте знімок. Показуйте локальний дизайн поруч зі сторінкою чи як накладання.
 - Копіюйте структуроване завдання виправлення з URL, пристроями, розмірами й нотатками про проблему до свого інструмента програмування.

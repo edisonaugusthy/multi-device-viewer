@@ -4,6 +4,7 @@ Duyarlı web sitesi testi için mobil önizlemeyi kullanın. Kırılma noktalar�
 
 iPhone 18 Pro, katlanmış ve açılmış iPhone Duo, MacBook ve Apple Watch önizlemelerini görün. Önceki ve sonraki oklarıyla seçili kategorideki cihazlar arasında geçiş yapın.
 
+- Tüm cihazları tek tıklamayla açın. Önizlemeler cihaz türüne göre gruplandırılır ve küçük ekranlardan büyük ekranlara doğru sıralanır.
 - Özel görünüm boyutları oluşturun, cihaz setlerini ve favorileri kaydedin veya tek görünüme odaklanın. Eşleşen görünümler arasında desteklenen etkileşimleri eşitleyin.
 - Tek görünümü veya tüm çalışma alanını yakalayın. Ok, kutu, çizim ve metin ekleyin ya da görüntüyü kırpın. Yerel tasarımı sayfanın yanında veya kaplama olarak gösterin.
 - URL, cihazlar, görünüm boyutları ve sorun notlarını içeren yapılandırılmış düzeltme istemini kodlama aracınıza kopyalayın.

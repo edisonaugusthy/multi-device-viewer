@@ -4,6 +4,7 @@ Uporabite mobilni predogled za preizkušanje odzivnih spletnih mest. Primerjajte
 
 Predoglejte iPhone 18 Pro, zložen in odprt iPhone Duo, MacBook in Apple Watch. Po izbrani kategoriji se premikajte s puščicama za prejšnjo in naslednjo napravo.
 
+- Odprite vse naprave z enim klikom. Predogledi so združeni po vrsti naprave in razvrščeni od manjših zaslonov do večjih.
 - Ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.
 - Zajemite en pogled ali celotno delovno površino. Dodajte puščice, okvirje, risbe in besedilo ali obrežite sliko. Prikažite lokalni dizajn ob strani ali kot prekrivanje.
 - Kopirajte strukturirano navodilo za popravek z URL-jem, napravami, dimenzijami in opombami o težavi v svoje programsko orodje.

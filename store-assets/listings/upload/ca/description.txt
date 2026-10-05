@@ -4,6 +4,7 @@ Fes servir la previsualització mòbil per a proves de webs responsives. Compara
 
 Previsualitza iPhone 18 Pro, iPhone Duo plegat i desplegat, MacBook i Apple Watch. Recorre la categoria seleccionada amb les fletxes de dispositiu anterior i següent.
 
+- Obre tots els dispositius amb un clic. Les previsualitzacions s’agrupen per tipus de dispositiu i s’ordenen de pantalles petites a grans.
 - Crea mides de visualització pròpies, desa conjunts i dispositius preferits o centra’t en una sola vista. Sincronitza les interaccions compatibles entre vistes coincidents.
 - Captura una vista o tot l’espai de treball. Afegeix fletxes, quadres, traços i text o retalla la captura. Mostra un disseny local al costat de la pàgina o superposat.
 - Copia a la teva eina de programació una instrucció de correcció estructurada amb l’URL, els dispositius, les mides i les notes del problema.

@@ -4,6 +4,7 @@ Dùng bản xem trước trên di động để kiểm thử website responsive.
 
 Xem trước iPhone 18 Pro, iPhone Duo ở trạng thái gập và mở, MacBook cùng Apple Watch. Dùng mũi tên trước và sau để chuyển thiết bị trong danh mục đã chọn.
 
+- Mở tất cả thiết bị chỉ với một cú nhấp. Các bản xem trước được nhóm theo loại thiết bị và sắp xếp từ màn hình nhỏ đến lớn.
 - Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.
 - Đồng bộ cuộn, tương tác được hỗ trợ và điều hướng giữa các bản xem trước phù hợp.
 - Lưu bộ thiết bị, mục yêu thích và thiết bị gần đây, hoặc tập trung vào một viewport.

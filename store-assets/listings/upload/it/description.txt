@@ -4,6 +4,7 @@ Usa l’anteprima mobile per i test di siti web responsive. Confronta dispositiv
 
 Visualizza iPhone 18 Pro, iPhone Duo chiuso e aperto, MacBook e Apple Watch. Scorri la categoria selezionata con le frecce per il dispositivo precedente e successivo.
 
+- Apri tutti i dispositivi con un clic. Le anteprime sono raggruppate per tipo di dispositivo e ordinate dagli schermi più piccoli ai più grandi.
 - Scegli dispositivi realistici, modifica orientamento e zoom, ricarica una singola anteprima o crea viewport personalizzate.
 - Sincronizza scorrimento, interazioni supportate e navigazione tra anteprime corrispondenti.
 - Salva set, preferiti e dispositivi recenti oppure concentra l’analisi su una sola viewport.

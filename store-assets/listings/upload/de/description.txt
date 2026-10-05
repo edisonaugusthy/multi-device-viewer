@@ -4,6 +4,7 @@ Nutze die mobile Vorschau für Tests responsiver Websites. Vergleiche mobile Ger
 
 Nutze Vorschauen für iPhone 18 Pro, iPhone Duo im zugeklappten und aufgeklappten Zustand, MacBook und Apple Watch. Wechsle mit den Vor- und Zurück-Pfeilen durch die ausgewählte Gerätekategorie.
 
+- Öffne alle Geräte mit einem Klick. Die Vorschauen sind nach Gerätetyp gruppiert und von kleinen zu großen Bildschirmen sortiert.
 - Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.
 - Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.
 - Speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.

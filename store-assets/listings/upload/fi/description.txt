@@ -2,6 +2,8 @@ Mobile View on maksuton avoimen lähdekoodin mobiilisimulaattori ja laite-emulaa
 
 Käytä mobiiliesikatselua responsiivisten verkkosivustojen testaukseen. Vertaa mobiililaitteita ja tietokoneita ja tarkista valikot, teksti ja välit eri katkaisukohdissa. Tämä responsiivisen verkkosuunnittelun testaustyökalu kokoaa responsiiviset testit samaan työtilaan.
 
+Avaa kaikki laitteet yhdellä napsautuksella. Esikatselut on ryhmitelty laitetyypin mukaan ja järjestetty pienemmistä näytöistä suurempiin.
+
 Esikatsele iPhone 18 Prota, taitettua ja avattua iPhone Duoa, MacBookia ja Apple Watchia. Selaa valitun laiteluokan laitteita edellisen ja seuraavan laitteen nuolilla.
 
 Tallenna laitejoukkoja ja suosikkeja tai määritä omia näyttökokoja. Kuvaa yksi näkymä tai koko työtila ja lisää nuolia, kehyksiä ja tekstiä. Vertaa paikallista suunnitelmaa sivustoon rinnakkain tai päällekkäin ja kopioi URL:n, laitteet, näkymäkoot ja muistiinpanot sisältävä korjauskehotus koodaustyökaluusi.

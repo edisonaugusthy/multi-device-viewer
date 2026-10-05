@@ -4,6 +4,7 @@ Use a pré-visualização móvel para testes de sites responsivos. Compare dispo
 
 Pré-visualize iPhone 18 Pro, iPhone Duo dobrado e aberto, MacBook e Apple Watch. Percorra a categoria selecionada com as setas do dispositivo anterior e seguinte.
 
+- Abra todos os dispositivos com um clique. As pré-visualizações são agrupadas por tipo de dispositivo e ordenadas dos ecrãs mais pequenos aos maiores.
 - Crie dimensões de visualização próprias, guarde conjuntos e dispositivos favoritos ou concentre-se numa vista. Sincronize as interações suportadas entre vistas correspondentes.
 - Capture uma vista ou toda a área de trabalho. Adicione setas, caixas, desenhos e texto ou recorte a imagem. Apresente um design local ao lado da página ou sobreposto.
 - Copie para a sua ferramenta de programação uma instrução de correção estruturada com o URL, os dispositivos, as dimensões e as notas do problema.

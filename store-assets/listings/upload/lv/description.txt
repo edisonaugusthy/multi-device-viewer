@@ -1,7 +1,7 @@
-Mobile View ir bezmaksas atvērtā pirmkoda mobilais simulators un ierīču emulators pārlūkam Chrome. Vienlaikus skatiet vietni līdz četros tālruņa, planšetes, klēpjdatora un datora skatos. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
+Mobile View ir bezmaksas atvērtā pirmkoda rīks pielāgojamu vietņu testēšanai pārlūkā Chrome. Salīdziniet līdz četriem skatiem blakus, tostarp mobilo priekšskatījumu, lai pārbaudītu izvēlnes, tekstu un atstarpes. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
 
 - Atveriet visas ierīces ar vienu klikšķi. Priekšskatījumi ir grupēti pēc ierīces veida un sakārtoti no mazākiem ekrāniem līdz lielākiem.
-- Izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
+- Atkārtotai pielāgojamu izkārtojumu testēšanai izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
 - Uzņemiet vienu skatu vai visu darbvietu. Pievienojiet bultas, rāmjus, zīmējumus un tekstu vai apgrieziet attēlu. Parādiet lokālu dizainu blakus lapai vai kā pārklājumu.
 - Kopējiet strukturētu labošanas uzvedni ar URL, ierīcēm, skata izmēriem un piezīmēm par problēmu savā programmēšanas rīkā.
 

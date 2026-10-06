@@ -1,7 +1,7 @@
-Mobile View yra nemokamas atvirojo kodo mobilusis simuliatorius ir įrenginių emuliatorius, skirtas Chrome. Vienu metu peržiūrėkite svetainę iki keturių telefono, planšetės, nešiojamojo ir stalinio kompiuterio rodinių. Rinkitės tikroviškus įrenginius, keiskite orientaciją bei mastelį, sinchronizuokite slinkimą ir naršymą, fiksuokite ekraną ir lyginkite su vietiniu dizainu. Viskas veikia naršyklėje be paskyros, prenumeratos, analizės, telemetrijos ar serverio.
+Mobile View yra nemokamas atvirojo kodo įrankis prisitaikančioms svetainėms testuoti Chrome naršyklėje. Palyginkite iki keturių rodinių greta, įskaitant mobilųjį peržiūros rodinį, ir tikrinkite meniu, tekstą bei tarpus. Rinkitės tikroviškus įrenginius, keiskite orientaciją bei mastelį, sinchronizuokite slinkimą ir naršymą, fiksuokite ekraną ir lyginkite su vietiniu dizainu. Viskas veikia naršyklėje be paskyros, prenumeratos, analizės, telemetrijos ar serverio.
 
 - Atverkite visus įrenginius vienu spustelėjimu. Peržiūros sugrupuotos pagal įrenginio tipą ir surikiuotos nuo mažesnių ekranų iki didesnių.
-- Kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.
+- Norėdami pakartotinai testuoti prisitaikančius maketus, kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.
 - Fiksuokite vieną vaizdą arba visą darbo sritį. Pridėkite rodykles, rėmelius, piešinius ir tekstą arba apkirpkite vaizdą. Rodykite vietinį dizainą šalia puslapio arba kaip perdangą.
 - Nukopijuokite struktūruotą taisymo užklausą su URL, įrenginiais, peržiūros dydžiais ir problemos pastabomis į savo programavimo įrankį.
 

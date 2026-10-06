@@ -1,9 +1,9 @@
-Ang Mobile View ay libre at open-source na mobile simulator at device emulator para sa Chrome. Tingnan ang website sa hanggang apat na phone, tablet, laptop, at desktop view nang sabay, nang hindi paulit-ulit na binabago ang laki ng window o DevTools preset.
+Ang Mobile View ay libre at open-source na tool para sa pagsusuri ng responsive na website sa Chrome. Ihambing ang hanggang apat na view nang magkatabi, kasama ang mobile preview, para suriin ang mga menu, teksto, at pagitan.
 
 - Buksan ang lahat ng device sa isang click. Nakapangkat ang mga preview ayon sa uri ng device at nakaayos mula sa mas maliit hanggang sa mas malaking screen.
 - Pumili ng makatotohanang device, baguhin ang orientation at zoom, i-reload ang isang preview, o gumawa ng custom viewport.
 - I-sync ang pag-scroll, suportadong interaction, at navigation sa magkatugmang preview.
-- Mag-save ng device set, paborito, at recent device, o tumutok sa isang viewport.
+- Para sa paulit-ulit na responsive testing, mag-save ng device set, paborito, at recent device, o tumutok sa isang viewport.
 - Kunan ang isang viewport o buong workspace at lagyan ng pen, kahon, arrow, text, o crop.
 - Ikumpara ang lokal na design sa tabi o ibabaw ng live website at magmarka ng feedback nang walang upload.
 - Kumopya ng structured fix prompt na may URL, device, viewport size, at opsyonal na detalye papunta sa coding tool.

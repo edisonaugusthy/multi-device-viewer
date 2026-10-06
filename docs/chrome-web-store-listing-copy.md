@@ -13,21 +13,21 @@ Copy each record into its matching store language. Packaging extension messages 
 
 **Detailed description**
 
-Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
+Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
-- Save device sets and favorites for repeat checks during frontend development and design review.
+- Save device sets and favorites for repeat responsive testing.
 - Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
 - Compare the live website with a local design reference, side by side or as an overlay.
-- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
+- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 
 Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.
 
 No Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.
 
-These are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
+These are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
 
 **Screenshot captions**
 
@@ -46,12 +46,12 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 **Detailed description**
 
-Mobile View ist ein kostenloser Open-Source-Mobilsimulator und Geräte-Emulator für Chrome. Zeige eine Website in bis zu vier Smartphone-, Tablet-, Laptop- und Desktop-Ansichten nebeneinander an, ohne ständig die Fenstergröße zu ändern oder zwischen DevTools-Vorgaben zu wechseln.
+Mobile View ist ein kostenloses Open-Source-Tool zum Testen responsiver Websites in Chrome. Vergleiche bis zu vier Ansichten nebeneinander, darunter eine mobile Vorschau, um Menüs, Text und Abstände zu prüfen.
 
 - Öffne alle Geräte mit einem Klick. Die Vorschauen sind nach Gerätetyp gruppiert und von kleinen zu großen Bildschirmen sortiert.
 - Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.
 - Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.
-- Speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.
+- Für wiederholte Tests responsiver Layouts speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.
 - Erfasse eine Ansicht oder den gesamten Arbeitsbereich und ergänze Stift, Rahmen, Pfeile, Text oder Zuschnitt.
 - Vergleiche einen lokalen Entwurf neben oder über der Live-Website und markiere Feedback ohne Upload.
 - Kopiere einen strukturierten Prompt zur Behebung responsiver Fehler mit URL, Geräten, Viewport-Größen und optionalen Problemdetails.
@@ -77,12 +77,12 @@ Dies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emula
 
 **Detailed description**
 
-Mobile View es un simulador móvil y emulador de dispositivos gratuito y de código abierto para Chrome. Previsualiza un sitio web en hasta cuatro vistas de teléfono, tablet, portátil y escritorio a la vez, sin redimensionar ventanas ni cambiar continuamente los ajustes de DevTools.
+Mobile View es una herramienta gratuita y de código abierto para probar sitios web adaptables en Chrome. Compara hasta cuatro vistas en paralelo, incluida una vista previa móvil, para revisar menús, texto y espaciado.
 
 - Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
 - Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.
-- Guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.
+- Para repetir las pruebas de diseño adaptable, guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.
 - Captura una vista o todo el espacio de trabajo y añade trazos, cuadros, flechas, texto o recortes.
 - Compara un diseño local junto a la web activa o superpuesto sobre ella y marca comentarios sin subirlo.
 - Copia a tu herramienta de programación un prompt estructurado con la URL, dispositivos, tamaños y detalles opcionales del problema.
@@ -108,12 +108,12 @@ Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari.
 
 **Detailed description**
 
-Mobile View est un simulateur mobile et un émulateur d’appareils gratuit et open source pour Chrome. Prévisualisez un site dans jusqu’à quatre vues téléphone, tablette, ordinateur portable et bureau côte à côte, sans redimensionner sans cesse la fenêtre ni changer de préréglage DevTools.
+Mobile View est un outil gratuit et open source pour tester des sites web adaptatifs dans Chrome. Comparez jusqu’à quatre vues côte à côte, dont un aperçu mobile, pour vérifier les menus, le texte et les espacements.
 
 - Affichez tous les appareils en un clic. Les aperçus sont regroupés par type d’appareil et classés du plus petit au plus grand écran.
 - Choisissez des appareils réalistes, modifiez l’orientation et le zoom, rechargez une vue ou créez des dimensions personnalisées.
 - Synchronisez le défilement, les interactions prises en charge et la navigation entre les aperçus correspondants.
-- Enregistrez des ensembles, favoris et appareils récents, ou concentrez-vous sur une seule vue.
+- Pour répéter vos tests de mise en page adaptative, enregistrez des ensembles, favoris et appareils récents, ou concentrez-vous sur une seule vue.
 - Capturez une vue ou tout l’espace de travail, puis ajoutez tracés, cadres, flèches, texte et recadrage.
 - Comparez une maquette locale à côté ou au-dessus du site et annotez-la sans l’envoyer.
 - Copiez vers votre outil de développement un prompt structuré contenant URL, appareils, dimensions et détails facultatifs du problème.
@@ -139,12 +139,12 @@ Ces aperçus responsive utilisent Chrome, pas des appareils physiques ni le mote
 
 **Detailed description**
 
-Mobile View 是一款免费、开源的 Chrome 移动模拟器与设备模拟器。 无需反复调整窗口或切换 DevTools 预设，即可并排预览最多四个手机、平板电脑、笔记本和桌面视图。
+Mobile View 是一款免费、开源的 Chrome 响应式网站测试工具。并排比较最多四个视图，包括移动端预览，以检查菜单、文字和间距。
 
 - 一键查看所有设备。预览按设备类型分组，并按屏幕尺寸从小到大排列。
 - 选择真实设备，切换方向与缩放，单独刷新预览，或创建自定义视口尺寸。
 - 在匹配的预览之间同步滚动、受支持的交互和页面导航。
-- 保存设备组合、收藏和最近使用的设备，也可聚焦单个视口进行细致检查。
+- 重复进行响应式测试时，保存设备组合、收藏和最近使用的设备，也可聚焦单个视口进行细致检查。
 - 截取单个视口或整个工作区，并使用画笔、方框、箭头、文字和裁剪工具标注。
 - 将本地设计稿放在实时网站旁边或叠加显示，无需上传即可标记反馈。
 - 将包含网址、设备、视口尺寸和可选问题说明的结构化修复提示复制到编程工具。
@@ -170,12 +170,12 @@ Mobile View 是一款免费、开源的 Chrome 移动模拟器与设备模拟器
 
 **Detailed description**
 
-Mobile View 是免費、開源的 Chrome 行動模擬器與裝置模擬器。 不必反覆調整視窗或切換 DevTools 預設，即可並排預覽最多四個手機、平板、筆電與桌面檢視。
+Mobile View 是免費、開源的 Chrome 響應式網站測試工具。並排比較最多四個檢視，包括行動版預覽，以檢查選單、文字與間距。
 
 - 一鍵查看所有裝置。預覽依裝置類型分組，並按螢幕尺寸由小到大排列。
 - 選擇真實裝置、切換方向與縮放、個別重新載入預覽，或建立自訂視區尺寸。
 - 在相符的預覽之間同步捲動、支援的互動與頁面導覽。
-- 儲存裝置組合、收藏與最近使用的裝置，或聚焦單一視區進行詳細檢查。
+- 重複進行響應式測試時，儲存裝置組合、收藏與最近使用的裝置，或聚焦單一視區進行詳細檢查。
 - 擷取單一視區或完整工作區，並以畫筆、方框、箭頭、文字及裁切工具標註。
 - 將本機設計稿放在即時網站旁或疊加顯示，不需上傳即可標記意見。
 - 將包含網址、裝置、視區尺寸與選填問題說明的結構化修正提示複製到程式開發工具。
@@ -201,12 +201,12 @@ Mobile View 是免費、開源的 Chrome 行動模擬器與裝置模擬器。 �
 
 **Detailed description**
 
-Ang Mobile View ay libre at open-source na mobile simulator at device emulator para sa Chrome. Tingnan ang website sa hanggang apat na phone, tablet, laptop, at desktop view nang sabay, nang hindi paulit-ulit na binabago ang laki ng window o DevTools preset.
+Ang Mobile View ay libre at open-source na tool para sa pagsusuri ng responsive na website sa Chrome. Ihambing ang hanggang apat na view nang magkatabi, kasama ang mobile preview, para suriin ang mga menu, teksto, at pagitan.
 
 - Buksan ang lahat ng device sa isang click. Nakapangkat ang mga preview ayon sa uri ng device at nakaayos mula sa mas maliit hanggang sa mas malaking screen.
 - Pumili ng makatotohanang device, baguhin ang orientation at zoom, i-reload ang isang preview, o gumawa ng custom viewport.
 - I-sync ang pag-scroll, suportadong interaction, at navigation sa magkatugmang preview.
-- Mag-save ng device set, paborito, at recent device, o tumutok sa isang viewport.
+- Para sa paulit-ulit na responsive testing, mag-save ng device set, paborito, at recent device, o tumutok sa isang viewport.
 - Kunan ang isang viewport o buong workspace at lagyan ng pen, kahon, arrow, text, o crop.
 - Ikumpara ang lokal na design sa tabi o ibabaw ng live website at magmarka ng feedback nang walang upload.
 - Kumopya ng structured fix prompt na may URL, device, viewport size, at opsyonal na detalye papunta sa coding tool.
@@ -232,12 +232,12 @@ Mga responsive viewport preview ito sa Chrome, hindi totoong device o Safari eng
 
 **Detailed description**
 
-Mobile View is een gratis opensource mobiele simulator en apparaatemulator voor Chrome. Bekijk een website in maximaal vier telefoon-, tablet-, laptop- en desktopweergaven naast elkaar, zonder steeds het venster te verkleinen of van DevTools-profiel te wisselen.
+Mobile View is een gratis opensource hulpmiddel om responsieve websites in Chrome te testen. Vergelijk maximaal vier weergaven naast elkaar, waaronder een mobiele preview, om menu’s, tekst en witruimte te controleren.
 
 - Open alle apparaten met één klik. De voorbeelden zijn gegroepeerd op apparaattype en gesorteerd van kleine naar grote schermen.
 - Kies realistische apparaten, wijzig oriëntatie en zoom, laad één voorbeeld opnieuw of maak aangepaste viewportformaten.
 - Synchroniseer scrollen, ondersteunde interacties en navigatie tussen overeenkomende voorbeelden.
-- Bewaar apparaatsets, favorieten en recente apparaten, of focus één viewport voor een detailcontrole.
+- Voor herhaalde tests van responsieve lay-outs bewaar apparaatsets, favorieten en recente apparaten, of focus één viewport voor een detailcontrole.
 - Leg één viewport of de volledige werkruimte vast en voeg pen, kader, pijl, tekst of uitsnede toe.
 - Vergelijk een lokaal ontwerp naast of over de live website en markeer feedback zonder upload.
 - Kopieer een gestructureerde herstelprompt met URL, apparaten, viewportformaten en optionele probleeminformatie naar je codeertool.
@@ -263,12 +263,12 @@ Dit zijn responsive previews in Chrome, geen fysieke apparaten of Safari-engine.
 
 **Detailed description**
 
-Mobile View là trình mô phỏng di động và trình giả lập thiết bị miễn phí, mã nguồn mở dành cho Chrome. Xem trước trang web trong tối đa bốn giao diện điện thoại, máy tính bảng, laptop và máy tính để bàn cùng lúc mà không phải liên tục đổi kích thước cửa sổ hoặc cấu hình DevTools.
+Mobile View là công cụ miễn phí, mã nguồn mở để kiểm thử website có bố cục thích ứng trong Chrome. So sánh tối đa bốn chế độ xem cạnh nhau, gồm bản xem trước trên di động, để kiểm tra menu, văn bản và khoảng cách.
 
 - Mở tất cả thiết bị chỉ với một cú nhấp. Các bản xem trước được nhóm theo loại thiết bị và sắp xếp từ màn hình nhỏ đến lớn.
 - Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.
 - Đồng bộ cuộn, tương tác được hỗ trợ và điều hướng giữa các bản xem trước phù hợp.
-- Lưu bộ thiết bị, mục yêu thích và thiết bị gần đây, hoặc tập trung vào một viewport.
+- Để lặp lại việc kiểm thử bố cục thích ứng, lưu bộ thiết bị, mục yêu thích và thiết bị gần đây, hoặc tập trung vào một viewport.
 - Chụp một viewport hoặc toàn bộ không gian làm việc rồi thêm nét vẽ, khung, mũi tên, chữ và cắt ảnh.
 - So sánh thiết kế cục bộ bên cạnh hoặc phủ lên trang web trực tiếp và đánh dấu phản hồi mà không cần tải lên.
 - Sao chép prompt sửa lỗi có cấu trúc gồm URL, thiết bị, kích thước viewport và thông tin tùy chọn sang công cụ lập trình.
@@ -294,12 +294,12 @@ Mọi thứ chạy cục bộ trong trình duyệt. Không cần tài khoản, t
 
 **Detailed description**
 
-O Mobile View é um simulador móvel e emulador de dispositivos gratuito e de código aberto para Chrome. Visualize um site em até quatro telas de celular, tablet, notebook e desktop lado a lado, sem redimensionar janelas ou alternar continuamente entre predefinições do DevTools.
+O Mobile View é uma ferramenta gratuita e de código aberto para testar sites responsivos no Chrome. Compare até quatro telas lado a lado, incluindo uma prévia para celular, para verificar menus, textos e espaçamento.
 
 - Abra todos os dispositivos com um clique. As visualizações são agrupadas por tipo de dispositivo e ordenadas das telas menores às maiores.
 - Escolha dispositivos realistas, altere orientação e zoom, recarregue uma visualização ou crie tamanhos personalizados.
 - Sincronize rolagem, interações compatíveis e navegação entre visualizações correspondentes.
-- Salve conjuntos, favoritos e dispositivos recentes ou foque em uma tela para revisão detalhada.
+- Para repetir os testes de layout responsivo, salve conjuntos, favoritos e dispositivos recentes ou foque em uma tela para revisão detalhada.
 - Capture uma tela ou todo o espaço de trabalho e use caneta, caixa, seta, texto e recorte.
 - Compare um design local ao lado ou sobre o site ativo e marque comentários sem fazer upload.
 - Copie para sua ferramenta de programação um prompt estruturado com URL, dispositivos, tamanhos e detalhes opcionais do problema.
@@ -325,12 +325,12 @@ São prévias responsivas no Chrome, não dispositivos físicos nem o motor do S
 
 **Detailed description**
 
-Mobile View è un simulatore mobile ed emulatore di dispositivi gratuito e open source per Chrome. Visualizza un sito in un massimo di quattro viste telefono, tablet, laptop e desktop affiancate, senza ridimensionare continuamente la finestra o cambiare preset DevTools.
+Mobile View è uno strumento gratuito e open source per testare siti web responsive in Chrome. Confronta fino a quattro viste affiancate, inclusa un’anteprima mobile, per controllare menu, testo e spaziatura.
 
 - Apri tutti i dispositivi con un clic. Le anteprime sono raggruppate per tipo di dispositivo e ordinate dagli schermi più piccoli ai più grandi.
 - Scegli dispositivi realistici, modifica orientamento e zoom, ricarica una singola anteprima o crea viewport personalizzate.
 - Sincronizza scorrimento, interazioni supportate e navigazione tra anteprime corrispondenti.
-- Salva set, preferiti e dispositivi recenti oppure concentra l’analisi su una sola viewport.
+- Per ripetere i test dei layout responsive, salva set, preferiti e dispositivi recenti oppure concentra l’analisi su una sola viewport.
 - Acquisisci una vista o l’intera area di lavoro e aggiungi penna, riquadro, freccia, testo o ritaglio.
 - Confronta un design locale accanto o sopra il sito attivo e segna feedback senza caricarlo.
 - Copia nel tuo strumento di sviluppo un prompt strutturato con URL, dispositivi, dimensioni e dettagli facoltativi del problema.
@@ -356,12 +356,12 @@ Sono anteprime responsive in Chrome, non dispositivi fisici né il motore Safari
 
 **Detailed description**
 
-Mobile View は Chrome 向けの無料・オープンソースのモバイルシミュレーター兼デバイスエミュレーターです。 ウィンドウサイズや DevTools のプリセットを何度も切り替えずに、スマホ、タブレット、ノートPC、デスクトップの表示を最大4つ並べて確認できます。
+Mobile View は Chrome でレスポンシブなウェブサイトをテストできる、無料のオープンソースツールです。モバイルプレビューを含む最大4つの表示を並べて、メニュー、テキスト、余白を確認できます。
 
 - ワンクリックですべてのデバイスを表示できます。プレビューはデバイスの種類ごとにグループ化され、画面サイズの小さい順に並びます。
 - 実在デバイスのプロファイルを選び、向きやズームを変更し、個別に再読み込みしたり独自のビューポートを作成できます。
 - 対応するプレビュー間でスクロール、サポートされる操作、ナビゲーションを同期できます。
-- デバイスセット、お気に入り、最近使った端末を保存し、1つの表示に集中することもできます。
+- レスポンシブテストを繰り返す際は、デバイスセット、お気に入り、最近使った端末を保存し、1つの表示に集中することもできます。
 - 単一の表示またはワークスペース全体をキャプチャし、ペン、枠、矢印、文字、切り抜きで注釈できます。
 - ローカルのデザインをライブサイトの横または上に重ね、アップロードせずにフィードバックを記録できます。
 - URL、端末、表示サイズ、任意の問題説明を含む修正プロンプトを開発ツールへコピーできます。
@@ -387,12 +387,12 @@ Mobile View は Chrome 向けの無料・オープンソースのモバイルシ
 
 **Detailed description**
 
-Mobile View는 Chrome용 무료 오픈 소스 모바일 시뮬레이터이자 기기 에뮬레이터입니다. 창 크기나 DevTools 프리셋을 반복해서 바꾸지 않고 휴대폰, 태블릿, 노트북, 데스크톱 화면을 최대 4개까지 나란히 미리 볼 수 있습니다.
+Mobile View는 Chrome에서 반응형 웹사이트를 테스트할 수 있는 무료 오픈 소스 도구입니다. 모바일 미리보기를 포함해 최대 4개의 화면을 나란히 비교하며 메뉴, 텍스트, 간격을 확인하세요.
 
 - 한 번의 클릭으로 모든 기기를 확인하세요. 미리보기는 기기 유형별로 묶이며 작은 화면부터 큰 화면 순으로 정렬됩니다.
 - 실제 기기 프로필을 선택하고 방향과 확대/축소를 변경하거나 개별 화면을 새로고침하고 사용자 지정 뷰포트를 만드세요.
 - 일치하는 미리보기 사이에서 스크롤, 지원되는 상호작용 및 탐색을 동기화하세요.
-- 기기 세트, 즐겨찾기, 최근 기기를 저장하거나 하나의 뷰포트에 집중하세요.
+- 반복적인 반응형 테스트를 위해 기기 세트, 즐겨찾기, 최근 기기를 저장하거나 하나의 뷰포트에 집중하세요.
 - 한 화면 또는 전체 작업 공간을 캡처하고 펜, 상자, 화살표, 텍스트 및 자르기로 주석을 추가하세요.
 - 로컬 디자인을 실시간 웹사이트 옆이나 위에 겹쳐 비교하고 업로드 없이 피드백을 표시하세요.
 - URL, 기기, 뷰포트 크기와 선택적 문제 설명이 포함된 구조화된 수정 프롬프트를 코딩 도구로 복사하세요.
@@ -418,12 +418,12 @@ Mobile View는 Chrome용 무료 오픈 소스 모바일 시뮬레이터이자 �
 
 **Detailed description**
 
-Mobile View Chrome के लिए मुफ़्त और ओपन-सोर्स मोबाइल सिम्युलेटर तथा डिवाइस एमुलेटर है। विंडो का आकार या DevTools प्रीसेट बार-बार बदले बिना वेबसाइट को अधिकतम चार फ़ोन, टैबलेट, लैपटॉप और डेस्कटॉप व्यू में साथ-साथ देखें।
+Mobile View Chrome में रिस्पॉन्सिव वेबसाइट की जाँच के लिए मुफ़्त और ओपन-सोर्स टूल है। मोबाइल प्रीव्यू सहित अधिकतम चार व्यू साथ-साथ देखकर मेनू, टेक्स्ट और खाली जगह की जाँच करें।
 
 - एक क्लिक में सभी डिवाइस खोलें। प्रीव्यू डिवाइस के प्रकार के अनुसार समूहों में और छोटी से बड़ी स्क्रीन के क्रम में दिखते हैं।
 - वास्तविक डिवाइस चुनें, दिशा और ज़ूम बदलें, किसी एक प्रीव्यू को रीलोड करें या कस्टम व्यूपोर्ट बनाएँ।
 - मेल खाते प्रीव्यू में स्क्रॉल, समर्थित इंटरैक्शन और नेविगेशन सिंक करें।
-- डिवाइस सेट, पसंदीदा और हाल के डिवाइस सहेजें या किसी एक व्यूपोर्ट पर ध्यान दें।
+- बार-बार रिस्पॉन्सिव जाँच करने के लिए डिवाइस सेट, पसंदीदा और हाल के डिवाइस सहेजें या किसी एक व्यूपोर्ट पर ध्यान दें।
 - एक व्यूपोर्ट या पूरा वर्कस्पेस कैप्चर करके पेन, बॉक्स, तीर, टेक्स्ट और क्रॉप से टिप्पणी जोड़ें।
 - स्थानीय डिज़ाइन को लाइव वेबसाइट के पास या उसके ऊपर रखकर तुलना करें और बिना अपलोड किए फ़ीडबैक चिह्नित करें।
 - URL, डिवाइस, व्यूपोर्ट आकार और वैकल्पिक समस्या विवरण वाला व्यवस्थित सुधार प्रॉम्प्ट अपने कोडिंग टूल में कॉपी करें।
@@ -449,12 +449,12 @@ Mobile View Chrome के लिए मुफ़्त और ओपन-सो�
 
 **Detailed description**
 
-Mobile View — бесплатный мобильный симулятор и эмулятор устройств с открытым исходным кодом для Chrome. Просматривайте сайт одновременно в четырех видах — телефон, планшет, ноутбук и компьютер — без постоянного изменения размера окна и переключения шаблонов DevTools.
+Mobile View — бесплатный инструмент с открытым исходным кодом для проверки адаптивных сайтов в Chrome. Сравнивайте до четырёх видов рядом, включая мобильный предпросмотр, чтобы проверять меню, текст и отступы.
 
 - Откройте все устройства одним нажатием. Предпросмотры сгруппированы по типу устройства и упорядочены от меньших экранов к большим.
 - Выбирайте реалистичные устройства, меняйте ориентацию и масштаб, перезагружайте отдельные виды и создавайте собственные размеры области просмотра.
 - Синхронизируйте прокрутку, поддерживаемые действия и навигацию между соответствующими видами.
-- Сохраняйте наборы, избранные и недавние устройства или сосредоточьтесь на одной области просмотра.
+- Для повторной проверки адаптивных макетов сохраняйте наборы, избранные и недавние устройства или сосредоточьтесь на одной области просмотра.
 - Снимайте отдельный вид или всю рабочую область и добавляйте рисунки, рамки, стрелки, текст и обрезку.
 - Сравнивайте локальный макет рядом с действующим сайтом или поверх него и отмечайте замечания без загрузки файлов.
 - Копируйте в инструмент разработки структурированный запрос на исправление с URL, устройствами, размерами и дополнительным описанием проблемы.
@@ -480,12 +480,12 @@ Mobile View — бесплатный мобильный симулятор и э
 
 **Detailed description**
 
-Mobile View هو محاكي جوال ومحاكي أجهزة مجاني ومفتوح المصدر لـChrome. اعرض الموقع في ما يصل إلى أربع واجهات للهاتف والجهاز اللوحي والحاسوب المحمول وسطح المكتب جنبًا إلى جنب، من دون تكرار تغيير حجم النافذة أو إعدادات DevTools.
+Mobile View أداة مجانية ومفتوحة المصدر لاختبار مواقع الويب المتجاوبة في Chrome. قارن ما يصل إلى أربع واجهات جنبًا إلى جنب، بما فيها معاينة الجوال، لفحص القوائم والنصوص والتباعد.
 
 - افتح جميع الأجهزة بنقرة واحدة. تُجمع المعاينات حسب نوع الجهاز وتُرتب من الشاشات الأصغر إلى الأكبر.
 - اختر أجهزة واقعية، وغيّر الاتجاه والتكبير، وأعد تحميل معاينة منفردة، أو أنشئ أحجام عرض مخصصة.
 - زامن التمرير والتفاعلات المدعومة والتنقل بين المعاينات المتطابقة.
-- احفظ مجموعات الأجهزة والمفضلة والأجهزة الحديثة، أو ركّز على واجهة واحدة للفحص التفصيلي.
+- لتكرار اختبارات التصميم المتجاوب، احفظ مجموعات الأجهزة والمفضلة والأجهزة الحديثة، أو ركّز على واجهة واحدة للفحص التفصيلي.
 - التقط واجهة واحدة أو مساحة العمل كاملة، ثم أضف القلم والمربعات والأسهم والنص والاقتصاص.
 - قارن تصميمًا محليًا بجانب الموقع المباشر أو فوقه وسجّل الملاحظات من دون رفع الملف.
 - انسخ إلى أداة البرمجة طلب إصلاح منظمًا يتضمن الرابط والأجهزة وأحجام العرض وتفاصيل المشكلة الاختيارية.
@@ -511,10 +511,10 @@ Mobile View هو محاكي جوال ومحاكي أجهزة مجاني ومفت
 
 **Detailed description**
 
-Mobile View ለChrome ነፃና ክፍት ምንጭ የሞባይል አስመሳይና የመሣሪያ አስመሳይ ነው። አንድ ድር ጣቢያ በስልክ፣ ታብሌት፣ ላፕቶፕና ዴስክቶፕ ላይ እስከ አራት እይታዎች ጎን ለጎን ያሳያል። የመሣሪያ መጠንና አቅጣጫ ይቀይሩ፣ ማሸብለልና አሰሳን ያመሳስሉ፣ ስክሪንሾት ያንሱ እና ከአካባቢያዊ ንድፍ ጋር ያወዳድሩ። ሁሉም ነገር በአሳሹ ውስጥ ይሰራል፤ መለያ፣ ምዝገባ፣ ትንታኔ ወይም የጀርባ አገልጋይ አያስፈልግም።
+Mobile View በChrome ውስጥ ምላሽ ሰጪ ድር ጣቢያዎችን ለመፈተሽ ነፃና ክፍት ምንጭ መሣሪያ ነው። የሞባይል ቅድመ እይታን ጨምሮ እስከ አራት እይታዎችን ጎን ለጎን በማወዳደር ምናሌዎችን፣ ጽሑፍንና ክፍተቶችን ይፈትሹ። የመሣሪያ መጠንና አቅጣጫ ይቀይሩ፣ ማሸብለልና አሰሳን ያመሳስሉ፣ ስክሪንሾት ያንሱ እና ከአካባቢያዊ ንድፍ ጋር ያወዳድሩ። ሁሉም ነገር በአሳሹ ውስጥ ይሰራል፤ መለያ፣ ምዝገባ፣ ትንታኔ ወይም የጀርባ አገልጋይ አያስፈልግም።
 
 - ሁሉንም መሣሪያዎች በአንድ ጠቅታ ይክፈቱ። ቅድመ እይታዎች በመሣሪያ ዓይነት ይመደባሉ፣ ከትንሽ ወደ ትልቅ ማያ ገጽም ይደረደራሉ።
-- የራስዎን የእይታ መጠኖች ይፍጠሩ፣ የመሣሪያ ስብስቦችንና ተወዳጆችን ያስቀምጡ ወይም በአንድ እይታ ላይ ያተኩሩ። በተዛማጅ እይታዎች የሚደገፉ ግንኙነቶችን ያመሳስሉ።
+- ምላሽ ሰጪ አቀማመጦችን ደጋግመው ለመፈተሽ፣ የራስዎን የእይታ መጠኖች ይፍጠሩ፣ የመሣሪያ ስብስቦችንና ተወዳጆችን ያስቀምጡ ወይም በአንድ እይታ ላይ ያተኩሩ። በተዛማጅ እይታዎች የሚደገፉ ግንኙነቶችን ያመሳስሉ።
 - አንድ እይታ ወይም ሙሉ የሥራ ቦታ ይቅረጹ። ቀስቶች፣ ሳጥኖችና ጽሑፍ ያክሉ ወይም ይከርክሙ። የአካባቢ ንድፍን ከገጹ አጠገብ ወይም በላዩ ያሳዩ።
 - የገጽ አድራሻ፣ መሣሪያዎች፣ የእይታ መጠኖችና የችግር ማስታወሻዎች ያሉበትን የማስተካከያ መመሪያ ወደ ኮድ መሣሪያዎ ይቅዱ።
 
@@ -537,10 +537,10 @@ Mobile View ለChrome ነፃና ክፍት ምንጭ የሞባይል አስመሳ
 
 **Detailed description**
 
-Mobile View е безплатен мобилен симулатор и емулатор на устройства с отворен код за Chrome. Преглеждайте сайт в до четири изгледа за телефон, таблет, лаптоп и настолен компютър едновременно. Избирайте реалистични устройства, променяйте ориентация и мащаб, синхронизирайте превъртане и навигация, правете екранни снимки и сравнявайте с локален дизайн. Всичко работи локално в браузъра без профил, абонамент, анализи, телеметрия или сървър.
+Mobile View е безплатен инструмент с отворен код за тестване на адаптивни уебсайтове в Chrome. Сравнявайте до четири изгледа един до друг, включително мобилен преглед, за да проверявате менюта, текст и отстояния. Избирайте реалистични устройства, променяйте ориентация и мащаб, синхронизирайте превъртане и навигация, правете екранни снимки и сравнявайте с локален дизайн. Всичко работи локално в браузъра без профил, абонамент, анализи, телеметрия или сървър.
 
 - Отворете всички устройства с едно щракване. Визуализациите са групирани по тип устройство и подредени от по-малки към по-големи екрани.
-- Създавайте собствени размери на изгледа, запазвайте комплекти и любими устройства или фокусирайте един изглед. Синхронизирайте поддържаните взаимодействия между съответстващи изгледи.
+- За повторно тестване на адаптивни оформления създавайте собствени размери на изгледа, запазвайте комплекти и любими устройства или фокусирайте един изглед. Синхронизирайте поддържаните взаимодействия между съответстващи изгледи.
 - Заснемайте един изглед или цялото работно пространство. Добавяйте стрелки, рамки, рисунки и текст или изрязвайте снимката. Показвайте локален дизайн до страницата или като наслагване.
 - Копирайте структурирана инструкция за поправка с URL, устройства, размери и бележки за проблема в инструмента си за програмиране.
 
@@ -563,10 +563,10 @@ Mobile View е безплатен мобилен симулатор и емул�
 
 **Detailed description**
 
-Mobile View হলো Chrome-এর জন্য বিনামূল্যের ওপেন-সোর্স মোবাইল সিমুলেটর ও ডিভাইস এমুলেটর। একটি ওয়েবসাইট ফোন, ট্যাবলেট, ল্যাপটপ ও ডেস্কটপের সর্বোচ্চ চারটি ভিউতে পাশাপাশি দেখুন। বাস্তবসম্মত ডিভাইস বেছে নিন, দিক ও জুম বদলান, স্ক্রল ও নেভিগেশন সিঙ্ক করুন, স্ক্রিনশট নিন এবং স্থানীয় ডিজাইনের সঙ্গে তুলনা করুন। সবকিছু ব্রাউজারেই চলে; অ্যাকাউন্ট, সাবস্ক্রিপশন, অ্যানালিটিক্স, টেলিমেট্রি বা ব্যাকএন্ড লাগে না।
+Mobile View হলো Chrome-এ রেসপনসিভ ওয়েবসাইট পরীক্ষা করার জন্য বিনামূল্যের ওপেন-সোর্স টুল। মেনু, লেখা ও ফাঁকা জায়গা পরীক্ষা করতে মোবাইল প্রিভিউসহ সর্বোচ্চ চারটি ভিউ পাশাপাশি তুলনা করুন। বাস্তবসম্মত ডিভাইস বেছে নিন, দিক ও জুম বদলান, স্ক্রল ও নেভিগেশন সিঙ্ক করুন, স্ক্রিনশট নিন এবং স্থানীয় ডিজাইনের সঙ্গে তুলনা করুন। সবকিছু ব্রাউজারেই চলে; অ্যাকাউন্ট, সাবস্ক্রিপশন, অ্যানালিটিক্স, টেলিমেট্রি বা ব্যাকএন্ড লাগে না।
 
 - এক ক্লিকেই সব ডিভাইস খুলুন। প্রিভিউগুলো ডিভাইসের ধরন অনুযায়ী গোষ্ঠীবদ্ধ এবং ছোট থেকে বড় স্ক্রিনের ক্রমে সাজানো থাকে।
-- নিজস্ব ভিউপোর্টের মাপ তৈরি করুন, ডিভাইস সেট ও পছন্দের ডিভাইস সংরক্ষণ করুন অথবা একটি ভিউতে মনোযোগ দিন। মিল থাকা ভিউগুলোর সমর্থিত ইন্টারঅ্যাকশন সিঙ্ক করুন।
+- বারবার রেসপনসিভ লেআউট পরীক্ষা করতে নিজস্ব ভিউপোর্টের মাপ তৈরি করুন, ডিভাইস সেট ও পছন্দের ডিভাইস সংরক্ষণ করুন অথবা একটি ভিউতে মনোযোগ দিন। মিল থাকা ভিউগুলোর সমর্থিত ইন্টারঅ্যাকশন সিঙ্ক করুন।
 - একটি ভিউ বা পুরো কর্মক্ষেত্রের ছবি নিন। তীর, বক্স, আঁকা ও লেখা যোগ করুন বা ছবি কাটুন। স্থানীয় ডিজাইন পৃষ্ঠার পাশে বা ওভারলে হিসেবে দেখুন।
 - URL, ডিভাইস, ভিউপোর্টের মাপ ও সমস্যার নোটসহ সাজানো সংশোধন প্রম্পট আপনার কোডিং টুলে কপি করুন।
 
@@ -589,10 +589,10 @@ Mobile View হলো Chrome-এর জন্য বিনামূল্যে�
 
 **Detailed description**
 
-Mobile View és un simulador mòbil i emulador de dispositius gratuït i de codi obert per a Chrome. Previsualitza un web en fins a quatre vistes de mòbil, tauleta, portàtil i escriptori alhora. Tria dispositius realistes, canvia l’orientació i el zoom, sincronitza el desplaçament i la navegació, captura pantalles i compara-les amb un disseny local. Tot funciona localment al navegador, sense compte, subscripció, analítica, telemetria ni servidor.
+Mobile View és una eina gratuïta i de codi obert per provar llocs web adaptables a Chrome. Compara fins a quatre vistes en paral·lel, inclosa una previsualització mòbil, per revisar menús, text i espais. Tria dispositius realistes, canvia l’orientació i el zoom, sincronitza el desplaçament i la navegació, captura pantalles i compara-les amb un disseny local. Tot funciona localment al navegador, sense compte, subscripció, analítica, telemetria ni servidor.
 
 - Obre tots els dispositius amb un clic. Les previsualitzacions s’agrupen per tipus de dispositiu i s’ordenen de pantalles petites a grans.
-- Crea mides de visualització pròpies, desa conjunts i dispositius preferits o centra’t en una sola vista. Sincronitza les interaccions compatibles entre vistes coincidents.
+- Per repetir les proves de disseny adaptable, crea mides de visualització pròpies, desa conjunts i dispositius preferits o centra’t en una sola vista. Sincronitza les interaccions compatibles entre vistes coincidents.
 - Captura una vista o tot l’espai de treball. Afegeix fletxes, quadres, traços i text o retalla la captura. Mostra un disseny local al costat de la pàgina o superposat.
 - Copia a la teva eina de programació una instrucció de correcció estructurada amb l’URL, els dispositius, les mides i les notes del problema.
 
@@ -615,10 +615,10 @@ Són previsualitzacions responsives amb Chrome, no dispositius físics ni el mot
 
 **Detailed description**
 
-Mobile View je bezplatný open-source mobilní simulátor a emulátor zařízení pro Chrome. Zobrazte web současně až ve čtyřech náhledech telefonu, tabletu, notebooku a počítače. Vybírejte realistická zařízení, měňte orientaci a přiblížení, synchronizujte posouvání a navigaci, pořizujte snímky a porovnávejte je s místním návrhem. Vše běží lokálně v prohlížeči bez účtu, předplatného, analytiky, telemetrie či serveru.
+Mobile View je bezplatný open-source nástroj pro testování responzivních webů v Chrome. Porovnávejte až čtyři pohledy vedle sebe, včetně mobilního náhledu, a kontrolujte nabídky, text a rozestupy. Vybírejte realistická zařízení, měňte orientaci a přiblížení, synchronizujte posouvání a navigaci, pořizujte snímky a porovnávejte je s místním návrhem. Vše běží lokálně v prohlížeči bez účtu, předplatného, analytiky, telemetrie či serveru.
 
 - Otevřete všechna zařízení jedním kliknutím. Náhledy jsou seskupeny podle typu zařízení a seřazeny od menších obrazovek po větší.
-- Vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.
+- Pro opakované testování responzivních rozvržení vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.
 - Zachyťte jeden náhled nebo celý pracovní prostor. Přidejte šipky, rámečky, kresby a text nebo snímek ořízněte. Zobrazte místní návrh vedle stránky nebo jako překryv.
 - Zkopírujte do svého programovacího nástroje strukturované zadání opravy s URL, zařízeními, rozměry a poznámkami k problému.
 
@@ -641,11 +641,11 @@ Jde o responzivní náhledy v Chromu, nikoli fyzická zařízení nebo jádro Sa
 
 **Detailed description**
 
-Mobile View er en gratis open source-mobilsimulator og enhedsemulator til Chrome. Se et website i op til fire mobil-, tablet-, laptop- og computervisninger på samme tid. Vælg realistiske enheder, skift retning og zoom, synkroniser rulning og navigation, tag skærmbilleder, og sammenlign med et lokalt design. Alt kører lokalt i browseren uden konto, abonnement, analyse, telemetri eller server.
+Mobile View er et gratis open source-værktøj til at teste responsive websites i Chrome. Sammenlign op til fire visninger side om side, inklusive en mobil forhåndsvisning, for at kontrollere menuer, tekst og afstande. Vælg realistiske enheder, skift retning og zoom, synkroniser rulning og navigation, tag skærmbilleder, og sammenlign med et lokalt design. Alt kører lokalt i browseren uden konto, abonnement, analyse, telemetri eller server.
 
 Åbn alle enheder med ét klik. Forhåndsvisningerne er grupperet efter enhedstype og sorteret fra mindre til større skærme.
 
-Gem enhedssæt og favoritter, eller opret egne skærmstørrelser. Tag et billede af en visning eller hele arbejdsområdet, og tilføj pile, rammer og tekst. Vis et lokalt design ved siden af eller oven på websitet, og kopiér et rettelsesforslag med URL, enheder, skærmstørrelser og noter til dit kodeværktøj.
+Til gentagne tests af responsive layouts gem enhedssæt og favoritter, eller opret egne skærmstørrelser. Tag et billede af en visning eller hele arbejdsområdet, og tilføj pile, rammer og tekst. Vis et lokalt design ved siden af eller oven på websitet, og kopiér et rettelsesforslag med URL, enheder, skærmstørrelser og noter til dit kodeværktøj.
 
 Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motoren. Websteders regler for login og indlejring gælder stadig. Originalsiden bevares; nye visninger kopierer ikke ugemte ændringer.
 
@@ -666,10 +666,10 @@ Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motore
 
 **Detailed description**
 
-Το Mobile View είναι δωρεάν προσομοιωτής κινητού και εξομοιωτής συσκευών ανοιχτού κώδικα για το Chrome. Προβάλετε έναν ιστότοπο ταυτόχρονα σε έως τέσσερις όψεις κινητού, tablet, laptop και desktop. Επιλέξτε ρεαλιστικές συσκευές, αλλάξτε προσανατολισμό και ζουμ, συγχρονίστε κύλιση και πλοήγηση, τραβήξτε στιγμιότυπα και συγκρίνετε με τοπικό σχέδιο. Όλα εκτελούνται τοπικά, χωρίς λογαριασμό, συνδρομή, analytics, τηλεμετρία ή διακομιστή.
+Το Mobile View είναι ένα δωρεάν εργαλείο ανοιχτού κώδικα για τη δοκιμή προσαρμοζόμενων ιστοτόπων στο Chrome. Συγκρίνετε έως τέσσερις προβολές δίπλα δίπλα, μαζί με μια προεπισκόπηση για κινητά, για να ελέγχετε μενού, κείμενο και αποστάσεις. Επιλέξτε ρεαλιστικές συσκευές, αλλάξτε προσανατολισμό και ζουμ, συγχρονίστε κύλιση και πλοήγηση, τραβήξτε στιγμιότυπα και συγκρίνετε με τοπικό σχέδιο. Όλα εκτελούνται τοπικά, χωρίς λογαριασμό, συνδρομή, analytics, τηλεμετρία ή διακομιστή.
 
 - Ανοίξτε όλες τις συσκευές με ένα κλικ. Οι προεπισκοπήσεις ομαδοποιούνται ανά τύπο συσκευής και ταξινομούνται από τις μικρότερες στις μεγαλύτερες οθόνες.
-- Δημιουργήστε προσαρμοσμένα μεγέθη viewport, αποθηκεύστε σύνολα και αγαπημένες συσκευές ή εστιάστε σε μία προβολή. Συγχρονίστε υποστηριζόμενες αλληλεπιδράσεις μεταξύ αντίστοιχων προβολών.
+- Για επαναλαμβανόμενες δοκιμές προσαρμοζόμενων διατάξεων, δημιουργήστε προσαρμοσμένα μεγέθη viewport, αποθηκεύστε σύνολα και αγαπημένες συσκευές ή εστιάστε σε μία προβολή. Συγχρονίστε υποστηριζόμενες αλληλεπιδράσεις μεταξύ αντίστοιχων προβολών.
 - Καταγράψτε μία προβολή ή ολόκληρο τον χώρο εργασίας. Προσθέστε βέλη, πλαίσια, σχέδια και κείμενο ή περικόψτε την εικόνα. Εμφανίστε ένα τοπικό σχέδιο δίπλα στη σελίδα ή ως επικάλυψη.
 - Αντιγράψτε στο εργαλείο προγραμματισμού σας μια δομημένη οδηγία διόρθωσης με URL, συσκευές, διαστάσεις και σημειώσεις προβλήματος.
 
@@ -692,21 +692,21 @@ Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motore
 
 **Detailed description**
 
-Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
+Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
-- Save device sets and favorites for repeat checks during frontend development and design review.
+- Save device sets and favorites for repeat responsive testing.
 - Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
 - Compare the live website with a local design reference, side by side or as an overlay.
-- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
+- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 
 Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.
 
 No Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.
 
-These are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
+These are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
 
 **Screenshot captions**
 
@@ -725,21 +725,21 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 **Detailed description**
 
-Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
+Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
-- Save device sets and favorites for repeat checks during frontend development and design review.
+- Save device sets and favorites for repeat responsive testing.
 - Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
 - Compare the live website with a local design reference, side by side or as an overlay.
-- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
+- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 
 Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.
 
 No Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.
 
-These are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
+These are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
 
 **Screenshot captions**
 
@@ -758,21 +758,21 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 **Detailed description**
 
-Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
+Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
-- Save device sets and favorites for repeat checks during frontend development and design review.
+- Save device sets and favorites for repeat responsive testing.
 - Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
 - Compare the live website with a local design reference, side by side or as an overlay.
-- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
+- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 
 Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.
 
 No Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.
 
-These are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
+These are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
 
 **Screenshot captions**
 
@@ -791,12 +791,12 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 **Detailed description**
 
-Mobile View es un simulador móvil y emulador de dispositivos gratuito y de código abierto para Chrome. Previsualiza un sitio web en hasta cuatro vistas de teléfono, tablet, portátil y escritorio a la vez, sin redimensionar ventanas ni cambiar continuamente los ajustes de DevTools.
+Mobile View es una herramienta gratuita y de código abierto para probar sitios web adaptables en Chrome. Compara hasta cuatro vistas en paralelo, incluida una vista previa móvil, para revisar menús, texto y espaciado.
 
 - Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
 - Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.
-- Guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.
+- Para repetir las pruebas de diseño adaptable, guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.
 - Captura una vista o todo el espacio de trabajo y añade trazos, cuadros, flechas, texto o recortes.
 - Compara un diseño local junto a la web activa o superpuesto sobre ella y marca comentarios sin subirlo.
 - Copia a tu herramienta de programación un prompt estructurado con la URL, dispositivos, tamaños y detalles opcionales del problema.
@@ -822,11 +822,11 @@ Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari.
 
 **Detailed description**
 
-Mobile View on tasuta avatud lähtekoodiga mobiilisimulaator ja seadmeemulaator Chrome’ile. Vaata veebilehte korraga kuni neljas telefoni, tahvli, sülearvuti ja lauaarvuti vaates. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
+Mobile View on tasuta avatud lähtekoodiga tööriist kohanduvate veebilehtede testimiseks Chrome’is. Võrdle kõrvuti kuni nelja vaadet, sealhulgas mobiili eelvaadet, et kontrollida menüüsid, teksti ja vahesid. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
 
 Avage kõik seadmed ühe klõpsuga. Eelvaated on rühmitatud seadmetüübi järgi ja järjestatud väiksematest ekraanidest suuremateni.
 
-Salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.
+Kohanduvate paigutuste korduvaks testimiseks salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.
 
 Need on Chrome’i kohanduvad eelvaated, mitte füüsilised seadmed ega Safari mootor. Veebisaitide sisselogimis- ja manustamisreeglid kehtivad edasi. Algne leht säilib; uued eelvaated ei kopeeri salvestamata muudatusi.
 
@@ -847,10 +847,10 @@ Need on Chrome’i kohanduvad eelvaated, mitte füüsilised seadmed ega Safari m
 
 **Detailed description**
 
-Mobile View یک شبیه‌ساز موبایل و شبیه‌ساز دستگاه رایگان و متن‌باز برای Chrome است. وب‌سایت را هم‌زمان در حداکثر چهار نمای گوشی، تبلت، لپ‌تاپ و دسکتاپ ببینید. دستگاه واقعی انتخاب کنید، جهت و بزرگ‌نمایی را تغییر دهید، پیمایش و ناوبری را همگام کنید، تصویر بگیرید و با طرح محلی مقایسه کنید. همه‌چیز به‌صورت محلی در مرورگر اجرا می‌شود و به حساب، اشتراک، تحلیل، تله‌متری یا سرور نیاز ندارد.
+Mobile View ابزاری رایگان و متن‌باز برای آزمایش وب‌سایت‌های واکنش‌گرا در Chrome است. حداکثر چهار نما، از جمله پیش‌نمایش موبایل، را کنار هم مقایسه کنید تا منوها، متن و فاصله‌ها را بررسی کنید. دستگاه واقعی انتخاب کنید، جهت و بزرگ‌نمایی را تغییر دهید، پیمایش و ناوبری را همگام کنید، تصویر بگیرید و با طرح محلی مقایسه کنید. همه‌چیز به‌صورت محلی در مرورگر اجرا می‌شود و به حساب، اشتراک، تحلیل، تله‌متری یا سرور نیاز ندارد.
 
 - همه دستگاه‌ها را با یک کلیک باز کنید. پیش‌نمایش‌ها بر اساس نوع دستگاه گروه‌بندی شده‌اند و از صفحه‌نمایش کوچک‌تر به بزرگ‌تر مرتب می‌شوند.
-- اندازه‌های دلخواه نما بسازید، مجموعه‌ها و دستگاه‌های محبوب را ذخیره کنید یا روی یک نما تمرکز کنید. تعاملات پشتیبانی‌شده را بین نماهای متناظر همگام کنید.
+- برای تکرار آزمایش طرح‌های واکنش‌گرا، اندازه‌های دلخواه نما بسازید، مجموعه‌ها و دستگاه‌های محبوب را ذخیره کنید یا روی یک نما تمرکز کنید. تعاملات پشتیبانی‌شده را بین نماهای متناظر همگام کنید.
 - از یک نما یا تمام فضای کار عکس بگیرید. پیکان، کادر، نقاشی و متن اضافه کنید یا تصویر را برش دهید. طرح محلی را کنار صفحه یا به‌صورت لایه روی آن نمایش دهید.
 - یک دستور اصلاح ساختاریافته شامل URL، دستگاه‌ها، اندازه‌های نما و یادداشت‌های مشکل را در ابزار کدنویسی خود کپی کنید.
 
@@ -873,11 +873,11 @@ Mobile View یک شبیه‌ساز موبایل و شبیه‌ساز دستگا�
 
 **Detailed description**
 
-Mobile View on maksuton avoimen lähdekoodin mobiilisimulaattori ja laite-emulaattori Chromelle. Esikatsele sivustoa yhtä aikaa jopa neljässä puhelin-, tabletti-, kannettava- ja työpöytänäkymässä. Valitse realistisia laitteita, muuta suuntaa ja zoomausta, synkronoi vieritys ja siirtyminen, ota kuvakaappauksia ja vertaa paikalliseen suunnitelmaan. Kaikki toimii paikallisesti ilman tiliä, tilausta, analytiikkaa, telemetriaa tai palvelinta.
+Mobile View on maksuton avoimen lähdekoodin työkalu responsiivisten verkkosivustojen testaamiseen Chromessa. Vertaa rinnakkain jopa neljää näkymää, mukaan lukien mobiiliesikatselu, ja tarkista valikot, teksti ja välit. Valitse realistisia laitteita, muuta suuntaa ja zoomausta, synkronoi vieritys ja siirtyminen, ota kuvakaappauksia ja vertaa paikalliseen suunnitelmaan. Kaikki toimii paikallisesti ilman tiliä, tilausta, analytiikkaa, telemetriaa tai palvelinta.
 
 Avaa kaikki laitteet yhdellä napsautuksella. Esikatselut on ryhmitelty laitetyypin mukaan ja järjestetty pienemmistä näytöistä suurempiin.
 
-Tallenna laitejoukkoja ja suosikkeja tai määritä omia näyttökokoja. Kuvaa yksi näkymä tai koko työtila ja lisää nuolia, kehyksiä ja tekstiä. Vertaa paikallista suunnitelmaa sivustoon rinnakkain tai päällekkäin ja kopioi URL:n, laitteet, näkymäkoot ja muistiinpanot sisältävä korjauskehotus koodaustyökaluusi.
+Responsiivisten asettelujen toistuvaa testaamista varten tallenna laitejoukkoja ja suosikkeja tai määritä omia näyttökokoja. Kuvaa yksi näkymä tai koko työtila ja lisää nuolia, kehyksiä ja tekstiä. Vertaa paikallista suunnitelmaa sivustoon rinnakkain tai päällekkäin ja kopioi URL:n, laitteet, näkymäkoot ja muistiinpanot sisältävä korjauskehotus koodaustyökaluusi.
 
 Nämä ovat responsiivisia esikatseluja Chromessa, eivät fyysisiä laitteita tai Safari-moottori. Sivustojen kirjautumis- ja upotussäännöt ovat edelleen voimassa. Alkuperäinen sivu säilyy; uudet esikatselut eivät kopioi tallentamattomia muutoksia.
 
@@ -898,10 +898,10 @@ Nämä ovat responsiivisia esikatseluja Chromessa, eivät fyysisiä laitteita ta
 
 **Detailed description**
 
-Mobile View Chrome માટે મફત અને ઓપન-સોર્સ મોબાઇલ સિમ્યુલેટર તથા ડિવાઇસ ઇમ્યુલેટર છે. વેબસાઇટને ફોન, ટેબ્લેટ, લેપટોપ અને ડેસ્કટોપના વધુમાં વધુ ચાર વ્યૂમાં સાથે જુઓ. વાસ્તવિક ડિવાઇસ પસંદ કરો, દિશા અને ઝૂમ બદલો, સ્ક્રોલ અને નેવિગેશન સિંક કરો, સ્ક્રીનશૉટ લો અને સ્થાનિક ડિઝાઇન સાથે સરખાવો. બધું બ્રાઉઝરમાં સ્થાનિક રીતે ચાલે છે; એકાઉન્ટ, સબ્સ્ક્રિપ્શન, એનાલિટિક્સ, ટેલિમેટ્રી કે સર્વર જરૂરી નથી.
+Mobile View એ Chromeમાં રિસ્પોન્સિવ વેબસાઇટનું પરીક્ષણ કરવા માટેનું મફત ઓપન-સોર્સ સાધન છે। મેનુ, લખાણ અને અંતર તપાસવા માટે મોબાઇલ પૂર્વાવલોકન સહિત ચાર દૃશ્યો સુધી બાજુબાજુ સરખાવો। વાસ્તવિક ડિવાઇસ પસંદ કરો, દિશા અને ઝૂમ બદલો, સ્ક્રોલ અને નેવિગેશન સિંક કરો, સ્ક્રીનશૉટ લો અને સ્થાનિક ડિઝાઇન સાથે સરખાવો. બધું બ્રાઉઝરમાં સ્થાનિક રીતે ચાલે છે; એકાઉન્ટ, સબ્સ્ક્રિપ્શન, એનાલિટિક્સ, ટેલિમેટ્રી કે સર્વર જરૂરી નથી.
 
 - એક ક્લિકમાં બધા ડિવાઇસ ખોલો. પ્રીવ્યૂ ડિવાઇસના પ્રકાર પ્રમાણે જૂથમાં ગોઠવાય છે અને નાનીથી મોટી સ્ક્રીનના ક્રમમાં દેખાય છે.
-- પોતાના વ્યૂપોર્ટ માપ બનાવો, ઉપકરણ સેટ અને મનપસંદ ઉપકરણો સાચવો અથવા એક દૃશ્ય પર ધ્યાન આપો. મેળ ખાતાં દૃશ્યોમાં સમર્થિત ક્રિયાઓ સિંક કરો.
+- રિસ્પોન્સિવ લેઆઉટનું વારંવાર પરીક્ષણ કરવા માટે પોતાના વ્યૂપોર્ટ માપ બનાવો, ઉપકરણ સેટ અને મનપસંદ ઉપકરણો સાચવો અથવા એક દૃશ્ય પર ધ્યાન આપો. મેળ ખાતાં દૃશ્યોમાં સમર્થિત ક્રિયાઓ સિંક કરો.
 - એક દૃશ્ય અથવા આખા કાર્યક્ષેત્રનો સ્ક્રીનશૉટ લો. તીર, બૉક્સ, રેખાંકન અને લખાણ ઉમેરો અથવા ચિત્ર કાપો. સ્થાનિક ડિઝાઇન પૃષ્ઠની બાજુમાં અથવા ઓવરલે તરીકે બતાવો.
 - URL, ઉપકરણો, વ્યૂપોર્ટ માપ અને સમસ્યાની નોંધો સાથેનો ગોઠવાયેલ સુધારા પ્રોમ્પ્ટ તમારા કોડિંગ ટૂલમાં કૉપિ કરો.
 
@@ -924,10 +924,10 @@ Mobile View Chrome માટે મફત અને ઓપન-સોર્સ �
 
 **Detailed description**
 
-Mobile View הוא סימולטור נייד ואמולטור מכשירים חינמי בקוד פתוח עבור Chrome. הציגו אתר בו-זמנית בעד ארבע תצוגות של טלפון, טאבלט, מחשב נייד ושולחני. בחרו מכשירים מציאותיים, שנו כיוון וזום, סנכרנו גלילה וניווט, צלמו והשוו לעיצוב מקומי. הכול פועל מקומית בדפדפן ללא חשבון, מינוי, ניתוח, טלמטריה או שרת.
+Mobile View הוא כלי חינמי בקוד פתוח לבדיקת אתרים רספונסיביים ב-Chrome. השוו עד ארבע תצוגות זו לצד זו, כולל תצוגה מקדימה לנייד, כדי לבדוק תפריטים, טקסט וריווח. בחרו מכשירים מציאותיים, שנו כיוון וזום, סנכרנו גלילה וניווט, צלמו והשוו לעיצוב מקומי. הכול פועל מקומית בדפדפן ללא חשבון, מינוי, ניתוח, טלמטריה או שרת.
 
 - פתחו את כל המכשירים בלחיצה אחת. התצוגות המקדימות מקובצות לפי סוג המכשיר ומסודרות ממסכים קטנים לגדולים.
-- צרו גדלי תצוגה מותאמים, שמרו קבוצות ומכשירים מועדפים או התמקדו בתצוגה אחת. סנכרנו אינטראקציות נתמכות בין תצוגות תואמות.
+- לבדיקות חוזרות של פריסות רספונסיביות, צרו גדלי תצוגה מותאמים, שמרו קבוצות ומכשירים מועדפים או התמקדו בתצוגה אחת. סנכרנו אינטראקציות נתמכות בין תצוגות תואמות.
 - צלמו תצוגה אחת או את כל סביבת העבודה. הוסיפו חצים, מסגרות, ציורים וטקסט או חתכו את התמונה. הציגו עיצוב מקומי לצד העמוד או כשכבה מעליו.
 - העתיקו לכלי התכנות שלכם הנחיית תיקון מובנית עם כתובת URL, מכשירים, מידות התצוגה והערות על הבעיה.
 
@@ -950,10 +950,10 @@ Mobile View הוא סימולטור נייד ואמולטור מכשירים ח�
 
 **Detailed description**
 
-Mobile View je besplatan mobilni simulator i emulator uređaja otvorenog koda za Chrome. Prikažite web u do četiri prikaza telefona, tableta, prijenosnika i računala istodobno. Odaberite realistične uređaje, promijenite orijentaciju i zumiranje, sinkronizirajte pomicanje i navigaciju, snimite zaslon i usporedite s lokalnim dizajnom. Sve radi lokalno bez računa, pretplate, analitike, telemetrije ili poslužitelja.
+Mobile View besplatan je alat otvorenog koda za testiranje responzivnih web-stranica u Chromeu. Usporedite do četiri prikaza jedan uz drugi, uključujući mobilni pretpregled, kako biste provjerili izbornike, tekst i razmake. Odaberite realistične uređaje, promijenite orijentaciju i zumiranje, sinkronizirajte pomicanje i navigaciju, snimite zaslon i usporedite s lokalnim dizajnom. Sve radi lokalno bez računa, pretplate, analitike, telemetrije ili poslužitelja.
 
 - Otvorite sve uređaje jednim klikom. Pretpregledi su grupirani prema vrsti uređaja i poredani od manjih zaslona prema većima.
-- Izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.
+- Za ponovljeno testiranje responzivnih rasporeda izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.
 - Snimite jedan prikaz ili cijeli radni prostor. Dodajte strelice, okvire, crteže i tekst ili izrežite snimku. Prikažite lokalni dizajn uz stranicu ili kao preklop.
 - Kopirajte strukturiranu uputu za popravak s URL-om, uređajima, dimenzijama i bilješkama o problemu u svoj alat za programiranje.
 
@@ -976,10 +976,10 @@ To su responzivni prikazi u Chromeu, a ne fizički uređaji ni pogon Safari. Pra
 
 **Detailed description**
 
-A Mobile View ingyenes, nyílt forráskódú mobil szimulátor és eszközemulátor a Chrome-hoz. Egy webhelyet egyszerre akár négy telefonos, táblagépes, laptopos és asztali nézetben vizsgálhat. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.
+A Mobile View ingyenes, nyílt forráskódú eszköz reszponzív webhelyek teszteléséhez a Chrome-ban. Hasonlítson össze legfeljebb négy nézetet egymás mellett, köztük egy mobilos előnézetet, hogy ellenőrizze a menüket, a szöveget és a térközöket. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.
 
 - Nyissa meg az összes eszközt egyetlen kattintással. Az előnézetek eszköztípus szerint vannak csoportosítva, és a kisebb képernyőktől a nagyobbak felé rendezve.
-- Hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.
+- A reszponzív elrendezések ismételt teszteléséhez hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.
 - Rögzítsen egy nézetet vagy a teljes munkaterületet. Adjon hozzá nyilakat, kereteket, rajzokat és szöveget, vagy vágja körül a képet. Jelenítsen meg helyi tervet az oldal mellett vagy fedvényként.
 - Másoljon strukturált javítási utasítást a programozóeszközébe az URL-lel, eszközökkel, nézetméretekkel és a probléma jegyzeteivel.
 
@@ -1002,10 +1002,10 @@ Ezek a Chrome reszponzív nézetei, nem fizikai eszközök vagy Safari-motor. A 
 
 **Detailed description**
 
-Mobile View adalah simulator seluler dan emulator perangkat gratis serta sumber terbuka untuk Chrome. Lihat situs dalam hingga empat tampilan ponsel, tablet, laptop, dan desktop sekaligus. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
+Mobile View adalah alat gratis dan sumber terbuka untuk menguji situs web responsif di Chrome. Bandingkan hingga empat tampilan berdampingan, termasuk pratinjau seluler, untuk memeriksa menu, teks, dan jarak. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
 
 - Buka semua perangkat dengan satu klik. Pratinjau dikelompokkan berdasarkan jenis perangkat dan diurutkan dari layar kecil ke besar.
-- Buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
+- Untuk mengulangi pengujian tata letak responsif, buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
 - Tangkap satu tampilan atau seluruh ruang kerja. Tambahkan panah, kotak, gambar, dan teks atau potong tangkapan layar. Tampilkan desain lokal di samping halaman atau sebagai overlay.
 - Salin instruksi perbaikan terstruktur berisi URL, perangkat, ukuran viewport, dan catatan masalah ke alat coding Anda.
 
@@ -1028,10 +1028,10 @@ Ini adalah pratinjau viewport responsif di Chrome, bukan perangkat fisik atau me
 
 **Detailed description**
 
-Mobile View ಎಂಬುದು Chromeಗಾಗಿ ಉಚಿತ ಓಪನ್ ಸೋರ್ಸ್ ಮೊಬೈಲ್ ಸಿಮ್ಯುಲೇಟರ್ ಮತ್ತು ಸಾಧನ ಎಮ್ಯುಲೇಟರ್ ಆಗಿದೆ. ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ಫೋನ್, ಟ್ಯಾಬ್ಲೆಟ್, ಲ್ಯಾಪ್‌ಟಾಪ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್‌ನ ಗರಿಷ್ಠ ನಾಲ್ಕು ವೀಕ್ಷಣೆಗಳಲ್ಲಿ ಒಟ್ಟಿಗೆ ನೋಡಿ. ನೈಜ ಸಾಧನಗಳನ್ನು ಆರಿಸಿ, ದಿಕ್ಕು ಮತ್ತು ಝೂಮ್ ಬದಲಿಸಿ, ಸ್ಕ್ರೋಲ್ ಮತ್ತು ನ್ಯಾವಿಗೇಶನ್ ಸಿಂಕ್ ಮಾಡಿ, ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ತೆಗೆದು ಸ್ಥಳೀಯ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ. ಎಲ್ಲವೂ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಥಳೀಯವಾಗಿ ನಡೆಯುತ್ತದೆ; ಖಾತೆ, ಚಂದಾದಾರಿಕೆ, ಅನಾಲಿಟಿಕ್ಸ್, ಟೆಲಿಮೆಟ್ರಿ ಅಥವಾ ಸರ್ವರ್ ಅಗತ್ಯವಿಲ್ಲ.
+Mobile View Chromeನಲ್ಲಿ ರೆಸ್ಪಾನ್ಸಿವ್ ವೆಬ್‌ಸೈಟ್‌ಗಳನ್ನು ಪರೀಕ್ಷಿಸಲು ಉಚಿತ ಓಪನ್ ಸೋರ್ಸ್ ಸಾಧನವಾಗಿದೆ. ಮೆನುಗಳು, ಪಠ್ಯ ಮತ್ತು ಅಂತರಗಳನ್ನು ಪರಿಶೀಲಿಸಲು ಮೊಬೈಲ್ ಪೂರ್ವವೀಕ್ಷಣೆಯೂ ಸೇರಿದಂತೆ ನಾಲ್ಕು ವೀಕ್ಷಣೆಗಳವರೆಗೆ ಅಕ್ಕಪಕ್ಕದಲ್ಲಿ ಹೋಲಿಸಿ. ನೈಜ ಸಾಧನಗಳನ್ನು ಆರಿಸಿ, ದಿಕ್ಕು ಮತ್ತು ಝೂಮ್ ಬದಲಿಸಿ, ಸ್ಕ್ರೋಲ್ ಮತ್ತು ನ್ಯಾವಿಗೇಶನ್ ಸಿಂಕ್ ಮಾಡಿ, ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ತೆಗೆದು ಸ್ಥಳೀಯ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ. ಎಲ್ಲವೂ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಥಳೀಯವಾಗಿ ನಡೆಯುತ್ತದೆ; ಖಾತೆ, ಚಂದಾದಾರಿಕೆ, ಅನಾಲಿಟಿಕ್ಸ್, ಟೆಲಿಮೆಟ್ರಿ ಅಥವಾ ಸರ್ವರ್ ಅಗತ್ಯವಿಲ್ಲ.
 
 - ಒಂದೇ ಕ್ಲಿಕ್‌ನಲ್ಲಿ ಎಲ್ಲಾ ಸಾಧನಗಳನ್ನು ತೆರೆಯಿರಿ. ಪೂರ್ವವೀಕ್ಷಣೆಗಳನ್ನು ಸಾಧನದ ಪ್ರಕಾರ ಗುಂಪು ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಚಿಕ್ಕ ಪರದೆಗಳಿಂದ ದೊಡ್ಡ ಪರದೆಗಳವರೆಗೆ ಕ್ರಮವಾಗಿ ಜೋಡಿಸಲಾಗಿದೆ.
-- ನಿಮ್ಮದೇ ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳನ್ನು ರಚಿಸಿ, ಸಾಧನ ಸೆಟ್‌ಗಳು ಮತ್ತು ಮೆಚ್ಚಿನವುಗಳನ್ನು ಉಳಿಸಿ ಅಥವಾ ಒಂದೇ ವೀಕ್ಷಣೆಯ ಮೇಲೆ ಗಮನ ಕೊಡಿ. ಹೊಂದುವ ವೀಕ್ಷಣೆಗಳ ನಡುವೆ ಬೆಂಬಲಿತ ಸಂವಹನಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿ.
+- ರೆಸ್ಪಾನ್ಸಿವ್ ವಿನ್ಯಾಸಗಳನ್ನು ಮತ್ತೆ ಮತ್ತೆ ಪರೀಕ್ಷಿಸಲು ನಿಮ್ಮದೇ ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳನ್ನು ರಚಿಸಿ, ಸಾಧನ ಸೆಟ್‌ಗಳು ಮತ್ತು ಮೆಚ್ಚಿನವುಗಳನ್ನು ಉಳಿಸಿ ಅಥವಾ ಒಂದೇ ವೀಕ್ಷಣೆಯ ಮೇಲೆ ಗಮನ ಕೊಡಿ. ಹೊಂದುವ ವೀಕ್ಷಣೆಗಳ ನಡುವೆ ಬೆಂಬಲಿತ ಸಂವಹನಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿ.
 - ಒಂದು ವೀಕ್ಷಣೆ ಅಥವಾ ಸಂಪೂರ್ಣ ಕಾರ್ಯಸ್ಥಳವನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ. ಬಾಣಗಳು, ಬಾಕ್ಸ್‌ಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ಪಠ್ಯ ಸೇರಿಸಿ ಅಥವಾ ಚಿತ್ರ ಕತ್ತರಿಸಿ. ಸ್ಥಳೀಯ ವಿನ್ಯಾಸವನ್ನು ಪುಟದ ಪಕ್ಕದಲ್ಲಿ ಅಥವಾ ಓವರ್‌ಲೇ ಆಗಿ ತೋರಿಸಿ.
 - URL, ಸಾಧನಗಳು, ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳು ಮತ್ತು ಸಮಸ್ಯೆಯ ಟಿಪ್ಪಣಿಗಳಿರುವ ರಚನಾತ್ಮಕ ತಿದ್ದುಪಡಿ ಪ್ರಾಂಪ್ಟ್ ಅನ್ನು ನಿಮ್ಮ ಕೋಡಿಂಗ್ ಸಾಧನಕ್ಕೆ ನಕಲಿಸಿ.
 
@@ -1054,10 +1054,10 @@ Mobile View ಎಂಬುದು Chromeಗಾಗಿ ಉಚಿತ ಓಪನ್ ಸ�
 
 **Detailed description**
 
-Mobile View yra nemokamas atvirojo kodo mobilusis simuliatorius ir įrenginių emuliatorius, skirtas Chrome. Vienu metu peržiūrėkite svetainę iki keturių telefono, planšetės, nešiojamojo ir stalinio kompiuterio rodinių. Rinkitės tikroviškus įrenginius, keiskite orientaciją bei mastelį, sinchronizuokite slinkimą ir naršymą, fiksuokite ekraną ir lyginkite su vietiniu dizainu. Viskas veikia naršyklėje be paskyros, prenumeratos, analizės, telemetrijos ar serverio.
+Mobile View yra nemokamas atvirojo kodo įrankis prisitaikančioms svetainėms testuoti Chrome naršyklėje. Palyginkite iki keturių rodinių greta, įskaitant mobilųjį peržiūros rodinį, ir tikrinkite meniu, tekstą bei tarpus. Rinkitės tikroviškus įrenginius, keiskite orientaciją bei mastelį, sinchronizuokite slinkimą ir naršymą, fiksuokite ekraną ir lyginkite su vietiniu dizainu. Viskas veikia naršyklėje be paskyros, prenumeratos, analizės, telemetrijos ar serverio.
 
 - Atverkite visus įrenginius vienu spustelėjimu. Peržiūros sugrupuotos pagal įrenginio tipą ir surikiuotos nuo mažesnių ekranų iki didesnių.
-- Kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.
+- Norėdami pakartotinai testuoti prisitaikančius maketus, kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.
 - Fiksuokite vieną vaizdą arba visą darbo sritį. Pridėkite rodykles, rėmelius, piešinius ir tekstą arba apkirpkite vaizdą. Rodykite vietinį dizainą šalia puslapio arba kaip perdangą.
 - Nukopijuokite struktūruotą taisymo užklausą su URL, įrenginiais, peržiūros dydžiais ir problemos pastabomis į savo programavimo įrankį.
 
@@ -1080,10 +1080,10 @@ Tai adaptyvios peržiūros naršyklėje Chrome, o ne fiziniai įrenginiai ar Saf
 
 **Detailed description**
 
-Mobile View ir bezmaksas atvērtā pirmkoda mobilais simulators un ierīču emulators pārlūkam Chrome. Vienlaikus skatiet vietni līdz četros tālruņa, planšetes, klēpjdatora un datora skatos. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
+Mobile View ir bezmaksas atvērtā pirmkoda rīks pielāgojamu vietņu testēšanai pārlūkā Chrome. Salīdziniet līdz četriem skatiem blakus, tostarp mobilo priekšskatījumu, lai pārbaudītu izvēlnes, tekstu un atstarpes. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
 
 - Atveriet visas ierīces ar vienu klikšķi. Priekšskatījumi ir grupēti pēc ierīces veida un sakārtoti no mazākiem ekrāniem līdz lielākiem.
-- Izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
+- Atkārtotai pielāgojamu izkārtojumu testēšanai izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
 - Uzņemiet vienu skatu vai visu darbvietu. Pievienojiet bultas, rāmjus, zīmējumus un tekstu vai apgrieziet attēlu. Parādiet lokālu dizainu blakus lapai vai kā pārklājumu.
 - Kopējiet strukturētu labošanas uzvedni ar URL, ierīcēm, skata izmēriem un piezīmēm par problēmu savā programmēšanas rīkā.
 
@@ -1106,10 +1106,10 @@ Tie ir adaptīvi priekšskatījumi pārlūkā Chrome, nevis fiziskas ierīces va
 
 **Detailed description**
 
-Mobile View Chrome-നുള്ള സൗജന്യ ഓപ്പൺ സോഴ്‌സ് മൊബൈൽ സിമുലേറ്ററും ഡിവൈസ് എമുലേറ്ററും ആണ്. ഒരു വെബ്‌സൈറ്റ് ഫോൺ, ടാബ്‌ലെറ്റ്, ലാപ്‌ടോപ്പ്, ഡെസ്‌ക്‌ടോപ്പ് എന്നിവയുടെ നാല് കാഴ്ചകളിൽ വരെ ഒരുമിച്ച് കാണുക. യഥാർത്ഥ ഉപകരണങ്ങൾ തിരഞ്ഞെടുക്കുക, ദിശയും സൂമും മാറ്റുക, സ്ക്രോളും നാവിഗേഷനും സമന്വയിപ്പിക്കുക, സ്ക്രീൻഷോട്ട് എടുക്കുക, പ്രാദേശിക ഡിസൈനുമായി താരതമ്യം ചെയ്യുക. അക്കൗണ്ട്, സബ്‌സ്‌ക്രിപ്‌ഷൻ, അനലിറ്റിക്‌സ്, ടെലിമെട്രി, സെർവർ എന്നിവയില്ലാതെ എല്ലാം ബ്രൗസറിൽ പ്രവർത്തിക്കുന്നു.
+Mobile View Chrome-ൽ റെസ്‌പോൺസീവ് വെബ്‌സൈറ്റുകൾ പരിശോധിക്കാനുള്ള സൗജന്യ ഓപ്പൺ സോഴ്‌സ് ഉപകരണമാണ്. മെനു, എഴുത്ത്, ഇടവേളകൾ എന്നിവ പരിശോധിക്കാൻ മൊബൈൽ പ്രിവ്യൂ ഉൾപ്പെടെ നാല് കാഴ്ചകൾ വരെ അരികരികിൽ താരതമ്യം ചെയ്യൂ. യഥാർത്ഥ ഉപകരണങ്ങൾ തിരഞ്ഞെടുക്കുക, ദിശയും സൂമും മാറ്റുക, സ്ക്രോളും നാവിഗേഷനും സമന്വയിപ്പിക്കുക, സ്ക്രീൻഷോട്ട് എടുക്കുക, പ്രാദേശിക ഡിസൈനുമായി താരതമ്യം ചെയ്യുക. അക്കൗണ്ട്, സബ്‌സ്‌ക്രിപ്‌ഷൻ, അനലിറ്റിക്‌സ്, ടെലിമെട്രി, സെർവർ എന്നിവയില്ലാതെ എല്ലാം ബ്രൗസറിൽ പ്രവർത്തിക്കുന്നു.
 
 - ഒറ്റ ക്ലിക്കിൽ എല്ലാ ഉപകരണങ്ങളും തുറക്കുക. പ്രിവ്യൂകൾ ഉപകരണത്തിന്റെ തരം അനുസരിച്ച് ഗ്രൂപ്പുകളാക്കി, ചെറിയ സ്ക്രീനുകളിൽ നിന്ന് വലിയ സ്ക്രീനുകളിലേക്ക് ക്രമീകരിച്ചിരിക്കുന്നു.
-- സ്വന്തം വ്യൂപോർട്ട് വലുപ്പങ്ങൾ സൃഷ്ടിക്കൂ, ഉപകരണ സെറ്റുകളും പ്രിയപ്പെട്ടവയും സൂക്ഷിക്കൂ, അല്ലെങ്കിൽ ഒരു കാഴ്ചയിൽ ശ്രദ്ധ കേന്ദ്രീകരിക്കൂ. അനുയോജ്യമായ കാഴ്ചകളിലെ പിന്തുണയ്ക്കുന്ന ഇടപെടലുകൾ സമന്വയിപ്പിക്കൂ.
+- റെസ്‌പോൺസീവ് വിന്യാസങ്ങൾ ആവർത്തിച്ച് പരിശോധിക്കാൻ സ്വന്തം വ്യൂപോർട്ട് വലുപ്പങ്ങൾ സൃഷ്ടിക്കൂ, ഉപകരണ സെറ്റുകളും പ്രിയപ്പെട്ടവയും സൂക്ഷിക്കൂ, അല്ലെങ്കിൽ ഒരു കാഴ്ചയിൽ ശ്രദ്ധ കേന്ദ്രീകരിക്കൂ. അനുയോജ്യമായ കാഴ്ചകളിലെ പിന്തുണയ്ക്കുന്ന ഇടപെടലുകൾ സമന്വയിപ്പിക്കൂ.
 - ഒരു കാഴ്ചയോ മുഴുവൻ പ്രവർത്തനസ്ഥലമോ പകർത്തൂ. അമ്പുകൾ, ബോക്സുകൾ, വരകൾ, എഴുത്ത് എന്നിവ ചേർക്കൂ അല്ലെങ്കിൽ ചിത്രം മുറിക്കൂ. പ്രാദേശിക ഡിസൈൻ പേജിന് അരികിലോ മുകളിലെ ഓവർലേയായോ കാണിക്കൂ.
 - URL, ഉപകരണങ്ങൾ, വ്യൂപോർട്ട് വലുപ്പങ്ങൾ, പ്രശ്നക്കുറിപ്പുകൾ എന്നിവയുള്ള ക്രമപ്പെടുത്തിയ പരിഹാര നിർദേശം നിങ്ങളുടെ കോഡിങ് ടൂളിലേക്ക് പകർത്തൂ.
 
@@ -1132,10 +1132,10 @@ Mobile View Chrome-നുള്ള സൗജന്യ ഓപ്പൺ സോഴ�
 
 **Detailed description**
 
-Mobile View हे Chromeसाठी मोफत आणि मुक्त-स्रोत मोबाइल सिम्युलेटर व डिव्हाइस एम्युलेटर आहे. वेबसाइट फोन, टॅबलेट, लॅपटॉप आणि डेस्कटॉपच्या चार दृश्यांपर्यंत एकत्र पहा. वास्तववादी डिव्हाइस निवडा, दिशा व झूम बदला, स्क्रोल व नेव्हिगेशन सिंक करा, स्क्रीनशॉट घ्या आणि स्थानिक डिझाइनशी तुलना करा. सर्व काही ब्राउझरमध्ये स्थानिकरीत्या चालते; खाते, सदस्यता, विश्लेषण, टेलिमेट्री किंवा सर्व्हर लागत नाही.
+Mobile View हे Chromeमध्ये रिस्पॉन्सिव्ह वेबसाइटची चाचणी करण्यासाठी मोफत मुक्त-स्रोत साधन आहे। मेनू, मजकूर आणि अंतर तपासण्यासाठी मोबाइल पूर्वावलोकनासह चार दृश्यांपर्यंत बाजूबाजूने तुलना करा। वास्तववादी डिव्हाइस निवडा, दिशा व झूम बदला, स्क्रोल व नेव्हिगेशन सिंक करा, स्क्रीनशॉट घ्या आणि स्थानिक डिझाइनशी तुलना करा. सर्व काही ब्राउझरमध्ये स्थानिकरीत्या चालते; खाते, सदस्यता, विश्लेषण, टेलिमेट्री किंवा सर्व्हर लागत नाही.
 
 - एका क्लिकमध्ये सर्व डिव्हाइस उघडा. प्रीव्ह्यू डिव्हाइसच्या प्रकारानुसार गटांमध्ये आणि लहान ते मोठ्या स्क्रीनच्या क्रमाने दिसतात.
-- स्वतःचे व्ह्यूपोर्ट आकार तयार करा, उपकरण संच व आवडती उपकरणे जतन करा किंवा एका दृश्यावर लक्ष केंद्रित करा. जुळणाऱ्या दृश्यांमध्ये समर्थित क्रिया समक्रमित करा.
+- रिस्पॉन्सिव्ह मांडणीची पुन्हा चाचणी करण्यासाठी स्वतःचे व्ह्यूपोर्ट आकार तयार करा, उपकरण संच व आवडती उपकरणे जतन करा किंवा एका दृश्यावर लक्ष केंद्रित करा. जुळणाऱ्या दृश्यांमध्ये समर्थित क्रिया समक्रमित करा.
 - एक दृश्य किंवा पूर्ण कार्यक्षेत्राचा स्क्रीनशॉट घ्या. बाण, चौकटी, रेखाचित्रे व मजकूर जोडा किंवा प्रतिमा कापा. स्थानिक डिझाइन पानाशेजारी किंवा ओव्हरले म्हणून दाखवा.
 - URL, उपकरणे, व्ह्यूपोर्ट आकार व समस्येच्या नोंदी असलेला संरचित दुरुस्ती प्रॉम्प्ट तुमच्या कोडिंग साधनात कॉपी करा.
 
@@ -1158,10 +1158,10 @@ Mobile View हे Chromeसाठी मोफत आणि मुक्त-स
 
 **Detailed description**
 
-Mobile View ialah simulator mudah alih dan emulator peranti percuma serta sumber terbuka untuk Chrome. Pratonton laman dalam sehingga empat paparan telefon, tablet, komputer riba dan desktop serentak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.
+Mobile View ialah alat percuma dan sumber terbuka untuk menguji laman web responsif dalam Chrome. Bandingkan sehingga empat paparan bersebelahan, termasuk pratonton mudah alih, untuk memeriksa menu, teks dan jarak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.
 
 - Buka semua peranti dengan satu klik. Pratonton dikumpulkan mengikut jenis peranti dan disusun daripada skrin yang lebih kecil kepada yang lebih besar.
-- Cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.
+- Untuk mengulangi ujian susun atur responsif, cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.
 - Tangkap satu paparan atau seluruh ruang kerja. Tambah anak panah, kotak, lukisan dan teks atau pangkas imej. Paparkan reka bentuk setempat di sebelah halaman atau sebagai tindanan.
 - Salin arahan pembaikan berstruktur dengan URL, peranti, saiz viewport dan nota masalah ke alat pengekodan anda.
 
@@ -1184,11 +1184,11 @@ Ini pratonton viewport responsif dalam Chrome, bukan peranti fizikal atau enjin 
 
 **Detailed description**
 
-Mobile View er en gratis mobilsimulator og enhetsemulator med åpen kildekode for Chrome. Se et nettsted i opptil fire mobil-, nettbrett-, laptop- og datamaskinvisninger samtidig. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.
+Mobile View er et gratis verktøy med åpen kildekode for å teste responsive nettsteder i Chrome. Sammenlign opptil fire visninger side om side, inkludert en mobil forhåndsvisning, for å kontrollere menyer, tekst og avstander. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.
 
 Åpne alle enheter med ett klikk. Forhåndsvisningene er gruppert etter enhetstype og sortert fra mindre til større skjermer.
 
-Lagre enhetssett og favoritter, eller lag egne skjermstørrelser. Ta bilde av en visning eller hele arbeidsområdet, og legg til piler, rammer og tekst. Sammenlign et lokalt design ved siden av eller over nettstedet, og kopier et forslag til retting med URL, enheter, skjermstørrelser og notater til kodeverktøyet.
+For gjentatte tester av responsive oppsett lagre enhetssett og favoritter, eller lag egne skjermstørrelser. Ta bilde av en visning eller hele arbeidsområdet, og legg til piler, rammer og tekst. Sammenlign et lokalt design ved siden av eller over nettstedet, og kopier et forslag til retting med URL, enheter, skjermstørrelser og notater til kodeverktøyet.
 
 Dette er responsive forhåndsvisninger i Chrome, ikke fysiske enheter eller Safari-motoren. Nettstedenes regler for innlogging og innbygging gjelder fortsatt. Originalsiden bevares; nye forhåndsvisninger kopierer ikke ulagrede endringer.
 
@@ -1209,10 +1209,10 @@ Dette er responsive forhåndsvisninger i Chrome, ikke fysiske enheter eller Safa
 
 **Detailed description**
 
-Mobile View to darmowy symulator mobilny i emulator urządzeń open source dla Chrome. Wyświetlaj stronę jednocześnie w maksymalnie czterech widokach telefonu, tabletu, laptopa i komputera. Wybieraj realistyczne urządzenia, zmieniaj orientację i powiększenie, synchronizuj przewijanie i nawigację, rób zrzuty oraz porównuj z lokalnym projektem. Wszystko działa lokalnie w przeglądarce bez konta, subskrypcji, analityki, telemetrii ani serwera.
+Mobile View to bezpłatne narzędzie open source do testowania responsywnych witryn w Chrome. Porównuj do czterech widoków obok siebie, w tym podgląd mobilny, aby sprawdzać menu, tekst i odstępy. Wybieraj realistyczne urządzenia, zmieniaj orientację i powiększenie, synchronizuj przewijanie i nawigację, rób zrzuty oraz porównuj z lokalnym projektem. Wszystko działa lokalnie w przeglądarce bez konta, subskrypcji, analityki, telemetrii ani serwera.
 
 - Otwórz wszystkie urządzenia jednym kliknięciem. Podglądy są pogrupowane według typu urządzenia i uporządkowane od mniejszych ekranów do większych.
-- Twórz własne rozmiary widoku, zapisuj zestawy i ulubione urządzenia lub skup się na jednym widoku. Synchronizuj obsługiwane interakcje między odpowiadającymi sobie podglądami.
+- Do ponownego testowania responsywnych układów twórz własne rozmiary widoku, zapisuj zestawy i ulubione urządzenia lub skup się na jednym widoku. Synchronizuj obsługiwane interakcje między odpowiadającymi sobie podglądami.
 - Przechwytuj jeden widok lub całą przestrzeń roboczą. Dodawaj strzałki, ramki, rysunki i tekst albo przycinaj obraz. Wyświetlaj lokalny projekt obok strony lub jako nakładkę.
 - Kopiuj uporządkowany prompt naprawy z adresem URL, urządzeniami, rozmiarami i notatkami o problemie do swojego narzędzia programistycznego.
 
@@ -1235,10 +1235,10 @@ To responsywne podglądy w Chrome, a nie fizyczne urządzenia ani silnik Safari.
 
 **Detailed description**
 
-O Mobile View é um simulador móvel e emulador de dispositivos gratuito e de código aberto para Chrome. Pré-visualize um site em até quatro vistas de telemóvel, tablet, portátil e computador ao mesmo tempo. Escolha dispositivos realistas, altere a orientação e o zoom, sincronize o deslocamento e a navegação, capture ecrãs e compare com um design local. Tudo funciona localmente no navegador sem conta, subscrição, análise, telemetria ou servidor.
+O Mobile View é uma ferramenta gratuita e de código aberto para testar sites responsivos no Chrome. Compare até quatro vistas lado a lado, incluindo uma pré-visualização para telemóvel, para verificar menus, texto e espaçamento. Escolha dispositivos realistas, altere a orientação e o zoom, sincronize o deslocamento e a navegação, capture ecrãs e compare com um design local. Tudo funciona localmente no navegador sem conta, subscrição, análise, telemetria ou servidor.
 
 - Abra todos os dispositivos com um clique. As pré-visualizações são agrupadas por tipo de dispositivo e ordenadas dos ecrãs mais pequenos aos maiores.
-- Crie dimensões de visualização próprias, guarde conjuntos e dispositivos favoritos ou concentre-se numa vista. Sincronize as interações suportadas entre vistas correspondentes.
+- Para repetir os testes de apresentação responsiva, crie dimensões de visualização próprias, guarde conjuntos e dispositivos favoritos ou concentre-se numa vista. Sincronize as interações suportadas entre vistas correspondentes.
 - Capture uma vista ou toda a área de trabalho. Adicione setas, caixas, desenhos e texto ou recorte a imagem. Apresente um design local ao lado da página ou sobreposto.
 - Copie para a sua ferramenta de programação uma instrução de correção estruturada com o URL, os dispositivos, as dimensões e as notas do problema.
 
@@ -1261,10 +1261,10 @@ São pré-visualizações responsivas no Chrome, não dispositivos físicos nem 
 
 **Detailed description**
 
-Mobile View este un simulator mobil și emulator de dispozitive gratuit și open-source pentru Chrome. Previzualizează un site în până la patru ecrane de telefon, tabletă, laptop și desktop simultan. Alege dispozitive realiste, schimbă orientarea și zoomul, sincronizează derularea și navigarea, capturează ecranul și compară-l cu un design local. Totul rulează local în browser fără cont, abonament, analiză, telemetrie sau server.
+Mobile View este un instrument gratuit și open-source pentru testarea site-urilor web responsive în Chrome. Compară până la patru vederi alăturate, inclusiv o previzualizare mobilă, pentru a verifica meniurile, textul și spațierea. Alege dispozitive realiste, schimbă orientarea și zoomul, sincronizează derularea și navigarea, capturează ecranul și compară-l cu un design local. Totul rulează local în browser fără cont, abonament, analiză, telemetrie sau server.
 
 - Deschide toate dispozitivele cu un clic. Previzualizările sunt grupate după tipul dispozitivului și ordonate de la ecrane mai mici la ecrane mai mari.
-- Creează dimensiuni de viewport personalizate, salvează seturi și dispozitive favorite sau concentrează-te pe o singură vedere. Sincronizează interacțiunile acceptate între vederi corespunzătoare.
+- Pentru a repeta testele de aspect responsive, creează dimensiuni de viewport personalizate, salvează seturi și dispozitive favorite sau concentrează-te pe o singură vedere. Sincronizează interacțiunile acceptate între vederi corespunzătoare.
 - Capturează o vedere sau întregul spațiu de lucru. Adaugă săgeți, chenare, desene și text sau decupează imaginea. Afișează un design local lângă pagină sau suprapus.
 - Copiază în instrumentul de programare o instrucțiune structurată de remediere cu URL, dispozitive, dimensiuni și note despre problemă.
 
@@ -1287,10 +1287,10 @@ Acestea sunt previzualizări responsive în Chrome, nu dispozitive fizice sau mo
 
 **Detailed description**
 
-Mobile View je bezplatný open-source mobilný simulátor a emulátor zariadení pre Chrome. Zobrazte web súčasne až v štyroch náhľadoch telefónu, tabletu, notebooku a počítača. Vyberajte realistické zariadenia, meňte orientáciu a priblíženie, synchronizujte posúvanie a navigáciu, vytvárajte snímky a porovnávajte ich s lokálnym návrhom. Všetko beží lokálne bez účtu, predplatného, analytiky, telemetrie či servera.
+Mobile View je bezplatný open-source nástroj na testovanie responzívnych webov v Chrome. Porovnávajte až štyri pohľady vedľa seba vrátane mobilného náhľadu a kontrolujte ponuky, text a rozostupy. Vyberajte realistické zariadenia, meňte orientáciu a priblíženie, synchronizujte posúvanie a navigáciu, vytvárajte snímky a porovnávajte ich s lokálnym návrhom. Všetko beží lokálne bez účtu, predplatného, analytiky, telemetrie či servera.
 
 - Otvorte všetky zariadenia jedným kliknutím. Náhľady sú zoskupené podľa typu zariadenia a zoradené od menších obrazoviek po väčšie.
-- Vytvárajte vlastné rozmery viewportu, ukladajte súpravy a obľúbené zariadenia alebo sa sústreďte na jeden náhľad. Synchronizujte podporované interakcie medzi zodpovedajúcimi náhľadmi.
+- Na opakované testovanie responzívnych rozložení vytvárajte vlastné rozmery viewportu, ukladajte súpravy a obľúbené zariadenia alebo sa sústreďte na jeden náhľad. Synchronizujte podporované interakcie medzi zodpovedajúcimi náhľadmi.
 - Zachyťte jeden náhľad alebo celý pracovný priestor. Pridajte šípky, rámčeky, kresby a text alebo obrázok orežte. Zobrazte miestny návrh vedľa stránky alebo ako prekrytie.
 - Skopírujte štruktúrované zadanie opravy s URL, zariadeniami, rozmermi a poznámkami k problému do svojho programovacieho nástroja.
 
@@ -1313,10 +1313,10 @@ Ide o responzívne náhľady v Chrome, nie fyzické zariadenia ani jadro Safari.
 
 **Detailed description**
 
-Mobile View je brezplačen odprtokodni mobilni simulator in emulator naprav za Chrome. Spletno mesto si hkrati oglejte v največ štirih pogledih telefona, tablice, prenosnika in računalnika. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.
+Mobile View je brezplačno odprtokodno orodje za testiranje odzivnih spletnih mest v Chromu. Primerjajte do štiri poglede drug ob drugem, vključno z mobilnim predogledom, da preverite menije, besedilo in razmike. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.
 
 - Odprite vse naprave z enim klikom. Predogledi so združeni po vrsti naprave in razvrščeni od manjših zaslonov do večjih.
-- Ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.
+- Za ponavljajoče se testiranje odzivnih postavitev ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.
 - Zajemite en pogled ali celotno delovno površino. Dodajte puščice, okvirje, risbe in besedilo ali obrežite sliko. Prikažite lokalni dizajn ob strani ali kot prekrivanje.
 - Kopirajte strukturirano navodilo za popravek z URL-jem, napravami, dimenzijami in opombami o težavi v svoje programsko orodje.
 
@@ -1339,10 +1339,10 @@ To so odzivni predogledi v Chromu, ne fizične naprave ali pogon Safari. Pravila
 
 **Detailed description**
 
-Mobile View је бесплатан мобилни симулатор и емулатор уређаја отвореног кода за Chrome. Прикажите сајт истовремено у највише четири приказа телефона, таблета, лаптопа и рачунара. Изаберите реалистичне уређаје, промените оријентацију и зумирање, синхронизујте померање и навигацију, снимите екран и упоредите га са локалним дизајном. Све ради локално без налога, претплате, аналитике, телеметрије или сервера.
+Mobile View је бесплатан алат отвореног кода за тестирање прилагодљивих веб-сајтова у Chrome-у. Упоредите до четири приказа један поред другог, укључујући мобилни преглед, да проверите меније, текст и размаке. Изаберите реалистичне уређаје, промените оријентацију и зумирање, синхронизујте померање и навигацију, снимите екран и упоредите га са локалним дизајном. Све ради локално без налога, претплате, аналитике, телеметрије или сервера.
 
 - Отворите све уређаје једним кликом. Прегледи су груписани по типу уређаја и поређани од мањих екрана ка већим.
-- Направите прилагођене величине приказа, сачувајте скупове и омиљене уређаје или се усредсредите на један приказ. Ускладите подржане интеракције између одговарајућих приказа.
+- За поновљено тестирање прилагодљивих распореда направите прилагођене величине приказа, сачувајте скупове и омиљене уређаје или се усредсредите на један приказ. Ускладите подржане интеракције између одговарајућих приказа.
 - Снимите један приказ или цео радни простор. Додајте стрелице, оквире, цртеже и текст или исеците слику. Прикажите локални дизајн поред странице или као преклоп.
 - Копирајте структурисано упутство за исправку са URL-ом, уређајима, димензијама и белешкама о проблему у свој алат за програмирање.
 
@@ -1365,11 +1365,11 @@ Mobile View је бесплатан мобилни симулатор и ему�
 
 **Detailed description**
 
-Mobile View är en kostnadsfri mobilsimulator och enhetsemulator med öppen källkod för Chrome. Visa en webbplats i upp till fyra mobil-, surfplatte-, laptop- och datorvyer samtidigt. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.
+Mobile View är ett kostnadsfritt verktyg med öppen källkod för att testa responsiva webbplatser i Chrome. Jämför upp till fyra vyer sida vid sida, inklusive en mobil förhandsvisning, för att kontrollera menyer, text och avstånd. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.
 
 Öppna alla enheter med ett klick. Förhandsvisningarna är grupperade efter enhetstyp och sorterade från mindre till större skärmar.
 
-Spara enhetsuppsättningar och favoriter eller skapa egna skärmstorlekar. Ta en bild av en vy eller hela arbetsytan och lägg till pilar, ramar och text. Jämför en lokal design bredvid eller ovanpå webbplatsen och kopiera ett korrigeringsförslag med URL, enheter, skärmstorlekar och anteckningar till ditt kodverktyg.
+För upprepade tester av responsiva layouter spara enhetsuppsättningar och favoriter eller skapa egna skärmstorlekar. Ta en bild av en vy eller hela arbetsytan och lägg till pilar, ramar och text. Jämför en lokal design bredvid eller ovanpå webbplatsen och kopiera ett korrigeringsförslag med URL, enheter, skärmstorlekar och anteckningar till ditt kodverktyg.
 
 Detta är responsiva förhandsvisningar i Chrome, inte fysiska enheter eller Safari-motorn. Webbplatsernas regler för inloggning och inbäddning gäller fortfarande. Originalsidan bevaras; nya förhandsvisningar kopierar inte osparade ändringar.
 
@@ -1390,10 +1390,10 @@ Detta är responsiva förhandsvisningar i Chrome, inte fysiska enheter eller Saf
 
 **Detailed description**
 
-Mobile View ni kiigaji cha simu na kiigaji cha vifaa bila malipo na cha programu huria kwa Chrome. Tazama tovuti katika mionekano hadi minne ya simu, kompyuta kibao, laptop na desktop kwa wakati mmoja. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.
+Mobile View ni zana ya bure na ya programu huria ya kupima tovuti zinazobadilika kulingana na ukubwa wa skrini katika Chrome. Linganisha hadi mionekano minne kando kwa kando, ikiwemo hakikisho la simu, ili kukagua menyu, maandishi na nafasi. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.
 
 - Fungua vifaa vyote kwa mbofyo mmoja. Muonekano wa awali umepangwa kwa aina ya kifaa na kuanzia skrini ndogo hadi kubwa.
-- Unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.
+- Ili kurudia vipimo vya mipangilio inayobadilika kulingana na skrini, unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.
 - Piga picha ya mwonekano mmoja au eneo lote la kazi. Ongeza mishale, visanduku, michoro na maandishi au punguza picha. Onyesha muundo wa ndani kando ya ukurasa au kama tabaka juu yake.
 - Nakili agizo la marekebisho lenye mpangilio, URL, vifaa, vipimo vya mwonekano na maelezo ya tatizo kwenye zana yako ya kuandika msimbo.
 
@@ -1416,10 +1416,10 @@ Haya ni maonyesho ya mwitikio katika Chrome, si vifaa halisi au injini ya Safari
 
 **Detailed description**
 
-Mobile View என்பது Chrome-க்கான இலவச திறந்த மூல மொபைல் சிமுலேட்டர் மற்றும் சாதன முன்மாதிரி. இணையதளத்தை தொலைபேசி, டேப்லெட், மடிக்கணினி மற்றும் டெஸ்க்டாப் ஆகியவற்றின் நான்கு காட்சிகள் வரை ஒரே நேரத்தில் பாருங்கள். உண்மையான சாதனங்களைத் தேர்ந்தெடுத்து, திசை மற்றும் பெரிதாக்கலை மாற்றி, ஸ்க்ரோல் மற்றும் வழிசெலுத்தலை ஒத்திசைத்து, திரைப்பிடிப்பு எடுத்து உள்ளூர் வடிவமைப்புடன் ஒப்பிடுங்கள். கணக்கு, சந்தா, பகுப்பாய்வு, டெலிமெட்ரி அல்லது சேவையகம் இல்லாமல் அனைத்தும் உலாவியிலேயே இயங்கும்.
+Mobile View என்பது Chrome-இல் ரெஸ்பான்சிவ் இணையதளங்களைச் சோதிக்க உதவும் இலவச திறந்த மூலக் கருவி. மெனுக்கள், உரை மற்றும் இடைவெளிகளைச் சரிபார்க்க, மொபைல் முன்னோட்டம் உட்பட நான்கு காட்சிகள் வரை அருகருகே ஒப்பிடுங்கள். உண்மையான சாதனங்களைத் தேர்ந்தெடுத்து, திசை மற்றும் பெரிதாக்கலை மாற்றி, ஸ்க்ரோல் மற்றும் வழிசெலுத்தலை ஒத்திசைத்து, திரைப்பிடிப்பு எடுத்து உள்ளூர் வடிவமைப்புடன் ஒப்பிடுங்கள். கணக்கு, சந்தா, பகுப்பாய்வு, டெலிமெட்ரி அல்லது சேவையகம் இல்லாமல் அனைத்தும் உலாவியிலேயே இயங்கும்.
 
 - ஒரே கிளிக்கில் எல்லா சாதனங்களையும் திறக்கவும். முன்னோட்டங்கள் சாதன வகையின்படி குழுவாக்கப்பட்டு, சிறிய திரைகளிலிருந்து பெரிய திரைகள் வரை வரிசைப்படுத்தப்பட்டுள்ளன.
-- விருப்ப வியூபோர்ட் அளவுகளை உருவாக்கி, சாதனத் தொகுப்புகளையும் விருப்பங்களையும் சேமிக்கவும் அல்லது ஒரு காட்சியில் கவனம் செலுத்தவும். பொருந்தும் காட்சிகளில் ஆதரிக்கப்படும் தொடர்புகளை ஒத்திசைக்கவும்.
+- ரெஸ்பான்சிவ் அமைப்புகளை மீண்டும் சோதிக்க, விருப்ப வியூபோர்ட் அளவுகளை உருவாக்கி, சாதனத் தொகுப்புகளையும் விருப்பங்களையும் சேமிக்கவும் அல்லது ஒரு காட்சியில் கவனம் செலுத்தவும். பொருந்தும் காட்சிகளில் ஆதரிக்கப்படும் தொடர்புகளை ஒத்திசைக்கவும்.
 - ஒரு காட்சியையோ முழுப் பணிப்பகுதியையோ படமெடுக்கவும். அம்புகள், பெட்டிகள், வரைபடங்கள், உரை சேர்க்கவும் அல்லது படத்தை வெட்டவும். உள்ளூர் வடிவமைப்பைப் பக்கத்தின் அருகில் அல்லது மேலடுக்காகக் காட்டவும்.
 - URL, சாதனங்கள், வியூபோர்ட் அளவுகள், சிக்கல் குறிப்புகள் அடங்கிய ஒழுங்கமைந்த திருத்த வழிமுறையை உங்கள் நிரலாக்கக் கருவிக்கு நகலெடுக்கவும்.
 
@@ -1442,10 +1442,10 @@ Mobile View என்பது Chrome-க்கான இலவச திறந�
 
 **Detailed description**
 
-Mobile View అనేది Chrome కోసం ఉచిత ఓపెన్ సోర్స్ మొబైల్ సిమ్యులేటర్ మరియు పరికర ఎమ్యులేటర్. వెబ్‌సైట్‌ను ఫోన్, టాబ్లెట్, ల్యాప్‌టాప్ మరియు డెస్క్‌టాప్ నాలుగు వీక్షణల వరకు ఒకేసారి చూడండి. నిజమైన పరికరాలను ఎంచుకోండి, దిశ మరియు జూమ్ మార్చండి, స్క్రోల్ మరియు నావిగేషన్ సమకాలీకరించండి, స్క్రీన్‌షాట్ తీసి స్థానిక డిజైన్‌తో పోల్చండి. ఖాతా, సబ్‌స్క్రిప్షన్, అనలిటిక్స్, టెలిమెట్రీ లేదా సర్వర్ లేకుండా అన్నీ బ్రౌజర్‌లోనే నడుస్తాయి.
+Mobile View Chromeలో రెస్పాన్సివ్ వెబ్‌సైట్‌లను పరీక్షించడానికి ఉచిత ఓపెన్ సోర్స్ సాధనం. మెనూలు, వచనం, ఖాళీలను తనిఖీ చేయడానికి మొబైల్ ప్రివ్యూతో సహా నాలుగు వీక్షణల వరకు పక్కపక్కన పోల్చండి. నిజమైన పరికరాలను ఎంచుకోండి, దిశ మరియు జూమ్ మార్చండి, స్క్రోల్ మరియు నావిగేషన్ సమకాలీకరించండి, స్క్రీన్‌షాట్ తీసి స్థానిక డిజైన్‌తో పోల్చండి. ఖాతా, సబ్‌స్క్రిప్షన్, అనలిటిక్స్, టెలిమెట్రీ లేదా సర్వర్ లేకుండా అన్నీ బ్రౌజర్‌లోనే నడుస్తాయి.
 
 - ఒకే క్లిక్‌తో అన్ని పరికరాలను తెరవండి. ప్రివ్యూలు పరికర రకం ప్రకారం సమూహాలుగా, చిన్న స్క్రీన్‌ల నుంచి పెద్ద స్క్రీన్‌ల వరకు క్రమంగా అమర్చబడతాయి.
-- మీ స్వంత వ్యూపోర్ట్ పరిమాణాలు సృష్టించండి, పరికర సెట్లు, ఇష్టమైనవి సేవ్ చేయండి లేదా ఒక వీక్షణపై దృష్టి పెట్టండి. సరిపోలే వీక్షణల్లో మద్దతు ఉన్న పరస్పర చర్యలను సమకాలీకరించండి.
+- రెస్పాన్సివ్ లేఅవుట్‌లను మళ్లీ పరీక్షించడానికి మీ స్వంత వ్యూపోర్ట్ పరిమాణాలు సృష్టించండి, పరికర సెట్లు, ఇష్టమైనవి సేవ్ చేయండి లేదా ఒక వీక్షణపై దృష్టి పెట్టండి. సరిపోలే వీక్షణల్లో మద్దతు ఉన్న పరస్పర చర్యలను సమకాలీకరించండి.
 - ఒక వీక్షణ లేదా మొత్తం పని ప్రదేశాన్ని క్యాప్చర్ చేయండి. బాణాలు, బాక్సులు, చిత్రాలు, వచనం జోడించండి లేదా చిత్రాన్ని కత్తిరించండి. స్థానిక డిజైన్‌ను పేజీ పక్కన లేదా ఓవర్‌లేగా చూపించండి.
 - URL, పరికరాలు, వ్యూపోర్ట్ పరిమాణాలు, సమస్య గమనికలతో నిర్మాణాత్మక సవరణ ప్రాంప్ట్‌ను మీ కోడింగ్ సాధనానికి కాపీ చేయండి.
 
@@ -1468,10 +1468,10 @@ Mobile View అనేది Chrome కోసం ఉచిత ఓపెన్ స
 
 **Detailed description**
 
-Mobile View เป็นโปรแกรมจำลองมือถือและโปรแกรมจำลองอุปกรณ์แบบโอเพนซอร์สฟรีสำหรับ Chrome ดูเว็บไซต์พร้อมกันได้สูงสุดสี่มุมมองบนมือถือ แท็บเล็ต แล็ปท็อป และเดสก์ท็อป เลือกอุปกรณ์จริง เปลี่ยนแนวและซูม ซิงค์การเลื่อนและการนำทาง จับภาพหน้าจอ และเปรียบเทียบกับดีไซน์ในเครื่อง ทุกอย่างทำงานในเบราว์เซอร์โดยไม่ต้องมีบัญชี การสมัครสมาชิก การวิเคราะห์ เทเลเมทรี หรือเซิร์ฟเวอร์
+Mobile View เป็นเครื่องมือโอเพนซอร์สฟรีสำหรับทดสอบเว็บไซต์แบบ responsive ใน Chrome เปรียบเทียบได้สูงสุดสี่มุมมองเคียงข้างกัน รวมถึงตัวอย่างบนมือถือ เพื่อตรวจสอบเมนู ข้อความ และระยะห่าง เลือกอุปกรณ์จริง เปลี่ยนแนวและซูม ซิงค์การเลื่อนและการนำทาง จับภาพหน้าจอ และเปรียบเทียบกับดีไซน์ในเครื่อง ทุกอย่างทำงานในเบราว์เซอร์โดยไม่ต้องมีบัญชี การสมัครสมาชิก การวิเคราะห์ เทเลเมทรี หรือเซิร์ฟเวอร์
 
 - เปิดอุปกรณ์ทั้งหมดได้ในคลิกเดียว ตัวอย่างจะจัดกลุ่มตามประเภทอุปกรณ์และเรียงจากหน้าจอขนาดเล็กไปใหญ่
-- สร้างขนาดวิวพอร์ตเอง บันทึกชุดอุปกรณ์และรายการโปรด หรือโฟกัสมุมมองเดียว ซิงค์การโต้ตอบที่รองรับระหว่างมุมมองที่ตรงกัน
+- สำหรับการทดสอบเลย์เอาต์แบบ responsive ซ้ำ สร้างขนาดวิวพอร์ตเอง บันทึกชุดอุปกรณ์และรายการโปรด หรือโฟกัสมุมมองเดียว ซิงค์การโต้ตอบที่รองรับระหว่างมุมมองที่ตรงกัน
 - จับภาพมุมมองเดียวหรือทั้งพื้นที่ทำงาน เพิ่มลูกศร กรอบ ภาพวาด และข้อความ หรือตัดภาพ แสดงดีไซน์ในเครื่องข้างหน้าเว็บหรือเป็นภาพซ้อนทับ
 - คัดลอกคำสั่งแก้ไขที่จัดโครงสร้างพร้อม URL อุปกรณ์ ขนาดวิวพอร์ต และบันทึกปัญหาไปยังเครื่องมือเขียนโค้ดของคุณ
 
@@ -1494,10 +1494,10 @@ Mobile View เป็นโปรแกรมจำลองมือถือ�
 
 **Detailed description**
 
-Mobile View, Chrome için ücretsiz ve açık kaynaklı bir mobil simülatör ve cihaz emülatörüdür. Bir siteyi aynı anda en fazla dört telefon, tablet, dizüstü ve masaüstü görünümünde izleyin. Gerçekçi cihazlar seçin, yönü ve yakınlaştırmayı değiştirin, kaydırma ve gezinmeyi eşitleyin, ekran görüntüsü alın ve yerel bir tasarımla karşılaştırın. Her şey hesap, abonelik, analiz, telemetri veya sunucu olmadan tarayıcıda yerel olarak çalışır.
+Mobile View, Chrome’da duyarlı web sitelerini test etmek için ücretsiz ve açık kaynaklı bir araçtır. Menüleri, metni ve boşlukları kontrol etmek için mobil önizleme dahil en fazla dört görünümü yan yana karşılaştırın. Gerçekçi cihazlar seçin, yönü ve yakınlaştırmayı değiştirin, kaydırma ve gezinmeyi eşitleyin, ekran görüntüsü alın ve yerel bir tasarımla karşılaştırın. Her şey hesap, abonelik, analiz, telemetri veya sunucu olmadan tarayıcıda yerel olarak çalışır.
 
 - Tüm cihazları tek tıklamayla açın. Önizlemeler cihaz türüne göre gruplandırılır ve küçük ekranlardan büyük ekranlara doğru sıralanır.
-- Özel görünüm boyutları oluşturun, cihaz setlerini ve favorileri kaydedin veya tek görünüme odaklanın. Eşleşen görünümler arasında desteklenen etkileşimleri eşitleyin.
+- Duyarlı düzenleri tekrar test etmek için özel görünüm boyutları oluşturun, cihaz setlerini ve favorileri kaydedin veya tek görünüme odaklanın. Eşleşen görünümler arasında desteklenen etkileşimleri eşitleyin.
 - Tek görünümü veya tüm çalışma alanını yakalayın. Ok, kutu, çizim ve metin ekleyin ya da görüntüyü kırpın. Yerel tasarımı sayfanın yanında veya kaplama olarak gösterin.
 - URL, cihazlar, görünüm boyutları ve sorun notlarını içeren yapılandırılmış düzeltme istemini kodlama aracınıza kopyalayın.
 
@@ -1520,10 +1520,10 @@ Bunlar Chrome üzerinde duyarlı görünüm önizlemeleridir; fiziksel cihazlar 
 
 **Detailed description**
 
-Mobile View — безкоштовний мобільний симулятор та емулятор пристроїв із відкритим кодом для Chrome. Переглядайте сайт одночасно в чотирьох варіантах — на телефоні, планшеті, ноутбуці та комп’ютері. Вибирайте реалістичні пристрої, змінюйте орієнтацію й масштаб, синхронізуйте прокручування та навігацію, робіть знімки й порівнюйте з локальним дизайном. Усе працює локально без облікового запису, підписки, аналітики, телеметрії чи сервера.
+Mobile View — безкоштовний інструмент із відкритим кодом для перевірки адаптивних вебсайтів у Chrome. Порівнюйте до чотирьох вікон поруч, зокрема мобільний перегляд, щоб перевіряти меню, текст і відступи. Вибирайте реалістичні пристрої, змінюйте орієнтацію й масштаб, синхронізуйте прокручування та навігацію, робіть знімки й порівнюйте з локальним дизайном. Усе працює локально без облікового запису, підписки, аналітики, телеметрії чи сервера.
 
 - Відкрийте всі пристрої одним натисканням. Попередні перегляди згруповано за типом пристрою та впорядковано від менших екранів до більших.
-- Створюйте власні розміри перегляду, зберігайте набори й улюблені пристрої або зосередьтеся на одному вікні. Синхронізуйте підтримувані взаємодії між відповідними переглядами.
+- Для повторного тестування адаптивних макетів створюйте власні розміри перегляду, зберігайте набори й улюблені пристрої або зосередьтеся на одному вікні. Синхронізуйте підтримувані взаємодії між відповідними переглядами.
 - Знімайте одне вікно або весь робочий простір. Додавайте стрілки, рамки, малюнки й текст або обрізайте знімок. Показуйте локальний дизайн поруч зі сторінкою чи як накладання.
 - Копіюйте структуроване завдання виправлення з URL, пристроями, розмірами й нотатками про проблему до свого інструмента програмування.
 

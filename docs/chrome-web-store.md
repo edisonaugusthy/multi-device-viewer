@@ -18,21 +18,21 @@ Mobile simulator and responsive design tester. Compare phone, tablet and desktop
 
 ### Detailed description
 
-Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
+Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
-- Save device sets and favorites for repeat checks during frontend development and design review.
+- Save device sets and favorites for repeat responsive testing.
 - Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
 - Compare the live website with a local design reference, side by side or as an overlay.
-- Copy a responsive-fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
+- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 
 Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.
 
 No Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.
 
-These are responsive viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
+These are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.
 
 ### Screenshot order and captions
 
@@ -59,7 +59,10 @@ Apple Watch; the marquee also includes unfolded iPhone Duo.
 The 0.2.11 draft was rejected for keyword spam (Yellow Argon). The review
 identified the device-model list in the detailed description. All 55 descriptions
 now omit that list and the redundant paragraph of search phrases. The English
-opening explains the comparison workflow directly. The All devices feature,
+opening explains the comparison workflow directly. The phrases “responsive
+website testing”, “mobile preview” and “responsive testing” each appear once
+in a sentence describing a real workflow, with native equivalents in the
+other languages. The All devices feature,
 privacy information and preview limitations remain described.
 
 Detailed descriptions are generated from `store-assets/listings/locales.json`.

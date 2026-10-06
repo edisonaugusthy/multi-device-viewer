@@ -1,7 +1,7 @@
-Mobile View on tasuta avatud lähtekoodiga mobiilisimulaator ja seadmeemulaator Chrome’ile. Vaata veebilehte korraga kuni neljas telefoni, tahvli, sülearvuti ja lauaarvuti vaates. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
+Mobile View on tasuta avatud lähtekoodiga tööriist kohanduvate veebilehtede testimiseks Chrome’is. Võrdle kõrvuti kuni nelja vaadet, sealhulgas mobiili eelvaadet, et kontrollida menüüsid, teksti ja vahesid. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
 
 Avage kõik seadmed ühe klõpsuga. Eelvaated on rühmitatud seadmetüübi järgi ja järjestatud väiksematest ekraanidest suuremateni.
 
-Salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.
+Kohanduvate paigutuste korduvaks testimiseks salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.
 
 Need on Chrome’i kohanduvad eelvaated, mitte füüsilised seadmed ega Safari mootor. Veebisaitide sisselogimis- ja manustamisreeglid kehtivad edasi. Algne leht säilib; uued eelvaated ei kopeeri salvestamata muudatusi.

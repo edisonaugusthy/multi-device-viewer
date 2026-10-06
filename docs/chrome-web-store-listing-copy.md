@@ -13,12 +13,9 @@ Copy each record into its matching store language. Packaging extension messages 
 
 **Detailed description**
 
-Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
-
-Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
+Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
-- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
 - Save device sets and favorites for repeat checks during frontend development and design review.
@@ -51,10 +48,6 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 Mobile View ist ein kostenloser Open-Source-Mobilsimulator und Geräte-Emulator für Chrome. Zeige eine Website in bis zu vier Smartphone-, Tablet-, Laptop- und Desktop-Ansichten nebeneinander an, ohne ständig die Fenstergröße zu ändern oder zwischen DevTools-Vorgaben zu wechseln.
 
-Nutze die mobile Vorschau für Tests responsiver Websites. Vergleiche mobile Geräte mit Desktop-Ansichten und prüfe Menüs, Text und Abstände an verschiedenen Breakpoints. Der Responsive-Tester hilft dir, responsive Webdesigns im selben Workspace zu überprüfen.
-
-Nutze Vorschauen für iPhone 18 Pro, iPhone Duo im zugeklappten und aufgeklappten Zustand, MacBook und Apple Watch. Wechsle mit den Vor- und Zurück-Pfeilen durch die ausgewählte Gerätekategorie.
-
 - Öffne alle Geräte mit einem Klick. Die Vorschauen sind nach Gerätetyp gruppiert und von kleinen zu großen Bildschirmen sortiert.
 - Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.
 - Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.
@@ -85,10 +78,6 @@ Dies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emula
 **Detailed description**
 
 Mobile View es un simulador móvil y emulador de dispositivos gratuito y de código abierto para Chrome. Previsualiza un sitio web en hasta cuatro vistas de teléfono, tablet, portátil y escritorio a la vez, sin redimensionar ventanas ni cambiar continuamente los ajustes de DevTools.
-
-Usa la vista previa móvil para las pruebas de sitios web responsive. Compara dispositivos móviles y escritorio para revisar menús, texto y espaciado en distintos puntos de ruptura. Este probador de diseño responsive reúne las pruebas de adaptación en un mismo espacio de trabajo.
-
-Previsualiza iPhone 18 Pro, iPhone Duo plegado y desplegado, MacBook y Apple Watch. Recorre la categoría seleccionada con las flechas de dispositivo anterior y siguiente.
 
 - Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
@@ -121,10 +110,6 @@ Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari.
 
 Mobile View est un simulateur mobile et un émulateur d’appareils gratuit et open source pour Chrome. Prévisualisez un site dans jusqu’à quatre vues téléphone, tablette, ordinateur portable et bureau côte à côte, sans redimensionner sans cesse la fenêtre ni changer de préréglage DevTools.
 
-Utilisez l’aperçu mobile pour les tests de sites web responsive. Comparez les appareils mobiles et les ordinateurs pour vérifier menus, textes et espacements à différents points de rupture. Cet outil de test du design responsive rassemble vos tests responsive dans un seul espace de travail.
-
-Prévisualisez iPhone 18 Pro, iPhone Duo plié et déplié, MacBook et Apple Watch. Parcourez la catégorie sélectionnée avec les flèches vers l’appareil précédent ou suivant.
-
 - Affichez tous les appareils en un clic. Les aperçus sont regroupés par type d’appareil et classés du plus petit au plus grand écran.
 - Choisissez des appareils réalistes, modifiez l’orientation et le zoom, rechargez une vue ou créez des dimensions personnalisées.
 - Synchronisez le défilement, les interactions prises en charge et la navigation entre les aperçus correspondants.
@@ -155,10 +140,6 @@ Ces aperçus responsive utilisent Chrome, pas des appareils physiques ni le mote
 **Detailed description**
 
 Mobile View 是一款免费、开源的 Chrome 移动模拟器与设备模拟器。 无需反复调整窗口或切换 DevTools 预设，即可并排预览最多四个手机、平板电脑、笔记本和桌面视图。
-
-使用移动预览进行响应式网站测试。对比移动设备与桌面视图，检查不同断点下的菜单、文字和间距。这款响应式设计测试工具将多设备查看与响应式测试整合到同一个工作区。
-
-预览 iPhone 18 Pro、折叠和展开的 iPhone Duo、MacBook 与 Apple Watch。使用上一个和下一个箭头浏览所选设备类别。
 
 - 一键查看所有设备。预览按设备类型分组，并按屏幕尺寸从小到大排列。
 - 选择真实设备，切换方向与缩放，单独刷新预览，或创建自定义视口尺寸。
@@ -191,10 +172,6 @@ Mobile View 是一款免费、开源的 Chrome 移动模拟器与设备模拟器
 
 Mobile View 是免費、開源的 Chrome 行動模擬器與裝置模擬器。 不必反覆調整視窗或切換 DevTools 預設，即可並排預覽最多四個手機、平板、筆電與桌面檢視。
 
-使用行動預覽進行響應式網站測試。比較行動裝置與桌面檢視，檢查不同斷點的選單、文字與間距。這款響應式設計測試工具將多裝置檢視與響應式測試整合在同一個工作區。
-
-預覽 iPhone 18 Pro、摺疊與展開的 iPhone Duo、MacBook 和 Apple Watch。使用上一個與下一個箭頭瀏覽所選裝置類別。
-
 - 一鍵查看所有裝置。預覽依裝置類型分組，並按螢幕尺寸由小到大排列。
 - 選擇真實裝置、切換方向與縮放、個別重新載入預覽，或建立自訂視區尺寸。
 - 在相符的預覽之間同步捲動、支援的互動與頁面導覽。
@@ -225,10 +202,6 @@ Mobile View 是免費、開源的 Chrome 行動模擬器與裝置模擬器。 �
 **Detailed description**
 
 Ang Mobile View ay libre at open-source na mobile simulator at device emulator para sa Chrome. Tingnan ang website sa hanggang apat na phone, tablet, laptop, at desktop view nang sabay, nang hindi paulit-ulit na binabago ang laki ng window o DevTools preset.
-
-Gamitin ang mobile preview para sa responsive website testing. Ihambing ang mga mobile device at desktop para suriin ang menu, text at spacing sa iba’t ibang breakpoint. Bilang responsive design tester, pinagsasama nito ang responsive testing sa iisang workspace.
-
-I-preview ang iPhone 18 Pro, nakatiklop at nakabukas na iPhone Duo, MacBook at Apple Watch. Gamitin ang previous at next arrow para lumipat sa napiling device category.
 
 - Buksan ang lahat ng device sa isang click. Nakapangkat ang mga preview ayon sa uri ng device at nakaayos mula sa mas maliit hanggang sa mas malaking screen.
 - Pumili ng makatotohanang device, baguhin ang orientation at zoom, i-reload ang isang preview, o gumawa ng custom viewport.
@@ -261,10 +234,6 @@ Mga responsive viewport preview ito sa Chrome, hindi totoong device o Safari eng
 
 Mobile View is een gratis opensource mobiele simulator en apparaatemulator voor Chrome. Bekijk een website in maximaal vier telefoon-, tablet-, laptop- en desktopweergaven naast elkaar, zonder steeds het venster te verkleinen of van DevTools-profiel te wisselen.
 
-Gebruik de mobiele preview om responsive websites te testen. Vergelijk mobiele apparaten met desktopweergaven en controleer menu’s, tekst en tussenruimte bij verschillende breakpoints. Deze responsive design tester brengt je responsive tests samen in één werkruimte.
-
-Bekijk iPhone 18 Pro, dichtgevouwen en opengevouwen iPhone Duo, MacBook en Apple Watch. Blader met de vorige- en volgende-pijlen door de geselecteerde apparaatcategorie.
-
 - Open alle apparaten met één klik. De voorbeelden zijn gegroepeerd op apparaattype en gesorteerd van kleine naar grote schermen.
 - Kies realistische apparaten, wijzig oriëntatie en zoom, laad één voorbeeld opnieuw of maak aangepaste viewportformaten.
 - Synchroniseer scrollen, ondersteunde interacties en navigatie tussen overeenkomende voorbeelden.
@@ -295,10 +264,6 @@ Dit zijn responsive previews in Chrome, geen fysieke apparaten of Safari-engine.
 **Detailed description**
 
 Mobile View là trình mô phỏng di động và trình giả lập thiết bị miễn phí, mã nguồn mở dành cho Chrome. Xem trước trang web trong tối đa bốn giao diện điện thoại, máy tính bảng, laptop và máy tính để bàn cùng lúc mà không phải liên tục đổi kích thước cửa sổ hoặc cấu hình DevTools.
-
-Dùng bản xem trước trên di động để kiểm thử website responsive. So sánh thiết bị di động và máy tính để kiểm tra menu, văn bản và khoảng cách tại các breakpoint. Công cụ kiểm thử thiết kế responsive này tập hợp các phép kiểm tra responsive trong cùng một không gian làm việc.
-
-Xem trước iPhone 18 Pro, iPhone Duo ở trạng thái gập và mở, MacBook cùng Apple Watch. Dùng mũi tên trước và sau để chuyển thiết bị trong danh mục đã chọn.
 
 - Mở tất cả thiết bị chỉ với một cú nhấp. Các bản xem trước được nhóm theo loại thiết bị và sắp xếp từ màn hình nhỏ đến lớn.
 - Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.
@@ -331,10 +296,6 @@ Mọi thứ chạy cục bộ trong trình duyệt. Không cần tài khoản, t
 
 O Mobile View é um simulador móvel e emulador de dispositivos gratuito e de código aberto para Chrome. Visualize um site em até quatro telas de celular, tablet, notebook e desktop lado a lado, sem redimensionar janelas ou alternar continuamente entre predefinições do DevTools.
 
-Use a prévia móvel para testes de sites responsivos. Compare dispositivos móveis e desktop para verificar menus, textos e espaçamento em diferentes breakpoints. Esta ferramenta de teste de design responsivo reúne os testes responsivos em um só espaço de trabalho.
-
-Visualize iPhone 18 Pro, iPhone Duo dobrado e aberto, MacBook e Apple Watch. Percorra a categoria selecionada com as setas de dispositivo anterior e seguinte.
-
 - Abra todos os dispositivos com um clique. As visualizações são agrupadas por tipo de dispositivo e ordenadas das telas menores às maiores.
 - Escolha dispositivos realistas, altere orientação e zoom, recarregue uma visualização ou crie tamanhos personalizados.
 - Sincronize rolagem, interações compatíveis e navegação entre visualizações correspondentes.
@@ -365,10 +326,6 @@ São prévias responsivas no Chrome, não dispositivos físicos nem o motor do S
 **Detailed description**
 
 Mobile View è un simulatore mobile ed emulatore di dispositivi gratuito e open source per Chrome. Visualizza un sito in un massimo di quattro viste telefono, tablet, laptop e desktop affiancate, senza ridimensionare continuamente la finestra o cambiare preset DevTools.
-
-Usa l’anteprima mobile per i test di siti web responsive. Confronta dispositivi mobili e desktop per controllare menu, testo e spaziature a diversi breakpoint. Questo tester di design responsive riunisce i test responsive in un unico spazio di lavoro.
-
-Visualizza iPhone 18 Pro, iPhone Duo chiuso e aperto, MacBook e Apple Watch. Scorri la categoria selezionata con le frecce per il dispositivo precedente e successivo.
 
 - Apri tutti i dispositivi con un clic. Le anteprime sono raggruppate per tipo di dispositivo e ordinate dagli schermi più piccoli ai più grandi.
 - Scegli dispositivi realistici, modifica orientamento e zoom, ricarica una singola anteprima o crea viewport personalizzate.
@@ -401,10 +358,6 @@ Sono anteprime responsive in Chrome, non dispositivi fisici né il motore Safari
 
 Mobile View は Chrome 向けの無料・オープンソースのモバイルシミュレーター兼デバイスエミュレーターです。 ウィンドウサイズや DevTools のプリセットを何度も切り替えずに、スマホ、タブレット、ノートPC、デスクトップの表示を最大4つ並べて確認できます。
 
-モバイルプレビューでWebサイトのレスポンシブテストを行えます。モバイル端末とPCの表示を比較し、各ブレークポイントでメニュー、文字、余白を確認してください。レスポンシブデザインのテストツールとして、複数端末の表示を一つのワークスペースで検証できます。
-
-iPhone 18 Pro、折りたたみ時と展開時のiPhone Duo、MacBook、Apple Watchをプレビューできます。前後の矢印で選択中のカテゴリ内の端末を切り替えられます。
-
 - ワンクリックですべてのデバイスを表示できます。プレビューはデバイスの種類ごとにグループ化され、画面サイズの小さい順に並びます。
 - 実在デバイスのプロファイルを選び、向きやズームを変更し、個別に再読み込みしたり独自のビューポートを作成できます。
 - 対応するプレビュー間でスクロール、サポートされる操作、ナビゲーションを同期できます。
@@ -435,10 +388,6 @@ iPhone 18 Pro、折りたたみ時と展開時のiPhone Duo、MacBook、Apple Wa
 **Detailed description**
 
 Mobile View는 Chrome용 무료 오픈 소스 모바일 시뮬레이터이자 기기 에뮬레이터입니다. 창 크기나 DevTools 프리셋을 반복해서 바꾸지 않고 휴대폰, 태블릿, 노트북, 데스크톱 화면을 최대 4개까지 나란히 미리 볼 수 있습니다.
-
-모바일 미리보기로 반응형 웹사이트 테스트를 진행하세요. 모바일 기기와 데스크톱 화면을 비교해 각 중단점에서 메뉴, 텍스트와 여백을 확인하세요. 이 반응형 디자인 테스트 도구는 여러 기기의 반응형 테스트를 하나의 작업 공간에서 지원합니다.
-
-iPhone 18 Pro, 접거나 펼친 iPhone Duo, MacBook과 Apple Watch를 미리 보세요. 이전 및 다음 화살표로 선택한 기기 카테고리 안에서 기기를 바꿀 수 있습니다.
 
 - 한 번의 클릭으로 모든 기기를 확인하세요. 미리보기는 기기 유형별로 묶이며 작은 화면부터 큰 화면 순으로 정렬됩니다.
 - 실제 기기 프로필을 선택하고 방향과 확대/축소를 변경하거나 개별 화면을 새로고침하고 사용자 지정 뷰포트를 만드세요.
@@ -471,10 +420,6 @@ iPhone 18 Pro, 접거나 펼친 iPhone Duo, MacBook과 Apple Watch를 미리 보
 
 Mobile View Chrome के लिए मुफ़्त और ओपन-सोर्स मोबाइल सिम्युलेटर तथा डिवाइस एमुलेटर है। विंडो का आकार या DevTools प्रीसेट बार-बार बदले बिना वेबसाइट को अधिकतम चार फ़ोन, टैबलेट, लैपटॉप और डेस्कटॉप व्यू में साथ-साथ देखें।
 
-मोबाइल प्रीव्यू से रिस्पॉन्सिव वेबसाइट परीक्षण करें। मोबाइल डिवाइस और डेस्कटॉप की तुलना करके हर ब्रेकपॉइंट पर मेन्यू, टेक्स्ट और स्पेसिंग देखें। यह रिस्पॉन्सिव डिज़ाइन टेस्टर आपके रिस्पॉन्सिव परीक्षण को एक ही कार्यक्षेत्र में लाता है।
-
-iPhone 18 Pro, बंद और खुले iPhone Duo, MacBook और Apple Watch का प्रीव्यू देखें। पिछले और अगले तीर से चुनी हुई डिवाइस श्रेणी में डिवाइस बदलें।
-
 - एक क्लिक में सभी डिवाइस खोलें। प्रीव्यू डिवाइस के प्रकार के अनुसार समूहों में और छोटी से बड़ी स्क्रीन के क्रम में दिखते हैं।
 - वास्तविक डिवाइस चुनें, दिशा और ज़ूम बदलें, किसी एक प्रीव्यू को रीलोड करें या कस्टम व्यूपोर्ट बनाएँ।
 - मेल खाते प्रीव्यू में स्क्रॉल, समर्थित इंटरैक्शन और नेविगेशन सिंक करें।
@@ -505,10 +450,6 @@ iPhone 18 Pro, बंद और खुले iPhone Duo, MacBook और Apple Wa
 **Detailed description**
 
 Mobile View — бесплатный мобильный симулятор и эмулятор устройств с открытым исходным кодом для Chrome. Просматривайте сайт одновременно в четырех видах — телефон, планшет, ноутбук и компьютер — без постоянного изменения размера окна и переключения шаблонов DevTools.
-
-Используйте мобильный предпросмотр для тестирования адаптивных сайтов. Сравнивайте мобильные устройства и компьютеры, проверяя меню, текст и отступы в контрольных точках. Этот инструмент тестирования адаптивного дизайна объединяет проверки адаптивности в одном рабочем пространстве.
-
-Просматривайте iPhone 18 Pro, сложенный и раскрытый iPhone Duo, MacBook и Apple Watch. Переключайте устройства в выбранной категории стрелками «назад» и «вперёд».
 
 - Откройте все устройства одним нажатием. Предпросмотры сгруппированы по типу устройства и упорядочены от меньших экранов к большим.
 - Выбирайте реалистичные устройства, меняйте ориентацию и масштаб, перезагружайте отдельные виды и создавайте собственные размеры области просмотра.
@@ -541,10 +482,6 @@ Mobile View — бесплатный мобильный симулятор и э
 
 Mobile View هو محاكي جوال ومحاكي أجهزة مجاني ومفتوح المصدر لـChrome. اعرض الموقع في ما يصل إلى أربع واجهات للهاتف والجهاز اللوحي والحاسوب المحمول وسطح المكتب جنبًا إلى جنب، من دون تكرار تغيير حجم النافذة أو إعدادات DevTools.
 
-استخدم المعاينة المحمولة لاختبار المواقع المتجاوبة. قارن الأجهزة المحمولة وسطح المكتب للتحقق من القوائم والنصوص والمسافات عند نقاط التوقف المختلفة. تجمع أداة اختبار التصميم المتجاوب هذه اختبارات التجاوب في مساحة عمل واحدة.
-
-عاين iPhone 18 Pro وiPhone Duo مطويًا ومفتوحًا وMacBook وApple Watch. تنقّل بين أجهزة الفئة المحددة باستخدام سهمَي الجهاز السابق والتالي.
-
 - افتح جميع الأجهزة بنقرة واحدة. تُجمع المعاينات حسب نوع الجهاز وتُرتب من الشاشات الأصغر إلى الأكبر.
 - اختر أجهزة واقعية، وغيّر الاتجاه والتكبير، وأعد تحميل معاينة منفردة، أو أنشئ أحجام عرض مخصصة.
 - زامن التمرير والتفاعلات المدعومة والتنقل بين المعاينات المتطابقة.
@@ -576,10 +513,6 @@ Mobile View هو محاكي جوال ومحاكي أجهزة مجاني ومفت
 
 Mobile View ለChrome ነፃና ክፍት ምንጭ የሞባይል አስመሳይና የመሣሪያ አስመሳይ ነው። አንድ ድር ጣቢያ በስልክ፣ ታብሌት፣ ላፕቶፕና ዴስክቶፕ ላይ እስከ አራት እይታዎች ጎን ለጎን ያሳያል። የመሣሪያ መጠንና አቅጣጫ ይቀይሩ፣ ማሸብለልና አሰሳን ያመሳስሉ፣ ስክሪንሾት ያንሱ እና ከአካባቢያዊ ንድፍ ጋር ያወዳድሩ። ሁሉም ነገር በአሳሹ ውስጥ ይሰራል፤ መለያ፣ ምዝገባ፣ ትንታኔ ወይም የጀርባ አገልጋይ አያስፈልግም።
 
-ምላሽ ሰጪ ድረ ገጾችን ለመሞከር የሞባይል ቅድመ እይታን ይጠቀሙ። የሞባይል መሣሪያና የዴስክቶፕ እይታዎችን በማወዳደር ዝርዝር ማውጫዎችን፣ ጽሑፍንና ክፍተቶችን ያረጋግጡ። ይህ የምላሽ ሰጪ ድር ንድፍ መሞከሪያ ሙከራዎችን በአንድ የሥራ ቦታ ያሰባስባል።
-
-iPhone 18 Pro፣ የታጠፈና የተከፈተ iPhone Duo፣ MacBook እና Apple Watch ቅድመ እይታዎችን ይመልከቱ። በተመረጠው የመሣሪያ ምድብ ውስጥ በቀዳሚና ቀጣይ ቀስቶች ይቀያይሩ።
-
 - ሁሉንም መሣሪያዎች በአንድ ጠቅታ ይክፈቱ። ቅድመ እይታዎች በመሣሪያ ዓይነት ይመደባሉ፣ ከትንሽ ወደ ትልቅ ማያ ገጽም ይደረደራሉ።
 - የራስዎን የእይታ መጠኖች ይፍጠሩ፣ የመሣሪያ ስብስቦችንና ተወዳጆችን ያስቀምጡ ወይም በአንድ እይታ ላይ ያተኩሩ። በተዛማጅ እይታዎች የሚደገፉ ግንኙነቶችን ያመሳስሉ።
 - አንድ እይታ ወይም ሙሉ የሥራ ቦታ ይቅረጹ። ቀስቶች፣ ሳጥኖችና ጽሑፍ ያክሉ ወይም ይከርክሙ። የአካባቢ ንድፍን ከገጹ አጠገብ ወይም በላዩ ያሳዩ።
@@ -605,10 +538,6 @@ iPhone 18 Pro፣ የታጠፈና የተከፈተ iPhone Duo፣ MacBook እና Ap
 **Detailed description**
 
 Mobile View е безплатен мобилен симулатор и емулатор на устройства с отворен код за Chrome. Преглеждайте сайт в до четири изгледа за телефон, таблет, лаптоп и настолен компютър едновременно. Избирайте реалистични устройства, променяйте ориентация и мащаб, синхронизирайте превъртане и навигация, правете екранни снимки и сравнявайте с локален дизайн. Всичко работи локално в браузъра без профил, абонамент, анализи, телеметрия или сървър.
-
-Използвайте мобилния преглед за тестване на адаптивни сайтове. Сравнявайте мобилни устройства и компютри, за да проверите менюта, текст и разстояния в точките на пречупване. Този инструмент за тестване на адаптивен дизайн обединява проверките за адаптивност в едно работно пространство.
-
-Преглеждайте iPhone 18 Pro, сгънат и разгънат iPhone Duo, MacBook и Apple Watch. Сменяйте устройствата в избраната категория със стрелките за предишно и следващо устройство.
 
 - Отворете всички устройства с едно щракване. Визуализациите са групирани по тип устройство и подредени от по-малки към по-големи екрани.
 - Създавайте собствени размери на изгледа, запазвайте комплекти и любими устройства или фокусирайте един изглед. Синхронизирайте поддържаните взаимодействия между съответстващи изгледи.
@@ -636,10 +565,6 @@ Mobile View е безплатен мобилен симулатор и емул�
 
 Mobile View হলো Chrome-এর জন্য বিনামূল্যের ওপেন-সোর্স মোবাইল সিমুলেটর ও ডিভাইস এমুলেটর। একটি ওয়েবসাইট ফোন, ট্যাবলেট, ল্যাপটপ ও ডেস্কটপের সর্বোচ্চ চারটি ভিউতে পাশাপাশি দেখুন। বাস্তবসম্মত ডিভাইস বেছে নিন, দিক ও জুম বদলান, স্ক্রল ও নেভিগেশন সিঙ্ক করুন, স্ক্রিনশট নিন এবং স্থানীয় ডিজাইনের সঙ্গে তুলনা করুন। সবকিছু ব্রাউজারেই চলে; অ্যাকাউন্ট, সাবস্ক্রিপশন, অ্যানালিটিক্স, টেলিমেট্রি বা ব্যাকএন্ড লাগে না।
 
-মোবাইল প্রিভিউ দিয়ে রেসপনসিভ ওয়েবসাইট পরীক্ষা করুন। মোবাইল ডিভাইস ও ডেস্কটপ তুলনা করে প্রতিটি ব্রেকপয়েন্টে মেনু, লেখা ও ফাঁক যাচাই করুন। এই রেসপনসিভ ডিজাইন টেস্টার একই কর্মক্ষেত্রে রেসপনসিভ পরীক্ষা করতে সাহায্য করে।
-
-iPhone 18 Pro, ভাঁজ করা ও খোলা iPhone Duo, MacBook এবং Apple Watch-এর প্রিভিউ দেখুন। আগের ও পরের তীর দিয়ে নির্বাচিত ডিভাইস বিভাগে ডিভাইস বদলান।
-
 - এক ক্লিকেই সব ডিভাইস খুলুন। প্রিভিউগুলো ডিভাইসের ধরন অনুযায়ী গোষ্ঠীবদ্ধ এবং ছোট থেকে বড় স্ক্রিনের ক্রমে সাজানো থাকে।
 - নিজস্ব ভিউপোর্টের মাপ তৈরি করুন, ডিভাইস সেট ও পছন্দের ডিভাইস সংরক্ষণ করুন অথবা একটি ভিউতে মনোযোগ দিন। মিল থাকা ভিউগুলোর সমর্থিত ইন্টারঅ্যাকশন সিঙ্ক করুন।
 - একটি ভিউ বা পুরো কর্মক্ষেত্রের ছবি নিন। তীর, বক্স, আঁকা ও লেখা যোগ করুন বা ছবি কাটুন। স্থানীয় ডিজাইন পৃষ্ঠার পাশে বা ওভারলে হিসেবে দেখুন।
@@ -665,10 +590,6 @@ iPhone 18 Pro, ভাঁজ করা ও খোলা iPhone Duo, MacBook এ�
 **Detailed description**
 
 Mobile View és un simulador mòbil i emulador de dispositius gratuït i de codi obert per a Chrome. Previsualitza un web en fins a quatre vistes de mòbil, tauleta, portàtil i escriptori alhora. Tria dispositius realistes, canvia l’orientació i el zoom, sincronitza el desplaçament i la navegació, captura pantalles i compara-les amb un disseny local. Tot funciona localment al navegador, sense compte, subscripció, analítica, telemetria ni servidor.
-
-Fes servir la previsualització mòbil per a proves de webs responsives. Compara dispositius mòbils i escriptori per revisar menús, text i espais als punts de ruptura. Aquesta eina de prova de disseny responsiu reuneix les proves responsives en un mateix espai de treball.
-
-Previsualitza iPhone 18 Pro, iPhone Duo plegat i desplegat, MacBook i Apple Watch. Recorre la categoria seleccionada amb les fletxes de dispositiu anterior i següent.
 
 - Obre tots els dispositius amb un clic. Les previsualitzacions s’agrupen per tipus de dispositiu i s’ordenen de pantalles petites a grans.
 - Crea mides de visualització pròpies, desa conjunts i dispositius preferits o centra’t en una sola vista. Sincronitza les interaccions compatibles entre vistes coincidents.
@@ -696,10 +617,6 @@ Són previsualitzacions responsives amb Chrome, no dispositius físics ni el mot
 
 Mobile View je bezplatný open-source mobilní simulátor a emulátor zařízení pro Chrome. Zobrazte web současně až ve čtyřech náhledech telefonu, tabletu, notebooku a počítače. Vybírejte realistická zařízení, měňte orientaci a přiblížení, synchronizujte posouvání a navigaci, pořizujte snímky a porovnávejte je s místním návrhem. Vše běží lokálně v prohlížeči bez účtu, předplatného, analytiky, telemetrie či serveru.
 
-Používejte mobilní náhled pro testování responzivních webů. Porovnávejte mobilní zařízení a počítače a kontrolujte nabídky, text a rozestupy v jednotlivých breakpointech. Tento nástroj pro testování responzivního designu spojuje responzivní testy v jednom pracovním prostoru.
-
-Prohlédněte si iPhone 18 Pro, složený a rozložený iPhone Duo, MacBook a Apple Watch. Mezi zařízeními ve vybrané kategorii přecházejte šipkami pro předchozí a další zařízení.
-
 - Otevřete všechna zařízení jedním kliknutím. Náhledy jsou seskupeny podle typu zařízení a seřazeny od menších obrazovek po větší.
 - Vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.
 - Zachyťte jeden náhled nebo celý pracovní prostor. Přidejte šipky, rámečky, kresby a text nebo snímek ořízněte. Zobrazte místní návrh vedle stránky nebo jako překryv.
@@ -726,11 +643,7 @@ Jde o responzivní náhledy v Chromu, nikoli fyzická zařízení nebo jádro Sa
 
 Mobile View er en gratis open source-mobilsimulator og enhedsemulator til Chrome. Se et website i op til fire mobil-, tablet-, laptop- og computervisninger på samme tid. Vælg realistiske enheder, skift retning og zoom, synkroniser rulning og navigation, tag skærmbilleder, og sammenlign med et lokalt design. Alt kører lokalt i browseren uden konto, abonnement, analyse, telemetri eller server.
 
-Brug mobilforhåndsvisning til test af responsive websites. Sammenlign mobilenheder og computere, og kontrollér menuer, tekst og afstande ved hvert breakpoint. Dette værktøj til test af responsivt webdesign samler dine responsive tests i ét arbejdsområde.
-
 Åbn alle enheder med ét klik. Forhåndsvisningerne er grupperet efter enhedstype og sorteret fra mindre til større skærme.
-
-Se forhåndsvisninger af iPhone 18 Pro, foldet og udfoldet iPhone Duo, MacBook og Apple Watch. Brug pilene til forrige og næste enhed i den valgte kategori.
 
 Gem enhedssæt og favoritter, eller opret egne skærmstørrelser. Tag et billede af en visning eller hele arbejdsområdet, og tilføj pile, rammer og tekst. Vis et lokalt design ved siden af eller oven på websitet, og kopiér et rettelsesforslag med URL, enheder, skærmstørrelser og noter til dit kodeværktøj.
 
@@ -754,10 +667,6 @@ Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motore
 **Detailed description**
 
 Το Mobile View είναι δωρεάν προσομοιωτής κινητού και εξομοιωτής συσκευών ανοιχτού κώδικα για το Chrome. Προβάλετε έναν ιστότοπο ταυτόχρονα σε έως τέσσερις όψεις κινητού, tablet, laptop και desktop. Επιλέξτε ρεαλιστικές συσκευές, αλλάξτε προσανατολισμό και ζουμ, συγχρονίστε κύλιση και πλοήγηση, τραβήξτε στιγμιότυπα και συγκρίνετε με τοπικό σχέδιο. Όλα εκτελούνται τοπικά, χωρίς λογαριασμό, συνδρομή, analytics, τηλεμετρία ή διακομιστή.
-
-Χρησιμοποιήστε την προεπισκόπηση κινητού για δοκιμές responsive ιστοτόπων. Συγκρίνετε κινητές συσκευές και υπολογιστές για να ελέγξετε μενού, κείμενο και αποστάσεις στα breakpoints. Αυτό το εργαλείο δοκιμής responsive σχεδιασμού συγκεντρώνει τους responsive ελέγχους σε έναν χώρο εργασίας.
-
-Δείτε προεπισκοπήσεις iPhone 18 Pro, διπλωμένου και ανοιχτού iPhone Duo, MacBook και Apple Watch. Αλλάξτε συσκευή στην επιλεγμένη κατηγορία με τα βέλη προηγούμενου και επόμενου.
 
 - Ανοίξτε όλες τις συσκευές με ένα κλικ. Οι προεπισκοπήσεις ομαδοποιούνται ανά τύπο συσκευής και ταξινομούνται από τις μικρότερες στις μεγαλύτερες οθόνες.
 - Δημιουργήστε προσαρμοσμένα μεγέθη viewport, αποθηκεύστε σύνολα και αγαπημένες συσκευές ή εστιάστε σε μία προβολή. Συγχρονίστε υποστηριζόμενες αλληλεπιδράσεις μεταξύ αντίστοιχων προβολών.
@@ -783,12 +692,9 @@ Dette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motore
 
 **Detailed description**
 
-Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
-
-Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
+Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
-- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
 - Save device sets and favorites for repeat checks during frontend development and design review.
@@ -819,12 +725,9 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 **Detailed description**
 
-Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
-
-Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
+Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
-- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
 - Save device sets and favorites for repeat checks during frontend development and design review.
@@ -855,12 +758,9 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 **Detailed description**
 
-Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
-
-Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
+Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
-- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
 - Save device sets and favorites for repeat checks during frontend development and design review.
@@ -893,10 +793,6 @@ These are responsive viewport previews using Chrome, not physical devices or the
 
 Mobile View es un simulador móvil y emulador de dispositivos gratuito y de código abierto para Chrome. Previsualiza un sitio web en hasta cuatro vistas de teléfono, tablet, portátil y escritorio a la vez, sin redimensionar ventanas ni cambiar continuamente los ajustes de DevTools.
 
-Usa la vista previa móvil para las pruebas de sitios web responsive. Compara dispositivos móviles y escritorio para revisar menús, texto y espaciado en distintos puntos de ruptura. Este probador de diseño responsive reúne las pruebas de adaptación en un mismo espacio de trabajo.
-
-Previsualiza iPhone 18 Pro, iPhone Duo plegado y desplegado, MacBook y Apple Watch. Recorre la categoría seleccionada con las flechas de dispositivo anterior y siguiente.
-
 - Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
 - Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.
@@ -928,11 +824,7 @@ Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari.
 
 Mobile View on tasuta avatud lähtekoodiga mobiilisimulaator ja seadmeemulaator Chrome’ile. Vaata veebilehte korraga kuni neljas telefoni, tahvli, sülearvuti ja lauaarvuti vaates. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
 
-Kasuta mobiilset eelvaadet kohanduvate veebisaitide testimiseks. Võrdle mobiilseadmeid ja arvuteid ning kontrolli menüüsid, teksti ja vahesid eri murdepunktides. See kohanduva veebidisaini testimise tööriist koondab kohanduvustestid ühte tööalasse.
-
 Avage kõik seadmed ühe klõpsuga. Eelvaated on rühmitatud seadmetüübi järgi ja järjestatud väiksematest ekraanidest suuremateni.
-
-Vaata iPhone 18 Pro, volditud ja avatud iPhone Duo, MacBooki ning Apple Watchi eelvaateid. Liigu valitud seadmekategoorias eelmise ja järgmise seadme nooltega.
 
 Salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.
 
@@ -956,10 +848,6 @@ Need on Chrome’i kohanduvad eelvaated, mitte füüsilised seadmed ega Safari m
 **Detailed description**
 
 Mobile View یک شبیه‌ساز موبایل و شبیه‌ساز دستگاه رایگان و متن‌باز برای Chrome است. وب‌سایت را هم‌زمان در حداکثر چهار نمای گوشی، تبلت، لپ‌تاپ و دسکتاپ ببینید. دستگاه واقعی انتخاب کنید، جهت و بزرگ‌نمایی را تغییر دهید، پیمایش و ناوبری را همگام کنید، تصویر بگیرید و با طرح محلی مقایسه کنید. همه‌چیز به‌صورت محلی در مرورگر اجرا می‌شود و به حساب، اشتراک، تحلیل، تله‌متری یا سرور نیاز ندارد.
-
-از پیش‌نمایش موبایل برای آزمایش وب‌سایت‌های واکنش‌گرا استفاده کنید. دستگاه‌های همراه و دسکتاپ را مقایسه کنید تا منو، متن و فاصله‌ها را در نقاط شکست بررسی کنید. این ابزار آزمایش طراحی واکنش‌گرا، تست واکنش‌گرایی را در یک فضای کاری جمع می‌کند.
-
-پیش‌نمایش iPhone 18 Pro، حالت بسته و باز iPhone Duo، MacBook و Apple Watch را ببینید. با پیکان‌های قبلی و بعدی بین دستگاه‌های دسته انتخاب‌شده جابه‌جا شوید.
 
 - همه دستگاه‌ها را با یک کلیک باز کنید. پیش‌نمایش‌ها بر اساس نوع دستگاه گروه‌بندی شده‌اند و از صفحه‌نمایش کوچک‌تر به بزرگ‌تر مرتب می‌شوند.
 - اندازه‌های دلخواه نما بسازید، مجموعه‌ها و دستگاه‌های محبوب را ذخیره کنید یا روی یک نما تمرکز کنید. تعاملات پشتیبانی‌شده را بین نماهای متناظر همگام کنید.
@@ -987,11 +875,7 @@ Mobile View یک شبیه‌ساز موبایل و شبیه‌ساز دستگا�
 
 Mobile View on maksuton avoimen lähdekoodin mobiilisimulaattori ja laite-emulaattori Chromelle. Esikatsele sivustoa yhtä aikaa jopa neljässä puhelin-, tabletti-, kannettava- ja työpöytänäkymässä. Valitse realistisia laitteita, muuta suuntaa ja zoomausta, synkronoi vieritys ja siirtyminen, ota kuvakaappauksia ja vertaa paikalliseen suunnitelmaan. Kaikki toimii paikallisesti ilman tiliä, tilausta, analytiikkaa, telemetriaa tai palvelinta.
 
-Käytä mobiiliesikatselua responsiivisten verkkosivustojen testaukseen. Vertaa mobiililaitteita ja tietokoneita ja tarkista valikot, teksti ja välit eri katkaisukohdissa. Tämä responsiivisen verkkosuunnittelun testaustyökalu kokoaa responsiiviset testit samaan työtilaan.
-
 Avaa kaikki laitteet yhdellä napsautuksella. Esikatselut on ryhmitelty laitetyypin mukaan ja järjestetty pienemmistä näytöistä suurempiin.
-
-Esikatsele iPhone 18 Prota, taitettua ja avattua iPhone Duoa, MacBookia ja Apple Watchia. Selaa valitun laiteluokan laitteita edellisen ja seuraavan laitteen nuolilla.
 
 Tallenna laitejoukkoja ja suosikkeja tai määritä omia näyttökokoja. Kuvaa yksi näkymä tai koko työtila ja lisää nuolia, kehyksiä ja tekstiä. Vertaa paikallista suunnitelmaa sivustoon rinnakkain tai päällekkäin ja kopioi URL:n, laitteet, näkymäkoot ja muistiinpanot sisältävä korjauskehotus koodaustyökaluusi.
 
@@ -1015,10 +899,6 @@ Nämä ovat responsiivisia esikatseluja Chromessa, eivät fyysisiä laitteita ta
 **Detailed description**
 
 Mobile View Chrome માટે મફત અને ઓપન-સોર્સ મોબાઇલ સિમ્યુલેટર તથા ડિવાઇસ ઇમ્યુલેટર છે. વેબસાઇટને ફોન, ટેબ્લેટ, લેપટોપ અને ડેસ્કટોપના વધુમાં વધુ ચાર વ્યૂમાં સાથે જુઓ. વાસ્તવિક ડિવાઇસ પસંદ કરો, દિશા અને ઝૂમ બદલો, સ્ક્રોલ અને નેવિગેશન સિંક કરો, સ્ક્રીનશૉટ લો અને સ્થાનિક ડિઝાઇન સાથે સરખાવો. બધું બ્રાઉઝરમાં સ્થાનિક રીતે ચાલે છે; એકાઉન્ટ, સબ્સ્ક્રિપ્શન, એનાલિટિક્સ, ટેલિમેટ્રી કે સર્વર જરૂરી નથી.
-
-રિસ્પોન્સિવ વેબસાઇટ પરીક્ષણ માટે મોબાઇલ પૂર્વાવલોકન વાપરો. મોબાઇલ ઉપકરણ અને ડેસ્કટોપ સરખાવી દરેક બ્રેકપોઇન્ટ પર મેનુ, લખાણ અને અંતર તપાસો. આ રિસ્પોન્સિવ ડિઝાઇન ટેસ્ટર એક જ કાર્યક્ષેત્રમાં રિસ્પોન્સિવ પરીક્ષણ કરવામાં મદદ કરે છે.
-
-iPhone 18 Pro, વાળેલા અને ખુલ્લા iPhone Duo, MacBook અને Apple Watchનું પૂર્વાવલોકન જુઓ. અગાઉના અને આગળના તીરથી પસંદ કરેલી ઉપકરણ શ્રેણીમાં ઉપકરણ બદલો.
 
 - એક ક્લિકમાં બધા ડિવાઇસ ખોલો. પ્રીવ્યૂ ડિવાઇસના પ્રકાર પ્રમાણે જૂથમાં ગોઠવાય છે અને નાનીથી મોટી સ્ક્રીનના ક્રમમાં દેખાય છે.
 - પોતાના વ્યૂપોર્ટ માપ બનાવો, ઉપકરણ સેટ અને મનપસંદ ઉપકરણો સાચવો અથવા એક દૃશ્ય પર ધ્યાન આપો. મેળ ખાતાં દૃશ્યોમાં સમર્થિત ક્રિયાઓ સિંક કરો.
@@ -1046,10 +926,6 @@ iPhone 18 Pro, વાળેલા અને ખુલ્લા iPhone Duo, MacBo
 
 Mobile View הוא סימולטור נייד ואמולטור מכשירים חינמי בקוד פתוח עבור Chrome. הציגו אתר בו-זמנית בעד ארבע תצוגות של טלפון, טאבלט, מחשב נייד ושולחני. בחרו מכשירים מציאותיים, שנו כיוון וזום, סנכרנו גלילה וניווט, צלמו והשוו לעיצוב מקומי. הכול פועל מקומית בדפדפן ללא חשבון, מינוי, ניתוח, טלמטריה או שרת.
 
-השתמשו בתצוגה מקדימה לנייד לבדיקת אתרים רספונסיביים. השוו מכשירים ניידים ומחשבים כדי לבדוק תפריטים, טקסט ורווחים בנקודות השבירה. כלי זה לבדיקת עיצוב רספונסיבי מרכז את בדיקות הרספונסיביות בסביבת עבודה אחת.
-
-הציגו תצוגות מקדימות של iPhone 18 Pro, ‏iPhone Duo מקופל ופתוח, MacBook ו-Apple Watch. עברו בין מכשירים בקטגוריה שנבחרה בעזרת החיצים למכשיר הקודם והבא.
-
 - פתחו את כל המכשירים בלחיצה אחת. התצוגות המקדימות מקובצות לפי סוג המכשיר ומסודרות ממסכים קטנים לגדולים.
 - צרו גדלי תצוגה מותאמים, שמרו קבוצות ומכשירים מועדפים או התמקדו בתצוגה אחת. סנכרנו אינטראקציות נתמכות בין תצוגות תואמות.
 - צלמו תצוגה אחת או את כל סביבת העבודה. הוסיפו חצים, מסגרות, ציורים וטקסט או חתכו את התמונה. הציגו עיצוב מקומי לצד העמוד או כשכבה מעליו.
@@ -1075,10 +951,6 @@ Mobile View הוא סימולטור נייד ואמולטור מכשירים ח�
 **Detailed description**
 
 Mobile View je besplatan mobilni simulator i emulator uređaja otvorenog koda za Chrome. Prikažite web u do četiri prikaza telefona, tableta, prijenosnika i računala istodobno. Odaberite realistične uređaje, promijenite orijentaciju i zumiranje, sinkronizirajte pomicanje i navigaciju, snimite zaslon i usporedite s lokalnim dizajnom. Sve radi lokalno bez računa, pretplate, analitike, telemetrije ili poslužitelja.
-
-Koristite mobilni pregled za testiranje responzivnih web-stranica. Usporedite mobilne uređaje i računala te provjerite izbornike, tekst i razmake na prijelomnim točkama. Ovaj alat za testiranje responzivnog dizajna objedinjuje responzivne testove u jednom radnom prostoru.
-
-Pregledajte iPhone 18 Pro, sklopljeni i otvoreni iPhone Duo, MacBook i Apple Watch. Strelicama za prethodni i sljedeći uređaj prolazite kroz odabranu kategoriju.
 
 - Otvorite sve uređaje jednim klikom. Pretpregledi su grupirani prema vrsti uređaja i poredani od manjih zaslona prema većima.
 - Izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.
@@ -1106,10 +978,6 @@ To su responzivni prikazi u Chromeu, a ne fizički uređaji ni pogon Safari. Pra
 
 A Mobile View ingyenes, nyílt forráskódú mobil szimulátor és eszközemulátor a Chrome-hoz. Egy webhelyet egyszerre akár négy telefonos, táblagépes, laptopos és asztali nézetben vizsgálhat. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.
 
-Használd a mobil előnézetet reszponzív weboldalak teszteléséhez. Hasonlítsd össze a mobileszközöket és az asztali nézeteket, majd ellenőrizd a menüket, szöveget és térközöket a töréspontoknál. Ez a reszponzív webdesign tesztelő eszköz egy munkaterületre gyűjti a reszponzív teszteket.
-
-Nézd meg az iPhone 18 Pro, az összecsukott és kinyitott iPhone Duo, a MacBook és az Apple Watch előnézetét. Az előző és következő nyíllal válthatsz a kiválasztott kategória eszközei között.
-
 - Nyissa meg az összes eszközt egyetlen kattintással. Az előnézetek eszköztípus szerint vannak csoportosítva, és a kisebb képernyőktől a nagyobbak felé rendezve.
 - Hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.
 - Rögzítsen egy nézetet vagy a teljes munkaterületet. Adjon hozzá nyilakat, kereteket, rajzokat és szöveget, vagy vágja körül a képet. Jelenítsen meg helyi tervet az oldal mellett vagy fedvényként.
@@ -1135,10 +1003,6 @@ Ezek a Chrome reszponzív nézetei, nem fizikai eszközök vagy Safari-motor. A 
 **Detailed description**
 
 Mobile View adalah simulator seluler dan emulator perangkat gratis serta sumber terbuka untuk Chrome. Lihat situs dalam hingga empat tampilan ponsel, tablet, laptop, dan desktop sekaligus. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
-
-Gunakan pratinjau seluler untuk pengujian situs web responsif. Bandingkan perangkat seluler dan desktop untuk memeriksa menu, teks dan jarak pada breakpoint. Alat penguji desain responsif ini menyatukan pengujian responsif dalam satu ruang kerja.
-
-Pratinjau iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan panah perangkat sebelumnya dan berikutnya dalam kategori yang dipilih.
 
 - Buka semua perangkat dengan satu klik. Pratinjau dikelompokkan berdasarkan jenis perangkat dan diurutkan dari layar kecil ke besar.
 - Buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
@@ -1166,10 +1030,6 @@ Ini adalah pratinjau viewport responsif di Chrome, bukan perangkat fisik atau me
 
 Mobile View ಎಂಬುದು Chromeಗಾಗಿ ಉಚಿತ ಓಪನ್ ಸೋರ್ಸ್ ಮೊಬೈಲ್ ಸಿಮ್ಯುಲೇಟರ್ ಮತ್ತು ಸಾಧನ ಎಮ್ಯುಲೇಟರ್ ಆಗಿದೆ. ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ಫೋನ್, ಟ್ಯಾಬ್ಲೆಟ್, ಲ್ಯಾಪ್‌ಟಾಪ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್‌ನ ಗರಿಷ್ಠ ನಾಲ್ಕು ವೀಕ್ಷಣೆಗಳಲ್ಲಿ ಒಟ್ಟಿಗೆ ನೋಡಿ. ನೈಜ ಸಾಧನಗಳನ್ನು ಆರಿಸಿ, ದಿಕ್ಕು ಮತ್ತು ಝೂಮ್ ಬದಲಿಸಿ, ಸ್ಕ್ರೋಲ್ ಮತ್ತು ನ್ಯಾವಿಗೇಶನ್ ಸಿಂಕ್ ಮಾಡಿ, ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ತೆಗೆದು ಸ್ಥಳೀಯ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ. ಎಲ್ಲವೂ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಥಳೀಯವಾಗಿ ನಡೆಯುತ್ತದೆ; ಖಾತೆ, ಚಂದಾದಾರಿಕೆ, ಅನಾಲಿಟಿಕ್ಸ್, ಟೆಲಿಮೆಟ್ರಿ ಅಥವಾ ಸರ್ವರ್ ಅಗತ್ಯವಿಲ್ಲ.
 
-ರೆಸ್ಪಾನ್ಸಿವ್ ವೆಬ್‌ಸೈಟ್ ಪರೀಕ್ಷೆಗೆ ಮೊಬೈಲ್ ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ಬಳಸಿ. ಮೊಬೈಲ್ ಸಾಧನಗಳು ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್ ಅನ್ನು ಹೋಲಿಸಿ, ಪ್ರತಿ ಬ್ರೇಕ್‌ಪಾಯಿಂಟ್‌ನಲ್ಲಿ ಮೆನು, ಪಠ್ಯ ಮತ್ತು ಅಂತರ ಪರಿಶೀಲಿಸಿ. ಈ ರೆಸ್ಪಾನ್ಸಿವ್ ವಿನ್ಯಾಸ ಪರೀಕ್ಷಾ ಸಾಧನವು ಒಂದೇ ಕಾರ್ಯಕ್ಷೇತ್ರದಲ್ಲಿ ರೆಸ್ಪಾನ್ಸಿವ್ ಪರೀಕ್ಷೆ ಮಾಡಲು ನೆರವಾಗುತ್ತದೆ.
-
-iPhone 18 Pro, ಮಡಚಿದ ಮತ್ತು ತೆರೆದ iPhone Duo, MacBook ಹಾಗೂ Apple Watch ಪೂರ್ವವೀಕ್ಷಣೆಗಳನ್ನು ನೋಡಿ. ಹಿಂದಿನ ಮತ್ತು ಮುಂದಿನ ಬಾಣಗಳಿಂದ ಆಯ್ಕೆ ಮಾಡಿದ ಸಾಧನ ವರ್ಗದಲ್ಲಿ ಸಾಧನ ಬದಲಿಸಿ.
-
 - ಒಂದೇ ಕ್ಲಿಕ್‌ನಲ್ಲಿ ಎಲ್ಲಾ ಸಾಧನಗಳನ್ನು ತೆರೆಯಿರಿ. ಪೂರ್ವವೀಕ್ಷಣೆಗಳನ್ನು ಸಾಧನದ ಪ್ರಕಾರ ಗುಂಪು ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಚಿಕ್ಕ ಪರದೆಗಳಿಂದ ದೊಡ್ಡ ಪರದೆಗಳವರೆಗೆ ಕ್ರಮವಾಗಿ ಜೋಡಿಸಲಾಗಿದೆ.
 - ನಿಮ್ಮದೇ ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳನ್ನು ರಚಿಸಿ, ಸಾಧನ ಸೆಟ್‌ಗಳು ಮತ್ತು ಮೆಚ್ಚಿನವುಗಳನ್ನು ಉಳಿಸಿ ಅಥವಾ ಒಂದೇ ವೀಕ್ಷಣೆಯ ಮೇಲೆ ಗಮನ ಕೊಡಿ. ಹೊಂದುವ ವೀಕ್ಷಣೆಗಳ ನಡುವೆ ಬೆಂಬಲಿತ ಸಂವಹನಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿ.
 - ಒಂದು ವೀಕ್ಷಣೆ ಅಥವಾ ಸಂಪೂರ್ಣ ಕಾರ್ಯಸ್ಥಳವನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ. ಬಾಣಗಳು, ಬಾಕ್ಸ್‌ಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ಪಠ್ಯ ಸೇರಿಸಿ ಅಥವಾ ಚಿತ್ರ ಕತ್ತರಿಸಿ. ಸ್ಥಳೀಯ ವಿನ್ಯಾಸವನ್ನು ಪುಟದ ಪಕ್ಕದಲ್ಲಿ ಅಥವಾ ಓವರ್‌ಲೇ ಆಗಿ ತೋರಿಸಿ.
@@ -1195,10 +1055,6 @@ iPhone 18 Pro, ಮಡಚಿದ ಮತ್ತು ತೆರೆದ iPhone Duo, MacBo
 **Detailed description**
 
 Mobile View yra nemokamas atvirojo kodo mobilusis simuliatorius ir įrenginių emuliatorius, skirtas Chrome. Vienu metu peržiūrėkite svetainę iki keturių telefono, planšetės, nešiojamojo ir stalinio kompiuterio rodinių. Rinkitės tikroviškus įrenginius, keiskite orientaciją bei mastelį, sinchronizuokite slinkimą ir naršymą, fiksuokite ekraną ir lyginkite su vietiniu dizainu. Viskas veikia naršyklėje be paskyros, prenumeratos, analizės, telemetrijos ar serverio.
-
-Naudokite mobiliąją peržiūrą adaptyvių svetainių testavimui. Palyginkite mobiliuosius įrenginius ir kompiuterius, tikrinkite meniu, tekstą ir tarpus ties lūžio taškais. Šis adaptyvaus dizaino testavimo įrankis sujungia adaptyvumo testus vienoje darbo srityje.
-
-Peržiūrėkite iPhone 18 Pro, sulenktą ir išskleistą iPhone Duo, MacBook bei Apple Watch. Pasirinktoje įrenginių kategorijoje judėkite ankstesnio ir kito įrenginio rodyklėmis.
 
 - Atverkite visus įrenginius vienu spustelėjimu. Peržiūros sugrupuotos pagal įrenginio tipą ir surikiuotos nuo mažesnių ekranų iki didesnių.
 - Kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.
@@ -1226,10 +1082,6 @@ Tai adaptyvios peržiūros naršyklėje Chrome, o ne fiziniai įrenginiai ar Saf
 
 Mobile View ir bezmaksas atvērtā pirmkoda mobilais simulators un ierīču emulators pārlūkam Chrome. Vienlaikus skatiet vietni līdz četros tālruņa, planšetes, klēpjdatora un datora skatos. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.
 
-Izmantojiet mobilo priekšskatījumu responsīvu vietņu testēšanai. Salīdziniet mobilās ierīces un datorus, pārbaudot izvēlnes, tekstu un atstarpes lūzuma punktos. Šis responsīvā dizaina testēšanas rīks apvieno responsīvos testus vienā darbvietā.
-
-Priekšskatiet iPhone 18 Pro, salocītu un atvērtu iPhone Duo, MacBook un Apple Watch. Pārvietojieties pa izvēlēto ierīču kategoriju ar iepriekšējās un nākamās ierīces bultiņām.
-
 - Atveriet visas ierīces ar vienu klikšķi. Priekšskatījumi ir grupēti pēc ierīces veida un sakārtoti no mazākiem ekrāniem līdz lielākiem.
 - Izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.
 - Uzņemiet vienu skatu vai visu darbvietu. Pievienojiet bultas, rāmjus, zīmējumus un tekstu vai apgrieziet attēlu. Parādiet lokālu dizainu blakus lapai vai kā pārklājumu.
@@ -1255,10 +1107,6 @@ Tie ir adaptīvi priekšskatījumi pārlūkā Chrome, nevis fiziskas ierīces va
 **Detailed description**
 
 Mobile View Chrome-നുള്ള സൗജന്യ ഓപ്പൺ സോഴ്‌സ് മൊബൈൽ സിമുലേറ്ററും ഡിവൈസ് എമുലേറ്ററും ആണ്. ഒരു വെബ്‌സൈറ്റ് ഫോൺ, ടാബ്‌ലെറ്റ്, ലാപ്‌ടോപ്പ്, ഡെസ്‌ക്‌ടോപ്പ് എന്നിവയുടെ നാല് കാഴ്ചകളിൽ വരെ ഒരുമിച്ച് കാണുക. യഥാർത്ഥ ഉപകരണങ്ങൾ തിരഞ്ഞെടുക്കുക, ദിശയും സൂമും മാറ്റുക, സ്ക്രോളും നാവിഗേഷനും സമന്വയിപ്പിക്കുക, സ്ക്രീൻഷോട്ട് എടുക്കുക, പ്രാദേശിക ഡിസൈനുമായി താരതമ്യം ചെയ്യുക. അക്കൗണ്ട്, സബ്‌സ്‌ക്രിപ്‌ഷൻ, അനലിറ്റിക്‌സ്, ടെലിമെട്രി, സെർവർ എന്നിവയില്ലാതെ എല്ലാം ബ്രൗസറിൽ പ്രവർത്തിക്കുന്നു.
-
-റെസ്പോൺസീവ് വെബ്സൈറ്റ് പരിശോധനയ്ക്ക് മൊബൈൽ പ്രിവ്യൂ ഉപയോഗിക്കൂ. മൊബൈൽ ഉപകരണങ്ങളും ഡെസ്ക്ടോപ്പും താരതമ്യം ചെയ്ത് ഓരോ ബ്രേക്ക്‌പോയിന്റിലും മെനു, ടെക്സ്റ്റ്, ഇടവേള എന്നിവ പരിശോധിക്കൂ. ഈ റെസ്പോൺസീവ് ഡിസൈൻ ടെസ്റ്റർ ഒരേ പ്രവർത്തനസ്ഥലത്ത് റെസ്പോൺസീവ് പരിശോധന നടത്താൻ സഹായിക്കുന്നു.
-
-iPhone 18 Pro, മടക്കിയതും തുറന്നതുമായ iPhone Duo, MacBook, Apple Watch എന്നിവ പ്രിവ്യൂ ചെയ്യൂ. മുമ്പത്തെയും അടുത്തതെയും അമ്പുകൾ ഉപയോഗിച്ച് തിരഞ്ഞെടുത്ത ഉപകരണ വിഭാഗത്തിൽ മാറൂ.
 
 - ഒറ്റ ക്ലിക്കിൽ എല്ലാ ഉപകരണങ്ങളും തുറക്കുക. പ്രിവ്യൂകൾ ഉപകരണത്തിന്റെ തരം അനുസരിച്ച് ഗ്രൂപ്പുകളാക്കി, ചെറിയ സ്ക്രീനുകളിൽ നിന്ന് വലിയ സ്ക്രീനുകളിലേക്ക് ക്രമീകരിച്ചിരിക്കുന്നു.
 - സ്വന്തം വ്യൂപോർട്ട് വലുപ്പങ്ങൾ സൃഷ്ടിക്കൂ, ഉപകരണ സെറ്റുകളും പ്രിയപ്പെട്ടവയും സൂക്ഷിക്കൂ, അല്ലെങ്കിൽ ഒരു കാഴ്ചയിൽ ശ്രദ്ധ കേന്ദ്രീകരിക്കൂ. അനുയോജ്യമായ കാഴ്ചകളിലെ പിന്തുണയ്ക്കുന്ന ഇടപെടലുകൾ സമന്വയിപ്പിക്കൂ.
@@ -1286,10 +1134,6 @@ iPhone 18 Pro, മടക്കിയതും തുറന്നതുമായ 
 
 Mobile View हे Chromeसाठी मोफत आणि मुक्त-स्रोत मोबाइल सिम्युलेटर व डिव्हाइस एम्युलेटर आहे. वेबसाइट फोन, टॅबलेट, लॅपटॉप आणि डेस्कटॉपच्या चार दृश्यांपर्यंत एकत्र पहा. वास्तववादी डिव्हाइस निवडा, दिशा व झूम बदला, स्क्रोल व नेव्हिगेशन सिंक करा, स्क्रीनशॉट घ्या आणि स्थानिक डिझाइनशी तुलना करा. सर्व काही ब्राउझरमध्ये स्थानिकरीत्या चालते; खाते, सदस्यता, विश्लेषण, टेलिमेट्री किंवा सर्व्हर लागत नाही.
 
-रिस्पॉन्सिव्ह वेबसाइट परीक्षणासाठी मोबाइल पूर्वदृश्य वापरा. मोबाइल डिव्हाइस आणि डेस्कटॉपची तुलना करून प्रत्येक ब्रेकपॉइंटवर मेनू, मजकूर आणि अंतर तपासा. हा रिस्पॉन्सिव्ह डिझाइन टेस्टर एकाच कार्यक्षेत्रात रिस्पॉन्सिव्ह परीक्षण करण्यात मदत करतो.
-
-iPhone 18 Pro, दुमडलेल्या आणि उघडलेल्या iPhone Duo, MacBook आणि Apple Watchची पूर्वदृश्ये पहा. मागील आणि पुढील बाणांनी निवडलेल्या डिव्हाइस श्रेणीत उपकरण बदला.
-
 - एका क्लिकमध्ये सर्व डिव्हाइस उघडा. प्रीव्ह्यू डिव्हाइसच्या प्रकारानुसार गटांमध्ये आणि लहान ते मोठ्या स्क्रीनच्या क्रमाने दिसतात.
 - स्वतःचे व्ह्यूपोर्ट आकार तयार करा, उपकरण संच व आवडती उपकरणे जतन करा किंवा एका दृश्यावर लक्ष केंद्रित करा. जुळणाऱ्या दृश्यांमध्ये समर्थित क्रिया समक्रमित करा.
 - एक दृश्य किंवा पूर्ण कार्यक्षेत्राचा स्क्रीनशॉट घ्या. बाण, चौकटी, रेखाचित्रे व मजकूर जोडा किंवा प्रतिमा कापा. स्थानिक डिझाइन पानाशेजारी किंवा ओव्हरले म्हणून दाखवा.
@@ -1315,10 +1159,6 @@ iPhone 18 Pro, दुमडलेल्या आणि उघडलेल्य
 **Detailed description**
 
 Mobile View ialah simulator mudah alih dan emulator peranti percuma serta sumber terbuka untuk Chrome. Pratonton laman dalam sehingga empat paparan telefon, tablet, komputer riba dan desktop serentak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.
-
-Gunakan pratonton mudah alih untuk ujian laman web responsif. Bandingkan peranti mudah alih dan desktop untuk menyemak menu, teks dan jarak pada titik perubahan susun atur. Alat penguji reka bentuk responsif ini menggabungkan ujian responsif dalam satu ruang kerja.
-
-Pratonton iPhone 18 Pro, iPhone Duo terlipat dan terbuka, MacBook serta Apple Watch. Gunakan anak panah peranti sebelumnya dan seterusnya dalam kategori yang dipilih.
 
 - Buka semua peranti dengan satu klik. Pratonton dikumpulkan mengikut jenis peranti dan disusun daripada skrin yang lebih kecil kepada yang lebih besar.
 - Cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.
@@ -1346,11 +1186,7 @@ Ini pratonton viewport responsif dalam Chrome, bukan peranti fizikal atau enjin 
 
 Mobile View er en gratis mobilsimulator og enhetsemulator med åpen kildekode for Chrome. Se et nettsted i opptil fire mobil-, nettbrett-, laptop- og datamaskinvisninger samtidig. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.
 
-Bruk mobilforhåndsvisning til testing av responsive nettsteder. Sammenlign mobilenheter og datamaskiner, og kontroller menyer, tekst og avstander ved bruddpunktene. Dette verktøyet for testing av responsivt webdesign samler de responsive testene i ett arbeidsområde.
-
 Åpne alle enheter med ett klikk. Forhåndsvisningene er gruppert etter enhetstype og sortert fra mindre til større skjermer.
-
-Forhåndsvis iPhone 18 Pro, sammenfoldet og utfoldet iPhone Duo, MacBook og Apple Watch. Bruk pilene for forrige og neste enhet i den valgte kategorien.
 
 Lagre enhetssett og favoritter, eller lag egne skjermstørrelser. Ta bilde av en visning eller hele arbeidsområdet, og legg til piler, rammer og tekst. Sammenlign et lokalt design ved siden av eller over nettstedet, og kopier et forslag til retting med URL, enheter, skjermstørrelser og notater til kodeverktøyet.
 
@@ -1374,10 +1210,6 @@ Dette er responsive forhåndsvisninger i Chrome, ikke fysiske enheter eller Safa
 **Detailed description**
 
 Mobile View to darmowy symulator mobilny i emulator urządzeń open source dla Chrome. Wyświetlaj stronę jednocześnie w maksymalnie czterech widokach telefonu, tabletu, laptopa i komputera. Wybieraj realistyczne urządzenia, zmieniaj orientację i powiększenie, synchronizuj przewijanie i nawigację, rób zrzuty oraz porównuj z lokalnym projektem. Wszystko działa lokalnie w przeglądarce bez konta, subskrypcji, analityki, telemetrii ani serwera.
-
-Używaj podglądu mobilnego do testowania responsywnych stron internetowych. Porównuj urządzenia mobilne i komputery, sprawdzając menu, tekst i odstępy w punktach zmiany układu. To narzędzie do testowania responsywnego projektu łączy testy responsywności w jednej przestrzeni roboczej.
-
-Wyświetlaj iPhone 18 Pro, złożony i rozłożony iPhone Duo, MacBook i Apple Watch. Przeglądaj wybraną kategorię strzałkami poprzedniego i następnego urządzenia.
 
 - Otwórz wszystkie urządzenia jednym kliknięciem. Podglądy są pogrupowane według typu urządzenia i uporządkowane od mniejszych ekranów do większych.
 - Twórz własne rozmiary widoku, zapisuj zestawy i ulubione urządzenia lub skup się na jednym widoku. Synchronizuj obsługiwane interakcje między odpowiadającymi sobie podglądami.
@@ -1405,10 +1237,6 @@ To responsywne podglądy w Chrome, a nie fizyczne urządzenia ani silnik Safari.
 
 O Mobile View é um simulador móvel e emulador de dispositivos gratuito e de código aberto para Chrome. Pré-visualize um site em até quatro vistas de telemóvel, tablet, portátil e computador ao mesmo tempo. Escolha dispositivos realistas, altere a orientação e o zoom, sincronize o deslocamento e a navegação, capture ecrãs e compare com um design local. Tudo funciona localmente no navegador sem conta, subscrição, análise, telemetria ou servidor.
 
-Use a pré-visualização móvel para testes de sites responsivos. Compare dispositivos móveis e computadores para verificar menus, texto e espaçamento nos pontos de quebra. Esta ferramenta de teste de design responsivo reúne os testes responsivos numa só área de trabalho.
-
-Pré-visualize iPhone 18 Pro, iPhone Duo dobrado e aberto, MacBook e Apple Watch. Percorra a categoria selecionada com as setas do dispositivo anterior e seguinte.
-
 - Abra todos os dispositivos com um clique. As pré-visualizações são agrupadas por tipo de dispositivo e ordenadas dos ecrãs mais pequenos aos maiores.
 - Crie dimensões de visualização próprias, guarde conjuntos e dispositivos favoritos ou concentre-se numa vista. Sincronize as interações suportadas entre vistas correspondentes.
 - Capture uma vista ou toda a área de trabalho. Adicione setas, caixas, desenhos e texto ou recorte a imagem. Apresente um design local ao lado da página ou sobreposto.
@@ -1434,10 +1262,6 @@ São pré-visualizações responsivas no Chrome, não dispositivos físicos nem 
 **Detailed description**
 
 Mobile View este un simulator mobil și emulator de dispozitive gratuit și open-source pentru Chrome. Previzualizează un site în până la patru ecrane de telefon, tabletă, laptop și desktop simultan. Alege dispozitive realiste, schimbă orientarea și zoomul, sincronizează derularea și navigarea, capturează ecranul și compară-l cu un design local. Totul rulează local în browser fără cont, abonament, analiză, telemetrie sau server.
-
-Folosește previzualizarea mobilă pentru testarea site-urilor responsive. Compară dispozitive mobile și computere pentru a verifica meniuri, text și spațiere la breakpoint-uri. Acest instrument de testare a designului responsive reunește testele responsive într-un singur spațiu de lucru.
-
-Previzualizează iPhone 18 Pro, iPhone Duo pliat și deschis, MacBook și Apple Watch. Parcurge categoria selectată cu săgețile pentru dispozitivul anterior și următor.
 
 - Deschide toate dispozitivele cu un clic. Previzualizările sunt grupate după tipul dispozitivului și ordonate de la ecrane mai mici la ecrane mai mari.
 - Creează dimensiuni de viewport personalizate, salvează seturi și dispozitive favorite sau concentrează-te pe o singură vedere. Sincronizează interacțiunile acceptate între vederi corespunzătoare.
@@ -1465,10 +1289,6 @@ Acestea sunt previzualizări responsive în Chrome, nu dispozitive fizice sau mo
 
 Mobile View je bezplatný open-source mobilný simulátor a emulátor zariadení pre Chrome. Zobrazte web súčasne až v štyroch náhľadoch telefónu, tabletu, notebooku a počítača. Vyberajte realistické zariadenia, meňte orientáciu a priblíženie, synchronizujte posúvanie a navigáciu, vytvárajte snímky a porovnávajte ich s lokálnym návrhom. Všetko beží lokálne bez účtu, predplatného, analytiky, telemetrie či servera.
 
-Používajte mobilný náhľad na testovanie responzívnych webov. Porovnávajte mobilné zariadenia a počítače a kontrolujte ponuky, text a rozostupy v bodoch zlomu. Tento nástroj na testovanie responzívneho dizajnu spája responzívne testy v jednom pracovnom priestore.
-
-Zobrazte si iPhone 18 Pro, zložený a rozložený iPhone Duo, MacBook a Apple Watch. Vybranou kategóriou prechádzajte šípkami pre predchádzajúce a ďalšie zariadenie.
-
 - Otvorte všetky zariadenia jedným kliknutím. Náhľady sú zoskupené podľa typu zariadenia a zoradené od menších obrazoviek po väčšie.
 - Vytvárajte vlastné rozmery viewportu, ukladajte súpravy a obľúbené zariadenia alebo sa sústreďte na jeden náhľad. Synchronizujte podporované interakcie medzi zodpovedajúcimi náhľadmi.
 - Zachyťte jeden náhľad alebo celý pracovný priestor. Pridajte šípky, rámčeky, kresby a text alebo obrázok orežte. Zobrazte miestny návrh vedľa stránky alebo ako prekrytie.
@@ -1494,10 +1314,6 @@ Ide o responzívne náhľady v Chrome, nie fyzické zariadenia ani jadro Safari.
 **Detailed description**
 
 Mobile View je brezplačen odprtokodni mobilni simulator in emulator naprav za Chrome. Spletno mesto si hkrati oglejte v največ štirih pogledih telefona, tablice, prenosnika in računalnika. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.
-
-Uporabite mobilni predogled za preizkušanje odzivnih spletnih mest. Primerjajte mobilne naprave in računalnike ter preverite menije, besedilo in razmike na prelomnih točkah. To orodje za preizkušanje odzivnega oblikovanja združuje odzivne preizkuse v enem delovnem prostoru.
-
-Predoglejte iPhone 18 Pro, zložen in odprt iPhone Duo, MacBook in Apple Watch. Po izbrani kategoriji se premikajte s puščicama za prejšnjo in naslednjo napravo.
 
 - Odprite vse naprave z enim klikom. Predogledi so združeni po vrsti naprave in razvrščeni od manjših zaslonov do večjih.
 - Ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.
@@ -1525,10 +1341,6 @@ To so odzivni predogledi v Chromu, ne fizične naprave ali pogon Safari. Pravila
 
 Mobile View је бесплатан мобилни симулатор и емулатор уређаја отвореног кода за Chrome. Прикажите сајт истовремено у највише четири приказа телефона, таблета, лаптопа и рачунара. Изаберите реалистичне уређаје, промените оријентацију и зумирање, синхронизујте померање и навигацију, снимите екран и упоредите га са локалним дизајном. Све ради локално без налога, претплате, аналитике, телеметрије или сервера.
 
-Користите мобилни преглед за тестирање прилагодљивих веб-сајтова. Поредите мобилне уређаје и рачунаре и проверите меније, текст и размаке на тачкама прелома. Овај алат за тестирање прилагодљивог дизајна обједињује тестове прилагодљивости у једном радном простору.
-
-Прегледајте iPhone 18 Pro, склопљен и отворен iPhone Duo, MacBook и Apple Watch. Стрелицама за претходни и следећи уређај пролазите кроз изабрану категорију.
-
 - Отворите све уређаје једним кликом. Прегледи су груписани по типу уређаја и поређани од мањих екрана ка већим.
 - Направите прилагођене величине приказа, сачувајте скупове и омиљене уређаје или се усредсредите на један приказ. Ускладите подржане интеракције између одговарајућих приказа.
 - Снимите један приказ или цео радни простор. Додајте стрелице, оквире, цртеже и текст или исеците слику. Прикажите локални дизајн поред странице или као преклоп.
@@ -1555,11 +1367,7 @@ Mobile View је бесплатан мобилни симулатор и ему�
 
 Mobile View är en kostnadsfri mobilsimulator och enhetsemulator med öppen källkod för Chrome. Visa en webbplats i upp till fyra mobil-, surfplatte-, laptop- och datorvyer samtidigt. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.
 
-Använd mobilförhandsvisning för test av responsiva webbplatser. Jämför mobilenheter och datorer och kontrollera menyer, text och avstånd vid brytpunkterna. Det här verktyget för test av responsiv webbdesign samlar dina responsiva tester i en arbetsyta.
-
 Öppna alla enheter med ett klick. Förhandsvisningarna är grupperade efter enhetstyp och sorterade från mindre till större skärmar.
-
-Förhandsvisa iPhone 18 Pro, hopvikt och utfälld iPhone Duo, MacBook och Apple Watch. Använd pilarna för föregående och nästa enhet i den valda kategorin.
 
 Spara enhetsuppsättningar och favoriter eller skapa egna skärmstorlekar. Ta en bild av en vy eller hela arbetsytan och lägg till pilar, ramar och text. Jämför en lokal design bredvid eller ovanpå webbplatsen och kopiera ett korrigeringsförslag med URL, enheter, skärmstorlekar och anteckningar till ditt kodverktyg.
 
@@ -1583,10 +1391,6 @@ Detta är responsiva förhandsvisningar i Chrome, inte fysiska enheter eller Saf
 **Detailed description**
 
 Mobile View ni kiigaji cha simu na kiigaji cha vifaa bila malipo na cha programu huria kwa Chrome. Tazama tovuti katika mionekano hadi minne ya simu, kompyuta kibao, laptop na desktop kwa wakati mmoja. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.
-
-Tumia hakiki ya simu kupima tovuti zinazobadilika kulingana na ukubwa wa skrini. Linganisha vifaa vya simu na kompyuta ili kukagua menyu, maandishi na nafasi kwenye sehemu za kubadili mpangilio. Zana hii ya kupima muundo sikivu huunganisha majaribio sikivu katika eneo moja la kazi.
-
-Hakiki iPhone 18 Pro, iPhone Duo iliyokunjwa na iliyofunguliwa, MacBook na Apple Watch. Tumia mishale ya kifaa kilichotangulia na kinachofuata katika aina iliyochaguliwa.
 
 - Fungua vifaa vyote kwa mbofyo mmoja. Muonekano wa awali umepangwa kwa aina ya kifaa na kuanzia skrini ndogo hadi kubwa.
 - Unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.
@@ -1614,10 +1418,6 @@ Haya ni maonyesho ya mwitikio katika Chrome, si vifaa halisi au injini ya Safari
 
 Mobile View என்பது Chrome-க்கான இலவச திறந்த மூல மொபைல் சிமுலேட்டர் மற்றும் சாதன முன்மாதிரி. இணையதளத்தை தொலைபேசி, டேப்லெட், மடிக்கணினி மற்றும் டெஸ்க்டாப் ஆகியவற்றின் நான்கு காட்சிகள் வரை ஒரே நேரத்தில் பாருங்கள். உண்மையான சாதனங்களைத் தேர்ந்தெடுத்து, திசை மற்றும் பெரிதாக்கலை மாற்றி, ஸ்க்ரோல் மற்றும் வழிசெலுத்தலை ஒத்திசைத்து, திரைப்பிடிப்பு எடுத்து உள்ளூர் வடிவமைப்புடன் ஒப்பிடுங்கள். கணக்கு, சந்தா, பகுப்பாய்வு, டெலிமெட்ரி அல்லது சேவையகம் இல்லாமல் அனைத்தும் உலாவியிலேயே இயங்கும்.
 
-ரெஸ்பான்சிவ் இணையதளச் சோதனைக்கு மொபைல் முன்னோட்டத்தைப் பயன்படுத்தவும். மொபைல் சாதனங்களையும் டெஸ்க்டாப்பையும் ஒப்பிட்டு, ஒவ்வொரு பிரேக்பாயிண்டிலும் பட்டியல், உரை மற்றும் இடைவெளிகளைச் சரிபார்க்கவும். இந்த ரெஸ்பான்சிவ் வடிவமைப்பு சோதனைக் கருவி ஒரே பணியிடத்தில் ரெஸ்பான்சிவ் சோதனைகளைச் செய்ய உதவுகிறது.
-
-iPhone 18 Pro, மடிக்கப்பட்ட மற்றும் திறந்த iPhone Duo, MacBook, Apple Watch ஆகியவற்றை முன்னோட்டமிடவும். முந்தைய மற்றும் அடுத்த அம்புகளால் தேர்ந்தெடுத்த சாதன வகையில் சாதனத்தை மாற்றவும்.
-
 - ஒரே கிளிக்கில் எல்லா சாதனங்களையும் திறக்கவும். முன்னோட்டங்கள் சாதன வகையின்படி குழுவாக்கப்பட்டு, சிறிய திரைகளிலிருந்து பெரிய திரைகள் வரை வரிசைப்படுத்தப்பட்டுள்ளன.
 - விருப்ப வியூபோர்ட் அளவுகளை உருவாக்கி, சாதனத் தொகுப்புகளையும் விருப்பங்களையும் சேமிக்கவும் அல்லது ஒரு காட்சியில் கவனம் செலுத்தவும். பொருந்தும் காட்சிகளில் ஆதரிக்கப்படும் தொடர்புகளை ஒத்திசைக்கவும்.
 - ஒரு காட்சியையோ முழுப் பணிப்பகுதியையோ படமெடுக்கவும். அம்புகள், பெட்டிகள், வரைபடங்கள், உரை சேர்க்கவும் அல்லது படத்தை வெட்டவும். உள்ளூர் வடிவமைப்பைப் பக்கத்தின் அருகில் அல்லது மேலடுக்காகக் காட்டவும்.
@@ -1643,10 +1443,6 @@ iPhone 18 Pro, மடிக்கப்பட்ட மற்றும் தி
 **Detailed description**
 
 Mobile View అనేది Chrome కోసం ఉచిత ఓపెన్ సోర్స్ మొబైల్ సిమ్యులేటర్ మరియు పరికర ఎమ్యులేటర్. వెబ్‌సైట్‌ను ఫోన్, టాబ్లెట్, ల్యాప్‌టాప్ మరియు డెస్క్‌టాప్ నాలుగు వీక్షణల వరకు ఒకేసారి చూడండి. నిజమైన పరికరాలను ఎంచుకోండి, దిశ మరియు జూమ్ మార్చండి, స్క్రోల్ మరియు నావిగేషన్ సమకాలీకరించండి, స్క్రీన్‌షాట్ తీసి స్థానిక డిజైన్‌తో పోల్చండి. ఖాతా, సబ్‌స్క్రిప్షన్, అనలిటిక్స్, టెలిమెట్రీ లేదా సర్వర్ లేకుండా అన్నీ బ్రౌజర్‌లోనే నడుస్తాయి.
-
-రెస్పాన్సివ్ వెబ్‌సైట్ పరీక్షకు మొబైల్ ప్రివ్యూ ఉపయోగించండి. మొబైల్ పరికరాలు, డెస్క్‌టాప్‌ను పోల్చి ప్రతి బ్రేక్‌పాయింట్ వద్ద మెనూ, పాఠ్యం, అంతరాలను తనిఖీ చేయండి. ఈ రెస్పాన్సివ్ డిజైన్ పరీక్షా సాధనం ఒకే కార్యక్షేత్రంలో రెస్పాన్సివ్ పరీక్షలు చేయడానికి సహాయపడుతుంది.
-
-iPhone 18 Pro, మడిచిన మరియు తెరిచిన iPhone Duo, MacBook, Apple Watch ప్రివ్యూలను చూడండి. మునుపటి, తదుపరి బాణాలతో ఎంచుకున్న పరికర వర్గంలో పరికరం మార్చండి.
 
 - ఒకే క్లిక్‌తో అన్ని పరికరాలను తెరవండి. ప్రివ్యూలు పరికర రకం ప్రకారం సమూహాలుగా, చిన్న స్క్రీన్‌ల నుంచి పెద్ద స్క్రీన్‌ల వరకు క్రమంగా అమర్చబడతాయి.
 - మీ స్వంత వ్యూపోర్ట్ పరిమాణాలు సృష్టించండి, పరికర సెట్లు, ఇష్టమైనవి సేవ్ చేయండి లేదా ఒక వీక్షణపై దృష్టి పెట్టండి. సరిపోలే వీక్షణల్లో మద్దతు ఉన్న పరస్పర చర్యలను సమకాలీకరించండి.
@@ -1674,10 +1470,6 @@ iPhone 18 Pro, మడిచిన మరియు తెరిచిన iPhone D
 
 Mobile View เป็นโปรแกรมจำลองมือถือและโปรแกรมจำลองอุปกรณ์แบบโอเพนซอร์สฟรีสำหรับ Chrome ดูเว็บไซต์พร้อมกันได้สูงสุดสี่มุมมองบนมือถือ แท็บเล็ต แล็ปท็อป และเดสก์ท็อป เลือกอุปกรณ์จริง เปลี่ยนแนวและซูม ซิงค์การเลื่อนและการนำทาง จับภาพหน้าจอ และเปรียบเทียบกับดีไซน์ในเครื่อง ทุกอย่างทำงานในเบราว์เซอร์โดยไม่ต้องมีบัญชี การสมัครสมาชิก การวิเคราะห์ เทเลเมทรี หรือเซิร์ฟเวอร์
 
-ใช้ตัวอย่างบนมือถือเพื่อทดสอบเว็บไซต์แบบ responsive เปรียบเทียบอุปกรณ์มือถือกับคอมพิวเตอร์เพื่อตรวจเมนู ข้อความและระยะห่างที่ breakpoint ต่าง ๆ เครื่องมือทดสอบการออกแบบ responsive นี้รวมการทดสอบ responsive ไว้ในพื้นที่ทำงานเดียว
-
-ดูตัวอย่าง iPhone 18 Pro, iPhone Duo แบบพับและกาง, MacBook และ Apple Watch ใช้ลูกศรก่อนหน้าและถัดไปเพื่อเปลี่ยนอุปกรณ์ในหมวดที่เลือก
-
 - เปิดอุปกรณ์ทั้งหมดได้ในคลิกเดียว ตัวอย่างจะจัดกลุ่มตามประเภทอุปกรณ์และเรียงจากหน้าจอขนาดเล็กไปใหญ่
 - สร้างขนาดวิวพอร์ตเอง บันทึกชุดอุปกรณ์และรายการโปรด หรือโฟกัสมุมมองเดียว ซิงค์การโต้ตอบที่รองรับระหว่างมุมมองที่ตรงกัน
 - จับภาพมุมมองเดียวหรือทั้งพื้นที่ทำงาน เพิ่มลูกศร กรอบ ภาพวาด และข้อความ หรือตัดภาพ แสดงดีไซน์ในเครื่องข้างหน้าเว็บหรือเป็นภาพซ้อนทับ
@@ -1704,10 +1496,6 @@ Mobile View เป็นโปรแกรมจำลองมือถือ�
 
 Mobile View, Chrome için ücretsiz ve açık kaynaklı bir mobil simülatör ve cihaz emülatörüdür. Bir siteyi aynı anda en fazla dört telefon, tablet, dizüstü ve masaüstü görünümünde izleyin. Gerçekçi cihazlar seçin, yönü ve yakınlaştırmayı değiştirin, kaydırma ve gezinmeyi eşitleyin, ekran görüntüsü alın ve yerel bir tasarımla karşılaştırın. Her şey hesap, abonelik, analiz, telemetri veya sunucu olmadan tarayıcıda yerel olarak çalışır.
 
-Duyarlı web sitesi testi için mobil önizlemeyi kullanın. Kırılma noktalarında menü, metin ve boşlukları kontrol etmek için mobil cihazları ve masaüstünü karşılaştırın. Bu duyarlı tasarım test aracı, duyarlı testleri tek bir çalışma alanında birleştirir.
-
-iPhone 18 Pro, katlanmış ve açılmış iPhone Duo, MacBook ve Apple Watch önizlemelerini görün. Önceki ve sonraki oklarıyla seçili kategorideki cihazlar arasında geçiş yapın.
-
 - Tüm cihazları tek tıklamayla açın. Önizlemeler cihaz türüne göre gruplandırılır ve küçük ekranlardan büyük ekranlara doğru sıralanır.
 - Özel görünüm boyutları oluşturun, cihaz setlerini ve favorileri kaydedin veya tek görünüme odaklanın. Eşleşen görünümler arasında desteklenen etkileşimleri eşitleyin.
 - Tek görünümü veya tüm çalışma alanını yakalayın. Ok, kutu, çizim ve metin ekleyin ya da görüntüyü kırpın. Yerel tasarımı sayfanın yanında veya kaplama olarak gösterin.
@@ -1733,10 +1521,6 @@ Bunlar Chrome üzerinde duyarlı görünüm önizlemeleridir; fiziksel cihazlar 
 **Detailed description**
 
 Mobile View — безкоштовний мобільний симулятор та емулятор пристроїв із відкритим кодом для Chrome. Переглядайте сайт одночасно в чотирьох варіантах — на телефоні, планшеті, ноутбуці та комп’ютері. Вибирайте реалістичні пристрої, змінюйте орієнтацію й масштаб, синхронізуйте прокручування та навігацію, робіть знімки й порівнюйте з локальним дизайном. Усе працює локально без облікового запису, підписки, аналітики, телеметрії чи сервера.
-
-Використовуйте мобільний попередній перегляд для тестування адаптивних сайтів. Порівнюйте мобільні пристрої й комп’ютери, перевіряючи меню, текст та відступи в точках зміни макета. Цей інструмент тестування адаптивного дизайну об’єднує перевірки адаптивності в одному робочому просторі.
-
-Переглядайте iPhone 18 Pro, складений і розгорнутий iPhone Duo, MacBook та Apple Watch. Переходьте між пристроями вибраної категорії стрілками попереднього й наступного пристрою.
 
 - Відкрийте всі пристрої одним натисканням. Попередні перегляди згруповано за типом пристрою та впорядковано від менших екранів до більших.
 - Створюйте власні розміри перегляду, зберігайте набори й улюблені пристрої або зосередьтеся на одному вікні. Синхронізуйте підтримувані взаємодії між відповідними переглядами.

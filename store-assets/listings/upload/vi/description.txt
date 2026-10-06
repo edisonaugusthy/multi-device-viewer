@@ -1,9 +1,5 @@
 Mobile View là trình mô phỏng di động và trình giả lập thiết bị miễn phí, mã nguồn mở dành cho Chrome. Xem trước trang web trong tối đa bốn giao diện điện thoại, máy tính bảng, laptop và máy tính để bàn cùng lúc mà không phải liên tục đổi kích thước cửa sổ hoặc cấu hình DevTools.
 
-Dùng bản xem trước trên di động để kiểm thử website responsive. So sánh thiết bị di động và máy tính để kiểm tra menu, văn bản và khoảng cách tại các breakpoint. Công cụ kiểm thử thiết kế responsive này tập hợp các phép kiểm tra responsive trong cùng một không gian làm việc.
-
-Xem trước iPhone 18 Pro, iPhone Duo ở trạng thái gập và mở, MacBook cùng Apple Watch. Dùng mũi tên trước và sau để chuyển thiết bị trong danh mục đã chọn.
-
 - Mở tất cả thiết bị chỉ với một cú nhấp. Các bản xem trước được nhóm theo loại thiết bị và sắp xếp từ màn hình nhỏ đến lớn.
 - Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.
 - Đồng bộ cuộn, tương tác được hỗ trợ và điều hướng giữa các bản xem trước phù hợp.

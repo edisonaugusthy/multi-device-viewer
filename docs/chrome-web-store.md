@@ -18,12 +18,9 @@ Mobile simulator and responsive design tester. Compare phone, tablet and desktop
 
 ### Detailed description
 
-Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
-
-Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
+Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
-- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
 - Save device sets and favorites for repeat checks during frontend development and design review.
@@ -57,36 +54,31 @@ The approved artwork uses the current plain icon and a MacBook behind the
 foreground devices. The small tile shows iPhone 18 Pro, folded iPhone Duo and
 Apple Watch; the marquee also includes unfolded iPhone Duo.
 
-### Current copy review — 4 October 2026
+### Current copy review — 6 October 2026
 
-The current copy replaces the August experiment package. All 55 summaries and
-detailed descriptions are generated from `store-assets/listings/locales.json`.
-See [the Extensiq keyword review](./chrome-web-store-localizations.md#extensiq-copy-review--4-october-2026)
-for observed positions, missing wording, placement changes and evidence IDs.
-The title is retained; the short description now includes `responsive design
-tester`, and the detailed opening explicitly describes `responsive website
-testing`. The revised copy and approved artwork are ready for local review and
-upload; packaging alone does not publish Store descriptions.
+The 0.2.11 draft was rejected for keyword spam (Yellow Argon). The review
+identified the device-model list in the detailed description. All 55 descriptions
+now omit that list and the redundant paragraph of search phrases. The English
+opening explains the comparison workflow directly. The All devices feature,
+privacy information and preview limitations remain described.
 
-Compare like-for-like search captures after the listing is published. No
-ranking improvement or causal effect is established by changing these files.
+Detailed descriptions are generated from `store-assets/listings/locales.json`.
+Run `npm run sync:store-locales` and upload each description to its matching
+Store language. Packaging extension messages does not publish these descriptions.
+The extension title, package summaries and approved screenshots are unchanged by
+this description correction.
 
-### Search-positioning terms
+### Writing future listing copy
 
-Use these phrases naturally in the name, summary, and first paragraphs; do not
-append a keyword list to the public description:
+Explain what users can do in plain language. Use feature bullets for actions and
+limitations. Avoid lists of device models or brands and avoid repeating related
+search phrases merely to target Store queries. Search-position research belongs
+in internal research notes, rather than a checklist of words for the description.
 
-- Established tracked terms: `mobile view`, `device emulator`, `mobile preview`,
-  `responsive tester`, `mobile simulator`, `responsive design tester`.
-- Tracked testing gaps: `responsive testing`, `responsive website testing`.
-- Relevant wording addition: `mobile device`; competitor use is observed,
-  but search demand and a rank for this phrase are not established here.
-- Feature-led: `multiple devices side by side`, `synced scrolling`,
-  `custom viewport sizes`, `responsive screenshot`, `design comparison`.
-
-Avoid claiming full hardware, network, sensor, or browser-engine emulation. The
-extension emulates responsive viewports and device presentation for everyday
-frontend testing; critical flows should still be checked on physical devices.
+Follow [Google's keyword spam guidance](https://developer.chrome.com/docs/webstore/program-policies/spam-faq#keyword-spam)
+and [Yellow Argon troubleshooting](https://developer.chrome.com/docs/webstore/troubleshooting/#keyword-stuffing).
+Do not claim physical-device or browser-engine emulation: previews use Chrome
+viewports, and critical flows should still be checked on physical devices.
 
 ### Search baseline (25 July 2026)
 
@@ -111,13 +103,10 @@ experiments, so use this as a baseline rather than a guaranteed universal rank.
 | `website responsive tester` | Outside first 10 |
 | `multiple device preview` | Outside first 10 |
 
-The leading results consistently place the searched phrase in the extension
-name, repeat it in the short description, and immediately explain the supported
-devices or testing workflow. The recommended name therefore covers three
-high-intent phrases exactly, while the short and detailed descriptions cover
-the related terms naturally. Do not repeat terms unnaturally: Store authority,
-ratings, active users, conversion, retention, localization, and listing quality
-also influence discovery.
+This table is historical research, rather than a template for public listing
+copy. Describe the workflow plainly and use search terms only where they help
+explain a feature. No ranking improvement or causal effect is established by
+changing these files.
 
 ### Category
 

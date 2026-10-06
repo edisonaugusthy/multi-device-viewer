@@ -1,10 +1,6 @@
 Mobile View on tasuta avatud lähtekoodiga mobiilisimulaator ja seadmeemulaator Chrome’ile. Vaata veebilehte korraga kuni neljas telefoni, tahvli, sülearvuti ja lauaarvuti vaates. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.
 
-Kasuta mobiilset eelvaadet kohanduvate veebisaitide testimiseks. Võrdle mobiilseadmeid ja arvuteid ning kontrolli menüüsid, teksti ja vahesid eri murdepunktides. See kohanduva veebidisaini testimise tööriist koondab kohanduvustestid ühte tööalasse.
-
 Avage kõik seadmed ühe klõpsuga. Eelvaated on rühmitatud seadmetüübi järgi ja järjestatud väiksematest ekraanidest suuremateni.
-
-Vaata iPhone 18 Pro, volditud ja avatud iPhone Duo, MacBooki ning Apple Watchi eelvaateid. Liigu valitud seadmekategoorias eelmise ja järgmise seadme nooltega.
 
 Salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.
 

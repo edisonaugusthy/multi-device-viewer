@@ -1,9 +1,5 @@
 Mobile View ni kiigaji cha simu na kiigaji cha vifaa bila malipo na cha programu huria kwa Chrome. Tazama tovuti katika mionekano hadi minne ya simu, kompyuta kibao, laptop na desktop kwa wakati mmoja. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.
 
-Tumia hakiki ya simu kupima tovuti zinazobadilika kulingana na ukubwa wa skrini. Linganisha vifaa vya simu na kompyuta ili kukagua menyu, maandishi na nafasi kwenye sehemu za kubadili mpangilio. Zana hii ya kupima muundo sikivu huunganisha majaribio sikivu katika eneo moja la kazi.
-
-Hakiki iPhone 18 Pro, iPhone Duo iliyokunjwa na iliyofunguliwa, MacBook na Apple Watch. Tumia mishale ya kifaa kilichotangulia na kinachofuata katika aina iliyochaguliwa.
-
 - Fungua vifaa vyote kwa mbofyo mmoja. Muonekano wa awali umepangwa kwa aina ya kifaa na kuanzia skrini ndogo hadi kubwa.
 - Unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.
 - Piga picha ya mwonekano mmoja au eneo lote la kazi. Ongeza mishale, visanduku, michoro na maandishi au punguza picha. Onyesha muundo wa ndani kando ya ukurasa au kama tabaka juu yake.

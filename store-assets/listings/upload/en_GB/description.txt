@@ -1,9 +1,6 @@
-Mobile View is a free, open-source mobile simulator and device emulator for responsive website testing in Chrome. Compare up to four phone, tablet, laptop and desktop views side by side without repeatedly resizing your browser.
-
-Use a mobile preview to check menus, text, spacing and page layouts at different breakpoints. This responsive design tester combines responsive testing, screenshots and design feedback in a multi-device viewer so you can review mobile device layouts alongside larger screens.
+Mobile View is a free, open-source tool for checking website layouts at different screen sizes in Chrome. Compare up to four previews side by side to check menus, text, spacing and layout changes.
 
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
-- Preview iPhone 18 Pro, folded and unfolded iPhone Duo, Android phones, tablets, MacBook and Apple Watch. Browse the selected device category with previous and next arrows.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
 - Save device sets and favorites for repeat checks during frontend development and design review.

@@ -1,9 +1,5 @@
 Mobile View è un simulatore mobile ed emulatore di dispositivi gratuito e open source per Chrome. Visualizza un sito in un massimo di quattro viste telefono, tablet, laptop e desktop affiancate, senza ridimensionare continuamente la finestra o cambiare preset DevTools.
 
-Usa l’anteprima mobile per i test di siti web responsive. Confronta dispositivi mobili e desktop per controllare menu, testo e spaziature a diversi breakpoint. Questo tester di design responsive riunisce i test responsive in un unico spazio di lavoro.
-
-Visualizza iPhone 18 Pro, iPhone Duo chiuso e aperto, MacBook e Apple Watch. Scorri la categoria selezionata con le frecce per il dispositivo precedente e successivo.
-
 - Apri tutti i dispositivi con un clic. Le anteprime sono raggruppate per tipo di dispositivo e ordinate dagli schermi più piccoli ai più grandi.
 - Scegli dispositivi realistici, modifica orientamento e zoom, ricarica una singola anteprima o crea viewport personalizzate.
 - Sincronizza scorrimento, interazioni supportate e navigazione tra anteprime corrispondenti.

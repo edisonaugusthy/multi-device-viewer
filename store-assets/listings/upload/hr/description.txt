@@ -1,9 +1,5 @@
 Mobile View je besplatan mobilni simulator i emulator uređaja otvorenog koda za Chrome. Prikažite web u do četiri prikaza telefona, tableta, prijenosnika i računala istodobno. Odaberite realistične uređaje, promijenite orijentaciju i zumiranje, sinkronizirajte pomicanje i navigaciju, snimite zaslon i usporedite s lokalnim dizajnom. Sve radi lokalno bez računa, pretplate, analitike, telemetrije ili poslužitelja.
 
-Koristite mobilni pregled za testiranje responzivnih web-stranica. Usporedite mobilne uređaje i računala te provjerite izbornike, tekst i razmake na prijelomnim točkama. Ovaj alat za testiranje responzivnog dizajna objedinjuje responzivne testove u jednom radnom prostoru.
-
-Pregledajte iPhone 18 Pro, sklopljeni i otvoreni iPhone Duo, MacBook i Apple Watch. Strelicama za prethodni i sljedeći uređaj prolazite kroz odabranu kategoriju.
-
 - Otvorite sve uređaje jednim klikom. Pretpregledi su grupirani prema vrsti uređaja i poredani od manjih zaslona prema većima.
 - Izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.
 - Snimite jedan prikaz ili cijeli radni prostor. Dodajte strelice, okvire, crteže i tekst ili izrežite snimku. Prikažite lokalni dizajn uz stranicu ili kao preklop.

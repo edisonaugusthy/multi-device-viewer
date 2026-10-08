@@ -8,7 +8,13 @@ async (page) => {
     await worker.evaluate(async url => {
       await chrome.storage.local.remove(['mdvWorkspaceView', 'mdvSimulatorSession']);
       const tab = (await chrome.tabs.query({})).find(t => t.url === url);
-      await chrome.tabs.sendMessage(tab.id, { type:'OPEN_SIMULATOR',url,sourceTabId:tab.id });
+      const request = { type:'OPEN_SIMULATOR',url,sourceTabId:tab.id };
+      try { await chrome.tabs.sendMessage(tab.id, request, { frameId: 0 }); }
+      catch (error) {
+        if (!String(error).includes('Receiving end does not exist')) throw error;
+        await chrome.scripting.executeScript({ target: { tabId: tab.id, frameIds: [0] }, files: ['content-scripts/content.js'] });
+        await chrome.tabs.sendMessage(tab.id, request, { frameId: 0 });
+      }
     }, initial);
   } else {
     await page.goto(initial);
@@ -71,6 +77,13 @@ async (page) => {
   await poll(()=>positions(),v=>v?.every(p=>Math.abs(p.y-250)<2&&Math.abs(p.x-80)<2),'root deltas');
   await scroll(1,-30,70);
   await poll(()=>positions(),v=>v?.every(p=>Math.abs(p.y-320)<2&&Math.abs(p.x-50)<2),'immediate follower takeover');
+  await frames.nth(1).evaluate(f=>f.contentWindow.postMessage({
+    type:'MDV_APPLY_SCROLL_SYNC',slotId:f.name.replace(/^mdv-(?:mobile-)?preview-/,''),
+    url:f.contentWindow.location.href,scrollLeft:80,scrollTop:250,deltaLeft:0,deltaTop:0,
+  },'*'));
+  await page.waitForTimeout(150);
+  if(!(await positions()).every(p=>Math.abs(p.y-320)<2&&Math.abs(p.x-50)<2))throw Error('late initial snapshot rewound newer movement');
+  results.checks.push('late initial snapshots cannot rewind a follower after takeover');
   await frames.first().evaluate(f=>{f.contentDocument.querySelector('#panel-a').scrollTo({top:190,left:70,behavior:'instant'});f.contentDocument.querySelector('#panel-b').scrollTo({top:230,left:90,behavior:'instant'});});
   await poll(()=>positions('panel-a'),v=>v?.every(p=>Math.abs(p.y-190)<1&&Math.abs(p.x-70)<1),'nested A');
   await poll(()=>positions('panel-b'),v=>v?.every(p=>Math.abs(p.y-230)<1&&Math.abs(p.x-90)<1),'nested B same animation frame');

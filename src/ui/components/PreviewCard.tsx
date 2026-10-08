@@ -1,3 +1,7 @@
+import { usePointerDrag } from "../hooks/usePointerDrag";
+import { adjustPlacement, type PlacementAdjustment } from "../interactions/placement";
+import { readPreviewHealthReport } from "../../domain/device/preview-health";
+import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
@@ -20,7 +24,7 @@ import {
   Star,
   X,
 } from "lucide-react";
-import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, useId, type ReactNode } from "react";
+import { forwardRef, memo, useEffect, useLayoutEffect, useMemo, useRef, useState, useId, type ReactNode } from "react";
 import {
   supportsOrientation,
   toLandscapeAwareSize,
@@ -91,8 +95,9 @@ interface PreviewCardProps {
   device: Device;
   display: DisplaySettings;
   showToolbar?: boolean;
+  visualsActive?: boolean;
   onScaleChange?: (scale: number) => void;
-  onLoadStateChange?: (id: string, status: "loaded" | "error") => void;
+  onLoadStateChange?: (id: string, status: GalleryLoadResult) => void;
   removable: boolean;
   onCapture?: () => void;
   capturePending?: boolean;
@@ -134,11 +139,12 @@ function readPageSurfaces(data: Record<string, unknown>): BrowserSurfaceColors |
   };
 }
 
-export function PreviewCard({
+export const PreviewCard = memo(function PreviewCard({
   slot,
   device,
   display,
   showToolbar = true,
+  visualsActive = true,
   onScaleChange,
   onLoadStateChange,
   removable,
@@ -163,8 +169,9 @@ export function PreviewCard({
   const previousScrollSyncRef = useRef(display.scrollSync);
   const navigationRef = useRef(new NavigationSyncState(slot.url));
   const bridgeDocumentRef = useRef<string | undefined>(undefined);
-  const syncSettingsRef = useRef({ scroll: display.scrollSync, flow: flowRecording });
-  syncSettingsRef.current = { scroll: display.scrollSync, flow: flowRecording };
+  const sampleVisuals = visualsActive && (device.type === "phone" || device.type === "tablet");
+  const syncSettingsRef = useRef({ scroll: display.scrollSync, flow: flowRecording, visuals: sampleVisuals });
+  syncSettingsRef.current = { scroll: display.scrollSync, flow: flowRecording, visuals: sampleVisuals };
   const currentPageUrlRef = useRef(slot.url);
   const sentFlowRunRef = useRef<string | null>(null);
   const pendingReplayStepRef = useRef<number | null>(null);
@@ -175,6 +182,13 @@ export function PreviewCard({
     height: 0,
   });
   const [preparedUrl, setPreparedUrl] = useState<string | null>(null);
+  const [loadIssue, setLoadIssue] = useState<"resources" | "unverified" | null>(null);
+  const healthRequest = useRef<string | null>(null);
+  const healthTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => {
+    setLoadIssue(null);
+    return () => { healthRequest.current = null; clearTimeout(healthTimer.current); };
+  }, [slot.id, slot.url, slot.reloadToken]);
   useEffect(() => {
     let active = true;
     setBlocked(false);
@@ -269,48 +283,17 @@ export function PreviewCard({
   };
   const overlayPlacement = designOverlay?.placement ?? fittedOverlayPlacement;
 
-  function startOverlayAdjustment(event: React.PointerEvent, kind: "move" | "width" | "height" | "both") {
+  const startDrag = usePointerDrag();
+
+  function startOverlayAdjustment(event: React.PointerEvent, kind: PlacementAdjustment) {
     if (!designOverlay?.adjusting || event.button !== 0) return;
-    event.preventDefault();
-    event.stopPropagation();
-    const target = event.currentTarget as HTMLElement;
-    const pointerId = event.pointerId;
     const surface = event.currentTarget.closest("[data-design-overlay-surface]")?.getBoundingClientRect();
-    if (!surface) return;
-    const startX = event.clientX;
-    const startY = event.clientY;
-    const initial = overlayPlacement;
-    let finished = false;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      target.removeEventListener("pointermove", onMove);
-      target.removeEventListener("pointerup", finish);
-      target.removeEventListener("pointercancel", finish);
-      target.removeEventListener("lostpointercapture", finish);
-      window.removeEventListener("blur", finish);
-      if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId);
-    };
-    const onMove = (moveEvent: PointerEvent) => {
-      if (moveEvent.pointerId !== pointerId || (moveEvent.buttons & 1) !== 1) return finish();
-      const deltaX = ((moveEvent.clientX - startX) / surface.width) * 100;
-      const deltaY = ((moveEvent.clientY - startY) / surface.height) * 100;
-      if (kind === "move") {
-        designOverlay.onPlacementChange({ ...initial, x: Math.max(-1000, Math.min(1000, initial.x + deltaX)), y: Math.max(-1000, Math.min(1000, initial.y + deltaY)) });
-      } else {
-        designOverlay.onPlacementChange({
-          ...initial,
-          width: kind === "width" || kind === "both" ? Math.max(1, Math.min(1000, initial.width + deltaX)) : initial.width,
-          height: kind === "height" || kind === "both" ? Math.max(1, Math.min(1000, initial.height + deltaY)) : initial.height,
-        });
-      }
-    };
-    target.addEventListener("pointermove", onMove);
-    target.addEventListener("pointerup", finish);
-    target.addEventListener("pointercancel", finish);
-    target.addEventListener("lostpointercapture", finish);
-    window.addEventListener("blur", finish);
-    target.setPointerCapture(pointerId);
+    if (!surface?.width || !surface.height) return;
+    event.stopPropagation();
+    startDrag(event, (deltaX, deltaY) => designOverlay.onPlacementChange(adjustPlacement(
+      overlayPlacement, kind, deltaX / surface.width * 100, deltaY / surface.height * 100,
+      { x: [-1000, 1000], y: [-1000, 1000], size: [1, 1000] },
+    )));
   }
 
   const syncScrollBridge = (iframe: HTMLIFrameElement | null) => {
@@ -330,6 +313,15 @@ export function PreviewCard({
       slotId: slot.id,
     }, "*");
   };
+
+  const syncVisualBridge = (iframe: HTMLIFrameElement | null) => {
+    iframe?.contentWindow?.postMessage({
+      type: "MDV_PREVIEW_ACTIVITY", slotId: slot.id,
+      active: syncSettingsRef.current.visuals,
+      sampleRightSurface: device.id.startsWith("apple-iphone-duo-"),
+    }, "*");
+  };
+  useEffect(() => { syncVisualBridge(iframeRef.current); }, [sampleVisuals, slot.id, device.id]);
 
   const sendFlowReplay = (startIndex = 0) => {
     if (!flowReplay) return;
@@ -353,12 +345,11 @@ export function PreviewCard({
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const update = () => {
-      const r = el.getBoundingClientRect();
-      setContainerSize({ width: r.width, height: r.height });
-    };
-    update();
-    const ro = new ResizeObserver(update);
+    // Use the browser's measured box instead of forcing a layout per card.
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setContainerSize(current => current.width === width && current.height === height ? current : { width, height });
+    });
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
@@ -441,6 +432,7 @@ export function PreviewCard({
           slotId: slot.id,
           hideScrollbars: device.type === "phone" || device.type === "tablet",
           sampleRightSurface: device.id.startsWith("apple-iphone-duo-"),
+          visualsActive: syncSettingsRef.current.visuals,
         },
         "*",
       );
@@ -473,6 +465,15 @@ export function PreviewCard({
       if (event.source !== iframeRef.current?.contentWindow) return;
       const data = event.data;
       if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
+      if (data.type === "MDV_PREVIEW_HEALTH") {
+        const errors = readPreviewHealthReport(data, healthRequest.current);
+        if (!errors) return;
+        clearTimeout(healthTimer.current);
+        const incomplete = errors.scripts + errors.styles > 0;
+        setLoadIssue(incomplete ? "resources" : null);
+        onLoadStateChange?.(slot.id, incomplete ? "incomplete" : "loaded");
+        return;
+      }
       if (data.type === "MDV_BROWSER_SCROLL") {
         const top = Number(data.scrollTop), delta = Number(data.deltaTop);
         if (Number.isFinite(top) && Number.isFinite(delta)) {
@@ -489,6 +490,7 @@ export function PreviewCard({
         // READY also covers a bridge injected after the iframe's load event.
         syncScrollBridge(iframeRef.current);
         syncFlowRecordingBridge(iframeRef.current);
+        syncVisualBridge(iframeRef.current);
         setBridgeStatus("ready");
         setBlocked(false);
         const nextSurfaces = readPageSurfaces(data as Record<string, unknown>);
@@ -595,7 +597,7 @@ export function PreviewCard({
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [device.id, device.type, frameProfile.platform, display.navigationSync, display.scrollSync, flowRecording, flowReplay, onFlowResult, onFlowStep, observeSlotUrl, slot.id, slot.url]);
+  }, [device.id, device.type, frameProfile.platform, display.navigationSync, display.scrollSync, flowRecording, flowReplay, onFlowResult, onFlowStep, observeSlotUrl, onLoadStateChange, slot.id, slot.url]);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -879,7 +881,20 @@ export function PreviewCard({
                       // Preparing the frame initially creates an empty document.
                       // Its load event must not release a website's queue slot.
                       try { if (frame.contentDocument?.URL === "about:blank") return; } catch { /* Cross-origin website. */ }
-                      onLoadStateChange?.(slot.id, "loaded");
+                      clearTimeout(healthTimer.current);
+                      setLoadIssue(null);
+                      if (typeof chrome === "undefined" || !chrome.runtime?.id) {
+                        onLoadStateChange?.(slot.id, "loaded");
+                        return;
+                      }
+                      const requestId = crypto.randomUUID();
+                      healthRequest.current = requestId;
+                      frame.contentWindow?.postMessage({ type: "MDV_PREVIEW_HEALTH_REQUEST", slotId: slot.id, requestId }, "*");
+                      healthTimer.current = setTimeout(() => {
+                        if (healthRequest.current !== requestId) return;
+                        setLoadIssue("unverified");
+                        onLoadStateChange?.(slot.id, "incomplete");
+                      }, 5000);
                     }}
                     onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
                   />
@@ -888,6 +903,11 @@ export function PreviewCard({
             </DeviceFrame>
           </div>
         )}
+        {loadIssue && !blocked && <div role="status" data-preview-load-issue={loadIssue}
+          className="absolute inset-x-2 bottom-2 z-40 flex items-center justify-between gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-[11px] text-amber-950 shadow-sm">
+          <span>{t(loadIssue === "resources" ? "previewResourceError" : "previewLoadUnverified")}</span>
+          <button type="button" onClick={() => reloadSlot(slot.id)} className="shrink-0 rounded px-2 py-1 font-semibold hover:bg-amber-100">{t("reloadPreview")}</button>
+        </div>}
         {designOverlay && <div
           className={`absolute z-30 touch-none select-none ${designOverlay.adjusting ? "cursor-move border-2 border-amber-400 shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "pointer-events-none"}`}
           style={{ left: `${overlayPlacement.x}%`, top: `${overlayPlacement.y}%`, width: `${overlayPlacement.width}%`, height: `${overlayPlacement.height}%`, opacity: designOverlay.opacity / 100 }}
@@ -904,7 +924,7 @@ export function PreviewCard({
       </div>
     </section>
   );
-}
+});
 
 function broadcastScrollSync(detail: ScrollSyncPayload) {
   window.dispatchEvent(

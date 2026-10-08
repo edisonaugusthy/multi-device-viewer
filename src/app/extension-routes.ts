@@ -25,12 +25,6 @@ export function isPreviewableUrl(value?: string | null): boolean {
   }
 }
 
-export async function getActiveTabUrl(): Promise<string | undefined> {
-  if (typeof chrome === "undefined" || !chrome.tabs?.query) return undefined;
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  return tab?.url;
-}
-
 export async function openSimulator(initialUrl?: string, sourceTabId?: number): Promise<void> {
   const targetUrl = simulatorUrl(initialUrl, sourceTabId);
 

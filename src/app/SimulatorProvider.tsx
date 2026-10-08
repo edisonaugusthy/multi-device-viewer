@@ -30,12 +30,9 @@ interface SimulatorContextValue extends SimulatorState {
   addSlot: (deviceId?: string, orientation?: PreviewSlot["orientation"]) => void;
   applyDevicePreset: (deviceIds: string[]) => void;
   removeSlot: (slotId: string) => void;
-  duplicateActiveSlot: (deviceId?: string) => void;
   moveSlot: (slotId: string, direction: "left" | "right") => void;
-  resetSession: () => void;
   updateDisplay: (display: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => void;
   useCount: number;
-  setSourceTabId: (tabId: number | null) => void;
 }
 
 interface SavedSimulatorSession {
@@ -262,24 +259,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     });
   }, [activeSlotId]);
 
-  const duplicateActiveSlot = useCallback((deviceId?: string) => {
-    setSlots((current) => {
-      if (current.length >= maxPreviewSlots) return current;
-      const source = current.find((slot) => slot.id === activeSlotId) ?? current[0];
-      const nextSlot = {
-        ...source,
-        url: observedUrls.current.get(source.id) ?? source.url,
-        id: `slot-${Date.now()}-${current.length}`,
-        deviceId: deviceId ?? source.deviceId,
-        zoom: 0.58,
-        zoomMode: "fit" as const,
-      };
-      const next = [...current, nextSlot];
-      setActiveSlotId(nextSlot.id);
-      return next;
-    });
-  }, [activeSlotId]);
-
   const moveSlot = useCallback((slotId: string, direction: "left" | "right") => {
     setSlots((current) => {
       const from = current.findIndex((slot) => slot.id === slotId);
@@ -291,14 +270,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const resetSession = useCallback(() => {
-    const url = slots[0]?.url ?? initialUrlFromSearch();
-    const next = defaultDeviceIds.map((deviceId, index) => createPreviewSlot(deviceId, url, index));
-    setSlots(next);
-    setActiveSlotId(next[0].id);
-    setDisplay(startupDisplay);
-  }, [slots]);
-
   const updateDisplay = useCallback((nextDisplay: DisplaySettings | ((current: DisplaySettings) => DisplaySettings)) => {
     if (!hydrated) displayUpdatedBeforeHydrationRef.current = true;
     setDisplay((current) =>
@@ -307,33 +278,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
         : nextDisplay,
     );
   }, [hydrated]);
-
-  // Listen for LOAD_URL messages sent by the background service worker when the
-  // extension icon is clicked while a simulator tab is already open.
-  useEffect(() => {
-    if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
-
-    const listener = (message: unknown) => {
-      if (
-        message !== null &&
-        typeof message === "object" &&
-        (message as Record<string, unknown>).type === "LOAD_URL" &&
-        typeof (message as Record<string, unknown>).url === "string"
-      ) {
-        const newUrl = (message as Record<string, unknown>).url as string;
-        setAllSlotsUrl(newUrl);
-        const nextTabId = (message as Record<string, unknown>).sourceTabId;
-        if (typeof nextTabId === "number" && Number.isInteger(nextTabId)) {
-          setSourceTabId(nextTabId);
-        }
-      }
-    };
-
-    chrome.runtime.onMessage.addListener(listener);
-    return () => {
-      chrome.runtime.onMessage.removeListener(listener);
-    };
-  }, [setAllSlotsUrl]);
 
   const value = useMemo<SimulatorContextValue>(
     () => ({
@@ -358,11 +302,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       addSlot,
       applyDevicePreset,
       removeSlot,
-      duplicateActiveSlot,
       moveSlot,
-      resetSession,
       updateDisplay,
-      setSourceTabId,
     }),
     [
       hydrated,
@@ -370,12 +311,10 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       addSlot,
       applyDevicePreset,
       display,
-      duplicateActiveSlot,
       moveSlot,
       reloadAllSlots,
       reloadSlot,
       removeSlot,
-      resetSession,
       rotateSlot,
       setActiveSlot,
       setAllSlotsUrl,

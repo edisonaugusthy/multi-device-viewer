@@ -6,7 +6,11 @@ export interface ViewerContext {
   close: () => void;
 }
 let context: ViewerContext | undefined;
-export function setViewerContext(value: ViewerContext | undefined) { context = value; }
+const pendingPreviews = new Map<string, Promise<void>>();
+export function setViewerContext(value: ViewerContext | undefined) {
+  context = value;
+  pendingPreviews.clear();
+}
 export function getViewerContext() { return context; }
 export function getViewerRoot(): ParentNode { return context?.root ?? document; }
 // ShadowRoot dispatches the same DOM keyboard/pointer events as Document.
@@ -17,6 +21,15 @@ export function extensionAsset(path: string): string {
 
 export async function preparePreview(url: string): Promise<void> {
   if (!context || typeof chrome === "undefined" || !chrome.runtime?.sendMessage) return;
-  const result = await chrome.runtime.sendMessage({ type: "MDV_PREVIEW_HOST", url });
-  if (!result?.ok) throw new Error(result?.error ?? "Could not prepare the preview.");
+  // Gallery frames share this setup, but still load independent documents.
+  // Only coalesce in-flight work: a later reload rechecks the session rules.
+  const pending = pendingPreviews.get(url);
+  if (pending) return pending;
+  const preparation = (async () => {
+    const result = await chrome.runtime.sendMessage({ type: "MDV_PREVIEW_HOST", url });
+    if (!result?.ok) throw new Error(result?.error ?? "Could not prepare the preview.");
+  })();
+  pendingPreviews.set(url, preparation);
+  try { await preparation; }
+  finally { if (pendingPreviews.get(url) === preparation) pendingPreviews.delete(url); }
 }

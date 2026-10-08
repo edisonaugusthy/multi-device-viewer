@@ -26,10 +26,6 @@ export function createPreviewSlot(deviceId: string, url: string, index: number):
   };
 }
 
-export function canAddPreviewSlot(slots: PreviewSlot[]): boolean {
-  return slots.length < maxPreviewSlots;
-}
-
 export function nextZoom(current: number, direction: "in" | "out"): number {
   const delta = direction === "in" ? 0.1 : -0.1;
   return Math.min(1.6, Math.max(0.2, Number((current + delta).toFixed(2))));

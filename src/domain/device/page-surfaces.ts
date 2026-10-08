@@ -6,9 +6,10 @@ let context: CanvasRenderingContext2D | null | undefined;
 
 /** Let the browser parse hex, rgb(), OKLCH and color() in the same sRGB space. */
 export function resolveCssColor(value: string | null | undefined): RgbaColor | undefined {
-  if (!value || !CSS.supports("color", value)) return undefined;
+  if (!value) return undefined;
   const cached = colors.get(value);
   if (cached) return cached;
+  if (!CSS.supports("color", value)) return undefined;
   if (context === undefined) {
     const canvas = document.createElement("canvas"); canvas.width = canvas.height = 1;
     context = canvas.getContext("2d", { willReadFrequently: true, colorSpace: "srgb" });
@@ -42,24 +43,40 @@ export function prefersLightIcons(color: RgbaColor): boolean {
   return 1.05 / (luminance + 0.05) > (luminance + 0.05) / 0.05;
 }
 
-function renderedBackground(start: Element | null) {
+// Shared only within one synchronous sample: repeated edge points often hit
+// the same ancestors, but a later sample must see new page styles.
+class SurfaceSample {
+  private styles = new WeakMap<Element, CSSStyleDeclaration>();
+  backgrounds = new WeakMap<Element, { color: RgbaColor; painted: boolean }>();
+  style(element: Element) {
+    let style = this.styles.get(element);
+    if (!style) { style = getComputedStyle(element); this.styles.set(element, style); }
+    return style;
+  }
+}
+
+function renderedBackground(start: Element | null, sample: SurfaceSample) {
+  const cached = start && sample.backgrounds.get(start);
+  if (cached) return cached;
   let color: RgbaColor = { r: 0, g: 0, b: 0, a: 0 };
   let painted = false;
   for (let element = start; element; element = element.parentElement) {
-    const style = getComputedStyle(element);
+    const style = sample.style(element);
     const background = resolveCssColor(style.backgroundColor);
     if (background?.a) { color = compositeColors(color, background); painted = true; }
     // CSS opacity applies to the composed subtree, including its descendants.
     color = { ...color, a: color.a * Number(style.opacity) };
   }
-  return { color: compositeColors(color, WHITE), painted };
+  const result = { color: compositeColors(color, WHITE), painted };
+  if (start) sample.backgrounds.set(start, result);
+  return result;
 }
 
-function sampleEdge(bottom: boolean) {
+function sampleEdge(bottom: boolean, sample: SurfaceSample) {
   const y = bottom ? Math.max(0, innerHeight - 1) : 1;
   const points = [0.12, 0.5, 0.88].map(ratio => {
     const element = document.elementFromPoint(Math.min(innerWidth - 1, Math.max(0, innerWidth * ratio)), y);
-    return { ...renderedBackground(element), pinned: pinnedEdgeBackground(element, y) };
+    return { ...renderedBackground(element, sample), pinned: pinnedEdgeBackground(element, y, sample) };
   });
   return { color: { r: points.reduce((n, p) => n + p.color.r, 0) / 3,
     g: points.reduce((n, p) => n + p.color.g, 0) / 3,
@@ -69,9 +86,9 @@ function sampleEdge(bottom: boolean) {
 }
 
 /** Extend a full-width, nearly opaque pinned surface, never a scrolling post. */
-function pinnedEdgeBackground(start: Element | null, y: number): RgbaColor | undefined {
+function pinnedEdgeBackground(start: Element | null, y: number, sample: SurfaceSample): RgbaColor | undefined {
   for (let element = start; element; element = element.parentElement) {
-    const style = getComputedStyle(element);
+    const style = sample.style(element);
     if (style.position !== "sticky" && style.position !== "fixed") continue;
     const rect = element.getBoundingClientRect();
     if (rect.top > y || rect.bottom <= y || rect.left > 1 || rect.right < innerWidth - 1) continue;
@@ -81,7 +98,7 @@ function pinnedEdgeBackground(start: Element | null, y: number): RgbaColor | und
     // Requiring alpha === 1 leaves that edge exposed on the newer iPhones.
     // Composite against the page before sealing it, as we do for browser tint;
     // keep genuinely transparent overlays unguarded.
-    if (background && background.a >= 0.9 && Number(style.opacity) === 1) return renderedBackground(element).color;
+    if (background && background.a >= 0.9 && Number(style.opacity) === 1) return renderedBackground(element, sample).color;
   }
   return undefined;
 }
@@ -98,9 +115,9 @@ function themeColor() {
 const toCss = (color: RgbaColor) => `rgb(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)})`;
 
 /** Background colors beside the Duo gutter, with section boundaries refined to a pixel. */
-function sampleRightEdge(): SideSurfaceBand[] {
+function sampleRightEdge(surface: SurfaceSample): SideSurfaceBand[] {
   const height = Math.max(1, innerHeight);
-  const sample = (y: number) => renderedBackground(document.elementFromPoint(Math.max(0, innerWidth - 1), Math.min(height - 1, y))).color;
+  const sample = (y: number) => renderedBackground(document.elementFromPoint(Math.max(0, innerWidth - 1), Math.min(height - 1, y)), surface).color;
   let previousY = 0;
   let previous = sample(0);
   const bands: SideSurfaceBand[] = [{ offset: 0, color: toCss(previous), isDark: prefersLightIcons(previous) }];
@@ -124,7 +141,8 @@ function sampleRightEdge(): SideSurfaceBand[] {
 }
 
 export function samplePageSurfaces(includeRightEdge = false) {
-  const top = sampleEdge(false), bottom = sampleEdge(true);
+  const sample = new SurfaceSample();
+  const top = sampleEdge(false, sample), bottom = sampleEdge(true, sample);
   // Sample what is actually at the edge. A header elsewhere in the document
   // must not continue tinting the browser after it has scrolled out of view.
   const topColor = top.painted ? top.color : themeColor() ?? top.color;
@@ -134,7 +152,7 @@ export function samplePageSurfaces(includeRightEdge = false) {
     topGuardColor: top.pinned ? toCss(top.pinned) : undefined,
     bottomGuardColor: bottom.pinned ? toCss(bottom.pinned) : undefined,
     topIsDark: prefersLightIcons(topColor), bottomIsDark: prefersLightIcons(bottom.color),
-    rightBands: includeRightEdge ? sampleRightEdge() : undefined,
+    rightBands: includeRightEdge ? sampleRightEdge(sample) : undefined,
     viewportFit: /viewport-fit\s*=\s*cover/i.test(viewportMeta) ? "cover" as const : "auto" as const,
   };
 }

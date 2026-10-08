@@ -9,7 +9,7 @@ Build a fully local Chrome MV3 extension that helps users test websites across r
 - All extension data lives in packaged assets or Chrome local storage.
 - No paid tiers, no ads, no server dependency.
 - Compare mode supports up to four simultaneous device previews.
-- Screenshot and annotation ship in v1; GIF/MP4/microphone/camera capture are v2.
+- Screenshots, annotations, and source-tab recording are supported. Microphone and camera capture are not part of the current product.
 - Device mockup PNGs are packaged locally for personal-use builds.
 
 ## Architecture
@@ -17,18 +17,20 @@ Build a fully local Chrome MV3 extension that helps users test websites across r
 - `src/domain/simulator`: preview slot state, orientation, zoom, URL normalization, iframe-blocked helpers.
 - `src/domain/capture`: screenshot and annotation model.
 - `src/infrastructure/storage`: Chrome storage adapter with localStorage fallback for browser dev.
-- `src/app`: React providers and extension bootstrap helpers.
+- `src/app`: React providers, viewer lifecycle, and preview bridge.
+- `entrypoints/content.ts`: top-frame viewer UI, injected on demand by the action handler; never register it on every browsing tab.
+- `entrypoints/preview-bridge.content.ts`: lightweight all-frame bridge; keep viewer UI dependencies out of this entrypoint.
 - `src/ui`: app shell, simulator, popup, icons, and shared visual primitives.
 
 ## Feature Matrix
-- Popup opens or focuses the simulator page with the active tab URL.
-- Simulator has single mode and compare grid mode.
+- The extension action toggles a full-screen viewer on the current website; restricted pages show an unsupported-page popup.
+- The workspace compares up to four selected devices and offers an All devices gallery with separate category pages. Only the selected category loads, and switching pages unmounts the previous category and cancels its queue.
 - Users can search devices, filter by type/brand, favorite devices, use recents, and create custom devices.
 - Each preview can rotate, zoom, fit to available space, reload, and capture.
-- Right panel shows Features, Report, Free transparent PNG, and Info.
-- Display settings toggle status bar, fake battery, browser URL bar, and presentation mode.
+- Workspace tools include device sets, design comparison, user-flow recording, fix prompts, capture, and help.
+- Display controls cover device/free view, interface theme, scroll sync, and navigation sync. Device chrome stays visible in device view.
 - Capture supports viewport-only, framed mockup, and comparison board PNG export.
-- Annotation supports arrow, rectangle, pen, text, blur/cover, undo, redo, and download.
+- Annotation supports arrow, rectangle, pen, text, crop, undo, redo, copy, and download.
 
 ## Device Data Process
 Each device is one JSON-like object with:
@@ -39,14 +41,14 @@ Adding a device should not require simulator code changes. Add catalog metadata 
 ## Asset Process
 Mockups are stored in `public/mockups`. Runtime must use local packaged assets only and must not render source links.
 
-Run `npm run generate:icons` to generate original raster Chrome icons at 16, 32, 48, and 128 px.
+Packaged icons live in `public/icons`; device assets live in `public/mockups`. Use `npm run render:store-assets` for store screenshots and validate them with `npm run validate:store-assets`.
 
 ## Release Steps
-1. `npm install`
-2. `npm run generate:icons`
-3. `npm run import:mockups`
-4. `npm run compile`
-5. `npm run build`
-6. Load `.output/chrome-mv3` in Chrome Extensions developer mode.
-7. Run manual QA on URL loading, compare mode, screenshots, annotation, and offline packaged assets.
-8. `npm run zip` for store/manual distribution.
+1. `npm ci`
+2. `npm run compile` and `npm test`
+3. `npm run validate:locales` and `npm run validate:store-assets`
+4. `npm run test:e2e`
+5. `npm run build` and `npm run zip`
+6. Validate the versioned ZIP with `npm run validate:chrome-zip -- .output/multi-device-viewer-<version>-chrome.zip`.
+7. Load `.output/chrome-mv3` in Chrome Extensions developer mode and verify viewer opening/closing, iframe sync, capture, recording, and the All devices gallery.
+8. Upload the validated package manually. Follow README.md for release notes and version updates.

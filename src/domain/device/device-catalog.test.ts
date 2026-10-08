@@ -427,13 +427,13 @@ describe("device catalog imports", () => {
     expect(device).toBeDefined();
     expect(device?.mockupAssets[0]).toMatchObject({
       localPath: "/mockups/modern-laptop-15.png",
-      screenInset: { top: 34, right: 120, bottom: 186, left: 148 },
+      screenInset: { top: 34, right: 178.8, bottom: 242, left: 178.8 },
       viewport: {
         portrait: {
-          left: 148,
+          left: 178.8,
           top: 34,
-          width: 1440,
-          height: 900,
+          width: 1350.4,
+          height: 844,
           enableRotation: false,
         },
       },
@@ -609,12 +609,12 @@ describe("device catalog imports", () => {
   it("fits the Surface Laptop 13.8-inch content to the complete display opening", () => {
     const asset = devices.find((candidate) => candidate.id === "microsoft-surface-laptop-8-13-8-2026")!.mockupAssets[0];
 
-    expect(asset.screenInset).toEqual({ top: 48, right: 252, bottom: 364, left: 208 });
+    expect(asset.screenInset).toEqual({ top: 48, right: 258, bottom: 386, left: 208 });
     expect(asset.viewport?.portrait).toMatchObject({
       left: 208,
       top: 48,
-      width: 860,
-      height: 598,
+      width: 854,
+      height: 576,
       cornerRadius: 4,
       enableRotation: false,
     });

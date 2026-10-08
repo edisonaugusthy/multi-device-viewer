@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { scheduleLayoutMeasurement } from "../interactions/layout-measurements";
 
 /** Seal the raster edge of independently composited sticky/fixed page layers. */
 export function PreviewSurface({ children, guardEdges, scale, topColor, bottomColor }: {
@@ -13,7 +14,7 @@ export function PreviewSurface({ children, guardEdges, scale, topColor, bottomCo
   useLayoutEffect(() => {
     const surface = surfaceRef.current;
     if (!surface || !guardEdges) return;
-    const update = () => {
+    const measure = () => {
       const rect = surface.getBoundingClientRect();
       if (!rect.height || !surface.clientHeight) return;
       // Sticky layers round their raster bounds independently of the iframe.
@@ -26,9 +27,13 @@ export function PreviewSurface({ children, guardEdges, scale, topColor, bottomCo
       const pixelsPerCssPixel = rect.height * dpr / surface.clientHeight;
       const top = (Math.ceil(rect.top * dpr) + 3 - rect.top * dpr) / pixelsPerCssPixel;
       const bottom = (rect.bottom * dpr - Math.floor(rect.bottom * dpr) + 3) / pixelsPerCssPixel;
-      surface.style.setProperty("--preview-top-inset", `${top}px`);
-      surface.style.setProperty("--preview-bottom-inset", `${bottom}px`);
+      return () => {
+        surface.style.setProperty("--preview-top-inset", `${top}px`);
+        surface.style.setProperty("--preview-bottom-inset", `${bottom}px`);
+      };
     };
+    let cancel: (() => void) | undefined;
+    const update = () => { cancel?.(); cancel = scheduleLayoutMeasurement(measure); };
     update();
     const observer = new ResizeObserver(update);
     observer.observe(surface);
@@ -36,8 +41,9 @@ export function PreviewSurface({ children, guardEdges, scale, topColor, bottomCo
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", update);
+      cancel?.();
     };
-  }, [guardEdges, scale, topColor, bottomColor]);
+  }, [guardEdges, scale]);
 
   return <div ref={surfaceRef} data-preview-surface
     className={`relative h-full w-full ${guardEdges ? "overflow-visible" : "overflow-hidden"}`}>

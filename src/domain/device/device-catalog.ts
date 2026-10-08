@@ -701,7 +701,7 @@ function createMockupOnlyDevices(existing: Device[]): Device[] {
   const usedIds = new Set(existing.map((device) => device.id));
 
   return localMockupCatalog
-    .filter((asset) => !usedIds.has(asset.id) && asset.id !== "apple-ipad-mini")
+    .filter((asset) => !usedIds.has(asset.id))
     .map((asset) => createDeviceFromMockup(asset.id));
 }
 

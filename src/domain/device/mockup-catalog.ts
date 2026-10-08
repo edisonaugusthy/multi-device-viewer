@@ -281,20 +281,6 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     }
   },
   {
-    "id": "apple-ipad-mini",
-    "localPath": "/mockups/apple-ipad-mini.png",
-    "file": "apple-ipad-mini.png",
-    "bytes": 69190,
-    "width": 1728,
-    "height": 2608,
-    "screenInset": {
-      "top": 9.5,
-      "right": 9,
-      "bottom": 9,
-      "left": 9
-    }
-  },
-  {
     "id": "apple-ipad-pro-11-2018",
     "localPath": "/mockups/apple-ipad-pro-11-2018.png",
     "file": "apple-ipad-pro-11-2018.png",
@@ -1579,9 +1565,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "cssViewport": { "width": 1440, "height": 900 },
     "screenInset": {
       "top": 34,
-      "right": 120,
-      "bottom": 186,
-      "left": 148
+      "right": 178.8,
+      "bottom": 242,
+      "left": 178.8
     }
   },
   {
@@ -1652,12 +1638,19 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-ipad-mini-a17-pro-2024",
-    "localPath": "/mockups/apple-ipad-mini.png",
-    "file": "apple-ipad-mini.png",
-    "bytes": 69190,
-    "width": 1728,
-    "height": 2608,
-    "screenInset": { "top": 9.5, "right": 9, "bottom": 9, "left": 9 }
+    "localPath": "/mockups/ipad-mini-modern.svg",
+    "file": "ipad-mini-modern.svg",
+    "bytes": 924,
+    "width": 840,
+    "height": 1218,
+    "renderScale": 1,
+    "frameOverlay": true,
+    "cssViewport": { "width": 744, "height": 1133 },
+    "screenInset": { "left": 48, "right": 48, "top": 42.5, "bottom": 42.5 },
+    "viewport": {
+      "portrait": { "left": 48, "top": 42.5, "width": 744, "height": 1133, "cornerRadius": 18, "enableRotation": true },
+      "landscape": { "left": 42.5, "top": 48, "width": 1133, "height": 744, "cornerRadius": 18, "enableRotation": true }
+    }
   },
   {
     "id": "apple-macbook-air-13-m4-2025",
@@ -1858,7 +1851,7 @@ export const localMockupCatalog: LocalMockupAsset[] = [
     "previewScale": 0.88,
     "sourceCrop": { "left": 60, "top": 250, "width": 1320, "height": 1010 },
     "cssViewport": { "width": 1152, "height": 768 },
-    "screenInset": { "top": 48, "right": 252, "bottom": 364, "left": 208 }
+    "screenInset": { "top": 48, "right": 258, "bottom": 386, "left": 208 }
   },
   {
     "id": "apple-studio-display-xdr-27-2026",
@@ -2041,22 +2034,6 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
       left: 36, top: 38, width: 896, height: 414,
       paths: {
         landscape: "M-1.79217e-06 373C-8.02381e-07 395.644 18.3563 414 41 414L855 414C877.644 414 896 395.644 896 373L896 41C896 18.3563 877.644 2.26721e-05 855 2.36619e-05L41 5.9243e-05C18.3563 6.02328e-05 -1.72941e-05 18.3564 -1.63043e-05 41.0001L-1.43085e-05 86.66C-1.41419e-05 90.4708 3.08922 93.56 6.89998 93.56L-1.40069e-05 93.56L6.99999 93.5601C20.8071 93.5601 32 104.753 32 118.56L32 296.722C32 310.529 20.8071 321.722 7 321.722L5.81818 321.722L5.81818 321.739C2.56549 321.975 -3.90392e-06 324.689 -3.7591e-06 328.002L-1.79217e-06 373Z",
-      },
-      enableRotation: true,
-    },
-  },
-  "apple-ipad-mini": {
-    portrait: {
-      left: 48, top: 139, width: 768, height: 1024,
-      paths: {
-        portrait: "M0 0.0999756C0 0.0447471 0.0447715 0 0.1 0H767.9C767.955 0 768 0.0447715 768 0.1V1023.9C768 1023.96 767.955 1024 767.9 1024H0.0999756C0.0447471 1024 0 1023.96 0 1023.9V0.0999756Z",
-      },
-      enableRotation: true,
-    },
-    landscape: {
-      left: 139, top: 48, width: 1024, height: 768,
-      paths: {
-        landscape: "M0.0999756 768C0.0447471 768 -1.95703e-09 767.955 -4.37114e-09 767.9L-3.3566e-05 0.0999756C-3.35684e-05 0.0447471 0.044738 -1.95701e-09 0.0999664 -4.37115e-09L1023.9 -4.47561e-05C1023.96 -4.47585e-05 1024 0.0447023 1024 0.0999308L1024 767.9C1024 767.955 1023.96 768 1023.9 768L0.0999756 768Z",
       },
       enableRotation: true,
     },
@@ -3292,7 +3269,9 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
   },
   "modern-laptop-15": {
     portrait: {
-      left: 148, top: 34, width: 1440, height: 900, enableRotation: false,
+      // The raster aperture ends at y=878 (half of the source image). Fit the
+      // 16:10 CSS viewport inside it, centered, without covering the bezel.
+      left: 178.8, top: 34, width: 1350.4, height: 844, enableRotation: false,
     },
   },
   "apple-iphone-16-pro-2024": {
@@ -3408,7 +3387,8 @@ export const mockupViewportConfigs: Record<string, Partial<Record<Orientation, M
   }
 },
   "microsoft-surface-laptop-8-13-8-2026": {
-    portrait: { left: 208, top: 48, width: 860, height: 598, cornerRadius: 4, enableRotation: false },
+    // Source-image display: x=268..1122, y=298..874, relative to the crop.
+    portrait: { left: 208, top: 48, width: 854, height: 576, cornerRadius: 4, enableRotation: false },
   },
   "apple-studio-display-xdr-27-2026": {
     portrait: { left: 99, top: 90, width: 503, height: 289, cornerRadius: 4, enableRotation: false },
@@ -3425,7 +3405,6 @@ const aliases: Record<string, string> = {
   "samsung-galaxy-s24-ultra": "samsung-galaxy-s24-ultra-2024",
   "google-pixel-8": "google-pixel-8-2024",
   "samsung-galaxy-z-fold-2": "samsung-galaxy-fold2",
-  "apple-ipad-mini-6": "apple-ipad-mini",
   "macbook-pro-16-2021": "apple-macbook-pro-16-2021",
   "macbook-air-2020-13": "macbook-air",
   "imac-24-2021": "apple-imac-24-inch-2021",
@@ -3438,18 +3417,8 @@ export function resolveMockupId(deviceId: string): string {
 }
 
 export function getMockupAssets(deviceId: string): MockupAsset[] {
-  if (deviceId === "apple-ipad-mini-6" || deviceId === "apple-ipad-mini-a17-pro-2024") {
-    return [{
-      kind: "transparent-svg", localPath: "/mockups/ipad-mini-modern.svg", width: 840, height: 1218,
-      renderScale: 1, frameOverlay: true, cssViewport: { width: 744, height: 1133 },
-      screenInset: { left: 48, right: 48, top: 42.5, bottom: 42.5 },
-      viewport: {
-        portrait: { left: 48, top: 42.5, width: 744, height: 1133, cornerRadius: 18, enableRotation: true },
-        landscape: { left: 42.5, top: 48, width: 1133, height: 744, cornerRadius: 18, enableRotation: true },
-      },
-    }];
-  }
-  const lookupId = resolveMockupId(deviceId);
+  // Both modern minis use the same SVG shell; OS metadata remains per device.
+  const lookupId = deviceId === "apple-ipad-mini-6" ? "apple-ipad-mini-a17-pro-2024" : resolveMockupId(deviceId);
   const asset = localMockupCatalog.find((candidate) => candidate.id === lookupId);
   if (!asset) return [];
   const viewportId = asset.viewportSourceId ?? lookupId;
@@ -3512,7 +3481,7 @@ export const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "apple-iphone-se": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
   "apple-iphone-x": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 3, isPro: false },
   "apple-iphone-xr": { osName: "iOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
-  "apple-ipad-mini": { osName: "iPadOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
+  "apple-ipad-mini-6": { osName: "iPadOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
   "apple-ipad-air-4": { osName: "iPadOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
   "apple-ipad-pro-11-2018": { osName: "iPadOS", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false },
   "samsung-galaxy-tab-s7": { osName: "Android", osVersion: "14.0", notch: false, devicePixelRatio: 2, isPro: false, safeAreaInsetTop: 28 },

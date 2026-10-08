@@ -1,6 +1,7 @@
 import { hasVerificationChallenge } from "../domain/flow/challenge-detection";
 import { getKeyboardScrollDelta, shouldKeepKeyboardSessionOnBlur } from "../domain/device/mobile-keyboard";
 import { samplePageSurfaces } from "../domain/device/page-surfaces";
+import { createSurfaceScheduler } from "./surface-scheduler";
 
 export function setupPreviewBridge() {
   if (window.parent === window) return;
@@ -17,15 +18,17 @@ export function setupPreviewBridge() {
   const scrollPositions = new WeakMap<Element, { left: number; top: number }>();
   const remotePositions = new WeakMap<Element, { left: number; top: number; actualLeft: number; actualTop: number }>();
   let scrollSyncEnabled = false;
+  let scrollActivity = new WeakSet<Element>();
   let flowRecordingEnabled = false;
   let applyingRemoteInteraction = false;
   let activeEditable: HTMLElement | null = null;
   let keyboardBlurTimer: number | undefined;
   let keyboardVisibilityTimer: number | undefined;
   let keyboardViewport: { platform: "ios" | "android"; occludedBottom: number } | undefined;
-  let surfaceRafPending = false;
   let lastSurfaceSignature = "";
   let sampleRightSurface = false;
+  let visualsActive = false;
+  let visualsRequested = false;
   let pagehideContinuation: { runId: string; nextStep: number } | undefined;
 
   // The iframe name is available as soon as the document starts loading, so
@@ -68,7 +71,7 @@ export function setupPreviewBridge() {
   rememberAllScroll();
 
   function announceSurfaceColors(force = false) {
-    if (!slotId) return;
+    if (!slotId || !visualsActive) return;
     const surfaces = samplePageSurfaces(sampleRightSurface);
     const signature = JSON.stringify(surfaces);
     if (!force && signature === lastSurfaceSignature) return;
@@ -76,21 +79,36 @@ export function setupPreviewBridge() {
     window.parent.postMessage({ type: "MDV_PAGE_SURFACE_COLORS", slotId, ...surfaces }, "*");
   }
 
+  const surfaceScheduler = createSurfaceScheduler(announceSurfaceColors);
   function scheduleSurfaceColors() {
-    if (surfaceRafPending) return;
-    surfaceRafPending = true;
-    requestAnimationFrame(() => {
-      surfaceRafPending = false;
-      announceSurfaceColors();
-    });
+    if (visualsActive) surfaceScheduler.request();
+  }
+
+  const surfaceObserver = new MutationObserver(scheduleSurfaceColors);
+  function setVisualActivity(requested: boolean) {
+    visualsRequested = requested;
+    const active = requested && !document.hidden;
+    if (visualsActive === active) return;
+    visualsActive = active;
+    if (active) {
+      surfaceObserver.observe(document.documentElement, {
+        attributes: true, attributeFilter: ["class", "style", "content", "media"],
+        childList: true, subtree: true,
+      });
+      // Refresh the tint after a hidden page changed, without reloading it.
+      announceSurfaceColors(true);
+    } else {
+      surfaceObserver.disconnect();
+      surfaceScheduler.cancel();
+    }
   }
 
   let announcedUrl = "";
   const announceReady = () => {
     if (!slotId) return;
     announcedUrl = window.location.href;
-    const surfaces = samplePageSurfaces(sampleRightSurface);
-    lastSurfaceSignature = JSON.stringify(surfaces);
+    const surfaces = visualsActive ? samplePageSurfaces(sampleRightSurface) : undefined;
+    if (surfaces) lastSurfaceSignature = JSON.stringify(surfaces);
     window.parent.postMessage({
       type: "MDV_PREVIEW_READY",
       slotId,
@@ -117,23 +135,20 @@ export function setupPreviewBridge() {
   window.addEventListener("pageshow", startNavigationWatch);
   window.addEventListener("popstate", announceNavigation);
   window.addEventListener("hashchange", announceNavigation);
-  document.addEventListener("visibilitychange", announceNavigation);
+  document.addEventListener("visibilitychange", () => {
+    setVisualActivity(visualsRequested);
+    announceNavigation();
+  });
   window.addEventListener("resize", scheduleSurfaceColors, { passive: true });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", scheduleSurfaceColors);
   let lastBrowserScrollTop = 0;
   window.addEventListener("scroll", () => {
     if (!slotId) return;
     const top = root().scrollTop;
-    window.parent.postMessage({ type: "MDV_BROWSER_SCROLL", slotId, scrollTop: top, deltaTop: top - lastBrowserScrollTop }, "*");
+    if (visualsActive) window.parent.postMessage({ type: "MDV_BROWSER_SCROLL", slotId, scrollTop: top, deltaTop: top - lastBrowserScrollTop }, "*");
     lastBrowserScrollTop = top;
     scheduleSurfaceColors();
   }, { passive: true });
-  new MutationObserver(scheduleSurfaceColors).observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class", "style", "content", "media"],
-    childList: true,
-    subtree: true,
-  });
 
   function applyPreviewViewportStyle(hideScrollbars: boolean) {
     let style = document.getElementById("mdv-preview-viewport-style") as HTMLStyleElement | null;
@@ -669,6 +684,7 @@ export function setupPreviewBridge() {
     // avoids losing the first scroll before its enable message reaches us.
     if (!slotId) return;
     if (!snapshot && payload.deltaLeft === 0 && payload.deltaTop === 0) return;
+    if (!snapshot) scrollActivity.add(target);
     const previousIntent = remotePositions.get(target);
     if (previousIntent && !snapshot) {
       // A follower becoming the source must keep its fractional remainder.
@@ -791,6 +807,7 @@ export function setupPreviewBridge() {
     if (data.type === "MDV_PREVIEW_REGISTER" && typeof data.slotId === "string") {
       sampleRightSurface = data.sampleRightSurface === true;
       slotId = data.slotId;
+      setVisualActivity(data.visualsActive !== false);
       applyPreviewViewportStyle(Boolean(data.hideScrollbars));
       announceReady();
       const focused = resolveEditable(document.activeElement);
@@ -798,6 +815,15 @@ export function setupPreviewBridge() {
         activeEditable = focused;
         postKeyboardFocus(focused);
       }
+      return;
+    }
+
+    if (data.type === "MDV_PREVIEW_ACTIVITY" && data.slotId === slotId) {
+      const sampleRight = data.sampleRightSurface === true;
+      const changed = sampleRightSurface !== sampleRight;
+      sampleRightSurface = sampleRight;
+      setVisualActivity(data.active === true);
+      if (changed) scheduleSurfaceColors();
       return;
     }
 
@@ -815,6 +841,11 @@ export function setupPreviewBridge() {
       const previous = remotePositions.get(el);
       const unchanged = previous && previous.actualLeft === el.scrollLeft && previous.actualTop === el.scrollTop;
       const movement = deltaLeft !== 0 || deltaTop !== 0;
+      // Initial-position replies can arrive after a follower has taken over.
+      // Never let a delayed snapshot rewind newer local or mirrored movement.
+      const local = scrollPayload(el);
+      if (!movement && (scrollActivity.has(el) || local.deltaLeft !== 0 || local.deltaTop !== 0)) return;
+      if (movement) scrollActivity.add(el);
       let left = movement ? (unchanged ? previous.left : el.scrollLeft) + deltaLeft : data.scrollLeft ?? el.scrollLeft;
       let top = movement ? (unchanged ? previous.top : el.scrollTop) + deltaTop : data.scrollTop ?? el.scrollTop;
       const maxLeft = Math.max(0, el.scrollWidth - el.clientWidth);
@@ -834,6 +865,7 @@ export function setupPreviewBridge() {
     if (data.type === "MDV_SCROLL_SYNC_ENABLE" && data.slotId === slotId) {
       if (scrollSyncEnabled) return;
       scrollSyncEnabled = true;
+      scrollActivity = new WeakSet<Element>();
       // Disabled scroll events keep baselines current. Sampling again here
       // can swallow the user's first move while this message was in flight.
       return;

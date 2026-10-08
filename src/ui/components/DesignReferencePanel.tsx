@@ -1,3 +1,5 @@
+import { usePointerDrag } from "../hooks/usePointerDrag";
+import { adjustPlacement, type PlacementAdjustment } from "../interactions/placement";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { ClipboardPaste, Eye, GripVertical, ImagePlus, Layers, Lock, Move, Pencil, RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
 import { useEffect, useRef, useState, type DragEvent } from "react";
@@ -63,34 +65,13 @@ export function DesignReferencePanel(props: DesignReferencePanelProps) {
     loadReference(Array.from(event.dataTransfer.files).find((file) => file.type.startsWith("image/")));
   }
 
+  const startDrag = usePointerDrag();
+
   function startPanelResize(event: React.PointerEvent) {
-    if (event.button !== 0) return;
-    event.preventDefault();
-    const target = event.currentTarget as HTMLElement;
-    const pointerId = event.pointerId;
-    const startX = event.clientX;
     const startWidth = width;
-    let finished = false;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      target.removeEventListener("pointermove", onMove);
-      target.removeEventListener("pointerup", finish);
-      target.removeEventListener("pointercancel", finish);
-      target.removeEventListener("lostpointercapture", finish);
-      window.removeEventListener("blur", finish);
-      if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId);
-    };
-    const onMove = (moveEvent: PointerEvent) => {
-      if (moveEvent.pointerId !== pointerId || (moveEvent.buttons & 1) !== 1) return finish();
-      onWidthChange(Math.max(260, Math.min(Math.min(760, window.innerWidth - 340), startWidth + moveEvent.clientX - startX)));
-    };
-    target.addEventListener("pointermove", onMove);
-    target.addEventListener("pointerup", finish);
-    target.addEventListener("pointercancel", finish);
-    target.addEventListener("lostpointercapture", finish);
-    window.addEventListener("blur", finish);
-    target.setPointerCapture(pointerId);
+    startDrag(event, deltaX => {
+      onWidthChange(Math.max(260, Math.min(Math.min(760, window.innerWidth - 340), startWidth + deltaX)));
+    });
   }
 
   function updateReferencePlacement(next: { x: number; y: number; width: number; height: number }) {
@@ -108,48 +89,16 @@ export function DesignReferencePanel(props: DesignReferencePanelProps) {
     });
   }
 
-  function startReferenceAdjustment(event: React.PointerEvent, kind: "move" | "width" | "height" | "both") {
+  function startReferenceAdjustment(event: React.PointerEvent, kind: PlacementAdjustment) {
     if (!referenceImage || event.button !== 0) return;
-    event.preventDefault();
+    const canvas = event.currentTarget.closest("[data-reference-canvas]")?.getBoundingClientRect();
+    if (!canvas?.width || !canvas.height) return;
     event.stopPropagation();
-    const target = event.currentTarget as HTMLElement;
-    const pointerId = event.pointerId;
-    const canvas = target.closest("[data-reference-canvas]")?.getBoundingClientRect();
-    if (!canvas) return;
-    const startX = event.clientX;
-    const startY = event.clientY;
     const initial = referencePlacement;
-    let finished = false;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      target.removeEventListener("pointermove", onMove);
-      target.removeEventListener("pointerup", finish);
-      target.removeEventListener("pointercancel", finish);
-      target.removeEventListener("lostpointercapture", finish);
-      window.removeEventListener("blur", finish);
-      if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId);
-    };
-    const onMove = (moveEvent: PointerEvent) => {
-      if (moveEvent.pointerId !== pointerId || (moveEvent.buttons & 1) !== 1) return finish();
-      const deltaX = ((moveEvent.clientX - startX) / canvas.width) * 100;
-      const deltaY = ((moveEvent.clientY - startY) / canvas.height) * 100;
-      if (kind === "move") {
-        updateReferencePlacement({ ...initial, x: Math.max(-initial.width + 5, Math.min(95, initial.x + deltaX)), y: Math.max(-initial.height + 5, Math.min(95, initial.y + deltaY)) });
-      } else {
-        updateReferencePlacement({
-          ...initial,
-          width: kind === "width" || kind === "both" ? Math.max(5, Math.min(600, initial.width + deltaX)) : initial.width,
-          height: kind === "height" || kind === "both" ? Math.max(5, Math.min(600, initial.height + deltaY)) : initial.height,
-        });
-      }
-    };
-    target.addEventListener("pointermove", onMove);
-    target.addEventListener("pointerup", finish);
-    target.addEventListener("pointercancel", finish);
-    target.addEventListener("lostpointercapture", finish);
-    window.addEventListener("blur", finish);
-    target.setPointerCapture(pointerId);
+    startDrag(event, (deltaX, deltaY) => updateReferencePlacement(adjustPlacement(
+      initial, kind, deltaX / canvas.width * 100, deltaY / canvas.height * 100,
+      { x: [-initial.width + 5, 95], y: [-initial.height + 5, 95], size: [5, 600] },
+    )));
   }
 
   return (

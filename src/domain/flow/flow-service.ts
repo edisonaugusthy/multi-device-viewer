@@ -18,8 +18,3 @@ export function appendRecordedStep(steps: FlowStep[], incoming: Omit<FlowStep, "
   }
   return [...steps, next];
 }
-
-export function flowStepLabel(step: FlowStep, index: number): string {
-  const target = step.ariaLabel || step.text || step.name || step.selector || "page";
-  return `${index + 1}. ${step.kind} ${target}`;
-}

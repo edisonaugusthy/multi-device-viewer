@@ -7,17 +7,17 @@ import { createOverlayLifecycle } from "../src/app/overlay-lifecycle";
 import viewerCss from "../src/ui/styles/global.css?inline";
 import { defineContentScript } from "wxt/utils/define-content-script";
 
-import { setupPreviewBridge } from "../src/app/preview-bridge";
-
 const OVERLAY_ID = "multi-device-viewer-overlay";
 
 export default defineContentScript({
   matches: ["https://*/*", "http://*/*"],
-  allFrames: true,
+  // The action handler injects this only when the viewer is opened. Ordinary
+  // browsing tabs should not retain React, catalogs, translations and styles.
+  registration: "runtime",
+  allFrames: false,
   runAt: "document_idle",
   main(ctx) {
     ctx.onInvalidated(() => { void overlayLifecycle.invalidate().catch(console.error); });
-    setupPreviewBridge();
 
     if (window.top === window) {
       notifyOverlayState(false);

@@ -32,6 +32,21 @@ export async function validateChromeExtensionPackage(zipPath) {
     throw new Error("Manifest V3 package is missing a background service worker.");
   }
 
+  const viewerScripts = (manifest.content_scripts ?? []).filter(script => script.js?.includes("content-scripts/content.js"));
+  const bridgeScripts = (manifest.content_scripts ?? []).filter(script => script.js?.includes("content-scripts/preview-bridge.js"));
+  if (viewerScripts.length !== 0 || !files.includes("content-scripts/content.js")
+    || bridgeScripts.length !== 1 || bridgeScripts[0].all_frames !== true || bridgeScripts[0].run_at !== "document_start") {
+    throw new Error("Package the viewer for on-demand injection only, and register the preview bridge in all frames at document_start to capture resource failures.");
+  }
+  for (const file of new Set((manifest.content_scripts ?? []).flatMap(script => script.js ?? []))) {
+    if (!files.includes(file)) throw new Error(`Missing packaged content script: ${file}`);
+  }
+  const { stdout: bridgeSource } = await execFileAsync("unzip", ["-p", zipPath, "content-scripts/preview-bridge.js"]);
+  // Allow bridge growth while catching accidental imports of the full React UI.
+  if (Buffer.byteLength(bridgeSource) > 128 * 1024) {
+    throw new Error("Preview bridge exceeds 128 KiB; check for viewer UI dependencies.");
+  }
+
   const requiredIcons = ["16", "32", "48", "128"];
   for (const size of requiredIcons) {
     const iconPath = manifest.icons?.[size];

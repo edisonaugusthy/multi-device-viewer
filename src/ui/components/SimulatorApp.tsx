@@ -918,6 +918,7 @@ export function SimulatorApp() {
                   device={findDevice(slot.deviceId)}
                   display={allDevicesUrl !== null ? { ...display, scrollSync: false, navigationSync: false } : display}
                   showToolbar={!viewOnly}
+                  visualsActive={allDevicesUrl === null}
                   removable={slots.length > 1}
                   onCapture={() => void takeScopedScreenshot(slot.id)}
                   capturePending={capturing && capturingSlotId === slot.id}

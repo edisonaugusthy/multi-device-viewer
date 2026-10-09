@@ -13,7 +13,6 @@ interface DeviceCatalogContextValue {
   addRecent: (id: string) => void;
   addCustomDevice: (input: CustomDeviceInput) => string | null;
   removeCustomDevice: (id: string) => void;
-  isFavorite: (id: string) => boolean;
   findDevice: (id: string) => Device;
 }
 
@@ -101,7 +100,6 @@ export function DeviceCatalogProvider({ children }: { children: ReactNode }) {
       addRecent,
       addCustomDevice,
       removeCustomDevice,
-      isFavorite: (id) => favorites.includes(id),
       findDevice
     }),
     [

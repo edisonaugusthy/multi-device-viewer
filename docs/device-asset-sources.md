@@ -4,6 +4,10 @@ Use the corresponding downloaded Mobile FIRST mockup where this catalog has one.
 
 The derived PNGs below only crop the official front render, isolate it from any companion rear render, scale it for the simulator, and remove the studio background. The product body, bezel, hinge, buttons, cameras, and display proportions are not redrawn.
 
+## Packaged format (9 October 2026)
+
+Frames ship as WebP in `public/mockups/`, converted from the source PNGs at the same pixel dimensions with `cwebp -q 90 -alpha_q 100 -m 6 -sharp_yuv`, so transparency, screen openings and the catalog's measurements are unchanged. `google-pixel-11-2026.webp` uses `-lossless -z 9` because lossy output was larger than its PNG. This reduced the frames from 29.4 MB to 4.3 MB. Add new frames the same way and record their `.webp` path, file name and byte size in `src/domain/device/mockup-catalog.ts`. The original PNGs remain in git history.
+
 ## Mobile FIRST recent mockups (4 October 2026)
 
 Downloaded the free transparent PNGs for all 16 matching 2025/2026 entries in the [Mobile FIRST mockup library](https://www.webmobilefirst.com/en/mockups/): iPhone 17, 17 Pro, 17 Pro Max, Air, 18 Pro, 18 Pro Max, Duo folded and unfolded; Pixel 10, 10 Pro and 10 Fold folded; Galaxy A17 and S26 Ultra; Infinix Hot 70; Motorola Razr 70 Ultra; and MacBook Neo. Presets not represented in this batch keep their existing artwork. The retained Razr 60 alias follows the same frame as before, preserving its suppression as a duplicate preset.

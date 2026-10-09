@@ -5,6 +5,7 @@ import { SimulatorApp } from "../src/ui/components/SimulatorApp";
 import { setViewerContext } from "../src/app/viewer-context";
 import { createOverlayLifecycle } from "../src/app/overlay-lifecycle";
 import viewerCss from "../src/ui/styles/global.css?inline";
+import { registerViewerFonts } from "../src/ui/fonts";
 import { defineContentScript } from "wxt/utils/define-content-script";
 
 const OVERLAY_ID = "multi-device-viewer-overlay";
@@ -61,6 +62,7 @@ function mountSimulator({ url: pageUrl, sourceTabId }: { url: string; sourceTabI
   const shadow = overlay.attachShadow({ mode: __MDV_OPEN_SHADOW_QA__ ? "open" : "closed" });
   // Keep ordinary site listeners outside viewer form interactions.
   for (const type of ["keydown", "keyup", "keypress", "input", "change", "paste", "drop"]) shadow.addEventListener(type, event => event.stopPropagation());
+  registerViewerFonts((path) => chrome.runtime.getURL(`/${path}`));
   const sheet = new CSSStyleSheet();
   // rem normally follows the host website's root font size, even across a shadow root.
   const isolatedCss = viewerCss.replace(/([\d.]+)rem\b/g, (_, amount: string) => `${Number(amount) * 16}px`);
@@ -81,7 +83,7 @@ function mountSimulator({ url: pageUrl, sourceTabId }: { url: string; sourceTabI
     .join("");
   sheet.replaceSync(isolatedCss
     + `\n@layer properties{*,::before,::after,::backdrop{${propertyDefaults}}}`
-    + "\n#root{width:100%;height:100%;isolation:isolate;color-scheme:light;font:16px/1.5 Inter,system-ui,sans-serif} ");
+    + "\n#root{width:100%;height:100%;isolation:isolate;color-scheme:light;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif} ");
   shadow.adoptedStyleSheets = [sheet];
   const container = document.createElement("div");
   container.id = "root";

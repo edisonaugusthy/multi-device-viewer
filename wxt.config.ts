@@ -1,6 +1,7 @@
 import { defineConfig } from "wxt";
 import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath } from "node:url";
+import { UI_LOCALES_DIR, uiLocaleAssets } from "./scripts/ui-locale-assets";
 
 export default defineConfig({
   manifestVersion: 3,
@@ -40,7 +41,7 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        resources: ["simulator.html", "mockups/*", "icons/*"],
+        resources: ["simulator.html", "mockups/*", "icons/*", "fonts/*", `${UI_LOCALES_DIR}/*`],
         matches: ["http://*/*", "https://*/*"]
       }
     ],
@@ -61,6 +62,7 @@ export default defineConfig({
       for (const index of nestedManifestIndexes.reverse()) {
         files.splice(index, 1);
       }
+      files.push(...uiLocaleAssets());
     }
   },
   zip: {

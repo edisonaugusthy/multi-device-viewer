@@ -28,25 +28,19 @@ const TOUR_TRANSLATION_KEYS: Array<{
   text: TranslationKey;
   hint?: TranslationKey;
 }> = [
-  { eyebrow: "devices", title: "addViewport", text: "tourWorkspaceText", hint: "tourWorkspaceHint" },
-  { eyebrow: "workspaceSetup", title: "collapseWorkspaceSetup", text: "tourCanvasText", hint: "tourCanvasHint" },
-  { eyebrow: "devices", title: "chooseDevice", text: "searchDevice" },
+  { eyebrow: "devices", title: "addDevice", text: "tourAddDeviceText", hint: "tourAddDeviceHint" },
+  { eyebrow: "workspace", title: "syncBetweenDevices", text: "tourSyncText" },
+  { eyebrow: "devices", title: "changeDevice", text: "tourChangeDeviceText" },
   { eyebrow: "devices", title: "allDevices", text: "tourAllDevicesText", hint: "tourAllDevicesHint" },
-  { eyebrow: "flowRecorder", title: "recordAFlow", text: "recordFlowToRerun" },
+  { eyebrow: "flowRecorder", title: "recordAFlow", text: "tourRecordText" },
 ];
 
 export function FirstRunGuide({
   dark,
   onClose,
-  toolsOpen,
-  compact,
-  onToolsOpenChange,
 }: {
   dark: boolean;
   onClose: () => void;
-  toolsOpen: boolean;
-  compact: boolean;
-  onToolsOpenChange: (open: boolean) => void;
 }) {
   const { locale, t } = useI18n();
   const [stepIndex, setStepIndex] = useState(0);
@@ -65,10 +59,6 @@ export function FirstRunGuide({
         : undefined,
   };
   const finalStep = stepIndex === FIRST_RUN_TOUR_STEPS.length - 1;
-
-  useLayoutEffect(() => {
-    onToolsOpenChange(baseStep.openTools === true || (baseStep.openTools === "compact" && compact));
-  }, [baseStep.openTools, compact, onToolsOpenChange]);
 
   const findTarget = useCallback(() => {
     if (!step.target) return null;
@@ -109,7 +99,7 @@ export function FirstRunGuide({
     target?.scrollIntoView({ block: "center", inline: "nearest" });
     const frame = window.requestAnimationFrame(updateHighlight);
     return () => window.cancelAnimationFrame(frame);
-  }, [findTarget, updateHighlight, toolsOpen]);
+  }, [findTarget, updateHighlight]);
 
   useEffect(() => {
     if (!step.target) return;
@@ -122,7 +112,7 @@ export function FirstRunGuide({
       resizeObserver.disconnect();
       window.clearTimeout(settledLayoutTimer);
     };
-  }, [step.target, findTarget, updateHighlight, toolsOpen]);
+  }, [step.target, findTarget, updateHighlight]);
 
   useEffect(() => {
     window.addEventListener("resize", updateHighlight);

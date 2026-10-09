@@ -1,7 +1,8 @@
-import { ArrowUpRight, Check, Clipboard, Crop, Download, Pencil, Square, Type, Undo2, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { downloadDataUrl, screenshotFilename } from "../../domain/capture/capture-service";
 import { useI18n } from "../../app/i18n";
+import { ArrowToolIcon, BackIcon, CheckIcon, CloseIcon, CopyIcon, CropIcon, DownloadIcon, FixPromptIcon, PencilIcon, RectangleIcon, TextToolIcon, UndoIcon } from "../icons";
+import { FixPromptForm, type FixPromptDevice } from "./FixPrompt";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,8 +31,14 @@ const FONT_SIZES = [12, 16, 20, 28, 40];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: string; meta?: CaptureMeta; onClose: () => void }) {
+export function AnnotationOverlay({ imageUrl, meta, fixPrompt, onClose }: {
+  imageUrl?: string;
+  meta?: CaptureMeta;
+  fixPrompt?: { pageUrl: string; devices: FixPromptDevice[] };
+  onClose: () => void;
+}) {
   const { t } = useI18n();
+  const [showFix, setShowFix] = useState(Boolean(fixPrompt));
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const imgRef       = useRef<HTMLImageElement | null>(null);
   const textareaRef  = useRef<HTMLTextAreaElement>(null);
@@ -91,9 +98,8 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
     const ctx = canvas.getContext("2d")!;
     const W = canvas.width;
     const H = canvas.height;
+    // Keep transparent pixels (a device cutout) transparent in the export.
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = "#f5f5f3";
-    ctx.fillRect(0, 0, W, H);
     if (img) ctx.drawImage(img, 0, 0, W, H);
     for (const m of marksRef.current) paintMark(ctx, m, W, H);
     if (draftRef.current) paintMark(ctx, draftRef.current, W, H);
@@ -326,196 +332,154 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
     await downloadDataUrl(exportPng(), screenshotFilename("annotated"));
   }
 
-  const cursor =
-    tool === "text" ? "text" :
-    tool === "crop" ? "crosshair" : "crosshair";
-
   return (
-    <div className="fixed inset-0 z-[70] flex flex-col bg-[#f5f5f3]">
+    <div className="fixed inset-0 z-[70] flex flex-col bg-stage text-ink">
 
       {/* ── Toolbar ── */}
-      <div className="flex h-12 shrink-0 items-center gap-2.5 border-b border-black/[0.07] bg-white px-4 shadow-sm">
-
-        {/* Tools */}
-        <div className="flex items-center gap-0.5">
-          <ToolBtn active={tool === "pen"}   title={t("pen")}   onClick={() => { setTool("pen");   cancelCrop(); }}><Pencil size={14} /></ToolBtn>
-          <ToolBtn active={tool === "rect"}  title={t("box")}   onClick={() => { setTool("rect");  cancelCrop(); }}><Square size={14} /></ToolBtn>
-          <ToolBtn active={tool === "arrow"} title={t("arrow")} onClick={() => { setTool("arrow"); cancelCrop(); }}><ArrowUpRight size={14} /></ToolBtn>
-          <ToolBtn active={tool === "text"}  title={t("text")}  onClick={() => { setTool("text");  cancelCrop(); }}><Type size={14} /></ToolBtn>
-          <ToolBtn active={tool === "crop"}  title={t("crop")}  onClick={() => { setTool("crop");  setCropRect(null); }}><Crop size={14} /></ToolBtn>
-        </div>
-
-        <div className="h-5 w-px bg-slate-200" />
-
-        {/* Color swatches */}
-        <div className="flex items-center gap-1">
-          {COLORS.map((c) => (
-            <button
-              key={c}
-              title={c}
-              onClick={() => setColor(c)}
-              className="h-[18px] w-[18px] shrink-0 rounded-full transition-transform hover:scale-110"
-              style={{
-                background: c,
-                outline: color === c ? "2px solid #3b82f6" : "2px solid transparent",
-                outlineOffset: "1.5px",
-                boxShadow: c === "#ffffff" ? "inset 0 0 0 1px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.08)" : undefined,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="h-5 w-px bg-slate-200" />
-
-        {/* Stroke width */}
-        <div className="flex items-center gap-1">
-          {WIDTHS.map((w) => (
-            <button
-              key={w}
-              title={t("size", { size: w })}
-              onClick={() => setLineWidth(w)}
-              className={`flex h-7 w-7 items-center justify-center rounded-md transition ${lineWidth === w ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100"}`}
-            >
-              <span className="rounded-full bg-current" style={{ width: w * 2.2, height: w * 2.2, display: "block" }} />
-            </button>
-          ))}
-        </div>
-
-        {/* Font size — only when text tool is active */}
-        {tool === "text" && (
-          <>
-            <div className="h-5 w-px bg-slate-200" />
-            <div className="flex items-center gap-1">
-              <span className="text-[11px] font-medium text-slate-400 select-none pr-0.5">A</span>
-              {FONT_SIZES.map((s) => (
-                <button
-                  key={s}
-                  title={t("fontSize", { size: s })}
-                  onClick={() => setFontSize(s)}
-                  className={`flex h-7 min-w-[28px] items-center justify-center rounded-md px-1 text-[11px] font-semibold transition ${fontSize === s ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100"}`}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-
-        <div className="h-5 w-px bg-slate-200" />
-
-        {/* Undo */}
-        <button
-          title={t("undo")}
-          onClick={undo}
-          disabled={marks.length === 0 && !textPos}
-          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 disabled:opacity-30"
-        >
-          <Undo2 size={14} />
+      <div className="flex min-h-[52px] shrink-0 flex-wrap items-center gap-2 border-b border-line bg-surface px-3 py-2">
+        <button type="button" onClick={onClose} className="flex h-[34px] items-center gap-1.5 rounded-[9px] border border-line pe-2.5 ps-2 text-[13px] font-semibold text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent">
+          <BackIcon size={15} />{t("workspace")}
         </button>
 
-        <div className="flex-1" />
+        <div className="flex min-w-0 flex-1 justify-center">
+          <div role="toolbar" aria-label={t("annotate")} className="flex h-10 items-center gap-0.5 rounded-[11px] border border-line-soft bg-field px-1.5">
+            <ToolBtn active={tool === "pen"}   title={t("pen")}   onClick={() => { setTool("pen");   cancelCrop(); }}><PencilIcon size={17} /></ToolBtn>
+            <ToolBtn active={tool === "rect"}  title={t("box")}   onClick={() => { setTool("rect");  cancelCrop(); }}><RectangleIcon size={17} /></ToolBtn>
+            <ToolBtn active={tool === "arrow"} title={t("arrow")} onClick={() => { setTool("arrow"); cancelCrop(); }}><ArrowToolIcon size={17} /></ToolBtn>
+            <ToolBtn active={tool === "text"}  title={t("text")}  onClick={() => { setTool("text");  cancelCrop(); }}><TextToolIcon size={17} /></ToolBtn>
+            <ToolBtn active={tool === "crop"}  title={t("crop")}  onClick={() => { setTool("crop");  setCropRect(null); }}><CropIcon size={17} /></ToolBtn>
+            <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+            {COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                title={c}
+                aria-label={c}
+                aria-pressed={color === c}
+                onClick={() => setColor(c)}
+                className={`mx-[3px] size-5 shrink-0 rounded-full transition-transform hover:scale-110 ${color === c ? "ring-2 ring-offset-2 ring-offset-field" : ""} ${c === "#ffffff" ? "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)]" : ""}`}
+                style={{ background: c, ["--tw-ring-color" as string]: c === "#ffffff" ? "#9aa1aa" : c }}
+              />
+            ))}
+            <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+            {WIDTHS.map((w) => (
+              <button
+                key={w}
+                type="button"
+                title={t("size", { size: w })}
+                aria-pressed={lineWidth === w}
+                onClick={() => setLineWidth(w)}
+                className={`grid size-8 place-items-center rounded-lg transition ${lineWidth === w ? "bg-primary text-on-primary" : "text-ink-2 hover:bg-sunken"}`}
+              >
+                <span className={`block rounded-full bg-current ${w === 2 ? "size-1" : w === 4 ? "size-2" : "size-3"}`} />
+              </button>
+            ))}
+            {tool === "text" && <>
+              <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+              {FONT_SIZES.map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  title={t("fontSize", { size })}
+                  aria-pressed={fontSize === size}
+                  onClick={() => setFontSize(size)}
+                  className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-1 text-xs font-semibold transition ${fontSize === size ? "bg-primary text-on-primary" : "text-ink-2 hover:bg-sunken"}`}
+                >
+                  {size}
+                </button>
+              ))}
+            </>}
+            <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+            <ToolBtn active={false} title={t("undo")} onClick={undo} disabled={marks.length === 0 && !textPos}><UndoIcon size={17} /></ToolBtn>
+          </div>
+        </div>
 
-        {/* Copy & Download */}
+        {fixPrompt && (
+          <button type="button" aria-pressed={showFix} onClick={() => setShowFix((value) => !value)} title={t("fixPrompt")}
+            className={`flex h-[34px] items-center gap-1.5 rounded-[9px] border px-3 text-[13px] font-semibold ${showFix ? "border-ink bg-sunken text-ink" : "border-line bg-surface text-ink hover:bg-sunken"}`}>
+            <FixPromptIcon size={15} />{t("fixPrompt")}
+          </button>
+        )}
         <button
+          type="button"
           onClick={() => void copyImage()}
           disabled={!imgReady}
-          className="flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+          className="flex h-[34px] items-center gap-1.5 rounded-[9px] border border-line bg-surface px-3 text-[13px] font-semibold text-ink hover:bg-sunken disabled:opacity-40"
         >
-          {copied ? <Check size={13} className="text-green-500" /> : <Clipboard size={13} />}
+          {copied ? <CheckIcon size={14} className="text-accent" /> : <CopyIcon size={14} />}
           {copied ? t("copiedBang") : t("copy")}
         </button>
         <button
+          type="button"
           onClick={() => void downloadImage()}
           disabled={!imgReady}
-          className="flex h-8 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-[12px] font-semibold text-white transition hover:bg-slate-700 disabled:opacity-40"
+          className="flex h-[34px] items-center gap-1.5 rounded-[9px] bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90 disabled:opacity-40"
         >
-          <Download size={13} />
+          <DownloadIcon size={15} />
           {t("download")}
         </button>
-
-        <div className="h-5 w-px bg-slate-200" />
-
-        <button onClick={onClose} title={t("close")} className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-800">
-          <X size={15} />
+        <button type="button" onClick={onClose} title={t("close")} aria-label={t("close")} className="grid size-[34px] place-items-center rounded-[9px] text-ink hover:bg-sunken">
+          <CloseIcon size={18} />
         </button>
       </div>
 
       {/* ── Crop confirm bar ── */}
       {tool === "crop" && cropRect && (
-        <div className="flex h-10 shrink-0 items-center justify-center gap-2 border-b border-black/[0.07] bg-amber-50">
-          <span className="text-[12px] font-medium text-amber-700">{t("cropSelection")}</span>
-          <button
-            onClick={applyCrop}
-            className="flex h-7 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-[12px] font-semibold text-white transition hover:bg-slate-700"
-          >
-            <Check size={12} /> {t("applyCrop")}
+        <div className="flex h-10 shrink-0 items-center justify-center gap-2 border-b border-warn-line bg-warn-soft">
+          <span className="text-xs font-medium text-warn">{t("cropSelection")}</span>
+          <button type="button" onClick={applyCrop} className="flex h-7 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-on-primary">
+            <CheckIcon size={12} /> {t("applyCrop")}
           </button>
-          <button
-            onClick={cancelCrop}
-            className="flex h-7 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-50"
-          >
-            <X size={12} /> {t("cancel")}
+          <button type="button" onClick={cancelCrop} className="flex h-7 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-xs font-semibold text-ink-2">
+            <CloseIcon size={12} /> {t("cancel")}
           </button>
         </div>
       )}
 
-      {/* ── Canvas area ── */}
-      <div className="relative flex flex-1 items-center justify-center overflow-auto p-8">
-        <div className="relative inline-block rounded-xl shadow-[0_4px_40px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.06]">
-          <canvas
-            ref={canvasRef}
-            style={{
-              display: "block",
-              maxWidth: "100%",
-              maxHeight: "calc(100vh - 120px)",
-              cursor,
-              borderRadius: 12,
-            }}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={() => setDraft(null)}
-          />
-
-          {/* Floating textarea for text tool */}
-          {tool === "text" && textPos && (
-            <textarea
-              ref={textareaRef}
-              value={textInput}
-              onChange={(e) => setTextInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commitText(); }
-                if (e.key === "Escape") { setTextPos(null); setTextInput(""); }
-              }}
-              onBlur={commitText}
-              placeholder={t("typeHere")}
-              rows={1}
-              style={{
-                position: "absolute",
-                left: `${textPos.x * 100}%`,
-                top:  `${textPos.y * 100}%`,
-                color,
-                fontSize,
-                background: "rgba(255,255,255,0.85)",
-                border: `2px dashed ${color}`,
-                borderRadius: 4,
-                padding: "2px 6px",
-                minWidth: 100,
-                resize: "none",
-                outline: "none",
-                lineHeight: 1.4,
-                fontWeight: 600,
-                backdropFilter: "blur(4px)",
-              }}
+      <div className="flex min-h-0 flex-1">
+        {/* ── Canvas area ── */}
+        <div className="relative flex min-w-0 flex-1 items-center justify-center overflow-auto p-8">
+          <div className="relative inline-block rounded-xl shadow-[0_4px_40px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.06]">
+            <canvas
+              ref={canvasRef}
+              className={`block max-h-[calc(100vh-120px)] max-w-full rounded-xl bg-[conic-gradient(var(--color-sunken)_25%,var(--color-surface)_0_50%,var(--color-sunken)_0_75%,var(--color-surface)_0)] bg-[length:16px_16px] ${tool === "text" ? "cursor-text" : "cursor-crosshair"}`}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={() => setDraft(null)}
             />
-          )}
 
-          {!imgReady && !imageUrl && (
-            <div className="flex h-[500px] w-[800px] items-center justify-center rounded-xl bg-white text-slate-400">
-              <span className="text-sm">{t("noScreenshot")}</span>
-            </div>
-          )}
+            {/* Floating textarea for text tool */}
+            {tool === "text" && textPos && (
+              <textarea
+                ref={textareaRef}
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commitText(); }
+                  if (e.key === "Escape") { setTextPos(null); setTextInput(""); }
+                }}
+                onBlur={commitText}
+                placeholder={t("typeHere")}
+                rows={1}
+                className="absolute min-w-[100px] resize-none rounded border-2 border-dashed bg-white/85 px-1.5 py-0.5 font-semibold leading-[1.4] outline-none backdrop-blur"
+                style={{ left: `${textPos.x * 100}%`, top: `${textPos.y * 100}%`, color, fontSize, borderColor: color }}
+              />
+            )}
+
+            {!imgReady && !imageUrl && (
+              <div className="flex h-[500px] w-[800px] items-center justify-center rounded-xl bg-surface text-muted">
+                <span className="text-sm">{t("noScreenshot")}</span>
+              </div>
+            )}
+          </div>
         </div>
+
+        {fixPrompt && showFix && (
+          <aside aria-label={t("fixPrompt")} className="flex w-[360px] max-w-[45%] shrink-0 flex-col border-s border-line bg-surface">
+            <FixPromptForm pageUrl={fixPrompt.pageUrl} devices={fixPrompt.devices} initialDeviceIds={fixPrompt.devices.map((device) => device.id)} onClose={() => setShowFix(false)} />
+          </aside>
+        )}
       </div>
     </div>
   );
@@ -523,12 +487,16 @@ export function AnnotationOverlay({ imageUrl, meta, onClose }: { imageUrl?: stri
 
 // ─── Toolbar button ───────────────────────────────────────────────────────────
 
-function ToolBtn({ active, title, onClick, children }: { active: boolean; title: string; onClick: () => void; children: ReactNode }) {
+function ToolBtn({ active, title, onClick, disabled = false, children }: { active: boolean; title: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
   return (
     <button
+      type="button"
       title={title}
+      aria-label={title}
+      aria-pressed={active}
+      disabled={disabled}
       onClick={onClick}
-      className={`flex h-7 w-7 items-center justify-center rounded-md transition ${active ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"}`}
+      className={`grid size-8 place-items-center rounded-lg transition disabled:opacity-30 ${active ? "bg-primary text-on-primary" : "text-ink hover:bg-sunken"}`}
     >
       {children}
     </button>

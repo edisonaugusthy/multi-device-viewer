@@ -10,20 +10,19 @@ describe("first-run feature tour", () => {
     expect(FIRST_RUN_TOUR_STEPS).toHaveLength(5);
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.target)).toEqual([
       '[data-tour="add-viewport"]',
-      '[data-tour="sidebar-collapse"]',
+      '[data-tour="sync"]',
       '[data-tour="change-device"]',
-      '[data-all-devices-toggle]',
-      '[data-tour="record-user-flow"]',
+      "[data-all-devices-toggle]",
+      '[data-tour="record"]',
     ]);
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.title)).toEqual([
-      "Add viewport",
-      "Hide workspace tools",
-      "Change the device",
+      "Add device",
+      "Sync between devices",
+      "Change device",
       "All devices",
       "Record user flow",
     ]);
     expect(FIRST_RUN_TOUR_STEPS[0].text).toContain("iPhone Duo folded");
-    expect(FIRST_RUN_TOUR_STEPS.map(step => step.openTools)).toEqual(["compact", true, undefined, undefined, true]);
   });
 
   it("centers the welcome card", () => {

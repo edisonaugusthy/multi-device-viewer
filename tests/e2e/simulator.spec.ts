@@ -11,16 +11,38 @@ async function dismissFirstRunGuide(page: Page) {
   if (await skipTour.isVisible().catch(() => false)) await skipTour.click();
 }
 
-async function openTools(page: Page) {
-  const open = page.getByRole("button", { name: "Open workspace setup", exact: true });
-  if (await open.isVisible()) await open.click();
+// Device controls fade in while a device is hovered, so tests hover its caption first.
+async function revealControls(page: Page, index = 0) {
+  await page.locator("[data-preview-slot-id]").nth(index).locator("[data-device-caption]").hover();
 }
 
 async function openViewportActions(page: Page, index = 0) {
-  const close = page.getByRole("button", { name: "Collapse workspace setup", exact: true });
-  if (await close.isVisible()) await close.click();
+  await revealControls(page, index);
   const toggle = page.locator("[data-preview-slot-id]").nth(index).getByRole("button", { name: "Viewport options", exact: true });
   if (await toggle.getAttribute("aria-expanded") !== "true") await toggle.click();
+}
+
+async function switchDevice(page: Page, query: string, selector: string, index = 0) {
+  await revealControls(page, index);
+  await page.locator("[data-preview-slot-id]").nth(index).getByTestId("device-switcher-button").click();
+  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill(query);
+  await page.locator(selector).click();
+  await page.keyboard.press("Escape");
+  await expect(page.getByTestId("device-switcher-panel")).toHaveCount(0);
+}
+
+async function toggleTheme(page: Page) {
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Settings", exact: true }).click();
+  const settings = page.getByRole("dialog", { name: "Settings" });
+  const light = settings.getByRole("button", { name: "Light", exact: true });
+  const pressed = await light.getAttribute("aria-pressed") === "true";
+  await settings.getByRole("button", { name: pressed ? "Dark" : "Light", exact: true }).click();
+  await page.keyboard.press("Escape");
+  await expect(settings).toHaveCount(0);
+}
+
+async function openRecordMenu(page: Page) {
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Record", exact: true }).click();
 }
 
 test.beforeEach(async ({ page }) => {
@@ -37,9 +59,9 @@ test("toggles only portrait and landscape with local hardware and saved rotation
   const screen = slot.locator('[data-device-screen="apple-iphone-18-pro-2026"]');
   const originalSrc = await hardware.getAttribute("src");
   expect(new URL(originalSrc!, page.url()).origin).toBe(new URL(page.url()).origin);
-  expect(originalSrc).toContain("/mockups/apple-iphone-18-pro-2026.png");
+  expect(originalSrc).toContain("/mockups/apple-iphone-18-pro-2026.webp");
   for (let turn = 1; turn <= 4; turn++) {
-    await openViewportActions(page);
+    await revealControls(page);
     await slot.getByRole("button", { name: "Rotate", exact: true }).click();
     await expectScreenSize(screen, turn % 2 ? 874 : 402, turn % 2 ? 402 : 874);
     await expect.poll(() => hardware.evaluate(el => el.parentElement!.style.transform)).toContain(`rotate(${turn % 2 * 90}deg)`);
@@ -55,7 +77,7 @@ test("toggles only portrait and landscape with local hardware and saved rotation
 
 test("resets orientation when switching between phones and wide unfolded devices", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
-  await openViewportActions(page);
+  await revealControls(page);
   await slot.getByRole("button", { name: "Rotate", exact: true }).click();
   const cases = [
     ["Apple iPhone Duo (folded)", "apple-iphone-duo-folded-2026", 466, 678, true],
@@ -65,20 +87,17 @@ test("resets orientation when switching between phones and wide unfolded devices
     ["Apple iPhone 18 Pro", "apple-iphone-18-pro-2026", 402, 874, true],
   ] as const;
   for (const [name, id, width, height, rotatable] of cases) {
-    await slot.getByTestId("device-switcher-button").click();
-    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill(name);
-    await page.locator(`button[title="${name}"]`).click();
+    await switchDevice(page, name, `button[title="${name}"]`);
     const screen = slot.locator(`[data-device-screen="${id}"]`);
-    await expect(slot.getByText(`${width} × ${height}`, { exact: true })).toBeVisible();
+    await expect(slot.getByText(`${width}×${height}`, { exact: true })).toBeVisible();
     await expect.poll(() => screen.evaluate(el => parseFloat(getComputedStyle(el).width) > parseFloat(getComputedStyle(el).height))).toBe(width > height);
-    await openViewportActions(page);
+    await revealControls(page);
     if (!rotatable) {
       await expect(slot.getByRole("button", { name: "Rotate", exact: true })).toHaveCount(0);
-      await slot.getByRole("button", { name: "Viewport options", exact: true }).click();
       continue;
     }
     await slot.getByRole("button", { name: "Rotate", exact: true }).click();
-    await expect(slot.getByText(`${height} × ${width}`, { exact: true })).toBeVisible();
+    await expect(slot.getByText(`${height}×${width}`, { exact: true })).toBeVisible();
     await expect.poll(() => screen.evaluate(el => parseFloat(getComputedStyle(el).width) > parseFloat(getComputedStyle(el).height))).toBe(height > width);
   }
   await page.reload();
@@ -102,19 +121,20 @@ test("migrates saved four-direction rotations to portrait and landscape", async 
 });
 
 test("passes night mode to the preview without applying a color filter", async ({ page }) => {
-  const darkToggle = page.getByRole("button", { name: "Dark theme" });
-  if (await darkToggle.isVisible()) await darkToggle.click();
-  await page.waitForTimeout(250);
-  await expect(page.getByRole("button", { name: "Light theme" })).toBeVisible();
-  await expect(page.locator("[data-preview-slot-id]").first().locator(":scope > div").first()).toHaveCSS("background-color", "rgb(21, 25, 34)");
+  const layout = page.locator("[data-interface-layout]");
+  if (!(await layout.getAttribute("class"))?.split(" ").includes("dark")) await toggleTheme(page);
+  await expect(layout).toHaveClass(/\bdark\b/);
   const frame = page.locator("iframe").first();
   await expect(frame).toHaveCSS("color-scheme", "dark");
   await expect(frame).toHaveCSS("filter", "none");
 });
 
 test("shows the simplified navigation controls", async ({ page }) => {
-  await openTools(page);
-  await expect(page.locator("[data-main-toolbar]").getByRole("button", { name: "Navigation sync", exact: true })).toBeVisible();
+  const toolbar = page.locator("[data-main-toolbar]");
+  await expect(toolbar.getByRole("checkbox", { name: "Scroll", exact: true })).toBeVisible();
+  await expect(toolbar.getByRole("checkbox", { name: "Navigation", exact: true })).toBeVisible();
+  await toolbar.getByRole("checkbox", { name: "Navigation", exact: true }).check();
+  await expect(toolbar.getByRole("checkbox", { name: "Navigation", exact: true })).toBeChecked();
   await expect(page.getByLabel("Page direction")).toHaveCount(0);
   await expect(page.getByLabel("Page color scheme")).toHaveCount(0);
   await expect(page.getByText("Responsive review", { exact: true })).toHaveCount(0);
@@ -133,13 +153,13 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   await expectScreenSize(duoScreen, 466, 678);
 
   // A user's saved rotation must survive reopening the simulator.
-  await openViewportActions(page, 1);
+  await revealControls(page, 1);
   await slots.nth(1).getByRole("button", { name: "Rotate", exact: true }).click();
   await expectScreenSize(duoScreen, 678, 466);
   await page.reload();
   await expectScreenSize(duoScreen, 678, 466);
 
-  await openTools(page);
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
   await page.getByRole("button", { name: "iOS + Android", exact: true }).click();
   await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="samsung-galaxy-s26-ultra-2026"]')).toBeVisible();
@@ -157,11 +177,9 @@ test("opens the latest devices from startup and quick presets", async ({ page })
 test("selects Duo unfolded in landscape from a portrait phone and allows manual rotation", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
   const duoScreen = slot.locator('[data-device-screen="apple-iphone-duo-unfolded-2026"]');
-  await page.getByTestId("device-switcher-button").first().click();
-  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone Duo");
-  await page.locator('button[title="Apple iPhone Duo (unfolded)"]').click();
+  await switchDevice(page, "iPhone Duo", 'button[title="Apple iPhone Duo (unfolded)"]');
   await expectScreenSize(duoScreen, 890, 626);
-  await openViewportActions(page);
+  await revealControls(page);
   await slot.getByRole("button", { name: "Rotate", exact: true }).click();
   await expectScreenSize(duoScreen, 626, 890);
 });
@@ -171,7 +189,6 @@ test("opens toolbar and device screenshots without duplicate Tools actions", asy
   const viewportCount = await viewports.count();
   expect(viewportCount).toBeGreaterThan(0);
   await expect(page.getByRole("button", { name: "Focus this viewport" })).toHaveCount(0);
-  await expect(viewports.getByRole("button", { name: "Screenshot and annotate", includeHidden: true })).toHaveCount(viewportCount);
 
   await page.evaluate(() => {
     const canvas = document.createElement("canvas");
@@ -206,12 +223,108 @@ test("opens toolbar and device screenshots without duplicate Tools actions", asy
   expect(captureSize.height).toBeLessThan(windowSize.height);
 
   await page.getByRole("button", { name: "Close", exact: true }).click();
-  await openTools(page);
-  await expect(page.getByRole("complementary").getByRole("button", { name: "Screenshot and annotate" })).toHaveCount(0);
-  await expect(page.getByRole("complementary").getByRole("button", { name: "Start a new check" })).toHaveCount(0);
+  await expect(page.getByRole("complementary")).toHaveCount(0);
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Screenshot and annotate" }).click();
   await expect(page.getByRole("button", { name: "Download" })).toBeVisible();
   await expect(page.locator("canvas")).toBeVisible();
+});
+
+test("cuts a device screenshot out of the workspace background", async ({ page }) => {
+  await page.evaluate(() => {
+    // Paint what the tab would show: the workspace, the backdrop currently
+    // behind the device, and an opaque device inset from its box.
+    const capture = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const context = canvas.getContext("2d")!;
+      context.fillStyle = "#e9ecef";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      const target = document.querySelector<HTMLElement>("[data-capture-matte]");
+      if (target) {
+        const box = target.getBoundingClientRect();
+        context.fillStyle = target.dataset.captureMatte === "black" ? "#000" : "#fff";
+        context.fillRect(box.left - 4, box.top - 4, box.width + 8, box.height + 8);
+        context.fillStyle = "#0f766e";
+        context.fillRect(box.left + box.width * 0.2, box.top + box.height * 0.2, box.width * 0.6, box.height * 0.6);
+      }
+      return canvas.toDataURL("image/png");
+    };
+    Object.defineProperty(window, "chrome", {
+      configurable: true,
+      value: {
+        runtime: {
+          lastError: undefined,
+          sendMessage: (_message: unknown, callback: (response: { dataUrl: string }) => void) => callback({ dataUrl: capture() }),
+        },
+      },
+    });
+  });
+
+  await openViewportActions(page);
+  await page.locator("[data-preview-slot-id]").first().getByRole("button", { name: "Screenshot and annotate" }).click();
+  const editorCanvas = page.locator("canvas");
+  await expect(editorCanvas).toBeVisible();
+  const alpha = await editorCanvas.evaluate((canvas: HTMLCanvasElement) => {
+    const pixels = canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data;
+    const at = (x: number, y: number) => pixels[(Math.floor(y) * canvas.width + Math.floor(x)) * 4 + 3];
+    return { corner: at(2, 2), center: at(canvas.width / 2, canvas.height / 2) };
+  });
+  expect(alpha).toEqual({ corner: 0, center: 255 });
+  await expect(page.locator("[data-capture-matte]")).toHaveCount(0);
+});
+
+test("retries a device screenshot when the tab capture returns a stale frame", async ({ page }) => {
+  await page.evaluate(() => {
+    let calls = 0;
+    // The first frame predates the backdrop and still shows an open menu over
+    // the device; later frames are current.
+    const capture = () => {
+      calls += 1;
+      const canvas = document.createElement("canvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const context = canvas.getContext("2d")!;
+      context.fillStyle = "#e9ecef";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      const target = document.querySelector<HTMLElement>("[data-capture-matte]");
+      if (target) {
+        const box = target.getBoundingClientRect();
+        if (calls > 1) {
+          context.fillStyle = target.dataset.captureMatte === "black" ? "#000" : "#fff";
+          context.fillRect(box.left - 4, box.top - 4, box.width + 8, box.height + 8);
+        }
+        context.fillStyle = "#0f766e";
+        context.fillRect(box.left + box.width * 0.2, box.top + box.height * 0.2, box.width * 0.6, box.height * 0.6);
+        if (calls === 1) {
+          context.fillStyle = "#fff";
+          context.fillRect(box.left + box.width * 0.4, box.top + box.height * 0.25, box.width * 0.35, box.height * 0.1);
+        }
+      }
+      return canvas.toDataURL("image/png");
+    };
+    Object.defineProperty(window, "chrome", {
+      configurable: true,
+      value: {
+        runtime: {
+          lastError: undefined,
+          sendMessage: (_message: unknown, callback: (response: { dataUrl: string }) => void) => callback({ dataUrl: capture() }),
+        },
+      },
+    });
+  });
+
+  await openViewportActions(page);
+  await page.locator("[data-preview-slot-id]").first().getByRole("button", { name: "Screenshot and annotate" }).click();
+  const editorCanvas = page.locator("canvas");
+  await expect(editorCanvas).toBeVisible();
+  const pixels = await editorCanvas.evaluate((canvas: HTMLCanvasElement) => {
+    const data = canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data;
+    const at = (x: number, y: number) => [...data.slice((Math.floor(y) * canvas.width + Math.floor(x)) * 4, (Math.floor(y) * canvas.width + Math.floor(x)) * 4 + 4)];
+    return { corner: at(2, 2)[3], menuArea: at(canvas.width * 0.55, canvas.height * 0.3) };
+  });
+  expect(pixels.corner).toBe(0);
+  expect(pixels.menuArea).toEqual([15, 118, 110, 255]);
 });
 
 test("reports a screenshot capture failure instead of leaving a dead button", async ({ page }) => {
@@ -235,6 +348,7 @@ test("reports a screenshot capture failure instead of leaving a dead button", as
 });
 
 test("keeps favorite controls separate from device selection buttons", async ({ page }) => {
+  await revealControls(page);
   await page.getByTestId("device-switcher-button").first().click();
 
   const selection = page.locator('button[title="Apple iPhone 17"]');
@@ -243,8 +357,8 @@ test("keeps favorite controls separate from device selection buttons", async ({ 
   await expect(selection.locator("xpath=..").getByRole("button", { name: /favorites/ })).toHaveCount(1);
 
   await selection.locator("xpath=..").getByRole("button", { name: /favorites/ }).click();
-  await expect(selection).toHaveCount(1);
-  await expect(selection.locator("xpath=..").getByRole("button", { name: /favorites/ })).toBeFocused();
+  // Starring keeps keyboard focus on the star that was pressed.
+  await expect(page.locator("[data-device-favorite]:focus")).toHaveCount(1);
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("device-switcher-panel")).toHaveCount(0);
   await expect(page.getByTestId("device-switcher-button").first()).toBeFocused();
@@ -255,20 +369,25 @@ test("keeps favorite controls separate from device selection buttons", async ({ 
 });
 
 test("discovers expanded current and rugged device families", async ({ page }) => {
+  await revealControls(page);
   await page.getByTestId("device-switcher-button").first().click();
   const search = page.getByRole("textbox", { name: "Search name, OS, type, or size" });
+  const chooseType = async (name: string) => {
+    await page.getByRole("button", { name: /^Device type:/ }).click();
+    await page.getByRole("option", { name, exact: true }).click();
+  };
 
-  await page.getByRole("tab", { name: /^Android/ }).click();
+  await chooseType("Android");
   await search.fill("XCover7 Pro");
   await expect(page.locator('button[title="Samsung Galaxy XCover7 Pro"]')).toBeVisible();
 
   await search.fill("");
-  await page.getByRole("tab", { name: /^Tablets/ }).click();
+  await chooseType("Tablets");
   await search.fill("iPad Pro 13 M4");
   await expect(page.locator('button[title="Apple iPad Pro 13-inch (M4)"]')).toBeVisible();
 
   await search.fill("");
-  await page.getByRole("tab", { name: /^Laptops/ }).click();
+  await chooseType("Laptops");
   await search.fill("MacBook Air 13 inch");
   await expect(page.locator('button[title="Apple MacBook Air 13 inch"]')).toBeVisible();
 });
@@ -290,15 +409,13 @@ test("renders every reported problem device with its verified viewport inside th
 
   const slot = page.locator("[data-preview-slot-id]").first();
   for (const [query, name, id, width, height] of reportedDevices) {
-    await page.getByTestId("device-switcher-button").first().click();
-    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill(query);
-    await page.locator(`button[title="${name}"]`).click();
+    await switchDevice(page, query, `button[title="${name}"]`);
 
     const frame = slot.locator(`[data-device-frame="${id}"]`);
     const screen = slot.locator(`[data-device-screen="${id}"]`);
     await expect(frame, `${name} frame`).toBeVisible();
     await expect(screen, `${name} screen`).toBeVisible();
-    await expect(slot).toContainText(`${width} × ${height}`);
+    await expect(slot).toContainText(`${width}×${height}`);
 
     const frameBox = await frame.boundingBox();
     const screenBox = await screen.boundingBox();
@@ -312,9 +429,7 @@ test("renders every reported problem device with its verified viewport inside th
 });
 
 test("keeps the Galaxy Z Flip7 camera hole inside the display in both orientations", async ({ page }) => {
-  await page.getByTestId("device-switcher-button").first().click();
-  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("Galaxy Z Flip7");
-  await page.locator('button[title="Samsung Galaxy Z Flip7"]').click();
+  await switchDevice(page, "Galaxy Z Flip7", 'button[title="Samsung Galaxy Z Flip7"]');
 
   const slot = page.locator("[data-preview-slot-id]").first();
   const frame = slot.locator('[data-device-frame="samsung-galaxy-z-flip7-2025"]');
@@ -332,17 +447,15 @@ test("keeps the Galaxy Z Flip7 camera hole inside the display in both orientatio
 
   await expect(screen).toHaveCSS("clip-path", /path\(/);
   await expectScreenInsideFrame();
-  await openViewportActions(page);
+  await revealControls(page);
   await page.getByRole("button", { name: "Rotate" }).first().click();
-  await expect(slot).toContainText("840 × 360");
+  await expect(slot).toContainText("840×360");
   await expect(screen).toHaveCSS("clip-path", /path\(/);
   await expectScreenInsideFrame();
 });
 
 test("keeps the Pixel 10a display and Android status row balanced inside its frame", async ({ page }) => {
-  await page.getByTestId("device-switcher-button").first().click();
-  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("Pixel 10a");
-  await page.locator('button[title="Google Pixel 10a"]').click();
+  await switchDevice(page, "Pixel 10a", 'button[title="Google Pixel 10a"]');
 
   const slot = page.locator("[data-preview-slot-id]").first();
   const frame = slot.locator('[data-device-frame="google-pixel-10a-2026"]');
@@ -372,9 +485,7 @@ test("keeps the Pixel 10a display and Android status row balanced inside its fra
 });
 
 test("aligns the iPhone 17e Liquid Glass header color with its notch opening", async ({ page }) => {
-  await page.getByTestId("device-switcher-button").first().click();
-  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone 17e");
-  await page.locator('button[title="Apple iPhone 17e"]').click();
+  await switchDevice(page, "iPhone 17e", 'button[title="Apple iPhone 17e"]');
 
   const slot = page.locator("[data-preview-slot-id]").first();
   const frame = slot.locator('[data-device-frame="apple-iphone-17e-2026"]');
@@ -448,9 +559,7 @@ test("seals translucent pinned headers on the new iPhones without sealing transp
 
 for (const model of ["iPhone 18 Pro", "iPhone 18 Pro Max"]) {
   test(`${model} follows page surface colors through scrolling and rotation`, async ({ page }) => {
-    await page.getByTestId("device-switcher-button").first().click();
-    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill(model);
-    await page.locator(`button[title="Apple ${model}"]`).click();
+    await switchDevice(page, model, `button[title="Apple ${model}"]`);
     const slot = page.locator("[data-preview-slot-id]").first();
     const iframe = slot.locator("iframe");
     const top = slot.locator("[data-ios-top-surface]");
@@ -459,7 +568,7 @@ for (const model of ["iPhone 18 Pro", "iPhone 18 Pro Max"]) {
 
     for (let rotation = 0; rotation < 2; rotation++) {
       if (rotation) {
-        await openViewportActions(page);
+        await revealControls(page);
         await slot.getByRole("button", { name: "Rotate", exact: true }).click();
       }
       const embedded = await (await iframe.elementHandle())!.contentFrame();
@@ -495,8 +604,7 @@ for (const model of ["iPhone 18 Pro", "iPhone 18 Pro Max"]) {
           if (collapsed) await expect(clock).not.toHaveCSS("color", "rgb(255, 255, 255)");
           else await expect(clock).toHaveCSS("color", "rgb(255, 255, 255)");
         }
-        const theme = page.getByRole("button", { name: /^(Dark|Light) theme$/ });
-        await theme.click();
+        await toggleTheme(page);
         await expect(top).toHaveCSS("background-color", colors.topColor);
         await expect(bottom).toHaveCSS("background-color", colors.bottomColor);
       }
@@ -505,9 +613,7 @@ for (const model of ["iPhone 18 Pro", "iPhone 18 Pro Max"]) {
 }
 
 test("keeps the Modern Laptop display below the webcam and uses Windows browser controls", async ({ page }) => {
-  await page.getByTestId("device-switcher-button").first().click();
-  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("Modern Laptop 15");
-  await page.locator('button[title="Modern Laptop 15 inch"]').click();
+  await switchDevice(page, "Modern Laptop 15", 'button[title="Modern Laptop 15 inch"]');
 
   const slot = page.locator("[data-preview-slot-id]").first();
   const frame = slot.locator('[data-device-frame="modern-laptop-15"]');
@@ -528,9 +634,7 @@ test("keeps the Modern Laptop display below the webcam and uses Windows browser 
 });
 
 test("keeps native-landscape foldables and their hardware inside the preview canvas", async ({ page }) => {
-  await page.getByTestId("device-switcher-button").first().click();
-  await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("Fold7");
-  await page.locator('button[title="Samsung Galaxy Z Fold7 (unfolded)"]').click();
+  await switchDevice(page, "Fold7", 'button[title="Samsung Galaxy Z Fold7 (unfolded)"]');
 
   const frame = page.locator('[data-device-frame="samsung-galaxy-z-fold7-unfolded-2025"]');
   const screen = page.locator('[data-device-screen="samsung-galaxy-z-fold7-unfolded-2025"]');
@@ -551,12 +655,10 @@ test("keeps native-landscape foldables and their hardware inside the preview can
 test("resizes Duo side controls with the address bar without moving their anchors or covering the page", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
   for (const posture of ["folded", "unfolded"]) {
-    await page.getByTestId("device-switcher-button").first().click();
-    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone Duo");
-    await page.locator(`button[title="Apple iPhone Duo (${posture})"]`).click();
+    await switchDevice(page, "iPhone Duo", `button[title="Apple iPhone Duo (${posture})"]`);
     for (let rotation = 0; rotation < 2; rotation++) {
       if (rotation) {
-        await openViewportActions(page);
+        await revealControls(page);
         await slot.getByRole("button", { name: "Rotate", exact: true }).click();
       }
       const iframe = slot.locator("iframe");
@@ -666,12 +768,10 @@ test("resizes Duo side controls with the address bar without moving their anchor
 test("continues Duo page sections into the right gutter and adapts control contrast", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
   for (const posture of ["folded", "unfolded"]) {
-    await page.getByTestId("device-switcher-button").first().click();
-    await page.getByRole("textbox", { name: "Search name, OS, type, or size" }).fill("iPhone Duo");
-    await page.locator(`button[title="Apple iPhone Duo (${posture})"]`).click();
+    await switchDevice(page, "iPhone Duo", `button[title="Apple iPhone Duo (${posture})"]`);
     for (let rotation = 0; rotation < 2; rotation++) {
       if (rotation) {
-        await openViewportActions(page);
+        await revealControls(page);
         await slot.getByRole("button", { name: "Rotate", exact: true }).click();
       }
       if (!(await slot.locator('[data-browser-control="side-toolbar"]').count())) continue;
@@ -714,21 +814,21 @@ test("does not report standalone previews as blocked when no extension bridge is
       if (event.source === window.parent && typeof event.data?.type === "string") registered.previewMessages!.push(event.data.type);
     });
   });
-  await page.getByRole("button", { name: "Scroll sync", exact: true }).click();
+  await page.locator("[data-main-toolbar]").getByRole("checkbox", { name: "Scroll", exact: true }).check();
   const slot = page.locator("[data-preview-slot-id]").first();
   const original = await (await slot.locator("iframe").elementHandle())!.contentFrame();
   await original!.evaluate(() => window.parent.postMessage({
     type: "MDV_PREVIEW_BLOCKED_OR_UNAVAILABLE", slotId: window.name.replace(/^mdv-(?:mobile-)?preview-/, ""),
   }, "*"));
   await expect(slot.getByText("This site blocks iframe preview.")).toBeVisible();
-  await openViewportActions(page);
+  await revealControls(page);
   await slot.getByRole("button", { name: "Reload preview", exact: true }).first().click();
   await expect(slot.locator("iframe")).toBeVisible();
   const reloaded = await (await slot.locator("iframe").elementHandle())!.contentFrame();
   await expect.poll(() => reloaded!.evaluate(() => (window as Window & { previewMessages?: string[] }).previewMessages ?? [])).toContain("MDV_SCROLL_SYNC_ENABLE");
 });
 
-test("uses view-only mode as a clean canvas without reloading previews", async ({ page }) => {
+test("uses focus mode as a clean canvas without reloading previews", async ({ page }) => {
   const deviceCount = await page.locator("[data-preview-slot-id]").count();
   await expect(page.locator("[data-main-toolbar]")).toHaveCount(1);
   await expect(page.locator("[data-device-toolbar]")).toHaveCount(deviceCount);
@@ -738,38 +838,59 @@ test("uses view-only mode as a clean canvas without reloading previews", async (
     (window as Window & { continuity?: string }).continuity = "view-only-draft";
     return (window as Window & { continuity?: string }).continuity;
   });
-  await page.getByRole("button", { name: "View only", exact: true }).click();
+  await page.getByRole("button", { name: "Focus mode", exact: true }).click();
 
   await expect(page.locator("[data-main-toolbar]")).toHaveCount(0);
   await expect(page.locator("[data-device-toolbar]")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Show workspace controls" })).toBeVisible();
+  await expect(page.locator("[data-device-caption]")).toHaveCount(0);
   await expect(page.getByRole("separator", { name: "Resize adjacent viewports" })).toHaveCount(0);
+  await expect(page.getByRole("toolbar", { name: "Focus mode controls" })).toBeAttached();
 
-  await page.getByRole("button", { name: "Show workspace controls" }).click();
+  // The focus mode controls appear while the pointer is near the bottom edge.
+  const viewport = page.viewportSize()!;
+  await page.mouse.move(viewport.width / 2, viewport.height - 30);
+  await page.getByRole("button", { name: "One", exact: true }).click();
+  await expect(page.locator("[data-preview-slot-id]:visible")).toHaveCount(1);
+  await page.getByRole("button", { name: "All", exact: true }).click();
+  await expect(page.locator("[data-preview-slot-id]:visible")).toHaveCount(deviceCount);
+
+  // Hovering any device also shows the controls, so Exit is easy to find.
+  const focusControls = page.getByRole("toolbar", { name: "Focus mode controls" });
+  await page.mouse.move(viewport.width / 2, 8);
+  await expect(focusControls).toHaveCSS("opacity", "0");
+  const frame = (await page.locator("[data-preview-slot-id] iframe").first().boundingBox())!;
+  await page.mouse.move(frame.x + frame.width / 2, frame.y + frame.height / 3);
+  await expect(focusControls).toHaveCSS("opacity", "1");
+  await expect(page.locator("[data-exit-view-only]")).toBeVisible();
+
+  await page.keyboard.press("Escape");
   await expect.poll(() => originalFrame!.evaluate(() => (window as Window & { continuity?: string }).continuity)).toBe(token);
   await expect(page.locator("[data-main-toolbar]")).toHaveCount(1);
   await expect(page.locator("[data-device-toolbar]")).toHaveCount(deviceCount);
 });
 
 test("builds an actionable AI fix prompt with optional context", async ({ page }) => {
-  await openTools(page);
-  await page.getByRole("button", { name: "Generate AI fix prompt" }).click();
-  await expect(page.getByRole("heading", { name: "Generate AI fix prompt" })).toBeVisible();
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Fix prompt", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Fix prompt" });
+  await expect(dialog.getByRole("heading", { name: "Fix prompt" })).toBeVisible();
 
-  const dialog = page.getByLabel("Generate AI fix prompt");
-  const copy = dialog.getByRole("button", { name: "Copy fix prompt" });
+  const copy = dialog.getByRole("button", { name: "Copy prompt" });
   await expect(copy).toBeEnabled();
-  await page.getByLabel("Issue summary").fill("Navigation overlaps the hero");
-  await page.getByLabel("Reproduction steps").fill("Open the page and use Pixel 10.");
+  await dialog.getByLabel("What's wrong?").fill("Navigation overlaps the hero");
+  await dialog.getByRole("button", { name: /More details/ }).click();
+  await dialog.getByLabel("Reproduction steps").fill("Open the page and use Pixel 10.");
+  await dialog.getByRole("button", { name: "Preview", exact: true }).click();
 
   await expect(copy).toBeEnabled();
-  await expect(page.getByText("Inspect the existing implementation and styling conventions before editing", { exact: false })).toBeVisible();
-  await expect(page.getByText("Run the relevant type, unit, and browser checks", { exact: false })).toBeVisible();
-  await expect(dialog.locator("pre")).toContainText("Navigation overlaps the hero");
-  await expect(dialog).toContainText("All fields are optional");
+  const preview = dialog.getByLabel("Prompt preview");
+  await expect(preview).toContainText("Inspect the existing implementation and styling conventions before editing");
+  await expect(preview).toContainText("Run the relevant type, unit, and browser checks");
+  await expect(preview).toContainText("Navigation overlaps the hero");
+  await expect(preview).toContainText("Open the page and use Pixel 10.");
+  await expect(dialog).toContainText("Nothing is sent from here");
 
   const dialogBox = await dialog.boundingBox();
-  const previewBox = await dialog.locator("pre").boundingBox();
+  const previewBox = await preview.boundingBox();
   expect(dialogBox).not.toBeNull();
   expect(previewBox).not.toBeNull();
   expect(previewBox!.x).toBeGreaterThanOrEqual(dialogBox!.x);
@@ -793,10 +914,12 @@ test("shows a persistent source-tab recording indicator", async ({ page }) => {
   if (await start.isVisible().catch(() => false)) await start.click();
   await dismissFirstRunGuide(page);
 
-  await openTools(page);
-  await page.getByRole("button", { name: "Screen record" }).click();
-  await expect(page.getByRole("status")).toContainText("Screen recording in progress · 00:00");
-  await expect(page.getByRole("button", { name: "Stop", exact: true })).toBeVisible();
+  await openRecordMenu(page);
+  await page.getByRole("button", { name: "Record this tab" }).click();
+  const stop = page.getByRole("dialog", { name: "Record" }).getByRole("button", { name: /^Stop/ });
+  await expect(stop).toBeVisible();
+  await expect(stop).toContainText("00:0");
+  await expect(stop).toHaveAttribute("aria-pressed", "true");
 });
 
 test("reruns a saved flow without refreshing the previews", async ({ page }) => {
@@ -813,7 +936,7 @@ test("reruns a saved flow without refreshing the previews", async ({ page }) => 
 
   const originalPreview = page.locator("iframe").first();
   await originalPreview.evaluate((iframe) => iframe.setAttribute("data-replay-preview", "original"));
-  await openTools(page);
+  await openRecordMenu(page);
   await page.getByRole("button", { name: "Rerun · 2 steps", exact: true }).click();
   await page.waitForTimeout(400);
 
@@ -833,7 +956,130 @@ test("returns a moved preview to the recorded flow start page", async ({ page })
 
   const preview = page.locator("iframe").first();
   await expect(preview).toHaveAttribute("src", "https://example.com");
-  await openTools(page);
+  await openRecordMenu(page);
   await page.getByRole("button", { name: "Rerun · 1 steps", exact: true }).click();
   await expect(preview).toHaveAttribute("src", "https://example.org");
+});
+
+test("steps through devices of the same type from the device toolbar", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  const caption = slot.locator("[data-device-caption]");
+  await revealControls(page);
+  const next = slot.getByTestId("next-device-button");
+  const nextName = (await next.getAttribute("aria-label"))!.split(": ")[1];
+  const start = await caption.textContent();
+
+  await next.click();
+  await expect(caption).toContainText(nextName.replace(/^Apple /, ""));
+  await slot.getByTestId("previous-device-button").click();
+  await expect(caption).toHaveText(start!);
+});
+
+test("explains header controls in tooltips without getting in the way", async ({ page }) => {
+  const header = page.locator("[data-main-toolbar]");
+  const tooltip = page.getByRole("tooltip").filter({ hasText: "Theme, browser bar position" });
+  const settings = header.getByRole("button", { name: "Settings", exact: true });
+
+  await settings.hover();
+  await expect(tooltip).toBeVisible();
+  await expect(settings).toHaveAccessibleDescription("Theme, browser bar position, language, help and the feature tour.");
+  await settings.click();
+  await expect(tooltip).toBeHidden();
+  await expect(page.getByRole("dialog", { name: "Settings" })).toBeVisible();
+});
+
+test("shows an enlarged All devices preview above the backdrop", async ({ page }) => {
+  await page.locator("[data-all-devices-toggle]").click();
+  const card = page.locator("[data-gallery-device-id]").nth(1);
+  // Enlarging from the hover toolbar leaves the pointer over the card, which
+  // must not keep the popup beneath the backdrop.
+  await card.locator("[data-device-capture]").hover();
+  await card.getByRole("button", { name: "Enlarge preview" }).click();
+
+  const popup = page.locator("[data-gallery-expanded]");
+  await expect(popup).toBeVisible();
+  const box = (await popup.boundingBox())!;
+  const topmost = await page.evaluate(({ x, y }) => {
+    const element = document.elementFromPoint(x, y);
+    return element?.closest("[data-gallery-expanded]") ? "popup" : element?.hasAttribute("data-gallery-backdrop") ? "backdrop" : element?.tagName;
+  }, { x: box.x + box.width / 2, y: box.y + 30 });
+  expect(topmost).toBe("popup");
+
+  await popup.getByRole("button", { name: "Back to gallery" }).click();
+  await expect(popup).toHaveCount(0);
+});
+
+test("toggles devices in the Add device picker and explains the four-device limit", async ({ page }) => {
+  const devices = page.locator("[data-preview-slot-id]");
+  const start = await devices.count();
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
+  const panel = page.getByTestId("device-switcher-panel");
+
+  // A device already on screen is deselected by clicking it again.
+  await panel.locator("[data-device-pick][data-added]").first().click();
+  await expect(devices).toHaveCount(start - 1);
+  await expect(panel).toBeVisible();
+
+  while (await devices.count() < 4) {
+    await panel.locator("[data-device-pick]:not([data-added]):not(:disabled)").first().click();
+  }
+  await expect(panel.getByRole("status")).toHaveText("You can compare up to 4 devices. Remove one to add another.");
+  await expect(panel.locator("[data-device-pick]:not([data-added])").first()).toBeDisabled();
+
+  // The devices on screen can be saved as a preset straight from the picker.
+  await panel.getByRole("button", { name: "Save current" }).click();
+  await expect(panel.getByRole("group", { name: "Sets" }).locator('button[aria-pressed="true"]')).toHaveText("Set 1");
+});
+
+test("keeps a dragged device in place when stepping devices and resets it when showing one", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  const device = slot.locator("[data-device-capture]");
+  const offset = () => device.evaluate(element => element.style.transform.match(/translate\(([^)]*)\)/)?.[1]);
+
+  await revealControls(page);
+  const grip = (await slot.locator("[data-move-handle]").boundingBox())!;
+  await page.mouse.move(grip.x + 5, grip.y + 5);
+  await page.mouse.down();
+  await page.mouse.move(grip.x + 45, grip.y - 55, { steps: 6 });
+  await page.mouse.up();
+  const dragged = await offset();
+  expect(dragged).not.toBe("0px, 0px");
+
+  await revealControls(page);
+  await slot.getByTestId("next-device-button").click();
+  await expect.poll(offset).toBe(dragged);
+  const toolbar = (await slot.locator("[data-device-toolbar]").boundingBox())!;
+  expect(toolbar.x).toBeGreaterThanOrEqual(0);
+  expect(toolbar.x + toolbar.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+
+  await page.getByRole("button", { name: "Focus mode", exact: true }).click();
+  const viewport = page.viewportSize()!;
+  await page.mouse.move(viewport.width / 2, viewport.height - 30);
+  await page.getByRole("button", { name: "One", exact: true }).click();
+  await expect.poll(() => page.locator("[data-preview-slot-id]:visible [data-device-capture]").evaluate(element => element.style.transform.match(/translate\(([^)]*)\)/)?.[1])).toBe("0px, 0px");
+});
+
+test("unchecks the last device in the Add device picker and replaces it with the next pick", async ({ page }) => {
+  const devices = page.locator("[data-preview-slot-id]");
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
+  const panel = page.getByTestId("device-switcher-panel");
+  while (await devices.count() > 1) {
+    const before = await devices.count();
+    await panel.locator("[data-device-pick][data-added]").first().click();
+    await expect(devices).toHaveCount(before - 1);
+  }
+
+  const last = panel.locator("[data-device-pick][data-added]").first();
+  const lastName = (await last.getAttribute("title"))!;
+  await last.click();
+  await expect(panel.getByRole("status")).toHaveText(`Replacing ${lastName}`);
+  await expect(devices).toHaveCount(1);
+
+  await panel.locator("[data-device-pick]:not([data-added])").filter({ hasNot: page.locator(`[title="${lastName}"]`) }).nth(1).click();
+  await expect(devices).toHaveCount(1);
+  await expect(page.locator(`[data-device-frame]`).first()).toBeVisible();
+  await expect(panel.getByRole("status")).toHaveCount(0);
+  // A device can be listed twice (Recent and its type), so compare unique ids.
+  await expect.poll(async () => new Set(await panel.locator("[data-device-pick][data-added]").evaluateAll(rows => rows.map(row => row.getAttribute("data-device-pick")))).size).toBe(1);
+  await expect(panel.locator(`[data-device-pick][data-added][title="${lastName}"]`)).toHaveCount(0);
 });

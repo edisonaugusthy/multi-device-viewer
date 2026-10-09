@@ -23,14 +23,15 @@ interface LocalMockupAsset {
   frameStyle?: MockupFrameStyle;
 }
 
-// Mobile FIRST PNGs remain unmodified. Insets, aperture masks, and camera bounds
-// are measured from their alpha channel; CSS viewports stay independent.
+// Frames ship as WebP converted from the source PNGs at the same pixel size with
+// lossless alpha. Insets, aperture masks, and camera bounds are measured from
+// that alpha channel; CSS viewports stay independent.
 export const localMockupCatalog: LocalMockupAsset[] = [
 {
   "id": "apple-iphone-18-pro-2026",
-  "localPath": "/mockups/apple-iphone-18-pro-2026.png",
-  "file": "apple-iphone-18-pro-2026.png",
-  "bytes": 67746,
+  "localPath": "/mockups/apple-iphone-18-pro-2026.webp",
+  "file": "apple-iphone-18-pro-2026.webp",
+  "bytes": 13722,
   "width": 389,
   "height": 800,
   "renderScale": 1.1292134831460674,
@@ -90,9 +91,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
 {
   "id": "apple-iphone-18-pro-max-2026",
-  "localPath": "/mockups/apple-iphone-18-pro-max-2026.png",
-  "file": "apple-iphone-18-pro-max-2026.png",
-  "bytes": 36488,
+  "localPath": "/mockups/apple-iphone-18-pro-max-2026.webp",
+  "file": "apple-iphone-18-pro-max-2026.webp",
+  "bytes": 8578,
   "width": 389,
   "height": 800,
   "renderScale": 1.2367399741267788,
@@ -152,9 +153,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
 {
   "id": "apple-iphone-duo-folded-2026",
-  "localPath": "/mockups/apple-iphone-duo-folded-2026.png",
-  "file": "apple-iphone-duo-folded-2026.png",
-  "bytes": 82232,
+  "localPath": "/mockups/apple-iphone-duo-folded-2026.webp",
+  "file": "apple-iphone-duo-folded-2026.webp",
+  "bytes": 11064,
   "width": 573,
   "height": 800,
   "renderScale": 0.8921052631578947,
@@ -212,9 +213,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
 {
   "id": "apple-iphone-duo-unfolded-2026",
-  "localPath": "/mockups/apple-iphone-duo-unfolded-2026.png",
-  "file": "apple-iphone-duo-unfolded-2026.png",
-  "bytes": 51095,
+  "localPath": "/mockups/apple-iphone-duo-unfolded-2026.webp",
+  "file": "apple-iphone-duo-unfolded-2026.webp",
+  "bytes": 10510,
   "width": 800,
   "height": 575,
   "renderScale": 1.1635687732342008,
@@ -254,9 +255,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "apple-imac-24-inch-2021",
-    "localPath": "/mockups/apple-imac-24-inch-2021.png",
-    "file": "apple-imac-24-inch-2021.png",
-    "bytes": 508235,
+    "localPath": "/mockups/apple-imac-24-inch-2021.webp",
+    "file": "apple-imac-24-inch-2021.webp",
+    "bytes": 148732,
     "width": 4312,
     "height": 3884,
     "screenInset": {
@@ -268,9 +269,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-ipad-air-4",
-    "localPath": "/mockups/apple-ipad-air-4.png",
-    "file": "apple-ipad-air-4.png",
-    "bytes": 75236,
+    "localPath": "/mockups/apple-ipad-air-4.webp",
+    "file": "apple-ipad-air-4.webp",
+    "bytes": 27644,
     "width": 1864,
     "height": 2584,
     "screenInset": {
@@ -282,9 +283,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-ipad-pro-11-2018",
-    "localPath": "/mockups/apple-ipad-pro-11-2018.png",
-    "file": "apple-ipad-pro-11-2018.png",
-    "bytes": 81988,
+    "localPath": "/mockups/apple-ipad-pro-11-2018.webp",
+    "file": "apple-ipad-pro-11-2018.webp",
+    "bytes": 26326,
     "width": 1864,
     "height": 2582,
     "screenInset": {
@@ -296,9 +297,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-11-pro-max",
-    "localPath": "/mockups/apple-iphone-11-pro-max.png",
-    "file": "apple-iphone-11-pro-max.png",
-    "bytes": 29774,
+    "localPath": "/mockups/apple-iphone-11-pro-max.webp",
+    "file": "apple-iphone-11-pro-max.webp",
+    "bytes": 14834,
     "width": 942,
     "height": 1896,
     "screenInset": {
@@ -310,9 +311,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-11-pro",
-    "localPath": "/mockups/apple-iphone-11-pro.png",
-    "file": "apple-iphone-11-pro.png",
-    "bytes": 29637,
+    "localPath": "/mockups/apple-iphone-11-pro.webp",
+    "file": "apple-iphone-11-pro.webp",
+    "bytes": 20246,
     "width": 866,
     "height": 1750,
     "screenInset": {
@@ -324,9 +325,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-11",
-    "localPath": "/mockups/apple-iphone-11.png",
-    "file": "apple-iphone-11.png",
-    "bytes": 93792,
+    "localPath": "/mockups/apple-iphone-11.webp",
+    "file": "apple-iphone-11.webp",
+    "bytes": 23824,
     "width": 980,
     "height": 1936,
     "screenInset": {
@@ -338,9 +339,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-12-mini",
-    "localPath": "/mockups/apple-iphone-12-mini.png",
-    "file": "apple-iphone-12-mini.png",
-    "bytes": 42335,
+    "localPath": "/mockups/apple-iphone-12-mini.webp",
+    "file": "apple-iphone-12-mini.webp",
+    "bytes": 11908,
     "width": 814,
     "height": 1640,
     "screenInset": {
@@ -352,9 +353,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-12-pro-max",
-    "localPath": "/mockups/apple-iphone-12-pro-max.png",
-    "file": "apple-iphone-12-pro-max.png",
-    "bytes": 55558,
+    "localPath": "/mockups/apple-iphone-12-pro-max.webp",
+    "file": "apple-iphone-12-pro-max.webp",
+    "bytes": 17882,
     "width": 956,
     "height": 1936,
     "screenInset": {
@@ -366,9 +367,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-12-pro",
-    "localPath": "/mockups/apple-iphone-12-pro.png",
-    "file": "apple-iphone-12-pro.png",
-    "bytes": 38606,
+    "localPath": "/mockups/apple-iphone-12-pro.webp",
+    "file": "apple-iphone-12-pro.webp",
+    "bytes": 14778,
     "width": 876,
     "height": 1772,
     "screenInset": {
@@ -380,9 +381,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-12",
-    "localPath": "/mockups/apple-iphone-12.png",
-    "file": "apple-iphone-12.png",
-    "bytes": 42594,
+    "localPath": "/mockups/apple-iphone-12.webp",
+    "file": "apple-iphone-12.webp",
+    "bytes": 15870,
     "width": 876,
     "height": 1772,
     "screenInset": {
@@ -394,9 +395,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-13-2021",
-    "localPath": "/mockups/apple-iphone-13-2021.png",
-    "file": "apple-iphone-13-2021.png",
-    "bytes": 67770,
+    "localPath": "/mockups/apple-iphone-13-2021.webp",
+    "file": "apple-iphone-13-2021.webp",
+    "bytes": 24166,
     "width": 882,
     "height": 1776,
     "screenInset": {
@@ -408,9 +409,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-13-mini-2021",
-    "localPath": "/mockups/apple-iphone-13-mini-2021.png",
-    "file": "apple-iphone-13-mini-2021.png",
-    "bytes": 62270,
+    "localPath": "/mockups/apple-iphone-13-mini-2021.webp",
+    "file": "apple-iphone-13-mini-2021.webp",
+    "bytes": 15912,
     "width": 844,
     "height": 1702,
     "screenInset": {
@@ -422,9 +423,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-13-pro-2021",
-    "localPath": "/mockups/apple-iphone-13-pro-2021.png",
-    "file": "apple-iphone-13-pro-2021.png",
-    "bytes": 37214,
+    "localPath": "/mockups/apple-iphone-13-pro-2021.webp",
+    "file": "apple-iphone-13-pro-2021.webp",
+    "bytes": 20630,
     "width": 868,
     "height": 1762,
     "screenInset": {
@@ -436,9 +437,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-13-pro-max-2021",
-    "localPath": "/mockups/apple-iphone-13-pro-max-2021.png",
-    "file": "apple-iphone-13-pro-max-2021.png",
-    "bytes": 40812,
+    "localPath": "/mockups/apple-iphone-13-pro-max-2021.webp",
+    "file": "apple-iphone-13-pro-max-2021.webp",
+    "bytes": 17910,
     "width": 966,
     "height": 1948,
     "screenInset": {
@@ -450,9 +451,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-14-2022",
-    "localPath": "/mockups/apple-iphone-14-2022.png",
-    "file": "apple-iphone-14-2022.png",
-    "bytes": 46800,
+    "localPath": "/mockups/apple-iphone-14-2022.webp",
+    "file": "apple-iphone-14-2022.webp",
+    "bytes": 17690,
     "width": 870,
     "height": 1772,
     "screenInset": {
@@ -464,9 +465,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-14-max-2022",
-    "localPath": "/mockups/apple-iphone-14-max-2022.png",
-    "file": "apple-iphone-14-max-2022.png",
-    "bytes": 51007,
+    "localPath": "/mockups/apple-iphone-14-max-2022.webp",
+    "file": "apple-iphone-14-max-2022.webp",
+    "bytes": 18384,
     "width": 956,
     "height": 1936,
     "screenInset": {
@@ -478,9 +479,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-14-pro-2022",
-    "localPath": "/mockups/apple-iphone-14-pro-2022.png",
-    "file": "apple-iphone-14-pro-2022.png",
-    "bytes": 107865,
+    "localPath": "/mockups/apple-iphone-14-pro-2022.webp",
+    "file": "apple-iphone-14-pro-2022.webp",
+    "bytes": 19734,
     "width": 870,
     "height": 1772,
     "screenInset": {
@@ -506,9 +507,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-14-pro-max-2022",
-    "localPath": "/mockups/apple-iphone-14-pro-max-2022.png",
-    "file": "apple-iphone-14-pro-max-2022.png",
-    "bytes": 42516,
+    "localPath": "/mockups/apple-iphone-14-pro-max-2022.webp",
+    "file": "apple-iphone-14-pro-max-2022.webp",
+    "bytes": 21152,
     "width": 956,
     "height": 1946,
     "screenInset": {
@@ -534,9 +535,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-15-2023",
-    "localPath": "/mockups/apple-iphone-15-2023.png",
-    "file": "apple-iphone-15-2023.png",
-    "bytes": 119372,
+    "localPath": "/mockups/apple-iphone-15-2023.webp",
+    "file": "apple-iphone-15-2023.webp",
+    "bytes": 12590,
     "width": 868,
     "height": 1772,
     "screenInset": {
@@ -548,9 +549,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-15-plus-2023",
-    "localPath": "/mockups/apple-iphone-15-plus-2023.png",
-    "file": "apple-iphone-15-plus-2023.png",
-    "bytes": 140869,
+    "localPath": "/mockups/apple-iphone-15-plus-2023.webp",
+    "file": "apple-iphone-15-plus-2023.webp",
+    "bytes": 16122,
     "width": 950,
     "height": 1936,
     "screenInset": {
@@ -562,9 +563,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-15-pro-2023",
-    "localPath": "/mockups/apple-iphone-15-pro-2023.png",
-    "file": "apple-iphone-15-pro-2023.png",
-    "bytes": 158901,
+    "localPath": "/mockups/apple-iphone-15-pro-2023.webp",
+    "file": "apple-iphone-15-pro-2023.webp",
+    "bytes": 19690,
     "width": 864,
     "height": 1768,
     "screenInset": {
@@ -576,9 +577,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-15-pro-max-2023",
-    "localPath": "/mockups/apple-iphone-15-pro-max-2023.png",
-    "file": "apple-iphone-15-pro-max-2023.png",
-    "bytes": 158193,
+    "localPath": "/mockups/apple-iphone-15-pro-max-2023.webp",
+    "file": "apple-iphone-15-pro-max-2023.webp",
+    "bytes": 15952,
     "width": 938,
     "height": 1926,
     "screenInset": {
@@ -590,9 +591,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-16-2024",
-    "localPath": "/mockups/apple-iphone-16-2024.png",
-    "file": "apple-iphone-16-2024.png",
-    "bytes": 72289,
+    "localPath": "/mockups/apple-iphone-16-2024.webp",
+    "file": "apple-iphone-16-2024.webp",
+    "bytes": 22966,
     "width": 878,
     "height": 1786,
     "screenInset": {
@@ -604,9 +605,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-16-plus-2024",
-    "localPath": "/mockups/apple-iphone-16-plus-2024.png",
-    "file": "apple-iphone-16-plus-2024.png",
-    "bytes": 91928,
+    "localPath": "/mockups/apple-iphone-16-plus-2024.webp",
+    "file": "apple-iphone-16-plus-2024.webp",
+    "bytes": 28432,
     "width": 961,
     "height": 1954,
     "screenInset": {
@@ -618,9 +619,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-16-pro-max-2024",
-    "localPath": "/mockups/apple-iphone-16-pro-max-2024.png",
-    "file": "apple-iphone-16-pro-max-2024.png",
-    "bytes": 91533,
+    "localPath": "/mockups/apple-iphone-16-pro-max-2024.webp",
+    "file": "apple-iphone-16-pro-max-2024.webp",
+    "bytes": 17114,
     "width": 962,
     "height": 1982,
     "screenInset": {
@@ -632,9 +633,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "apple-iphone-17-2025",
-  "localPath": "/mockups/apple-iphone-17-2025.png",
-  "file": "apple-iphone-17-2025.png",
-  "bytes": 66125,
+  "localPath": "/mockups/apple-iphone-17-2025.webp",
+  "file": "apple-iphone-17-2025.webp",
+  "bytes": 14060,
   "width": 388,
   "height": 800,
   "renderScale": 1.1292134831460674,
@@ -652,9 +653,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
   "id": "apple-iphone-17-pro-2025",
-  "localPath": "/mockups/apple-iphone-17-pro-2025.png",
-  "file": "apple-iphone-17-pro-2025.png",
-  "bytes": 76617,
+  "localPath": "/mockups/apple-iphone-17-pro-2025.webp",
+  "file": "apple-iphone-17-pro-2025.webp",
+  "bytes": 14348,
   "width": 389,
   "height": 800,
   "renderScale": 1.1292134831460674,
@@ -672,9 +673,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
   "id": "apple-iphone-17-pro-max-2025",
-  "localPath": "/mockups/apple-iphone-17-pro-max-2025.png",
-  "file": "apple-iphone-17-pro-max-2025.png",
-  "bytes": 49325,
+  "localPath": "/mockups/apple-iphone-17-pro-max-2025.webp",
+  "file": "apple-iphone-17-pro-max-2025.webp",
+  "bytes": 11360,
   "width": 389,
   "height": 800,
   "renderScale": 1.2367399741267788,
@@ -692,9 +693,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "apple-iphone-5",
-    "localPath": "/mockups/apple-iphone-5.png",
-    "file": "apple-iphone-5.png",
-    "bytes": 48759,
+    "localPath": "/mockups/apple-iphone-5.webp",
+    "file": "apple-iphone-5.webp",
+    "bytes": 18172,
     "width": 756,
     "height": 1600,
     "screenInset": {
@@ -706,9 +707,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "apple-iphone-air-2025",
-  "localPath": "/mockups/apple-iphone-air-2025.png",
-  "file": "apple-iphone-air-2025.png",
-  "bytes": 47132,
+  "localPath": "/mockups/apple-iphone-air-2025.webp",
+  "file": "apple-iphone-air-2025.webp",
+  "bytes": 12094,
   "width": 388,
   "height": 800,
   "renderScale": 1.176774193548387,
@@ -726,9 +727,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "apple-iphone-se",
-    "localPath": "/mockups/apple-iphone-se.png",
-    "file": "apple-iphone-se.png",
-    "bytes": 65099,
+    "localPath": "/mockups/apple-iphone-se.webp",
+    "file": "apple-iphone-se.webp",
+    "bytes": 14098,
     "width": 744,
     "height": 1512,
     "screenInset": {
@@ -740,9 +741,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-x",
-    "localPath": "/mockups/apple-iphone-x.png",
-    "file": "apple-iphone-x.png",
-    "bytes": 106691,
+    "localPath": "/mockups/apple-iphone-x.webp",
+    "file": "apple-iphone-x.webp",
+    "bytes": 41116,
     "width": 858,
     "height": 1720,
     "screenInset": {
@@ -754,9 +755,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-xr",
-    "localPath": "/mockups/apple-iphone-xr.png",
-    "file": "apple-iphone-xr.png",
-    "bytes": 73861,
+    "localPath": "/mockups/apple-iphone-xr.webp",
+    "file": "apple-iphone-xr.webp",
+    "bytes": 22018,
     "width": 980,
     "height": 1936,
     "screenInset": {
@@ -768,9 +769,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-macbook-pro-16-2021",
-    "localPath": "/mockups/apple-macbook-pro-16-2021.png",
-    "file": "apple-macbook-pro-16-2021.png",
-    "bytes": 323138,
+    "localPath": "/mockups/apple-macbook-pro-16-2021.webp",
+    "file": "apple-macbook-pro-16-2021.webp",
+    "bytes": 84354,
     "width": 4244,
     "height": 2594,
     "screenInset": {
@@ -782,9 +783,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-watch-serie-6",
-    "localPath": "/mockups/apple-watch-serie-6.png",
-    "file": "apple-watch-serie-6.png",
-    "bytes": 63573,
+    "localPath": "/mockups/apple-watch-serie-6.webp",
+    "file": "apple-watch-serie-6.webp",
+    "bytes": 29008,
     "width": 450,
     "height": 776,
     "screenInset": {
@@ -796,9 +797,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "dell-latitude-14-3420",
-    "localPath": "/mockups/dell-latitude-14-3420.png",
-    "file": "dell-latitude-14-3420.png",
-    "bytes": 396125,
+    "localPath": "/mockups/dell-latitude-14-3420.webp",
+    "file": "dell-latitude-14-3420.webp",
+    "bytes": 102352,
     "width": 3574,
     "height": 2450,
     "screenInset": {
@@ -810,9 +811,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "google-pixel-5",
-    "localPath": "/mockups/google-pixel-5.png",
-    "file": "google-pixel-5.png",
-    "bytes": 74919,
+    "localPath": "/mockups/google-pixel-5.webp",
+    "file": "google-pixel-5.webp",
+    "bytes": 10108,
     "width": 876,
     "height": 1786,
     "screenInset": {
@@ -824,9 +825,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "google-pixel-6-pro",
-    "localPath": "/mockups/google-pixel-6-pro.png",
-    "file": "google-pixel-6-pro.png",
-    "bytes": 41621,
+    "localPath": "/mockups/google-pixel-6-pro.webp",
+    "file": "google-pixel-6-pro.webp",
+    "bytes": 9922,
     "width": 762,
     "height": 1656,
     "screenInset": {
@@ -838,9 +839,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "google-pixel-8-2024",
-    "localPath": "/mockups/google-pixel-8-2024.png",
-    "file": "google-pixel-8-2024.png",
-    "bytes": 35887,
+    "localPath": "/mockups/google-pixel-8-2024.webp",
+    "file": "google-pixel-8-2024.webp",
+    "bytes": 9762,
     "width": 912,
     "height": 1920,
     "screenInset": {
@@ -852,9 +853,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "huawei-p30-pro",
-    "localPath": "/mockups/huawei-p30-pro.png",
-    "file": "huawei-p30-pro.png",
-    "bytes": 15222,
+    "localPath": "/mockups/huawei-p30-pro.webp",
+    "file": "huawei-p30-pro.webp",
+    "bytes": 11148,
     "width": 758,
     "height": 1634,
     "screenInset": {
@@ -866,9 +867,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "macbook-air",
-    "localPath": "/mockups/macbook-air.png",
-    "file": "macbook-air.png",
-    "bytes": 130937,
+    "localPath": "/mockups/macbook-air.webp",
+    "file": "macbook-air.webp",
+    "bytes": 38366,
     "width": 3296,
     "height": 1894,
     "screenInset": {
@@ -880,9 +881,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "microsoft-surface-duo",
-    "localPath": "/mockups/microsoft-surface-duo.png",
-    "file": "microsoft-surface-duo.png",
-    "bytes": 33398,
+    "localPath": "/mockups/microsoft-surface-duo.webp",
+    "file": "microsoft-surface-duo.webp",
+    "bytes": 17896,
     "width": 2328,
     "height": 1842,
     "screenInset": {
@@ -894,9 +895,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "non-branded-android-smartphone",
-    "localPath": "/mockups/non-branded-android-smartphone.png",
-    "file": "non-branded-android-smartphone.png",
-    "bytes": 34236,
+    "localPath": "/mockups/non-branded-android-smartphone.webp",
+    "file": "non-branded-android-smartphone.webp",
+    "bytes": 13262,
     "width": 794,
     "height": 1672,
     "screenInset": {
@@ -908,9 +909,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "oneplus-nord-2",
-    "localPath": "/mockups/oneplus-nord-2.png",
-    "file": "oneplus-nord-2.png",
-    "bytes": 38405,
+    "localPath": "/mockups/oneplus-nord-2.webp",
+    "file": "oneplus-nord-2.webp",
+    "bytes": 18428,
     "width": 898,
     "height": 1944,
     "screenInset": {
@@ -922,9 +923,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "oppo-find-x3-pro",
-    "localPath": "/mockups/oppo-find-x3-pro.png",
-    "file": "oppo-find-x3-pro.png",
-    "bytes": 23520,
+    "localPath": "/mockups/oppo-find-x3-pro.webp",
+    "file": "oppo-find-x3-pro.webp",
+    "bytes": 12918,
     "width": 760,
     "height": 1690,
     "screenInset": {
@@ -936,9 +937,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-a12-2021",
-    "localPath": "/mockups/samsung-galaxy-a12-2021.png",
-    "file": "samsung-galaxy-a12-2021.png",
-    "bytes": 43247,
+    "localPath": "/mockups/samsung-galaxy-a12-2021.webp",
+    "file": "samsung-galaxy-a12-2021.webp",
+    "bytes": 14804,
     "width": 794,
     "height": 1718,
     "screenInset": {
@@ -950,9 +951,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-fold2",
-    "localPath": "/mockups/samsung-galaxy-fold2.png",
-    "file": "samsung-galaxy-fold2.png",
-    "bytes": 71206,
+    "localPath": "/mockups/samsung-galaxy-fold2.webp",
+    "file": "samsung-galaxy-fold2.webp",
+    "bytes": 30646,
     "width": 1842,
     "height": 2284,
     "screenInset": {
@@ -964,9 +965,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-note20-ultra",
-    "localPath": "/mockups/samsung-galaxy-note20-ultra.png",
-    "file": "samsung-galaxy-note20-ultra.png",
-    "bytes": 19489,
+    "localPath": "/mockups/samsung-galaxy-note20-ultra.webp",
+    "file": "samsung-galaxy-note20-ultra.webp",
+    "bytes": 10234,
     "width": 846,
     "height": 1826,
     "screenInset": {
@@ -978,9 +979,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s20",
-    "localPath": "/mockups/samsung-galaxy-s20.png",
-    "file": "samsung-galaxy-s20.png",
-    "bytes": 32958,
+    "localPath": "/mockups/samsung-galaxy-s20.webp",
+    "file": "samsung-galaxy-s20.webp",
+    "bytes": 10242,
     "width": 768,
     "height": 1668,
     "screenInset": {
@@ -992,9 +993,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s21-ultra",
-    "localPath": "/mockups/samsung-galaxy-s21-ultra.png",
-    "file": "samsung-galaxy-s21-ultra.png",
-    "bytes": 53607,
+    "localPath": "/mockups/samsung-galaxy-s21-ultra.webp",
+    "file": "samsung-galaxy-s21-ultra.webp",
+    "bytes": 10856,
     "width": 764,
     "height": 1658,
     "screenInset": {
@@ -1006,9 +1007,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s22-2022",
-    "localPath": "/mockups/samsung-galaxy-s22-2022.png",
-    "file": "samsung-galaxy-s22-2022.png",
-    "bytes": 43105,
+    "localPath": "/mockups/samsung-galaxy-s22-2022.webp",
+    "file": "samsung-galaxy-s22-2022.webp",
+    "bytes": 12890,
     "width": 786,
     "height": 1622,
     "screenInset": {
@@ -1020,9 +1021,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s22-plus-2022",
-    "localPath": "/mockups/samsung-galaxy-s22-plus-2022.png",
-    "file": "samsung-galaxy-s22-plus-2022.png",
-    "bytes": 28015,
+    "localPath": "/mockups/samsung-galaxy-s22-plus-2022.webp",
+    "file": "samsung-galaxy-s22-plus-2022.webp",
+    "bytes": 10000,
     "width": 786,
     "height": 1622,
     "screenInset": {
@@ -1034,9 +1035,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s22-ultra-2022",
-    "localPath": "/mockups/samsung-galaxy-s22-ultra-2022.png",
-    "file": "samsung-galaxy-s22-ultra-2022.png",
-    "bytes": 11713,
+    "localPath": "/mockups/samsung-galaxy-s22-ultra-2022.webp",
+    "file": "samsung-galaxy-s22-ultra-2022.webp",
+    "bytes": 4666,
     "width": 742,
     "height": 1568,
     "screenInset": {
@@ -1048,9 +1049,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s24-2024",
-    "localPath": "/mockups/samsung-galaxy-s24-2024.png",
-    "file": "samsung-galaxy-s24-2024.png",
-    "bytes": 39680,
+    "localPath": "/mockups/samsung-galaxy-s24-2024.webp",
+    "file": "samsung-galaxy-s24-2024.webp",
+    "bytes": 11346,
     "width": 780,
     "height": 1614,
     "screenInset": {
@@ -1062,9 +1063,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-s24-ultra-2024",
-    "localPath": "/mockups/samsung-galaxy-s24-ultra-2024.png",
-    "file": "samsung-galaxy-s24-ultra-2024.png",
-    "bytes": 83376,
+    "localPath": "/mockups/samsung-galaxy-s24-ultra-2024.webp",
+    "file": "samsung-galaxy-s24-ultra-2024.webp",
+    "bytes": 11980,
     "width": 844,
     "height": 1728,
     "screenInset": {
@@ -1076,9 +1077,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "samsung-galaxy-s26-ultra-2026",
-  "localPath": "/mockups/samsung-galaxy-s26-ultra-2026.png",
-  "file": "samsung-galaxy-s26-ultra-2026.png",
-  "bytes": 33923,
+  "localPath": "/mockups/samsung-galaxy-s26-ultra-2026.webp",
+  "file": "samsung-galaxy-s26-ultra-2026.webp",
+  "bytes": 5498,
   "width": 385,
   "height": 800,
   "renderScale": 1.1444444444444444,
@@ -1096,9 +1097,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "samsung-galaxy-tab-s7",
-    "localPath": "/mockups/samsung-galaxy-tab-s7.png",
-    "file": "samsung-galaxy-tab-s7.png",
-    "bytes": 80268,
+    "localPath": "/mockups/samsung-galaxy-tab-s7.webp",
+    "file": "samsung-galaxy-tab-s7.webp",
+    "bytes": 21972,
     "width": 1790,
     "height": 2744,
     "screenInset": {
@@ -1110,9 +1111,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-flip3-2021",
-    "localPath": "/mockups/samsung-galaxy-z-flip3-2021.png",
-    "file": "samsung-galaxy-z-flip3-2021.png",
-    "bytes": 82462,
+    "localPath": "/mockups/samsung-galaxy-z-flip3-2021.webp",
+    "file": "samsung-galaxy-z-flip3-2021.webp",
+    "bytes": 16826,
     "width": 828,
     "height": 1858,
     "screenInset": {
@@ -1124,9 +1125,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-smart-tv",
-    "localPath": "/mockups/samsung-smart-tv.png",
-    "file": "samsung-smart-tv.png",
-    "bytes": 114935,
+    "localPath": "/mockups/samsung-smart-tv.webp",
+    "file": "samsung-smart-tv.webp",
+    "bytes": 39508,
     "width": 3882,
     "height": 2418,
     "screenInset": {
@@ -1138,9 +1139,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "self-service-kiosk",
-    "localPath": "/mockups/self-service-kiosk.png",
-    "file": "self-service-kiosk.png",
-    "bytes": 921669,
+    "localPath": "/mockups/self-service-kiosk.webp",
+    "file": "self-service-kiosk.webp",
+    "bytes": 627514,
     "width": 2752,
     "height": 6036,
     "screenInset": {
@@ -1152,9 +1153,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "sonoff-nspanel-pro",
-    "localPath": "/mockups/sonoff-nspanel-pro.png",
-    "file": "sonoff-nspanel-pro.png",
-    "bytes": 46336,
+    "localPath": "/mockups/sonoff-nspanel-pro.webp",
+    "file": "sonoff-nspanel-pro.webp",
+    "bytes": 7570,
     "width": 1132,
     "height": 1136,
     "screenInset": {
@@ -1166,9 +1167,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "xiaomi-12-2022",
-    "localPath": "/mockups/xiaomi-12-2022.png",
-    "file": "xiaomi-12-2022.png",
-    "bytes": 39658,
+    "localPath": "/mockups/xiaomi-12-2022.webp",
+    "file": "xiaomi-12-2022.webp",
+    "bytes": 12866,
     "width": 770,
     "height": 1670,
     "screenInset": {
@@ -1180,9 +1181,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "xiaomi-mi-11i",
-    "localPath": "/mockups/xiaomi-mi-11i.png",
-    "file": "xiaomi-mi-11i.png",
-    "bytes": 25403,
+    "localPath": "/mockups/xiaomi-mi-11i.webp",
+    "file": "xiaomi-mi-11i.webp",
+    "bytes": 10498,
     "width": 792,
     "height": 1684,
     "screenInset": {
@@ -1194,9 +1195,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "zebra-mc330",
-    "localPath": "/mockups/zebra-mc330.png",
-    "file": "zebra-mc330.png",
-    "bytes": 479600,
+    "localPath": "/mockups/zebra-mc330.webp",
+    "file": "zebra-mc330.webp",
+    "bytes": 181420,
     "width": 1362,
     "height": 3716,
     "screenInset": {
@@ -1208,9 +1209,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "zebra-tc78",
-    "localPath": "/mockups/zebra-tc78.png",
-    "file": "zebra-tc78.png",
-    "bytes": 193087,
+    "localPath": "/mockups/zebra-tc78.webp",
+    "file": "zebra-tc78.webp",
+    "bytes": 66304,
     "width": 1020,
     "height": 2112,
     "screenInset": {
@@ -1222,9 +1223,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "google-pixel-10-2026",
-  "localPath": "/mockups/google-pixel-10-2026.png",
-  "file": "google-pixel-10-2026.png",
-  "bytes": 31895,
+  "localPath": "/mockups/google-pixel-10-2026.webp",
+  "file": "google-pixel-10-2026.webp",
+  "bytes": 8466,
   "width": 379,
   "height": 800,
   "renderScale": 1.2117647058823529,
@@ -1242,9 +1243,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
   "id": "google-pixel-10-pro-2026",
-  "localPath": "/mockups/google-pixel-10-pro-2026.png",
-  "file": "google-pixel-10-pro-2026.png",
-  "bytes": 33641,
+  "localPath": "/mockups/google-pixel-10-pro-2026.webp",
+  "file": "google-pixel-10-pro-2026.webp",
+  "bytes": 7868,
   "width": 380,
   "height": 800,
   "renderScale": 1.1849710982658959,
@@ -1262,9 +1263,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
   "id": "google-pixel-10-pro-fold-2026",
-  "localPath": "/mockups/google-pixel-10-pro-fold-2026.png",
-  "file": "google-pixel-10-pro-fold-2026.png",
-  "bytes": 63488,
+  "localPath": "/mockups/google-pixel-10-pro-fold-2026.webp",
+  "file": "google-pixel-10-pro-fold-2026.webp",
+  "bytes": 11538,
   "width": 395,
   "height": 800,
   "renderScale": 1.1907514450867052,
@@ -1282,9 +1283,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "google-pixel-11-2026",
-    "localPath": "/mockups/google-pixel-11-2026.png",
-    "file": "google-pixel-11-2026.png",
-    "bytes": 250048,
+    "localPath": "/mockups/google-pixel-11-2026.webp",
+    "file": "google-pixel-11-2026.webp",
+    "bytes": 256322,
     "width": 1554,
     "height": 1243,
     "sourceCrop": { "left": 541, "top": 120, "width": 476, "height": 1005 },
@@ -1310,9 +1311,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "google-pixel-11-pro-2026",
-    "localPath": "/mockups/google-pixel-11-pro-2026.png",
-    "file": "google-pixel-11-pro-2026.png",
-    "bytes": 138167,
+    "localPath": "/mockups/google-pixel-11-pro-2026.webp",
+    "file": "google-pixel-11-pro-2026.webp",
+    "bytes": 100764,
     "width": 1554,
     "height": 1243,
     "sourceCrop": { "left": 554, "top": 180, "width": 448, "height": 945 },
@@ -1332,9 +1333,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "google-pixel-11-pro-xl-2026",
-    "localPath": "/mockups/google-pixel-11-pro-xl-2026.png",
-    "file": "google-pixel-11-pro-xl-2026.png",
-    "bytes": 149069,
+    "localPath": "/mockups/google-pixel-11-pro-xl-2026.webp",
+    "file": "google-pixel-11-pro-xl-2026.webp",
+    "bytes": 114930,
     "width": 1554,
     "height": 1243,
     "sourceCrop": { "left": 541, "top": 119, "width": 475, "height": 1006 },
@@ -1354,9 +1355,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "google-pixel-11-pro-fold-2026",
-    "localPath": "/mockups/google-pixel-11-pro-fold-2026.png",
-    "file": "google-pixel-11-pro-fold-2026.png",
-    "bytes": 215187,
+    "localPath": "/mockups/google-pixel-11-pro-fold-2026.webp",
+    "file": "google-pixel-11-pro-fold-2026.webp",
+    "bytes": 128740,
     "width": 1554,
     "height": 1243,
     "sourceCrop": { "left": 290, "top": 120, "width": 976, "height": 1006 },
@@ -1376,9 +1377,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "samsung-galaxy-a17-2025",
-  "localPath": "/mockups/samsung-galaxy-a17-2025.png",
-  "file": "samsung-galaxy-a17-2025.png",
-  "bytes": 50023,
+  "localPath": "/mockups/samsung-galaxy-a17-2025.webp",
+  "file": "samsung-galaxy-a17-2025.webp",
+  "bytes": 8940,
   "width": 384,
   "height": 800,
   "renderScale": 1.197674418604651,
@@ -1396,9 +1397,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
   "id": "motorola-razr-70-ultra-2026",
-  "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
-  "file": "motorola-razr-70-ultra-2026.png",
-  "bytes": 51571,
+  "localPath": "/mockups/motorola-razr-70-ultra-2026.webp",
+  "file": "motorola-razr-70-ultra-2026.webp",
+  "bytes": 11584,
   "width": 352,
   "height": 800,
   "renderScale": 1.331571994715984,
@@ -1416,9 +1417,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
   "id": "infinix-hot-70-2026",
-  "localPath": "/mockups/infinix-hot-70-2026.png",
-  "file": "infinix-hot-70-2026.png",
-  "bytes": 57140,
+  "localPath": "/mockups/infinix-hot-70-2026.webp",
+  "file": "infinix-hot-70-2026.webp",
+  "bytes": 9680,
   "width": 379,
   "height": 800,
   "renderScale": 1.0506666666666666,
@@ -1436,9 +1437,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "samsung-galaxy-s26-2026",
-    "localPath": "/mockups/samsung-galaxy-s26.png",
-    "file": "samsung-galaxy-s26.png",
-    "bytes": 347910,
+    "localPath": "/mockups/samsung-galaxy-s26.webp",
+    "file": "samsung-galaxy-s26.webp",
+    "bytes": 20190,
     "width": 746,
     "height": 1577,
     "cssViewport": { "width": 360, "height": 780 },
@@ -1451,9 +1452,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-fold7-unfolded-2025",
-    "localPath": "/mockups/samsung-galaxy-z-fold7-unfolded.png",
-    "file": "samsung-galaxy-z-fold7-unfolded.png",
-    "bytes": 509709,
+    "localPath": "/mockups/samsung-galaxy-z-fold7-unfolded.webp",
+    "file": "samsung-galaxy-z-fold7-unfolded.webp",
+    "bytes": 42180,
     "width": 1842,
     "height": 1687,
     "cssViewport": { "width": 874, "height": 787 },
@@ -1466,9 +1467,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-fold8-folded-2026",
-    "localPath": "/mockups/samsung-galaxy-z-fold8-folded.png",
-    "file": "samsung-galaxy-z-fold8-folded.png",
-    "bytes": 1284234,
+    "localPath": "/mockups/samsung-galaxy-z-fold8-folded.webp",
+    "file": "samsung-galaxy-z-fold8-folded.webp",
+    "bytes": 31266,
     "width": 898,
     "height": 1340,
     "cssViewport": { "width": 416, "height": 657 },
@@ -1476,9 +1477,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-fold8-unfolded-2026",
-    "localPath": "/mockups/samsung-galaxy-z-fold8-unfolded.png",
-    "file": "samsung-galaxy-z-fold8-unfolded.png",
-    "bytes": 4165746,
+    "localPath": "/mockups/samsung-galaxy-z-fold8-unfolded.webp",
+    "file": "samsung-galaxy-z-fold8-unfolded.webp",
+    "bytes": 64804,
     "width": 1994,
     "height": 1530,
     "cssViewport": { "width": 979, "height": 739 },
@@ -1486,9 +1487,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-fold8-ultra-folded-2026",
-    "localPath": "/mockups/samsung-galaxy-z-fold8-ultra-folded.png",
-    "file": "samsung-galaxy-z-fold8-ultra-folded.png",
-    "bytes": 1489963,
+    "localPath": "/mockups/samsung-galaxy-z-fold8-ultra-folded.webp",
+    "file": "samsung-galaxy-z-fold8-ultra-folded.webp",
+    "bytes": 44372,
     "width": 798,
     "height": 1700,
     "cssViewport": { "width": 360, "height": 840 },
@@ -1496,9 +1497,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-fold8-ultra-unfolded-2026",
-    "localPath": "/mockups/samsung-galaxy-z-fold8-ultra-unfolded.png",
-    "file": "samsung-galaxy-z-fold8-ultra-unfolded.png",
-    "bytes": 3297926,
+    "localPath": "/mockups/samsung-galaxy-z-fold8-ultra-unfolded.webp",
+    "file": "samsung-galaxy-z-fold8-ultra-unfolded.webp",
+    "bytes": 87144,
     "width": 1854,
     "height": 2040,
     "cssViewport": { "width": 902, "height": 1002 },
@@ -1506,9 +1507,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-flip8-folded-2026",
-    "localPath": "/mockups/samsung-galaxy-z-flip8-folded.png",
-    "file": "samsung-galaxy-z-flip8-folded.png",
-    "bytes": 406856,
+    "localPath": "/mockups/samsung-galaxy-z-flip8-folded.webp",
+    "file": "samsung-galaxy-z-flip8-folded.webp",
+    "bytes": 21624,
     "width": 676,
     "height": 760,
     "cssViewport": { "width": 316, "height": 349 },
@@ -1516,9 +1517,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-flip8-unfolded-2026",
-    "localPath": "/mockups/samsung-galaxy-z-flip8-unfolded.png",
-    "file": "samsung-galaxy-z-flip8-unfolded.png",
-    "bytes": 1004624,
+    "localPath": "/mockups/samsung-galaxy-z-flip8-unfolded.webp",
+    "file": "samsung-galaxy-z-flip8-unfolded.webp",
+    "bytes": 35130,
     "width": 786,
     "height": 1700,
     "cssViewport": { "width": 360, "height": 840 },
@@ -1526,9 +1527,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-a27-5g-2026",
-    "localPath": "/mockups/samsung-galaxy-a27-5g.png",
-    "file": "samsung-galaxy-a27-5g.png",
-    "bytes": 1210667,
+    "localPath": "/mockups/samsung-galaxy-a27-5g.webp",
+    "file": "samsung-galaxy-a27-5g.webp",
+    "bytes": 31290,
     "width": 792,
     "height": 1600,
     "cssViewport": { "width": 360, "height": 780 },
@@ -1536,9 +1537,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "google-pixel-10-pro-xl-2025",
-  "localPath": "/mockups/google-pixel-10-pro-2026.png",
-  "file": "google-pixel-10-pro-2026.png",
-  "bytes": 33641,
+  "localPath": "/mockups/google-pixel-10-pro-2026.webp",
+  "file": "google-pixel-10-pro-2026.webp",
+  "bytes": 7868,
   "width": 380,
   "height": 800,
   "renderScale": 1.1849710982658959,
@@ -1557,9 +1558,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "modern-laptop-15",
-    "localPath": "/mockups/modern-laptop-15.png",
-    "file": "modern-laptop-15.png",
-    "bytes": 1532814,
+    "localPath": "/mockups/modern-laptop-15.webp",
+    "file": "modern-laptop-15.webp",
+    "bytes": 158748,
     "width": 3416,
     "height": 2240,
     "cssViewport": { "width": 1440, "height": 900 },
@@ -1572,9 +1573,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "apple-iphone-16-pro-2024",
-  "localPath": "/mockups/apple-iphone-17-pro-2025.png",
-  "file": "apple-iphone-17-pro-2025.png",
-  "bytes": 76617,
+  "localPath": "/mockups/apple-iphone-17-pro-2025.webp",
+  "file": "apple-iphone-17-pro-2025.webp",
+  "bytes": 14348,
   "width": 389,
   "height": 800,
   "renderScale": 1.1292134831460674,
@@ -1593,9 +1594,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "apple-iphone-16e-2025",
-    "localPath": "/mockups/apple-iphone-14-2022.png",
-    "file": "apple-iphone-14-2022.png",
-    "bytes": 46800,
+    "localPath": "/mockups/apple-iphone-14-2022.webp",
+    "file": "apple-iphone-14-2022.webp",
+    "bytes": 17690,
     "width": 870,
     "height": 1772,
     "cssViewport": { "width": 390, "height": 844 },
@@ -1604,9 +1605,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-iphone-17e-2026",
-    "localPath": "/mockups/apple-iphone-17e-2026.png",
-    "file": "apple-iphone-17e-2026.png",
-    "bytes": 102865,
+    "localPath": "/mockups/apple-iphone-17e-2026.webp",
+    "file": "apple-iphone-17e-2026.webp",
+    "bytes": 14974,
     "width": 696,
     "height": 1404,
     "renderScale": 0.6,
@@ -1618,9 +1619,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-ipad-pro-13-m4-2024",
-    "localPath": "/mockups/apple-ipad-pro-13.png",
-    "file": "apple-ipad-pro-13.png",
-    "bytes": 614058,
+    "localPath": "/mockups/apple-ipad-pro-13.webp",
+    "file": "apple-ipad-pro-13.webp",
+    "bytes": 89040,
     "width": 2275,
     "height": 2960,
     "cssViewport": { "width": 1032, "height": 1376 },
@@ -1628,9 +1629,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-ipad-air-13-m4-2026",
-    "localPath": "/mockups/apple-ipad-pro-13.png",
-    "file": "apple-ipad-pro-13.png",
-    "bytes": 614058,
+    "localPath": "/mockups/apple-ipad-pro-13.webp",
+    "file": "apple-ipad-pro-13.webp",
+    "bytes": 89040,
     "width": 2275,
     "height": 2960,
     "cssViewport": { "width": 1024, "height": 1366 },
@@ -1654,27 +1655,27 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-macbook-air-13-m4-2025",
-    "localPath": "/mockups/macbook-air.png",
-    "file": "macbook-air.png",
-    "bytes": 130937,
+    "localPath": "/mockups/macbook-air.webp",
+    "file": "macbook-air.webp",
+    "bytes": 38366,
     "width": 3296,
     "height": 1894,
     "screenInset": { "top": 4, "right": 154, "bottom": 37.5, "left": 153 }
   },
   {
     "id": "apple-macbook-pro-14-m5-2025",
-    "localPath": "/mockups/apple-macbook-pro-16-2021.png",
-    "file": "apple-macbook-pro-16-2021.png",
-    "bytes": 323138,
+    "localPath": "/mockups/apple-macbook-pro-16-2021.webp",
+    "file": "apple-macbook-pro-16-2021.webp",
+    "bytes": 84354,
     "width": 4244,
     "height": 2594,
     "screenInset": { "top": 10.5, "right": 172, "bottom": 128.5, "left": 171 }
   },
   {
     "id": "samsung-galaxy-s26-plus-2026",
-    "localPath": "/mockups/samsung-galaxy-s26-plus-2026.png",
-    "file": "samsung-galaxy-s26-plus-2026.png",
-    "bytes": 496694,
+    "localPath": "/mockups/samsung-galaxy-s26-plus-2026.webp",
+    "file": "samsung-galaxy-s26-plus-2026.webp",
+    "bytes": 26176,
     "width": 1920,
     "height": 1280,
     "renderScale": 1,
@@ -1685,9 +1686,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-z-flip7-2025",
-    "localPath": "/mockups/samsung-galaxy-z-flip7.png",
-    "file": "samsung-galaxy-z-flip7.png",
-    "bytes": 301466,
+    "localPath": "/mockups/samsung-galaxy-z-flip7.webp",
+    "file": "samsung-galaxy-z-flip7.webp",
+    "bytes": 24676,
     "width": 795,
     "height": 1785,
     "cssViewport": { "width": 360, "height": 840 },
@@ -1695,9 +1696,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-tab-s11-ultra-2025",
-    "localPath": "/mockups/samsung-galaxy-tab-s11-ultra.png",
-    "file": "samsung-galaxy-tab-s11-ultra.png",
-    "bytes": 723229,
+    "localPath": "/mockups/samsung-galaxy-tab-s11-ultra.webp",
+    "file": "samsung-galaxy-tab-s11-ultra.webp",
+    "bytes": 72798,
     "width": 2022,
     "height": 3117,
     "cssViewport": { "width": 924, "height": 1480 },
@@ -1705,9 +1706,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "samsung-galaxy-xcover7-pro-2025",
-    "localPath": "/mockups/samsung-galaxy-a12-2021.png",
-    "file": "samsung-galaxy-a12-2021.png",
-    "bytes": 43247,
+    "localPath": "/mockups/samsung-galaxy-a12-2021.webp",
+    "file": "samsung-galaxy-a12-2021.webp",
+    "bytes": 14804,
     "width": 794,
     "height": 1718,
     "viewportSourceId": "samsung-galaxy-a12-2021",
@@ -1729,9 +1730,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "motorola-edge-60-pro-2025",
-    "localPath": "/mockups/xiaomi-12-2022.png",
-    "file": "xiaomi-12-2022.png",
-    "bytes": 39658,
+    "localPath": "/mockups/xiaomi-12-2022.webp",
+    "file": "xiaomi-12-2022.webp",
+    "bytes": 12866,
     "width": 770,
     "height": 1670,
     "viewportSourceId": "xiaomi-12-2022",
@@ -1740,9 +1741,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "motorola-thinkphone-25-2024",
-    "localPath": "/mockups/xiaomi-12-2022.png",
-    "file": "xiaomi-12-2022.png",
-    "bytes": 39658,
+    "localPath": "/mockups/xiaomi-12-2022.webp",
+    "file": "xiaomi-12-2022.webp",
+    "bytes": 12866,
     "width": 770,
     "height": 1670,
     "viewportSourceId": "xiaomi-12-2022",
@@ -1751,9 +1752,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "motorola-razr-60-ultra-2025",
-  "localPath": "/mockups/motorola-razr-70-ultra-2026.png",
-  "file": "motorola-razr-70-ultra-2026.png",
-  "bytes": 51571,
+  "localPath": "/mockups/motorola-razr-70-ultra-2026.webp",
+  "file": "motorola-razr-70-ultra-2026.webp",
+  "bytes": 11584,
   "width": 352,
   "height": 800,
   "renderScale": 1.331571994715984,
@@ -1772,9 +1773,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "zebra-tc58-2022",
-    "localPath": "/mockups/zebra-tc58.png",
-    "file": "zebra-tc58.png",
-    "bytes": 885146,
+    "localPath": "/mockups/zebra-tc58.webp",
+    "file": "zebra-tc58.webp",
+    "bytes": 83854,
     "width": 983,
     "height": 1895,
     "cssViewport": { "width": 412, "height": 823 },
@@ -1782,9 +1783,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "honeywell-ct47-2023",
-    "localPath": "/mockups/zebra-tc58.png",
-    "file": "zebra-tc58.png",
-    "bytes": 885146,
+    "localPath": "/mockups/zebra-tc58.webp",
+    "file": "zebra-tc58.webp",
+    "bytes": 83854,
     "width": 983,
     "height": 1895,
     "cssViewport": { "width": 412, "height": 823 },
@@ -1792,9 +1793,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "panasonic-toughbook-s1-2021",
-    "localPath": "/mockups/panasonic-toughbook-s1.png",
-    "file": "panasonic-toughbook-s1.png",
-    "bytes": 2152702,
+    "localPath": "/mockups/panasonic-toughbook-s1.webp",
+    "file": "panasonic-toughbook-s1.webp",
+    "bytes": 227978,
     "width": 1493,
     "height": 2138,
     "cssViewport": { "width": 533, "height": 853 },
@@ -1802,9 +1803,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "microsoft-surface-laptop-7-2024",
-    "localPath": "/mockups/modern-laptop-15.png",
-    "file": "modern-laptop-15.png",
-    "bytes": 1532814,
+    "localPath": "/mockups/modern-laptop-15.webp",
+    "file": "modern-laptop-15.webp",
+    "bytes": 158748,
     "width": 3416,
     "height": 2240,
     "cssViewport": { "width": 1440, "height": 900 },
@@ -1812,9 +1813,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "dell-xps-13-9350-2024",
-    "localPath": "/mockups/modern-laptop-15.png",
-    "file": "modern-laptop-15.png",
-    "bytes": 1532814,
+    "localPath": "/mockups/modern-laptop-15.webp",
+    "file": "modern-laptop-15.webp",
+    "bytes": 158748,
     "width": 3416,
     "height": 2240,
     "cssViewport": { "width": 1440, "height": 900 },
@@ -1822,9 +1823,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
   "id": "apple-macbook-neo-13-2026",
-  "localPath": "/mockups/apple-macbook-neo-13-2026.png",
-  "file": "apple-macbook-neo-13-2026.png",
-  "bytes": 48999,
+  "localPath": "/mockups/apple-macbook-neo-13-2026.webp",
+  "file": "apple-macbook-neo-13-2026.webp",
+  "bytes": 9180,
   "width": 800,
   "height": 488,
   "renderScale": 1.873134328358209,
@@ -1842,9 +1843,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
 },
   {
     "id": "microsoft-surface-laptop-8-13-8-2026",
-    "localPath": "/mockups/microsoft-surface-laptop-8-13-8-2026.png",
-    "file": "microsoft-surface-laptop-8-13-8-2026.png",
-    "bytes": 752654,
+    "localPath": "/mockups/microsoft-surface-laptop-8-13-8-2026.webp",
+    "file": "microsoft-surface-laptop-8-13-8-2026.webp",
+    "bytes": 96934,
     "width": 1440,
     "height": 1440,
     "renderScale": 1,
@@ -1855,9 +1856,9 @@ export const localMockupCatalog: LocalMockupAsset[] = [
   },
   {
     "id": "apple-studio-display-xdr-27-2026",
-    "localPath": "/mockups/apple-studio-display-xdr-27-2026.png",
-    "file": "apple-studio-display-xdr-27-2026.png",
-    "bytes": 312798,
+    "localPath": "/mockups/apple-studio-display-xdr-27-2026.webp",
+    "file": "apple-studio-display-xdr-27-2026.webp",
+    "bytes": 47832,
     "width": 1800,
     "height": 1400,
     "renderScale": 1,

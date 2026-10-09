@@ -115,13 +115,13 @@ describe("device catalog imports", () => {
   });
 
   it.each([
-    ["samsung-galaxy-z-fold8-ultra-folded-2026", "/mockups/samsung-galaxy-z-fold8-ultra-folded.png"],
-    ["samsung-galaxy-z-fold8-ultra-unfolded-2026", "/mockups/samsung-galaxy-z-fold8-ultra-unfolded.png"],
-    ["samsung-galaxy-z-fold8-folded-2026", "/mockups/samsung-galaxy-z-fold8-folded.png"],
-    ["samsung-galaxy-z-fold8-unfolded-2026", "/mockups/samsung-galaxy-z-fold8-unfolded.png"],
-    ["samsung-galaxy-z-flip8-folded-2026", "/mockups/samsung-galaxy-z-flip8-folded.png"],
-    ["samsung-galaxy-z-flip8-unfolded-2026", "/mockups/samsung-galaxy-z-flip8-unfolded.png"],
-    ["samsung-galaxy-a27-5g-2026", "/mockups/samsung-galaxy-a27-5g.png"],
+    ["samsung-galaxy-z-fold8-ultra-folded-2026", "/mockups/samsung-galaxy-z-fold8-ultra-folded.webp"],
+    ["samsung-galaxy-z-fold8-ultra-unfolded-2026", "/mockups/samsung-galaxy-z-fold8-ultra-unfolded.webp"],
+    ["samsung-galaxy-z-fold8-folded-2026", "/mockups/samsung-galaxy-z-fold8-folded.webp"],
+    ["samsung-galaxy-z-fold8-unfolded-2026", "/mockups/samsung-galaxy-z-fold8-unfolded.webp"],
+    ["samsung-galaxy-z-flip8-folded-2026", "/mockups/samsung-galaxy-z-flip8-folded.webp"],
+    ["samsung-galaxy-z-flip8-unfolded-2026", "/mockups/samsung-galaxy-z-flip8-unfolded.webp"],
+    ["samsung-galaxy-a27-5g-2026", "/mockups/samsung-galaxy-a27-5g.webp"],
   ])("uses a product-specific official frame for %s", (id, localPath) => {
     const asset = devices.find((candidate) => candidate.id === id)?.mockupAssets[0];
 
@@ -130,12 +130,12 @@ describe("device catalog imports", () => {
   });
 
   it.each([
-    ["apple-iphone-17e-2026", "Apple iPhone 17e", "phone", 390, 844, 1170, 2532, "/mockups/apple-iphone-17e-2026.png"],
+    ["apple-iphone-17e-2026", "Apple iPhone 17e", "phone", 390, 844, 1170, 2532, "/mockups/apple-iphone-17e-2026.webp"],
     ["google-pixel-10a-2026", "Google Pixel 10a", "phone", 412, 924, 1080, 2424, "/mockups/google-pixel-10a-2026.webp"],
-    ["samsung-galaxy-s26-plus-2026", "Samsung Galaxy S26+", "phone", 384, 832, 1440, 3120, "/mockups/samsung-galaxy-s26-plus-2026.png"],
-    ["apple-macbook-neo-13-2026", "Apple MacBook Neo 13-inch", "laptop", 1204, 753, 2408, 1506, "/mockups/apple-macbook-neo-13-2026.png"],
-    ["microsoft-surface-laptop-8-13-8-2026", "Microsoft Surface Laptop 13.8-inch (8th Edition)", "laptop", 1152, 768, 2304, 1536, "/mockups/microsoft-surface-laptop-8-13-8-2026.png"],
-    ["apple-studio-display-xdr-27-2026", "Apple Studio Display XDR 27-inch", "desktop", 2560, 1440, 5120, 2880, "/mockups/apple-studio-display-xdr-27-2026.png"],
+    ["samsung-galaxy-s26-plus-2026", "Samsung Galaxy S26+", "phone", 384, 832, 1440, 3120, "/mockups/samsung-galaxy-s26-plus-2026.webp"],
+    ["apple-macbook-neo-13-2026", "Apple MacBook Neo 13-inch", "laptop", 1204, 753, 2408, 1506, "/mockups/apple-macbook-neo-13-2026.webp"],
+    ["microsoft-surface-laptop-8-13-8-2026", "Microsoft Surface Laptop 13.8-inch (8th Edition)", "laptop", 1152, 768, 2304, 1536, "/mockups/microsoft-surface-laptop-8-13-8-2026.webp"],
+    ["apple-studio-display-xdr-27-2026", "Apple Studio Display XDR 27-inch", "desktop", 2560, 1440, 5120, 2880, "/mockups/apple-studio-display-xdr-27-2026.webp"],
   ])("includes manufacturer-calibrated frame %s", (id, name, type, width, height, panelWidth, panelHeight, localPath) => {
     expect(devices.find((device) => device.id === id)).toMatchObject({
       name,
@@ -241,7 +241,7 @@ describe("device catalog imports", () => {
       cssViewport: { width, height },
       pixelRatio,
     });
-    expect(device?.mockupAssets[0]?.localPath).toBe(`/mockups/${id}.png`);
+    expect(device?.mockupAssets[0]?.localPath).toBe(`/mockups/${id}.webp`);
     const viewport = device?.mockupAssets[0]?.viewport;
     expect(viewport?.portrait?.paths?.portrait).toContain("M");
     expect(viewport?.landscape?.paths?.landscape).toContain("M");
@@ -263,10 +263,10 @@ describe("device catalog imports", () => {
   });
 
   it.each([
-    ["google-pixel-11-2026", "/mockups/google-pixel-11-2026.png", "https://store.google.com/us/config/pixel_11?hl=en-US"],
-    ["google-pixel-11-pro-2026", "/mockups/google-pixel-11-pro-2026.png", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
-    ["google-pixel-11-pro-xl-2026", "/mockups/google-pixel-11-pro-xl-2026.png", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
-    ["google-pixel-11-pro-fold-2026", "/mockups/google-pixel-11-pro-fold-2026.png", "https://store.google.com/us/config/pixel_11_pro_fold?hl=en-US"],
+    ["google-pixel-11-2026", "/mockups/google-pixel-11-2026.webp", "https://store.google.com/us/config/pixel_11?hl=en-US"],
+    ["google-pixel-11-pro-2026", "/mockups/google-pixel-11-pro-2026.webp", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
+    ["google-pixel-11-pro-xl-2026", "/mockups/google-pixel-11-pro-xl-2026.webp", "https://store.google.com/us/config/pixel_11_pro?hl=en-US"],
+    ["google-pixel-11-pro-fold-2026", "/mockups/google-pixel-11-pro-fold-2026.webp", "https://store.google.com/us/config/pixel_11_pro_fold?hl=en-US"],
   ])("uses an official Google Store image for %s", (id, localPath) => {
     expect(devices.find((candidate) => candidate.id === id)?.mockupAssets[0]).toMatchObject({
       localPath,
@@ -344,7 +344,7 @@ describe("device catalog imports", () => {
       manufacturerResolution: { width: 640, height: 1136 },
     });
     expect(asset).toMatchObject({
-      localPath: "/mockups/apple-iphone-se.png",
+      localPath: "/mockups/apple-iphone-se.webp",
       viewport: {
         portrait: { left: 26, top: 93, width: 320, height: 568 },
         landscape: { left: 93, top: 26, width: 568, height: 320 },
@@ -392,10 +392,10 @@ describe("device catalog imports", () => {
   });
 
   it.each([
-    ["samsung-galaxy-s26-2026", "Samsung Galaxy S26", 360, 780, "/mockups/samsung-galaxy-s26.png"],
-    ["samsung-galaxy-z-fold7-unfolded-2025", "Samsung Galaxy Z Fold7 (unfolded)", 874, 787, "/mockups/samsung-galaxy-z-fold7-unfolded.png"],
-    ["google-pixel-10-pro-xl-2025", "Google Pixel 10 Pro XL", 448, 997, "/mockups/google-pixel-10-pro-2026.png"],
-    ["modern-laptop-15", "Modern Laptop 15 inch", 1440, 900, "/mockups/modern-laptop-15.png"],
+    ["samsung-galaxy-s26-2026", "Samsung Galaxy S26", 360, 780, "/mockups/samsung-galaxy-s26.webp"],
+    ["samsung-galaxy-z-fold7-unfolded-2025", "Samsung Galaxy Z Fold7 (unfolded)", 874, 787, "/mockups/samsung-galaxy-z-fold7-unfolded.webp"],
+    ["google-pixel-10-pro-xl-2025", "Google Pixel 10 Pro XL", 448, 997, "/mockups/google-pixel-10-pro-2026.webp"],
+    ["modern-laptop-15", "Modern Laptop 15 inch", 1440, 900, "/mockups/modern-laptop-15.webp"],
   ])("includes calibrated current mockup %s", (id, name, width, height, localPath) => {
     const device = devices.find((candidate) => candidate.id === id);
 
@@ -426,7 +426,7 @@ describe("device catalog imports", () => {
 
     expect(device).toBeDefined();
     expect(device?.mockupAssets[0]).toMatchObject({
-      localPath: "/mockups/modern-laptop-15.png",
+      localPath: "/mockups/modern-laptop-15.webp",
       screenInset: { top: 34, right: 178.8, bottom: 242, left: 178.8 },
       viewport: {
         portrait: {
@@ -637,7 +637,7 @@ describe("device catalog imports", () => {
     const device = devices.find((candidate) => candidate.id === id);
 
     expect(device).toMatchObject({ name, type, cssViewport: { width, height } });
-    expect(device?.mockupAssets[0]?.localPath).toMatch(/^\/mockups\/.+\.(png|svg)$/);
+    expect(device?.mockupAssets[0]?.localPath).toMatch(/^\/mockups\/.+\.(webp|svg)$/);
   });
 
   it.each([
@@ -729,7 +729,7 @@ describe("device catalog imports", () => {
     const asset = device?.mockupAssets.find((candidate) => (candidate.kind === "transparent-png" || candidate.kind === "transparent-svg"));
 
     expect(asset).toMatchObject({
-      localPath: "/mockups/apple-iphone-14-2022.png",
+      localPath: "/mockups/apple-iphone-14-2022.webp",
       width: 870,
       height: 1772,
       screenInset: { top: 7, right: 8.5, bottom: 9.5, left: 10.5 },
@@ -759,13 +759,13 @@ describe("device catalog imports", () => {
     const macbook = devices.find((device) => device.id === "apple-macbook-pro-14-m5-2025")!;
 
     expect(motorola.mockupAssets[0]).toMatchObject({
-      localPath: "/mockups/xiaomi-12-2022.png",
+      localPath: "/mockups/xiaomi-12-2022.webp",
       width: 770,
       height: 1670,
       viewport: { portrait: { left: 11, top: 15, width: 360, height: 800 } },
     });
     expect(xcover.mockupAssets[0]).toMatchObject({
-      localPath: "/mockups/samsung-galaxy-a12-2021.png",
+      localPath: "/mockups/samsung-galaxy-a12-2021.webp",
       width: 794,
       height: 1718,
       viewport: { portrait: { left: 17, top: 20, width: 360, height: 800 } },
@@ -788,7 +788,7 @@ describe("device catalog imports", () => {
     });
     expect(getFrameProfile(onePlus).statusBarInsetLeft).toBe(30);
     expect(macbook.mockupAssets[0]).toMatchObject({
-      localPath: "/mockups/apple-macbook-pro-16-2021.png",
+      localPath: "/mockups/apple-macbook-pro-16-2021.webp",
       viewport: { portrait: { left: 197, top: 40, width: 1728, cornerRadius: 8 } },
     });
     const macbookScreen = macbook.mockupAssets[0].viewport!.portrait!;

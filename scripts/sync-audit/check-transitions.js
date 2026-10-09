@@ -4,7 +4,7 @@ async(page)=>{
  const toolbar=scope.locator('[data-main-toolbar]'),frames=scope.locator('iframe');
  const results=[];
  const poll=async(read,predicate,label)=>{let value;const start=Date.now();do{value=await read().catch(()=>null);if(predicate(value))return value;await page.waitForTimeout(40)}while(Date.now()-start<9000);throw Error(label+': '+JSON.stringify(value))};
- const toggle=async(name,on)=>{const b=toolbar.getByRole('button',{name,exact:true});if((await b.getAttribute('aria-pressed')==='true')!==on)await b.click()};
+ const toggle=(name,on)=>toolbar.getByRole('checkbox',{name:name.replace(' sync',''),exact:true}).setChecked(on);
  const ys=()=>frames.evaluateAll(fs=>fs.map(f=>f.contentDocument.scrollingElement.scrollTop));
  const tokens=()=>frames.evaluateAll(fs=>fs.map(f=>f.contentWindow.documentToken));
  const syncAt=y=>poll(ys,v=>v?.every(x=>Math.abs(x-y)<1.5),'scroll agreement');
@@ -18,13 +18,13 @@ async(page)=>{
  await poll(ys,v=>v?.every((x,i)=>x>beforeKey[i]+100)&&Math.max(...v)-Math.min(...v)<1.5,'keyboard page scroll');
  results.push('trusted wheel and PageDown scroll sync');await page.waitForTimeout(500);
  await toggle('Scroll sync',false);await frames.evaluateAll(fs=>fs.forEach(f=>f.contentDocument.scrollingElement.scrollTo({top:400,left:0,behavior:'instant'})));await syncAt(400);await toggle('Scroll sync',true);
- const before=tokens();await scope.getByTestId('device-switcher-button').first().click();await scope.getByRole('textbox',{name:'Search name, OS, type, or size'}).fill('Pixel 10a');await scope.locator('button[title="Google Pixel 10a"]').click();
+ const before=tokens();await scope.locator('[data-device-caption]').first().hover();await scope.getByTestId('device-switcher-button').first().click();await scope.getByRole('textbox',{name:'Search name, OS, type, or size'}).fill('Pixel 10a');await scope.locator('button[title="Google Pixel 10a"]').click();
  await toolbar.getByRole('button',{name:'Free',exact:true}).click();await toolbar.getByRole('button',{name:'Device',exact:true}).click();
- await toolbar.getByRole('button',{name:'View only',exact:true}).click();
+ await toolbar.getByRole('button',{name:'Focus mode',exact:true}).click();
  await frames.first().evaluate(f=>f.contentDocument.scrollingElement.scrollBy({top:70,behavior:'instant'}));await syncAt(470);
- await scope.getByRole('button',{name:'Show workspace controls'}).click();
+ await page.keyboard.press('Escape');
  if(JSON.stringify(await before)!==JSON.stringify(await tokens()))throw Error('view/device change recreated document');
- results.push('device selection, Device/Free and View only preserve live sync and documents');
+ results.push('device selection, Device/Free and Focus mode preserve live sync and documents');
  await toggle('Navigation sync',true);
  const joinedUrl=await frames.first().evaluate(f=>{const url=new URL(f.contentWindow.location.href);url.searchParams.set('route','join-current');f.contentWindow.history.pushState({},'',url);return url.href});
  await poll(()=>frames.evaluateAll(fs=>fs.map(f=>f.contentWindow.location.href)),v=>v?.every(url=>url===joinedUrl),'current page before adding');
@@ -34,12 +34,12 @@ async(page)=>{
  await poll(()=>frames.evaluateAll(fs=>fs.map(f=>({url:f.contentWindow.location.href,messages:f.contentWindow.receivedSync}))),v=>v?.length===3&&v.every(p=>p.url===joinedUrl&&p.messages?.includes('MDV_SCROLL_SYNC_ENABLE')),'reload all stays on current URLs with sync enabled');
  await page.waitForTimeout(150);await frames.first().evaluate(f=>f.contentDocument.scrollingElement.scrollTo({top:470,behavior:'instant'}));await syncAt(470);
  results.push('Reload all reloads the current navigated URLs, not the launch URLs');
- await toolbar.getByRole('button',{name:'Add viewport',exact:true}).click();
+ await toolbar.getByRole('button',{name:'Add device',exact:true}).click();await scope.locator('[data-device-pick]:not([disabled]):not([data-added])').first().click();await page.keyboard.press('Escape');
  await poll(()=>frames.count(),v=>v===4,'fourth viewport');
  await poll(()=>frames.last().evaluate(f=>f.contentWindow.receivedSync),v=>v?.includes('MDV_SCROLL_SYNC_ENABLE')&&v.includes('MDV_APPLY_SCROLL_SYNC'),'new viewport joins enabled sync');
  await poll(()=>frames.evaluateAll(fs=>fs.map(f=>f.contentWindow.location.href)),v=>v?.length===4&&v.every(url=>url===joinedUrl),'new viewport joins current navigation');
  await syncAt(470);await frames.last().evaluate(f=>f.contentDocument.scrollingElement.scrollBy({top:50,behavior:'instant'}));await syncAt(520);
- await scope.locator('[data-remove-viewport]').last().click();await poll(()=>frames.count(),v=>v===3,'remove viewport');
+ await scope.locator('[data-device-caption]').last().hover();await scope.locator('[data-remove-viewport]').last().click();await poll(()=>frames.count(),v=>v===3,'remove viewport');
  results.push('new viewport joins the current URL and position and can lead immediately; removal keeps sync active');await toggle('Navigation sync',false);
  // Independent pages must not exchange scroll movement.
  const old=await frames.last().evaluate(f=>f.contentWindow.location.href);

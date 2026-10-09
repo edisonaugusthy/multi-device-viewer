@@ -1,5 +1,5 @@
 import { getViewerContext } from "./viewer-context";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { defaultDeviceIds } from "../domain/device/device-catalog";
 import { useDeviceCatalog } from "./DeviceCatalogProvider";
 import { getDefaultOrientation, nextOrientation, normalizeOrientation, supportsOrientation } from "../domain/device/device-service";
@@ -21,7 +21,6 @@ interface SimulatorContextValue extends SimulatorState {
   setSlotUrl: (slotId: string, url: string) => void;
   observeSlotUrl: (slotId: string, url: string) => void;
   getSlotUrl: (slotId: string) => string;
-  setAllSlotsUrl: (url: string) => void;
   rotateSlot: (slotId: string) => void;
   zoomSlot: (slotId: string, direction: "in" | "out") => void;
   setSlotZoomMode: (slotId: string, zoomMode: PreviewSlot["zoomMode"]) => void;
@@ -192,14 +191,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     updateSlot(slotId, (slot) => ({ ...slot, url: normalized, reloadToken: slot.reloadToken + 1 }));
   }, [updateSlot]);
 
-  const setAllSlotsUrl = useCallback((url: string) => {
-    const normalized = normalizeUrl(url);
-    observedUrls.current.clear();
-    setSlots((current) =>
-      current.map((slot) => ({ ...slot, url: normalized, reloadToken: slot.reloadToken + 1 }))
-    );
-  }, []);
-
   const rotateSlot = useCallback((slotId: string) => {
     updateSlot(slotId, (slot) => {
       const device = devices.find((item) => item.id === slot.deviceId);
@@ -293,7 +284,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSlotUrl,
       observeSlotUrl,
       getSlotUrl,
-      setAllSlotsUrl,
       rotateSlot,
       zoomSlot,
       setSlotZoomMode,
@@ -317,7 +307,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       removeSlot,
       rotateSlot,
       setActiveSlot,
-      setAllSlotsUrl,
       setSlotDevice,
       setSlotBrowserPreferences,
       setSlotUrl,
@@ -332,13 +321,70 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     ]
   );
 
-  return <SimulatorContext.Provider value={value}>{children}</SimulatorContext.Provider>;
+  return <SimulatorValueProvider value={value}>{children}</SimulatorValueProvider>;
 }
 
 export function useSimulator() {
   const value = useContext(SimulatorContext);
   if (!value) throw new Error("useSimulator must be used inside SimulatorProvider");
   return value;
+}
+
+// The latest simulator value, readable from event handlers and effects
+// without subscribing the component to every slot or status change.
+export interface SimulatorRef {
+  readonly current: SimulatorContextValue;
+}
+
+interface SimulatorStore extends SimulatorRef {
+  publish: (value: SimulatorContextValue) => void;
+  subscribe: (listener: () => void) => () => void;
+}
+
+const SimulatorStoreContext = createContext<SimulatorStore | null>(null);
+
+function createSimulatorStore(initial: SimulatorContextValue): SimulatorStore {
+  let current = initial;
+  const listeners = new Set<() => void>();
+  return {
+    get current() { return current; },
+    publish(value) {
+      if (value === current) return;
+      current = value;
+      listeners.forEach(listener => listener());
+    },
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => { listeners.delete(listener); };
+    },
+  };
+}
+
+function SimulatorValueProvider({ value, children }: { value: SimulatorContextValue; children: ReactNode }) {
+  const [store] = useState(() => createSimulatorStore(value));
+  useLayoutEffect(() => store.publish(value), [store, value]);
+  return (
+    <SimulatorContext.Provider value={value}>
+      <SimulatorStoreContext.Provider value={store}>{children}</SimulatorStoreContext.Provider>
+    </SimulatorContext.Provider>
+  );
+}
+
+function useSimulatorStore() {
+  const store = useContext(SimulatorStoreContext);
+  if (!store) throw new Error("useSimulatorRef must be used inside SimulatorProvider");
+  return store;
+}
+
+export function useSimulatorRef(): SimulatorRef {
+  return useSimulatorStore();
+}
+
+// Re-renders only when the selected value changes. Selectors must return
+// primitives or values that keep their identity between unrelated updates.
+export function useSimulatorSelector<T>(selector: (value: SimulatorContextValue) => T): T {
+  const store = useSimulatorStore();
+  return useSyncExternalStore(store.subscribe, () => selector(store.current));
 }
 
 // A temporary preview surface can own its slots without replacing or saving
@@ -349,5 +395,5 @@ export function SimulatorScopeProvider({ value, children }: {
 }) {
   const parent = useSimulator();
   const scoped = useMemo(() => ({ ...parent, ...value }), [parent, value]);
-  return <SimulatorContext.Provider value={scoped}>{children}</SimulatorContext.Provider>;
+  return <SimulatorValueProvider value={scoped}>{children}</SimulatorValueProvider>;
 }

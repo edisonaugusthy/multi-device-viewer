@@ -37,7 +37,7 @@ async (page) => {
   const ready = () => poll(()=>frames.evaluateAll(fs=>fs.map(f=>Boolean(f.contentWindow.documentToken)&&f.contentWindow.receivedSync.includes('MDV_PREVIEW_REGISTER'))),v=>v?.length===3&&v.every(Boolean),'bridge ready');
   const allAt = url => poll(urls,v=>v?.length===3&&v.every(x=>x===url),'navigation convergence');
   const navigate = (index,url) => frames.nth(index).evaluate((f,url)=>f.contentWindow.history.pushState({},'',url),url);
-  const toggle = async (name,enabled) => {const b=toolbar.getByRole('button',{name,exact:true});if((await b.getAttribute('aria-pressed')==='true')!==enabled)await b.click();};
+  const toggle = (name,on) => toolbar.getByRole('checkbox',{name:name.replace(' sync',''),exact:true}).setChecked(on);
   const positions = (id='') => frames.evaluateAll((fs,id)=>fs.map(f=>{const el=id?f.contentDocument.getElementById(id):f.contentDocument.scrollingElement;return {x:el.scrollLeft,y:el.scrollTop,max:el.scrollHeight-el.clientHeight}}),id);
   const scroll = (index,x,y,id='') => frames.nth(index).evaluate((f,{x,y,id})=>{const el=id?f.contentDocument.getElementById(id):f.contentDocument.scrollingElement;el.scrollBy({left:x,top:y,behavior:'instant'})},{x,y,id});
   const stable = async label => {const before=await tokens();await page.waitForTimeout(500);if(JSON.stringify(before)!==JSON.stringify(await tokens()))throw Error(label+' reload loop');};

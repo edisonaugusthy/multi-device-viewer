@@ -1,8 +1,7 @@
 async(page)=>{
  const installed=page.context().serviceWorkers().length>0;
  const scope=installed?page.locator('#multi-device-viewer-overlay'):page.locator('body'),fs=scope.locator('iframe');
- const button=scope.locator('[data-main-toolbar]').getByRole('button',{name:'Scroll sync',exact:true});
- const toggle=async(on)=>{if((await button.getAttribute('aria-pressed')==='true')!==on)await button.click()};
+ const toggle=on=>scope.locator('[data-main-toolbar]').getByRole('checkbox',{name:'Scroll',exact:true}).setChecked(on);
  const poll=async(read,predicate,label)=>{let v;const start=Date.now();do{v=await read().catch(()=>null);if(predicate(v))return v;await page.waitForTimeout(50)}while(Date.now()-start<9000);throw Error(label+': '+JSON.stringify(v))};
  const pos=()=>fs.evaluateAll(fs=>fs.map(f=>{const el=f.contentDocument.querySelector('#panel-a');return {x:el.scrollLeft,y:el.scrollTop,maxX:el.scrollWidth-el.clientWidth,maxY:el.scrollHeight-el.clientHeight}}));
  await poll(()=>fs.evaluateAll(fs=>fs.map(f=>Boolean(f.contentDocument?.querySelector('#panel-a')))),v=>v?.length===3&&v.every(Boolean),'fixtures ready');

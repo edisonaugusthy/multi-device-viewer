@@ -3,7 +3,7 @@ async(page)=>{
  const scope=installed?page.locator('#multi-device-viewer-overlay'):page.locator('body');
  const toolbar=scope.locator('[data-main-toolbar]'),elements=scope.locator('iframe');
  const frames=async()=>Promise.all((await elements.elementHandles()).map(e=>e.contentFrame()));
- const toggle=async(name,on)=>{const b=toolbar.getByRole('button',{name,exact:true});if((await b.getAttribute('aria-pressed')==='true')!==on)await b.click()};
+ const toggle=(name,on)=>toolbar.getByRole('checkbox',{name:name.replace(' sync',''),exact:true}).setChecked(on);
  const poll=async(read,predicate,label)=>{let v;const start=Date.now();do{v=await read().catch(()=>null);if(predicate(v))return v;await page.waitForTimeout(60)}while(Date.now()-start<9000);throw Error(label+': '+JSON.stringify(v))};
  await toggle('Navigation sync',true);await toggle('Scroll sync',true);
  const initial=(await frames())[0].url();const target=initial.replace('127.0.0.1','localhost');

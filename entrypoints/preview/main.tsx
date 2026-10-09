@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import "../../src/ui/styles/global.css";
 import { AppProviders } from "../../src/app/AppProviders";
 import { SimulatorApp } from "../../src/ui/components/SimulatorApp";
+import { registerViewerFonts } from "../../src/ui/fonts";
+
+registerViewerFonts((path) => `/${path}`);
 
 (window as Window & { __MDV_STANDALONE_PREVIEW__?: boolean }).__MDV_STANDALONE_PREVIEW__ = true;
 

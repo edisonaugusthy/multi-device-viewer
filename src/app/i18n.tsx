@@ -1,4 +1,4 @@
-import { getViewerContext } from "./viewer-context";
+import { extensionAsset, getViewerContext } from "./viewer-context";
 import {
   createContext,
   useCallback,
@@ -9,21 +9,6 @@ import {
   type ReactNode,
 } from "react";
 import { readStore, writeStore } from "../infrastructure/storage/local-store";
-import arCatalog from "./i18n-catalogs/ar.json";
-import deCatalog from "./i18n-catalogs/de.json";
-import esCatalog from "./i18n-catalogs/es.json";
-import filCatalog from "./i18n-catalogs/fil.json";
-import frCatalog from "./i18n-catalogs/fr.json";
-import hiCatalog from "./i18n-catalogs/hi.json";
-import itCatalog from "./i18n-catalogs/it.json";
-import jaCatalog from "./i18n-catalogs/ja.json";
-import koCatalog from "./i18n-catalogs/ko.json";
-import nlCatalog from "./i18n-catalogs/nl.json";
-import ptBrCatalog from "./i18n-catalogs/pt_BR.json";
-import ruCatalog from "./i18n-catalogs/ru.json";
-import viCatalog from "./i18n-catalogs/vi.json";
-import zhCnCatalog from "./i18n-catalogs/zh_CN.json";
-import zhTwCatalog from "./i18n-catalogs/zh_TW.json";
 
 export const SUPPORTED_LOCALES = [
   { code: "en", name: "English", dir: "ltr" },
@@ -54,16 +39,12 @@ const en = {
   galleryLoadedPreviews: "{loaded}/{count} previews loaded",
   previewResourceError: "This page reported script or stylesheet errors.",
   previewLoadUnverified: "Could not verify this page’s resources.",
-  galleryIncompletePreviews: "{count} incomplete",
   retryIncompletePreviews: "Retry incomplete previews",
-  galleryLoadingMode: "Loading mode",
   galleryFastLoading: "Fast — parallel loading",
   galleryGentleLoading: "Gentle — fewer requests",
   galleryPauseLoading: "Pause new loads",
   galleryResumeLoading: "Resume loading",
   galleryLoadingPaused: "Paused",
-  galleryLoadingHelp: "Fast loads six previews at a time. Gentle reduces requests further. Pause holds pending loads; pages already loading continue.",
-  galleryLoadingPreview: "Loading preview…",
   galleryQueuedPreview: "Queued for background loading…",
   galleryVerificationHelp: "If the site needs sign-in or verification, open it in a tab, then refresh this preview.",
   backToWorkspace: "Back to workspace",
@@ -110,44 +91,20 @@ const en = {
   reviewStatusNever: "Your choice to stop requests is saved. The manual links remain available.",
   reviewStatusEligible: "You're eligible. A request appears after a quiet pause, once other dialogs or tasks close.",
   language: "Language",
-  workspaceSetup: "Workspace setup",
-  openWorkspaceSetup: "Open workspace setup",
-  closeWorkspaceSetup: "Close workspace setup",
-  collapseWorkspaceSetup: "Collapse workspace setup",
-  viewOnly: "View only",
-  showWorkspaceControls: "Show workspace controls",
-  quickDeviceSets: "Quick device sets",
   phoneTablet: "Phone + tablet",
   iosAndroid: "iOS + Android",
   mobileTabletLaptop: "Mobile + tablet + laptop",
-  addViewport: "Add viewport",
-  copyFixPrompt: "Copy fix prompt",
-  comparePageDesign: "Compare page to design",
   scrollSync: "Scroll sync",
   navigationSync: "Navigation sync",
-  turnOnScrollSync: "Turn on scroll sync",
-  turnOffScrollSync: "Turn off scroll sync",
-  turnOnNavigationSync: "Turn on navigation sync",
-  turnOffNavigationSync: "Turn off navigation sync",
   reloadAll: "Reload all",
-  lightTheme: "Light theme",
-  darkTheme: "Dark theme",
   deviceView: "Device",
   freeView: "Free",
   previewStyle: "Preview style",
-  tools: "Tools",
   closeViewer: "Close viewer",
   devices: "Devices",
-  countOf: "{count} of {max}",
-  addCustomViewport: "Add custom viewport",
   customViewports: "Custom viewports",
-  addNamedViewport: "Add {name} viewport",
   deleteNamed: "Delete {name}",
-  savedSets: "Saved sets",
   done: "Done",
-  manage: "Manage",
-  reuseDeviceCombinations: "Reuse device combinations for repeated checks.",
-  sessionTools: "Session tools",
   flowRecorder: "User flow",
   recordAFlow: "Record user flow",
   stopAndSaveFlow: "Recording in progress · {count} steps",
@@ -159,7 +116,6 @@ const en = {
   flowFailed: "{passed}/{count} passed · step {step} failed",
   flowVerificationPaused: "Verification paused replay. Complete it in the viewport.",
   resumeFlowAfterVerification: "Resume after verification",
-  viewPermissions: "View extension permissions",
   permissionsTitle: "Permissions and why they are used",
   permissionsIntro: "Only the access needed for responsive previews and the tools you choose to use.",
   closePermissions: "Close permissions",
@@ -173,14 +129,9 @@ const en = {
   permissionTabCapture: "Records the source tab only after you press Record. Chrome only.",
   permissionOffscreen: "Keeps an active Chrome recording running while the viewer remains usable.",
   permissionsPrivacy: "No browsing history, page content, screenshots, or recordings are uploaded by the extension.",
-  showAllViewports: "Show all viewports",
-  focusActiveViewport: "Focus active viewport",
-  generateAiFixPrompt: "Generate AI fix prompt",
   captureAndAnnotate: "Screenshot and annotate",
   recordingStop: "Stop",
   recordSourceTab: "Screen record",
-  takeFeatureTour: "Take a feature tour",
-  recordingStatus: "Screen recording in progress · {time}",
   reloadPreview: "Reload preview",
   moveViewportLeft: "Move viewport left",
   moveViewportRight: "Move viewport right",
@@ -194,21 +145,14 @@ const en = {
   resizeOverlayWidth: "Resize design overlay width",
   resizeOverlayHeight: "Resize design overlay height",
   resizeOverlayBoth: "Resize design overlay width and height",
-  chooseDevice: "Choose a device",
   previousDevice: "Previous device",
   nextDevice: "Next device",
-  results: "{count} results",
   searchDevice: "Search name, OS, type, or size",
-  clearDeviceSearch: "Clear device search",
   deviceCategories: "Device categories",
-  favorites: "Favorites",
-  recentlyUsed: "Recently used",
-  searchResults: "Search results",
   noDevicesMatch: "No devices match “{query}”",
   tablets: "Tablets",
   laptops: "Laptops",
   desktops: "Desktops",
-  other: "Other",
   custom: "Custom",
   newLabel: "NEW",
   addFavorite: "Add {name} to favorites",
@@ -217,14 +161,9 @@ const en = {
   iframeBlockedHelp: "The page likely keeps frame protection, uses a restricted browser URL, or prevented the preview bridge from loading.",
   openInTab: "Open in tab",
   captureCurrentTab: "Capture current tab instead",
-  customViewport: "Custom viewport",
   name: "Name",
-  myDevice: "My Device",
-  widthPx: "Width (px)",
-  heightPx: "Height (px)",
   pixelRatio: "Pixel ratio (DPR)",
   type: "Type",
-  saveAddViewport: "Save and add viewport",
   close: "Close",
   phone: "Phone",
   tablet: "Tablet",
@@ -232,9 +171,6 @@ const en = {
   desktop: "Desktop",
   watch: "Watch",
   tv: "TV",
-  nameLayout: "Name this layout…",
-  savePreset: "Save preset",
-  deletePreset: "Delete preset",
   deviceCount: "{count} device",
   devicesCount: "{count} devices",
   export: "Export",
@@ -243,49 +179,19 @@ const en = {
   whatIsNew: "What’s new",
   closeReleaseNotes: "Close release notes",
   startTesting: "Start testing",
-  generateCodingPrompt: "Generate a coding-agent prompt",
-  reviewPromptHelp: "Add any details you have. Every field is optional, and the preview includes the active URL, devices, and viewports automatically.",
-  closeIssueReview: "Close issue review",
-  issueSummary: "Issue summary",
-  expectedBehavior: "Expected behavior",
-  actualBehavior: "Actual behavior",
   reproductionSteps: "Reproduction steps",
   cssSelector: "CSS selector",
   constraintsContext: "Constraints and context",
-  issuePlaceholder: "Navigation overlaps the hero heading",
-  expectedPlaceholder: "Navigation should collapse below 768px.",
-  actualPlaceholder: "Links wrap over the heading at 390px.",
-  reproductionPlaceholder: "Open the page, select the phone viewport, then scroll to the hero.",
-  constraintsPlaceholder: "Keep the desktop navigation unchanged. Reuse the existing menu component.",
   promptPreview: "Prompt preview",
-  clipboardPrivacy: "All fields are optional. Nothing is uploaded; copying only writes the preview to your clipboard.",
-  designReference: "Design reference",
-  resizeDesignPanel: "Resize design reference panel",
-  designReferenceHelp: "Match the intended design against the live page.",
-  closeDesignReference: "Close design reference",
-  referenceViewport: "Reference viewport",
   markFeedback: "Mark feedback",
   remove: "Remove",
   sideBySide: "Side by side",
   overlay: "Overlay",
   opacity: "Opacity",
   designOverlayOpacity: "Design overlay opacity",
-  designReferenceZoom: "Design reference zoom",
-  zoomDesignOut: "Zoom design out",
-  scale: "Scale",
-  zoomDesignIn: "Zoom design in",
   reset: "Reset",
-  dragResizeImage: "Drag or resize image",
-  adjustOverlay: "Adjust overlay",
-  lockUsePage: "Lock & use page",
   resetFit: "Reset fit",
-  adjustDesignPreview: "Adjust design reference preview",
   importedDesignReference: "Imported design reference",
-  resizeReferenceWidth: "Resize reference width",
-  resizeReferenceHeight: "Resize reference height",
-  resizeReferenceBoth: "Resize reference width and height",
-  chooseDesign: "Drop, paste, or choose a design",
-  chooseDesignHelp: "Use a PNG, JPG, WebP, or SVG exported from Figma or another design tool. It stays on this device.",
   pen: "Pen",
   box: "Box",
   arrow: "Arrow",
@@ -304,7 +210,6 @@ const en = {
   previousTourStep: "Previous tour step",
   previousField: "Previous field",
   next: "Next",
-  finish: "Finish",
   key: "Key {key}",
   space: "Space",
   onScreenKeyboard: "{platform} on-screen keyboard",
@@ -324,12 +229,8 @@ const en = {
   reviewCta: "Leave an honest review",
   reviewNotNow: "Not helpful yet",
   reviewNever: "Don’t ask again",
-  tourWorkspaceText: "Fresh sessions start with iPhone 18 Pro, iPhone Duo folded, and MacBook Pro. Add a viewport to compare another screen.",
-  tourWorkspaceHint: "Start with Add viewport, then choose a device in its card.",
   tourAllDevicesText: "Preview the page on every available device in one click. Sections run from iOS and Android phones to tablets, computers, and watches, with smaller screens first.",
   tourAllDevicesHint: "Zoom or expand a card for a closer look. Refresh all restores every preview to its starting page and default view.",
-  tourCanvasText: "Close Workspace setup to uncover the previews, then reopen it whenever you need tools.",
-  tourCanvasHint: "Use Open workspace setup whenever you need the sidebar again.",
   releaseAllDevicesTitle: "All devices in one click",
   releaseAllDevicesDescription: "Compare every device from smaller to larger screens, with zoom and large popups. Previews load in the background and stay open as you scroll.",
   releaseGalleryControlsTitle: "Compact controls and refresh-all",
@@ -338,35 +239,179 @@ const en = {
   releaseStartupDescription: "Fresh sessions start with iPhone 18 Pro, iPhone Duo folded, and MacBook Pro. Saved device selections are preserved.",
   widthRangeError: "Width must be between 120 and 4000.",
   heightRangeError: "Height must be between 120 and 4000.",
-  pixelRatioRangeError: "Pixel ratio must be between 1 and 5.",
   resizeAdjacentViewports: "Resize adjacent viewports",
-  chooseDesignButton: "Choose design",
   replaceDesign: "Replace design",
+  workspace: "Workspace",
+  views: "Views",
+  addDevice: "Add device",
+  sync: "Sync",
+  scroll: "Scroll",
+  navigation: "Navigation",
+  syncBetweenDevices: "Sync between devices",
+  syncBetweenDevicesHint: "Keep devices in step",
+  scrollSyncHint: "Scrolling, clicks, and typing follow the device you use",
+  navigationSyncHint: "Opening a page in one device opens it in all",
+  compareWithDesign: "Compare with design",
+  fixPrompt: "Fix prompt",
+  record: "Record",
+  recordTabVideo: "Record this tab",
+  viewMode: "Focus mode",
+  settings: "Settings",
+  starred: "Starred",
+  recent: "Recent",
+  allTypes: "All types",
+  deviceType: "Device type",
+  addADevice: "Add a device",
+  replaceNamed: "Replace {name}",
+  replacingNamed: "Replacing {name}",
+  addInstead: "Add instead",
+  searchReplacement: "Search for a replacement",
+  searchDevicesHint: "Search devices or type 390×844",
+  slotsFull: "All {count} slots are in use",
+  addToWorkspace: "Add to workspace",
+  switchToDevice: "Switch to this device",
+  showingNow: "Showing now",
+  alreadyInWorkspace: "Already in the workspace",
+  sets: "Sets",
+  deviceSets: "Device sets",
+  customSize: "Custom size",
+  backToDevices: "Back to devices",
+  restoreBuiltIn: "Restore built-in",
+  yourSets: "Your sets",
+  builtInSets: "Built-in sets",
+  inUse: "In use",
+  saveSetAs: "Save these {count} devices as…",
+  setName: "Name for this set",
+  defaultSetName: "Set {count}",
+  noSavedSets: "No device sets yet.",
+  noCustomSizes: "No custom sizes yet.",
+  save: "Save",
+  savedSizes: "Saved sizes",
+  add: "Add",
+  added: "Added",
+  full: "Full",
+  switchAction: "Switch",
+  customWidth: "Custom width",
+  customHeight: "Custom height",
+  theme: "Theme",
+  light: "Light",
+  dark: "Dark",
+  browserBar: "Browser bar",
+  featureTour: "Feature tour",
+  whatsNew: "What's new",
+  permissions: "Permissions",
+  fixPromptHelp: "Copy it into your AI coding tool. Nothing is sent from here.",
+  whatsWrong: "What's wrong?",
+  whatsWrongPlaceholder: "The hero heading wraps to three lines on phones and pushes the button down.",
+  whatShouldHappen: "What should happen?",
+  whatShouldHappenPlaceholder: "Two short lines, button visible without scrolling",
+  optional: "Optional",
+  whereItHappens: "Where it happens",
+  devicesToInclude: "Devices to include",
+  moreDetails: "More details",
+  moreDetailsHint: "steps, element, constraints",
+  selectorPlaceholder: "Element or CSS selector, e.g. .hero h1",
+  constraintsShortPlaceholder: "Constraints, e.g. keep the desktop layout",
+  preview: "Preview",
+  hidePreview: "Hide preview",
+  copyPrompt: "Copy prompt",
+  deviceControls: "{name} controls",
+  changeDevice: "Change device",
+  focusDevice: "Expand this device",
+  fixPromptForDevice: "Fix prompt for this device",
+  showAll: "Show all",
+  showAllDevices: "Show all devices",
+  viewModeControls: "Focus mode controls",
+  show: "Show",
+  viewAll: "All",
+  viewOne: "One",
+  exit: "Exit",
+  retry: "Retry",
+  design: "Design",
+  livePage: "Live page",
+  under: "under",
+  hasDesign: "Design",
+  noDesign: "No design",
+  deviceToCompare: "Device to compare",
+  comparisonMode: "Comparison mode",
+  addDesignFor: "Add a design for {name}",
+  addDesignToOverlay: "Add a design to overlay",
+  dropDesignHint: "Drop, paste, or choose a PNG, JPG, WebP, or SVG",
+  comparisonControls: "Comparison controls",
+  blend: "Blend",
+  normal: "Normal",
+  difference: "Difference",
+  differenceHint: "Highlights pixels that differ",
+  locked: "Locked",
+  unlocked: "Unlocked",
+  lockOverlayHint: "Lock the overlay so you can use the page underneath",
+  resetOverlayHint: "Reset size and position",
+  scrollDesignWithPage: "Scroll design with page",
+  removeDesign: "Remove design",
+  loading: "Loading",
+  pauseLoading: "Pause loading",
+  resumeLoading: "Resume loading",
+  retryCount: "Retry {count}",
+  fast: "Fast",
+  gentle: "Gentle",
+  previewLoadingSpeed: "Preview loading speed",
+  queuedPosition: "Queued",
+  incomplete: "incomplete",
+  scriptErrors: "Script or stylesheet errors",
+  tourAddDeviceText: "Fresh sessions start with iPhone 18 Pro, iPhone Duo folded, and MacBook Pro. Add a device to compare another screen.",
+  tourAddDeviceHint: "Pick from starred, recent, or every device type.",
+  tourSyncText: "Keep scrolling and page navigation in step across every device, or turn either off.",
+  tourChangeDeviceText: "Hover a device to show its controls, then switch it to another screen size.",
+  annotate: "Annotate",
+  galleryWidthRange: "{range} CSS px wide · smallest first",
+  moveDevice: "Drag to move",
+  closeFixPrompt: "Close fix prompt",
+  removeFromWorkspace: "Remove from workspace",
+  maxDevicesReached: "You can compare up to {count} devices. Remove one to add another.",
+  saveCurrentSet: "Save current",
+  saveCurrentSetHint: "Save the devices on screen as a preset",
+  previousInCategory: "Previous device of this type",
+  nextInCategory: "Next device of this type",
+  tipDeviceView: "Show each page inside a realistic device frame.",
+  tipFreeView: "Show only the page at its exact size, without a frame.",
+  tipReloadAll: "Reload every device on the page it is showing.",
+  tipCompare: "Check a device against a design image, side by side or overlaid.",
+  tipScreenshot: "Capture all devices, then mark up, copy or download the image.",
+  tipFixPrompt: "Describe a layout bug and copy a prompt for your AI coding assistant.",
+  tipRecord: "Record this tab as a video, or record a user flow to replay on every device.",
+  tipFocusMode: "Hide the controls and show only the devices. Press Esc to exit.",
+  tipSettings: "Theme, browser bar position, language, help and the feature tour.",
+  tipCloseViewer: "Close the viewer and return to the page.",
+  tipAddDevice: "Add another device to compare, up to four.",
+  tipAllDevices: "Preview the page on every device in a category.",
+  tourRecordText: "Record a journey once so you can rerun the same interactions across your devices.",
 } as const;
 
 export type TranslationKey = keyof typeof en;
 export const UI_TRANSLATION_KEYS = Object.keys(en) as TranslationKey[];
-const generatedCatalogs: Record<AppLocale, Record<TranslationKey, string>> = {
-  en,
-  de: deCatalog,
-  es: esCatalog,
-  fr: frCatalog,
-  zh_CN: zhCnCatalog,
-  zh_TW: zhTwCatalog,
-  fil: filCatalog,
-  nl: nlCatalog,
-  vi: viCatalog,
-  pt_BR: ptBrCatalog,
-  it: itCatalog,
-  ja: jaCatalog,
-  ko: koCatalog,
-  hi: hiCatalog,
-  ru: ruCatalog,
-  ar: arCatalog,
-};
+export type TranslationCatalog = Record<TranslationKey, string>;
+export const englishCatalog: TranslationCatalog = en;
 
-export function translationCatalog(locale: AppLocale) {
-  return generatedCatalogs[locale];
+// Only English is bundled. Other languages are separate files (see
+// scripts/ui-locale-assets.ts), fetched once when a viewer needs them.
+const catalogRequests = new Map<AppLocale, Promise<TranslationCatalog>>();
+
+export function loadTranslationCatalog(locale: AppLocale): Promise<TranslationCatalog> {
+  if (locale === "en") return Promise.resolve(en);
+  let request = catalogRequests.get(locale);
+  if (!request) {
+    request = fetch(extensionAsset(`/ui-locales/${locale}.json`))
+      .then(response => {
+        if (!response.ok) throw new Error(`Missing UI catalog: ${locale}`);
+        return response.json() as Promise<TranslationCatalog>;
+      })
+      .catch(error => {
+        catalogRequests.delete(locale);
+        throw error;
+      });
+    catalogRequests.set(locale, request);
+  }
+  return request;
 }
 
 function normalizeLocale(value: string): AppLocale {
@@ -406,15 +451,24 @@ interface I18nValue {
 const I18nContext = createContext<I18nValue | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<AppLocale>(browserLocale);
+  const [state, setState] = useState<{ locale: AppLocale; catalog: TranslationCatalog } | null>(null);
 
+  // Resolve the saved language and its catalog before the first render, so
+  // non-English viewers never flash English. Any failure falls back to English.
   useEffect(() => {
-    void readStore<AppLocale>(UI_LOCALE_KEY, browserLocale()).then((stored) => {
-      if (SUPPORTED_LOCALES.some(({ code }) => code === stored)) setLocaleState(stored);
-    });
+    let active = true;
+    void readStore<AppLocale>(UI_LOCALE_KEY, browserLocale())
+      .then(stored => SUPPORTED_LOCALES.some(({ code }) => code === stored) ? stored : browserLocale())
+      .catch(() => browserLocale())
+      .then(locale => loadTranslationCatalog(locale).then(catalog => ({ locale, catalog })))
+      .catch(() => ({ locale: "en" as AppLocale, catalog: en }))
+      .then(next => { if (active) setState(current => current ?? next); });
+    return () => { active = false; };
   }, []);
 
+  const locale = state?.locale;
   useEffect(() => {
+    if (!locale) return;
     const selected = SUPPORTED_LOCALES.find(({ code }) => code === locale)!;
     const languageRoot = getViewerContext()?.root ?? document.documentElement;
     languageRoot.lang = locale.replace("_", "-");
@@ -422,17 +476,21 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, [locale]);
 
   const setLocale = useCallback((next: AppLocale) => {
-    setLocaleState(next);
     void writeStore(UI_LOCALE_KEY, next);
+    // Keep the current language on screen until the new catalog is ready.
+    void loadTranslationCatalog(next)
+      .then(catalog => setState({ locale: next, catalog }))
+      .catch(() => setState({ locale: "en", catalog: en }));
   }, []);
 
+  const catalog = state?.catalog;
   const t = useCallback(
-    (key: TranslationKey, values?: TranslationValues) =>
-      interpolate(generatedCatalogs[locale][key] ?? en[key], values),
-    [locale],
+    (key: TranslationKey, values?: TranslationValues) => interpolate(catalog?.[key] ?? en[key], values),
+    [catalog],
   );
 
-  const value = useMemo(() => ({ locale, setLocale, t }), [locale, setLocale, t]);
+  const value = useMemo(() => locale ? { locale, setLocale, t } : null, [locale, setLocale, t]);
+  if (!value) return null;
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

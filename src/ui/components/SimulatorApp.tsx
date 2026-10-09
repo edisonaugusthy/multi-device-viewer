@@ -1,37 +1,18 @@
 import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
 import { getViewerContext, getViewerEventTarget, getViewerRoot } from "../../app/viewer-context";
 import {
-  CircleHelp,
-  Eye,
-  Focus,
-  ChevronRight,
-  GripVertical,
-  Images,
-  Languages,
-  PanelsTopLeft,
-  Play,
-  Plus,
-  RefreshCw,
-  Route,
-  ScanSearch,
-  Settings2,
-  Square,
-  Trash2,
-  Video,
-  X,
-} from "lucide-react";
-import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
-import { SUPPORTED_LOCALES, useI18n, type AppLocale } from "../../app/i18n";
+import { useI18n } from "../../app/i18n";
 import { useReviewPrompt } from "../../app/useReviewPrompt";
 import { useSimulator } from "../../app/SimulatorProvider";
+import { useDeviceSets } from "../../app/useDeviceSets";
 import { PRODUCT_SHORT_NAME } from "../../app/product";
 import {
   LAST_SEEN_RELEASE_VERSION_KEY,
@@ -44,65 +25,76 @@ import {
   captureTabWithOverlay,
   startTabRecording,
   stopTabRecording,
+  type TabCaptureResult,
 } from "../../domain/capture/capture-service";
+import { extractMatte, type PixelRect } from "../../domain/capture/capture-matte";
+import { getFrameProfile } from "../../domain/device/frame-profiles";
 import { maxPreviewSlots } from "../../domain/simulator/simulator-service";
-import { defaultDeviceIds, quickDevicePresetIds } from "../../domain/device/device-catalog";
+import { defaultDeviceIds } from "../../domain/device/device-catalog";
+import { adjacentPickerDevices } from "../../domain/device/device-picker";
 import { appendRecordedStep } from "../../domain/flow/flow-service";
 import type { FlowReplayRequest, FlowReplayResult, FlowStep } from "../../domain/flow/flow.types";
-import {
-  readStore,
-  writeStore,
-} from "../../infrastructure/storage/local-store";
-import { AnnotationOverlay } from "./AnnotationOverlay";
-import {
-  DesignReferencePanel,
-  type ReferenceMode,
-} from "./DesignReferencePanel";
-import { CustomDeviceModal } from "./CustomDeviceModal";
-import { FirstRunGuide } from "./FirstRunGuide";
-import { PresetsManager } from "./PresetsManager";
-import { PermissionsInfoModal } from "./PermissionsInfoModal";
-import { PreviewCard } from "./PreviewCard";
-import { ReviewIssueModal } from "./ReviewIssueModal";
-import { ReviewPromptModal } from "./ReviewPromptModal";
-import { ReleaseNotesModal } from "./ReleaseNotesModal";
-import { HelpModal } from "./HelpModal";
-import { FocusToolbar } from "./FocusToolbar";
+import { readStore, writeStore } from "../../infrastructure/storage/local-store";
+import { GripIcon } from "../icons";
 import { AllDevicesView } from "./AllDevicesView";
+import { AnnotationOverlay } from "./AnnotationOverlay";
+import { CompareBar, CompareControls, CompareLabel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
+import { DevicePicker, type PickerTarget } from "./DevicePicker";
+import { FirstRunGuide } from "./FirstRunGuide";
+import { FixPromptPopover, type FixPromptDevice } from "./FixPrompt";
+import { HelpModal } from "./HelpModal";
+import { PermissionsInfoModal } from "./PermissionsInfoModal";
+import { PreviewCard, shortName } from "./PreviewCard";
+import { RecordMenu, type FlowStatus } from "./RecordMenu";
+import { ReleaseNotesModal } from "./ReleaseNotesModal";
+import { ReviewPromptModal } from "./ReviewPromptModal";
+import { SettingsPopover, type BrowserBarPosition } from "./SettingsPopover";
+import { cx } from "./ui";
+import { useStableCallback } from "../hooks/useStableCallback";
+import { ViewModeBar } from "./ViewModeBar";
+import { WorkspaceHeader } from "./WorkspaceHeader";
 
-const QUICK_DEVICE_SETS = [
-  {
-    labelKey: "phoneTablet" as const,
-    devices: quickDevicePresetIds.phoneTablet,
-  },
-  {
-    labelKey: "iosAndroid" as const,
-    devices: quickDevicePresetIds.iosAndroid,
-  },
-  {
-    labelKey: "mobileTabletLaptop" as const,
-    devices: quickDevicePresetIds.mobileTabletLaptop,
-  },
-] as const;
+type OverlayPlacement = { x: number; y: number; width: number; height: number };
+type Popover = "picker" | "settings" | "fix" | "record" | null;
+
+interface SavedWorkspaceView {
+  widths?: number[];
+  focusedSlotId?: string | null;
+  showDesignReference?: boolean;
+  referenceViewportId?: string;
+  designReferences?: Record<string, string>;
+  designNames?: Record<string, string>;
+  referenceMode?: CompareMode;
+  referenceOpacity?: number;
+  overlayPlacements?: Record<string, OverlayPlacement>;
+  overlayBlend?: CompareBlend;
+  designScrollLinked?: boolean;
+}
 
 export function SimulatorApp() {
-  const { locale, setLocale, t } = useI18n();
-  const { findDevice, customDevices, removeCustomDevice } = useDeviceCatalog();
+  const { t } = useI18n();
+  const { devices, findDevice, removeCustomDevice } = useDeviceCatalog();
   const {
     ready,
     slots,
     activeSlotId,
     display,
     addSlot,
+    removeSlot,
     applyDevicePreset,
     reloadAllSlots,
     updateDisplay,
     sourceTabId,
     useCount,
+    setActiveSlot,
     setSlotDevice,
     setSlotUrl,
     getSlotUrl,
+    setSlotBrowserPreferences,
+    zoomSlot,
+    setSlotZoomMode,
   } = useSimulator();
+  const deviceSets = useDeviceSets(t);
   const [annotationOpen, setAnnotationOpen] = useState(false);
   const [annotationImage, setAnnotationImage] = useState<string | undefined>();
   const [annotationMeta, setAnnotationMeta] = useState<{
@@ -120,52 +112,45 @@ export function SimulatorApp() {
   const [recordedFlow, setRecordedFlow] = useState<FlowStep[]>([]);
   const [flowReplay, setFlowReplay] = useState<FlowReplayRequest | null>(null);
   const [flowResults, setFlowResults] = useState<Record<string, FlowReplayResult>>({});
-  const [viewOnly, setViewOnly] = useState(false);
-  const [showExitHint, setShowExitHint] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [viewMode, setViewMode] = useState(false);
+  const [viewSingle, setViewSingle] = useState(false);
   const [allDevicesUrl, setAllDevicesUrl] = useState<string | null>(null);
   const [narrowLayout, setNarrowLayout] = useState(
     () => typeof window !== "undefined" && window.innerWidth <= 760,
   );
-  const [showCustomDevice, setShowCustomDevice] = useState(false);
-  const [showSavedSets, setShowSavedSets] = useState(false);
-  const [showReviewIssue, setShowReviewIssue] = useState(false);
-  const [showDesignReference, setShowDesignReference] = useState(false);
+  const [popover, setPopover] = useState<Popover>(null);
+  const [pickerTarget, setPickerTarget] = useState<PickerTarget>({ kind: "add" });
+  const [fixDeviceIds, setFixDeviceIds] = useState<string[] | undefined>();
   const [showPermissions, setShowPermissions] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [referenceViewportId, setReferenceViewportId] = useState(
-    () => slots[0]?.id ?? "",
-  );
-  const [designReferences, setDesignReferences] = useState<
-    Record<string, string>
-  >({});
-  const [referenceMode, setReferenceMode] =
-    useState<ReferenceMode>("side-by-side");
-  const [referenceOpacity, setReferenceOpacity] = useState(50);
-  const [adjustingOverlay, setAdjustingOverlay] = useState(true);
-  const [overlayPlacements, setOverlayPlacements] = useState<
-    Record<string, { x: number; y: number; width: number; height: number }>
-  >({});
-  const [designPanelWidth, setDesignPanelWidth] = useState(() =>
-    Math.min(
-      520,
-      typeof window === "undefined" ? 520 : window.innerWidth * 0.42,
-    ),
-  );
+  const [compare, setCompare] = useState(false);
+  const [compareSlotId, setCompareSlotId] = useState(() => slots[0]?.id ?? "");
+  const [designReferences, setDesignReferences] = useState<Record<string, string>>({});
+  const [designNames, setDesignNames] = useState<Record<string, string>>({});
+  const [compareMode, setCompareMode] = useState<CompareMode>("side-by-side");
+  const [overlayOpacity, setOverlayOpacity] = useState(50);
+  const [overlayBlend, setOverlayBlend] = useState<CompareBlend>("normal");
+  const [overlayLocked, setOverlayLocked] = useState(true);
+  const [overlayPlacements, setOverlayPlacements] = useState<Record<string, OverlayPlacement>>({});
+  const [designScrollLinked, setDesignScrollLinked] = useState(true);
+  const [designScrollTop, setDesignScrollTop] = useState(0);
+  const [scales, setScales] = useState<Record<string, number>>({});
   const [showFirstRun, setShowFirstRun] = useState(false);
   const [releaseNotes, setReleaseNotes] = useState<VersionReleaseNotes | null>(null);
-  const [widths, setWidths] = useState<number[]>(() =>
-    slots.map(() => 100 / slots.length),
-  );
+  const [widths, setWidths] = useState<number[]>(() => slots.map(() => 100 / slots.length));
   const [focusedSlotId, setFocusedSlotId] = useState<string | null>(null);
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const previousSlotCount = useRef(slots.length);
   const lastSuccessfulFlowRun = useRef<string | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
+  const addRef = useRef<HTMLButtonElement>(null);
+  const fixRef = useRef<HTMLButtonElement>(null);
+  const recordRef = useRef<HTMLButtonElement>(null);
+  const settingsRef = useRef<HTMLButtonElement>(null);
+  const overlayFileInput = useRef<HTMLInputElement>(null);
   const dark = display.darkMode;
   const standalonePreview = Boolean(
-    (window as Window & { __MDV_STANDALONE_PREVIEW__?: boolean })
-      .__MDV_STANDALONE_PREVIEW__,
+    (window as Window & { __MDV_STANDALONE_PREVIEW__?: boolean }).__MDV_STANDALONE_PREVIEW__,
   );
   const reviewPromptPreview =
     import.meta.env.DEV &&
@@ -174,10 +159,9 @@ export function SimulatorApp() {
     enabled: !standalonePreview,
     hasMultipleViewports: (slots.length >= 2 || allDevicesUrl !== null) && !showFirstRun && !releaseNotes,
     canPresent:
-      !viewOnly &&
+      !viewMode &&
       !annotationOpen &&
-      !showCustomDevice &&
-      !showReviewIssue &&
+      popover === null &&
       !showPermissions &&
       !showHelp &&
       !showFirstRun &&
@@ -194,41 +178,44 @@ export function SimulatorApp() {
   useEffect(() => {
     if (!flowReplay || lastSuccessfulFlowRun.current === flowReplay.runId) return;
     const results = Object.values(flowResults);
-    if (
-      results.length !== slots.length ||
-      !results.every((result) => result.status === "passed")
-    )
-      return;
+    if (results.length !== slots.length || !results.every((result) => result.status === "passed")) return;
     lastSuccessfulFlowRun.current = flowReplay.runId;
     reviewPrompt.noteSuccessfulAction();
   }, [flowReplay, flowResults, reviewPrompt.noteSuccessfulAction, slots.length]);
 
   useEffect(() => {
-    void readStore<{
-      widths?: number[];
-      focusedSlotId?: string | null;
-      sidebarOpen?: boolean;
-      showDesignReference?: boolean;
-      referenceViewportId?: string;
-      designReferences?: Record<string, string>;
-      referenceMode?: ReferenceMode;
-      referenceOpacity?: number;
-      overlayPlacements?: Record<string, { x: number; y: number; width: number; height: number }>;
-      designPanelWidth?: number;
-    } | null>("mdvWorkspaceView", null)
-      .then((saved) => {
-        if (saved?.widths?.length === slots.length) setWidths(saved.widths);
-        if (saved?.focusedSlotId && slots.some((slot) => slot.id === saved.focusedSlotId)) setFocusedSlotId(saved.focusedSlotId);
-        if (saved?.showDesignReference) setShowDesignReference(true);
-        if (saved?.referenceViewportId) setReferenceViewportId(saved.referenceViewportId);
-        if (saved?.designReferences) setDesignReferences(saved.designReferences);
-        if (saved?.referenceMode) setReferenceMode(saved.referenceMode);
-        if (typeof saved?.referenceOpacity === "number") setReferenceOpacity(saved.referenceOpacity);
-        if (saved?.overlayPlacements) setOverlayPlacements(saved.overlayPlacements);
-        if (typeof saved?.designPanelWidth === "number") setDesignPanelWidth(saved.designPanelWidth);
-        setWorkspaceHydrated(true);
-      });
+    void readStore<SavedWorkspaceView | null>("mdvWorkspaceView", null).then((saved) => {
+      if (saved?.widths?.length === slots.length) setWidths(saved.widths);
+      if (saved?.focusedSlotId && slots.some((slot) => slot.id === saved.focusedSlotId)) setFocusedSlotId(saved.focusedSlotId);
+      if (saved?.showDesignReference) setCompare(true);
+      if (saved?.referenceViewportId) setCompareSlotId(saved.referenceViewportId);
+      if (saved?.designReferences) setDesignReferences(saved.designReferences);
+      if (saved?.designNames) setDesignNames(saved.designNames);
+      if (saved?.referenceMode) setCompareMode(saved.referenceMode);
+      if (typeof saved?.referenceOpacity === "number") setOverlayOpacity(saved.referenceOpacity);
+      if (saved?.overlayPlacements) setOverlayPlacements(saved.overlayPlacements);
+      if (saved?.overlayBlend) setOverlayBlend(saved.overlayBlend);
+      if (typeof saved?.designScrollLinked === "boolean") setDesignScrollLinked(saved.designScrollLinked);
+      setWorkspaceHydrated(true);
+    });
   }, []);
+
+  useEffect(() => {
+    if (!workspaceHydrated) return;
+    void writeStore<SavedWorkspaceView>("mdvWorkspaceView", {
+      widths,
+      focusedSlotId,
+      showDesignReference: compare,
+      referenceViewportId: compareSlotId,
+      designReferences,
+      designNames,
+      referenceMode: compareMode,
+      referenceOpacity: overlayOpacity,
+      overlayPlacements,
+      overlayBlend,
+      designScrollLinked,
+    });
+  }, [compare, compareMode, compareSlotId, designNames, designReferences, designScrollLinked, focusedSlotId, overlayBlend, overlayOpacity, overlayPlacements, widths, workspaceHydrated]);
 
   useEffect(() => {
     if (!recording) {
@@ -242,75 +229,60 @@ export function SimulatorApp() {
     return () => window.clearInterval(timer);
   }, [recording]);
 
-  useEffect(() => {
-    if (!workspaceHydrated) return;
-    void writeStore("mdvWorkspaceView", {
-      widths,
-      focusedSlotId,
-      sidebarOpen,
-      showDesignReference,
-      referenceViewportId,
-      designReferences,
-      referenceMode,
-      referenceOpacity,
-      overlayPlacements,
-      designPanelWidth,
-    });
-  }, [designPanelWidth, designReferences, focusedSlotId, overlayPlacements, referenceMode, referenceOpacity, referenceViewportId, showDesignReference, sidebarOpen, widths, workspaceHydrated]);
+  const exitViewMode = useCallback(() => {
+    setViewMode(false);
+    requestAnimationFrame(() => getViewerRoot().querySelector<HTMLButtonElement>("[data-view-only-toggle]")?.focus());
+  }, []);
 
-  function enterViewOnly() {
-    setSidebarOpen(false);
-    setViewOnly(true);
-    setShowExitHint(true);
+  function enterViewMode() {
+    setPopover(null);
+    setViewMode(true);
   }
 
   useLayoutEffect(() => {
-    if (!viewOnly) return;
+    if (!viewMode) return;
     getViewerRoot().querySelector<HTMLElement>("[data-interface-layout]")?.focus({ preventScroll: true });
-    const timer = window.setTimeout(() => setShowExitHint(false), 2200);
-    const restore = () => {
-      setViewOnly(false);
-      requestAnimationFrame(() => getViewerRoot().querySelector<HTMLButtonElement>("[data-view-only-toggle]")?.focus());
-    };
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") restore(); };
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") exitViewMode(); };
     const onMessage = (event: MessageEvent) => {
       if (event.data?.type !== "MDV_PREVIEW_ESCAPE") return;
       const owned = Array.from(getViewerRoot().querySelectorAll("iframe")).some(frame => frame.contentWindow === event.source);
-      if (owned) restore();
+      if (owned) exitViewMode();
     };
     const target = getViewerEventTarget();
     target.addEventListener("keydown", onKey);
     window.addEventListener("message", onMessage);
-    return () => { window.clearTimeout(timer); target.removeEventListener("keydown", onKey); window.removeEventListener("message", onMessage); };
-  }, [viewOnly]);
+    return () => { target.removeEventListener("keydown", onKey); window.removeEventListener("message", onMessage); };
+  }, [exitViewMode, viewMode]);
 
+  // Escape leaves focus or compare mode when no popover is open.
   useEffect(() => {
-    if (!sidebarOpen || showFirstRun) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setSidebarOpen(false);
-      getViewerRoot().querySelector<HTMLButtonElement>("[data-focused-toolbar] [aria-expanded]")?.focus();
+    if (viewMode || popover !== null || (!focusedSlotId && !compare) || allDevicesUrl !== null || annotationOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      if (focusedSlotId) setFocusedSlotId(null);
+      else setCompare(false);
     };
     const target = getViewerEventTarget();
-    target.addEventListener("keydown", closeOnEscape);
-    return () => target.removeEventListener("keydown", closeOnEscape);
-  }, [sidebarOpen, showFirstRun]);
+    target.addEventListener("keydown", onKey);
+    return () => target.removeEventListener("keydown", onKey);
+  }, [allDevicesUrl, annotationOpen, compare, focusedSlotId, popover, viewMode]);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 760px)");
-    const update = () => {
-      setNarrowLayout(query.matches);
-      if (query.matches && !showFirstRun) setSidebarOpen(false);
-    };
+    const update = () => setNarrowLayout(query.matches);
     update();
     query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
-  }, [showFirstRun]);
+  }, []);
 
   useEffect(() => {
-    if (slots.some((slot) => slot.id === referenceViewportId)) return;
-    setReferenceViewportId(slots[0]?.id ?? "");
-  }, [referenceViewportId, slots]);
+    if (slots.some((slot) => slot.id === compareSlotId)) return;
+    setCompareSlotId(slots[0]?.id ?? "");
+  }, [compareSlotId, slots]);
+
+  useEffect(() => {
+    if (focusedSlotId && !slots.some(slot => slot.id === focusedSlotId)) setFocusedSlotId(null);
+  }, [focusedSlotId, slots]);
 
   useEffect(() => {
     if (useCount < 1) return;
@@ -336,13 +308,7 @@ export function SimulatorApp() {
   useEffect(() => {
     if (typeof chrome === "undefined" || !chrome.runtime?.onMessage) return;
     const listener = (message: unknown) => {
-      if (
-        message &&
-        typeof message === "object" &&
-        (message as Record<string, unknown>).type ===
-          "OFFSCREEN_RECORDING_COMPLETE"
-      )
-        setRecording(false);
+      if (message && typeof message === "object" && (message as Record<string, unknown>).type === "OFFSCREEN_RECORDING_COMPLETE") setRecording(false);
     };
     chrome.runtime.onMessage.addListener(listener);
     return () => chrome.runtime.onMessage.removeListener(listener);
@@ -353,65 +319,50 @@ export function SimulatorApp() {
     setWidths(slots.map(() => 100 / slots.length));
   }
 
-  const startResize = useCallback(
-    (event: React.MouseEvent, index: number) => {
-      event.preventDefault();
-      const board = boardRef.current;
-      if (!board) return;
-      const startX = event.clientX;
-      const totalWidth = board.getBoundingClientRect().width;
-      const left = widths[index];
-      const right = widths[index + 1];
-      const combined = left + right;
-      const onMove = (moveEvent: MouseEvent) => {
-        const delta = ((moveEvent.clientX - startX) / totalWidth) * 100;
-        const minimum = (120 / totalWidth) * 100;
-        const nextLeft = Math.min(
-          combined - minimum,
-          Math.max(minimum, left + delta),
-        );
-        setWidths((current) =>
-          current.map((value, itemIndex) =>
-            itemIndex === index
-              ? nextLeft
-              : itemIndex === index + 1
-                ? combined - nextLeft
-                : value,
-          ),
-        );
-      };
-      const onUp = () => {
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onUp);
-      };
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
-    },
-    [widths],
-  );
+  const startResize = useCallback((event: React.MouseEvent, index: number) => {
+    event.preventDefault();
+    const board = boardRef.current;
+    if (!board) return;
+    const startX = event.clientX;
+    const totalWidth = board.getBoundingClientRect().width;
+    const left = widths[index];
+    const right = widths[index + 1];
+    const combined = left + right;
+    const onMove = (moveEvent: MouseEvent) => {
+      const delta = ((moveEvent.clientX - startX) / totalWidth) * 100;
+      const minimum = (120 / totalWidth) * 100;
+      const nextLeft = Math.min(combined - minimum, Math.max(minimum, left + delta));
+      setWidths((current) => current.map((value, itemIndex) =>
+        itemIndex === index ? nextLeft : itemIndex === index + 1 ? combined - nextLeft : value));
+    };
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }, [widths]);
 
   async function takeScopedScreenshot(slotId?: string) {
     if (capturing) return;
     setCapturing(true);
     setCapturingSlotId(slotId);
     setCaptureError(null);
-    setSidebarOpen(false);
+    setPopover(null);
     try {
-      const capture = await captureTabWithOverlay(sourceTabId);
-      if (!capture.dataUrl) {
-        setCaptureError(capture.error ?? t("noScreenshot"));
-        window.setTimeout(() => setCaptureError(null), 4000);
-        return;
-      }
       const card = slotId
-        ? Array.from(getViewerRoot().querySelectorAll<HTMLElement>("[data-preview-slot-id]"))
-            .find((element) => element.dataset.previewSlotId === slotId)
+        ? Array.from(getViewerRoot().querySelectorAll<HTMLElement>("[data-preview-slot-id]")).find((element) => element.dataset.previewSlotId === slotId)
         : undefined;
       const target = slotId
         ? card?.querySelector<HTMLElement>("[data-device-capture]")
         : getViewerRoot().querySelector<HTMLElement>("[data-capture-board]");
       if (!target) throw new Error(t("noScreenshot"));
-      const cropped = await cropScreenshotToElement(capture.dataUrl, target);
+      const capture = () => captureTabWithOverlay(sourceTabId);
+      // One device is cut out with a transparent background; the workspace
+      // screenshot keeps its background so the devices stay in context.
+      const cropped = slotId
+        ? await captureDeviceCutout(target, capture, t("noScreenshot"))
+        : await cropScreenshotToElement(await capturedImage(capture, t("noScreenshot")), target);
       setAnnotationImage(cropped);
       setAnnotationMeta(captureMetaForSlot(slotId));
       setAnnotationOpen(true);
@@ -456,29 +407,19 @@ export function SimulatorApp() {
   function replayRecordedFlow() {
     if (!recordedFlow.length || flowRecording) return;
     setFlowResults({});
-    setFlowReplay({
-      runId: crypto.randomUUID(),
-      steps: recordedFlow,
-      startUrl: recordedFlow.find((step) => step.url)?.url,
-    });
+    setFlowReplay({ runId: crypto.randomUUID(), steps: recordedFlow, startUrl: recordedFlow.find((step) => step.url)?.url });
   }
 
   function resumePausedFlow() {
-    const pausedResults = Object.values(flowResults).filter(
-      (result) => result.status === "paused" && result.nextStep !== undefined,
-    );
+    const pausedResults = Object.values(flowResults).filter((result) => result.status === "paused" && result.nextStep !== undefined);
     if (!pausedResults.length) return;
     const pausedSlotIds = new Set(pausedResults.map((result) => result.slotId));
-    setFlowResults((current) => Object.fromEntries(
-      Object.entries(current).filter(([slotId]) => !pausedSlotIds.has(slotId)),
-    ));
+    setFlowResults((current) => Object.fromEntries(Object.entries(current).filter(([slotId]) => !pausedSlotIds.has(slotId))));
     setFlowReplay({
       runId: crypto.randomUUID(),
       steps: recordedFlow,
       startUrl: recordedFlow.find((step) => step.url)?.url,
-      startIndexes: Object.fromEntries(
-        pausedResults.map((result) => [result.slotId, result.nextStep ?? 0]),
-      ),
+      startIndexes: Object.fromEntries(pausedResults.map((result) => [result.slotId, result.nextStep ?? 0])),
     });
   }
 
@@ -492,16 +433,9 @@ export function SimulatorApp() {
 
   function closeViewer() {
     if (getViewerContext()) return getViewerContext()!.close();
-    if (window.parent !== window)
-      return void window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*");
-    if (
-      typeof chrome !== "undefined" &&
-      chrome.tabs?.getCurrent &&
-      chrome.tabs?.remove
-    ) {
-      chrome.tabs.getCurrent((tab) =>
-        tab?.id ? void chrome.tabs.remove(tab.id) : window.close(),
-      );
+    if (window.parent !== window) return void window.parent.postMessage({ type: "CLOSE_SIMULATOR" }, "*");
+    if (typeof chrome !== "undefined" && chrome.tabs?.getCurrent && chrome.tabs?.remove) {
+      chrome.tabs.getCurrent((tab) => tab?.id ? void chrome.tabs.remove(tab.id) : window.close());
       return;
     }
     window.close();
@@ -509,7 +443,6 @@ export function SimulatorApp() {
 
   function finishFirstRun() {
     setShowFirstRun(false);
-    setSidebarOpen(false);
     void writeStore("responsiveTesterFirstRunComplete", true);
   }
 
@@ -523,7 +456,7 @@ export function SimulatorApp() {
   function openAllDevices() {
     if (flowRecording) toggleFlowRecording();
     setFlowReplay(null);
-    setSidebarOpen(false);
+    setPopover(null);
     setAllDevicesUrl(getSlotUrl(activeSlotId));
   }
 
@@ -537,6 +470,49 @@ export function SimulatorApp() {
     if (getSlotUrl(activeSlotId) !== url) setSlotUrl(activeSlotId, url);
     closeAllDevices();
   }, [activeSlotId, closeAllDevices, getSlotUrl, setSlotDevice, setSlotUrl]);
+
+  const addGalleryDevice = useCallback((deviceId: string, url: string) => {
+    if (slots.length >= maxPreviewSlots) {
+      openGalleryDevice(deviceId, url);
+      return;
+    }
+    addSlot(deviceId);
+    closeAllDevices();
+  }, [addSlot, closeAllDevices, openGalleryDevice, slots.length]);
+
+  function togglePopover(next: Exclude<Popover, null>) {
+    setPopover(current => current === next ? null : next);
+  }
+
+  function openPicker(target: PickerTarget) {
+    setPickerTarget(target);
+    setPopover("picker");
+  }
+
+  function openFixPrompt(deviceIds?: string[]) {
+    setFixDeviceIds(deviceIds);
+    setPopover("fix");
+  }
+
+  const closePopover = useCallback(() => setPopover(null), []);
+
+  // Return focus to the control that opened the picker.
+  const closePicker = useCallback(() => {
+    setPopover(null);
+    requestAnimationFrame(() => {
+      const trigger = pickerTarget.kind === "replace"
+        ? getViewerRoot().querySelector<HTMLButtonElement>(`[data-preview-slot-id="${CSS.escape(pickerTarget.slotId)}"] [data-testid="device-switcher-button"]`)
+        : addRef.current;
+      trigger?.focus({ preventScroll: true });
+    });
+  }, [pickerTarget]);
+
+  function slotSize(slotId: string) {
+    const slot = slots.find((item) => item.id === slotId);
+    if (!slot) return { width: 0, height: 0 };
+    const device = findDevice(slot.deviceId);
+    return supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport;
+  }
 
   const captureMeta = {
     title: `${PRODUCT_SHORT_NAME} QA capture`,
@@ -552,433 +528,380 @@ export function SimulatorApp() {
     const slot = slots.find((item) => item.id === slotId);
     if (!slot) return captureMeta;
     const device = findDevice(slot.deviceId);
-    const { width, height } = supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport;
-    return {
-      title: `${PRODUCT_SHORT_NAME} · ${device.name}`,
-      url: slot.url,
-      devices: [`${device.name} (${width}x${height})`],
-      includeBanner: false,
-    };
+    const { width, height } = slotSize(slotId);
+    return { title: `${PRODUCT_SHORT_NAME} · ${device.name}`, url: slot.url, devices: [`${device.name} (${width}x${height})`], includeBanner: false };
   }
 
-  const reviewDevices = slots.map((slot) => {
+  const reviewDevices: FixPromptDevice[] = slots.map((slot) => {
     const device = findDevice(slot.deviceId);
-    const size = supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport;
-    return {
-      name: device.name,
-      width: size.width,
-      height: size.height,
-      orientation: slot.orientation,
-    };
+    const size = slotSize(slot.id);
+    return { id: slot.id, name: device.name, width: size.width, height: size.height, orientation: slot.orientation };
   });
+
+  const flowStatus = useMemo<FlowStatus | undefined>(() => {
+    if (!flowReplay) return undefined;
+    const results = Object.values(flowResults);
+    const failed = results.find((result) => result.status === "failed");
+    const passed = results.filter((result) => result.status === "passed").length;
+    if (failed) return { tone: "error", text: t("flowFailed", { passed, count: slots.length, step: (failed.failedStep ?? 0) + 1 }) };
+    if (results.some((result) => result.status === "paused")) return { tone: "warning", text: t("flowVerificationPaused") };
+    if (results.length === slots.length && results.every((result) => result.status === "passed")) return { tone: "success", text: t("flowViewportsPassed", { count: slots.length }) };
+    return { tone: "neutral", text: t("flowRunning", { count: slots.length }) };
+  }, [flowReplay, flowResults, slots.length, t]);
+
+  const iosPhoneSlots = slots.filter((slot) => {
+    const device = findDevice(slot.deviceId);
+    return device.type === "phone" && getFrameProfile(device).platform === "ios";
+  });
+  const browserBar: BrowserBarPosition = iosPhoneSlots[0]?.browserPreferences?.layout === "top" ? "top" : "bottom";
+  function changeBrowserBar(position: BrowserBarPosition) {
+    for (const slot of iosPhoneSlots) setSlotBrowserPreferences(slot.id, { layout: position });
+  }
+
+  const focusIndex = focusedSlotId ? slots.findIndex((slot) => slot.id === focusedSlotId) : -1;
+  const focusMode = !viewMode && !compare && focusIndex >= 0;
+  const viewOneMode = viewMode && viewSingle;
+  const activeIndex = Math.max(0, slots.findIndex((slot) => slot.id === activeSlotId));
+  const singleSlotId = compare && !viewMode ? compareSlotId : focusMode ? focusedSlotId : viewOneMode ? slots[activeIndex]?.id : null;
+  const showChrome = !viewMode && !compare;
+
+  function stepFocus(direction: 1 | -1) {
+    if (!slots.length) return;
+    const next = slots[(focusIndex + direction + slots.length) % slots.length];
+    setFocusedSlotId(next.id);
+    setActiveSlot(next.id);
+  }
+
+  function stepActive(direction: 1 | -1) {
+    if (!slots.length) return;
+    setActiveSlot(slots[(activeIndex + direction + slots.length) % slots.length].id);
+  }
+
+  const compareSlot = slots.find((slot) => slot.id === compareSlotId);
+  const compareDevice = compareSlot ? findDevice(compareSlot.deviceId) : undefined;
+  const compareSize = slotSize(compareSlotId);
+  const compareImage = designReferences[compareSlotId];
+  const compareScale = scales[compareSlotId] ?? 0;
+  const comparePaneWidth = Math.max(160, Math.round(compareSize.width * compareScale));
+  const comparePaneHeight = Math.max(160, Math.round(compareSize.height * compareScale));
+
+  function setDesign(slotId: string, image?: string, name?: string) {
+    setDesignReferences((current) => {
+      const next = { ...current };
+      if (image) next[slotId] = image; else delete next[slotId];
+      return next;
+    });
+    setDesignNames((current) => {
+      const next = { ...current };
+      if (name) next[slotId] = name; else delete next[slotId];
+      return next;
+    });
+  }
+
+  const onComparePageScroll = useCallback((scrollTop: number) => setDesignScrollTop(scrollTop), []);
+
+  // Cards are memoized, so every prop they share stays stable while the
+  // workspace re-renders for column resizing, popovers or another card's scale.
+  const workspaceDisplay = useMemo(() => allDevicesUrl !== null ? { ...display, scrollSync: false, navigationSync: false } : display, [allDevicesUrl, display]);
+  const captureSlot = useStableCallback((slotId: string) => void takeScopedScreenshot(slotId));
+  const changeSlotDevice = useStableCallback((slotId: string) => openPicker({ kind: "replace", slotId }));
+  const switchSlotDevice = useCallback((slotId: string, deviceId: string) => setSlotDevice(slotId, deviceId), [setSlotDevice]);
+  const neighbours = useMemo(() => new Map(slots.map(slot => [slot.id, adjacentPickerDevices(devices, slot.deviceId)])), [devices, slots]);
+  const focusSlot = useStableCallback((slotId: string) => { setFocusedSlotId(slotId); setActiveSlot(slotId); });
+  const fixPromptForSlot = useStableCallback((slotId: string) => openFixPrompt([slotId]));
+  const updateScale = useCallback((scale: number, slotId: string) => setScales((current) => current[slotId] === scale ? current : { ...current, [slotId]: scale }), []);
+  const focusPrevious = useStableCallback(() => stepFocus(-1));
+  const focusNext = useStableCallback(() => stepFocus(1));
+  const exitFocus = useCallback(() => setFocusedSlotId(null), []);
+  const focusNavigation = useMemo(() => focusMode ? {
+    position: `${focusIndex + 1} / ${slots.length}`,
+    canStep: slots.length > 1,
+    onPrevious: focusPrevious,
+    onNext: focusNext,
+    onExit: exitFocus,
+  } : undefined, [exitFocus, focusIndex, focusMode, focusNext, focusPrevious, slots.length]);
 
   return (
     <div
       data-interface-layout="focus"
-      data-view-only={viewOnly || undefined}
+      data-view-only={viewMode || undefined}
       tabIndex={-1}
-      className={`relative flex h-screen flex-col overflow-hidden outline-none font-sans transition-colors ${dark ? "bg-[#0b0d12] text-slate-100" : "bg-[#eef0f3] text-slate-900"}`}
+      className={cx("relative flex h-screen flex-col overflow-hidden bg-stage font-sans text-ink outline-none transition-colors", dark && "dark")}
     >
-      <div className={`flex min-h-0 flex-1 flex-col ${allDevicesUrl !== null ? "invisible" : ""}`} inert={allDevicesUrl !== null} aria-hidden={allDevicesUrl !== null || undefined}>
-      {!viewOnly && <FocusToolbar dark={dark} freeView={display.previewStyle === "free"} scrollSync={display.scrollSync} navigationSync={display.navigationSync} toolsOpen={sidebarOpen}
-        url={slots.find(slot => slot.id === activeSlotId)?.url ?? slots[0]?.url ?? ""}
-        canAdd={slots.length < maxPreviewSlots} capturing={capturing}
-        onViewChange={free => updateDisplay(current => ({ ...current, previewStyle: free ? "free" : "device" }))}
-        onAdd={() => addSlot()} onSync={() => updateDisplay(current => ({ ...current, scrollSync: !current.scrollSync }))}
-        onNavigationSync={() => updateDisplay(current => ({ ...current, navigationSync: !current.navigationSync }))} onReload={reloadAllSlots}
-        onViewOnly={enterViewOnly} onAllDevices={openAllDevices} onCapture={() => void takeScopedScreenshot()} onTools={() => setSidebarOpen(value => !value)}
-        onTheme={() => updateDisplay(current => ({ ...current, darkMode: !current.darkMode }))} onClose={closeViewer}/>}
-      <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        {sidebarOpen && !viewOnly && (
-          <button
-            type="button"
-            aria-label={t("closeWorkspaceSetup")}
-            tabIndex={-1}
-            aria-hidden="true"
-            className="absolute inset-0 z-30 bg-black/15"
-            onClick={() => setSidebarOpen(false)}
+      <div className={cx("flex min-h-0 flex-1 flex-col", allDevicesUrl !== null && "invisible")} inert={allDevicesUrl !== null} aria-hidden={allDevicesUrl !== null || undefined}>
+        {!viewMode && (
+          <WorkspaceHeader
+            slotCount={slots.length}
+            catalogCount={devices.length}
+            canAdd={slots.length < maxPreviewSlots}
+            addRef={addRef}
+            addOpen={popover === "picker" && pickerTarget.kind === "add"}
+            scrollSync={display.scrollSync}
+            navigationSync={display.navigationSync}
+            freeView={display.previewStyle === "free"}
+            compare={compare}
+            capturing={capturing}
+            recordRef={recordRef}
+            recordOpen={popover === "record"}
+            recordingActive={recording || flowRecording}
+            fixRef={fixRef}
+            fixOpen={popover === "fix"}
+            settingsRef={settingsRef}
+            settingsOpen={popover === "settings"}
+            onAllDevices={openAllDevices}
+            onAdd={() => popover === "picker" && pickerTarget.kind === "add" ? setPopover(null) : openPicker({ kind: "add" })}
+            onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
+            onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
+            onFreeViewChange={(free) => updateDisplay((current) => ({ ...current, previewStyle: free ? "free" : "device" }))}
+            onReloadAll={reloadAllSlots}
+            onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
+            onCapture={() => void takeScopedScreenshot()}
+            onFixPrompt={() => popover === "fix" ? setPopover(null) : openFixPrompt()}
+            onRecord={() => togglePopover("record")}
+            onViewMode={enterViewMode}
+            onSettings={() => togglePopover("settings")}
+            onClose={closeViewer}
           />
         )}
-        <aside
-          className={`absolute inset-y-3 start-3 z-40 flex shrink-0 flex-col rounded-xl border shadow-xl ${dark ? "border-white/[0.12] bg-[#11141a]" : "border-slate-200 bg-white"} ${sidebarOpen && !viewOnly ? "w-72 max-w-[calc(100%-1.5rem)]" : "hidden"}`}
-        >
-          {sidebarOpen && (
-            <>
-              <div
-                className={`flex h-11 shrink-0 items-center justify-between border-b px-3 ${dark ? "border-white/[0.07]" : "border-slate-100"}`}
-              >
-                <div className="flex items-center gap-2">
-                  <Settings2 size={14} className="text-[#0f9f8f]" />
-                  <span className="text-[11px] font-extrabold">
-                    {t("workspaceSetup")}
-                  </span>
-                </div>
-                <button
-                  data-tour="sidebar-collapse"
-                  type="button"
-                  onClick={() => setSidebarOpen(false)}
-                  className={`grid h-7 w-7 place-items-center rounded-md ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"}`}
-                  aria-label={t("collapseWorkspaceSetup")}
-                >
-                  <X size={14}/>
-                </button>
-              </div>
-              <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">
-                <SidebarSection title={t("quickDeviceSets")} dark={dark}>
-                  <ActionRow dark={dark} icon={<PanelsTopLeft size={14}/>} label={t("allDevices")} onClick={openAllDevices}/>
-                  {QUICK_DEVICE_SETS.map(set => <ActionRow key={set.labelKey} dark={dark} icon={<PanelsTopLeft size={14}/>} label={t(set.labelKey)} onClick={() => applyDevicePreset([...set.devices])}/>)}
-                  <ActionRow dark={dark} icon={<Route size={14}/>} label={t("navigationSync")} active={display.navigationSync} activeTone="teal" onClick={() => updateDisplay(current => ({ ...current, navigationSync: !current.navigationSync }))}/>
-                  <ActionRow dark={dark} icon={<RefreshCw size={14}/>} label={t("reloadAll")} onClick={reloadAllSlots}/>
-                  <ActionRow dark={dark} icon={<CircleHelp size={14}/>} label={t("helpAndFeedback")} onClick={() => setShowHelp(true)}/>
-                </SidebarSection>
-                <div>
-                  <SidebarSection
-                    title={t("devices")}
-                    meta={t("countOf", { count: slots.length, max: maxPreviewSlots })}
-                    dark={dark}
-                  >
-                  <button
-                    data-tour="add-viewport"
-                    type="button"
-                    disabled={slots.length >= maxPreviewSlots}
-                    onClick={() => addSlot()}
-                    className="flex h-9 w-full items-center justify-center gap-2 rounded-[9px] bg-[#0f9f8f] text-[11px] font-bold text-white shadow-sm hover:bg-[#0c8b7e] disabled:opacity-40"
-                  >
-                    <Plus size={14} />
-                    {t("addViewport")}
-                  </button>
-                  <ActionRow
-                    dark={dark}
-                    icon={<PanelsTopLeft size={14} />}
-                    onClick={() => setShowCustomDevice(true)}
-                    label={t("addCustomViewport")}
-                  />
-                  </SidebarSection>
-                </div>
-
-                {customDevices.length > 0 && (
-                  <SidebarSection
-                    title={t("customViewports")}
-                    meta={`${customDevices.length}`}
-                    dark={dark}
-                  >
-                    <div className="flex flex-col gap-1">
-                      {customDevices.map((device) => (
-                        <div
-                          key={device.id}
-                          className={`flex h-8 min-w-0 items-center gap-1 rounded-lg border pl-2 pr-1 ${dark ? "border-white/[0.07] bg-white/[0.025]" : "border-slate-100 bg-slate-50"}`}
-                        >
-                          <button
-                            type="button"
-                            onClick={() => addSlot(device.id, device.cssViewport.width > device.cssViewport.height ? "landscape" : "portrait")}
-                            disabled={slots.length >= maxPreviewSlots}
-                            title={t("addNamedViewport", { name: device.name })}
-                            className="flex min-w-0 flex-1 items-center gap-1.5 text-left disabled:cursor-not-allowed disabled:opacity-45"
-                          >
-                            <span className="min-w-0 flex-1 truncate text-[10px] font-bold">{device.name}</span>
-                            <span className={`shrink-0 font-mono text-[8px] ${dark ? "text-slate-500" : "text-slate-400"}`}>{device.cssViewport.width}×{device.cssViewport.height}</span>
-                            <Plus size={10} className="shrink-0 text-[#0f9f8f]" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => deleteCustomViewport(device.id)}
-                            title={t("deleteNamed", { name: device.name })}
-                            aria-label={t("deleteNamed", { name: device.name })}
-                            className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition ${dark ? "text-slate-600 hover:bg-red-500/10 hover:text-red-400" : "text-slate-400 hover:bg-red-50 hover:text-red-600"}`}
-                          >
-                            <Trash2 size={12} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </SidebarSection>
-                )}
-
-                <SidebarSection
-                  title={t("savedSets")}
-                  dark={dark}
-                  action={
-                    <button
-                      type="button"
-                      onClick={() => setShowSavedSets((value) => !value)}
-                      className="text-[9px] font-extrabold uppercase tracking-wider text-[#0f9f8f]"
-                    >
-                      {showSavedSets ? t("done") : t("manage")}
-                    </button>
-                  }
-                >
-                  <p
-                    className={`text-[10px] leading-4 ${dark ? "text-slate-500" : "text-slate-400"}`}
-                  >
-                    {t("reuseDeviceCombinations")}
-                  </p>
-                  {showSavedSets && (
-                    <PresetsManager
-                      dark={dark}
-                      currentDeviceIds={slots.map((slot) => slot.deviceId)}
-                      onApply={applyDevicePreset}
-                      onSaved={reviewPrompt.noteSuccessfulAction}
-                    />
-                  )}
-                </SidebarSection>
-
-                <div>
-                  <SidebarSection title={t("sessionTools")} dark={dark}>
-                  <ActionRow
-                    dark={dark}
-                    icon={<Focus size={14} />}
-                    onClick={() => setFocusedSlotId(focusedSlotId ? null : activeSlotId)}
-                    active={!!focusedSlotId}
-                    label={focusedSlotId ? t("showAllViewports") : t("focusActiveViewport")}
-                  />
-                  <ActionRow
-                    dark={dark}
-                    icon={<ScanSearch size={14} />}
-                    onClick={() => setShowReviewIssue(true)}
-                    label={t("generateAiFixPrompt")}
-                  />
-                  <ActionRow
-                    dark={dark}
-                    icon={<Images size={14} />}
-                    onClick={() => setShowDesignReference(true)}
-                    label={t("comparePageDesign")}
-                  />
-                  <ActionRow
-                    dark={dark}
-                    icon={recording ? <Square size={13} fill="currentColor" /> : <Video size={14} />}
-                    onClick={() => void toggleRecording()}
-                    disabled={!sourceTabId}
-                    active={recording}
-                    label={recording ? t("recordingStop") : t("recordSourceTab")}
-                  />
-                  <ActionRow
-                    dark={dark}
-                    icon={<CircleHelp size={14} />}
-                    onClick={() => setShowFirstRun(true)}
-                    label={t("takeFeatureTour")}
-                  />
-                  {recording && (
-                    <div role="status" aria-live="polite" className="flex h-7 items-center gap-2 rounded-lg bg-red-500/10 px-2 text-[10px] font-extrabold text-red-500">
-                      <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-                      {t("recordingStatus", { time: formatDuration(recordingSeconds) })}
-                    </div>
-                  )}
-                  </SidebarSection>
-                </div>
-                <SidebarSection
-                  title={flowRecording ? t("stopAndSaveFlow", { count: recordedFlow.length }) : t("flowRecorder")}
-                  dark={dark}
-                  active={flowRecording}
-                >
-                  <div data-tour="record-user-flow">
-                    <ActionRow
-                      dark={dark}
-                      icon={flowRecording ? <Square size={13} fill="currentColor" /> : <Route size={14} />}
-                      onClick={toggleFlowRecording}
-                      active={flowRecording}
-                      label={flowRecording ? t("recordingStop") : t("recordAFlow")}
-                    />
-                  </div>
-                  {!flowRecording && <ActionRow
-                    dark={dark}
-                    icon={<Play size={14} />}
-                    onClick={replayRecordedFlow}
-                    disabled={!recordedFlow.length}
-                    label={recordedFlow.length ? t("reloadAndRerunFlow", { count: recordedFlow.length }) : t("recordFlowToRerun")}
-                  />}
-                  {!flowRecording && recordedFlow.length > 0 && (
-                    <ActionRow dark={dark} icon={<Trash2 size={14} />} onClick={clearRecordedFlow} label={t("clearSavedFlow")} />
-                  )}
-                  {flowReplay && (
-                    <p role="status" aria-live="polite" className={`px-2 text-[10px] font-bold ${Object.keys(flowResults).length === slots.length && Object.values(flowResults).every((result) => result.status === "passed") ? "text-emerald-500" : Object.values(flowResults).some((result) => result.status === "failed") ? "text-red-500" : Object.values(flowResults).some((result) => result.status === "paused") ? "text-amber-500" : dark ? "text-slate-400" : "text-slate-500"}`}>
-                      {Object.values(flowResults).some((result) => result.status === "failed")
-                        ? t("flowFailed", { passed: Object.values(flowResults).filter((result) => result.status === "passed").length, count: slots.length, step: (Object.values(flowResults).find((result) => result.status === "failed")?.failedStep ?? 0) + 1 })
-                        : Object.values(flowResults).some((result) => result.status === "paused")
-                          ? t("flowVerificationPaused")
-                        : Object.keys(flowResults).length === slots.length
-                          ? t("flowViewportsPassed", { count: slots.length })
-                          : t("flowRunning", { count: slots.length })}
-                    </p>
-                  )}
-                  {Object.values(flowResults).some((result) => result.status === "paused") && (
-                    <ActionRow
-                      dark={dark}
-                      icon={<Play size={14} />}
-                      onClick={resumePausedFlow}
-                      label={t("resumeFlowAfterVerification")}
-                    />
-                  )}
-                </SidebarSection>
-              </div>
-              <div
-                className={`border-t p-3 ${dark ? "border-white/[0.07]" : "border-slate-100"}`}
-              >
-                <div className="flex items-center gap-2">
-                  <Languages size={13} className="shrink-0 text-[#0f9f8f]" />
-                  <select
-                    aria-label={t("language")}
-                    value={locale}
-                    onChange={(event) => setLocale(event.target.value as AppLocale)}
-                    className={`min-w-0 flex-1 rounded-md border px-2 py-1 text-[10px] font-bold outline-none ${dark ? "border-white/10 bg-[#171a21] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
-                  >
-                    {SUPPORTED_LOCALES.map((option) => (
-                      <option key={option.code} value={option.code}>
-                        {option.name}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => setShowPermissions(true)}
-                    aria-label={t("viewPermissions")}
-                    title={t("viewPermissions")}
-                    className={`grid h-7 w-7 shrink-0 place-items-center rounded-md ${dark ? "text-slate-400 hover:bg-white/10 hover:text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"}`}
-                  >
-                    <Eye size={14} />
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-        </aside>
-
-        {viewOnly && (
-          <button type="button" data-exit-view-only aria-label={t("showWorkspaceControls")} title={`${t("showWorkspaceControls")} (Esc)`}
-            onClick={() => setViewOnly(false)}
-            className={`absolute start-3 top-3 z-50 flex h-9 items-center gap-2 rounded-full border px-3 text-xs font-semibold shadow-sm transition-opacity hover:opacity-100 focus:opacity-100 ${showExitHint ? "opacity-100" : "opacity-0"} ${dark ? "border-white/20 bg-slate-900 text-white" : "border-slate-300 bg-white text-slate-700"}`}>
-            <Settings2 size={14}/>{t("showWorkspaceControls")} <kbd className="text-[10px] opacity-60">Esc</kbd>
-          </button>
-        )}
-
-        {showDesignReference && !viewOnly && (
-          <DesignReferencePanel
-            dark={dark}
-            viewports={slots.map((slot) => ({
-              id: slot.id,
-              label: findDevice(slot.deviceId).name,
-            }))}
-            activeViewportId={referenceViewportId || slots[0]?.id || ""}
-            references={designReferences}
-            mode={referenceMode}
-            opacity={referenceOpacity}
-            adjustingOverlay={adjustingOverlay}
-            width={designPanelWidth}
-            onActiveViewportChange={setReferenceViewportId}
-            onReferenceChange={(id, image) =>
-              setDesignReferences((current) => {
-                const next = { ...current };
-                if (image) next[id] = image;
-                else delete next[id];
-                return next;
-              })
-            }
-            onModeChange={setReferenceMode}
-            onOpacityChange={setReferenceOpacity}
-            onAdjustingOverlayChange={setAdjustingOverlay}
-            onResetOverlay={() =>
-              setOverlayPlacements((current) => {
-                const next = { ...current };
-                delete next[referenceViewportId];
-                return next;
-              })
-            }
-            onWidthChange={setDesignPanelWidth}
-            onClose={() => setShowDesignReference(false)}
-            onMarkFeedback={(image) => {
-              setAnnotationImage(image);
-              setAnnotationMeta(captureMetaForSlot(referenceViewportId));
-              setAnnotationOpen(true);
-              reviewPrompt.noteSuccessfulAction();
-            }}
+        {compare && !viewMode && (
+          <CompareBar
+            tabs={slots.map((slot) => ({ slotId: slot.id, label: shortName(findDevice(slot.deviceId).name), hasDesign: Boolean(designReferences[slot.id]) }))}
+            activeSlotId={compareSlotId}
+            mode={compareMode}
+            onSelect={(slotId) => { setCompareSlotId(slotId); setActiveSlot(slotId); setDesignScrollTop(0); }}
+            onModeChange={setCompareMode}
+            onDone={() => setCompare(false)}
           />
         )}
-        <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+
+        <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
           <div
             ref={boardRef}
             data-capture-board
-            className={`flex min-h-0 flex-1 ${narrowLayout ? "flex-col" : ""}`}
+            className={cx(
+              "flex min-h-0 flex-1",
+              narrowLayout && "flex-col",
+              viewMode ? "px-6 pb-[100px] pt-6" : compare ? "gap-16 px-6 pb-[88px] pt-3" : "px-3 pb-1 pt-1",
+            )}
           >
-            {ready && slots.map((slot, index) => (
-              focusedSlotId && focusedSlotId !== slot.id ? null :
-              <div
-                key={slot.id}
-                className="relative flex h-full min-w-0 flex-col overflow-visible"
-                style={{
-                  width: narrowLayout
-                    ? "100%"
-                    : focusedSlotId === slot.id
-                      ? "100%"
-                      : `${widths[index] ?? 100 / slots.length}%`,
-                  height: narrowLayout ? `${100 / slots.length}%` : undefined,
-                  flexShrink: 0,
-                }}
-              >
-                <PreviewCard
-                  slot={slot}
-                  device={findDevice(slot.deviceId)}
-                  display={allDevicesUrl !== null ? { ...display, scrollSync: false, navigationSync: false } : display}
-                  showToolbar={!viewOnly}
-                  visualsActive={allDevicesUrl === null}
-                  removable={slots.length > 1}
-                  onCapture={() => void takeScopedScreenshot(slot.id)}
-                  capturePending={capturing && capturingSlotId === slot.id}
-                  focused={focusedSlotId === slot.id}
-                  first={index === 0}
-                  last={index === slots.length - 1}
-                  flowRecording={flowRecording && activeSlotId === slot.id}
-                  flowReplay={flowReplay}
-                  onFlowStep={recordFlowStep}
-                  onFlowResult={receiveFlowResult}
-                  designOverlay={
-                    !viewOnly && showDesignReference &&
-                    referenceMode === "overlay" &&
-                    referenceViewportId === slot.id &&
-                    designReferences[slot.id]
-                      ? {
-                          image: designReferences[slot.id],
-                          opacity: referenceOpacity,
-                          adjusting: adjustingOverlay,
-                          placement: overlayPlacements[slot.id],
-                          onPlacementChange: (placement) =>
-                            setOverlayPlacements((current) => ({
-                              ...current,
-                              [slot.id]: placement,
-                            })),
-                        }
-                      : undefined
-                  }
-                />
-                {!viewOnly && !focusedSlotId && index < slots.length - 1 && !narrowLayout && (
-                  <div
-                    role="separator"
-                    aria-label={t("resizeAdjacentViewports")}
-                    aria-orientation="vertical"
-                    className="group absolute right-0 top-0 z-20 flex h-full w-4 translate-x-1/2 cursor-col-resize items-center justify-center"
-                    onMouseDown={(event) => startResize(event, index)}
-                  >
+            {ready && slots.map((slot, index) => {
+              const shown = singleSlotId === null || singleSlotId === slot.id;
+              const comparing = compare && !viewMode && slot.id === compareSlotId;
+              return (
+                <div
+                  key={slot.id}
+                  className={cx("relative flex h-full min-w-0 shrink-0 flex-col hover:z-30 focus-within:z-30", !shown && "hidden", singleSlotId !== null && "flex-1")}
+                  style={singleSlotId === null ? (narrowLayout ? { height: `${100 / slots.length}%`, width: "100%" } : { width: `${widths[index] ?? 100 / slots.length}%` }) : undefined}
+                >
+                  {comparing && (compareMode === "side-by-side"
+                    ? <CompareLabel tone="live" title={t("livePage")} detail={slot.url} />
+                    : <CompareLabel tone="live" title={t("livePage")}>
+                        {compareImage && <>
+                          <span className="text-xs text-muted">{t("under")}</span>
+                          <span className="flex items-center gap-1.5"><span aria-hidden="true" className="size-2 rounded-full bg-design" /><span className="font-semibold">{t("design")}</span></span>
+                          {designNames[slot.id] && <span className="font-mono text-xs text-muted">{designNames[slot.id]}</span>}
+                        </>}
+                      </CompareLabel>)}
+                  <PreviewCard
+                    slot={slot}
+                    device={findDevice(slot.deviceId)}
+                    display={workspaceDisplay}
+                    showToolbar={showChrome || focusMode}
+                    showCaption={showChrome || focusMode}
+                    align="bottom"
+                    visualsActive={allDevicesUrl === null}
+                    removable={slots.length > 1}
+                    onCapture={captureSlot}
+                    capturePending={capturing && capturingSlotId === slot.id}
+                    focused={focusMode}
+                    first={index === 0}
+                    last={index === slots.length - 1}
+                    revealToolbar={showFirstRun}
+                    flowRecording={flowRecording && activeSlotId === slot.id}
+                    flowReplay={flowReplay}
+                    onFlowStep={recordFlowStep}
+                    onFlowResult={receiveFlowResult}
+                    onChangeDevice={changeSlotDevice}
+                    previousDevice={neighbours.get(slot.id)?.previous}
+                    nextDevice={neighbours.get(slot.id)?.next}
+                    onSwitchDevice={switchSlotDevice}
+                    positionKey={singleSlotId === null ? "all" : "one"}
+                    onExpand={focusSlot}
+                    onFixPrompt={fixPromptForSlot}
+                    focusNavigation={focusNavigation}
+                    onScaleChange={updateScale}
+                    onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}
+                    designOverlay={comparing && compareMode === "overlay" && designReferences[slot.id] ? {
+                      image: designReferences[slot.id],
+                      opacity: overlayOpacity,
+                      adjusting: !overlayLocked,
+                      blend: overlayBlend,
+                      placement: overlayPlacements[slot.id],
+                      onPlacementChange: (placement) => setOverlayPlacements((current) => ({ ...current, [slot.id]: placement })),
+                    } : undefined}
+                  />
+                  {showChrome && !focusMode && index < slots.length - 1 && !narrowLayout && (
                     <div
-                      className={`absolute inset-y-0 left-1/2 w-px transition-colors group-hover:bg-[#0f9f8f] ${dark ? "bg-white/20" : "bg-slate-300"}`}
-                    />
-                    <span
-                      className={`relative grid h-9 w-4 place-items-center rounded-full border shadow-sm transition-colors group-hover:border-[#0f9f8f] group-hover:bg-[#0f9f8f] group-hover:text-white ${dark ? "border-white/20 bg-[#1a1e27] text-slate-400" : "border-slate-300 bg-white text-slate-500"}`}
+                      role="separator"
+                      aria-label={t("resizeAdjacentViewports")}
+                      aria-orientation="vertical"
+                      title={t("resizeAdjacentViewports")}
+                      onMouseDown={(event) => startResize(event, index)}
+                      onDoubleClick={() => setWidths(slots.map(() => 100 / slots.length))}
+                      className="group/grip absolute end-0 top-0 z-20 flex h-full w-7 translate-x-1/2 cursor-col-resize items-center justify-center pb-11 rtl:-translate-x-1/2"
                     >
-                      <GripVertical size={12} />
-                    </span>
-                  </div>
-                )}
+                      <span className="grid h-9 w-4 place-items-center rounded-lg border border-line bg-surface text-faint shadow-lift transition-colors group-hover/grip:border-accent group-hover/grip:text-accent">
+                        <GripIcon />
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {compare && !viewMode && compareMode === "side-by-side" && compareDevice && (
+              <div className="flex min-w-0 flex-1 flex-col">
+                <DesignPane
+                  image={compareImage}
+                  fileName={designNames[compareSlotId]}
+                  deviceName={compareDevice.name}
+                  width={comparePaneWidth}
+                  height={comparePaneHeight}
+                  scrollTop={designScrollLinked ? designScrollTop * compareScale : undefined}
+                  onImage={(image, name) => setDesign(compareSlotId, image, name)}
+                  onRemove={() => setDesign(compareSlotId)}
+                  onMarkUp={(image) => {
+                    setAnnotationImage(image);
+                    setAnnotationMeta(captureMetaForSlot(compareSlotId));
+                    setAnnotationOpen(true);
+                    reviewPrompt.noteSuccessfulAction();
+                  }}
+                />
               </div>
-            ))}
+            )}
           </div>
+
+          {compare && !viewMode && compareSlot && (
+            <>
+              <CompareControls
+                mode={compareMode}
+                opacity={overlayOpacity}
+                blend={overlayBlend}
+                locked={overlayLocked}
+                scrollLinked={designScrollLinked}
+                zoomLabel={`${Math.round(compareScale * 100)}%`}
+                hasDesign={Boolean(compareImage)}
+                onOpacityChange={setOverlayOpacity}
+                onBlendChange={setOverlayBlend}
+                onLockedChange={setOverlayLocked}
+                onReset={() => setOverlayPlacements((current) => { const next = { ...current }; delete next[compareSlotId]; return next; })}
+                onScrollLinkedChange={setDesignScrollLinked}
+                onZoomOut={() => zoomSlot(compareSlotId, "out")}
+                onZoomIn={() => zoomSlot(compareSlotId, "in")}
+                onZoomReset={() => setSlotZoomMode(compareSlotId, "fit")}
+                onAddDesign={() => overlayFileInput.current?.click()}
+              />
+              <input ref={overlayFileInput} type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="sr-only" tabIndex={-1}
+                onChange={(event) => { readDesignFile(event.target.files?.[0], (image, name) => setDesign(compareSlotId, image, name)); event.target.value = ""; }} />
+            </>
+          )}
+
+          {viewMode && (
+            <ViewModeBar
+              single={viewSingle}
+              position={`${activeIndex + 1} / ${slots.length}`}
+              canStep={slots.length > 1}
+              onShowAll={() => setViewSingle(false)}
+              onShowOne={() => setViewSingle(true)}
+              onPrevious={() => stepActive(-1)}
+              onNext={() => stepActive(1)}
+              onExit={exitViewMode}
+              zoomLabel={`${Math.round((scales[slots[activeIndex]?.id ?? ""] ?? 0) * 100)}%`}
+              onZoomOut={() => zoomSlot(slots[activeIndex].id, "out")}
+              onZoomIn={() => zoomSlot(slots[activeIndex].id, "in")}
+              onZoomReset={() => setSlotZoomMode(slots[activeIndex].id, "fit")}
+            />
+          )}
         </main>
       </div>
-      </div>
 
-      {allDevicesUrl !== null && <AllDevicesView key={allDevicesUrl} url={allDevicesUrl} onClose={closeAllDevices} onOpenDevice={openGalleryDevice}/>}
+      <DevicePicker
+        open={popover === "picker"}
+        anchorRef={addRef}
+        target={pickerTarget}
+        slots={slots}
+        maxSlots={maxPreviewSlots}
+        sets={deviceSets}
+        onClose={closePicker}
+        onAdd={(deviceId) => addSlot(deviceId)}
+        onRemove={removeSlot}
+        onReplace={(slotId, deviceId) => setSlotDevice(slotId, deviceId)}
+        onAddInstead={() => setPickerTarget({ kind: "add" })}
+        onApplySet={(deviceIds) => { applyDevicePreset(deviceIds); setFocusedSlotId(null); }}
+        onDeleteCustom={deleteCustomViewport}
+      />
+      <SettingsPopover
+        open={popover === "settings"}
+        anchorRef={settingsRef}
+        dark={dark}
+        browserBar={browserBar}
+        onClose={closePopover}
+        onThemeChange={(nextDark) => updateDisplay((current) => ({ ...current, darkMode: nextDark }))}
+        onBrowserBarChange={changeBrowserBar}
+        onHelp={() => setShowHelp(true)}
+        onTour={() => setShowFirstRun(true)}
+        onWhatsNew={() => setReleaseNotes(CURRENT_RELEASE_NOTES)}
+        onPermissions={() => setShowPermissions(true)}
+      />
+      <FixPromptPopover
+        open={popover === "fix"}
+        anchorRef={fixRef}
+        onClose={closePopover}
+        pageUrl={getSlotUrl(activeSlotId) || slots[0]?.url || ""}
+        devices={reviewDevices}
+        initialDeviceIds={fixDeviceIds}
+      />
+      <RecordMenu
+        open={popover === "record"}
+        anchorRef={recordRef}
+        onClose={closePopover}
+        tabRecording={recording}
+        tabRecordingTime={formatDuration(recordingSeconds)}
+        canRecordTab={Boolean(sourceTabId)}
+        onToggleTabRecording={() => void toggleRecording()}
+        flowRecording={flowRecording}
+        flowStepCount={recordedFlow.length}
+        onToggleFlowRecording={toggleFlowRecording}
+        onReplayFlow={replayRecordedFlow}
+        onClearFlow={clearRecordedFlow}
+        flowStatus={flowStatus}
+        canResumeFlow={Object.values(flowResults).some((result) => result.status === "paused")}
+        onResumeFlow={resumePausedFlow}
+      />
+
+      {allDevicesUrl !== null && (
+        <AllDevicesView
+          key={allDevicesUrl}
+          url={allDevicesUrl}
+          onClose={closeAllDevices}
+          onOpenDevice={openGalleryDevice}
+          onAddDevice={addGalleryDevice}
+          onCloseViewer={closeViewer}
+          settings={{
+            browserBar,
+            onBrowserBarChange: changeBrowserBar,
+            onHelp: () => setShowHelp(true),
+            onTour: () => { closeAllDevices(); setShowFirstRun(true); },
+            onWhatsNew: () => setReleaseNotes(CURRENT_RELEASE_NOTES),
+            onPermissions: () => setShowPermissions(true),
+          }}
+        />
+      )}
 
       {annotationOpen && (
         <AnnotationOverlay
           imageUrl={annotationImage}
           meta={annotationMeta ?? captureMeta}
+          fixPrompt={{ pageUrl: annotationMeta?.url ?? captureMeta.url, devices: reviewDevices }}
           onClose={() => {
             setAnnotationOpen(false);
             setAnnotationMeta(undefined);
@@ -986,31 +909,13 @@ export function SimulatorApp() {
         />
       )}
       {captureError && (
-        <div role="alert" className={`fixed bottom-3 left-1/2 z-[100] -translate-x-1/2 rounded-md border px-3 py-2 text-xs font-semibold shadow-sm ${dark ? "border-white/10 bg-[#171b23] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}>
+        <div role="alert" className="fixed bottom-3 left-1/2 z-[100] -translate-x-1/2 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-semibold text-ink shadow-float">
           {captureError}
         </div>
       )}
-      {showCustomDevice && (
-        <CustomDeviceModal
-          dark={dark}
-          onClose={() => setShowCustomDevice(false)}
-          onCreated={(deviceId, orientation) => {
-            addSlot(deviceId, orientation);
-            setShowCustomDevice(false);
-          }}
-        />
-      )}
-      {showReviewIssue && (
-        <ReviewIssueModal
-          dark={dark}
-          pageUrl={slots[0]?.url ?? ""}
-          devices={reviewDevices}
-          onClose={() => setShowReviewIssue(false)}
-        />
-      )}
       {showPermissions && <PermissionsInfoModal dark={dark} onClose={() => setShowPermissions(false)} />}
       {showHelp && <HelpModal dark={dark} review={reviewPrompt} onClose={() => setShowHelp(false)} />}
-      {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} toolsOpen={sidebarOpen} compact={narrowLayout} onToolsOpenChange={setSidebarOpen} />}
+      {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
       {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
       {(reviewPrompt.visible || reviewPromptPreview) && (
         <ReviewPromptModal
@@ -1025,108 +930,137 @@ export function SimulatorApp() {
   );
 }
 
-function SidebarSection({
-  title,
-  meta,
-  action,
-  dark,
-  active,
-  children,
-}: {
-  title: string;
-  meta?: string;
-  action?: ReactNode;
-  dark: boolean;
-  active?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <section>
-      <div className="mb-1 flex items-center justify-between">
-        <h2
-          role={active ? "status" : undefined}
-          aria-live={active ? "polite" : undefined}
-          className={`flex min-w-0 items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] ${active ? "text-red-500" : dark ? "text-slate-400" : "text-slate-500"}`}
-        >
-          {active && <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-current" />}
-          {title}
-        </h2>
-        {action ??
-          (meta && (
-            <span
-              className={`text-[9px] font-bold ${dark ? "text-slate-400" : "text-slate-500"}`}
-            >
-              {meta}
-            </span>
-          ))}
-      </div>
-      <div className="flex flex-col gap-1.5">{children}</div>
-    </section>
-  );
-}
-
-function ActionRow({
-  icon,
-  label,
-  dark,
-  onClick,
-  disabled,
-  active,
-  activeTone = "red",
-}: {
-  icon: ReactNode;
-  label: string;
-  dark: boolean;
-  onClick: () => void;
-  disabled?: boolean;
-  active?: boolean;
-  activeTone?: "red" | "teal";
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={label}
-      disabled={disabled}
-      aria-pressed={active}
-      className={`flex h-8 w-full items-center gap-2 rounded-[8px] px-2 text-left text-[11px] font-semibold transition disabled:opacity-35 ${active ? activeTone === "teal" ? dark ? "bg-teal-500/10 text-teal-300" : "bg-teal-500/10 text-teal-700" : "bg-red-500/10 text-red-500" : dark ? "text-slate-400 hover:bg-white/[0.055] hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
-    >
-      <span className="shrink-0">{icon}</span>
-      <span className="min-w-0 flex-1 truncate">{label}</span>
-      {!active && <ChevronRight size={11} className="shrink-0 opacity-35" />}
-    </button>
-  );
-}
-
-async function cropScreenshotToElement(dataUrl: string, element: HTMLElement): Promise<string> {
+async function capturedImage(capture: () => Promise<TabCaptureResult>, fallbackError: string): Promise<HTMLImageElement> {
+  let result = await capture();
+  // Chrome allows two tab captures per second; a cutout needs two in a row.
+  if (result.error?.includes("MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND")) {
+    await new Promise(resolve => window.setTimeout(resolve, 600));
+    result = await capture();
+  }
+  if (!result.dataUrl) throw new Error(result.error ?? fallbackError);
   const image = new Image();
-  image.src = dataUrl;
+  image.src = result.dataUrl;
   await image.decode();
-  const rect = element.getBoundingClientRect();
+  return image;
+}
+
+// The element's bounds in screenshot pixels. Derive the size from both edges
+// so fractional placement cannot add or drop a bottom/right row. `inner` keeps
+// only pixels the element fully covers, for cutouts whose edges must not mix
+// in whatever is painted beside the element.
+function elementPixelRect(element: HTMLElement, image: HTMLImageElement, inner = false): PixelRect {
+  const rect = inner ? visibleRect(element) : element.getBoundingClientRect();
   const scaleX = image.naturalWidth / window.innerWidth;
   const scaleY = image.naturalHeight / window.innerHeight;
-  // Preserve every boundary pixel of the scaled device; derive size from both
-  // edges so fractional placement cannot add or drop a bottom/right row.
-  const sourceX = Math.max(0, Math.floor(rect.left * scaleX));
-  const sourceY = Math.max(0, Math.floor(rect.top * scaleY));
-  const sourceWidth = Math.min(image.naturalWidth, Math.ceil(rect.right * scaleX)) - sourceX;
-  const sourceHeight = Math.min(image.naturalHeight, Math.ceil(rect.bottom * scaleY)) - sourceY;
-  if (sourceWidth <= 0 || sourceHeight <= 0) throw new Error("The device is outside the visible area. Zoom out and try again.");
+  const start = inner ? Math.ceil : Math.floor;
+  const end = inner ? Math.floor : Math.ceil;
+  const x = Math.max(0, start(rect.left * scaleX));
+  const y = Math.max(0, start(rect.top * scaleY));
+  return {
+    x,
+    y,
+    width: Math.min(image.naturalWidth, end(rect.right * scaleX)) - x,
+    height: Math.min(image.naturalHeight, end(rect.bottom * scaleY)) - y,
+  };
+}
+
+// The part of an element not clipped away by scrolling or overflow-hidden
+// ancestors, e.g. a device slightly wider than its column.
+function visibleRect(element: HTMLElement) {
+  let { left, top, right, bottom } = element.getBoundingClientRect();
+  for (let parent = element.parentElement; parent; parent = parent.parentElement) {
+    if (getComputedStyle(parent).overflow === "visible") continue;
+    const clip = parent.getBoundingClientRect();
+    left = Math.max(left, clip.left);
+    top = Math.max(top, clip.top);
+    right = Math.min(right, clip.right);
+    bottom = Math.min(bottom, clip.bottom);
+  }
+  return { left, top, right, bottom };
+}
+
+function cropToCanvas(image: HTMLImageElement, region: PixelRect) {
+  if (region.width <= 0 || region.height <= 0) throw new Error("The device is outside the visible area. Zoom out and try again.");
   const canvas = document.createElement("canvas");
-  canvas.width = sourceWidth;
-  canvas.height = sourceHeight;
-  canvas.getContext("2d")?.drawImage(
-    image,
-    sourceX,
-    sourceY,
-    sourceWidth,
-    sourceHeight,
-    0,
-    0,
-    sourceWidth,
-    sourceHeight,
-  );
-  return canvas.toDataURL("image/png");
+  canvas.width = region.width;
+  canvas.height = region.height;
+  const context = canvas.getContext("2d", { willReadFrequently: true })!;
+  context.drawImage(image, region.x, region.y, region.width, region.height, 0, 0, region.width, region.height);
+  return { canvas, context };
+}
+
+async function cropScreenshotToElement(image: HTMLImageElement, element: HTMLElement): Promise<string> {
+  return cropToCanvas(image, elementPixelRect(element, image)).canvas.toDataURL("image/png");
+}
+
+// Captures one device with only its frame and page: the same view over a white
+// and then a black backdrop gives every pixel's opacity (see extractMatte).
+async function captureDeviceCutout(target: HTMLElement, capture: () => Promise<TabCaptureResult>, fallbackError: string): Promise<string> {
+  const shots: HTMLImageElement[] = [];
+  try {
+    for (const matte of ["white", "black"] as const) {
+      target.dataset.captureMatte = matte;
+      shots.push(await captureShowingMatte(target, matte, capture, fallbackError));
+    }
+  } finally {
+    delete target.dataset.captureMatte;
+  }
+  const [onWhite, onBlack] = shots;
+  const region = elementPixelRect(target, onBlack, true);
+  const white = cropToCanvas(onWhite, region).context.getImageData(0, 0, region.width, region.height);
+  const black = cropToCanvas(onBlack, region);
+  const page = target.querySelector<HTMLElement>("[data-preview-surface]");
+  const output = black.context.createImageData(region.width, region.height);
+  output.data.set(extractMatte(white.data, black.context.getImageData(0, 0, region.width, region.height).data, region.width, page ? pageRect(page, region, onBlack) : undefined));
+  black.context.putImageData(output, 0, 0);
+  return black.canvas.toDataURL("image/png");
+}
+
+// A busy page can delay the compositor, so a tab capture may return a frame
+// from before the backdrop (and the hidden controls) were painted. Mixing such
+// a frame with a current one leaves menus and haze in the cutout, so retry
+// until the capture shows the requested backdrop.
+async function captureShowingMatte(target: HTMLElement, matte: "white" | "black", capture: () => Promise<TabCaptureResult>, fallbackError: string) {
+  for (let attempt = 1; ; attempt++) {
+    const image = await capturedImage(capture, fallbackError);
+    if (attempt === 3 || showsMatte(image, target, matte)) return image;
+    await new Promise(resolve => window.setTimeout(resolve, 250));
+  }
+}
+
+// Samples the backdrop ring painted just outside each edge of the device.
+function showsMatte(image: HTMLImageElement, target: HTMLElement, matte: "white" | "black") {
+  const rect = target.getBoundingClientRect();
+  const scaleX = image.naturalWidth / window.innerWidth;
+  const scaleY = image.naturalHeight / window.innerHeight;
+  const middleX = rect.left + rect.width / 2;
+  const middleY = rect.top + rect.height / 2;
+  const points = [[middleX, rect.top - 1.5], [middleX, rect.bottom + 1.5], [rect.left - 1.5, middleY], [rect.right + 1.5, middleY]]
+    .filter(([x, y]) => x >= 0 && y >= 0 && x < window.innerWidth && y < window.innerHeight);
+  if (points.length === 0) return true;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 1;
+  const context = canvas.getContext("2d", { willReadFrequently: true })!;
+  const expected = matte === "white" ? 255 : 0;
+  const matches = points.filter(([x, y]) => {
+    context.clearRect(0, 0, 1, 1);
+    context.drawImage(image, Math.floor(x * scaleX), Math.floor(y * scaleY), 1, 1, 0, 0, 1, 1);
+    const [red, green, blue] = context.getImageData(0, 0, 1, 1).data;
+    return [red, green, blue].every(channel => Math.abs(channel - expected) <= 6);
+  });
+  return matches.length * 2 >= points.length;
+}
+
+// The page area relative to the cutout, inset past its rounded screen corners.
+function pageRect(page: HTMLElement, region: PixelRect, image: HTMLImageElement): PixelRect {
+  const bounds = elementPixelRect(page, image);
+  const inset = Math.ceil(16 * (image.naturalWidth / window.innerWidth));
+  return {
+    x: bounds.x - region.x + inset,
+    y: bounds.y - region.y + inset,
+    width: Math.max(0, bounds.width - inset * 2),
+    height: Math.max(0, bounds.height - inset * 2),
+  };
 }
 
 function formatDuration(seconds: number) {

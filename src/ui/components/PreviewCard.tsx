@@ -1,4 +1,5 @@
 import { usePointerDrag } from "../hooks/usePointerDrag";
+import { useStableCallback } from "../hooks/useStableCallback";
 import { adjustPlacement, type PlacementAdjustment } from "../interactions/placement";
 import { readPreviewHealthReport } from "../../domain/device/preview-health";
 import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
@@ -8,23 +9,9 @@ import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronDown,
-  ExternalLink,
-  ImageDown,
-  Minus,
-  MoreVertical,
-  Plus,
-  RefreshCw,
-  RotateCw,
-  Search,
-  Settings2,
-  Star,
-  X,
-} from "lucide-react";
-import { forwardRef, memo, useEffect, useLayoutEffect, useMemo, useRef, useState, useId, type ReactNode } from "react";
+import { AlertIcon, CameraIcon, ChevronLeftIcon, ChevronRightIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
+import { PreviewToolbar, type FocusNavigation } from "./PreviewToolbar";
+import { memo, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import {
   supportsOrientation,
   toLandscapeAwareSize,
@@ -37,8 +24,7 @@ import type {
   DisplaySettings,
   PreviewSlot,
 } from "../../domain/simulator/simulator.types";
-import { useSimulator } from "../../app/SimulatorProvider";
-import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
+import { useSimulatorRef, useSimulatorSelector } from "../../app/SimulatorProvider";
 import { useI18n } from "../../app/i18n";
 import {
   DeviceFrame,
@@ -50,6 +36,8 @@ import {
 } from "./DeviceFrame";
 
 const CARD_PAD = 16;
+// Room above the device for its floating toolbar.
+const TOOLBAR_SPACE = 56;
 
 interface ScrollSyncPayload {
   slotId: string;
@@ -96,10 +84,10 @@ interface PreviewCardProps {
   display: DisplaySettings;
   showToolbar?: boolean;
   visualsActive?: boolean;
-  onScaleChange?: (scale: number) => void;
+  onScaleChange?: (scale: number, slotId: string) => void;
   onLoadStateChange?: (id: string, status: GalleryLoadResult) => void;
   removable: boolean;
-  onCapture?: () => void;
+  onCapture?: (slotId: string) => void;
   capturePending?: boolean;
   focused: boolean;
   first: boolean;
@@ -112,9 +100,28 @@ interface PreviewCardProps {
     image: string;
     opacity: number;
     adjusting: boolean;
+    blend?: "normal" | "difference";
     placement?: { x: number; y: number; width: number; height: number };
     onPlacementChange: (placement: { x: number; y: number; width: number; height: number }) => void;
   };
+  /** Bottom-aligns the device so every preview in a row shares a baseline. */
+  align?: "bottom" | "center";
+  showCaption?: boolean;
+  /** Keeps the floating toolbar visible, e.g. while the feature tour points at it. */
+  revealToolbar?: boolean;
+  focusNavigation?: FocusNavigation;
+  // Slot-aware handlers let a parent pass one stable function to every card.
+  onChangeDevice?: (slotId: string) => void;
+  /** Neighbouring devices of the same type and the handler that switches to one. */
+  previousDevice?: Device;
+  nextDevice?: Device;
+  onSwitchDevice?: (slotId: string, deviceId: string) => void;
+  /** Changing this returns a dragged device to its default position. */
+  positionKey?: string;
+  onExpand?: (slotId: string) => void;
+  onFixPrompt?: (slotId: string) => void;
+  onPageScroll?: (scrollTop: number) => void;
+  expandLabel?: string;
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -158,6 +165,19 @@ export const PreviewCard = memo(function PreviewCard({
   onFlowStep,
   onFlowResult,
   designOverlay,
+  align = "center",
+  showCaption = false,
+  revealToolbar = false,
+  focusNavigation,
+  onChangeDevice,
+  previousDevice,
+  nextDevice,
+  onSwitchDevice,
+  positionKey,
+  onExpand,
+  onFixPrompt,
+  onPageScroll,
+  expandLabel,
 }: PreviewCardProps) {
   const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -213,19 +233,10 @@ export const PreviewCard = memo(function PreviewCard({
   const [pageSurfaces, setPageSurfaces] = useState<BrowserSurfaceColors | undefined>();
   const [browserCollapsed, setBrowserCollapsed] = useState(0);
   const [browserSettingsOpen, setBrowserSettingsOpen] = useState(false);
-  const {
-    slots,
-    activeSlotId,
-    setActiveSlot,
-    removeSlot,
-    rotateSlot,
-    zoomSlot,
-    setSlotDevice,
-    setSlotUrl,
-    observeSlotUrl,
-    reloadSlot,
-    moveSlot,
-  } = useSimulator();
+  // Cards read actions and peers on demand; they re-render only when their
+  // own active state changes, not whenever another preview loads or scrolls.
+  const simulator = useSimulatorRef();
+  const isActive = useSimulatorSelector(value => value.activeSlotId === slot.id);
 
   const canRotate = supportsOrientation(device);
   const effectiveOrientation = canRotate ? slot.orientation : "portrait";
@@ -273,17 +284,36 @@ export const PreviewCard = memo(function PreviewCard({
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
 
-  useLayoutEffect(() => { onScaleChange?.(scale); }, [onScaleChange, scale]);
+  useLayoutEffect(() => { onScaleChange?.(scale, slot.id); }, [onScaleChange, scale, slot.id]);
+
+  const startDrag = usePointerDrag();
+  // Devices can be dragged anywhere inside their space; resetting zoom recentres them.
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  // Switching to another device keeps where it was dragged; rotating, Free view
+  // or a new layout (such as showing one device) starts from the default spot.
+  useEffect(() => { setOffset({ x: 0, y: 0 }); }, [effectiveOrientation, freeView, positionKey]);
+
+  function startMove(event: React.PointerEvent) {
+    if (event.button !== 0) return;
+    if ((event.target as Element).closest("button, a, input, textarea, select, [data-mobile-keyboard]") && event.currentTarget !== event.target && !(event.currentTarget as Element).matches("[data-move-handle]")) return;
+    const origin = offset;
+    event.stopPropagation();
+    startDrag(event, (deltaX, deltaY) => setOffset({ x: origin.x + deltaX, y: origin.y + deltaY }));
+  }
+
+  function resetView() {
+    setOffset({ x: 0, y: 0 });
+    simulator.current.setSlotZoomMode(slot.id, "fit");
+  }
 
   const fittedOverlayPlacement = {
-    x: containerSize.width > 0 ? ((containerSize.width - frameSize.width * scale) / 2 / containerSize.width) * 100 : 0,
-    y: containerSize.height > 0 ? ((containerSize.height - frameSize.height * scale) / 2 / containerSize.height) * 100 : 0,
+    x: containerSize.width > 0 ? (((containerSize.width - frameSize.width * scale) / 2 + offset.x) / containerSize.width) * 100 : 0,
+    y: containerSize.height > 0 ? (((containerSize.height - frameSize.height * scale) / (align === "bottom" ? 1 : 2) + offset.y) / containerSize.height) * 100 : 0,
     width: containerSize.width > 0 ? (frameSize.width * scale / containerSize.width) * 100 : 100,
     height: containerSize.height > 0 ? (frameSize.height * scale / containerSize.height) * 100 : 100,
   };
   const overlayPlacement = designOverlay?.placement ?? fittedOverlayPlacement;
 
-  const startDrag = usePointerDrag();
 
   function startOverlayAdjustment(event: React.PointerEvent, kind: PlacementAdjustment) {
     if (!designOverlay?.adjusting || event.button !== 0) return;
@@ -348,6 +378,8 @@ export const PreviewCard = memo(function PreviewCard({
     // Use the browser's measured box instead of forcing a layout per card.
     const ro = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
+      // A hidden preview reports 0×0. Keep its last size so the document stays mounted.
+      if (width === 0 && height === 0) return;
       setContainerSize(current => current.width === width && current.height === height ? current : { width, height });
     });
     ro.observe(el);
@@ -478,6 +510,7 @@ export const PreviewCard = memo(function PreviewCard({
         const top = Number(data.scrollTop), delta = Number(data.deltaTop);
         if (Number.isFinite(top) && Number.isFinite(delta)) {
           setBrowserCollapsed(current => nextBrowserCollapse(current, top, delta));
+          onPageScroll?.(top);
         }
         return;
       }
@@ -502,7 +535,7 @@ export const PreviewCard = memo(function PreviewCard({
           window.setTimeout(() => sendFlowReplay(nextStep), 150);
         }
         currentPageUrlRef.current = navigation.url;
-        observeSlotUrl(slot.id, navigation.url);
+        simulator.current.observeSlotUrl(slot.id, navigation.url);
         if (display.navigationSync && navigation.changed) {
           window.dispatchEvent(new CustomEvent("MDV_NAVIGATION_EVENT", {
             detail: { slotId: slot.id, url: navigation.url },
@@ -597,7 +630,7 @@ export const PreviewCard = memo(function PreviewCard({
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [device.id, device.type, frameProfile.platform, display.navigationSync, display.scrollSync, flowRecording, flowReplay, onFlowResult, onFlowStep, observeSlotUrl, onLoadStateChange, slot.id, slot.url]);
+  }, [device.id, device.type, frameProfile.platform, display.navigationSync, display.scrollSync, flowRecording, flowReplay, onFlowResult, onFlowStep, onLoadStateChange, onPageScroll, slot.id, slot.url]);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -628,13 +661,14 @@ export const PreviewCard = memo(function PreviewCard({
     if (!display.scrollSync || blocked) return;
     const onRequest = (event: Event) => {
       const { targetSlotId } = (event as CustomEvent<{ targetSlotId: string }>).detail;
+      const { activeSlotId, slots } = simulator.current;
       const sourceId = activeSlotId !== targetSlotId ? activeSlotId : slots.find(candidate => candidate.id !== targetSlotId)?.id;
       if (sourceId !== slot.id) return;
       iframeRef.current?.contentWindow?.postMessage({ type: "MDV_SCROLL_SYNC_SNAPSHOT", slotId: slot.id, targetSlotId }, "*");
     };
     window.addEventListener("MDV_SCROLL_SYNC_REQUEST", onRequest);
     return () => window.removeEventListener("MDV_SCROLL_SYNC_REQUEST", onRequest);
-  }, [activeSlotId, blocked, display.scrollSync, slot.id, slots]);
+  }, [blocked, display.scrollSync, simulator, slot.id]);
 
   useEffect(() => {
     if (!display.scrollSync || blocked) return;
@@ -663,7 +697,7 @@ export const PreviewCard = memo(function PreviewCard({
   useLayoutEffect(() => {
     syncScrollBridge(iframeRef.current);
     const enabling = display.scrollSync && !previousScrollSyncRef.current;
-    if (enabling && activeSlotId === slot.id) {
+    if (enabling && simulator.current.activeSlotId === slot.id) {
       iframeRef.current?.contentWindow?.postMessage({
         type: "MDV_SCROLL_SYNC_SNAPSHOT",
         slotId: slot.id,
@@ -703,227 +737,260 @@ export const PreviewCard = memo(function PreviewCard({
     const onNavigation = (event: Event) => {
       const detail = (event as CustomEvent<{ slotId: string; url: string }>).detail;
       if (!detail || detail.slotId === slot.id || !navigationRef.current.follow(detail.url)) return;
-      setSlotUrl(slot.id, detail.url);
+      simulator.current.setSlotUrl(slot.id, detail.url);
     };
     window.addEventListener("MDV_NAVIGATION_EVENT", onNavigation);
     return () => window.removeEventListener("MDV_NAVIGATION_EVENT", onNavigation);
-  }, [display.navigationSync, setSlotUrl, slot.id, slot.url]);
+  }, [display.navigationSync, simulator, slot.id, slot.url]);
 
 
 
+
+  const scaledHeight = frameSize.height * scale;
+  const deviceTop = containerSize.height > 0
+    ? align === "bottom" ? containerSize.height - scaledHeight : (containerSize.height - scaledHeight) / 2
+    : 0;
+  const toolbarTop = Math.max(6, TOOLBAR_SPACE + deviceTop + offset.y - 48);
+  // The toolbar follows a dragged device sideways but always stays fully on
+  // screen; a toolbar wider than its column is centred and may overlap
+  // neighbours (the hovered column is raised above them).
+  const [toolbarShift, setToolbarShift] = useState(0);
+  // Measured after layout changes and again just before the toolbar appears,
+  // since column widths may still be animating when the layout first settles.
+  const placeToolbar = useStableCallback(() => {
+    const wrapper = toolbarRef.current;
+    const bar = wrapper?.querySelector<HTMLElement>("[data-device-toolbar]");
+    if (!wrapper || !bar) return;
+    // The section, not the shifted wrapper, gives the card's own position.
+    const card = (wrapper.parentElement ?? wrapper).getBoundingClientRect();
+    const bounds = (wrapper.closest("main, [data-all-devices-view]") ?? document.documentElement).getBoundingClientRect();
+    const half = bar.offsetWidth / 2;
+    const cardCenter = card.left + card.width / 2;
+    const min = bounds.left + 8 + half;
+    const max = bounds.right - 8 - half;
+    const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, cardCenter + offset.x));
+    setToolbarShift(Math.round(center - cardCenter));
+  });
+  useLayoutEffect(placeToolbar, [placeToolbar, offset.x, containerSize.width, device.id, showToolbar, capturePending, focusNavigation]);
+  // While the pointer is on the toolbar it stays put, so repeated clicks on
+  // previous/next keep hitting the same button as the device changes size.
+  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number } | null>(null);
+  const statusTop = Math.max(6, TOOLBAR_SPACE * (showToolbar ? 1 : 0) + deviceTop + offset.y + 8);
+  const openInTab = () => window.open(currentPageUrlRef.current || slot.url, "_blank", "noopener,noreferrer");
+  const viewportLabel = `${viewportSize.width}×${viewportSize.height}`;
 
   return (
     <section
       data-preview-slot-id={slot.id}
-      className={`@container/viewport flex h-full min-h-0 flex-col overflow-visible border-t transition-colors ${showToolbar && activeSlotId === slot.id ? "border-t-teal-500" : "border-t-transparent"}`}
-      style={{ minWidth: 0 }}
-      onClick={() => setActiveSlot(slot.id)}
-      onFocus={() => setActiveSlot(slot.id)}
+      data-active-slot={isActive || undefined}
+      className="group/device @container/viewport relative flex h-full min-h-0 min-w-0 flex-col"
+      onClick={() => simulator.current.setActiveSlot(slot.id)}
+      onFocus={() => { simulator.current.setActiveSlot(slot.id); placeToolbar(); }}
+      onPointerEnter={placeToolbar}
     >
-      {/* ── Per-card header ── */}
-      {showToolbar && <div
-        ref={toolbarRef}
-        data-device-toolbar
-        className={`relative flex h-8 shrink-0 flex-nowrap items-center gap-1 border-b px-2 transition-colors ${
-          display.darkMode
-            ? "border-white/10 bg-[#151922]"
-            : "border-black/[0.06] bg-white"
-        }`}
-      >
-        <DeviceSwitcher
-          currentDevice={device}
-          dark={display.darkMode}
-          onSwitch={(id) => setSlotDevice(slot.id, id)}
-          tourTarget={first ? "change-device" : undefined}
-          alignEnd={last}
-        />
-
-        <span className={`hidden @min-[300px]/viewport:inline shrink-0 px-1 text-[9px] font-medium ${display.darkMode ? "text-slate-500" : "text-slate-400"}`}>
-          {viewportSize.width} × {viewportSize.height}
-        </span>
-        <div data-viewport-zoom className="hidden @min-[240px]/viewport:flex shrink-0 items-center">
-          <CardBtn dark={display.darkMode} label={t("zoomOut")} onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
-          <CardBtn dark={display.darkMode} label={t("zoomIn")} onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
-        </div>
-        <button type="button" aria-label={t("viewportOptions")} title={t("viewportOptions")} aria-expanded={controlsOpen} onClick={() => setControlsOpen(value => !value)}
-          className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-teal-500 ${controlsOpen ? display.darkMode ? "bg-teal-400/10 text-teal-300" : "bg-teal-50 text-teal-700" : display.darkMode ? "text-slate-400 hover:bg-white/10 hover:text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"}`}><MoreVertical size={15}/></button>
-        {removable && <button type="button" data-remove-viewport aria-label={t("removeDevice")} title={t("removeDevice")}
-          onClick={event => { event.stopPropagation(); removeSlot(slot.id); }}
-          className={`grid h-7 w-7 shrink-0 place-items-center rounded-md transition focus-visible:outline-2 focus-visible:outline-teal-500 ${display.darkMode ? "text-slate-400 hover:bg-red-400/10 hover:text-red-300" : "text-slate-500 hover:bg-red-50 hover:text-red-600"}`}><X size={14}/></button>}
-        <div data-viewport-actions="compact"
-          onKeyDown={event => { if (event.key === "Escape") { setControlsOpen(false); setBrowserSettingsOpen(false); } }}
-          className={`${controlsOpen ? "flex" : "hidden"} absolute end-2 top-8 z-[60] max-h-[calc(100dvh-120px)] w-64 flex-col gap-1 overflow-y-auto rounded-xl border p-2 shadow-xl ${display.darkMode ? "border-white/15 bg-[#171a21]" : "border-slate-200 bg-white"}`}>
-        <div className="flex @min-[240px]/viewport:hidden">
-          <CardBtn dark={display.darkMode} label={t("zoomOut")} onClick={() => zoomSlot(slot.id, "out")}><Minus size={13} /></CardBtn>
-          <CardBtn dark={display.darkMode} label={t("zoomIn")} onClick={() => zoomSlot(slot.id, "in")}><Plus size={13} /></CardBtn>
-        </div>
-        {frameProfile.platform === "ios" && <div className="relative">
-          <CardBtn expanded dark={display.darkMode} label={t("browserAppearance")} onClick={() => setBrowserSettingsOpen(value => !value)}><Settings2 size={13}/></CardBtn>
-          {browserSettingsOpen && <div role="group" aria-label={t("browserAppearance")} className={`absolute right-0 top-8 z-[60] w-60 rounded-xl border p-3 shadow-xl ${display.darkMode ? "border-white/10 bg-[#171a21] text-white" : "border-slate-200 bg-white text-slate-900"}`}>
-            <BrowserAppearanceSettings device={device} slot={slot} geometry={browserGeometry} onClose={() => setBrowserSettingsOpen(false)}/>
-          </div>}
-        </div>}
-
-        <CardBtn expanded
-          dark={display.darkMode}
-          label={t("reloadPreview")}
-          onClick={() => reloadSlot(slot.id)}
+      {/* Clip enlarged previews here. The toolbar sits outside this clip box,
+          over its top inset, so a narrow column never cuts it off. */}
+      <div className={`relative min-h-0 flex-1 overflow-hidden ${showToolbar ? "pt-14" : ""}`}>
+        <div
+          ref={containerRef}
+          data-design-overlay-surface
+          className={`relative flex size-full min-h-0 min-w-0 justify-center ${align === "bottom" ? "items-end" : "items-center"}`}
         >
-          <RefreshCw size={14} className={bridgeStatus === "checking" ? "animate-spin" : ""} />
-        </CardBtn>
-        {bridgeStatus === "unavailable" && <CardBtn expanded dark={display.darkMode} label={t("openInTab")} onClick={() => window.open(currentPageUrlRef.current || slot.url, "_blank", "noopener,noreferrer")}><ExternalLink size={14}/></CardBtn>}
-        {onCapture && <CardBtn expanded dark={display.darkMode} label={t("captureAndAnnotate")} onClick={() => { setControlsOpen(false); setBrowserSettingsOpen(false); onCapture(); }} disabled={capturePending}>
-          <ImageDown size={13} className={capturePending ? "animate-pulse" : undefined} />
-        </CardBtn>}
-        {canRotate && (
-          <CardBtn expanded
-            dark={display.darkMode}
-            label={t("rotate")}
-            onClick={() => rotateSlot(slot.id)}
-          >
-            <RotateCw size={14} />
-          </CardBtn>
-        )}
-        <CardBtn expanded dark={display.darkMode} label={t("openInTab")} onClick={() => window.open(currentPageUrlRef.current || slot.url, "_blank", "noopener,noreferrer")}><ExternalLink size={13} /></CardBtn>
-        {!focused && !first && <CardBtn expanded dark={display.darkMode} label={t("moveViewportLeft")} onClick={() => moveSlot(slot.id, "left")}><ArrowLeft size={13} /></CardBtn>}
-        {!focused && !last && <CardBtn expanded dark={display.darkMode} label={t("moveViewportRight")} onClick={() => moveSlot(slot.id, "right")}><ArrowRight size={13} /></CardBtn>}
-        </div>
-      </div>}
-
-      {/* ── Canvas ── */}
-      {/* Clip enlarged previews here; toolbar menus and column resize handles
-          remain outside the clip. The canvas must not grow to the device size. */}
-      <div
-        ref={containerRef}
-        data-design-overlay-surface
-        className={`relative flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-hidden transition-colors ${display.darkMode ? "bg-[#101217]" : "bg-[#f5f5f3]"}`}
-      >
-        {containerSize.width > 0 && (
-          <div
-            className="shrink-0 origin-center"
-            data-device-capture
-            data-free-device-view={freeView ? "" : undefined}
-            style={{
-              width: frameSize.width,
-              height: frameSize.height,
-              transform: `scale(${scale})`,
-              marginTop: `${(frameSize.height * scale - frameSize.height) / 2}px`,
-              marginBottom: `${(frameSize.height * scale - frameSize.height) / 2}px`,
-              marginLeft: `${(frameSize.width * scale - frameSize.width) / 2}px`,
-              marginRight: `${(frameSize.width * scale - frameSize.width) / 2}px`,
-              ...(freeView ? {
-                "--mdv-free-width": `${viewportSize.width}px`,
-                "--mdv-free-height": `${Math.max(120, viewportSize.height - keyboardHeight)}px`,
-                position: "relative" as const,
-                overflow: "hidden",
-                borderRadius: 6,
-                boxShadow: `0 0 0 1px ${display.darkMode ? "#475569" : "#cbd5e1"},0 8px 28px #0f172a14`,
-              } : {}),
-            }}
-          >
-            <DeviceFrame
-              device={device}
-              showFrame={slot.showFrame}
-              showStatusBar={SHOW_CHROME.showStatusBar}
-              showBattery={SHOW_CHROME.showBattery}
-              showUrlBar={SHOW_CHROME.showUrlBar}
-              darkMode={display.darkMode}
-              url={slot.url}
-              viewportSize={viewportSize}
-              orientation={effectiveOrientation}
-              scrollProgress={browserCollapsed}
-              browserPreferences={slot.browserPreferences}
-              keyboard={keyboard}
-              onKeyboardAction={sendKeyboardAction}
-              pageSurfaces={pageSurfaces}
+          {containerSize.width > 0 && (
+            <div
+              // A device screenshot briefly paints known backdrops behind the
+              // device, spread well past its edges even at small zoom, to cut it
+              // out of the workspace (see captureDeviceCutout).
+              className={`shrink-0 origin-center cursor-grab touch-none active:cursor-grabbing data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
+              data-device-capture
+              data-free-device-view={freeView ? "" : undefined}
+              onPointerDown={startMove}
+              onDoubleClick={event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) setOffset({ x: 0, y: 0 }); }}
+              style={{
+                width: frameSize.width,
+                height: frameSize.height,
+                transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+                marginTop: `${(frameSize.height * scale - frameSize.height) / 2}px`,
+                marginBottom: `${(frameSize.height * scale - frameSize.height) / 2}px`,
+                marginLeft: `${(frameSize.width * scale - frameSize.width) / 2}px`,
+                marginRight: `${(frameSize.width * scale - frameSize.width) / 2}px`,
+                ...(freeView ? {
+                  "--mdv-free-width": `${viewportSize.width}px`,
+                  "--mdv-free-height": `${Math.max(120, viewportSize.height - keyboardHeight)}px`,
+                } : {}),
+              }}
             >
-              <PreviewSurface
-                guardEdges={!freeView && slot.showFrame}
-                scale={scale}
-                topColor={browserGeometry.neutralChrome ? pageSurfaces?.topGuardColor : pageSurfaces?.top ?? "#ffffff"}
-                bottomColor={browserGeometry.neutralChrome ? pageSurfaces?.bottomGuardColor : pageSurfaces?.bottom ?? "#ffffff"}
-              >
-                {blocked ? (
-                  <BlockedView
-                    url={slot.url}
-                    dark={display.darkMode}
-                    onCapture={onCapture}
-                    onReload={() => reloadSlot(slot.id)}
-                  />
-                ) : (
-                  <iframe
-                    ref={iframeRef}
-                    key={`${slot.id}-${slot.reloadToken}`}
-                    name={
-                      device.type === "phone" || device.type === "tablet"
-                        ? `mdv-mobile-preview-${slot.id}`
-                        : `mdv-preview-${slot.id}`
-                    }
-                    title={t("devicePreview", { name: device.name })}
-                    src={preparedUrl === slot.url ? preparedUrl : "about:blank"}
-                    loading="eager"
-                    className={`block h-full w-full overflow-auto border-0 ${
-                      display.darkMode ? "bg-[#0f172a]" : "bg-white"
-                    }`}
-                    style={{
-                      width: "100%",
-                      colorScheme: display.darkMode ? "dark" : "light",
-                      // Match the page at fractional raster edges, including
-                      // the clear gaps between Duo's floating glass groups.
-                      backgroundColor: pageSurfaces?.top ?? (display.darkMode ? "#0f172a" : "#ffffff"),
-                      scrollbarWidth: device.type === "phone" || device.type === "tablet" ? "none" : "auto",
-                    }}
-                    scrolling="auto"
-                    sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-storage-access-by-user-activation"
-                    onLoad={event => {
-                      const frame = event.currentTarget;
-                      if (frame.getAttribute("src") === "about:blank") return;
-                      // Preparing the frame initially creates an empty document.
-                      // Its load event must not release a website's queue slot.
-                      try { if (frame.contentDocument?.URL === "about:blank") return; } catch { /* Cross-origin website. */ }
-                      clearTimeout(healthTimer.current);
-                      setLoadIssue(null);
-                      if (typeof chrome === "undefined" || !chrome.runtime?.id) {
-                        onLoadStateChange?.(slot.id, "loaded");
-                        return;
-                      }
-                      const requestId = crypto.randomUUID();
-                      healthRequest.current = requestId;
-                      frame.contentWindow?.postMessage({ type: "MDV_PREVIEW_HEALTH_REQUEST", slotId: slot.id, requestId }, "*");
-                      healthTimer.current = setTimeout(() => {
-                        if (healthRequest.current !== requestId) return;
-                        setLoadIssue("unverified");
-                        onLoadStateChange?.(slot.id, "incomplete");
-                      }, 5000);
-                    }}
-                    onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
-                  />
-                )}
-              </PreviewSurface>
-            </DeviceFrame>
+              {renderFrame()}
+            </div>
+          )}
+          {designOverlay && <div
+            className={`absolute z-30 touch-none select-none ${designOverlay.blend === "difference" ? "mix-blend-difference" : ""} ${designOverlay.adjusting ? "cursor-move outline-2 outline-design shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "pointer-events-none outline-2 outline-design"}`}
+            style={{ left: `${overlayPlacement.x}%`, top: `${overlayPlacement.y}%`, width: `${overlayPlacement.width}%`, height: `${overlayPlacement.height}%`, opacity: designOverlay.opacity / 100 }}
+            onPointerDown={(event) => startOverlayAdjustment(event, "move")}
+            aria-label={t("adjustableDesignOverlay")}
+          >
+            <img src={designOverlay.image} alt={t("designOverlay")} draggable={false} className="block size-full" />
+            {designOverlay.adjusting && <>
+              <button type="button" aria-label={t("resizeOverlayWidth")} onPointerDown={(event) => startOverlayAdjustment(event, "width")} className="absolute -right-2 top-1/2 h-8 w-4 -translate-y-1/2 cursor-ew-resize rounded-full border-2 border-white bg-design shadow" />
+              <button type="button" aria-label={t("resizeOverlayHeight")} onPointerDown={(event) => startOverlayAdjustment(event, "height")} className="absolute -bottom-2 left-1/2 h-4 w-8 -translate-x-1/2 cursor-ns-resize rounded-full border-2 border-white bg-design shadow" />
+              <button type="button" aria-label={t("resizeOverlayBoth")} onPointerDown={(event) => startOverlayAdjustment(event, "both")} className="absolute -bottom-2 -right-2 size-5 cursor-nwse-resize rounded-full border-2 border-white bg-design shadow" />
+            </>}
+          </div>}
+        </div>
+
+
+        {loadIssue && !blocked && !capturePending && <div role="status" data-preview-load-issue={loadIssue}
+          className="pointer-events-none absolute inset-x-0 z-30 flex justify-center px-3"
+          style={{ top: statusTop }}>
+          <div className="pointer-events-auto flex max-w-full items-center gap-1.5 rounded-lg border border-warn-line bg-warn-soft py-1 pe-1 ps-2.5 text-xs font-semibold text-warn shadow-float">
+            <AlertIcon size={13} className="shrink-0"/>
+            <span className="min-w-0 truncate">{t(loadIssue === "resources" ? "previewResourceError" : "previewLoadUnverified")}</span>
+            <button type="button" onClick={(event) => { event.stopPropagation(); simulator.current.reloadSlot(slot.id); }} className="h-6 shrink-0 rounded-md bg-surface px-2 text-xs font-semibold text-warn">{t("retry")}</button>
           </div>
-        )}
-        {loadIssue && !blocked && <div role="status" data-preview-load-issue={loadIssue}
-          className="absolute inset-x-2 bottom-2 z-40 flex items-center justify-between gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-[11px] text-amber-950 shadow-sm">
-          <span>{t(loadIssue === "resources" ? "previewResourceError" : "previewLoadUnverified")}</span>
-          <button type="button" onClick={() => reloadSlot(slot.id)} className="shrink-0 rounded px-2 py-1 font-semibold hover:bg-amber-100">{t("reloadPreview")}</button>
-        </div>}
-        {designOverlay && <div
-          className={`absolute z-30 touch-none select-none ${designOverlay.adjusting ? "cursor-move border-2 border-amber-400 shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "pointer-events-none"}`}
-          style={{ left: `${overlayPlacement.x}%`, top: `${overlayPlacement.y}%`, width: `${overlayPlacement.width}%`, height: `${overlayPlacement.height}%`, opacity: designOverlay.opacity / 100 }}
-          onPointerDown={(event) => startOverlayAdjustment(event, "move")}
-          aria-label={t("adjustableDesignOverlay")}
-        >
-          <img src={designOverlay.image} alt={t("designOverlay")} draggable={false} className="block h-full w-full" />
-          {designOverlay.adjusting && <>
-            <button type="button" aria-label={t("resizeOverlayWidth")} onPointerDown={(event) => startOverlayAdjustment(event, "width")} className="absolute -right-2 top-1/2 h-8 w-4 -translate-y-1/2 cursor-ew-resize rounded-full border-2 border-white bg-amber-500 shadow" />
-            <button type="button" aria-label={t("resizeOverlayHeight")} onPointerDown={(event) => startOverlayAdjustment(event, "height")} className="absolute -bottom-2 left-1/2 h-4 w-8 -translate-x-1/2 cursor-ns-resize rounded-full border-2 border-white bg-amber-500 shadow" />
-            <button type="button" aria-label={t("resizeOverlayBoth")} onPointerDown={(event) => startOverlayAdjustment(event, "both")} className="absolute -bottom-2 -right-2 h-5 w-5 cursor-nwse-resize rounded-full border-2 border-white bg-amber-500 shadow" />
-          </>}
         </div>}
       </div>
+
+      {showToolbar && !capturePending && (
+        <div ref={toolbarRef} className="pointer-events-none absolute inset-x-0 z-40"
+          onPointerEnter={() => setPinnedToolbar({ top: toolbarTop, shift: toolbarShift })}
+          onPointerLeave={() => setPinnedToolbar(null)}
+          style={{ top: pinnedToolbar?.top ?? toolbarTop, transform: `translateX(${pinnedToolbar?.shift ?? toolbarShift}px)` }}>
+          <PreviewToolbar
+            deviceName={device.name}
+            zoomLabel={`${Math.round(scale * 100)}%`}
+            canRotate={canRotate}
+            removable={removable}
+            reloading={bridgeStatus === "checking"}
+            revealed={revealToolbar}
+            menuOpen={controlsOpen}
+            tourTarget={first ? "change-device" : undefined}
+            focusNavigation={focusNavigation}
+            onChangeDevice={onChangeDevice && (() => onChangeDevice(slot.id))}
+            previousDeviceName={previousDevice?.name}
+            nextDeviceName={nextDevice?.name}
+            onPreviousDevice={previousDevice && onSwitchDevice && (() => onSwitchDevice(slot.id, previousDevice.id))}
+            onNextDevice={nextDevice && onSwitchDevice && (() => onSwitchDevice(slot.id, nextDevice.id))}
+            onRotate={() => simulator.current.rotateSlot(slot.id)}
+            onZoomOut={() => simulator.current.zoomSlot(slot.id, "out")}
+            onZoomIn={() => simulator.current.zoomSlot(slot.id, "in")}
+            onResetZoom={resetView}
+            onMoveStart={startMove}
+            expandLabel={expandLabel}
+            onReload={() => simulator.current.reloadSlot(slot.id)}
+            onOpenInTab={openInTab}
+            onExpand={onExpand && (() => onExpand(slot.id))}
+            onFixPrompt={onFixPrompt && (() => onFixPrompt(slot.id))}
+            onMenu={() => setControlsOpen(value => !value)}
+            onRemove={() => simulator.current.removeSlot(slot.id)}
+            menu={
+              <div data-viewport-actions
+                onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); setControlsOpen(false); setBrowserSettingsOpen(false); } }}
+                className="absolute end-0 top-full z-[60] mt-2 flex max-h-[calc(100dvh-120px)] w-64 flex-col gap-0.5 overflow-y-auto rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
+                {browserSettingsOpen ? (
+                  <div role="group" aria-label={t("browserAppearance")} className="p-1.5">
+                    <BrowserAppearanceSettings device={device} slot={slot} geometry={browserGeometry} onClose={() => setBrowserSettingsOpen(false)}/>
+                  </div>
+                ) : <>
+                  <MenuItem label={t("openInTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
+                  {onCapture && <MenuItem label={t("captureAndAnnotate")} disabled={capturePending} onClick={() => { setControlsOpen(false); onCapture(slot.id); }}><CameraIcon size={15}/></MenuItem>}
+                  {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
+                  {!focused && !first && <MenuItem label={t("moveViewportLeft")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "left"); }}><ChevronLeftIcon size={15}/></MenuItem>}
+                  {!focused && !last && <MenuItem label={t("moveViewportRight")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "right"); }}><ChevronRightIcon size={15}/></MenuItem>}
+                </>}
+              </div>
+            }
+          />
+        </div>
+      )}
+
+      {showCaption && (
+        <div className="flex h-11 shrink-0 items-center justify-center px-2">
+          <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
+            className={`flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent ${isActive ? "font-semibold text-ink" : "font-medium text-ink-2"}`}>
+            <span className="truncate text-[13px]">{shortName(device.name)}</span>
+            <span className="shrink-0 font-mono text-xs font-medium text-muted">{viewportLabel}</span>
+          </button>
+        </div>
+      )}
     </section>
   );
+
+  function renderFrame() {
+    return (
+      <DeviceFrame
+        device={device}
+        showFrame={slot.showFrame}
+        showStatusBar={SHOW_CHROME.showStatusBar}
+        showBattery={SHOW_CHROME.showBattery}
+        showUrlBar={SHOW_CHROME.showUrlBar}
+        darkMode={display.darkMode}
+        url={slot.url}
+        viewportSize={viewportSize}
+        orientation={effectiveOrientation}
+        scrollProgress={browserCollapsed}
+        browserPreferences={slot.browserPreferences}
+        keyboard={keyboard}
+        onKeyboardAction={sendKeyboardAction}
+        pageSurfaces={pageSurfaces}
+      >
+        <PreviewSurface
+          guardEdges={!freeView && slot.showFrame}
+          scale={scale}
+          topColor={browserGeometry.neutralChrome ? pageSurfaces?.topGuardColor : pageSurfaces?.top ?? "#ffffff"}
+          bottomColor={browserGeometry.neutralChrome ? pageSurfaces?.bottomGuardColor : pageSurfaces?.bottom ?? "#ffffff"}
+        >
+          {blocked ? (
+            <BlockedView
+              url={slot.url}
+              onCapture={onCapture && (() => onCapture(slot.id))}
+              onReload={() => simulator.current.reloadSlot(slot.id)}
+            />
+          ) : (
+            <iframe
+              ref={iframeRef}
+              key={`${slot.id}-${slot.reloadToken}`}
+              name={
+                device.type === "phone" || device.type === "tablet"
+                  ? `mdv-mobile-preview-${slot.id}`
+                  : `mdv-preview-${slot.id}`
+              }
+              title={t("devicePreview", { name: device.name })}
+              src={preparedUrl === slot.url ? preparedUrl : "about:blank"}
+              loading="eager"
+              className={`block size-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a] [color-scheme:dark]" : "bg-white [color-scheme:light]"} ${device.type === "phone" || device.type === "tablet" ? "[scrollbar-width:none]" : ""}`}
+              // Match the page at fractional raster edges, including the clear
+              // gaps between Duo's floating glass groups.
+              style={pageSurfaces?.top ? { backgroundColor: pageSurfaces.top } : undefined}
+              scrolling="auto"
+              sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-storage-access-by-user-activation"
+              onLoad={event => {
+                const frame = event.currentTarget;
+                if (frame.getAttribute("src") === "about:blank") return;
+                // Preparing the frame initially creates an empty document.
+                // Its load event must not release a website's queue slot.
+                try { if (frame.contentDocument?.URL === "about:blank") return; } catch { /* Cross-origin website. */ }
+                clearTimeout(healthTimer.current);
+                setLoadIssue(null);
+                if (typeof chrome === "undefined" || !chrome.runtime?.id) {
+                  onLoadStateChange?.(slot.id, "loaded");
+                  return;
+                }
+                const requestId = crypto.randomUUID();
+                healthRequest.current = requestId;
+                frame.contentWindow?.postMessage({ type: "MDV_PREVIEW_HEALTH_REQUEST", slotId: slot.id, requestId }, "*");
+                healthTimer.current = setTimeout(() => {
+                  if (healthRequest.current !== requestId) return;
+                  setLoadIssue("unverified");
+                  onLoadStateChange?.(slot.id, "incomplete");
+                }, 5000);
+              }}
+              onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
+            />
+          )}
+        </PreviewSurface>
+      </DeviceFrame>
+    );
+  }
 });
 
 function broadcastScrollSync(detail: ScrollSyncPayload) {
@@ -938,547 +1005,50 @@ function broadcastInteractionSync(detail: InteractionSyncPayload) {
   );
 }
 
-// ─── Device switcher ──────────────────────────────────────────────────────────
-// Device categories mirror the way responsive developers scan target hardware.
-// Special-purpose hardware (kiosks, control panels, watches, TVs, custom) stays
-// in Other instead of being mixed with tablets and computers.
-type MenuGroupId = "ios" | "android" | "tablet" | "laptop" | "desktop" | "other" | "custom";
-type MenuSection = { key: MenuGroupId | "favorite" | "recent" | "search"; devices: Device[] };
-
-const MENU_GROUP_ORDER: MenuGroupId[] = ["ios", "android", "tablet", "laptop", "desktop", "other", "custom"];
-export function menuGroupFor(device: Device): MenuGroupId {
-  if (device.brand === "Custom") return "custom";
-  if (device.type === "tablet") return "tablet";
-  if (device.type === "laptop") return "laptop";
-  if (device.type === "desktop") return "desktop";
-  if (device.type === "phone") {
-    const os = device.os.trim().toLowerCase().split(/\s+/)[0];
-    if (os === "ios") return "ios";
-    if (os === "android") return "android";
-  }
-  return "other";
-}
-
-function newestDevicesFirst(left: Device, right: Device): number {
-  const yearDifference = (right.year ?? -1) - (left.year ?? -1);
-  if (yearDifference !== 0) return yearDifference;
-  const updatedDifference = right.updatedAt.localeCompare(left.updatedAt);
-  return updatedDifference || left.name.localeCompare(right.name);
-}
-
-const RECENT_LIMIT = 4;
-
-// The picker and header navigation share one ordering rule.
-export function getDeviceMenuSections({
-  devices, favorites, recents, currentDeviceId, activeGroup, query = "",
-}: {
-  devices: Device[];
-  favorites: string[];
-  recents: string[];
-  currentDeviceId: string;
-  activeGroup: MenuGroupId;
-  query?: string;
-}): MenuSection[] {
-  const normalize = (value: string) => value.normalize("NFKD").toLowerCase().replace(/\p{M}/gu, "").replace(/×/g, "x").replace(/(\d)\s*x\s*(?=\d)/g, "$1x").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
-  const q = normalize(query);
-  const queryTerms = q.split(/\s+/).filter(Boolean);
-  const filterByQuery = (list: Device[]): Device[] =>
-    q
-      ? list.filter((device) => {
-        const haystack = normalize(`${device.name} ${device.brand} ${device.family} ${device.os} ${device.type} ${device.year ?? ""} ${device.tags.join(" ")} ${device.cssViewport.width}x${device.cssViewport.height} ${device.cssViewport.height}x${device.cssViewport.width}`);
-        return queryTerms.every((term) => haystack.includes(term));
-      })
-      : list;
-
-  const findById = (id: string) => devices.find((device) => device.id === id);
-  const favoriteDevices = favorites
-    .map(findById)
-    .filter((device): device is Device => !!device && menuGroupFor(device) === activeGroup);
-  const favoriteSection: MenuSection | null = favoriteDevices.length > 0
-    ? { key: "favorite", devices: filterByQuery(favoriteDevices) }
-    : null;
-
-  // Keep promoted devices in the same order as the picker, without duplicates.
-  const usedInRecents = new Set<string>();
-  const recentDevices = recents
-    .map(findById)
-    .filter((d): d is Device => (
-      !!d
-      && menuGroupFor(d) === activeGroup
-      && !usedInRecents.has(d.id)
-      && (usedInRecents.add(d.id), true)
-    ))
-    .filter(device => !favorites.includes(device.id))
-    .slice(0, RECENT_LIMIT);
-  const recentSection: MenuSection | null = (() => {
-    const filtered = filterByQuery(recentDevices).filter(
-      (d) => d.id !== currentDeviceId,
-    );
-    if (filtered.length === 0) return null;
-    return { key: "recent", devices: filtered };
-  })();
-
-  if (q) {
-    const matches = filterByQuery(devices).sort(newestDevicesFirst);
-    return matches.length > 0 ? [{ key: "search", devices: matches }] : [];
-  }
-
-  const promoted = new Set([...(favoriteSection?.devices ?? []), ...(recentSection?.devices ?? [])].map(device => device.id));
-  const categoryDevices = devices
-    .filter((device) => menuGroupFor(device) === activeGroup && !promoted.has(device.id))
-    .sort(newestDevicesFirst);
-  const categorySection: MenuSection = {
-    key: activeGroup,
-    devices: categoryDevices,
-  };
-
-  return [favoriteSection, recentSection, categorySection].filter((section): section is MenuSection => !!section && section.devices.length > 0);
-}
-
-function DeviceSwitcher({
-  currentDevice,
-  dark,
-  onSwitch,
-  tourTarget,
-  alignEnd = false,
-}: {
-  currentDevice: Device;
-  dark: boolean;
-  onSwitch: (id: string) => void;
-  tourTarget?: string;
-  alignEnd?: boolean;
-}) {
-  const { t } = useI18n();
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [activeGroup, setActiveGroup] = useState<MenuGroupId>(() => menuGroupFor(currentDevice));
-  const [panelPosition, setPanelPosition] = useState({left: 12, top: 80, width: 380, maxHeight: 400});
-  const panelId = useId();
-  const ref = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const activeItemRef = useRef<HTMLButtonElement>(null);
-  const { devices, favorites, recents, addRecent, toggleFavorite, isFavorite } = useDeviceCatalog();
-  function closePicker() {
-    setOpen(false);
-    triggerRef.current?.focus();
-  }
-
-  useLayoutEffect(() => {
-    if (!open) return;
-    const position = () => {
-      const anchor = triggerRef.current?.getBoundingClientRect();
-      if (!anchor) return;
-      const width = Math.min(380, window.innerWidth - 24);
-      const below = window.innerHeight - anchor.bottom - 20;
-      const above = anchor.top - 20;
-      const openAbove = below < 240 && above > below;
-      const useWindowHeight = Math.max(above, below) < 280;
-      const maxHeight = Math.max(100, Math.min(480, useWindowHeight ? window.innerHeight - 24 : openAbove ? above : below));
-      setPanelPosition({
-        width, maxHeight,
-        left: Math.max(12, Math.min(window.innerWidth - width - 12, alignEnd ? anchor.right - width : anchor.left)),
-        top: useWindowHeight ? 12 : openAbove ? Math.max(12, anchor.top - maxHeight - 8) : anchor.bottom + 8,
-      });
-    };
-    position();
-    const observer = new ResizeObserver(position);
-    if (triggerRef.current) observer.observe(triggerRef.current);
-    window.addEventListener("resize", position);
-    return () => { observer.disconnect(); window.removeEventListener("resize", position); };
-  }, [open, alignEnd]);
-
-  const groupLabels: Record<MenuGroupId, string> = {
-    ios: "iOS",
-    android: "Android",
-    tablet: t("tablets"),
-    laptop: t("laptops"),
-    desktop: t("desktops"),
-    other: t("other"),
-    custom: t("custom"),
-  };
-
-  // Close on outside click
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !e.composedPath().includes(ref.current))
-        setOpen(false);
-    };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !event.isComposing) {
-        event.preventDefault();
-        closePicker();
-      }
-    };
-    const target = getViewerEventTarget();
-    target.addEventListener("mousedown", handler);
-    target.addEventListener("keydown", escape);
-    return () => { target.removeEventListener("mousedown", handler); target.removeEventListener("keydown", escape); };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const frame = requestAnimationFrame(() => {
-      const focused = (ref.current?.getRootNode() as Document | ShadowRoot | undefined)?.activeElement;
-      if (!focused || focused === triggerRef.current || !ref.current?.contains(focused)) inputRef.current?.focus();
-      const item = activeItemRef.current;
-      const list = listRef.current;
-      if (item && list) list.scrollTop = Math.max(0, item.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop - 8);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [open]);
-
-  useEffect(() => {
-    if (open && listRef.current) listRef.current.scrollTop = 0;
-  }, [query, activeGroup]);
-
-  const sections = useMemo(() => getDeviceMenuSections({
-    devices, favorites, recents, currentDeviceId: currentDevice.id, activeGroup, query,
-  }), [activeGroup, devices, favorites, query, recents, currentDevice.id]);
-
-  // Freeze the chosen list: recording each click in recents must not reorder it.
-  const [browseList, setBrowseList] = useState<{ ids: string[]; currentId: string } | null>(null);
-  useEffect(() => {
-    if (browseList && browseList.currentId !== currentDevice.id) setBrowseList(null);
-  }, [currentDevice.id, browseList]);
-  const defaultBrowseIds = useMemo(() => getDeviceMenuSections({
-    devices, favorites, recents, currentDeviceId: currentDevice.id,
-    activeGroup: menuGroupFor(currentDevice),
-  }).flatMap(section => section.devices.map(device => device.id)), [devices, favorites, recents, currentDevice]);
-  const availableIds = new Set(devices.map(device => device.id));
-  const browseIds = (browseList?.currentId === currentDevice.id ? browseList.ids : defaultBrowseIds)
-    .filter(id => availableIds.has(id));
-  const browseIndex = browseIds.indexOf(currentDevice.id);
-  const previousDevice = browseIndex > 0 ? devices.find(device => device.id === browseIds[browseIndex - 1]) : undefined;
-  const nextDevice = browseIndex >= 0 ? devices.find(device => device.id === browseIds[browseIndex + 1]) : undefined;
-  function stepDevice(device: Device | undefined) {
-    if (!device) return;
-    setBrowseList({ ids: browseIds, currentId: device.id });
-    addRecent(device.id);
-    onSwitch(device.id);
-    setOpen(false);
-  }
-  const sectionLabels: Record<MenuSection["key"], string> = {
-    ...groupLabels, favorite: t("favorites"), recent: t("recentlyUsed"), search: t("searchResults"),
-  };
-
-  const groupCounts = useMemo(() => Object.fromEntries(
-    MENU_GROUP_ORDER.map((group) => [group, devices.filter((device) => menuGroupFor(device) === group).length]),
-  ) as Record<MenuGroupId, number>, [devices]);
-
-  const visibleGroups = MENU_GROUP_ORDER.filter(group => groupCounts[group] > 0);
-
-  return (
-    <div ref={ref} className="@container/device-picker relative min-w-0 flex-[1.45]">
-      <div className="flex min-w-0 items-center gap-0.5">
-        <button
-          type="button"
-          aria-label={t("previousDevice")}
-          title={previousDevice ? `${t("previousDevice")}: ${previousDevice.name}` : t("previousDevice")}
-          disabled={!previousDevice}
-          data-testid="previous-device-button"
-          onClick={event => { event.stopPropagation(); stepDevice(previousDevice); }}
-          className={`hidden h-7 w-6 shrink-0 place-items-center rounded-[6px] transition-colors @min-[180px]/device-picker:grid focus-visible:outline-2 focus-visible:outline-teal-500 disabled:opacity-30 disabled:hover:bg-transparent ${dark ? "text-slate-300 hover:bg-white/10" : "text-slate-600 hover:bg-slate-100"}`}
-        ><ArrowLeft size={13} className="rtl:rotate-180" aria-hidden="true" /></button>
-        <button
-          type="button"
-          data-tour={tourTarget}
-          ref={triggerRef}
-          aria-expanded={open}
-          aria-haspopup="dialog"
-          aria-controls={open ? panelId : undefined}
-          title={`${t("chooseDevice")}: ${currentDevice.name}`}
-          data-testid="device-switcher-button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!open) { setQuery(""); setActiveGroup(menuGroupFor(currentDevice)); }
-            setOpen((v) => !v);
-          }}
-          className={`flex h-7 min-w-0 flex-1 items-center gap-1 whitespace-nowrap rounded-[7px] border border-transparent px-1.5 text-start text-[11px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-teal-500 ${open ? dark ? "bg-teal-400/10 text-white" : "bg-teal-50 text-teal-900" :
-            dark
-              ? "text-slate-200 hover:bg-white/[0.08]"
-              : "text-slate-800 hover:bg-slate-100"
-          }`}
-        >
-          <span aria-live="polite" aria-atomic="true" className="min-w-0 flex-1 truncate">
-            {shortName(currentDevice.name)}
-          </span>
-          <ChevronDown
-            size={14}
-            className={`shrink-0 transition-transform ${open ? "rotate-180" : ""} ${dark ? "text-slate-400" : "text-slate-500"}`}
-          />
-        </button>
-
-        <button
-          type="button"
-          aria-label={t("nextDevice")}
-          title={nextDevice ? `${t("nextDevice")}: ${nextDevice.name}` : t("nextDevice")}
-          disabled={!nextDevice}
-          data-testid="next-device-button"
-          onClick={event => { event.stopPropagation(); stepDevice(nextDevice); }}
-          className={`hidden h-7 w-6 shrink-0 place-items-center rounded-[6px] transition-colors @min-[180px]/device-picker:grid focus-visible:outline-2 focus-visible:outline-teal-500 disabled:opacity-30 disabled:hover:bg-transparent ${dark ? "text-slate-300 hover:bg-white/10" : "text-slate-600 hover:bg-slate-100"}`}
-        ><ArrowRight size={13} className="rtl:rotate-180" aria-hidden="true" /></button>
-      </div>
-
-      {open && (
-        <div
-          id={panelId}
-          role="dialog"
-          aria-label={t("chooseDevice")}
-          style={panelPosition}
-          data-testid="device-switcher-panel"
-          className={`fixed z-50 flex flex-col overflow-hidden rounded-[10px] border shadow-[0_12px_36px_rgba(15,23,42,0.2)] ${
-            dark ? "border-slate-600 bg-[#171b24]" : "border-slate-300 bg-white"
-          }`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className={`shrink-0 border-b p-2.5 ${dark ? "border-white/10 bg-[#1d2330]" : "border-slate-200 bg-slate-50/70"}`}>
-            <div className="mb-2 flex items-center justify-between px-0.5">
-              <p className={`text-xs font-bold ${dark ? "text-white" : "text-slate-800"}`}>{t("chooseDevice")}</p>
-              <div className="flex items-center gap-2">
-                <span aria-live="polite" className={`text-[10px] font-medium ${dark ? "text-slate-400" : "text-slate-500"}`}>{t("results", { count: sections.reduce((count, section) => count + section.devices.length, 0) })}</span>
-                <button type="button" onClick={closePicker} aria-label={t("close")} className="grid h-6 w-6 place-items-center rounded-[5px] hover:bg-slate-500/10 focus-visible:outline-2 focus-visible:outline-teal-500"><X size={13}/></button>
-              </div>
-            </div>
-            <div className={`flex h-8 items-center gap-2 rounded-[6px] border px-2 transition-colors focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/15 ${dark ? "border-slate-600 bg-[#111722]" : "border-slate-300 bg-white"}`}>
-              <Search size={13} className={dark ? "text-slate-500" : "text-slate-400"} />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                aria-label={t("searchDevice")}
-                onKeyDown={event => {
-                  if (event.nativeEvent.isComposing) return;
-                  if (event.key === "ArrowDown") { event.preventDefault(); listRef.current?.querySelector<HTMLButtonElement>("[data-device-pick]")?.focus(); }
-                  if (event.key === "Enter") { event.preventDefault(); listRef.current?.querySelector<HTMLButtonElement>("[data-device-pick]")?.click(); }
-                }}
-                placeholder={t("searchDevice")}
-                className={`min-w-0 flex-1 bg-transparent text-[11px] font-medium outline-none placeholder:text-slate-500 ${dark ? "text-white" : "text-slate-800"}`}
-              />
-              {query && <button type="button" onClick={() => { setQuery(""); inputRef.current?.focus(); }} aria-label={t("clearDeviceSearch")} className={`grid h-5 w-5 place-items-center rounded ${dark ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-200 hover:text-slate-700"}`}><X size={11} /></button>}
-            </div>
-            {!query && <div className="mt-2 grid grid-cols-3 gap-1" role="tablist" aria-label={t("deviceCategories")}>
-              {visibleGroups.map((group) => <button
-                key={group}
-                type="button"
-                role="tab"
-                id={`${panelId}-${group}`}
-                aria-controls={`${panelId}-results`}
-                tabIndex={activeGroup === group ? 0 : -1}
-                onKeyDown={event => {
-                  const direction = getComputedStyle(event.currentTarget).direction === "rtl" ? -1 : 1;
-                  const offsets: Record<string, number> = {ArrowRight: direction, ArrowLeft: -direction, ArrowDown: 3, ArrowUp: -3};
-                  if (!(event.key in offsets) && event.key !== "Home" && event.key !== "End") return;
-                  event.preventDefault();
-                  const index = visibleGroups.indexOf(group);
-                  const next = event.key === "Home" ? 0 : event.key === "End" ? visibleGroups.length - 1 : Math.max(0, Math.min(visibleGroups.length - 1, index + offsets[event.key]));
-                  setActiveGroup(visibleGroups[next]);
-                  const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-                  tabs?.[next]?.focus();
-                }}
-                aria-selected={activeGroup === group}
-                onClick={() => setActiveGroup(group)}
-                className={`flex h-7 items-center justify-between gap-1 rounded-[5px] border px-2 text-[10px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500 ${activeGroup === group ? dark ? "border-teal-400/70 bg-teal-400/15 text-teal-200" : "border-teal-600 bg-teal-50 text-teal-900" : dark ? "border-white/10 bg-white/[0.025] text-slate-300 hover:border-slate-500 hover:bg-white/[0.07]" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400 hover:bg-slate-100"}`}
-              ><span>{groupLabels[group]}</span><span className={activeGroup === group ? "opacity-80" : "opacity-60"}>{groupCounts[group]}</span></button>)}
-            </div>}
-          </div>
-
-          {/* List */}
-          <div ref={listRef} id={`${panelId}-results`} role={query ? "region" : "tabpanel"}
-            aria-labelledby={query ? undefined : `${panelId}-${activeGroup}`} aria-label={query ? t("searchResults") : undefined} className="min-h-0 overflow-y-auto overscroll-contain py-1.5" onKeyDown={event => {
-            if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
-            const buttons = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>("[data-device-pick]") ?? []);
-            const index = buttons.indexOf(event.target as HTMLButtonElement);
-            if (index < 0) return;
-            event.preventDefault();
-            const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : Math.max(0, Math.min(buttons.length - 1, index + (event.key === "ArrowDown" ? 1 : -1)));
-            if (event.key === "ArrowUp" && index === 0) inputRef.current?.focus();
-            else buttons[next]?.focus();
-          }}>
-            {sections.map((section) => (
-              <div key={section.key}>
-                {(section.key !== activeGroup || sections.length > 1) && <p className={`flex items-center justify-between px-3 pb-1 pt-2 text-[9px] font-bold uppercase tracking-wider ${dark ? "text-slate-400" : "text-slate-500"}`}>
-                  <span>{sectionLabels[section.key]}</span><span>{section.devices.length}</span>
-                </p>}
-                <div className="flex flex-col gap-0.5 px-1.5">
-                  {section.devices.map((d) => (
-                    <DeviceSwitcherItem
-                      key={d.id}
-                      ref={d.id === currentDevice.id ? activeItemRef : undefined}
-                      device={d}
-                      active={d.id === currentDevice.id}
-                      dark={dark}
-                      favorite={isFavorite(d.id)}
-                      onToggleFavorite={() => {
-                        toggleFavorite(d.id);
-                        requestAnimationFrame(() => listRef.current?.querySelector<HTMLButtonElement>(`[data-device-favorite="${CSS.escape(d.id)}"]`)?.focus());
-                      }}
-                      onPick={() => {
-                        setBrowseList({ ids: sections.flatMap(section => section.devices.map(device => device.id)), currentId: d.id });
-                        addRecent(d.id);
-                        onSwitch(d.id);
-                        closePicker();
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-            {sections.length === 0 && (
-              <p className="break-words px-4 py-6 text-center text-[11px] text-slate-500">
-                {t("noDevicesMatch", { query })}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Small helpers ────────────────────────────────────────────────────────────
-
-const DeviceSwitcherItem = forwardRef<HTMLButtonElement, {
-  device: Device;
-  active: boolean;
-  dark: boolean;
-  favorite: boolean;
-  onToggleFavorite: () => void;
-  onPick: () => void;
-}>(function DeviceSwitcherItem({ device, active, dark, favorite, onToggleFavorite, onPick }, ref) {
-  const { t } = useI18n();
-  const rowClass = `group flex min-h-10 w-full min-w-0 items-center rounded-[6px] border transition-colors ${
-    active
-      ? dark ? "border-teal-400/50 bg-teal-400/10 text-teal-100" : "border-teal-500/60 bg-teal-50 text-teal-900"
-      : dark
-        ? "border-white/[0.07] text-slate-200 hover:border-slate-500 hover:bg-white/[0.05]"
-        : "border-slate-200/70 text-slate-800 hover:border-slate-400 hover:bg-slate-50"
-  }`;
-
-  return (
-    <div className={rowClass}>
-      <button
-        ref={ref}
-        data-device-pick={device.id}
-        aria-pressed={active}
-        type="button"
-        title={device.name}
-        className="flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded-s-[6px] px-2.5 py-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-500"
-        onClick={onPick}
-      >
-        <span className="min-w-0 flex-1">
-          <span className="flex min-w-0 items-center gap-1.5">
-            <span className="min-w-0 flex-1 line-clamp-2 text-[11px] font-semibold leading-tight">{shortName(device.name)}</span>
-            {device.tags.includes("new") && <span data-device-new={device.id} className={`shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold ${dark ? "bg-emerald-400/15 text-emerald-300" : "bg-emerald-100 text-emerald-700"}`}>{t("newLabel")}</span>}
-            {device.year && <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[9px] font-medium ${active ? dark ? "bg-teal-400/15 text-teal-300" : "bg-teal-100 text-teal-700" : dark ? "bg-white/[0.06] text-slate-400" : "bg-slate-100 text-slate-500"}`}>{device.year}</span>}
-          </span>
-          <span className={`mt-0.5 block truncate text-[9px] font-medium leading-tight ${active ? dark ? "text-teal-300" : "text-teal-700" : dark ? "text-slate-400" : "text-slate-500"}`}>
-            {device.os.toLowerCase() === "android" ? `${device.brand} · ` : ""}{device.os} · {device.cssViewport.width} × {device.cssViewport.height}
-          </span>
-        </span>
-      </button>
-      <button
-        type="button"
-        data-device-favorite={device.id}
-        aria-label={favorite ? t("removeFavorite", { name: device.name }) : t("addFavorite", { name: device.name })}
-        onClick={onToggleFavorite}
-        className={`mr-1 grid h-9 w-9 shrink-0 place-items-center rounded-[5px] outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${favorite ? dark ? "text-amber-300" : "text-amber-600" : dark ? "text-slate-500 hover:text-slate-200 hover:bg-white/10" : "text-slate-400 hover:text-slate-700 hover:bg-slate-100"}`}
-      ><Star size={13} fill={favorite ? "currentColor" : "none"} /></button>
-    </div>
-  );
-});
-
 function BlockedView({
-  dark,
   onCapture,
   onReload,
   url,
 }: {
-  dark: boolean;
   onCapture?: () => void;
   onReload: () => void;
   url: string;
 }) {
   const { t } = useI18n();
+  const secondary = "flex items-center justify-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-sunken";
   return (
-    <div className={`flex h-full flex-col items-center justify-center gap-3 p-6 text-center transition-colors ${dark ? "bg-[#0f172a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
-      <p className="text-sm font-black">
-        {t("iframeBlocked")}
-      </p>
-      <p className={`max-w-[250px] break-all text-[11px] font-semibold leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
-        {url}
-      </p>
-      <p className={`max-w-[260px] text-xs leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
-        {t("iframeBlockedHelp")}
-      </p>
+    <div className="flex h-full flex-col items-center justify-center gap-3 bg-surface-2 p-6 text-center text-ink">
+      <p className="text-sm font-bold">{t("iframeBlocked")}</p>
+      <p className="max-w-[250px] break-all text-[11px] font-semibold leading-5 text-muted">{url}</p>
+      <p className="max-w-[260px] text-xs leading-5 text-muted">{t("iframeBlockedHelp")}</p>
       <div className="grid w-full max-w-[240px] gap-2">
-        <button
-          type="button"
-          className={`flex items-center justify-center gap-2 rounded-md px-3 py-1.5 text-xs font-bold text-white ${dark ? "bg-[#0f9f8f]" : "bg-slate-900"}`}
-          onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
-        >
-          <ExternalLink size={13} /> {t("openInTab")}
+        <button type="button" className="flex items-center justify-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-on-primary" onClick={() => window.open(url, "_blank", "noopener,noreferrer")}>
+          <OpenInTabIcon size={13} /> {t("openInTab")}
         </button>
-        <button
-          type="button"
-          className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold ${dark ? "border-white/10 bg-white/[0.06] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
-          onClick={onReload}
-        >
-          <RefreshCw size={13} /> {t("reloadPreview")}
+        <button type="button" className={secondary} onClick={onReload}>
+          <ReloadIcon size={13} /> {t("reloadPreview")}
         </button>
-        {onCapture && <button
-          type="button"
-          className={`flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold ${dark ? "border-white/10 bg-white/[0.06] text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}
-          onClick={onCapture}
-        >
-          {t("captureCurrentTab")}
-        </button>}
+        {onCapture && <button type="button" className={secondary} onClick={onCapture}>{t("captureCurrentTab")}</button>}
       </div>
     </div>
   );
 }
 
-function CardBtn({
-  dark,
-  label,
-  children,
-  onClick,
-  disabled = false,
-  expanded = false,
-}: {
-  dark: boolean;
-  label: string;
-  children: ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  expanded?: boolean;
-}) {
+function MenuItem({ label, onClick, disabled = false, children }: { label: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
   return (
     <button
       type="button"
-      title={label}
-      aria-label={label}
       disabled={disabled}
-      className={`${expanded ? "flex h-8 w-full items-center gap-2 px-2 text-left text-[11px] font-medium" : "grid h-7 w-7 place-items-center"} shrink-0 rounded-md transition focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500 ${
-        dark
-          ? "text-slate-400 hover:bg-white/10 hover:text-white"
-          : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
-      } ${disabled ? "cursor-not-allowed opacity-35 hover:bg-transparent hover:text-current" : ""}`}
-      onClick={(e) => {
-        if (disabled) return;
-        e.stopPropagation();
-        onClick();
-      }}
+      onClick={event => { event.stopPropagation(); onClick(); }}
+      className="flex h-9 w-full items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40"
     >
-      {children}
-      {expanded && <span className="min-w-0 truncate">{label}</span>}
+      <span className="grid w-4 shrink-0 place-items-center text-ink-2">{children}</span>
+      <span className="min-w-0 truncate">{label}</span>
     </button>
   );
 }
 
-function shortName(name: string) {
+export function shortName(name: string) {
   return name
     .replace(/^Apple\s+/i, "")
     .replace(/^Samsung\s+/i, "")

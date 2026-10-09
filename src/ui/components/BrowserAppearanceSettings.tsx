@@ -1,10 +1,11 @@
-import { X } from "lucide-react";
 import { useI18n } from "../../app/i18n";
 import { useSimulatorRef } from "../../app/SimulatorProvider";
 import { supportsIos26, type BrowserGeometry, type SafariLayout } from "../../domain/device/browser-geometry";
 import { getFrameProfile } from "../../domain/device/frame-profiles";
 import type { Device } from "../../domain/device/device.types";
 import type { PreviewSlot } from "../../domain/simulator/simulator.types";
+import { CloseIcon } from "../icons";
+import { Dropdown, IconButton } from "./ui";
 
 // Both preview surfaces edit the same Safari preferences and geometry.
 export function BrowserAppearanceSettings({ device, slot, geometry, onClose }: {
@@ -13,26 +14,38 @@ export function BrowserAppearanceSettings({ device, slot, geometry, onClose }: {
   const { t } = useI18n();
   const simulator = useSimulatorRef();
   const profile = getFrameProfile(device);
-  return <>
-    <div className="mb-2 flex items-center justify-between text-xs font-bold">
-      {t("browserAppearance")}
-      <button type="button" aria-label={t("closeBrowserSettings")} onClick={onClose} className="rounded p-1 focus-visible:outline-2 focus-visible:outline-teal-500"><X size={14}/></button>
+  const layouts: Array<{ value: SafariLayout; label: string }> = device.type === "tablet"
+    ? [{ value: "tabs", label: t("separateTabs") }, { value: "compact-tabs", label: t("compactTabs") }]
+    : [
+      ...(geometry.variant === "ios-liquid-glass" ? [{ value: "compact" as const, label: t("compactBrowser") }] : []),
+      { value: "bottom", label: t("bottomBrowser") },
+      { value: "top", label: t("topBrowser") },
+    ];
+  return <div className="flex flex-col gap-2.5 text-ink">
+    <div className="flex items-center justify-between">
+      <span className="text-[13px] font-semibold">{t("browserAppearance")}</span>
+      <IconButton size="sm" label={t("closeBrowserSettings")} onClick={onClose}><CloseIcon size={14} /></IconButton>
     </div>
-    {supportsIos26(device) && profile.osMajor < 26 && <label className="mb-2 block text-xs">
-      {t("browserVersion")}
-      <select aria-label={t("browserVersion")} className="mt-1 w-full rounded border border-slate-500/25 bg-transparent p-1.5" value={slot.browserPreferences?.version ?? "ios26"}
-        onChange={event => simulator.current.setSlotBrowserPreferences(slot.id, { version: event.target.value as "catalog" | "ios26", layout: undefined })}>
-        <option value="ios26">Safari 26</option><option value="catalog">{t("catalogBrowserVersion", { version: profile.osMajor })}</option>
-      </select>
-    </label>}
-    {geometry.duoControls ? <div className="text-xs">iPhone Duo · iOS 27</div> : <label className="block text-xs">
-      {t("browserLayout")}
-      <select aria-label={t("browserLayout")} className="mt-1 w-full rounded border border-slate-500/25 bg-transparent p-1.5" value={geometry.layout}
-        onChange={event => simulator.current.setSlotBrowserPreferences(slot.id, { layout: event.target.value as SafariLayout })}>
-        {device.type === "tablet" ? <><option value="tabs">{t("separateTabs")}</option><option value="compact-tabs">{t("compactTabs")}</option></>
-          : <>{geometry.variant === "ios-liquid-glass" && <option value="compact">{t("compactBrowser")}</option>}<option value="bottom">{t("bottomBrowser")}</option><option value="top">{t("topBrowser")}</option></>}
-      </select>
-    </label>}
-    <p className="mt-2 text-[10px] leading-4 opacity-60">{t("browserPreviewNote")}</p>
-  </>;
+    {supportsIos26(device) && profile.osMajor < 26 && <Setting label={t("browserVersion")}>
+      <Dropdown<"ios26" | "catalog"> label={t("browserVersion")} value={slot.browserPreferences?.version ?? "ios26"}
+        onChange={version => simulator.current.setSlotBrowserPreferences(slot.id, { version, layout: undefined })}
+        options={[{ value: "ios26", label: "Safari 26" }, { value: "catalog", label: t("catalogBrowserVersion", { version: profile.osMajor }) }]} />
+    </Setting>}
+    {geometry.duoControls
+      ? <p className="text-xs text-ink-2">iPhone Duo · iOS 27</p>
+      : <Setting label={t("browserLayout")}>
+          <Dropdown<SafariLayout> label={t("browserLayout")} value={geometry.layout} options={layouts}
+            onChange={layout => simulator.current.setSlotBrowserPreferences(slot.id, { layout })} />
+        </Setting>}
+    <p className="text-[11px] leading-4 text-muted">{t("browserPreviewNote")}</p>
+  </div>;
+}
+
+function Setting({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-xs font-medium text-ink-2">{label}</span>
+      {children}
+    </div>
+  );
 }

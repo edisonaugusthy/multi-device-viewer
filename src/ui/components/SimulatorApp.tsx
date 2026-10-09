@@ -629,7 +629,8 @@ export function SimulatorApp() {
       className={cx("relative flex h-screen flex-col overflow-hidden bg-stage font-sans text-ink outline-none transition-colors", dark && "dark")}
     >
       <div className={cx("flex min-h-0 flex-1 flex-col", allDevicesUrl !== null && "invisible")} inert={allDevicesUrl !== null} aria-hidden={allDevicesUrl !== null || undefined}>
-        {!viewMode && (
+        {/* One header at a time: compare brings its own in place of this one. */}
+        {!viewMode && !compare && (
           <WorkspaceHeader
             slotCount={slots.length}
             catalogCount={devices.length}
@@ -670,7 +671,7 @@ export function SimulatorApp() {
             mode={compareMode}
             onSelect={(slotId) => { setCompareSlotId(slotId); setActiveSlot(slotId); setDesignScrollTop(0); }}
             onModeChange={setCompareMode}
-            onDone={() => setCompare(false)}
+            onBack={() => setCompare(false)}
           />
         )}
 
@@ -885,7 +886,6 @@ export function SimulatorApp() {
           onClose={closeAllDevices}
           onOpenDevice={openGalleryDevice}
           onAddDevice={addGalleryDevice}
-          onCloseViewer={closeViewer}
           settings={{
             browserBar,
             onBrowserBarChange: changeBrowserBar,
@@ -913,13 +913,12 @@ export function SimulatorApp() {
           {captureError}
         </div>
       )}
-      {showPermissions && <PermissionsInfoModal dark={dark} onClose={() => setShowPermissions(false)} />}
-      {showHelp && <HelpModal dark={dark} review={reviewPrompt} onClose={() => setShowHelp(false)} />}
-      {showFirstRun && <FirstRunGuide dark={dark} onClose={finishFirstRun} />}
-      {releaseNotes && <ReleaseNotesModal dark={dark} release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
+      {showPermissions && <PermissionsInfoModal onClose={() => setShowPermissions(false)} />}
+      {showHelp && <HelpModal review={reviewPrompt} onClose={() => setShowHelp(false)} />}
+      {showFirstRun && <FirstRunGuide onClose={finishFirstRun} />}
+      {releaseNotes && <ReleaseNotesModal release={releaseNotes} onClose={() => setReleaseNotes(null)} />}
       {(reviewPrompt.visible || reviewPromptPreview) && (
         <ReviewPromptModal
-          dark={dark}
           storageError={reviewPrompt.error}
           onReview={reviewPrompt.openReview}
           onNotNow={reviewPrompt.postpone}

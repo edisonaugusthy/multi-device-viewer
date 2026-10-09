@@ -7,17 +7,16 @@ import type { DeviceGalleryGroupId } from "../../domain/device/device-gallery";
 import { buildPickerSections, pickerTypeOptions, type PickerSectionKey, type PickerTypeFilter } from "../../domain/device/device-picker";
 import type { Device, DeviceType } from "../../domain/device/device.types";
 import {
-  CheckIcon,
   ChevronLeftIcon,
+  ChevronRightIcon,
   CloseIcon,
   CustomSizeIcon,
-  MinusIcon,
   PlusIcon,
   SearchIcon,
   SetsIcon,
   StarIcon,
-  SwitchIcon,
 } from "../icons";
+import { readStore, writeStore } from "../../infrastructure/storage/local-store";
 import { DeviceGlyph, glyphKindFor } from "./DeviceGlyph";
 import { shortName } from "./PreviewCard";
 import { cx, Dropdown, focusRing, positionStyle, popoverPanel, SectionLabel, useAnchoredPosition, useDismiss } from "./ui";
@@ -25,6 +24,7 @@ import { cx, Dropdown, focusRing, positionStyle, popoverPanel, SectionLabel, use
 export type PickerTarget = { kind: "add" } | { kind: "replace"; slotId: string };
 
 type PickerView = "devices" | "sets" | "custom";
+const PRESETS_OPEN_KEY = "mdvPickerPresetsOpen";
 
 const TYPE_LABELS: Record<DeviceGalleryGroupId, TranslationKey | "iOS" | "Android"> = {
   ios: "iOS", android: "Android", phone: "phones", tablet: "tablets", laptop: "laptops",
@@ -79,6 +79,15 @@ export function DevicePicker({
   // Unchecking the only device on screen keeps it until another is picked,
   // which then takes its place, so the workspace is never empty.
   const [swapSlotId, setSwapSlotId] = useState<string | null>(null);
+  // The presets section remembers whether it was left open.
+  const [presetsOpen, setPresetsOpen] = useState(true);
+  useEffect(() => {
+    void readStore<boolean>(PRESETS_OPEN_KEY, true).then(value => setPresetsOpen(value !== false)).catch(() => {});
+  }, []);
+  const togglePresets = (next: boolean) => {
+    setPresetsOpen(next);
+    void writeStore(PRESETS_OPEN_KEY, next).catch(() => {});
+  };
   const swapSlot = !replaceSlot ? slots.find(slot => slot.id === swapSlotId) : undefined;
   const swapping = swapSlot ? findDevice(swapSlot.deviceId) : undefined;
   const usedIds = useMemo(() => new Set(slots.filter(slot => slot.id !== swapSlotId).map(slot => slot.deviceId)), [slots, swapSlotId]);
@@ -227,7 +236,7 @@ export function DevicePicker({
           </p>
         )}
         {!replacing && full && (
-          <p role="status" className="mx-2 mb-1 shrink-0 rounded-lg border border-warn-line bg-warn-soft px-2.5 py-1.5 text-[12.5px] font-medium text-warn">
+          <p role="status" className="mx-2 mb-1 shrink-0 rounded-lg border border-warn-line bg-warn-soft px-2.5 py-1 text-xs font-medium text-warn">
             {t("maxDevicesReached", { count: maxSlots })}
           </p>
         )}
@@ -252,7 +261,7 @@ export function DevicePicker({
                 const state = rowState(device);
                 const favorite = favorites.includes(device.id);
                 return (
-                  <div key={`${section.key}-${device.id}`} className="flex items-center">
+                  <div key={`${section.key}-${device.id}`} className={rowFrame(state, Boolean(replaceSlot))}>
                     <button
                       type="button"
                       data-device-pick={device.id}
@@ -260,29 +269,16 @@ export function DevicePicker({
                       title={device.name}
                       aria-label={`${device.name} · ${state.hint}`}
                       aria-current={state.current || undefined}
+                      aria-pressed={replaceSlot ? undefined : state.added}
                       disabled={state.disabled}
                       onClick={() => pick(device)}
-                      className={cx(
-                        "group/row flex h-9 min-w-0 flex-1 items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium transition-colors",
-                        state.current ? "bg-accent-soft text-ink" : "hover:bg-sunken",
-                        state.disabled && !state.added && !state.current ? "cursor-default text-faint hover:bg-transparent" : "text-ink",
-                        state.disabled && "cursor-default",
-                        focusRing,
-                      )}
+                      className={rowButton(state, Boolean(replaceSlot))}
                     >
                       <span className="flex w-[18px] shrink-0 justify-center opacity-80"><DeviceGlyph kind={glyphKindFor(device)} /></span>
                       <span className="min-w-0 truncate">{shortName(device.name)}</span>
                       {device.tags.includes("new") && <span className="shrink-0 rounded-full bg-design-tint px-1.5 py-px text-[10px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
                       <span className="flex-1" />
                       <span className="shrink-0 font-mono text-[11.5px] text-faint">{device.cssViewport.width}×{device.cssViewport.height}</span>
-                      <span className="grid w-[18px] shrink-0 place-items-center" aria-hidden="true">
-                        {state.added && replaceSlot && state.current ? <CheckIcon size={15} className="text-accent" />
-                          : state.added && !replaceSlot ? <>
-                            <CheckIcon size={15} className={cx("text-accent", !state.disabled && "group-hover/row:hidden group-focus-visible/row:hidden")} />
-                            {!state.disabled && <MinusIcon size={15} className="hidden text-danger group-hover/row:block group-focus-visible/row:block" />}
-                          </>
-                          : !state.disabled ? (replaceSlot ? <SwitchIcon size={15} className="text-ink-2" /> : <PlusIcon size={15} className="text-ink-2" />) : null}
-                      </span>
                     </button>
                     <button
                       type="button"
@@ -303,24 +299,38 @@ export function DevicePicker({
           {sections.length === 0 && <p className="px-4 py-6 text-center text-[12.5px] text-muted">{t("noDevicesMatch", { query })}</p>}
         </div>
 
-        <div role="group" aria-label={t("sets")} className="flex shrink-0 flex-wrap items-center gap-1 border-t border-line-soft px-2.5 py-2">
-          {sets.allSets.map(set => (
-            <SetChip key={set.id} set={set} current={currentIds} onApply={onApplySet}
-              devices={set.deviceIds.map(id => findDevice(id))} />
-          ))}
-          {!currentIsSaved && (
-            <button type="button" onClick={saveCurrentAsPreset} title={t("saveCurrentSetHint")}
-              className={cx("flex h-[26px] items-center gap-1 whitespace-nowrap rounded-full border border-dashed border-line px-2.5 text-xs font-semibold text-ink-2 hover:bg-sunken hover:text-ink", focusRing)}>
-              <PlusIcon size={12} strokeWidth={2.6} />{t("saveCurrentSet")}
+        <section aria-label={t("sets")} className="shrink-0 border-t border-line-soft">
+          <div className="flex items-center gap-1 px-1.5 pt-1">
+            <button type="button" aria-expanded={presetsOpen} onClick={() => togglePresets(!presetsOpen)}
+              className={cx("flex h-8 min-w-0 flex-1 items-center gap-1.5 rounded-[7px] px-1.5 text-start", focusRing)}>
+              <ChevronRightIcon size={13} className={cx("shrink-0 text-ink-2 transition-transform rtl:rotate-180", presetsOpen && "rotate-90 rtl:rotate-90")} />
+              <SectionLabel>{t("sets")}</SectionLabel>
+              <span className="font-mono text-[11px] text-faint">{sets.allSets.length}</span>
             </button>
+            <button type="button" onClick={() => setView("sets")} aria-label={t("deviceSets")} title={t("deviceSets")}
+              className={cx("grid size-7 shrink-0 place-items-center rounded-[7px] text-ink-2 hover:bg-sunken hover:text-ink", focusRing)}>
+              <SetsIcon size={15} />
+            </button>
+          </div>
+          {presetsOpen && (
+            <div className="max-h-40 overflow-y-auto px-1 pb-1">
+              {sets.allSets.map(set => (
+                <SetRow key={set.id} set={set} current={currentIds} onApply={onApplySet} devices={set.deviceIds.map(id => findDevice(id))} />
+              ))}
+              {!currentIsSaved && (
+                <button type="button" onClick={saveCurrentAsPreset}
+                  className={cx("my-px flex h-8 w-full items-center gap-2 rounded-[7px] border border-dashed border-line px-2 text-start text-[12.5px] font-semibold text-ink-2 hover:bg-sunken hover:text-ink", focusRing)}>
+                  <PlusIcon size={13} strokeWidth={2.6} className="shrink-0" />{t("saveCurrentSetHint")}
+                </button>
+              )}
+            </div>
           )}
-        </div>
+        </section>
 
         <div className="flex shrink-0 items-center gap-0.5 border-t border-line-soft p-1">
-          <FooterLink icon={<SetsIcon size={15} />} label={t("sets")} onClick={() => setView("sets")} />
           <FooterLink icon={<CustomSizeIcon size={15} />} label={t("customSize")} onClick={() => setView("custom")} />
           <span className="flex-1" />
-          <span className="pe-2 font-mono text-[11.5px] text-faint">{slots.length}/{maxSlots}</span>
+          <span className={cx("pe-2 font-mono text-[11.5px]", full && !replaceSlot ? "font-semibold text-warn" : "text-faint")}>{slots.length}/{maxSlots}</span>
         </div>
       </>}
 
@@ -405,19 +415,20 @@ export function DevicePicker({
           {customDevices.map(device => {
             const state = rowState(device);
             return (
-              <div key={device.id} className="flex items-center">
+              <div key={device.id} className={rowFrame(state, Boolean(replaceSlot))}>
                 <button
                   type="button"
                   data-device-pick={device.id}
+                  data-added={state.added || undefined}
                   title={device.name}
+                  aria-label={`${device.cssViewport.width} × ${device.cssViewport.height} · ${state.hint}`}
+                  aria-current={state.current || undefined}
+                  aria-pressed={replaceSlot ? undefined : state.added}
                   disabled={state.disabled}
                   onClick={() => pick(device)}
-                  className={cx("flex h-9 min-w-0 flex-1 items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium", state.disabled ? "cursor-default text-faint" : "text-ink hover:bg-sunken", focusRing)}
+                  className={rowButton(state, Boolean(replaceSlot))}
                 >
-                  <span className="flex-1 truncate">{device.cssViewport.width} × {device.cssViewport.height}</span>
-                  <span className={cx("text-xs", state.added ? "text-accent" : "text-muted")}>
-                    {state.added ? (replaceSlot ? t("added") : t("remove")) : state.disabled ? t("full") : replaceSlot ? t("switchAction") : t("add")}
-                  </span>
+                  <span className="flex-1 truncate font-mono">{device.cssViewport.width} × {device.cssViewport.height}</span>
                 </button>
                 <button
                   type="button"
@@ -438,7 +449,35 @@ export function DevicePicker({
   );
 }
 
-function SetChip({ set, current, devices, onApply }: { set: DeviceSet; current: string[]; devices: Device[]; onApply: (ids: string[]) => void }) {
+// Devices on screen are shown selected: the whole row, star included, gets an
+// accent border and a light fill, and clicking it toggles. While switching one
+// device, the one being replaced is the selection and other devices on screen
+// get a quiet outline.
+type RowState = { added: boolean; current: boolean; disabled: boolean };
+const isSelected = (state: RowState, replacing: boolean) => replacing ? state.current : state.added;
+
+function rowFrame(state: RowState, replacing: boolean) {
+  const selected = isSelected(state, replacing);
+  return cx(
+    "my-px flex items-center rounded-lg border transition-colors",
+    selected ? "border-accent-line bg-accent-soft/45 hover:border-accent"
+      : replacing && state.added ? "border-line"
+      : "border-transparent",
+  );
+}
+
+function rowButton(state: RowState, replacing: boolean) {
+  return cx(
+    "flex h-[34px] min-w-0 flex-1 items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium",
+    isSelected(state, replacing) ? "text-ink"
+      : state.disabled ? "cursor-default text-faint"
+      : "text-ink hover:bg-sunken",
+    focusRing,
+  );
+}
+
+function SetRow({ set, current, devices, onApply }: { set: DeviceSet; current: string[]; devices: Device[]; onApply: (ids: string[]) => void }) {
+  const { t } = useI18n();
   const same = set.deviceIds.join() === current.join();
   return (
     <button
@@ -447,15 +486,18 @@ function SetChip({ set, current, devices, onApply }: { set: DeviceSet; current: 
       aria-pressed={same}
       onClick={() => onApply(set.deviceIds)}
       className={cx(
-        "flex h-[26px] items-center gap-1.5 whitespace-nowrap rounded-full border pe-2.5 ps-2 text-xs font-semibold",
-        same ? "border-accent bg-accent-soft text-accent-strong" : "border-line bg-surface text-ink hover:bg-sunken",
+        "my-px flex h-8 w-full items-center gap-2.5 rounded-[7px] border px-2 text-start text-[12.5px] font-semibold text-ink",
+        same ? "border-accent-line bg-accent-soft/45" : "border-transparent hover:bg-sunken",
         focusRing,
       )}
     >
-      <span aria-hidden="true" className="flex h-3.5 items-end gap-0.5 opacity-75">
+      <span aria-hidden="true" className="flex h-3.5 w-12 shrink-0 items-end gap-0.5 text-ink-2">
         {devices.map((device, index) => <DeviceGlyph key={`${device.id}-${index}`} kind={glyphKindFor(device)} small />)}
       </span>
-      {set.name}
+      <span className="min-w-0 flex-1 truncate">{set.name}</span>
+      <span aria-hidden="true" className="shrink-0 text-[11.5px] font-medium text-faint">
+        {same ? t("inUse") : t(devices.length === 1 ? "deviceCount" : "devicesCount", { count: devices.length })}
+      </span>
     </button>
   );
 }

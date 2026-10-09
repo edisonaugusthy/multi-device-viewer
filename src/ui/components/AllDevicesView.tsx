@@ -67,7 +67,6 @@ interface AllDevicesViewProps {
   onClose: () => void;
   onOpenDevice: (deviceId: string, url: string) => void;
   onAddDevice: (deviceId: string, url: string) => void;
-  onCloseViewer: () => void;
   settings: GallerySettings;
 }
 
@@ -98,7 +97,7 @@ export function AllDevicesView(props: AllDevicesViewProps) {
     onToggleLoading={() => setLoadingPaused(current => !current)}/>;
 }
 
-function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCloseViewer, settings, group, groups, onSelectGroup, focusCategory,
+function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, settings, group, groups, onSelectGroup, focusCategory,
   loadingMode, changeLoadingMode, loadingPaused, onToggleLoading }: AllDevicesViewProps & {
   focusCategory: boolean;
   group: DeviceGalleryGroup;
@@ -332,7 +331,8 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCloseViewer, s
             <IconButton label={t("reloadAll")} tooltip={t("resetGalleryPreviews")} onClick={refreshAll}><ReloadIcon size={16} /></IconButton>
             <IconButton label={t("viewMode")} tooltip={t("tipFocusMode")} tooltipAlign="end" tone="primary" onClick={() => setViewMode(true)}><EyeIcon size={16} /></IconButton>
             <IconButton ref={settingsRef} label={t("settings")} tooltip={t("tipSettings")} tooltipAlign="end" pressed={settingsOpen} aria-expanded={settingsOpen} onClick={() => setSettingsOpen(value => !value)}><SettingsIcon size={16} /></IconButton>
-            <IconButton label={t("closeViewer")} tooltip={t("tipCloseViewer")} tooltipAlign="end" onClick={onCloseViewer}><CloseIcon size={18} /></IconButton>
+            {/* Only the workspace closes the viewer; here × goes back to it. */}
+            <IconButton label={t("backToWorkspace")} tooltip={t("tipBackToWorkspace")} tooltipAlign="end" onClick={onClose}><CloseIcon size={18} /></IconButton>
           </div>
         </header>}
 

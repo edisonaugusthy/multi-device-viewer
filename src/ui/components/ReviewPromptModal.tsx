@@ -1,17 +1,17 @@
-import { ExternalLink, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useI18n } from "../../app/i18n";
-import { FeedbackDialog, FeedbackError } from "./FeedbackDialog";
+import { OpenInTabIcon, StarIcon } from "../icons";
+import { Dialog, DialogError, Spinner } from "./Dialog";
+import { cx, focusRing } from "./ui";
 
 interface ReviewPromptModalProps {
-  dark: boolean;
   storageError?: boolean;
   onReview: () => Promise<void>;
   onNotNow: () => void;
   onNever: () => void;
 }
 
-export function ReviewPromptModal({ dark, storageError = false, onReview, onNotNow, onNever }: ReviewPromptModalProps) {
+export function ReviewPromptModal({ storageError = false, onReview, onNotNow, onNever }: ReviewPromptModalProps) {
   const { t } = useI18n();
   const [opening, setOpening] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -25,22 +25,23 @@ export function ReviewPromptModal({ dark, storageError = false, onReview, onNotN
   };
 
   return (
-    <FeedbackDialog dark={dark} title={t("reviewTitle")}
-      description={<><strong className={`font-semibold ${dark ? "text-slate-100" : "text-slate-900"}`}>{t("reviewOpenSource")}</strong>{" "}{t("reviewBody")}</>}
+    <Dialog icon={<StarIcon size={18} />} title={t("reviewTitle")} dismissOnBackdrop={false}
+      description={<><strong className="font-semibold text-ink">{t("reviewOpenSource")}</strong>{" "}{t("reviewBody")}</>}
       busy={opening} onClose={onNotNow}
-      footer={<div className="flex flex-wrap items-center justify-between gap-2">
+      footer={<>
         <button type="button" onClick={onNever} disabled={opening}
-          className={`min-h-9 rounded-lg px-2 text-xs font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:opacity-50 ${dark ? "text-slate-400 hover:text-slate-200" : "text-slate-600 hover:text-slate-900"}`}>{t("reviewNever")}</button>
+          className={cx("h-8 rounded-lg px-2 text-xs font-medium text-muted underline-offset-4 hover:text-ink hover:underline disabled:opacity-50", focusRing)}>{t("reviewNever")}</button>
+        <span className="flex-1" />
         <button type="button" onClick={onNotNow} disabled={opening}
-          className={`min-h-9 rounded-lg border px-3 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:opacity-50 ${dark ? "border-slate-600 bg-slate-800/60 hover:bg-slate-700" : "border-slate-300 bg-white hover:bg-slate-100"}`}>{t("reviewNotNow")}</button>
-      </div>}
+          className={cx("h-8 rounded-lg border border-line bg-surface px-3 text-xs font-semibold text-ink hover:bg-sunken disabled:opacity-50", focusRing)}>{t("reviewNotNow")}</button>
+      </>}
     >
       <button type="button" onClick={openReview} disabled={opening} aria-busy={opening}
-        className="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-teal-700 bg-teal-700 px-4 py-2.5 text-[13px] font-semibold text-white transition hover:bg-teal-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:cursor-wait disabled:opacity-70">
-        {opening ? <LoaderCircle size={15} className="animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ExternalLink size={15} className="shrink-0" aria-hidden="true" />}
+        className={cx("flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-accent px-4 text-[13px] font-semibold text-on-accent hover:opacity-90 disabled:cursor-wait disabled:opacity-70", focusRing)}>
+        {opening ? <Spinner /> : <OpenInTabIcon size={15} />}
         {opening ? t("openingReview") : t("reviewCta")}
       </button>
-      {(failed || storageError) && <FeedbackError dark={dark}>{t(failed ? "reviewOpenError" : "reviewStatusError")}</FeedbackError>}
-    </FeedbackDialog>
+      {(failed || storageError) && <DialogError>{t(failed ? "reviewOpenError" : "reviewStatusError")}</DialogError>}
+    </Dialog>
   );
 }

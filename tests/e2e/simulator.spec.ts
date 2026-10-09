@@ -1015,7 +1015,8 @@ test("toggles devices in the Add device picker and explains the four-device limi
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
   const panel = page.getByTestId("device-switcher-panel");
 
-  // A device already on screen is deselected by clicking it again.
+  // Devices on screen are shown selected; clicking one again deselects it.
+  await expect(panel.locator("[data-device-pick][data-added]").first()).toHaveAttribute("aria-pressed", "true");
   await panel.locator("[data-device-pick][data-added]").first().click();
   await expect(devices).toHaveCount(start - 1);
   await expect(panel).toBeVisible();
@@ -1027,8 +1028,12 @@ test("toggles devices in the Add device picker and explains the four-device limi
   await expect(panel.locator("[data-device-pick]:not([data-added])").first()).toBeDisabled();
 
   // The devices on screen can be saved as a preset straight from the picker.
-  await panel.getByRole("button", { name: "Save current" }).click();
-  await expect(panel.getByRole("group", { name: "Sets" }).locator('button[aria-pressed="true"]')).toHaveText("Set 1");
+  await panel.getByRole("button", { name: "Save the devices on screen as a preset" }).click();
+  await expect(panel.getByRole("region", { name: "Sets" }).locator('button[aria-pressed="true"]')).toContainText("Set 1");
+
+  // The presets section can be collapsed.
+  await panel.getByRole("button", { name: /^Sets/ }).first().click();
+  await expect(panel.getByRole("region", { name: "Sets" }).locator('button[aria-pressed]')).toHaveCount(0);
 });
 
 test("keeps a dragged device in place when stepping devices and resets it when showing one", async ({ page }) => {
@@ -1082,4 +1087,25 @@ test("unchecks the last device in the Add device picker and replaces it with the
   // A device can be listed twice (Recent and its type), so compare unique ids.
   await expect.poll(async () => new Set(await panel.locator("[data-device-pick][data-added]").evaluateAll(rows => rows.map(row => row.getAttribute("data-device-pick")))).size).toBe(1);
   await expect(panel.locator(`[data-device-pick][data-added][title="${lastName}"]`)).toHaveCount(0);
+});
+
+test("shows one header in Compare and All devices, whose close returns to the workspace", async ({ page }) => {
+  const mainHeader = page.locator("[data-main-toolbar]");
+  await mainHeader.getByRole("button", { name: "Compare with design" }).click();
+  const compareHeader = page.locator("[data-compare-toolbar]");
+  await expect(compareHeader).toBeVisible();
+  await expect(mainHeader).toHaveCount(0);
+  await expect(page.getByText("Page", { exact: true })).toBeVisible();
+  await expect(page.getByText("Live page")).toHaveCount(0);
+
+  await compareHeader.getByRole("button", { name: "Back to workspace" }).last().click();
+  await expect(compareHeader).toHaveCount(0);
+  await expect(mainHeader).toBeVisible();
+
+  await page.locator("[data-all-devices-toggle]").click();
+  const gallery = page.locator("[data-all-devices-view]");
+  await expect(gallery.getByRole("button", { name: "Close viewer" })).toHaveCount(0);
+  await gallery.getByRole("button", { name: "Back to workspace" }).last().click();
+  await expect(gallery).toHaveCount(0);
+  await expect(mainHeader).toBeVisible();
 });

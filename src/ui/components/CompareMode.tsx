@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type DragEvent, type ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import { getViewerEventTarget } from "../../app/viewer-context";
-import { LockIcon, MinusIcon, OverlayIcon, PencilIcon, PlusIcon, SideBySideIcon, UnlockIcon, UploadIcon, CloseIcon } from "../icons";
-import { cx, focusRing, Segmented, Switch } from "./ui";
+import { BackIcon, LockIcon, MinusIcon, OverlayIcon, PencilIcon, PlusIcon, SideBySideIcon, UnlockIcon, UploadIcon, CloseIcon } from "../icons";
+import { BrandMark } from "./BrandMark";
+import { cx, focusRing, IconButton, Segmented, Switch } from "./ui";
 
 export type CompareMode = "side-by-side" | "overlay";
 export type CompareBlend = "normal" | "difference";
@@ -20,17 +21,24 @@ export function readDesignFile(file: File | undefined, onLoad: (image: string, n
   reader.readAsDataURL(file);
 }
 
-export function CompareBar({ tabs, activeSlotId, mode, onSelect, onModeChange, onDone }: {
+// Compare replaces the main header: one bar with the way back on both ends.
+export function CompareBar({ tabs, activeSlotId, mode, onSelect, onModeChange, onBack }: {
   tabs: CompareTab[];
   activeSlotId: string;
   mode: CompareMode;
   onSelect: (slotId: string) => void;
   onModeChange: (mode: CompareMode) => void;
-  onDone: () => void;
+  onBack: () => void;
 }) {
   const { t } = useI18n();
   return (
-    <div className="relative z-20 flex h-[52px] shrink-0 items-center gap-2.5 border-b border-line bg-surface px-3">
+    <header data-compare-toolbar className="relative z-30 flex h-[52px] shrink-0 items-center gap-2.5 border-b border-line bg-surface px-2.5">
+      <BrandMark size={28} />
+      <button type="button" onClick={onBack} aria-label={t("backToWorkspace")} title={t("backToWorkspace")}
+        className={cx("flex h-[34px] shrink-0 items-center gap-1.5 rounded-[9px] border border-line pe-2.5 ps-2 text-[13px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+        <BackIcon size={15} className="rtl:rotate-180" />{t("workspace")}
+      </button>
+      <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />
       <span className="whitespace-nowrap text-[13px] font-semibold">{t("compareWithDesign")}</span>
       <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />
       <div role="tablist" aria-label={t("deviceToCompare")} className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
@@ -69,10 +77,8 @@ export function CompareBar({ tabs, activeSlotId, mode, onSelect, onModeChange, o
           { value: "overlay", label: t("overlay"), icon: <OverlayIcon size={16} /> },
         ]}
       />
-      <button type="button" onClick={onDone} className={cx("h-[34px] shrink-0 rounded-[9px] bg-primary px-3.5 text-[13px] font-semibold text-on-primary", focusRing)}>
-        {t("done")}
-      </button>
-    </div>
+      <IconButton label={t("backToWorkspace")} tooltip={t("tipBackToWorkspace")} tooltipAlign="end" onClick={onBack}><CloseIcon size={18} /></IconButton>
+    </header>
   );
 }
 

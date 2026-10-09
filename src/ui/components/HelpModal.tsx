@@ -1,11 +1,11 @@
-import { ExternalLink, LoaderCircle, Bug, Star } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useI18n, type TranslationKey } from "../../app/i18n";
 import type { useReviewPrompt } from "../../app/useReviewPrompt";
 import { SUPPORT_URL } from "../../domain/review/review-coordinator";
 import { REVIEW_PROMPT_POLICY } from "../../domain/review/review-prompt";
-
-import { FeedbackDialog, FeedbackError } from "./FeedbackDialog";
+import { BugIcon, ChevronRightIcon, HelpIcon, OpenInTabIcon, StarIcon } from "../icons";
+import { Dialog, DialogError, Spinner } from "./Dialog";
+import { cx, focusRing } from "./ui";
 
 const reasonLabels: Record<string, TranslationKey> = {
   disabled: "reviewStatusDisabled", error: "reviewStatusError", loading: "reviewStatusLoading",
@@ -14,8 +14,8 @@ const reasonLabels: Record<string, TranslationKey> = {
   limit: "reviewStatusLimit", never: "reviewStatusNever", eligible: "reviewStatusEligible",
 };
 
-export function HelpModal({ dark, review, onClose }: {
-  dark: boolean; review: ReturnType<typeof useReviewPrompt>; onClose: () => void;
+export function HelpModal({ review, onClose }: {
+  review: ReturnType<typeof useReviewPrompt>; onClose: () => void;
 }) {
   const { t } = useI18n();
   const [opening, setOpening] = useState<"review" | "support" | null>(null);
@@ -33,29 +33,50 @@ export function HelpModal({ dark, review, onClose }: {
     } catch { setFailed(true); }
     finally { setOpening(null); }
   };
-  return <FeedbackDialog dismissOnBackdrop dark={dark} title={t("helpAndFeedback")} description={t("helpIntro")} busy={busy} onClose={onClose}
-    footer={<details className="text-xs">
-      <summary className={`cursor-pointer rounded font-medium leading-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 ${dark ? "text-slate-400 hover:text-slate-200" : "text-slate-600 hover:text-slate-900"}`}>{t("reviewRequestStatus")}</summary>
-      <p className={`mt-2 leading-5 ${dark ? "text-slate-300" : "text-slate-600"}`}>{t(reasonLabels[review.reason] ?? "reviewStatusLoading")}</p>
-      {review.state && <div className={`mt-2 space-y-1 leading-5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
-        <p>{t("reviewProgress", { sessions: review.state.qualifiedSessions, requiredsessions: REVIEW_PROMPT_POLICY.minimumQualifiedSessions })}</p>
-        <p>{t("reviewTracking", { prompts: review.state.promptCount, limit: REVIEW_PROMPT_POLICY.maximumPrompts, opens: review.state.openedCount, dismissals: review.state.postponedCount })}</p>
-        <p>{t("reviewTrackingNote")}</p>
-      </div>}
-    </details>}
-  >
-    <div className="grid gap-2">
-      <button type="button" disabled={busy} aria-busy={opening === "review"} onClick={() => void open("review")}
-        className="flex min-h-10 items-center gap-3 rounded-lg border border-teal-700 bg-teal-700 px-3 py-2.5 text-start text-[13px] font-semibold text-white transition hover:bg-teal-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:opacity-60">
-        <Star size={16} className="shrink-0" aria-hidden="true" /><span className="flex-1">{opening === "review" ? t("openingReview") : t("leaveStoreReview")}</span>
-        {opening === "review" ? <LoaderCircle size={14} className="shrink-0 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ExternalLink size={14} className="shrink-0" aria-hidden="true" />}
-      </button>
-      <button type="button" disabled={busy} aria-busy={opening === "support"} onClick={() => void open("support")}
-        className={`flex min-h-10 items-center gap-3 rounded-lg border px-3 py-2.5 text-start text-[13px] font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:opacity-60 ${dark ? "border-slate-600 bg-slate-800/40 hover:bg-slate-800" : "border-slate-300 bg-white hover:bg-slate-50"}`}>
-        <Bug size={16} className="shrink-0" aria-hidden="true" /><span className="flex-1">{opening === "support" ? t("openingReview") : t("reportIssueGitHub")}</span>
-        {opening === "support" ? <LoaderCircle size={14} className="shrink-0 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ExternalLink size={14} className="shrink-0" aria-hidden="true" />}
-      </button>
-    </div>
-    {failed && <FeedbackError dark={dark}>{t("reviewOpenError")}</FeedbackError>}
-  </FeedbackDialog>;
+  return (
+    <Dialog icon={<HelpIcon size={18} />} title={t("helpAndFeedback")} description={t("helpIntro")} busy={busy} onClose={onClose}
+      footer={<details className="group/status min-w-0 flex-1 text-xs">
+        <summary className={cx("flex cursor-pointer list-none items-center gap-1 rounded font-medium text-muted hover:text-ink", focusRing)}>
+          <ChevronRightIcon size={12} className="transition-transform group-open/status:rotate-90 rtl:rotate-180" />
+          {t("reviewRequestStatus")}
+        </summary>
+        <div className="mt-2 space-y-1 leading-5 text-muted">
+          <p className="text-ink-2">{t(reasonLabels[review.reason] ?? "reviewStatusLoading")}</p>
+          {review.state && <>
+            <p>{t("reviewProgress", { sessions: review.state.qualifiedSessions, requiredsessions: REVIEW_PROMPT_POLICY.minimumQualifiedSessions })}</p>
+            <p>{t("reviewTracking", { prompts: review.state.promptCount, limit: REVIEW_PROMPT_POLICY.maximumPrompts, opens: review.state.openedCount, dismissals: review.state.postponedCount })}</p>
+            <p>{t("reviewTrackingNote")}</p>
+          </>}
+        </div>
+      </details>}
+    >
+      <div className="grid gap-2">
+        <ActionRow primary icon={<StarIcon size={16} />} busy={opening === "review"} disabled={busy} onClick={() => void open("review")}>
+          {opening === "review" ? t("openingReview") : t("leaveStoreReview")}
+        </ActionRow>
+        <ActionRow icon={<BugIcon size={16} />} busy={opening === "support"} disabled={busy} onClick={() => void open("support")}>
+          {opening === "support" ? t("openingReview") : t("reportIssueGitHub")}
+        </ActionRow>
+      </div>
+      {failed && <DialogError>{t("reviewOpenError")}</DialogError>}
+    </Dialog>
+  );
+}
+
+// A full-width action that opens a page outside the viewer.
+function ActionRow({ primary = false, icon, busy, disabled, onClick, children }: {
+  primary?: boolean; icon: ReactNode; busy: boolean; disabled: boolean; onClick: () => void; children: ReactNode;
+}) {
+  return (
+    <button type="button" disabled={disabled} aria-busy={busy} onClick={onClick}
+      className={cx(
+        "flex min-h-11 items-center gap-3 rounded-xl border px-3.5 text-start text-[13px] font-semibold transition-colors disabled:opacity-60",
+        primary ? "border-transparent bg-accent text-on-accent hover:opacity-90" : "border-line bg-surface text-ink hover:bg-sunken",
+        focusRing,
+      )}>
+      <span aria-hidden="true" className="shrink-0">{icon}</span>
+      <span className="flex-1">{children}</span>
+      {busy ? <Spinner /> : <OpenInTabIcon size={14} className={cx("shrink-0", !primary && "text-muted")} />}
+    </button>
+  );
 }

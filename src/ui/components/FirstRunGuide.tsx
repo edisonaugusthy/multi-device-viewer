@@ -1,13 +1,7 @@
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { getViewerRoot } from "../../app/viewer-context";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  MousePointerClick,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, CloseIcon, PointerIcon, TourIcon } from "../icons";
+import { cx, focusRing, IconButton } from "./ui";
 import {
   useCallback,
   useEffect,
@@ -35,13 +29,7 @@ const TOUR_TRANSLATION_KEYS: Array<{
   { eyebrow: "flowRecorder", title: "recordAFlow", text: "tourRecordText" },
 ];
 
-export function FirstRunGuide({
-  dark,
-  onClose,
-}: {
-  dark: boolean;
-  onClose: () => void;
-}) {
+export function FirstRunGuide({ onClose }: { onClose: () => void }) {
   const { locale, t } = useI18n();
   const [stepIndex, setStepIndex] = useState(0);
   const [highlight, setHighlight] = useState<HighlightRect | null>(null);
@@ -140,96 +128,47 @@ export function FirstRunGuide({
   const cardStyle = positionCard(highlight);
 
   return (
-    <div
-      className="fixed inset-0 z-[80]"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="first-run-title"
-    >
-      <div
-        className={`fixed inset-0 transition-colors ${
-          highlight ? "bg-transparent" : "bg-black/55"
-        }`}
-        aria-hidden="true"
-      />
+    <div className="fixed inset-0 z-[80]" role="dialog" aria-modal="true" aria-labelledby="first-run-title">
+      <div className={cx("fixed inset-0 transition-colors", highlight ? "bg-transparent" : "bg-black/45")} aria-hidden="true" />
       {highlight && (
         <div
           data-testid="tour-highlight"
-          className="pointer-events-none fixed rounded-xl border-2 border-[#32c9b8] shadow-[0_0_0_9999px_rgba(2,6,15,0.68),0_0_0_5px_rgba(15,159,143,0.2)] transition-all duration-200"
+          className="pointer-events-none fixed rounded-xl border-2 border-accent shadow-[0_0_0_9999px_rgb(10_12_16/0.6),0_0_0_6px_var(--color-accent-soft)] transition-all duration-200"
           style={highlight}
           aria-hidden="true"
         />
       )}
 
       <section
-        className={`fixed flex max-h-[calc(100vh-24px)] w-[calc(100vw-24px)] max-w-[360px] flex-col overflow-y-auto rounded-2xl border p-5 shadow-2xl transition-[left,top] duration-200 ${
-          dark
-            ? "border-white/10 bg-[#171a21] text-white"
-            : "border-slate-200 bg-white text-slate-900"
-        }`}
+        className="fixed flex max-h-[calc(100vh-24px)] w-[calc(100vw-24px)] max-w-[360px] flex-col overflow-y-auto rounded-2xl border border-line bg-surface p-5 text-ink shadow-popover transition-[left,top] duration-200"
         style={cardStyle}
       >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#18b5a4]">
-              {step.eyebrow} · {t("tourStep", {
-                current: stepIndex + 1,
-                total: FIRST_RUN_TOUR_STEPS.length,
-              })}
+        <div className="flex items-start gap-3">
+          <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-accent-soft text-accent-strong">
+            <TourIcon size={18} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-accent-strong">
+              {step.eyebrow} · {t("tourStep", { current: stepIndex + 1, total: FIRST_RUN_TOUR_STEPS.length })}
             </p>
-            <h2
-              id="first-run-title"
-              className="mt-1 text-lg font-extrabold leading-6"
-            >
-              {step.title}
-            </h2>
+            <h2 id="first-run-title" className="mt-0.5 text-[15px] font-semibold leading-6 tracking-tight">{step.title}</h2>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t("skipFeatureTour")}
-            title={t("skipTour")}
-            className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${
-              dark ? "hover:bg-white/10" : "hover:bg-slate-100"
-            }`}
-          >
-            <X size={16} />
-          </button>
+          <IconButton size="sm" label={t("skipFeatureTour")} onClick={onClose} className="-me-1.5 -mt-0.5">
+            <CloseIcon size={16} />
+          </IconButton>
         </div>
 
-        <p
-          className={`mt-3 text-xs leading-5 ${
-            dark ? "text-slate-300" : "text-slate-600"
-          }`}
-        >
-          {step.text}
-        </p>
+        <p className="mt-3 text-[13px] leading-relaxed text-ink-2">{step.text}</p>
 
         {step.hint && (
-          <div
-            className={`mt-4 flex gap-2.5 rounded-xl p-3 ${
-              dark ? "bg-white/[0.05]" : "bg-slate-50"
-            }`}
-          >
-            <MousePointerClick
-              className="mt-0.5 shrink-0 text-[#18b5a4]"
-              size={17}
-            />
-            <p
-              className={`text-[11px] leading-4 ${
-                dark ? "text-slate-400" : "text-slate-500"
-              }`}
-            >
-              {step.hint}
-            </p>
+          <div className="mt-3 flex gap-2.5 rounded-xl bg-surface-2 p-3">
+            <PointerIcon size={16} className="mt-0.5 shrink-0 text-accent-strong" />
+            <p className="text-xs leading-5 text-muted">{step.hint}</p>
           </div>
         )}
 
-        <div className="mt-5 flex items-center justify-between gap-3">
-          <div
-            className="flex gap-1.5"
-            aria-label={t("tourStep", { current: stepIndex + 1, total: FIRST_RUN_TOUR_STEPS.length })}
-          >
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <div className="flex gap-1.5" aria-label={t("tourStep", { current: stepIndex + 1, total: FIRST_RUN_TOUR_STEPS.length })}>
             {FIRST_RUN_TOUR_STEPS.map((item, index) => (
               <button
                 key={item.title}
@@ -237,61 +176,29 @@ export function FirstRunGuide({
                 onClick={() => setStepIndex(index)}
                 aria-label={t("goToTourStep", {
                   current: index + 1,
-                  title: locale === "en"
-                    ? item.title
-                    : t(TOUR_TRANSLATION_KEYS[index].title),
+                  title: locale === "en" ? item.title : t(TOUR_TRANSLATION_KEYS[index].title),
                 })}
                 aria-current={index === stepIndex ? "step" : undefined}
-                className={`h-1.5 rounded-full transition-all ${
-                  index === stepIndex
-                    ? "w-5 bg-[#18b5a4]"
-                    : dark
-                      ? "w-1.5 bg-white/20 hover:bg-white/40"
-                      : "w-1.5 bg-slate-200 hover:bg-slate-300"
-                }`}
+                className={cx("h-1.5 rounded-full transition-all", index === stepIndex ? "w-5 bg-accent" : "w-1.5 bg-line hover:bg-faint", focusRing)}
               />
             ))}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             {stepIndex > 0 && (
-              <button
-                type="button"
-                onClick={() => setStepIndex((current) => current - 1)}
-                className={`grid h-9 w-9 place-items-center rounded-xl ${
-                  dark
-                    ? "bg-white/[0.07] hover:bg-white/10"
-                    : "bg-slate-100 hover:bg-slate-200"
-                }`}
-                aria-label={t("previousTourStep")}
-              >
-                <ArrowLeft size={15} />
-              </button>
+              <IconButton tone="outline" label={t("previousTourStep")} onClick={() => setStepIndex(current => current - 1)}>
+                <ChevronLeftIcon size={15} className="rtl:rotate-180" />
+              </IconButton>
             )}
             <button
               type="button"
-              onClick={() =>
-                finalStep
-                  ? onClose()
-                  : setStepIndex((current) => current + 1)
-              }
-              className="flex h-9 items-center justify-center gap-2 rounded-xl bg-[#0f9f8f] px-4 text-xs font-extrabold text-white hover:bg-[#0c8b7e]"
+              onClick={() => finalStep ? onClose() : setStepIndex(current => current + 1)}
+              className={cx("flex h-[34px] items-center justify-center gap-1.5 rounded-[9px] bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}
             >
-              {finalStep ? (
-                <>
-                  <Check size={15} />
-                  {t("startTesting")}
-                </>
-              ) : stepIndex === 0 ? (
-                <>
-                  <Sparkles size={15} />
-                  {t("showMe")}
-                </>
-              ) : (
-                <>
-                  {t("next")}
-                  <ArrowRight size={15} />
-                </>
-              )}
+              {finalStep
+                ? <><CheckIcon size={14} />{t("startTesting")}</>
+                : stepIndex === 0
+                  ? t("showMe")
+                  : <>{t("next")}<ChevronRightIcon size={14} className="rtl:rotate-180" /></>}
             </button>
           </div>
         </div>

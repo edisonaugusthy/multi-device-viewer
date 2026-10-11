@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Responsive Website Tester & Device Emulator for Chrome",
+    "description": "Free Chrome extension to test responsive sites on real iPhone, Android, iPad, Mac and Apple Watch frames side by side, with synced scrolling. Works on localhost.",
+    "ogTitle": "Mobile View: see your site on every screen at once",
+    "ogImageAlt": "Mobile View showing one page on iPhone, a foldable, a MacBook and an Apple Watch side by side"
+  },
+  "nav": {
+    "home": "Mobile View home",
+    "main": "Main",
+    "tour": "Tour",
+    "reviews": "Reviews",
+    "faq": "FAQ",
+    "guides": "Guides",
+    "privacy": "Privacy",
+    "github": "Mobile View on GitHub",
+    "leaveReview": "Leave a review",
+    "addToChrome": "Add to Chrome",
+    "skip": "Skip to content"
+  },
+  "hero": {
+    "rating": "{rating} on the Chrome Web Store",
+    "title": "See your site on every screen at once.",
+    "lede": "A free Chrome extension that shows any page, even localhost, on real phones, foldables, tablets, laptops and watches. Side by side, in sync.",
+    "install": "Add to Chrome, it's free",
+    "review": "Leave a review"
+  },
+  "demo": {
+    "label": "Live demo",
+    "badge": "Live. Scroll or tap any screen.",
+    "frameTitle": "Live demo page on {device}"
+  },
+  "facts": {
+    "label": "At a glance",
+    "devicesValue": "{count}",
+    "devices": "real devices",
+    "atOnceValue": "4 at once",
+    "atOnce": "side by side",
+    "syncValue": "In sync",
+    "sync": "scroll, taps and pages",
+    "privateValue": "Private",
+    "private": "no account, no tracking"
+  },
+  "tour": {
+    "workspaceTitle": "Four devices. One workspace.",
+    "workspaceText": "Pick any four of {count} real devices and see your page on all of them at once.",
+    "workspaceAlt": "Mobile View workspace showing a page on iPhone 18 Pro, iPhone Duo folded, MacBook Pro 14 and Apple Watch side by side",
+    "syncTitle": "Scroll once. Every screen follows.",
+    "syncText": "Scrolling, clicks and navigation stay in sync across devices.",
+    "syncAlt": "Four devices scrolled to the same point of a page with scroll and navigation sync turned on",
+    "allTitle": "Every device. One click.",
+    "allText": "Open a whole category at once. Here, 16 of 37 iPhones, from the iPhone 5 to the iPhone 15 Pro.",
+    "allAlt": "All devices view showing two rows of iPhones, from iPhone 5 and iPhone SE to iPhone 15 Pro, each loading the same page",
+    "designTitle": "Match the design.",
+    "designText": "Drop your mockup next to the live page on any device. Side by side or overlaid, every gap between design and build is easy to spot.",
+    "designCaught": "Caught in this comparison",
+    "designItem1": "Headline copy differs",
+    "designItem1Detail": "Live: \"Make room for your best work.\" Design: \"Room for your best work.\"",
+    "designItem2": "Button style differs",
+    "designItem2Detail": "Live: dark, square corners. Design: teal pill.",
+    "designAlt": "Compare with design: the live page on iPhone 18 Pro beside the design image, with a different headline and button style",
+    "fixTitle": "Mark the bug. Copy the fix.",
+    "fixText": "Draw on a screenshot, then copy a ready prompt for your AI coding tool. Nothing leaves your machine.",
+    "fixAlt": "Annotation editor with an arrow and box marking a heading on the iPhone, next to the fix prompt panel listing the affected devices",
+    "alsoInside": "Also inside",
+    "chipRecord": "Record and replay flows",
+    "chipFocus": "Focus mode",
+    "chipRotate": "Rotate and zoom",
+    "chipCustom": "Custom sizes",
+    "chipSets": "Saved device sets"
+  },
+  "reviews": {
+    "title": "Rated by people who ship.",
+    "outOf": "out of 5",
+    "stars": "{rating} out of 5 stars",
+    "summary": "{count} ratings · {users} users on the Chrome Web Store",
+    "leave": "Leave a review",
+    "readAll": "Read all",
+    "source": "Chrome Web Store",
+    "empty": "Be one of the first to review Mobile View."
+  },
+  "privacy": {
+    "title": "Private by design.",
+    "item1": "No account",
+    "item2": "No tracking",
+    "item3": "Your pages stay in your browser",
+    "item4": "Open source",
+    "link": "Privacy policy"
+  },
+  "faq": {
+    "title": "Questions.",
+    "q1": "Is it free?",
+    "a1": "Yes. Free and open source under the MIT license, with no account.",
+    "q2": "Does it work on localhost?",
+    "a2": "Yes. Open your local page in Chrome, then open Mobile View. Nothing leaves your computer.",
+    "q3": "How is it different from DevTools device mode?",
+    "a3": "DevTools shows one viewport at a time. Mobile View shows four real devices side by side, kept in sync.",
+    "q4": "Why won't some sites load?",
+    "a4": "Some sites block being shown inside another page. Mobile View tells you and offers to open them in a tab.",
+    "q5": "Does the fix prompt upload my code?",
+    "a5": "No. It is written on your machine for you to paste into your own coding tool."
+  },
+  "cta": {
+    "title": "Try it on your own site.",
+    "text": "Free. No account. Works on localhost.",
+    "install": "Add to Chrome, it's free",
+    "review": "Leave a review"
+  },
+  "footer": {
+    "blurb": "A free, private responsive tester for Chrome. Open source under the MIT license.",
+    "product": "Product",
+    "guides": "Guides",
+    "project": "Project",
+    "tour": "Tour",
+    "reviews": "Reviews",
+    "changelog": "Changelog",
+    "store": "Chrome Web Store",
+    "allGuides": "All guides",
+    "source": "Source on GitHub",
+    "issue": "Report an issue",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "language": "Language",
+    "copyright": "© {year} Edison Augusthy. MIT licensed.",
+    "trademarks": "iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Galaxy is a trademark of Samsung; Pixel of Google. Device names describe screen sizes only; Mobile View is not affiliated with these companies."
+  }
+}

@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check extension
+        run: npm run compile
+
+      - name: Check artwork privacy
+        run: npm run validate:artwork-privacy && npm run test:artwork-privacy
+
+      - name: Validate localized extension metadata
+        run: npm run validate:locales
+
+      # Device frames are private and never in the repository. CI builds and
+      # tests with plain stand-ins that keep the real screen geometry.
+      - name: Provide stand-in device frames
+        run: npm run stand-in:mockups
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Install browser test runtimes
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Chrome browser tests
+        run: npm run test:e2e
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Smoke test the built extension
+        run: npm run test:extension
+
+      - name: Package extension zip
+        run: npm run zip
+
+      - name: Validate Chrome package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          npm run validate:chrome-zip -- ".output/multi-device-viewer-${version}-chrome.zip"

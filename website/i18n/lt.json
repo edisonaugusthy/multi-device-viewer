@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: adaptyvaus dizaino testeris ir emuliatorius Chrome",
+    "description": "Nemokamas Chrome plėtinys adaptyvumui testuoti tikruose iPhone, Android, iPad, Mac ir Apple Watch rėmeliuose su sinchronišku slinkimu. Veikia su localhost.",
+    "ogTitle": "Mobile View: jūsų svetainė visuose ekranuose iš karto",
+    "ogImageAlt": "Mobile View rodo tą patį puslapį greta iPhone, sulankstomojo telefono, MacBook ir Apple Watch ekranuose"
+  },
+  "nav": {
+    "home": "Mobile View pradžia",
+    "main": "Pagrindinis",
+    "tour": "Apžvalga",
+    "reviews": "Atsiliepimai",
+    "faq": "DUK",
+    "guides": "Gidai",
+    "privacy": "Privatumas",
+    "github": "Mobile View GitHub platformoje",
+    "leaveReview": "Palikti atsiliepimą",
+    "addToChrome": "Pridėti prie Chrome",
+    "skip": "Pereiti prie turinio"
+  },
+  "hero": {
+    "rating": "{rating} – Chrome Web Store įvertinimas",
+    "title": "Jūsų svetainė visuose ekranuose iš karto.",
+    "lede": "Nemokamas Chrome plėtinys, rodantis bet kurį puslapį, net localhost, tikruose telefonuose, sulankstomuosiuose įrenginiuose, planšetėse, nešiojamuosiuose kompiuteriuose ir laikrodžiuose. Greta ir sinchroniškai.",
+    "install": "Pridėti prie Chrome nemokamai",
+    "review": "Palikti atsiliepimą"
+  },
+  "demo": {
+    "label": "Tiesioginė demonstracija",
+    "badge": "Tiesiogiai. Slinkite ar bakstelėkite bet kurį ekraną.",
+    "frameTitle": "Tiesioginės demonstracijos puslapis: {device}"
+  },
+  "facts": {
+    "label": "Trumpai",
+    "devicesValue": "{count}",
+    "devices": "tikrų įrenginių",
+    "atOnceValue": "4 iš karto",
+    "atOnce": "greta vienas kito",
+    "syncValue": "Sinchroniškai",
+    "sync": "slinkimas, bakstelėjimai ir puslapiai",
+    "privateValue": "Privatu",
+    "private": "be paskyros, be sekimo"
+  },
+  "tour": {
+    "workspaceTitle": "Keturi įrenginiai. Viena darbo erdvė.",
+    "workspaceText": "Pasirinkite bet kuriuos keturis iš {count} tikrų įrenginių ir matykite puslapį visuose iš karto.",
+    "workspaceAlt": "Mobile View darbo erdvė, kurioje puslapis rodomas greta iPhone 18 Pro, sulenkto iPhone Duo, MacBook Pro 14 ir Apple Watch ekranuose",
+    "syncTitle": "Paslinkite kartą. Visi ekranai seka.",
+    "syncText": "Slinkimas, paspaudimai ir naršymas sinchronizuojami visuose įrenginiuose.",
+    "syncAlt": "Keturi įrenginiai, paslinkti į tą pačią puslapio vietą, įjungus slinkimo ir naršymo sinchronizavimą",
+    "allTitle": "Visi įrenginiai. Vienas paspaudimas.",
+    "allText": "Atidarykite visą kategoriją iš karto. Čia – 16 iš 37 iPhone, nuo iPhone 5 iki iPhone 15 Pro.",
+    "allAlt": "Visų įrenginių rodinys su dviem iPhone eilėmis, nuo iPhone 5 ir iPhone SE iki iPhone 15 Pro, kiekviename įkeliamas tas pats puslapis",
+    "designTitle": "Atitikite dizainą.",
+    "designText": "Padėkite maketą šalia tiesioginio puslapio bet kuriame įrenginyje. Greta ar uždėjus vieną ant kito, kiekvienas dizaino ir įgyvendinimo neatitikimas iškart matomas.",
+    "designCaught": "Šiame palyginime aptikta",
+    "designItem1": "Skiriasi antraštės tekstas",
+    "designItem1Detail": "Tiesiogiai: „Make room for your best work.“ Dizainas: „Room for your best work.“",
+    "designItem2": "Skiriasi mygtuko stilius",
+    "designItem2Detail": "Tiesiogiai: tamsus, statūs kampai. Dizainas: žalsvai mėlyna piliulė.",
+    "designAlt": "Palyginimas su dizainu: tiesioginis puslapis iPhone 18 Pro šalia dizaino vaizdo, su kita antrašte ir mygtuko stiliumi",
+    "fixTitle": "Pažymėkite klaidą. Nukopijuokite pataisymą.",
+    "fixText": "Pieškite ant ekrano kopijos, tada nukopijuokite paruoštą užklausą savo AI programavimo įrankiui. Niekas nepalieka jūsų kompiuterio.",
+    "fixAlt": "Anotacijų redaktorius su rodykle ir rėmeliu, žyminčiais antraštę iPhone ekrane, šalia pataisymo užklausos skydelis su paveiktų įrenginių sąrašu",
+    "alsoInside": "Taip pat",
+    "chipRecord": "Eigų įrašymas ir atkūrimas",
+    "chipFocus": "Fokusavimo režimas",
+    "chipRotate": "Pasukimas ir mastelis",
+    "chipCustom": "Pasirinktiniai dydžiai",
+    "chipSets": "Išsaugoti įrenginių rinkiniai"
+  },
+  "reviews": {
+    "title": "Vertina tie, kas kuria.",
+    "outOf": "iš 5",
+    "stars": "{rating} iš 5 žvaigždučių",
+    "summary": "Įvertinimų: {count} · Naudotojų Chrome Web Store: {users}",
+    "leave": "Palikti atsiliepimą",
+    "readAll": "Skaityti visus",
+    "source": "Chrome Web Store",
+    "empty": "Būkite vieni pirmųjų, įvertinusių Mobile View."
+  },
+  "privacy": {
+    "title": "Privatus iš principo.",
+    "item1": "Jokios paskyros",
+    "item2": "Jokio sekimo",
+    "item3": "Jūsų puslapiai lieka jūsų naršyklėje",
+    "item4": "Atvirasis kodas",
+    "link": "Privatumo politika"
+  },
+  "faq": {
+    "title": "Klausimai.",
+    "q1": "Ar tai nemokama?",
+    "a1": "Taip. Nemokama ir atvirojo kodo pagal MIT licenciją, be paskyros.",
+    "q2": "Ar veikia su localhost?",
+    "a2": "Taip. Atidarykite vietinį puslapį Chrome naršyklėje, tada paleiskite Mobile View. Niekas nepalieka jūsų kompiuterio.",
+    "q3": "Kuo tai skiriasi nuo DevTools įrenginio režimo?",
+    "a3": "DevTools vienu metu rodo vieną peržiūros sritį. Mobile View rodo keturis tikrus įrenginius greta ir sinchroniškai.",
+    "q4": "Kodėl kai kurios svetainės neįsikelia?",
+    "a4": "Kai kurios svetainės draudžia rodyti save kitame puslapyje. Mobile View apie tai praneša ir pasiūlo atidaryti jas skirtuke.",
+    "q5": "Ar pataisymo užklausa įkelia mano kodą?",
+    "a5": "Ne. Ji sukuriama jūsų kompiuteryje, kad galėtumėte ją įklijuoti į savo programavimo įrankį."
+  },
+  "cta": {
+    "title": "Išbandykite savo svetainėje.",
+    "text": "Nemokama. Be paskyros. Veikia su localhost.",
+    "install": "Pridėti prie Chrome nemokamai",
+    "review": "Palikti atsiliepimą"
+  },
+  "footer": {
+    "blurb": "Nemokamas ir privatus adaptyvumo testeris Chrome naršyklei. Atvirasis kodas pagal MIT licenciją.",
+    "product": "Produktas",
+    "guides": "Gidai",
+    "project": "Projektas",
+    "tour": "Apžvalga",
+    "reviews": "Atsiliepimai",
+    "changelog": "Pakeitimų žurnalas",
+    "store": "Chrome Web Store",
+    "allGuides": "Visi gidai",
+    "source": "Išeities kodas GitHub",
+    "issue": "Pranešti apie problemą",
+    "privacy": "Privatumo politika",
+    "terms": "Naudojimo sąlygos",
+    "language": "Kalba",
+    "copyright": "© {year} Edison Augusthy. MIT licencija.",
+    "trademarks": "iPhone, iPad, Mac ir Apple Watch yra Apple Inc. prekių ženklai. Galaxy yra Samsung prekių ženklas, Pixel – Google. Įrenginių pavadinimai nurodo tik ekrano dydžius; Mobile View nėra susijęs su šiomis bendrovėmis."
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: adaptīvo vietņu tests un ierīču emulators Chrome",
+    "description": "Bezmaksas Chrome paplašinājums adaptīvu vietņu testēšanai īstos iPhone, Android, iPad un Mac rāmjos blakus, ar sinhronu ritināšanu. Darbojas arī ar localhost.",
+    "ogTitle": "Mobile View: jūsu vietne visos ekrānos vienlaikus",
+    "ogImageAlt": "Mobile View rāda vienu lapu blakus iPhone, salokāmā tālrunī, MacBook un Apple Watch"
+  },
+  "nav": {
+    "home": "Mobile View sākumlapa",
+    "main": "Galvenā izvēlne",
+    "tour": "Apskats",
+    "reviews": "Atsauksmes",
+    "faq": "BUJ",
+    "guides": "Ceļveži",
+    "privacy": "Privātums",
+    "github": "Mobile View vietnē GitHub",
+    "leaveReview": "Atstāt atsauksmi",
+    "addToChrome": "Pievienot Chrome",
+    "skip": "Pāriet uz saturu"
+  },
+  "hero": {
+    "rating": "{rating} Chrome Web Store",
+    "title": "Jūsu vietne visos ekrānos vienlaikus.",
+    "lede": "Bezmaksas Chrome paplašinājums, kas jebkuru lapu, pat localhost, parāda īstos tālruņos, salokāmās ierīcēs, planšetdatoros, klēpjdatoros un pulksteņos. Blakus un sinhroni.",
+    "install": "Pievienot Chrome bez maksas",
+    "review": "Atstāt atsauksmi"
+  },
+  "demo": {
+    "label": "Tiešraides demo",
+    "badge": "Tiešraidē. Ritiniet vai pieskarieties jebkuram ekrānam.",
+    "frameTitle": "Tiešraides demo lapa ierīcē {device}"
+  },
+  "facts": {
+    "label": "Īsumā",
+    "devicesValue": "{count}",
+    "devices": "īstas ierīces",
+    "atOnceValue": "4 vienlaikus",
+    "atOnce": "blakus",
+    "syncValue": "Sinhroni",
+    "sync": "ritināšana, pieskārieni un lapas",
+    "privateValue": "Privāti",
+    "private": "bez konta, bez izsekošanas"
+  },
+  "tour": {
+    "workspaceTitle": "Četras ierīces. Viena darbvieta.",
+    "workspaceText": "Izvēlieties jebkuras četras no {count} īstām ierīcēm un skatiet lapu tajās visās vienlaikus.",
+    "workspaceAlt": "Mobile View darbvieta ar lapu blakus iPhone 18 Pro, salocītā iPhone Duo, MacBook Pro 14 un Apple Watch",
+    "syncTitle": "Ritiniet vienreiz. Seko visi ekrāni.",
+    "syncText": "Ritināšana, klikšķi un navigācija visās ierīcēs notiek sinhroni.",
+    "syncAlt": "Četras ierīces, ritinātas līdz vienai un tai pašai lapas vietai ar ieslēgtu ritināšanas un navigācijas sinhronizāciju",
+    "allTitle": "Visas ierīces. Viens klikšķis.",
+    "allText": "Atveriet visu kategoriju uzreiz. Šeit 16 no 37 iPhone, no iPhone 5 līdz iPhone 15 Pro.",
+    "allAlt": "Visu ierīču skats ar divām iPhone rindām, no iPhone 5 un iPhone SE līdz iPhone 15 Pro, katrā ielādējas tā pati lapa",
+    "designTitle": "Salīdziniet ar dizainu.",
+    "designText": "Novietojiet maketu blakus aktīvajai lapai jebkurā ierīcē. Blakus vai pārklājumā: katra atšķirība starp dizainu un realizāciju ir viegli pamanāma.",
+    "designCaught": "Atrasts šajā salīdzinājumā",
+    "designItem1": "Atšķiras virsraksts",
+    "designItem1Detail": "Aktīvā: „Make room for your best work.“ Dizains: „Room for your best work.“",
+    "designItem2": "Atšķiras pogas stils",
+    "designItem2Detail": "Aktīvā: tumša, taisni stūri. Dizains: zilganzaļa, noapaļota.",
+    "designAlt": "Salīdzināšana ar dizainu: aktīvā lapa iPhone 18 Pro blakus dizaina attēlam, ar atšķirīgu virsrakstu un pogas stilu",
+    "fixTitle": "Atzīmējiet kļūdu. Kopējiet labojumu.",
+    "fixText": "Zīmējiet uz ekrānuzņēmuma un kopējiet gatavu uzvedni savam AI programmēšanas rīkam. Nekas nepamet jūsu datoru.",
+    "fixAlt": "Anotāciju redaktors ar bultu un rāmi, kas iezīmē virsrakstu iPhone ekrānā, blakus labojuma uzvednes panelim ar skartajām ierīcēm",
+    "alsoInside": "Un vēl",
+    "chipRecord": "Plūsmu ierakstīšana un atkārtošana",
+    "chipFocus": "Fokusa režīms",
+    "chipRotate": "Pagriešana un tālummaiņa",
+    "chipCustom": "Pielāgoti izmēri",
+    "chipSets": "Saglabātas ierīču kopas"
+  },
+  "reviews": {
+    "title": "Novērtējuši tie, kas izstrādā.",
+    "outOf": "no 5",
+    "stars": "{rating} no 5 zvaigznēm",
+    "summary": "Vērtējumi: {count} · lietotāji: {users} Chrome Web Store",
+    "leave": "Atstāt atsauksmi",
+    "readAll": "Lasīt visas",
+    "source": "Chrome Web Store",
+    "empty": "Esiet viens no pirmajiem, kas novērtē Mobile View."
+  },
+  "privacy": {
+    "title": "Privāts pēc būtības.",
+    "item1": "Bez konta",
+    "item2": "Bez izsekošanas",
+    "item3": "Jūsu lapas paliek jūsu pārlūkā",
+    "item4": "Atvērtais pirmkods",
+    "link": "Privātuma politika"
+  },
+  "faq": {
+    "title": "Jautājumi.",
+    "q1": "Vai tas ir bez maksas?",
+    "a1": "Jā. Bezmaksas un ar atvērtu pirmkodu saskaņā ar MIT licenci, bez konta.",
+    "q2": "Vai tas darbojas ar localhost?",
+    "a2": "Jā. Atveriet savu lokālo lapu pārlūkā Chrome, pēc tam atveriet Mobile View. Nekas nepamet jūsu datoru.",
+    "q3": "Ar ko tas atšķiras no DevTools ierīču režīma?",
+    "a3": "DevTools vienlaikus rāda vienu skatlauku. Mobile View rāda četras īstas ierīces blakus, sinhronizētas.",
+    "q4": "Kāpēc dažas vietnes neielādējas?",
+    "a4": "Dažas vietnes bloķē attēlošanu citā lapā. Mobile View par to paziņo un piedāvā tās atvērt cilnē.",
+    "q5": "Vai labojuma uzvedne augšupielādē manu kodu?",
+    "a5": "Nē. Tā tiek izveidota jūsu datorā, lai jūs to ielīmētu savā programmēšanas rīkā."
+  },
+  "cta": {
+    "title": "Izmēģiniet savā vietnē.",
+    "text": "Bez maksas. Bez konta. Darbojas ar localhost.",
+    "install": "Pievienot Chrome bez maksas",
+    "review": "Atstāt atsauksmi"
+  },
+  "footer": {
+    "blurb": "Bezmaksas, privāts adaptivitātes testētājs pārlūkam Chrome. Atvērtais pirmkods ar MIT licenci.",
+    "product": "Produkts",
+    "guides": "Ceļveži",
+    "project": "Projekts",
+    "tour": "Apskats",
+    "reviews": "Atsauksmes",
+    "changelog": "Izmaiņu žurnāls",
+    "store": "Chrome Web Store",
+    "allGuides": "Visi ceļveži",
+    "source": "Pirmkods vietnē GitHub",
+    "issue": "Ziņot par problēmu",
+    "privacy": "Privātuma politika",
+    "terms": "Lietošanas noteikumi",
+    "language": "Valoda",
+    "copyright": "© {year} Edison Augusthy. MIT licence.",
+    "trademarks": "iPhone, iPad, Mac un Apple Watch ir Apple Inc. preču zīmes. Galaxy ir Samsung preču zīme, Pixel – Google preču zīme. Ierīču nosaukumi apraksta tikai ekrāna izmērus; Mobile View nav saistīts ar šiem uzņēmumiem."
+  }
+}

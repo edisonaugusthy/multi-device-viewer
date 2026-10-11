@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: responsiv nettsidetest og enhetsemulator for Chrome",
+    "description": "Gratis Chrome-utvidelse: test responsive nettsider i ekte iPhone-, Android-, iPad- og Mac-rammer side om side, med synkronisert rulling. Fungerer på localhost.",
+    "ogTitle": "Mobile View: se nettsiden din på alle skjermer samtidig",
+    "ogImageAlt": "Mobile View viser én side på en iPhone, en sammenleggbar telefon, en MacBook og en Apple Watch side om side"
+  },
+  "nav": {
+    "home": "Mobile View forside",
+    "main": "Hovedmeny",
+    "tour": "Omvisning",
+    "reviews": "Anmeldelser",
+    "faq": "Spørsmål",
+    "guides": "Veiledninger",
+    "privacy": "Personvern",
+    "github": "Mobile View på GitHub",
+    "leaveReview": "Skriv en anmeldelse",
+    "addToChrome": "Legg til i Chrome",
+    "skip": "Hopp til innholdet"
+  },
+  "hero": {
+    "rating": "{rating} i Chrome Web Store",
+    "title": "Se nettsiden din på alle skjermer samtidig.",
+    "lede": "En gratis Chrome-utvidelse som viser hvilken som helst side, også localhost, på ekte telefoner, sammenleggbare, nettbrett, bærbare og klokker. Side om side, i synk.",
+    "install": "Legg til i Chrome, helt gratis",
+    "review": "Skriv en anmeldelse"
+  },
+  "demo": {
+    "label": "Live-demo",
+    "badge": "Live. Rull eller trykk på en skjerm.",
+    "frameTitle": "Live-demoside på {device}"
+  },
+  "facts": {
+    "label": "Kort fortalt",
+    "devicesValue": "{count}",
+    "devices": "ekte enheter",
+    "atOnceValue": "4 samtidig",
+    "atOnce": "side om side",
+    "syncValue": "I synk",
+    "sync": "rulling, trykk og sider",
+    "privateValue": "Privat",
+    "private": "ingen konto, ingen sporing"
+  },
+  "tour": {
+    "workspaceTitle": "Fire enheter. Ett arbeidsområde.",
+    "workspaceText": "Velg fire av {count} ekte enheter og se siden din på alle samtidig.",
+    "workspaceAlt": "Mobile View-arbeidsområde som viser en side på iPhone 18 Pro, sammenlagt iPhone Duo, MacBook Pro 14 og Apple Watch side om side",
+    "syncTitle": "Rull én gang. Alle skjermer følger med.",
+    "syncText": "Rulling, klikk og navigasjon holdes synkronisert på tvers av enhetene.",
+    "syncAlt": "Fire enheter rullet til samme punkt på en side, med synkronisering av rulling og navigasjon slått på",
+    "allTitle": "Alle enheter. Ett klikk.",
+    "allText": "Åpne en hel kategori på én gang. Her 16 av 37 iPhoner, fra iPhone 5 til iPhone 15 Pro.",
+    "allAlt": "Visningen Alle enheter med to rader iPhoner, fra iPhone 5 og iPhone SE til iPhone 15 Pro, som alle laster samme side",
+    "designTitle": "Treff designet.",
+    "designText": "Legg skissen ved siden av den levende siden på hvilken som helst enhet. Side om side eller lagt oppå: hvert avvik mellom design og bygg er lett å se.",
+    "designCaught": "Funnet i denne sammenligningen",
+    "designItem1": "Overskriften er ulik",
+    "designItem1Detail": "Live: «Make room for your best work.» Design: «Room for your best work.»",
+    "designItem2": "Knappestilen er ulik",
+    "designItem2Detail": "Live: mørk, firkantede hjørner. Design: blågrønn pille.",
+    "designAlt": "Sammenlign med design: den levende siden på iPhone 18 Pro ved siden av designbildet, med annen overskrift og knappestil",
+    "fixTitle": "Marker feilen. Kopier løsningen.",
+    "fixText": "Tegn på et skjermbilde og kopier en ferdig prompt til AI-kodeverktøyet ditt. Ingenting forlater maskinen din.",
+    "fixAlt": "Annoteringsverktøy med en pil og en boks som markerer en overskrift på iPhonen, ved siden av prompt-panelet som lister de berørte enhetene",
+    "alsoInside": "Også med",
+    "chipRecord": "Ta opp og spill av flyter",
+    "chipFocus": "Fokusmodus",
+    "chipRotate": "Roter og zoom",
+    "chipCustom": "Egendefinerte størrelser",
+    "chipSets": "Lagrede enhetssett"
+  },
+  "reviews": {
+    "title": "Vurdert av folk som leverer.",
+    "outOf": "av 5",
+    "stars": "{rating} av 5 stjerner",
+    "summary": "{count} vurderinger · {users} brukere i Chrome Web Store",
+    "leave": "Skriv en anmeldelse",
+    "readAll": "Les alle",
+    "source": "Chrome Web Store",
+    "empty": "Bli en av de første som anmelder Mobile View."
+  },
+  "privacy": {
+    "title": "Personvern fra grunnen av.",
+    "item1": "Ingen konto",
+    "item2": "Ingen sporing",
+    "item3": "Sidene dine blir i nettleseren",
+    "item4": "Åpen kildekode",
+    "link": "Personvernerklæring"
+  },
+  "faq": {
+    "title": "Spørsmål.",
+    "q1": "Er det gratis?",
+    "a1": "Ja. Gratis og åpen kildekode under MIT-lisensen, uten konto.",
+    "q2": "Fungerer det på localhost?",
+    "a2": "Ja. Åpne den lokale siden i Chrome, og åpne deretter Mobile View. Ingenting forlater datamaskinen din.",
+    "q3": "Hva er forskjellen fra enhetsmodusen i DevTools?",
+    "a3": "DevTools viser ett visningsområde om gangen. Mobile View viser fire ekte enheter side om side, i synk.",
+    "q4": "Hvorfor lastes ikke enkelte nettsider?",
+    "a4": "Noen nettsider blokkerer visning inne i en annen side. Mobile View sier ifra og tilbyr å åpne dem i en fane.",
+    "q5": "Laster prompten opp koden min?",
+    "a5": "Nei. Den lages på maskinen din, slik at du kan lime den inn i ditt eget kodeverktøy."
+  },
+  "cta": {
+    "title": "Prøv det på din egen nettside.",
+    "text": "Gratis. Ingen konto. Fungerer på localhost.",
+    "install": "Legg til i Chrome, helt gratis",
+    "review": "Skriv en anmeldelse"
+  },
+  "footer": {
+    "blurb": "En gratis og privat responsiv tester for Chrome. Åpen kildekode under MIT-lisensen.",
+    "product": "Produkt",
+    "guides": "Veiledninger",
+    "project": "Prosjekt",
+    "tour": "Omvisning",
+    "reviews": "Anmeldelser",
+    "changelog": "Endringslogg",
+    "store": "Chrome Web Store",
+    "allGuides": "Alle veiledninger",
+    "source": "Kildekode på GitHub",
+    "issue": "Rapporter et problem",
+    "privacy": "Personvernerklæring",
+    "terms": "Vilkår for bruk",
+    "language": "Språk",
+    "copyright": "© {year} Edison Augusthy. MIT-lisensiert.",
+    "trademarks": "iPhone, iPad, Mac og Apple Watch er varemerker for Apple Inc. Galaxy er et varemerke for Samsung, Pixel for Google. Enhetsnavn beskriver kun skjermstørrelser; Mobile View er ikke tilknyttet disse selskapene."
+  }
+}

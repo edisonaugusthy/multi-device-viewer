@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: ഡിവൈസ് എമുലേറ്ററും റെസ്‌പോൺസീവ് ടെസ്റ്ററും"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "മൊബൈൽ സിമുലേറ്ററിൽ റെസ്പോൺസീവ് ഡിസൈൻ പരിശോധിക്കുക. കാഴ്ചകൾ താരതമ്യം ചെയ്യൂ, സ്ക്രോൾ സമന്വയിപ്പിക്കൂ, സ്ക്രീൻഷോട്ട് എടുക്കൂ."
+  },
+  "actionTitle": {
+    "message": "Mobile View ഡിവൈസ് എമുലേറ്റർ തുറക്കുക"
+  },
+  "contextMenuTitle": {
+    "message": "ഈ ടാബ് Mobile Viewൽ തുറക്കുക"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View സജീവമാണ് — അടയ്ക്കാൻ ക്ലിക്ക് ചെയ്യുക"
+  },
+  "unsupportedActionTitle": {
+    "message": "ആദ്യം ഒരു വെബ്‌സൈറ്റ് തുറക്കുക"
+  },
+  "unsupportedUrlHint": {
+    "message": "നിങ്ങൾ വികസിപ്പിക്കുന്ന പേജിലേക്ക് മാറി എക്സ്റ്റൻഷനിൽ വീണ്ടും ക്ലിക്ക് ചെയ്യുക."
+  }
+}

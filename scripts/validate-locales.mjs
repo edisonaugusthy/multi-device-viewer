@@ -1,0 +1,145 @@
+import { existsSync } from "node:fs";
+import { readdir, readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+
+const localesDirectory = resolve("public/_locales");
+// The owner's private Store listing copy; checked when present (not in CI).
+const listingCopyPath = resolve("internal/docs/chrome-web-store-listing-copy.md");
+const expectedLocales = [
+  "ar",
+  "am",
+  "bg",
+  "bn",
+  "ca",
+  "cs",
+  "da",
+  "de",
+  "el",
+  "en",
+  "en_AU",
+  "en_GB",
+  "en_US",
+  "es",
+  "es_419",
+  "et",
+  "fa",
+  "fi",
+  "fil",
+  "fr",
+  "gu",
+  "he",
+  "hi",
+  "hr",
+  "hu",
+  "id",
+  "it",
+  "ja",
+  "kn",
+  "ko",
+  "lt",
+  "lv",
+  "ml",
+  "mr",
+  "ms",
+  "nl",
+  "no",
+  "pl",
+  "pt_BR",
+  "pt_PT",
+  "ro",
+  "ru",
+  "sk",
+  "sl",
+  "sr",
+  "sv",
+  "sw",
+  "ta",
+  "te",
+  "th",
+  "tr",
+  "uk",
+  "vi",
+  "zh_CN",
+  "zh_TW",
+];
+const requiredKeys = [
+  "extensionName",
+  "extensionShortName",
+  "extensionDescription",
+  "actionTitle",
+  "contextMenuTitle",
+  "activeActionTitle",
+  "unsupportedActionTitle",
+  "unsupportedUrlHint",
+];
+const limits = {
+  extensionName: 75,
+  extensionShortName: 12,
+  extensionDescription: 132,
+};
+
+const localeNames = (await readdir(localesDirectory, { withFileTypes: true }))
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort();
+
+const failures = [];
+const listingCopy = existsSync(listingCopyPath) ? await readFile(listingCopyPath, "utf8") : null;
+
+for (const locale of expectedLocales) {
+  if (!localeNames.includes(locale)) {
+    failures.push(`${locale}: missing locale directory`);
+  }
+  if (listingCopy !== null && !listingCopy.includes(`## \`${locale}\``)) {
+    failures.push(`${locale}: missing localized Chrome Web Store listing copy`);
+  }
+}
+
+for (const locale of localeNames) {
+  if (!expectedLocales.includes(locale)) {
+    failures.push(`${locale}: locale directory is not in expectedLocales`);
+  }
+}
+
+for (const locale of localeNames) {
+  const file = resolve(localesDirectory, locale, "messages.json");
+  let messages;
+
+  try {
+    messages = JSON.parse(await readFile(file, "utf8"));
+  } catch (error) {
+    failures.push(`${locale}: invalid or missing messages.json (${error.message})`);
+    continue;
+  }
+
+  for (const key of requiredKeys) {
+    const message = messages[key]?.message;
+    if (typeof message !== "string" || message.trim() === "") {
+      failures.push(`${locale}: missing non-empty ${key}.message`);
+      continue;
+    }
+
+    const limit = limits[key];
+    if (limit && [...message].length > limit) {
+      failures.push(
+        `${locale}: ${key} is ${[...message].length} characters (limit ${limit})`,
+      );
+    }
+  }
+
+  for (const key of ["extensionName", "extensionDescription"]) {
+    const message = messages[key]?.message;
+    if (message && listingCopy !== null && !listingCopy.includes(message)) {
+      failures.push(`${locale}: ${key} does not match the localized Store copy`);
+    }
+  }
+}
+
+if (failures.length > 0) {
+  console.error(failures.join("\n"));
+  process.exitCode = 1;
+} else {
+  console.log(
+    `Locale validation passed: ${localeNames.length} locales with complete Chrome metadata and Store copy.`,
+  );
+}

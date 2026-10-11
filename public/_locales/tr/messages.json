@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: Cihaz emülatörü ve duyarlı tasarım testi"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Duyarlı web tasarımını test etmek için mobil simülatör. Görünümleri karşılaştırın, kaydırmayı eşitleyin ve ekran görüntüsü alın."
+  },
+  "actionTitle": {
+    "message": "Mobile View cihaz emülatörünü aç"
+  },
+  "contextMenuTitle": {
+    "message": "Bu sekmeyi Mobile View’da aç"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View etkin — kapatmak için tıklayın"
+  },
+  "unsupportedActionTitle": {
+    "message": "Önce bir web sitesi açın"
+  },
+  "unsupportedUrlHint": {
+    "message": "Geliştirdiğiniz sayfaya gidin ve uzantıya tekrar tıklayın."
+  }
+}

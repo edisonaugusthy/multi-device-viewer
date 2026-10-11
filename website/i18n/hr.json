@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: test responzivnih stranica i emulator za Chrome",
+    "description": "Besplatno Chrome proširenje: testirajte responzivne stranice u stvarnim okvirima uređaja, jedan uz drugi, uz sinkronizirano pomicanje. Radi i na localhostu.",
+    "ogTitle": "Mobile View: vaša stranica na svim zaslonima odjednom",
+    "ogImageAlt": "Mobile View prikazuje istu stranicu usporedno na iPhoneu, preklopnom telefonu, MacBooku i Apple Watchu"
+  },
+  "nav": {
+    "home": "Mobile View početna",
+    "main": "Glavno",
+    "tour": "Obilazak",
+    "reviews": "Recenzije",
+    "faq": "Pitanja",
+    "guides": "Vodiči",
+    "privacy": "Privatnost",
+    "github": "Mobile View na GitHubu",
+    "leaveReview": "Napišite recenziju",
+    "addToChrome": "Dodaj u Chrome",
+    "skip": "Preskoči na sadržaj"
+  },
+  "hero": {
+    "rating": "{rating} u Chrome Web Storeu",
+    "title": "Vaša stranica na svim zaslonima odjednom.",
+    "lede": "Besplatno Chrome proširenje koje bilo koju stranicu, čak i localhost, prikazuje na stvarnim telefonima, preklopnim uređajima, tabletima, laptopima i satovima. Usporedno i sinkronizirano.",
+    "install": "Dodaj u Chrome, besplatno je",
+    "review": "Napišite recenziju"
+  },
+  "demo": {
+    "label": "Demo uživo",
+    "badge": "Uživo. Pomičite ili dodirnite bilo koji zaslon.",
+    "frameTitle": "Demo stranica uživo na uređaju {device}"
+  },
+  "facts": {
+    "label": "Ukratko",
+    "devicesValue": "{count}",
+    "devices": "stvarnih uređaja",
+    "atOnceValue": "4 odjednom",
+    "atOnce": "jedan uz drugi",
+    "syncValue": "Sinkronizirano",
+    "sync": "pomicanje, dodiri i stranice",
+    "privateValue": "Privatno",
+    "private": "bez računa, bez praćenja"
+  },
+  "tour": {
+    "workspaceTitle": "Četiri uređaja. Jedan radni prostor.",
+    "workspaceText": "Odaberite bilo koja četiri od {count} stvarnih uređaja i gledajte stranicu na svima odjednom.",
+    "workspaceAlt": "Radni prostor Mobile View prikazuje stranicu usporedno na iPhone 18 Pro, preklopljenom iPhone Duo, MacBook Pro 14 i Apple Watchu",
+    "syncTitle": "Pomaknite jednom. Svi zasloni prate.",
+    "syncText": "Pomicanje, klikovi i navigacija sinkronizirani su na svim uređajima.",
+    "syncAlt": "Četiri uređaja pomaknuta na isto mjesto na stranici uz uključenu sinkronizaciju pomicanja i navigacije",
+    "allTitle": "Svi uređaji. Jedan klik.",
+    "allText": "Otvorite cijelu kategoriju odjednom. Ovdje 16 od 37 iPhonea, od iPhonea 5 do iPhonea 15 Pro.",
+    "allAlt": "Prikaz svih uređaja s dva reda iPhonea, od iPhonea 5 i iPhonea SE do iPhonea 15 Pro, a svaki učitava istu stranicu",
+    "designTitle": "Uskladite s dizajnom.",
+    "designText": "Stavite svoj mockup uz stranicu uživo na bilo kojem uređaju. Usporedno ili preklopljeno, svaka razlika između dizajna i izvedbe odmah je vidljiva.",
+    "designCaught": "Uočeno u ovoj usporedbi",
+    "designItem1": "Tekst naslova se razlikuje",
+    "designItem1Detail": "Uživo: „Make room for your best work.“ Dizajn: „Room for your best work.“",
+    "designItem2": "Stil gumba se razlikuje",
+    "designItem2Detail": "Uživo: taman, oštri kutovi. Dizajn: tirkizna pilula.",
+    "designAlt": "Usporedba s dizajnom: stranica uživo na iPhone 18 Pro uz sliku dizajna, s drugačijim naslovom i stilom gumba",
+    "fixTitle": "Označite grešku. Kopirajte popravak.",
+    "fixText": "Crtajte po snimci zaslona, a zatim kopirajte gotov prompt za svoj AI alat za programiranje. Ništa ne napušta vaše računalo.",
+    "fixAlt": "Uređivač bilješki sa strelicom i okvirom koji označavaju naslov na iPhoneu, uz ploču s promptom za popravak i popisom zahvaćenih uređaja",
+    "alsoInside": "Također unutra",
+    "chipRecord": "Snimanje i ponavljanje tokova",
+    "chipFocus": "Način fokusa",
+    "chipRotate": "Rotacija i zumiranje",
+    "chipCustom": "Prilagođene veličine",
+    "chipSets": "Spremljeni skupovi uređaja"
+  },
+  "reviews": {
+    "title": "Ocjenjuju ga oni koji isporučuju.",
+    "outOf": "od 5",
+    "stars": "{rating} od 5 zvjezdica",
+    "summary": "{count} ocjena · {users} korisnika u Chrome Web Storeu",
+    "leave": "Napišite recenziju",
+    "readAll": "Pročitaj sve",
+    "source": "Chrome Web Store",
+    "empty": "Budite među prvima koji će recenzirati Mobile View."
+  },
+  "privacy": {
+    "title": "Privatno po dizajnu.",
+    "item1": "Bez računa",
+    "item2": "Bez praćenja",
+    "item3": "Vaše stranice ostaju u vašem pregledniku",
+    "item4": "Otvoreni kod",
+    "link": "Pravila privatnosti"
+  },
+  "faq": {
+    "title": "Pitanja.",
+    "q1": "Je li besplatno?",
+    "a1": "Da. Besplatno i otvorenog koda pod licencom MIT, bez računa.",
+    "q2": "Radi li na localhostu?",
+    "a2": "Da. Otvorite lokalnu stranicu u Chromeu, a zatim Mobile View. Ništa ne napušta vaše računalo.",
+    "q3": "Po čemu se razlikuje od načina rada uređaja u DevTools?",
+    "a3": "DevTools prikazuje jedan prikaz odjednom. Mobile View prikazuje četiri stvarna uređaja usporedno i sinkronizirano.",
+    "q4": "Zašto se neke stranice ne učitavaju?",
+    "a4": "Neke stranice ne dopuštaju prikaz unutar druge stranice. Mobile View vas o tome obavijesti i ponudi da ih otvori u kartici.",
+    "q5": "Prenosi li prompt za popravak moj kod?",
+    "a5": "Ne. Nastaje na vašem računalu kako biste ga zalijepili u vlastiti alat za programiranje."
+  },
+  "cta": {
+    "title": "Isprobajte na svojoj stranici.",
+    "text": "Besplatno. Bez računa. Radi na localhostu.",
+    "install": "Dodaj u Chrome, besplatno je",
+    "review": "Napišite recenziju"
+  },
+  "footer": {
+    "blurb": "Besplatan i privatan tester responzivnosti za Chrome. Otvoreni kod pod licencom MIT.",
+    "product": "Proizvod",
+    "guides": "Vodiči",
+    "project": "Projekt",
+    "tour": "Obilazak",
+    "reviews": "Recenzije",
+    "changelog": "Popis promjena",
+    "store": "Chrome Web Store",
+    "allGuides": "Svi vodiči",
+    "source": "Izvorni kod na GitHubu",
+    "issue": "Prijavite problem",
+    "privacy": "Pravila privatnosti",
+    "terms": "Uvjeti korištenja",
+    "language": "Jezik",
+    "copyright": "© {year} Edison Augusthy. Licenca MIT.",
+    "trademarks": "iPhone, iPad, Mac i Apple Watch zaštitni su znakovi tvrtke Apple Inc. Galaxy je zaštitni znak tvrtke Samsung, a Pixel tvrtke Google. Nazivi uređaja služe samo za opis veličina zaslona; Mobile View nije povezan s tim tvrtkama."
+  }
+}

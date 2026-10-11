@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: kohanduvustest ja seadmeemulaator Chrome'ile",
+    "description": "Tasuta Chrome'i laiendus: testi saiti päris iPhone'i, Androidi, iPadi, Maci ja Apple Watchi raamides kõrvuti, sünkroonse kerimisega. Töötab localhostis.",
+    "ogTitle": "Mobile View: vaata oma saiti kõigil ekraanidel korraga",
+    "ogImageAlt": "Mobile View näitab üht lehte kõrvuti iPhone'is, volditavas seadmes, MacBookis ja Apple Watchis"
+  },
+  "nav": {
+    "home": "Mobile View avaleht",
+    "main": "Peamenüü",
+    "tour": "Ülevaade",
+    "reviews": "Arvustused",
+    "faq": "KKK",
+    "guides": "Juhendid",
+    "privacy": "Privaatsus",
+    "github": "Mobile View GitHubis",
+    "leaveReview": "Kirjuta arvustus",
+    "addToChrome": "Lisa Chrome'i",
+    "skip": "Liigu sisu juurde"
+  },
+  "hero": {
+    "rating": "{rating} Chrome Web Store'is",
+    "title": "Sinu sait kõigil ekraanidel korraga.",
+    "lede": "Tasuta Chrome'i laiendus, mis näitab mis tahes lehte, ka localhosti, päris telefonides, volditavates seadmetes, tahvlites, sülearvutites ja kellades. Kõrvuti ja sünkroonis.",
+    "install": "Lisa Chrome'i, see on tasuta",
+    "review": "Kirjuta arvustus"
+  },
+  "demo": {
+    "label": "Otsedemo",
+    "badge": "Otse. Keri või puuduta mis tahes ekraani.",
+    "frameTitle": "Otsedemo leht seadmes {device}"
+  },
+  "facts": {
+    "label": "Lühidalt",
+    "devicesValue": "{count}",
+    "devices": "päris seadet",
+    "atOnceValue": "4 korraga",
+    "atOnce": "kõrvuti",
+    "syncValue": "Sünkroonis",
+    "sync": "kerimine, puudutused ja lehed",
+    "privateValue": "Privaatne",
+    "private": "ei kontot ega jälgimist"
+  },
+  "tour": {
+    "workspaceTitle": "Neli seadet. Üks tööruum.",
+    "workspaceText": "Vali {count} päris seadme seast ükskõik millised neli ja näe oma lehte kõigis korraga.",
+    "workspaceAlt": "Mobile View tööruum, kus üht lehte näidatakse kõrvuti seadmetes iPhone 18 Pro, kokkuvolditud iPhone Duo, MacBook Pro 14 ja Apple Watch",
+    "syncTitle": "Keri korra. Kõik ekraanid järgnevad.",
+    "syncText": "Kerimine, klõpsud ja navigeerimine püsivad seadmete vahel sünkroonis.",
+    "syncAlt": "Neli seadet on keritud lehe samasse kohta, kerimise ja navigeerimise sünkroonimine on sisse lülitatud",
+    "allTitle": "Kõik seadmed. Üks klõps.",
+    "allText": "Ava terve kategooria korraga. Siin on 16 iPhone'i 37-st, alates iPhone 5-st kuni iPhone 15 Pro'ni.",
+    "allAlt": "Kõigi seadmete vaade kahe rea iPhone'idega, iPhone 5-st ja iPhone SE-st kuni iPhone 15 Pro'ni, igaühes laadib sama leht",
+    "designTitle": "Täpselt nagu kujundus.",
+    "designText": "Pane oma makett mis tahes seadmes päris lehe kõrvale. Kõrvuti või kattuvana on iga erinevus kujunduse ja teostuse vahel kohe näha.",
+    "designCaught": "Selles võrdluses leitud",
+    "designItem1": "Pealkirja tekst erineb",
+    "designItem1Detail": "Päris: „Make room for your best work.“ Kujundus: „Room for your best work.“",
+    "designItem2": "Nupu stiil erineb",
+    "designItem2Detail": "Päris: tume, teravad nurgad. Kujundus: sinakasroheline ümar nupp.",
+    "designAlt": "Võrdlus kujundusega: päris leht iPhone 18 Pro's kujunduspildi kõrval, erineva pealkirja ja nupustiiliga",
+    "fixTitle": "Märgi viga. Kopeeri parandus.",
+    "fixText": "Joonista kuvatõmmisele ja kopeeri valmis viip oma AI-kodeerimistööriista jaoks. Miski ei lahku sinu arvutist.",
+    "fixAlt": "Märkuste redaktor, kus nool ja kast märgivad iPhone'is pealkirja, kõrval paranduse viiba paneel koos mõjutatud seadmete loendiga",
+    "alsoInside": "Lisaks",
+    "chipRecord": "Salvesta ja korda töövooge",
+    "chipFocus": "Fookusrežiim",
+    "chipRotate": "Pööra ja suumi",
+    "chipCustom": "Kohandatud suurused",
+    "chipSets": "Salvestatud seadmekomplektid"
+  },
+  "reviews": {
+    "title": "Tegijate hinnatud.",
+    "outOf": "5-st",
+    "stars": "{rating} tärni 5-st",
+    "summary": "{count} hinnangut · {users} kasutajat Chrome Web Store'is",
+    "leave": "Kirjuta arvustus",
+    "readAll": "Loe kõiki",
+    "source": "Chrome Web Store",
+    "empty": "Ole üks esimesi, kes Mobile View'd arvustab."
+  },
+  "privacy": {
+    "title": "Privaatne algusest peale.",
+    "item1": "Kontot pole vaja",
+    "item2": "Jälgimist pole",
+    "item3": "Sinu lehed jäävad sinu brauserisse",
+    "item4": "Avatud lähtekood",
+    "link": "Privaatsuspoliitika"
+  },
+  "faq": {
+    "title": "Küsimused.",
+    "q1": "Kas see on tasuta?",
+    "a1": "Jah. Tasuta ja avatud lähtekoodiga MIT-litsentsi all, kontot pole vaja.",
+    "q2": "Kas see töötab localhostis?",
+    "a2": "Jah. Ava oma kohalik leht Chrome'is ja seejärel Mobile View. Miski ei lahku sinu arvutist.",
+    "q3": "Mille poolest erineb see DevToolsi seadmerežiimist?",
+    "a3": "DevTools näitab korraga üht vaateakent. Mobile View näitab nelja päris seadet kõrvuti ja sünkroonis.",
+    "q4": "Miks mõni sait ei laadi?",
+    "a4": "Mõni sait keelab end teise lehe sees kuvada. Mobile View annab sellest teada ja pakub selle avamist vahelehel.",
+    "q5": "Kas paranduse viip laadib mu koodi üles?",
+    "a5": "Ei. See koostatakse sinu arvutis, et saaksid selle oma kodeerimistööriista kleepida."
+  },
+  "cta": {
+    "title": "Proovi oma saidil.",
+    "text": "Tasuta. Kontot pole vaja. Töötab localhostis.",
+    "install": "Lisa Chrome'i, see on tasuta",
+    "review": "Kirjuta arvustus"
+  },
+  "footer": {
+    "blurb": "Tasuta ja privaatne kohanduvuse testija Chrome'ile. Avatud lähtekood MIT-litsentsi all.",
+    "product": "Toode",
+    "guides": "Juhendid",
+    "project": "Projekt",
+    "tour": "Ülevaade",
+    "reviews": "Arvustused",
+    "changelog": "Muudatuste logi",
+    "store": "Chrome Web Store",
+    "allGuides": "Kõik juhendid",
+    "source": "Lähtekood GitHubis",
+    "issue": "Teata probleemist",
+    "privacy": "Privaatsuspoliitika",
+    "terms": "Kasutustingimused",
+    "language": "Keel",
+    "copyright": "© {year} Edison Augusthy. MIT-litsents.",
+    "trademarks": "iPhone, iPad, Mac ja Apple Watch on Apple Inc. kaubamärgid. Galaxy on Samsungi kaubamärk, Pixel Google'i oma. Seadmete nimed kirjeldavad ainult ekraanisuurusi; Mobile View ei ole nende ettevõtetega seotud."
+  }
+}

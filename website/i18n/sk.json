@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Test responzívnych webov a emulátor pre Chrome",
+    "description": "Bezplatné rozšírenie Chrome: testujte responzívne weby v skutočných rámoch iPhone, Android, iPad a Mac so synchronným posúvaním. Funguje aj na localhost.",
+    "ogTitle": "Mobile View: váš web na všetkých obrazovkách naraz",
+    "ogImageAlt": "Mobile View zobrazuje jednu stránku na iPhone, skladacom telefóne, MacBooku a Apple Watch vedľa seba"
+  },
+  "nav": {
+    "home": "Domov Mobile View",
+    "main": "Hlavné",
+    "tour": "Prehliadka",
+    "reviews": "Recenzie",
+    "faq": "Časté otázky",
+    "guides": "Návody",
+    "privacy": "Súkromie",
+    "github": "Mobile View na GitHube",
+    "leaveReview": "Napísať recenziu",
+    "addToChrome": "Pridať do Chrome",
+    "skip": "Preskočiť na obsah"
+  },
+  "hero": {
+    "rating": "{rating} v Chrome Web Store",
+    "title": "Váš web na všetkých obrazovkách naraz.",
+    "lede": "Bezplatné rozšírenie pre Chrome, ktoré zobrazí akúkoľvek stránku, aj localhost, na skutočných telefónoch, skladacích zariadeniach, tabletoch, notebookoch a hodinkách. Vedľa seba a synchronizovane.",
+    "install": "Pridať do Chrome zadarmo",
+    "review": "Napísať recenziu"
+  },
+  "demo": {
+    "label": "Živé demo",
+    "badge": "Naživo. Posúvajte alebo ťuknite na ľubovoľnú obrazovku.",
+    "frameTitle": "Živá ukážková stránka na {device}"
+  },
+  "facts": {
+    "label": "V skratke",
+    "devicesValue": "{count}",
+    "devices": "skutočných zariadení",
+    "atOnceValue": "4 naraz",
+    "atOnce": "vedľa seba",
+    "syncValue": "Synchronizované",
+    "sync": "posúvanie, ťuknutia a stránky",
+    "privateValue": "Súkromné",
+    "private": "bez účtu, bez sledovania"
+  },
+  "tour": {
+    "workspaceTitle": "Štyri zariadenia. Jeden pracovný priestor.",
+    "workspaceText": "Vyberte si ľubovoľné štyri z {count} skutočných zariadení a pozrite si stránku na všetkých naraz.",
+    "workspaceAlt": "Pracovný priestor Mobile View so stránkou na iPhone 18 Pro, zloženom iPhone Duo, MacBook Pro 14 a Apple Watch vedľa seba",
+    "syncTitle": "Posuňte raz. Všetky obrazovky nasledujú.",
+    "syncText": "Posúvanie, kliknutia aj navigácia zostávajú synchronizované naprieč zariadeniami.",
+    "syncAlt": "Štyri zariadenia posunuté na rovnaké miesto stránky so zapnutou synchronizáciou posúvania a navigácie",
+    "allTitle": "Všetky zariadenia. Jedno kliknutie.",
+    "allText": "Otvorte celú kategóriu naraz. Tu 16 z 37 iPhonov, od iPhone 5 po iPhone 15 Pro.",
+    "allAlt": "Zobrazenie všetkých zariadení s dvoma radmi iPhonov, od iPhone 5 a iPhone SE po iPhone 15 Pro, každý načítava rovnakú stránku",
+    "designTitle": "Podľa návrhu.",
+    "designText": "Vložte svoj návrh vedľa živej stránky na ľubovoľnom zariadení. Vedľa seba alebo cez seba, každý rozdiel medzi návrhom a realitou ľahko odhalíte.",
+    "designCaught": "Odhalené pri tomto porovnaní",
+    "designItem1": "Text nadpisu sa líši",
+    "designItem1Detail": "Naživo: „Make room for your best work.“ Návrh: „Room for your best work.“",
+    "designItem2": "Štýl tlačidla sa líši",
+    "designItem2Detail": "Naživo: tmavé, hranaté rohy. Návrh: tyrkysová pilulka.",
+    "designAlt": "Porovnanie s návrhom: živá stránka na iPhone 18 Pro vedľa obrázka návrhu s iným nadpisom a štýlom tlačidla",
+    "fixTitle": "Označte chybu. Skopírujte opravu.",
+    "fixText": "Kreslite na snímku obrazovky a potom skopírujte hotový prompt pre svoj AI nástroj na programovanie. Nič neopustí váš počítač.",
+    "fixAlt": "Editor anotácií so šípkou a rámčekom označujúcim nadpis na iPhone, vedľa panela s promptom na opravu so zoznamom dotknutých zariadení",
+    "alsoInside": "A tiež",
+    "chipRecord": "Nahrávanie a prehrávanie postupov",
+    "chipFocus": "Režim zamerania",
+    "chipRotate": "Otáčanie a priblíženie",
+    "chipCustom": "Vlastné rozmery",
+    "chipSets": "Uložené sady zariadení"
+  },
+  "reviews": {
+    "title": "Hodnotia ho tí, čo dodávajú.",
+    "outOf": "z 5",
+    "stars": "{rating} z 5 hviezdičiek",
+    "summary": "{count} hodnotení · {users} používateľov v Chrome Web Store",
+    "leave": "Napísať recenziu",
+    "readAll": "Čítať všetky",
+    "source": "Chrome Web Store",
+    "empty": "Buďte medzi prvými, kto ohodnotí Mobile View."
+  },
+  "privacy": {
+    "title": "Súkromie už v základe.",
+    "item1": "Bez účtu",
+    "item2": "Bez sledovania",
+    "item3": "Vaše stránky zostávajú vo vašom prehliadači",
+    "item4": "Otvorený zdrojový kód",
+    "link": "Zásady ochrany súkromia"
+  },
+  "faq": {
+    "title": "Otázky.",
+    "q1": "Je to zadarmo?",
+    "a1": "Áno. Zadarmo a s otvoreným kódom pod licenciou MIT, bez účtu.",
+    "q2": "Funguje to na localhost?",
+    "a2": "Áno. Otvorte lokálnu stránku v Chrome a potom otvorte Mobile View. Nič neopustí váš počítač.",
+    "q3": "Čím sa líši od režimu zariadenia v DevTools?",
+    "a3": "DevTools zobrazujú naraz jeden viewport. Mobile View zobrazí štyri skutočné zariadenia vedľa seba, synchronizované.",
+    "q4": "Prečo sa niektoré weby nenačítajú?",
+    "a4": "Niektoré weby blokujú zobrazenie vo vnútri inej stránky. Mobile View vás na to upozorní a ponúkne ich otvorenie na karte.",
+    "q5": "Odosiela prompt na opravu môj kód?",
+    "a5": "Nie. Vytvorí sa na vašom počítači, aby ste ho vložili do vlastného nástroja na programovanie."
+  },
+  "cta": {
+    "title": "Vyskúšajte ho na vlastnom webe.",
+    "text": "Zadarmo. Bez účtu. Funguje na localhost.",
+    "install": "Pridať do Chrome zadarmo",
+    "review": "Napísať recenziu"
+  },
+  "footer": {
+    "blurb": "Bezplatný a súkromný tester responzivity pre Chrome. Otvorený kód pod licenciou MIT.",
+    "product": "Produkt",
+    "guides": "Návody",
+    "project": "Projekt",
+    "tour": "Prehliadka",
+    "reviews": "Recenzie",
+    "changelog": "Zoznam zmien",
+    "store": "Chrome Web Store",
+    "allGuides": "Všetky návody",
+    "source": "Zdrojový kód na GitHube",
+    "issue": "Nahlásiť problém",
+    "privacy": "Zásady ochrany súkromia",
+    "terms": "Podmienky používania",
+    "language": "Jazyk",
+    "copyright": "© {year} Edison Augusthy. Licencia MIT.",
+    "trademarks": "iPhone, iPad, Mac a Apple Watch sú ochranné známky spoločnosti Apple Inc. Galaxy je ochranná známka spoločnosti Samsung; Pixel spoločnosti Google. Názvy zariadení opisujú len veľkosti obrazoviek; Mobile View nie je s týmito spoločnosťami prepojený."
+  }
+}

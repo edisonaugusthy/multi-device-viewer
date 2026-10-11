@@ -1,0 +1,20 @@
+{
+  "storeLocale": "lt",
+  "name": "Mobile View: Įrenginių emuliatorius ir adaptyvus testas",
+  "summary": "Mobilusis simuliatorius adaptyviam dizainui testuoti. Lyginkite rodinius, sinchronizuokite slinkimą ir darykite ekrano nuotraukas.",
+  "screenshotCaptions": [
+    "Visi ekranai greta.",
+    "Visi įrenginiai. Vienas spustelėjimas.",
+    "Sutelkite dėmesį į vieną ekraną.",
+    "Tiksliai pagal dizainą, iki pikselio.",
+    "Pažymėkite klaidą. Įrašykite eigą."
+  ],
+  "screenshotSubtitles": [
+    "Tikri įrenginių rėmeliai su sinchronizuotu slinkimu, paspaudimais ir naršymu.",
+    "Atverkite visus 110+ įrenginių pagal kategorijas – nuo mažiausio telefono iki didžiausio ekrano.",
+    "Išskleiskite bet kurį įrenginį ir fokusavimo režimu paslėpkite visus įrankius – švarioms peržiūroms ir demonstracijoms.",
+    "Vienoje pusėje jūsų maketas, kitoje – veikiantis puslapis. Pastebėkite kiekvieną skirtumą iš pirmo žvilgsnio.",
+    "Pridėkite pastabų prie ekrano kopijos, nukopijuokite taisymo užklausą savo DI įrankiui arba atkurkite naudotojo eigą kiekviename įrenginyje."
+  ],
+  "screenshotLocale": "en"
+}

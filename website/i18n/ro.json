@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Test site-uri responsive și emulator pentru Chrome",
+    "description": "Extensie Chrome gratuită: testează site-uri responsive în rame reale de iPhone, Android, iPad, Mac și Apple Watch, cu derulare sincronizată. Merge pe localhost.",
+    "ogTitle": "Mobile View: vezi site-ul pe toate ecranele deodată",
+    "ogImageAlt": "Mobile View afișând o pagină pe iPhone, un pliabil, un MacBook și un Apple Watch unul lângă altul"
+  },
+  "nav": {
+    "home": "Pagina principală Mobile View",
+    "main": "Principal",
+    "tour": "Prezentare",
+    "reviews": "Recenzii",
+    "faq": "Întrebări frecvente",
+    "guides": "Ghiduri",
+    "privacy": "Confidențialitate",
+    "github": "Mobile View pe GitHub",
+    "leaveReview": "Lasă o recenzie",
+    "addToChrome": "Adaugă în Chrome",
+    "skip": "Salt la conținut"
+  },
+  "hero": {
+    "rating": "{rating} în Chrome Web Store",
+    "title": "Vezi site-ul pe toate ecranele deodată.",
+    "lede": "O extensie Chrome gratuită care afișează orice pagină, chiar și localhost, pe telefoane, pliabile, tablete, laptopuri și ceasuri reale. Una lângă alta, sincronizate.",
+    "install": "Adaugă în Chrome, e gratuit",
+    "review": "Lasă o recenzie"
+  },
+  "demo": {
+    "label": "Demo live",
+    "badge": "Live. Derulează sau atinge orice ecran.",
+    "frameTitle": "Pagină demo live pe {device}"
+  },
+  "facts": {
+    "label": "Pe scurt",
+    "devicesValue": "{count}",
+    "devices": "dispozitive reale",
+    "atOnceValue": "4 deodată",
+    "atOnce": "unul lângă altul",
+    "syncValue": "Sincronizat",
+    "sync": "derulare, atingeri și pagini",
+    "privateValue": "Privat",
+    "private": "fără cont, fără urmărire"
+  },
+  "tour": {
+    "workspaceTitle": "Patru dispozitive. Un singur spațiu de lucru.",
+    "workspaceText": "Alege oricare patru din {count} dispozitive reale și vezi pagina pe toate deodată.",
+    "workspaceAlt": "Spațiul de lucru Mobile View afișând o pagină pe iPhone 18 Pro, iPhone Duo pliat, MacBook Pro 14 și Apple Watch unul lângă altul",
+    "syncTitle": "Derulezi o dată. Toate ecranele urmează.",
+    "syncText": "Derularea, clicurile și navigarea rămân sincronizate pe toate dispozitivele.",
+    "syncAlt": "Patru dispozitive derulate în același punct al unei pagini, cu sincronizarea derulării și a navigării activată",
+    "allTitle": "Toate dispozitivele. Un singur clic.",
+    "allText": "Deschide o categorie întreagă deodată. Aici, 16 din 37 de iPhone-uri, de la iPhone 5 la iPhone 15 Pro.",
+    "allAlt": "Vizualizarea tuturor dispozitivelor cu două rânduri de iPhone-uri, de la iPhone 5 și iPhone SE la iPhone 15 Pro, fiecare încărcând aceeași pagină",
+    "designTitle": "Fidel designului.",
+    "designText": "Pune macheta lângă pagina live pe orice dispozitiv. Alăturate sau suprapuse, orice diferență dintre design și implementare sare în ochi.",
+    "designCaught": "Depistat în această comparație",
+    "designItem1": "Textul titlului diferă",
+    "designItem1Detail": "Live: „Make room for your best work.” Design: „Room for your best work.”",
+    "designItem2": "Stilul butonului diferă",
+    "designItem2Detail": "Live: închis la culoare, colțuri drepte. Design: pastilă turcoaz.",
+    "designAlt": "Comparare cu designul: pagina live pe iPhone 18 Pro lângă imaginea de design, cu titlu și stil de buton diferite",
+    "fixTitle": "Marchează bugul. Copiază soluția.",
+    "fixText": "Desenează pe o captură de ecran, apoi copiază un prompt gata făcut pentru instrumentul tău de programare cu AI. Nimic nu părăsește calculatorul tău.",
+    "fixAlt": "Editor de adnotări cu o săgeată și un chenar care marchează un titlu pe iPhone, lângă panoul cu promptul de remediere ce listează dispozitivele afectate",
+    "alsoInside": "Și în plus",
+    "chipRecord": "Înregistrează și redă fluxuri",
+    "chipFocus": "Mod focus",
+    "chipRotate": "Rotire și zoom",
+    "chipCustom": "Dimensiuni personalizate",
+    "chipSets": "Seturi de dispozitive salvate"
+  },
+  "reviews": {
+    "title": "Apreciat de cei care livrează.",
+    "outOf": "din 5",
+    "stars": "{rating} din 5 stele",
+    "summary": "{count} evaluări · {users} utilizatori în Chrome Web Store",
+    "leave": "Lasă o recenzie",
+    "readAll": "Citește toate",
+    "source": "Chrome Web Store",
+    "empty": "Fii printre primii care evaluează Mobile View."
+  },
+  "privacy": {
+    "title": "Privat prin design.",
+    "item1": "Fără cont",
+    "item2": "Fără urmărire",
+    "item3": "Paginile tale rămân în browser",
+    "item4": "Open source",
+    "link": "Politica de confidențialitate"
+  },
+  "faq": {
+    "title": "Întrebări.",
+    "q1": "Este gratuit?",
+    "a1": "Da. Gratuit și open source sub licența MIT, fără cont.",
+    "q2": "Funcționează pe localhost?",
+    "a2": "Da. Deschide pagina locală în Chrome, apoi deschide Mobile View. Nimic nu părăsește calculatorul tău.",
+    "q3": "Prin ce diferă de modul dispozitiv din DevTools?",
+    "a3": "DevTools afișează o singură zonă de vizualizare odată. Mobile View afișează patru dispozitive reale unul lângă altul, sincronizate.",
+    "q4": "De ce nu se încarcă unele site-uri?",
+    "a4": "Unele site-uri blochează afișarea în interiorul altei pagini. Mobile View te anunță și îți oferă să le deschizi într-o filă.",
+    "q5": "Promptul de remediere îmi încarcă codul?",
+    "a5": "Nu. Este generat pe calculatorul tău, ca să-l lipești în propriul instrument de programare."
+  },
+  "cta": {
+    "title": "Încearcă-l pe propriul site.",
+    "text": "Gratuit. Fără cont. Funcționează pe localhost.",
+    "install": "Adaugă în Chrome, e gratuit",
+    "review": "Lasă o recenzie"
+  },
+  "footer": {
+    "blurb": "Un tester responsive gratuit și privat pentru Chrome. Open source sub licența MIT.",
+    "product": "Produs",
+    "guides": "Ghiduri",
+    "project": "Proiect",
+    "tour": "Prezentare",
+    "reviews": "Recenzii",
+    "changelog": "Istoric modificări",
+    "store": "Chrome Web Store",
+    "allGuides": "Toate ghidurile",
+    "source": "Cod sursă pe GitHub",
+    "issue": "Raportează o problemă",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni de utilizare",
+    "language": "Limbă",
+    "copyright": "© {year} Edison Augusthy. Licență MIT.",
+    "trademarks": "iPhone, iPad, Mac și Apple Watch sunt mărci comerciale ale Apple Inc. Galaxy este marcă comercială Samsung; Pixel, a Google. Numele dispozitivelor descriu doar dimensiuni de ecran; Mobile View nu este afiliat acestor companii."
+  }
+}

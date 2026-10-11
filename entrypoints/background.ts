@@ -1,0 +1,339 @@
+import { createPreviewSessions } from "../src/app/preview-sessions";
+import { defineBackground } from "wxt/utils/define-background";
+import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
+import { LAST_SEEN_RELEASE_VERSION_KEY, PENDING_RELEASE_VERSION_KEY } from "../src/app/release-notes";
+import { CHROME_STORE_URL, createReviewCoordinator, isReviewCommand, LEGACY_REVIEW_DISMISSED_KEY, REVIEW_PROMPT_STORAGE_KEY, SUPPORT_URL } from "../src/domain/review/review-coordinator";
+
+const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
+const UPDATE_BADGE_TEXT = "NEW";
+const OFFSCREEN_RECORDING_PATH = "/offscreen.html";
+const UNSUPPORTED_PAGE_PATH = "/unsupported.html";
+
+const message = (key: string, fallback: string) =>
+  chrome.i18n.getMessage(key) || fallback;
+
+export default defineBackground(() => {
+  const launches = new Map<number, Promise<void>>();
+  const previews = createPreviewSessions();
+  void previews.prune().catch(console.error);
+  chrome.tabs.onRemoved.addListener(tabId => { void previews.close(tabId).catch(console.error); });
+  const review = createReviewCoordinator({
+    read: async () => {
+      const stored = await chrome.storage.local.get([REVIEW_PROMPT_STORAGE_KEY, LEGACY_REVIEW_DISMISSED_KEY]);
+      return { state: stored[REVIEW_PROMPT_STORAGE_KEY], legacyDismissed: stored[LEGACY_REVIEW_DISMISSED_KEY] === true };
+    },
+    write: state => chrome.storage.local.set({ [REVIEW_PROMPT_STORAGE_KEY]: state }),
+    openReviewPage: async () => { await chrome.tabs.create({ url: CHROME_STORE_URL }); },
+  });
+  createContextMenu();
+  syncAllActionStates();
+
+  chrome.runtime.onMessage.addListener((message, sender) => {
+    if (!message || message.type !== "MDV_OVERLAY_STATE" || typeof sender.tab?.id !== "number" || sender.frameId !== 0) return;
+    setActiveIndicator(sender.tab.id, Boolean(message.active));
+  });
+
+  chrome.action.onClicked.addListener((tab) => {
+    openSimulatorForTab(tab);
+  });
+
+  chrome.runtime.onInstalled.addListener((details) => {
+    createContextMenu();
+    const version = chrome.runtime.getManifest().version;
+    if (details.reason === "install") {
+      void review("load").catch(console.error);
+      void chrome.storage.local.set({
+        [LAST_SEEN_RELEASE_VERSION_KEY]: version,
+        [PENDING_RELEASE_VERSION_KEY]: null,
+      });
+      return;
+    }
+    if (details.reason === "update") {
+      void chrome.storage.local.set({ [PENDING_RELEASE_VERSION_KEY]: version });
+      syncUpdateIndicator();
+    }
+  });
+
+  chrome.runtime.onStartup.addListener(() => {
+    createContextMenu();
+    syncAllActionStates();
+  });
+
+  chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
+    if (changeInfo.status === "loading") {
+      setActiveIndicator(_tabId, false);
+      void previews.close(_tabId).catch(console.error);
+    }
+    if (changeInfo.url || changeInfo.status === "complete") syncActionState(tab);
+  });
+
+  chrome.tabs.onActivated.addListener(({ tabId }) => {
+    chrome.tabs.get(tabId, (tab) => {
+      if (!chrome.runtime.lastError) syncActionState(tab);
+    });
+  });
+
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId !== OPEN_SIMULATOR_MENU_ID || !tab) return;
+    openSimulatorForTab(tab);
+  });
+
+  function createContextMenu() {
+    const title = message(
+      "contextMenuTitle",
+      "Open this tab in Mobile View & Responsive Tester",
+    );
+    chrome.contextMenus.create({
+      id: OPEN_SIMULATOR_MENU_ID,
+      title,
+      contexts: ["page", "action"],
+    }, () => {
+      if (!chrome.runtime.lastError) return;
+
+      chrome.contextMenus.update(OPEN_SIMULATOR_MENU_ID, {
+        title,
+        contexts: ["page", "action"],
+      }, () => {
+        void chrome.runtime.lastError;
+      });
+    });
+  }
+
+  function openSimulatorForTab(tab: chrome.tabs.Tab) {
+    clearUpdateIndicator();
+
+    if (!isPreviewableUrl(tab.url)) {
+      syncActionState(tab);
+      if (chrome.action.openPopup && typeof tab.windowId === "number") {
+        void chrome.action.openPopup({ windowId: tab.windowId }).catch(() => undefined);
+      }
+      return;
+    }
+
+    const url = tab.url;
+
+    if (typeof tab.id !== "number") {
+      void openSimulator(url, tab.id).catch(console.error);
+      return;
+    }
+
+    // Keep the viewer on the current page. The content script owns the
+    // full-screen overlay, so the source page remains underneath it.
+    const tabId = tab.id;
+    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId };
+    // Acknowledge each toggle before processing the next click, including the
+    // first launch into a tab that needs content-script injection.
+    const work = (launches.get(tabId) ?? Promise.resolve()).then(async () => {
+      let response;
+      try {
+        response = await chrome.tabs.sendMessage(tabId, request, { frameId: 0 });
+      } catch (error) {
+        // A disconnected response is not proof that the script is missing:
+        // reinjecting there would register another owner of the same overlay.
+        if (!String(error).includes("Receiving end does not exist")) throw error;
+        await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, files: ["content-scripts/content.js"] });
+        response = await chrome.tabs.sendMessage(tabId, request, { frameId: 0 });
+      }
+      if (response?.ok === false) throw new Error(response.error);
+    }).catch(console.error);
+    launches.set(tabId, work);
+    void work.finally(() => { if (launches.get(tabId) === work) launches.delete(tabId); });
+  }
+
+  function syncAllActionStates() {
+    chrome.tabs.query({}, (tabs) => {
+      if (chrome.runtime.lastError) return;
+      tabs.forEach(syncActionState);
+    });
+  }
+
+  function syncActionState(tab: chrome.tabs.Tab) {
+    if (typeof tab.id !== "number") return;
+    const previewable = isPreviewableUrl(tab.url);
+    chrome.action.setPopup({
+      tabId: tab.id,
+      popup: previewable ? "" : UNSUPPORTED_PAGE_PATH,
+    });
+    if (!previewable) {
+      chrome.action.setBadgeText({ tabId: tab.id, text: "" });
+      chrome.action.setTitle({ tabId: tab.id, title: message("unsupportedActionTitle", "Open a website first") });
+      return;
+    }
+    // Read the live owner, including after service-worker suspension or a tab switch.
+    chrome.tabs.sendMessage(tab.id, { type: "MDV_GET_OVERLAY_STATE" }, { frameId: 0 }, response => {
+      const active = !chrome.runtime.lastError && response?.active === true;
+      setActiveIndicator(tab.id!, active);
+    });
+  }
+
+  function syncUpdateIndicator() {
+    chrome.action.setBadgeBackgroundColor({ color: "#0f766e" });
+    chrome.action.setBadgeText({ text: UPDATE_BADGE_TEXT });
+  }
+
+  function clearUpdateIndicator() {
+    chrome.action.setBadgeText({ text: "" });
+  }
+
+  function setActiveIndicator(tabId: number, active: boolean) {
+    chrome.action.setBadgeBackgroundColor({ color: "#0f9f8f", tabId });
+    chrome.action.setBadgeText({ text: active ? "ON" : "", tabId });
+    chrome.action.setTitle({
+      title: active
+        ? message(
+            "activeActionTitle",
+            "Mobile View & Responsive Tester is active — click to close",
+          )
+        : message("actionTitle", "Open Mobile View device emulator"),
+      tabId,
+    });
+  }
+
+  async function resolveCaptureTab(tabId?: number | null): Promise<chrome.tabs.Tab | null> {
+    if (typeof tabId === "number" && Number.isInteger(tabId)) {
+      return new Promise((resolve) => {
+        chrome.tabs.get(tabId, (tab) => {
+          if (chrome.runtime.lastError || !tab?.id) resolve(null);
+          else resolve(tab);
+        });
+      });
+    }
+
+    const tabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    return tabs[0] ?? null;
+  }
+
+  function downloadFinished(id: number): Promise<void> {
+    return new Promise((resolve) => {
+      const done = () => { chrome.downloads.onChanged.removeListener(listener); resolve(); };
+      const listener = (delta: chrome.downloads.DownloadDelta) => {
+        if (delta.id === id && (delta.state?.current === "complete" || delta.state?.current === "interrupted")) done();
+      };
+      chrome.downloads.onChanged.addListener(listener);
+      void chrome.downloads.search({ id }).then(([item]) => { if (!item || item.state !== "in_progress") done(); });
+    });
+  }
+
+  async function ensureOffscreenRecordingDocument(): Promise<void> {
+    const contexts = await chrome.runtime.getContexts?.({
+      contextTypes: ["OFFSCREEN_DOCUMENT"],
+      documentUrls: [chrome.runtime.getURL(OFFSCREEN_RECORDING_PATH)],
+    });
+
+    if (contexts && contexts.length > 0) return;
+
+    await chrome.offscreen.createDocument({
+      url: OFFSCREEN_RECORDING_PATH,
+      reasons: ["USER_MEDIA"],
+      justification: "Record the current tab for device preview QA.",
+    });
+  }
+
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if ((message?.type === "MDV_PREVIEW_HOST" || message?.type === "MDV_PREVIEW_CLOSE") && typeof sender.tab?.id === "number" && sender.frameId === 0) {
+      const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url);
+      void work.then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "MDV_DOWNLOAD" && typeof message.dataUrl === "string" && /^data:image\/(png|jpeg);base64,/.test(message.dataUrl)) {
+      const filename = String(message.filename ?? "mobile-view.png").replace(/[^a-zA-Z0-9_.-]/g, "-").slice(0,160);
+      void chrome.downloads.download({ url: message.dataUrl, filename, saveAs: true }).then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "MDV_REVIEW" && isReviewCommand(message.command)) {
+      void review(message.command).then(result => sendResponse({ ok: true, result }))
+        .catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "MDV_OPEN_SUPPORT") {
+      void chrome.tabs.create({ url: SUPPORT_URL }).then(() => sendResponse({ ok: true }))
+        .catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "OPEN_ACTIVE_TAB_IN_VIEWER") {
+      chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+        const tab = tabs[0];
+        if (!tab?.id) {
+          sendResponse({ ok: false, error: "No active tab" });
+          return;
+        }
+        openSimulatorForTab(tab);
+        sendResponse({ ok: true });
+      });
+      return true;
+    }
+
+    // ── CAPTURE_TAB_WITH_OVERLAY: capture the visible tab AS-IS (overlay stays visible) ──
+    if (message?.type === "CAPTURE_TAB_WITH_OVERLAY") {
+      const captureTab = (tab: chrome.tabs.Tab | null) => {
+        if (!tab?.windowId) { sendResponse({ error: "No viewer tab found." }); return; }
+        if (!tab.active) { sendResponse({ error: "The viewer tab is not active." }); return; }
+        chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" }, (dataUrl) => {
+          if (chrome.runtime.lastError) sendResponse({ error: chrome.runtime.lastError.message });
+          else sendResponse({ dataUrl });
+        });
+      };
+      const requestedTabId = typeof message.tabId === "number" ? message.tabId : null;
+      if (sender.tab?.id && (requestedTabId === null || sender.tab.id === requestedTabId)) {
+        captureTab(sender.tab);
+      } else {
+        void resolveCaptureTab(requestedTabId).then(captureTab);
+      }
+      return true;
+    }
+
+    if (message?.type === "START_RECORDING") {
+      void (async () => {
+        const tab = await resolveCaptureTab(typeof message.tabId === "number" ? message.tabId : null);
+        if (!tab?.id) {
+          sendResponse({ ok: false, error: "No source tab" });
+          return;
+        }
+
+        try {
+          await ensureOffscreenRecordingDocument();
+          const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
+          const started = await chrome.runtime.sendMessage({
+            type: "OFFSCREEN_START_RECORDING",
+            streamId,
+            tabId: tab.id,
+            filename: `multi-device-viewer-recording-${Date.now()}.webm`,
+          }) as { ok?: boolean; error?: string } | undefined;
+          if (!started?.ok) throw new Error(started?.error ?? "The recorder did not start.");
+          await chrome.storage.session.set({ mdvRecordingActive: true });
+          sendResponse({ ok: true });
+        } catch (error) {
+          await chrome.storage.session.set({ mdvRecordingActive: false });
+          void chrome.offscreen.closeDocument().catch(() => undefined);
+          sendResponse({ ok: false, error: String(error) });
+        }
+      })();
+      return true;
+    }
+
+    if (message?.type === "STOP_RECORDING") {
+      void chrome.storage.session.set({ mdvRecordingActive: false }).then(() => {
+        chrome.runtime.sendMessage({ type: "OFFSCREEN_STOP_RECORDING" });
+        sendResponse({ ok: true });
+      });
+      return true;
+    }
+
+    if (message?.type === "OFFSCREEN_RECORDING_COMPLETE") {
+      void chrome.storage.session.set({ mdvRecordingActive: false }).then(async () => {
+        sendResponse({ ok: true });
+        // The video lives in the recorder page, so it stays open until the
+        // download, including the Save dialog, has finished.
+        if (typeof message.blobUrl === "string" && typeof message.filename === "string") {
+          await chrome.downloads.download({ url: message.blobUrl, filename: message.filename, saveAs: true })
+            .then(downloadFinished)
+            .catch(() => undefined);
+        }
+        await chrome.offscreen.closeDocument().catch(() => undefined);
+      });
+      return true;
+    }
+
+    return false;
+  });
+});

@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Responsiivisuustestaus ja laite-emulaattori Chromeen",
+    "description": "Ilmainen Chrome-laajennus: testaa sivusi aidoissa iPhone-, Android-, iPad-, Mac- ja Apple Watch -kehyksissä synkronoidulla vierityksellä. Toimii localhostissa.",
+    "ogTitle": "Mobile View: sivustosi kaikilla näytöillä kerralla",
+    "ogImageAlt": "Mobile View näyttää saman sivun rinnakkain iPhonessa, taittuvassa laitteessa, MacBookissa ja Apple Watchissa"
+  },
+  "nav": {
+    "home": "Mobile View -etusivu",
+    "main": "Päävalikko",
+    "tour": "Esittely",
+    "reviews": "Arviot",
+    "faq": "UKK",
+    "guides": "Oppaat",
+    "privacy": "Tietosuoja",
+    "github": "Mobile View GitHubissa",
+    "leaveReview": "Kirjoita arvio",
+    "addToChrome": "Lisää Chromeen",
+    "skip": "Siirry sisältöön"
+  },
+  "hero": {
+    "rating": "{rating} Chrome Web Storessa",
+    "title": "Sivustosi kaikilla näytöillä kerralla.",
+    "lede": "Ilmainen Chrome-laajennus, joka näyttää minkä tahansa sivun, myös localhostin, aidoissa puhelimissa, taittuvissa laitteissa, tableteissa, kannettavissa ja kelloissa. Rinnakkain ja synkronoituna.",
+    "install": "Lisää Chromeen – ilmainen",
+    "review": "Kirjoita arvio"
+  },
+  "demo": {
+    "label": "Live-demo",
+    "badge": "Livenä. Vieritä tai napauta mitä tahansa näyttöä.",
+    "frameTitle": "Live-demosivu laitteessa {device}"
+  },
+  "facts": {
+    "label": "Lyhyesti",
+    "devicesValue": "{count}",
+    "devices": "aitoa laitetta",
+    "atOnceValue": "4 kerralla",
+    "atOnce": "rinnakkain",
+    "syncValue": "Synkronoitu",
+    "sync": "vieritys, napautukset ja sivut",
+    "privateValue": "Yksityinen",
+    "private": "ei tiliä, ei seurantaa"
+  },
+  "tour": {
+    "workspaceTitle": "Neljä laitetta. Yksi työtila.",
+    "workspaceText": "Valitse mitkä tahansa neljä {count} aidosta laitteesta ja näe sivusi niissä kaikissa kerralla.",
+    "workspaceAlt": "Mobile View -työtila, jossa sama sivu näkyy rinnakkain laitteissa iPhone 18 Pro, taitettu iPhone Duo, MacBook Pro 14 ja Apple Watch",
+    "syncTitle": "Vieritä kerran. Jokainen näyttö seuraa.",
+    "syncText": "Vieritys, klikkaukset ja navigointi pysyvät synkronoituina laitteiden välillä.",
+    "syncAlt": "Neljä laitetta vieritettynä sivun samaan kohtaan, vierityksen ja navigoinnin synkronointi päällä",
+    "allTitle": "Kaikki laitteet. Yksi klikkaus.",
+    "allText": "Avaa koko kategoria kerralla. Tässä 16 iPhonea 37:stä, iPhone 5:stä iPhone 15 Prohon.",
+    "allAlt": "Kaikki laitteet -näkymä, jossa kaksi riviä iPhoneja iPhone 5:stä ja iPhone SE:stä iPhone 15 Prohon, kaikissa latautuu sama sivu",
+    "designTitle": "Vertaa suunnitelmaan.",
+    "designText": "Tuo mallikuvasi live-sivun viereen millä tahansa laitteella. Rinnakkain tai päällekkäin – jokainen ero suunnitelman ja toteutuksen välillä erottuu helposti.",
+    "designCaught": "Tässä vertailussa havaittu",
+    "designItem1": "Otsikon teksti eroaa",
+    "designItem1Detail": "Live: ”Make room for your best work.” Suunnitelma: ”Room for your best work.”",
+    "designItem2": "Painikkeen tyyli eroaa",
+    "designItem2Detail": "Live: tumma, terävät kulmat. Suunnitelma: sinivihreä pyöreä painike.",
+    "designAlt": "Vertailu suunnitelmaan: live-sivu iPhone 18 Prossa suunnitelmakuvan vieressä, eri otsikolla ja painiketyylillä",
+    "fixTitle": "Merkitse bugi. Kopioi korjaus.",
+    "fixText": "Piirrä kuvakaappaukseen ja kopioi valmis kehote AI-koodaustyökalullesi. Mikään ei lähde koneeltasi.",
+    "fixAlt": "Merkintäeditori, jossa nuoli ja laatikko merkitsevät otsikon iPhonessa, vieressä korjauskehotteen paneeli, jossa luetellaan kyseiset laitteet",
+    "alsoInside": "Lisäksi mukana",
+    "chipRecord": "Tallenna ja toista polkuja",
+    "chipFocus": "Keskittymistila",
+    "chipRotate": "Kierto ja zoomaus",
+    "chipCustom": "Omat koot",
+    "chipSets": "Tallennetut laitesarjat"
+  },
+  "reviews": {
+    "title": "Tekijöiden arvostama.",
+    "outOf": "/ 5",
+    "stars": "{rating}/5 tähteä",
+    "summary": "{count} arviota · {users} käyttäjää Chrome Web Storessa",
+    "leave": "Kirjoita arvio",
+    "readAll": "Lue kaikki",
+    "source": "Chrome Web Store",
+    "empty": "Arvioi Mobile View ensimmäisten joukossa."
+  },
+  "privacy": {
+    "title": "Yksityinen alusta asti.",
+    "item1": "Ei tiliä",
+    "item2": "Ei seurantaa",
+    "item3": "Sivusi pysyvät selaimessasi",
+    "item4": "Avoin lähdekoodi",
+    "link": "Tietosuojakäytäntö"
+  },
+  "faq": {
+    "title": "Kysymyksiä.",
+    "q1": "Onko se ilmainen?",
+    "a1": "On. Ilmainen ja avointa lähdekoodia MIT-lisenssillä, eikä tiliä tarvita.",
+    "q2": "Toimiiko se localhostissa?",
+    "a2": "Toimii. Avaa paikallinen sivusi Chromessa ja avaa sitten Mobile View. Mikään ei lähde tietokoneeltasi.",
+    "q3": "Miten se eroaa DevToolsin laitetilasta?",
+    "a3": "DevTools näyttää yhden näkymän kerrallaan. Mobile View näyttää neljä aitoa laitetta rinnakkain ja synkronoituna.",
+    "q4": "Miksi jotkin sivustot eivät lataudu?",
+    "a4": "Jotkin sivustot estävät näyttämisensä toisen sivun sisällä. Mobile View kertoo siitä ja tarjoaa avata ne välilehdessä.",
+    "q5": "Lähettääkö korjauskehote koodini jonnekin?",
+    "a5": "Ei. Se luodaan koneellasi, ja voit liittää sen omaan koodaustyökaluusi."
+  },
+  "cta": {
+    "title": "Kokeile omalla sivustollasi.",
+    "text": "Ilmainen. Ei tiliä. Toimii localhostissa.",
+    "install": "Lisää Chromeen – ilmainen",
+    "review": "Kirjoita arvio"
+  },
+  "footer": {
+    "blurb": "Ilmainen ja yksityinen responsiivisuustestaaja Chromeen. Avointa lähdekoodia MIT-lisenssillä.",
+    "product": "Tuote",
+    "guides": "Oppaat",
+    "project": "Projekti",
+    "tour": "Esittely",
+    "reviews": "Arviot",
+    "changelog": "Muutosloki",
+    "store": "Chrome Web Store",
+    "allGuides": "Kaikki oppaat",
+    "source": "Lähdekoodi GitHubissa",
+    "issue": "Ilmoita ongelmasta",
+    "privacy": "Tietosuojakäytäntö",
+    "terms": "Käyttöehdot",
+    "language": "Kieli",
+    "copyright": "© {year} Edison Augusthy. MIT-lisenssi.",
+    "trademarks": "iPhone, iPad, Mac ja Apple Watch ovat Apple Inc:n tavaramerkkejä. Galaxy on Samsungin ja Pixel Googlen tavaramerkki. Laitenimet kuvaavat vain näyttökokoja; Mobile View ei ole sidoksissa näihin yrityksiin."
+  }
+}

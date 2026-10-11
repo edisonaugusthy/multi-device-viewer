@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Test responsive websites – enhedsemulator til Chrome",
+    "description": "Gratis Chrome-udvidelse: Test responsive websites i ægte enhedsrammer side om side med synkroniseret rulning. Virker også på localhost.",
+    "ogTitle": "Mobile View: se dit website på alle skærme på én gang",
+    "ogImageAlt": "Mobile View viser én side på iPhone, en foldbar telefon, en MacBook og et Apple Watch side om side"
+  },
+  "nav": {
+    "home": "Mobile View forside",
+    "main": "Hovedmenu",
+    "tour": "Rundvisning",
+    "reviews": "Anmeldelser",
+    "faq": "FAQ",
+    "guides": "Guides",
+    "privacy": "Privatliv",
+    "github": "Mobile View på GitHub",
+    "leaveReview": "Skriv en anmeldelse",
+    "addToChrome": "Føj til Chrome",
+    "skip": "Gå til indhold"
+  },
+  "hero": {
+    "rating": "{rating} i Chrome Web Store",
+    "title": "Se dit website på alle skærme på én gang.",
+    "lede": "En gratis Chrome-udvidelse, der viser enhver side, selv localhost, på ægte telefoner, foldbare, tablets, bærbare og ure. Side om side og synkroniseret.",
+    "install": "Føj til Chrome – det er gratis",
+    "review": "Skriv en anmeldelse"
+  },
+  "demo": {
+    "label": "Live-demo",
+    "badge": "Live. Rul eller tryk på en skærm.",
+    "frameTitle": "Live-demoside på {device}"
+  },
+  "facts": {
+    "label": "Kort fortalt",
+    "devicesValue": "{count}",
+    "devices": "ægte enheder",
+    "atOnceValue": "4 på én gang",
+    "atOnce": "side om side",
+    "syncValue": "Synkroniseret",
+    "sync": "rulning, tryk og sider",
+    "privateValue": "Privat",
+    "private": "ingen konto, ingen sporing"
+  },
+  "tour": {
+    "workspaceTitle": "Fire enheder. Ét arbejdsområde.",
+    "workspaceText": "Vælg fire af {count} ægte enheder, og se din side på dem alle på én gang.",
+    "workspaceAlt": "Mobile View-arbejdsområde, der viser en side på iPhone 18 Pro, sammenfoldet iPhone Duo, MacBook Pro 14 og Apple Watch side om side",
+    "syncTitle": "Rul én gang. Alle skærme følger med.",
+    "syncText": "Rulning, klik og navigation holdes synkroniseret på tværs af enheder.",
+    "syncAlt": "Fire enheder rullet til samme sted på en side med synkronisering af rulning og navigation slået til",
+    "allTitle": "Alle enheder. Ét klik.",
+    "allText": "Åbn en hel kategori på én gang. Her 16 af 37 iPhones, fra iPhone 5 til iPhone 15 Pro.",
+    "allAlt": "Visning af alle enheder med to rækker iPhones, fra iPhone 5 og iPhone SE til iPhone 15 Pro, der alle indlæser den samme side",
+    "designTitle": "Ram designet.",
+    "designText": "Læg dit mockup ved siden af den live side på en hvilken som helst enhed. Side om side eller lagt ovenpå er enhver forskel mellem design og kode let at få øje på.",
+    "designCaught": "Fanget i denne sammenligning",
+    "designItem1": "Overskriften er forskellig",
+    "designItem1Detail": "Live: »Make room for your best work.« Design: »Room for your best work.«",
+    "designItem2": "Knapstilen er forskellig",
+    "designItem2Detail": "Live: mørk med skarpe hjørner. Design: blågrøn og afrundet.",
+    "designAlt": "Sammenlign med design: den live side på iPhone 18 Pro ved siden af designbilledet med en anden overskrift og knapstil",
+    "fixTitle": "Markér fejlen. Kopiér rettelsen.",
+    "fixText": "Tegn på et skærmbillede, og kopiér en færdig prompt til dit AI-kodeværktøj. Intet forlader din computer.",
+    "fixAlt": "Annoteringseditor med en pil og en boks, der markerer en overskrift på iPhonen, ved siden af promptpanelet med de berørte enheder",
+    "alsoInside": "Også med",
+    "chipRecord": "Optag og afspil forløb",
+    "chipFocus": "Fokustilstand",
+    "chipRotate": "Rotér og zoom",
+    "chipCustom": "Egne størrelser",
+    "chipSets": "Gemte enhedssæt"
+  },
+  "reviews": {
+    "title": "Bedømt af folk, der leverer.",
+    "outOf": "ud af 5",
+    "stars": "{rating} ud af 5 stjerner",
+    "summary": "{count} bedømmelser · {users} brugere i Chrome Web Store",
+    "leave": "Skriv en anmeldelse",
+    "readAll": "Læs alle",
+    "source": "Chrome Web Store",
+    "empty": "Vær blandt de første til at anmelde Mobile View."
+  },
+  "privacy": {
+    "title": "Privat fra starten.",
+    "item1": "Ingen konto",
+    "item2": "Ingen sporing",
+    "item3": "Dine sider bliver i din browser",
+    "item4": "Open source",
+    "link": "Privatlivspolitik"
+  },
+  "faq": {
+    "title": "Spørgsmål.",
+    "q1": "Er det gratis?",
+    "a1": "Ja. Gratis og open source under MIT-licensen, uden konto.",
+    "q2": "Virker det på localhost?",
+    "a2": "Ja. Åbn din lokale side i Chrome, og åbn derefter Mobile View. Intet forlader din computer.",
+    "q3": "Hvordan adskiller det sig fra enhedstilstanden i DevTools?",
+    "a3": "DevTools viser én viewport ad gangen. Mobile View viser fire ægte enheder side om side, synkroniseret.",
+    "q4": "Hvorfor indlæses nogle websites ikke?",
+    "a4": "Nogle websites blokerer for at blive vist inde i en anden side. Mobile View siger til og tilbyder at åbne dem i en fane.",
+    "q5": "Uploader rettelsesprompten min kode?",
+    "a5": "Nej. Den skrives på din computer, så du kan indsætte den i dit eget kodeværktøj."
+  },
+  "cta": {
+    "title": "Prøv det på dit eget website.",
+    "text": "Gratis. Ingen konto. Virker på localhost.",
+    "install": "Føj til Chrome – det er gratis",
+    "review": "Skriv en anmeldelse"
+  },
+  "footer": {
+    "blurb": "En gratis og privat responsiv tester til Chrome. Open source under MIT-licensen.",
+    "product": "Produkt",
+    "guides": "Guides",
+    "project": "Projekt",
+    "tour": "Rundvisning",
+    "reviews": "Anmeldelser",
+    "changelog": "Ændringslog",
+    "store": "Chrome Web Store",
+    "allGuides": "Alle guides",
+    "source": "Kildekode på GitHub",
+    "issue": "Rapportér et problem",
+    "privacy": "Privatlivspolitik",
+    "terms": "Brugsvilkår",
+    "language": "Sprog",
+    "copyright": "© {year} Edison Augusthy. MIT-licenseret.",
+    "trademarks": "iPhone, iPad, Mac og Apple Watch er varemærker tilhørende Apple Inc. Galaxy er et varemærke tilhørende Samsung, Pixel tilhørende Google. Enhedsnavne beskriver kun skærmstørrelser; Mobile View er ikke tilknyttet disse virksomheder."
+  }
+}

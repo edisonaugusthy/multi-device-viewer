@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: эмулятор устройств и адаптивный тест"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Мобильный симулятор для тестирования адаптивного дизайна. Сравнивайте экраны, синхронизируйте прокрутку и делайте снимки."
+  },
+  "actionTitle": {
+    "message": "Открыть эмулятор устройств Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Открыть эту вкладку в Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View активен — нажмите, чтобы закрыть"
+  },
+  "unsupportedActionTitle": {
+    "message": "Сначала откройте сайт"
+  },
+  "unsupportedUrlHint": {
+    "message": "Перейдите на разрабатываемую страницу и снова нажмите значок расширения."
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Chrome용 반응형 웹사이트 테스트 및 기기 에뮬레이터",
+    "description": "무료 Chrome 확장 프로그램. 실제 iPhone, Android, 폴더블, iPad, Mac, Apple Watch 프레임에서 반응형 사이트를 나란히 테스트하고 스크롤을 동기화하세요. localhost도 지원.",
+    "ogTitle": "Mobile View: 모든 화면에서 사이트를 한 번에",
+    "ogImageAlt": "iPhone, 폴더블, MacBook, Apple Watch에 같은 페이지를 나란히 보여주는 Mobile View"
+  },
+  "nav": {
+    "home": "Mobile View 홈",
+    "main": "메인",
+    "tour": "둘러보기",
+    "reviews": "리뷰",
+    "faq": "FAQ",
+    "guides": "가이드",
+    "privacy": "개인정보",
+    "github": "GitHub의 Mobile View",
+    "leaveReview": "리뷰 남기기",
+    "addToChrome": "Chrome에 추가",
+    "skip": "본문으로 건너뛰기"
+  },
+  "hero": {
+    "rating": "Chrome Web Store 평점 {rating}",
+    "title": "모든 화면에서 한 번에 확인하세요.",
+    "lede": "어떤 페이지든, localhost까지, 실제 휴대폰, 폴더블, 태블릿, 노트북, 워치 화면으로 보여주는 무료 Chrome 확장 프로그램. 나란히, 동기화된 채로.",
+    "install": "Chrome에 무료로 추가",
+    "review": "리뷰 남기기"
+  },
+  "demo": {
+    "label": "라이브 데모",
+    "badge": "라이브. 아무 화면이나 스크롤하거나 탭해 보세요.",
+    "frameTitle": "{device}의 라이브 데모 페이지"
+  },
+  "facts": {
+    "label": "한눈에 보기",
+    "devicesValue": "{count}",
+    "devices": "실제 기기",
+    "atOnceValue": "동시에 4대",
+    "atOnce": "나란히 보기",
+    "syncValue": "동기화",
+    "sync": "스크롤, 탭, 페이지 이동",
+    "privateValue": "프라이빗",
+    "private": "계정 없음, 추적 없음"
+  },
+  "tour": {
+    "workspaceTitle": "기기 4대. 작업 공간 하나.",
+    "workspaceText": "{count}개 실제 기기 중 원하는 4대를 골라 모든 기기에서 페이지를 한 번에 확인하세요.",
+    "workspaceAlt": "iPhone 18 Pro, 접힌 iPhone Duo, MacBook Pro 14, Apple Watch에 페이지를 나란히 표시한 Mobile View 작업 공간",
+    "syncTitle": "한 번 스크롤하면 모든 화면이 따라옵니다.",
+    "syncText": "스크롤, 클릭, 페이지 이동이 모든 기기에서 동기화됩니다.",
+    "syncAlt": "스크롤 및 탐색 동기화를 켜고 페이지의 같은 위치로 스크롤된 기기 4대",
+    "allTitle": "모든 기기를 클릭 한 번으로.",
+    "allText": "카테고리 전체를 한 번에 여세요. 여기서는 iPhone 37대 중 16대, iPhone 5부터 iPhone 15 Pro까지.",
+    "allAlt": "iPhone 5와 iPhone SE부터 iPhone 15 Pro까지 두 줄로 늘어선 iPhone이 각각 같은 페이지를 불러오는 전체 기기 보기",
+    "designTitle": "디자인과 맞춰 보세요.",
+    "designText": "어떤 기기에서든 라이브 페이지 옆에 목업을 놓아 보세요. 나란히 놓든 겹쳐 놓든, 디자인과 구현의 차이가 바로 보입니다.",
+    "designCaught": "이번 비교에서 찾은 차이",
+    "designItem1": "헤드라인 문구가 다름",
+    "designItem1Detail": "라이브: “Make room for your best work.” 디자인: “Room for your best work.”",
+    "designItem2": "버튼 스타일이 다름",
+    "designItem2Detail": "라이브: 어두운 색, 각진 모서리. 디자인: 청록색 알약형.",
+    "designAlt": "디자인과 비교: iPhone 18 Pro의 라이브 페이지와 디자인 이미지를 나란히 놓아 헤드라인과 버튼 스타일 차이를 표시",
+    "fixTitle": "버그를 표시하고, 수정안을 복사하세요.",
+    "fixText": "스크린샷에 표시한 뒤 AI 코딩 도구에 바로 쓸 프롬프트를 복사하세요. 어떤 데이터도 내 컴퓨터 밖으로 나가지 않습니다.",
+    "fixAlt": "iPhone의 제목을 화살표와 상자로 표시한 주석 편집기와, 영향받는 기기 목록이 담긴 수정 프롬프트 패널",
+    "alsoInside": "그 밖의 기능",
+    "chipRecord": "플로 녹화 및 재생",
+    "chipFocus": "포커스 모드",
+    "chipRotate": "회전 및 확대/축소",
+    "chipCustom": "사용자 지정 크기",
+    "chipSets": "저장된 기기 세트"
+  },
+  "reviews": {
+    "title": "만드는 사람들이 인정한 도구.",
+    "outOf": "/ 5",
+    "stars": "별점 5점 만점에 {rating}점",
+    "summary": "평가 {count}개 · Chrome Web Store 사용자 {users}명",
+    "leave": "리뷰 남기기",
+    "readAll": "모두 보기",
+    "source": "Chrome Web Store",
+    "empty": "Mobile View의 첫 리뷰어가 되어 주세요."
+  },
+  "privacy": {
+    "title": "처음부터 프라이빗하게.",
+    "item1": "계정 불필요",
+    "item2": "추적 없음",
+    "item3": "페이지는 브라우저 안에만 머뭅니다",
+    "item4": "오픈 소스",
+    "link": "개인정보처리방침"
+  },
+  "faq": {
+    "title": "자주 묻는 질문.",
+    "q1": "무료인가요?",
+    "a1": "네. MIT 라이선스의 무료 오픈 소스이며 계정도 필요 없습니다.",
+    "q2": "localhost에서도 작동하나요?",
+    "a2": "네. Chrome에서 로컬 페이지를 연 다음 Mobile View를 실행하세요. 어떤 데이터도 컴퓨터 밖으로 나가지 않습니다.",
+    "q3": "DevTools 기기 모드와 무엇이 다른가요?",
+    "a3": "DevTools는 한 번에 하나의 뷰포트만 보여줍니다. Mobile View는 실제 기기 4대를 나란히, 동기화된 상태로 보여줍니다.",
+    "q4": "일부 사이트가 로드되지 않는 이유는?",
+    "a4": "일부 사이트는 다른 페이지 안에 표시되는 것을 차단합니다. 이 경우 Mobile View가 알려 주고 탭에서 열 수 있게 해 줍니다.",
+    "q5": "수정 프롬프트가 내 코드를 업로드하나요?",
+    "a5": "아니요. 프롬프트는 내 컴퓨터에서 작성되며, 직접 사용하는 코딩 도구에 붙여 넣으면 됩니다."
+  },
+  "cta": {
+    "title": "내 사이트에서 직접 써 보세요.",
+    "text": "무료. 계정 불필요. localhost 지원.",
+    "install": "Chrome에 무료로 추가",
+    "review": "리뷰 남기기"
+  },
+  "footer": {
+    "blurb": "Chrome용 무료 프라이빗 반응형 테스트 도구. MIT 라이선스 오픈 소스.",
+    "product": "제품",
+    "guides": "가이드",
+    "project": "프로젝트",
+    "tour": "둘러보기",
+    "reviews": "리뷰",
+    "changelog": "변경 내역",
+    "store": "Chrome Web Store",
+    "allGuides": "모든 가이드",
+    "source": "GitHub 소스 코드",
+    "issue": "문제 신고",
+    "privacy": "개인정보처리방침",
+    "terms": "이용약관",
+    "language": "언어",
+    "copyright": "© {year} Edison Augusthy. MIT 라이선스.",
+    "trademarks": "iPhone, iPad, Mac, Apple Watch는 Apple Inc.의 상표입니다. Galaxy는 Samsung의, Pixel은 Google의 상표입니다. 기기 이름은 화면 크기를 나타내기 위한 것이며, Mobile View는 이들 회사와 제휴 관계가 없습니다."
+  }
+}

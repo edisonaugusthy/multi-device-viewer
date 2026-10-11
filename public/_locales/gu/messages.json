@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: ડિવાઇસ ઇમ્યુલેટર અને રિસ્પોન્સિવ ટેસ્ટર"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "મોબાઇલ સિમ્યુલેટરથી રિસ્પોન્સિવ વેબ ડિઝાઇન તપાસો. ઉપકરણના દૃશ્યો સરખાવો, સ્ક્રોલ સિંક કરો અને સ્ક્રીનશૉટ લો."
+  },
+  "actionTitle": {
+    "message": "Mobile View ડિવાઇસ ઇમ્યુલેટર ખોલો"
+  },
+  "contextMenuTitle": {
+    "message": "આ ટૅબ Mobile Viewમાં ખોલો"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View સક્રિય છે — બંધ કરવા ક્લિક કરો"
+  },
+  "unsupportedActionTitle": {
+    "message": "પહેલા વેબસાઇટ ખોલો"
+  },
+  "unsupportedUrlHint": {
+    "message": "તમે જે પેજ બનાવી રહ્યા છો ત્યાં જાઓ અને એક્સ્ટેન્શન પર ફરી ક્લિક કરો."
+  }
+}

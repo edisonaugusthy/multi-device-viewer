@@ -1,0 +1,20 @@
+{
+  "storeLocale": "sl",
+  "name": "Mobile View: Emulator naprav in odzivni preizkus",
+  "summary": "Mobilni simulator za preizkušanje odzivnega oblikovanja. Primerjajte poglede, uskladite drsenje in zajemite zaslonske slike.",
+  "screenshotCaptions": [
+    "Vsi zasloni, drug ob drugem.",
+    "Vse naprave. En klik.",
+    "Osredotočite se na en zaslon.",
+    "Natančno po dizajnu, piksel za pikslom.",
+    "Označite napako. Posnemite potek."
+  ],
+  "screenshotSubtitles": [
+    "Pravi okvirji naprav s sinhroniziranim pomikanjem, kliki in navigacijo.",
+    "Odprite vseh 110+ naprav po kategorijah, od najmanjšega telefona do največjega zaslona.",
+    "Razširite katero koli napravo in v načinu osredotočenosti skrijte vsa orodja za čiste preglede in predstavitve.",
+    "Na eni strani vaša maketa, na drugi živa stran. Vsako razliko opazite na prvi pogled.",
+    "Dodajte opombe na posnetek zaslona, kopirajte poziv za popravek za svoje orodje UI ali predvajajte uporabniški potek na vseh napravah."
+  ],
+  "screenshotLocale": "en"
+}

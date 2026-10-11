@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Chrome用レスポンシブサイトテスト＆デバイスエミュレーター",
+    "description": "無料のChrome拡張機能。iPhone、Android、折りたたみ、iPad、Mac、Apple Watchの実機フレームでレスポンシブサイトを並べて確認。スクロール同期、localhostにも対応。",
+    "ogTitle": "Mobile View: すべての画面でサイトを一度に確認",
+    "ogImageAlt": "iPhone、折りたたみ端末、MacBook、Apple Watchに同じページを並べて表示したMobile View"
+  },
+  "nav": {
+    "home": "Mobile View ホーム",
+    "main": "メイン",
+    "tour": "機能紹介",
+    "reviews": "レビュー",
+    "faq": "よくある質問",
+    "guides": "ガイド",
+    "privacy": "プライバシー",
+    "github": "GitHubのMobile View",
+    "leaveReview": "レビューを書く",
+    "addToChrome": "Chromeに追加",
+    "skip": "本文へスキップ"
+  },
+  "hero": {
+    "rating": "Chrome Web Storeで{rating}",
+    "title": "すべての画面で、一度に確認。",
+    "lede": "どんなページも、localhostでも、実在のスマホ、折りたたみ、タブレット、ノートPC、スマートウォッチで表示できる無料のChrome拡張機能。並べて、同期して。",
+    "install": "Chromeに追加（無料）",
+    "review": "レビューを書く"
+  },
+  "demo": {
+    "label": "ライブデモ",
+    "badge": "ライブ。どの画面でもスクロールやタップができます。",
+    "frameTitle": "{device}のライブデモページ"
+  },
+  "facts": {
+    "label": "ひと目でわかる",
+    "devicesValue": "{count}",
+    "devices": "種類の実機",
+    "atOnceValue": "同時に4台",
+    "atOnce": "並べて表示",
+    "syncValue": "同期",
+    "sync": "スクロール・タップ・ページ移動",
+    "privateValue": "プライベート",
+    "private": "アカウント不要・追跡なし"
+  },
+  "tour": {
+    "workspaceTitle": "4台のデバイス。ひとつのワークスペース。",
+    "workspaceText": "{count}種類の実機から好きな4台を選び、すべてで同時にページを確認できます。",
+    "workspaceAlt": "iPhone 18 Pro、折りたたんだiPhone Duo、MacBook Pro 14、Apple Watchにページを並べて表示したMobile Viewのワークスペース",
+    "syncTitle": "一度スクロールすれば、全画面が追従。",
+    "syncText": "スクロール、クリック、ページ移動がデバイス間で同期します。",
+    "syncAlt": "スクロールとナビゲーションの同期をオンにして、4台のデバイスがページの同じ位置を表示",
+    "allTitle": "全デバイスを、ワンクリックで。",
+    "allText": "カテゴリーごとまとめて開けます。ここでは37台中16台のiPhone、iPhone 5からiPhone 15 Proまで。",
+    "allAlt": "全デバイス表示。iPhone 5やiPhone SEからiPhone 15 Proまで、2列に並んだiPhoneがそれぞれ同じページを読み込み中",
+    "designTitle": "デザインどおりか確かめる。",
+    "designText": "どのデバイスでも、ライブページの横にモックアップを配置。並べても重ねても、デザインと実装のズレがすぐわかります。",
+    "designCaught": "この比較で見つかった差分",
+    "designItem1": "見出しの文言が違う",
+    "designItem1Detail": "ライブ：「Make room for your best work.」 デザイン：「Room for your best work.」",
+    "designItem2": "ボタンのスタイルが違う",
+    "designItem2Detail": "ライブ：濃い色、角ばった形。デザイン：ティール色のピル型。",
+    "designAlt": "デザインと比較：iPhone 18 Proのライブページとデザイン画像を並べ、見出しとボタンのスタイルの違いを表示",
+    "fixTitle": "バグに印を。修正をコピー。",
+    "fixText": "スクリーンショットに書き込み、AIコーディングツール用のプロンプトをそのままコピー。データは外部に送信されません。",
+    "fixAlt": "iPhoneの見出しを矢印と枠で示した注釈エディターと、影響を受けるデバイスを一覧表示する修正プロンプトパネル",
+    "alsoInside": "ほかにも",
+    "chipRecord": "フローの記録と再生",
+    "chipFocus": "フォーカスモード",
+    "chipRotate": "回転とズーム",
+    "chipCustom": "カスタムサイズ",
+    "chipSets": "デバイスセットの保存"
+  },
+  "reviews": {
+    "title": "開発の現場で高評価。",
+    "outOf": "/ 5",
+    "stars": "5つ星中{rating}",
+    "summary": "{count}件の評価 · Chrome Web Storeで{users}人が利用",
+    "leave": "レビューを書く",
+    "readAll": "すべて見る",
+    "source": "Chrome Web Store",
+    "empty": "Mobile Viewの最初のレビュアーになりませんか。"
+  },
+  "privacy": {
+    "title": "設計からプライベート。",
+    "item1": "アカウント不要",
+    "item2": "トラッキングなし",
+    "item3": "ページはブラウザ内にとどまります",
+    "item4": "オープンソース",
+    "link": "プライバシーポリシー"
+  },
+  "faq": {
+    "title": "よくある質問。",
+    "q1": "無料ですか？",
+    "a1": "はい。MITライセンスの無料オープンソースで、アカウントも不要です。",
+    "q2": "localhostでも使えますか？",
+    "a2": "はい。Chromeでローカルページを開き、Mobile Viewを起動するだけ。データはパソコンの外に出ません。",
+    "q3": "DevToolsのデバイスモードとの違いは？",
+    "a3": "DevToolsは一度にひとつのビューポートしか表示できません。Mobile Viewは4台の実機を並べて同期表示します。",
+    "q4": "一部のサイトが読み込めないのはなぜ？",
+    "a4": "サイトによっては、他のページ内への埋め込み表示をブロックしています。その場合はMobile Viewがお知らせし、タブで開くこともできます。",
+    "q5": "修正プロンプトはコードをアップロードしますか？",
+    "a5": "いいえ。お使いのPC上で作成され、ご自身のコーディングツールに貼り付けて使います。"
+  },
+  "cta": {
+    "title": "あなたのサイトで試してみよう。",
+    "text": "無料。アカウント不要。localhostにも対応。",
+    "install": "Chromeに追加（無料）",
+    "review": "レビューを書く"
+  },
+  "footer": {
+    "blurb": "Chrome向けの無料でプライベートなレスポンシブテストツール。MITライセンスのオープンソース。",
+    "product": "製品",
+    "guides": "ガイド",
+    "project": "プロジェクト",
+    "tour": "機能紹介",
+    "reviews": "レビュー",
+    "changelog": "更新履歴",
+    "store": "Chrome Web Store",
+    "allGuides": "すべてのガイド",
+    "source": "GitHubのソースコード",
+    "issue": "問題を報告",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "language": "言語",
+    "copyright": "© {year} Edison Augusthy. MITライセンス。",
+    "trademarks": "iPhone、iPad、Mac、Apple WatchはApple Inc.の商標です。GalaxyはSamsungの、PixelはGoogleの商標です。デバイス名は画面サイズを示すためだけに使用しており、Mobile Viewはこれらの企業と提携していません。"
+  }
+}

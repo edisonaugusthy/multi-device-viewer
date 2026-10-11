@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Kiểm thử responsive & giả lập thiết bị cho Chrome",
+    "description": "Tiện ích Chrome miễn phí: kiểm thử web responsive trên khung iPhone, Android, iPad, Mac, Apple Watch thật, đặt cạnh nhau, đồng bộ cuộn. Hỗ trợ localhost.",
+    "ogTitle": "Mobile View: xem trang web trên mọi màn hình cùng lúc",
+    "ogImageAlt": "Mobile View hiển thị cùng một trang trên iPhone, điện thoại gập, MacBook và Apple Watch cạnh nhau"
+  },
+  "nav": {
+    "home": "Trang chủ Mobile View",
+    "main": "Điều hướng chính",
+    "tour": "Tham quan",
+    "reviews": "Đánh giá",
+    "faq": "Hỏi đáp",
+    "guides": "Hướng dẫn",
+    "privacy": "Quyền riêng tư",
+    "github": "Mobile View trên GitHub",
+    "leaveReview": "Viết đánh giá",
+    "addToChrome": "Thêm vào Chrome",
+    "skip": "Chuyển đến nội dung"
+  },
+  "hero": {
+    "rating": "{rating} trên Chrome Web Store",
+    "title": "Xem trang web trên mọi màn hình cùng lúc.",
+    "lede": "Tiện ích Chrome miễn phí hiển thị mọi trang, kể cả localhost, trên điện thoại, máy gập, máy tính bảng, laptop và đồng hồ thật. Đặt cạnh nhau, luôn đồng bộ.",
+    "install": "Thêm vào Chrome, miễn phí",
+    "review": "Viết đánh giá"
+  },
+  "demo": {
+    "label": "Bản demo trực tiếp",
+    "badge": "Trực tiếp. Hãy cuộn hoặc chạm vào bất kỳ màn hình nào.",
+    "frameTitle": "Trang demo trực tiếp trên {device}"
+  },
+  "facts": {
+    "label": "Tổng quan",
+    "devicesValue": "{count}",
+    "devices": "thiết bị thật",
+    "atOnceValue": "4 cùng lúc",
+    "atOnce": "đặt cạnh nhau",
+    "syncValue": "Đồng bộ",
+    "sync": "cuộn, chạm và chuyển trang",
+    "privateValue": "Riêng tư",
+    "private": "không tài khoản, không theo dõi"
+  },
+  "tour": {
+    "workspaceTitle": "Bốn thiết bị. Một không gian làm việc.",
+    "workspaceText": "Chọn bốn thiết bị bất kỳ trong {count} thiết bị thật và xem trang của bạn trên tất cả cùng lúc.",
+    "workspaceAlt": "Không gian làm việc Mobile View hiển thị một trang trên iPhone 18 Pro, iPhone Duo gập, MacBook Pro 14 và Apple Watch cạnh nhau",
+    "syncTitle": "Cuộn một lần. Mọi màn hình cùng theo.",
+    "syncText": "Thao tác cuộn, nhấp và điều hướng luôn đồng bộ giữa các thiết bị.",
+    "syncAlt": "Bốn thiết bị cuộn đến cùng một vị trí trên trang khi bật đồng bộ cuộn và điều hướng",
+    "allTitle": "Mọi thiết bị. Một cú nhấp.",
+    "allText": "Mở cả một nhóm thiết bị cùng lúc. Ở đây là 16 trong 37 mẫu iPhone, từ iPhone 5 đến iPhone 15 Pro.",
+    "allAlt": "Chế độ xem tất cả thiết bị với hai hàng iPhone, từ iPhone 5 và iPhone SE đến iPhone 15 Pro, cùng tải một trang",
+    "designTitle": "Khớp với thiết kế.",
+    "designText": "Đặt bản mockup cạnh trang thật trên bất kỳ thiết bị nào. Xếp cạnh nhau hay chồng lên nhau, mọi khác biệt giữa thiết kế và sản phẩm đều dễ nhận ra.",
+    "designCaught": "Phát hiện trong lần so sánh này",
+    "designItem1": "Tiêu đề khác nhau",
+    "designItem1Detail": "Trang thật: “Make room for your best work.” Thiết kế: “Room for your best work.”",
+    "designItem2": "Kiểu nút khác nhau",
+    "designItem2Detail": "Trang thật: tối màu, góc vuông. Thiết kế: dạng viên thuốc màu xanh mòng két.",
+    "designAlt": "So sánh với thiết kế: trang thật trên iPhone 18 Pro bên cạnh ảnh thiết kế, khác tiêu đề và kiểu nút",
+    "fixTitle": "Đánh dấu lỗi. Sao chép cách sửa.",
+    "fixText": "Vẽ lên ảnh chụp màn hình, rồi sao chép prompt soạn sẵn cho công cụ lập trình AI của bạn. Không có gì rời khỏi máy bạn.",
+    "fixAlt": "Trình chú thích với mũi tên và khung đánh dấu tiêu đề trên iPhone, bên cạnh bảng prompt sửa lỗi liệt kê các thiết bị bị ảnh hưởng",
+    "alsoInside": "Còn có",
+    "chipRecord": "Ghi và phát lại luồng",
+    "chipFocus": "Chế độ tập trung",
+    "chipRotate": "Xoay và thu phóng",
+    "chipCustom": "Kích thước tùy chỉnh",
+    "chipSets": "Bộ thiết bị đã lưu"
+  },
+  "reviews": {
+    "title": "Được người làm sản phẩm tin dùng.",
+    "outOf": "trên 5",
+    "stars": "{rating} trên 5 sao",
+    "summary": "{count} lượt đánh giá · {users} người dùng trên Chrome Web Store",
+    "leave": "Viết đánh giá",
+    "readAll": "Xem tất cả",
+    "source": "Chrome Web Store",
+    "empty": "Hãy là một trong những người đầu tiên đánh giá Mobile View."
+  },
+  "privacy": {
+    "title": "Riêng tư ngay từ thiết kế.",
+    "item1": "Không cần tài khoản",
+    "item2": "Không theo dõi",
+    "item3": "Trang của bạn chỉ ở trong trình duyệt",
+    "item4": "Mã nguồn mở",
+    "link": "Chính sách quyền riêng tư"
+  },
+  "faq": {
+    "title": "Câu hỏi.",
+    "q1": "Có miễn phí không?",
+    "a1": "Có. Miễn phí và mã nguồn mở theo giấy phép MIT, không cần tài khoản.",
+    "q2": "Có chạy trên localhost không?",
+    "a2": "Có. Mở trang cục bộ trong Chrome, rồi mở Mobile View. Không có gì rời khỏi máy tính của bạn.",
+    "q3": "Khác gì so với chế độ thiết bị của DevTools?",
+    "a3": "DevTools chỉ hiển thị một khung nhìn mỗi lần. Mobile View hiển thị bốn thiết bị thật cạnh nhau và luôn đồng bộ.",
+    "q4": "Vì sao một số trang không tải được?",
+    "a4": "Một số trang chặn việc hiển thị bên trong trang khác. Mobile View sẽ báo cho bạn và đề nghị mở trang trong một thẻ.",
+    "q5": "Prompt sửa lỗi có tải mã của tôi lên không?",
+    "a5": "Không. Prompt được tạo ngay trên máy bạn để bạn dán vào công cụ lập trình của riêng mình."
+  },
+  "cta": {
+    "title": "Thử ngay trên trang web của bạn.",
+    "text": "Miễn phí. Không cần tài khoản. Chạy trên localhost.",
+    "install": "Thêm vào Chrome, miễn phí",
+    "review": "Viết đánh giá"
+  },
+  "footer": {
+    "blurb": "Công cụ kiểm thử responsive miễn phí, riêng tư cho Chrome. Mã nguồn mở theo giấy phép MIT.",
+    "product": "Sản phẩm",
+    "guides": "Hướng dẫn",
+    "project": "Dự án",
+    "tour": "Tham quan",
+    "reviews": "Đánh giá",
+    "changelog": "Nhật ký thay đổi",
+    "store": "Chrome Web Store",
+    "allGuides": "Tất cả hướng dẫn",
+    "source": "Mã nguồn trên GitHub",
+    "issue": "Báo lỗi",
+    "privacy": "Chính sách quyền riêng tư",
+    "terms": "Điều khoản sử dụng",
+    "language": "Ngôn ngữ",
+    "copyright": "© {year} Edison Augusthy. Giấy phép MIT.",
+    "trademarks": "iPhone, iPad, Mac và Apple Watch là nhãn hiệu của Apple Inc. Galaxy là nhãn hiệu của Samsung; Pixel là nhãn hiệu của Google. Tên thiết bị chỉ dùng để mô tả kích thước màn hình; Mobile View không liên kết với các công ty này."
+  }
+}

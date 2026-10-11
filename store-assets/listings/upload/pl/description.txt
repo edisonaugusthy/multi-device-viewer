@@ -1,0 +1,8 @@
+Mobile View to bezpłatne narzędzie open source do testowania responsywnych witryn w Chrome. Porównuj do czterech widoków obok siebie, w tym podgląd mobilny, aby sprawdzać menu, tekst i odstępy. Wybieraj realistyczne urządzenia, zmieniaj orientację i powiększenie, synchronizuj przewijanie i nawigację, rób zrzuty oraz porównuj z lokalnym projektem. Wszystko działa lokalnie w przeglądarce bez konta, subskrypcji, analityki, telemetrii ani serwera.
+
+- Otwórz wszystkie urządzenia jednym kliknięciem. Podglądy są pogrupowane według typu urządzenia i uporządkowane od mniejszych ekranów do większych.
+- Do ponownego testowania responsywnych układów twórz własne rozmiary widoku, zapisuj zestawy i ulubione urządzenia lub skup się na jednym widoku. Synchronizuj obsługiwane interakcje między odpowiadającymi sobie podglądami.
+- Przechwytuj jeden widok lub całą przestrzeń roboczą. Dodawaj strzałki, ramki, rysunki i tekst albo przycinaj obraz. Wyświetlaj lokalny projekt obok strony lub jako nakładkę.
+- Kopiuj uporządkowany prompt naprawy z adresem URL, urządzeniami, rozmiarami i notatkami o problemie do swojego narzędzia programistycznego.
+
+To responsywne podglądy w Chrome, a nie fizyczne urządzenia ani silnik Safari. Nadal obowiązują zasady logowania i osadzania witryn. Oryginalna strona pozostaje bez zmian; nowe podglądy nie kopiują niezapisanych zmian.

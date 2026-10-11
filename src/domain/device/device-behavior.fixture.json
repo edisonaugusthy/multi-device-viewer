@@ -1,0 +1,1556 @@
+[
+  {
+    "id": "apple-iphone-18-pro-2026",
+    "name": "Apple iPhone 18 Pro",
+    "cssViewport": {
+      "width": 402,
+      "height": 874
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1206,
+      "height": 2622
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-18-pro-max-2026",
+    "name": "Apple iPhone 18 Pro Max",
+    "cssViewport": {
+      "width": 440,
+      "height": 956
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1320,
+      "height": 2868
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-duo-folded-2026",
+    "name": "Apple iPhone Duo (folded)",
+    "cssViewport": {
+      "width": 466,
+      "height": 678
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1398,
+      "height": 2034
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-duo-unfolded-2026",
+    "name": "Apple iPhone Duo (unfolded)",
+    "cssViewport": {
+      "width": 890,
+      "height": 626
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 2670,
+      "height": 1878
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-14-pro-max-2022",
+    "name": "Apple iPhone 14 Pro Max",
+    "cssViewport": {
+      "width": 430,
+      "height": 932
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1290,
+      "height": 2796
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-air-2025",
+    "name": "Apple iPhone Air (2025)",
+    "cssViewport": {
+      "width": 420,
+      "height": 912
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1260,
+      "height": 2736
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-17-pro-max-2025",
+    "name": "Apple iPhone 17 Pro Max (2025)",
+    "cssViewport": {
+      "width": 440,
+      "height": 956
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1320,
+      "height": 2868
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-16-pro-max-2024",
+    "name": "Apple iPhone 16 Pro Max (2024)",
+    "cssViewport": {
+      "width": 440,
+      "height": 956
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1320,
+      "height": 2868
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-15",
+    "name": "Apple iPhone 15",
+    "cssViewport": {
+      "width": 393,
+      "height": 852
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1179,
+      "height": 2556
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-14",
+    "name": "Apple iPhone 14",
+    "cssViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1170,
+      "height": 2532
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-13-mini",
+    "name": "Apple iPhone 13 Mini",
+    "cssViewport": {
+      "width": 375,
+      "height": 812
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-se-2018",
+    "name": "Apple iPhone SE (1st generation)",
+    "cssViewport": {
+      "width": 320,
+      "height": 568
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 640,
+      "height": 1136
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s24",
+    "name": "Samsung Galaxy S24",
+    "cssViewport": {
+      "width": 360,
+      "height": 780
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s24-ultra",
+    "name": "Samsung Galaxy S24 Ultra",
+    "cssViewport": {
+      "width": 384,
+      "height": 832
+    },
+    "pixelRatio": 3.75,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 3120
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-z-fold8-ultra-folded-2026",
+    "name": "Samsung Galaxy Z Fold8 Ultra (folded)",
+    "cssViewport": {
+      "width": 360,
+      "height": 840
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2520
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-galaxy-z-fold8-ultra-unfolded-2026",
+    "name": "Samsung Galaxy Z Fold8 Ultra (unfolded)",
+    "cssViewport": {
+      "width": 902,
+      "height": 1002
+    },
+    "pixelRatio": 2.5,
+    "manufacturerResolution": {
+      "width": 2256,
+      "height": 2504
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-galaxy-z-fold8-folded-2026",
+    "name": "Samsung Galaxy Z Fold8 (folded)",
+    "cssViewport": {
+      "width": 416,
+      "height": 657
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1248,
+      "height": 1972
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-galaxy-z-fold8-unfolded-2026",
+    "name": "Samsung Galaxy Z Fold8 (unfolded)",
+    "cssViewport": {
+      "width": 979,
+      "height": 739
+    },
+    "pixelRatio": 2.5,
+    "manufacturerResolution": {
+      "width": 2448,
+      "height": 1848
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-galaxy-z-flip8-folded-2026",
+    "name": "Samsung Galaxy Z Flip8 (folded)",
+    "cssViewport": {
+      "width": 316,
+      "height": 349
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 948,
+      "height": 1048
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-galaxy-z-flip8-unfolded-2026",
+    "name": "Samsung Galaxy Z Flip8 (unfolded)",
+    "cssViewport": {
+      "width": 360,
+      "height": 840
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2520
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-galaxy-a27-5g-2026",
+    "name": "Samsung Galaxy A27 5G",
+    "cssViewport": {
+      "width": 360,
+      "height": 780
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-8",
+    "name": "Google Pixel 8",
+    "cssViewport": {
+      "width": 412,
+      "height": 916
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2400
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-11-2026",
+    "name": "Google Pixel 11",
+    "cssViewport": {
+      "width": 412,
+      "height": 924
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2424
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-11-pro-2026",
+    "name": "Google Pixel 11 Pro",
+    "cssViewport": {
+      "width": 410,
+      "height": 914
+    },
+    "pixelRatio": 3.125,
+    "manufacturerResolution": {
+      "width": 1280,
+      "height": 2856
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-11-pro-xl-2026",
+    "name": "Google Pixel 11 Pro XL",
+    "cssViewport": {
+      "width": 448,
+      "height": 997
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1344,
+      "height": 2992
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-11-pro-fold-2026",
+    "name": "Google Pixel 11 Pro Fold",
+    "cssViewport": {
+      "width": 791,
+      "height": 823
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 2076,
+      "height": 2160
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-6-pro",
+    "name": "Google Pixel 6 Pro",
+    "cssViewport": {
+      "width": 412,
+      "height": 892
+    },
+    "pixelRatio": 3.5,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 3120
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-z-fold-2",
+    "name": "Samsung Galaxy Z Fold 2",
+    "cssViewport": {
+      "width": 884,
+      "height": 1104
+    },
+    "pixelRatio": 2.5,
+    "manufacturerResolution": {
+      "width": 1768,
+      "height": 2208
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-ipad-mini-6",
+    "name": "Apple iPad Mini (6th Gen)",
+    "cssViewport": {
+      "width": 744,
+      "height": 1133
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 1488,
+      "height": 2266
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-ipad-air-4",
+    "name": "Apple iPad Air 4",
+    "cssViewport": {
+      "width": 820,
+      "height": 1180
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 1640,
+      "height": 2360
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-tab-s7",
+    "name": "Samsung Galaxy Tab S7",
+    "cssViewport": {
+      "width": 800,
+      "height": 1280
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 1600,
+      "height": 2560
+    },
+    "rotate": true
+  },
+  {
+    "id": "macbook-pro-16-2021",
+    "name": "Apple MacBook Pro 16 inch",
+    "cssViewport": {
+      "width": 1728,
+      "height": 1085
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 3456,
+      "height": 2170
+    },
+    "rotate": false
+  },
+  {
+    "id": "macbook-air-2020-13",
+    "name": "Apple MacBook Air 13 inch",
+    "cssViewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 2560,
+      "height": 1600
+    },
+    "rotate": false
+  },
+  {
+    "id": "imac-24-2021",
+    "name": "iMac 24 inch",
+    "cssViewport": {
+      "width": 2048,
+      "height": 1152
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 4096,
+      "height": 2304
+    },
+    "rotate": false
+  },
+  {
+    "id": "apple-watch-series-12-46mm",
+    "name": "Apple Watch Series 12 (46mm)",
+    "cssViewport": {
+      "width": 208,
+      "height": 248
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 416,
+      "height": 496
+    },
+    "rotate": false
+  },
+  {
+    "id": "apple-watch-series-12-42mm",
+    "name": "Apple Watch Series 12 (42mm)",
+    "cssViewport": {
+      "width": 187,
+      "height": 223
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 374,
+      "height": 446
+    },
+    "rotate": false
+  },
+  {
+    "id": "apple-watch-ultra-4",
+    "name": "Apple Watch Ultra 4 (49mm)",
+    "cssViewport": {
+      "width": 211,
+      "height": 257
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 422,
+      "height": 514
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-neo-qled-4k-55",
+    "name": "Samsung Smart TV Neo QLED 4K 55 inch",
+    "cssViewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 3840,
+      "height": 2160
+    },
+    "rotate": false
+  },
+  {
+    "id": "apple-ipad-pro-11-2018",
+    "name": "Apple iPad Pro 11",
+    "cssViewport": {
+      "width": 834,
+      "height": 1194
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 1668,
+      "height": 2388
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-11-pro-max",
+    "name": "Apple iPhone 11 Pro Max",
+    "cssViewport": {
+      "width": 414,
+      "height": 896
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1242,
+      "height": 2688
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-11-pro",
+    "name": "Apple iPhone 11 Pro",
+    "cssViewport": {
+      "width": 375,
+      "height": 812
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1125,
+      "height": 2436
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-11",
+    "name": "Apple iPhone 11",
+    "cssViewport": {
+      "width": 414,
+      "height": 896
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 828,
+      "height": 1792
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-12-mini",
+    "name": "Apple iPhone 12 Mini",
+    "cssViewport": {
+      "width": 375,
+      "height": 812
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-12-pro-max",
+    "name": "Apple iPhone 12 Pro Max",
+    "cssViewport": {
+      "width": 428,
+      "height": 926
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1284,
+      "height": 2778
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-12-pro",
+    "name": "Apple iPhone 12 Pro",
+    "cssViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1170,
+      "height": 2532
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-12",
+    "name": "Apple iPhone 12",
+    "cssViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1170,
+      "height": 2532
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-13-2021",
+    "name": "Apple iPhone 13",
+    "cssViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1170,
+      "height": 2532
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-13-pro-2021",
+    "name": "Apple iPhone 13 Pro",
+    "cssViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1170,
+      "height": 2532
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-13-pro-max-2021",
+    "name": "Apple iPhone 13 Pro Max",
+    "cssViewport": {
+      "width": 428,
+      "height": 926
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1284,
+      "height": 2778
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-14-max-2022",
+    "name": "Apple iPhone 14 Plus",
+    "cssViewport": {
+      "width": 428,
+      "height": 926
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1284,
+      "height": 2778
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-14-pro-2022",
+    "name": "Apple iPhone 14 Pro",
+    "cssViewport": {
+      "width": 393,
+      "height": 852
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1179,
+      "height": 2556
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-15-plus-2023",
+    "name": "Apple iPhone 15 Plus",
+    "cssViewport": {
+      "width": 430,
+      "height": 932
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1290,
+      "height": 2796
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-15-pro-2023",
+    "name": "Apple iPhone 15 Pro",
+    "cssViewport": {
+      "width": 393,
+      "height": 852
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1179,
+      "height": 2556
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-15-pro-max-2023",
+    "name": "Apple iPhone 15 Pro Max",
+    "cssViewport": {
+      "width": 430,
+      "height": 932
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1290,
+      "height": 2796
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-16-2024",
+    "name": "Apple iPhone 16",
+    "cssViewport": {
+      "width": 393,
+      "height": 852
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1179,
+      "height": 2556
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-16-plus-2024",
+    "name": "Apple iPhone 16 Plus",
+    "cssViewport": {
+      "width": 430,
+      "height": 932
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1290,
+      "height": 2796
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-17-2025",
+    "name": "Apple iPhone 17",
+    "cssViewport": {
+      "width": 402,
+      "height": 874
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1206,
+      "height": 2622
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-17-pro-2025",
+    "name": "Apple iPhone 17 Pro",
+    "cssViewport": {
+      "width": 402,
+      "height": 874
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1206,
+      "height": 2622
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-5",
+    "name": "Apple iPhone 5",
+    "cssViewport": {
+      "width": 320,
+      "height": 568
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 640,
+      "height": 1136
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-x",
+    "name": "Apple iPhone X",
+    "cssViewport": {
+      "width": 375,
+      "height": 812
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1125,
+      "height": 2436
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-xr",
+    "name": "Apple iPhone XR",
+    "cssViewport": {
+      "width": 414,
+      "height": 896
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 828,
+      "height": 1792
+    },
+    "rotate": true
+  },
+  {
+    "id": "dell-latitude-14-3420",
+    "name": "Dell Latitude 14 3420",
+    "cssViewport": {
+      "width": 1440,
+      "height": 809
+    },
+    "pixelRatio": 1,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 809
+    },
+    "rotate": false
+  },
+  {
+    "id": "google-pixel-5",
+    "name": "Google Pixel 5",
+    "cssViewport": {
+      "width": 393,
+      "height": 851
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1179,
+      "height": 2553
+    },
+    "rotate": true
+  },
+  {
+    "id": "huawei-p30-pro",
+    "name": "Huawei P30 Pro",
+    "cssViewport": {
+      "width": 360,
+      "height": 780
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "microsoft-surface-duo",
+    "name": "Microsoft Surface Duo",
+    "cssViewport": {
+      "width": 1114,
+      "height": 705
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 2228,
+      "height": 1410
+    },
+    "rotate": false
+  },
+  {
+    "id": "non-branded-android-smartphone",
+    "name": "Non-branded Android Smartphone",
+    "cssViewport": {
+      "width": 360,
+      "height": 800
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2400
+    },
+    "rotate": true
+  },
+  {
+    "id": "oneplus-nord-2",
+    "name": "OnePlus Nord 2",
+    "cssViewport": {
+      "width": 412,
+      "height": 915
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2400
+    },
+    "rotate": true
+  },
+  {
+    "id": "oppo-find-x3-pro",
+    "name": "OPPO Find X3 Pro",
+    "cssViewport": {
+      "width": 360,
+      "height": 804
+    },
+    "pixelRatio": 4,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 3216
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-a12-2021",
+    "name": "Samsung Galaxy A12",
+    "cssViewport": {
+      "width": 360,
+      "height": 800
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 720,
+      "height": 1600
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-note20-ultra",
+    "name": "Samsung Galaxy Note20 Ultra",
+    "cssViewport": {
+      "width": 412,
+      "height": 883
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1236,
+      "height": 2649
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s20",
+    "name": "Samsung Galaxy S20",
+    "cssViewport": {
+      "width": 360,
+      "height": 800
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2400
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s21-ultra",
+    "name": "Samsung Galaxy S21 Ultra",
+    "cssViewport": {
+      "width": 360,
+      "height": 800
+    },
+    "pixelRatio": 4,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 3200
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s22-2022",
+    "name": "Samsung Galaxy S22",
+    "cssViewport": {
+      "width": 360,
+      "height": 780
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s22-plus-2022",
+    "name": "Samsung Galaxy S22 Plus",
+    "cssViewport": {
+      "width": 360,
+      "height": 780
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s22-ultra-2022",
+    "name": "Samsung Galaxy S22 Ultra",
+    "cssViewport": {
+      "width": 360,
+      "height": 772
+    },
+    "pixelRatio": 4,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 3088
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s26-ultra-2026",
+    "name": "Samsung Galaxy S26 Ultra",
+    "cssViewport": {
+      "width": 412,
+      "height": 891
+    },
+    "pixelRatio": 4,
+    "manufacturerResolution": {
+      "width": 1648,
+      "height": 3564
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-z-flip3-2021",
+    "name": "Samsung Galaxy Z Flip3",
+    "cssViewport": {
+      "width": 360,
+      "height": 880
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2640
+    },
+    "rotate": true
+  },
+  {
+    "id": "self-service-kiosk",
+    "name": "Self-service Kiosk",
+    "cssViewport": {
+      "width": 1080,
+      "height": 1920
+    },
+    "pixelRatio": 1,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 1920
+    },
+    "rotate": false
+  },
+  {
+    "id": "sonoff-nspanel-pro",
+    "name": "Sonoff Nspanel Pro",
+    "cssViewport": {
+      "width": 480,
+      "height": 480
+    },
+    "pixelRatio": 1,
+    "manufacturerResolution": {
+      "width": 480,
+      "height": 480
+    },
+    "rotate": false
+  },
+  {
+    "id": "xiaomi-12-2022",
+    "name": "Xiaomi 12",
+    "cssViewport": {
+      "width": 360,
+      "height": 800
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2400
+    },
+    "rotate": true
+  },
+  {
+    "id": "xiaomi-mi-11i",
+    "name": "Xiaomi MI 11i",
+    "cssViewport": {
+      "width": 360,
+      "height": 800
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2400
+    },
+    "rotate": true
+  },
+  {
+    "id": "zebra-mc330",
+    "name": "Zebra MC330",
+    "cssViewport": {
+      "width": 480,
+      "height": 800
+    },
+    "pixelRatio": 1,
+    "manufacturerResolution": {
+      "width": 480,
+      "height": 800
+    },
+    "rotate": true
+  },
+  {
+    "id": "zebra-tc78",
+    "name": "Zebra TC78",
+    "cssViewport": {
+      "width": 412,
+      "height": 818
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 824,
+      "height": 1636
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-10-2026",
+    "name": "Google Pixel 10",
+    "cssViewport": {
+      "width": 412,
+      "height": 924
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1082,
+      "height": 2426
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-10-pro-2026",
+    "name": "Google Pixel 10 Pro",
+    "cssViewport": {
+      "width": 410,
+      "height": 912
+    },
+    "pixelRatio": 3.125,
+    "manufacturerResolution": {
+      "width": 1281,
+      "height": 2850
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-10-pro-fold-2026",
+    "name": "Google Pixel 10 Pro Fold",
+    "cssViewport": {
+      "width": 412,
+      "height": 901
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1082,
+      "height": 2365
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-a17-2025",
+    "name": "Samsung Galaxy A17",
+    "cssViewport": {
+      "width": 412,
+      "height": 892
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1082,
+      "height": 2342
+    },
+    "rotate": true
+  },
+  {
+    "id": "motorola-razr-70-ultra-2026",
+    "name": "Motorola Razr 70 Ultra",
+    "cssViewport": {
+      "width": 412,
+      "height": 1008
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1236,
+      "height": 3024
+    },
+    "rotate": true
+  },
+  {
+    "id": "infinix-hot-70-2026",
+    "name": "Infinix Hot 70",
+    "cssViewport": {
+      "width": 360,
+      "height": 788
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 720,
+      "height": 1576
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-s26-2026",
+    "name": "Samsung Galaxy S26",
+    "cssViewport": {
+      "width": 360,
+      "height": 780
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2340
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-z-fold7-unfolded-2025",
+    "name": "Samsung Galaxy Z Fold7 (unfolded)",
+    "cssViewport": {
+      "width": 787,
+      "height": 874
+    },
+    "pixelRatio": 2.5,
+    "manufacturerResolution": {
+      "width": 1968,
+      "height": 2184
+    },
+    "rotate": false
+  },
+  {
+    "id": "google-pixel-10-pro-xl-2025",
+    "name": "Google Pixel 10 Pro XL",
+    "cssViewport": {
+      "width": 448,
+      "height": 997
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1344,
+      "height": 2992
+    },
+    "rotate": true
+  },
+  {
+    "id": "modern-laptop-15",
+    "name": "Modern Laptop 15 inch",
+    "cssViewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "pixelRatio": 1,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 900
+    },
+    "rotate": false
+  },
+  {
+    "id": "apple-iphone-16-pro-2024",
+    "name": "Apple iPhone 16 Pro",
+    "cssViewport": {
+      "width": 402,
+      "height": 874
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1206,
+      "height": 2622
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-16e-2025",
+    "name": "Apple iPhone 16e",
+    "cssViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1170,
+      "height": 2532
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-iphone-17e-2026",
+    "name": "Apple iPhone 17e",
+    "cssViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1170,
+      "height": 2532
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-ipad-pro-13-m4-2024",
+    "name": "Apple iPad Pro 13-inch (M4)",
+    "cssViewport": {
+      "width": 1032,
+      "height": 1376
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 2064,
+      "height": 2752
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-ipad-air-13-m4-2026",
+    "name": "Apple iPad Air 13-inch (M4)",
+    "cssViewport": {
+      "width": 1024,
+      "height": 1366
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 2048,
+      "height": 2732
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-ipad-mini-a17-pro-2024",
+    "name": "Apple iPad mini (A17 Pro)",
+    "cssViewport": {
+      "width": 744,
+      "height": 1133
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 1488,
+      "height": 2266
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-macbook-pro-14-m5-2025",
+    "name": "Apple MacBook Pro 14-inch (M5)",
+    "cssViewport": {
+      "width": 1512,
+      "height": 982
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 3024,
+      "height": 1964
+    },
+    "rotate": false
+  },
+  {
+    "id": "samsung-galaxy-s26-plus-2026",
+    "name": "Samsung Galaxy S26+",
+    "cssViewport": {
+      "width": 384,
+      "height": 832
+    },
+    "pixelRatio": 3.75,
+    "manufacturerResolution": {
+      "width": 1440,
+      "height": 3120
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-z-flip7-2025",
+    "name": "Samsung Galaxy Z Flip7",
+    "cssViewport": {
+      "width": 360,
+      "height": 840
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2520
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-tab-s11-ultra-2025",
+    "name": "Samsung Galaxy Tab S11 Ultra",
+    "cssViewport": {
+      "width": 924,
+      "height": 1480
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 1848,
+      "height": 2960
+    },
+    "rotate": true
+  },
+  {
+    "id": "samsung-galaxy-xcover7-pro-2025",
+    "name": "Samsung Galaxy XCover7 Pro",
+    "cssViewport": {
+      "width": 360,
+      "height": 803
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2408
+    },
+    "rotate": true
+  },
+  {
+    "id": "google-pixel-10a-2026",
+    "name": "Google Pixel 10a",
+    "cssViewport": {
+      "width": 412,
+      "height": 924
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1080,
+      "height": 2424
+    },
+    "rotate": true
+  },
+  {
+    "id": "motorola-edge-60-pro-2025",
+    "name": "Motorola Edge 60 Pro",
+    "cssViewport": {
+      "width": 407,
+      "height": 904
+    },
+    "pixelRatio": 3,
+    "manufacturerResolution": {
+      "width": 1220,
+      "height": 2712
+    },
+    "rotate": true
+  },
+  {
+    "id": "zebra-tc58-2022",
+    "name": "Zebra TC58",
+    "cssViewport": {
+      "width": 412,
+      "height": 823
+    },
+    "pixelRatio": 2.625,
+    "manufacturerResolution": {
+      "width": 1082,
+      "height": 2160
+    },
+    "rotate": true
+  },
+  {
+    "id": "panasonic-toughbook-s1-2021",
+    "name": "Panasonic Toughbook S1",
+    "cssViewport": {
+      "width": 533,
+      "height": 853
+    },
+    "pixelRatio": 1.5,
+    "manufacturerResolution": {
+      "width": 800,
+      "height": 1280
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-macbook-neo-13-2026",
+    "name": "Apple MacBook Neo 13-inch",
+    "cssViewport": {
+      "width": 1204,
+      "height": 753
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 2408,
+      "height": 1506
+    },
+    "rotate": false
+  },
+  {
+    "id": "microsoft-surface-laptop-8-13-8-2026",
+    "name": "Microsoft Surface Laptop 13.8-inch (8th Edition)",
+    "cssViewport": {
+      "width": 1152,
+      "height": 768
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 2304,
+      "height": 1536
+    },
+    "rotate": false
+  },
+  {
+    "id": "apple-studio-display-xdr-27-2026",
+    "name": "Apple Studio Display XDR 27-inch",
+    "cssViewport": {
+      "width": 2560,
+      "height": 1440
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 5120,
+      "height": 2880
+    },
+    "rotate": false
+  }
+]

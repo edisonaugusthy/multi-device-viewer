@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Chrome 響應式網站測試工具與裝置模擬器",
+    "description": "免費 Chrome 擴充功能：在真實的 iPhone、Android、摺疊機、iPad、Mac 和 Apple Watch 裝置外框中並排測試響應式網站，同步捲動，支援 localhost。",
+    "ogTitle": "Mobile View: 一次看遍所有螢幕上的網站",
+    "ogImageAlt": "Mobile View 在 iPhone、摺疊手機、MacBook 和 Apple Watch 上並排顯示同一頁面"
+  },
+  "nav": {
+    "home": "Mobile View 首頁",
+    "main": "主選單",
+    "tour": "功能導覽",
+    "reviews": "評價",
+    "faq": "常見問題",
+    "guides": "指南",
+    "privacy": "隱私",
+    "github": "GitHub 上的 Mobile View",
+    "leaveReview": "撰寫評價",
+    "addToChrome": "加到 Chrome",
+    "skip": "跳至主要內容"
+  },
+  "hero": {
+    "rating": "Chrome Web Store 評分 {rating}",
+    "title": "一次看遍所有螢幕。",
+    "lede": "一款免費的 Chrome 擴充功能，能在真實的手機、摺疊機、平板、筆電和手錶上顯示任何頁面，連 localhost 也行。並排呈現，同步連動。",
+    "install": "免費加到 Chrome",
+    "review": "撰寫評價"
+  },
+  "demo": {
+    "label": "線上展示",
+    "badge": "即時運作。捲動或輕觸任一螢幕試試看。",
+    "frameTitle": "{device} 上的線上展示頁面"
+  },
+  "facts": {
+    "label": "重點一覽",
+    "devicesValue": "{count}",
+    "devices": "款真實裝置",
+    "atOnceValue": "同時 4 台",
+    "atOnce": "並排顯示",
+    "syncValue": "同步",
+    "sync": "捲動、輕觸和換頁",
+    "privateValue": "私密",
+    "private": "免帳號，不追蹤"
+  },
+  "tour": {
+    "workspaceTitle": "四台裝置，一個工作區。",
+    "workspaceText": "從 {count} 款真實裝置中任選四款，同時查看頁面在每台裝置上的樣子。",
+    "workspaceAlt": "Mobile View 工作區：在 iPhone 18 Pro、摺疊狀態的 iPhone Duo、MacBook Pro 14 和 Apple Watch 上並排顯示同一頁面",
+    "syncTitle": "捲動一次，所有螢幕跟著動。",
+    "syncText": "捲動、點擊和瀏覽在所有裝置間保持同步。",
+    "syncAlt": "開啟捲動與瀏覽同步後，四台裝置停在頁面的同一位置",
+    "allTitle": "所有裝置，一鍵開啟。",
+    "allText": "一次開啟整個類別。圖中是 37 款 iPhone 中的 16 款，從 iPhone 5 到 iPhone 15 Pro。",
+    "allAlt": "所有裝置檢視：兩排 iPhone，從 iPhone 5、iPhone SE 到 iPhone 15 Pro，都在載入同一頁面",
+    "designTitle": "對照設計稿。",
+    "designText": "在任何裝置上，把設計稿放在即時頁面旁邊。並排或疊加比對，設計與實作之間的每個落差都一目瞭然。",
+    "designCaught": "這次比對抓到的問題",
+    "designItem1": "標題文案不同",
+    "designItem1Detail": "即時頁面：「Make room for your best work.」設計稿：「Room for your best work.」",
+    "designItem2": "按鈕樣式不同",
+    "designItem2Detail": "即時頁面：深色、直角。設計稿：青綠色膠囊形。",
+    "designAlt": "與設計稿比對：iPhone 18 Pro 上的即時頁面與設計圖並排，標題和按鈕樣式不同",
+    "fixTitle": "標出問題，複製修正提示。",
+    "fixText": "在截圖上註記，再為你的 AI 程式開發工具複製現成的提示詞。任何資料都不會離開你的電腦。",
+    "fixAlt": "註記編輯器以箭頭和方框標出 iPhone 上的標題，旁邊是列出受影響裝置的修正提示面板",
+    "alsoInside": "更多功能",
+    "chipRecord": "錄製並重播流程",
+    "chipFocus": "專注模式",
+    "chipRotate": "旋轉與縮放",
+    "chipCustom": "自訂尺寸",
+    "chipSets": "已儲存的裝置組合"
+  },
+  "reviews": {
+    "title": "深受第一線開發者好評。",
+    "outOf": "滿分 5 分",
+    "stars": "{rating} 顆星（滿分 5 顆星）",
+    "summary": "{count} 則評分 · Chrome Web Store 上有 {users} 位使用者",
+    "leave": "撰寫評價",
+    "readAll": "查看全部",
+    "source": "Chrome Web Store",
+    "empty": "成為最早評價 Mobile View 的使用者。"
+  },
+  "privacy": {
+    "title": "從設計就重視隱私。",
+    "item1": "免帳號",
+    "item2": "不追蹤",
+    "item3": "頁面始終留在你的瀏覽器中",
+    "item4": "開放原始碼",
+    "link": "隱私權政策"
+  },
+  "faq": {
+    "title": "常見問題。",
+    "q1": "免費嗎？",
+    "a1": "是的。採用 MIT 授權免費開源，不需要帳號。",
+    "q2": "支援 localhost 嗎？",
+    "a2": "支援。在 Chrome 中開啟本機頁面，再開啟 Mobile View 即可。任何資料都不會離開你的電腦。",
+    "q3": "和 DevTools 的裝置模式有什麼不同？",
+    "a3": "DevTools 一次只顯示一個檢視區。Mobile View 並排顯示四台真實裝置，而且保持同步。",
+    "q4": "為什麼有些網站無法載入？",
+    "a4": "有些網站禁止被嵌入其他頁面中顯示。Mobile View 會告訴你，並可改在新分頁中開啟。",
+    "q5": "修正提示會上傳我的程式碼嗎？",
+    "a5": "不會。提示在你的電腦上產生，讓你貼到自己的程式開發工具中。"
+  },
+  "cta": {
+    "title": "用你自己的網站試試看。",
+    "text": "免費。免帳號。支援 localhost。",
+    "install": "免費加到 Chrome",
+    "review": "撰寫評價"
+  },
+  "footer": {
+    "blurb": "免費、重視隱私的 Chrome 響應式測試工具。採用 MIT 授權開放原始碼。",
+    "product": "產品",
+    "guides": "指南",
+    "project": "專案",
+    "tour": "功能導覽",
+    "reviews": "評價",
+    "changelog": "更新紀錄",
+    "store": "Chrome Web Store",
+    "allGuides": "所有指南",
+    "source": "GitHub 原始碼",
+    "issue": "回報問題",
+    "privacy": "隱私權政策",
+    "terms": "使用條款",
+    "language": "語言",
+    "copyright": "© {year} Edison Augusthy。採用 MIT 授權。",
+    "trademarks": "iPhone、iPad、Mac 和 Apple Watch 是 Apple Inc. 的商標。Galaxy 是 Samsung 的商標，Pixel 是 Google 的商標。裝置名稱僅用於描述螢幕尺寸；Mobile View 與上述公司無任何關聯。"
+  }
+}

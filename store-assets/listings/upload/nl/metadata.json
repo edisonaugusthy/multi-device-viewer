@@ -1,0 +1,20 @@
+{
+  "storeLocale": "nl",
+  "name": "Mobile View: Apparaatemulator & responsive tester",
+  "summary": "Mobiele simulator voor responsive designtests. Vergelijk apparaatweergaven, synchroniseer scrollen en maak screenshots.",
+  "screenshotCaptions": [
+    "Elk scherm, naast elkaar.",
+    "Elk apparaat. Eén klik.",
+    "Focus op één scherm.",
+    "Pixelperfect volgens ontwerp.",
+    "Markeer de bug. Neem de flow op."
+  ],
+  "screenshotSubtitles": [
+    "Echte apparaatframes met gesynchroniseerd scrollen, klikken en navigeren.",
+    "Open alle 110+ apparaten per categorie, van de kleinste telefoon tot het grootste scherm.",
+    "Vergroot elk apparaat en verberg in de focusmodus alle tools voor strakke reviews en demo’s.",
+    "Je mockup aan de ene kant, de live pagina aan de andere. Zie elk verschil in één oogopslag.",
+    "Annoteer een screenshot, kopieer een fixprompt voor je AI-tool of speel een gebruikersflow af op elk apparaat."
+  ],
+  "screenshotLocale": "en"
+}

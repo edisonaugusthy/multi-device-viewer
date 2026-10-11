@@ -1,0 +1,20 @@
+{
+  "storeLocale": "pl",
+  "name": "Mobile View: Emulator urządzeń i test responsywny",
+  "summary": "Symulator mobilny do testowania responsywnego projektu. Porównuj widoki, synchronizuj przewijanie i rób zrzuty ekranu.",
+  "screenshotCaptions": [
+    "Wszystkie ekrany obok siebie.",
+    "Wszystkie urządzenia. Jedno kliknięcie.",
+    "Skup się na jednym ekranie.",
+    "Zgodnie z projektem, co do piksela.",
+    "Zaznacz błąd. Nagraj ścieżkę."
+  ],
+  "screenshotSubtitles": [
+    "Prawdziwe ramki urządzeń z synchronizowanym przewijaniem, kliknięciami i nawigacją.",
+    "Otwórz wszystkie 110+ urządzeń według kategorii, od najmniejszego telefonu po największy ekran.",
+    "Powiększ dowolne urządzenie, a potem ukryj wszystkie narzędzia w trybie skupienia – do przejrzystych przeglądów i prezentacji.",
+    "Makieta po jednej stronie, działająca strona po drugiej. Każdą różnicę dostrzeżesz od razu.",
+    "Dodaj adnotacje do zrzutu ekranu, skopiuj prompt z poprawką dla swojego narzędzia AI lub odtwórz ścieżkę użytkownika na każdym urządzeniu."
+  ],
+  "screenshotLocale": "en"
+}

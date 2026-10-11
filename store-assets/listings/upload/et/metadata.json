@@ -1,0 +1,20 @@
+{
+  "storeLocale": "et",
+  "name": "Mobile View: Seadmeemulaator ja kohanduvustest",
+  "summary": "Mobiilisimulaator kohanduva veebidisaini testimiseks. Võrdle seadmevaateid, sünkrooni kerimine ja tee kuvatõmmiseid.",
+  "screenshotCaptions": [
+    "Kõik ekraanid kõrvuti.",
+    "Kõik seadmed. Üks klõps.",
+    "Keskendu ühele ekraanile.",
+    "Täpselt nagu kujundus, piksel pikslilt.",
+    "Märgi viga. Salvesta kasutusvoog."
+  ],
+  "screenshotSubtitles": [
+    "Päris seadmeraamid sünkroonitud kerimise, klõpsude ja navigeerimisega.",
+    "Ava kõik 110+ seadet kategooriate kaupa, väikseimast telefonist suurima ekraanini.",
+    "Laienda mis tahes seade ja peida fookusrežiimis kõik tööriistad, et ülevaatused ja demod oleksid puhtad.",
+    "Ühel pool sinu makett, teisel pool päris leht. Märka iga erinevust ühe pilguga.",
+    "Lisa kuvatõmmisele märkmeid, kopeeri AI-tööriista jaoks parandusviip või esita kasutusvoog uuesti igas seadmes."
+  ],
+  "screenshotLocale": "en"
+}

@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Responsive Tester at Device Emulator para sa Chrome",
+    "description": "Libreng Chrome extension: i-test ang website sa totoong iPhone, Android, foldable, iPad, Mac at Apple Watch frame, may synced scrolling. Gumagana sa localhost.",
+    "ogTitle": "Mobile View: makita ang site mo sa lahat ng screen nang sabay",
+    "ogImageAlt": "Mobile View na nagpapakita ng isang page sa iPhone, foldable, MacBook at Apple Watch nang magkakatabi"
+  },
+  "nav": {
+    "home": "Home ng Mobile View",
+    "main": "Pangunahin",
+    "tour": "Tour",
+    "reviews": "Mga review",
+    "faq": "FAQ",
+    "guides": "Mga gabay",
+    "privacy": "Privacy",
+    "github": "Mobile View sa GitHub",
+    "leaveReview": "Mag-iwan ng review",
+    "addToChrome": "Idagdag sa Chrome",
+    "skip": "Lumaktaw sa nilalaman"
+  },
+  "hero": {
+    "rating": "{rating} sa Chrome Web Store",
+    "title": "Makita ang site mo sa lahat ng screen nang sabay.",
+    "lede": "Libreng Chrome extension na nagpapakita ng kahit anong page, pati localhost, sa totoong phone, foldable, tablet, laptop at relo. Magkakatabi at naka-sync.",
+    "install": "Idagdag sa Chrome, libre ito",
+    "review": "Mag-iwan ng review"
+  },
+  "demo": {
+    "label": "Live demo",
+    "badge": "Live. Mag-scroll o mag-tap sa kahit anong screen.",
+    "frameTitle": "Live demo page sa {device}"
+  },
+  "facts": {
+    "label": "Sa isang tingin",
+    "devicesValue": "{count}",
+    "devices": "totoong device",
+    "atOnceValue": "4 nang sabay",
+    "atOnce": "magkakatabi",
+    "syncValue": "Naka-sync",
+    "sync": "scroll, tap at page",
+    "privateValue": "Pribado",
+    "private": "walang account, walang tracking"
+  },
+  "tour": {
+    "workspaceTitle": "Apat na device. Isang workspace.",
+    "workspaceText": "Pumili ng kahit anong apat sa {count} totoong device at makita ang page mo sa lahat nang sabay.",
+    "workspaceAlt": "Workspace ng Mobile View na nagpapakita ng page sa iPhone 18 Pro, nakatuping iPhone Duo, MacBook Pro 14 at Apple Watch nang magkakatabi",
+    "syncTitle": "Isang scroll. Sumusunod ang bawat screen.",
+    "syncText": "Naka-sync sa lahat ng device ang pag-scroll, pag-click at pag-navigate.",
+    "syncAlt": "Apat na device na naka-scroll sa parehong bahagi ng page habang naka-on ang scroll at navigation sync",
+    "allTitle": "Lahat ng device. Isang click.",
+    "allText": "Buksan ang buong kategorya nang sabay. Dito, 16 sa 37 iPhone, mula iPhone 5 hanggang iPhone 15 Pro.",
+    "allAlt": "View ng lahat ng device na may dalawang hanay ng iPhone, mula iPhone 5 at iPhone SE hanggang iPhone 15 Pro, na naglo-load ng parehong page",
+    "designTitle": "Itugma sa design.",
+    "designText": "Ilagay ang mockup mo katabi ng live page sa kahit anong device. Magkatabi man o naka-overlay, madaling makita ang bawat pagkakaiba ng design at ng build.",
+    "designCaught": "Nahuli sa paghahambing na ito",
+    "designItem1": "Magkaiba ang headline",
+    "designItem1Detail": "Live na page: “Make room for your best work.” Disenyo: “Room for your best work.”",
+    "designItem2": "Magkaiba ang istilo ng button",
+    "designItem2Detail": "Live na page: madilim, kuwadradong kanto. Disenyo: teal na pill.",
+    "designAlt": "Paghahambing sa design: ang live page sa iPhone 18 Pro katabi ng design image, na may ibang headline at istilo ng button",
+    "fixTitle": "Markahan ang bug. Kopyahin ang fix.",
+    "fixText": "Mag-drawing sa screenshot, saka kopyahin ang handang prompt para sa AI coding tool mo. Walang lumalabas sa computer mo.",
+    "fixAlt": "Annotation editor na may arrow at kahon na nagmamarka ng heading sa iPhone, katabi ng panel ng fix prompt na naglilista ng mga apektadong device",
+    "alsoInside": "Kasama rin",
+    "chipRecord": "I-record at i-replay ang flow",
+    "chipFocus": "Focus mode",
+    "chipRotate": "I-rotate at i-zoom",
+    "chipCustom": "Custom na laki",
+    "chipSets": "Mga naka-save na device set"
+  },
+  "reviews": {
+    "title": "Ni-rate ng mga taong nagsi-ship.",
+    "outOf": "sa 5",
+    "stars": "{rating} sa 5 bituin",
+    "summary": "{count} rating · {users} user sa Chrome Web Store",
+    "leave": "Mag-iwan ng review",
+    "readAll": "Basahin lahat",
+    "source": "Chrome Web Store",
+    "empty": "Maging isa sa mga unang mag-review ng Mobile View."
+  },
+  "privacy": {
+    "title": "Pribado mula sa simula.",
+    "item1": "Walang account",
+    "item2": "Walang tracking",
+    "item3": "Nananatili sa browser mo ang mga page mo",
+    "item4": "Open source",
+    "link": "Patakaran sa privacy"
+  },
+  "faq": {
+    "title": "Mga tanong.",
+    "q1": "Libre ba ito?",
+    "a1": "Oo. Libre at open source sa ilalim ng MIT license, walang account.",
+    "q2": "Gumagana ba ito sa localhost?",
+    "a2": "Oo. Buksan ang local page mo sa Chrome, saka buksan ang Mobile View. Walang lumalabas sa computer mo.",
+    "q3": "Ano ang pinagkaiba nito sa device mode ng DevTools?",
+    "a3": "Isang viewport lang ang ipinapakita ng DevTools bawat beses. Apat na totoong device ang ipinapakita ng Mobile View nang magkakatabi at naka-sync.",
+    "q4": "Bakit hindi naglo-load ang ilang site?",
+    "a4": "May mga site na humaharang na maipakita sila sa loob ng ibang page. Sasabihin ito ng Mobile View at mag-aalok na buksan sila sa tab.",
+    "q5": "Ina-upload ba ng fix prompt ang code ko?",
+    "a5": "Hindi. Ginagawa ito sa computer mo para i-paste mo sa sarili mong coding tool."
+  },
+  "cta": {
+    "title": "Subukan sa sarili mong site.",
+    "text": "Libre. Walang account. Gumagana sa localhost.",
+    "install": "Idagdag sa Chrome, libre ito",
+    "review": "Mag-iwan ng review"
+  },
+  "footer": {
+    "blurb": "Libre at pribadong responsive tester para sa Chrome. Open source sa ilalim ng MIT license.",
+    "product": "Produkto",
+    "guides": "Mga gabay",
+    "project": "Proyekto",
+    "tour": "Tour",
+    "reviews": "Mga review",
+    "changelog": "Changelog",
+    "store": "Chrome Web Store",
+    "allGuides": "Lahat ng gabay",
+    "source": "Source sa GitHub",
+    "issue": "Mag-ulat ng isyu",
+    "privacy": "Patakaran sa privacy",
+    "terms": "Mga tuntunin ng paggamit",
+    "language": "Wika",
+    "copyright": "© {year} Edison Augusthy. May lisensyang MIT.",
+    "trademarks": "Ang iPhone, iPad, Mac at Apple Watch ay mga trademark ng Apple Inc. Ang Galaxy ay trademark ng Samsung; ang Pixel ay sa Google. Laki lang ng screen ang inilalarawan ng mga pangalan ng device; walang kaugnayan ang Mobile View sa mga kumpanyang ito."
+  }
+}

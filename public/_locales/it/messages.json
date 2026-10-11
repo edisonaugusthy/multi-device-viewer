@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: Emulatore mobile e test responsive"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Simulatore mobile per testare il design responsive. Confronta le viste, sincronizza lo scorrimento e acquisisci screenshot."
+  },
+  "actionTitle": {
+    "message": "Apri l’emulatore mobile Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Apri questa scheda in Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View è attivo — fai clic per chiudere"
+  },
+  "unsupportedActionTitle": {
+    "message": "Apri prima un sito web"
+  },
+  "unsupportedUrlHint": {
+    "message": "Passa alla pagina che stai sviluppando, poi fai di nuovo clic sull’estensione."
+  }
+}

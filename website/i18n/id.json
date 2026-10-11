@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Penguji Web Responsif & Emulator Perangkat Chrome",
+    "description": "Ekstensi Chrome gratis: uji situs responsif di bingkai perangkat asli (iPhone, Android, iPad, Mac, Apple Watch) dengan gulir sinkron. Bisa di localhost.",
+    "ogTitle": "Mobile View: lihat situs Anda di semua layar sekaligus",
+    "ogImageAlt": "Mobile View menampilkan satu halaman di iPhone, ponsel lipat, MacBook, dan Apple Watch secara berdampingan"
+  },
+  "nav": {
+    "home": "Beranda Mobile View",
+    "main": "Utama",
+    "tour": "Tur",
+    "reviews": "Ulasan",
+    "faq": "FAQ",
+    "guides": "Panduan",
+    "privacy": "Privasi",
+    "github": "Mobile View di GitHub",
+    "leaveReview": "Tulis ulasan",
+    "addToChrome": "Tambahkan ke Chrome",
+    "skip": "Langsung ke konten"
+  },
+  "hero": {
+    "rating": "{rating} di Chrome Web Store",
+    "title": "Lihat situs Anda di semua layar sekaligus.",
+    "lede": "Ekstensi Chrome gratis yang menampilkan halaman apa pun, bahkan localhost, di ponsel, perangkat lipat, tablet, laptop, dan jam tangan sungguhan. Berdampingan dan tersinkron.",
+    "install": "Tambahkan ke Chrome, gratis",
+    "review": "Tulis ulasan"
+  },
+  "demo": {
+    "label": "Demo langsung",
+    "badge": "Langsung. Gulir atau ketuk layar mana pun.",
+    "frameTitle": "Halaman demo langsung di {device}"
+  },
+  "facts": {
+    "label": "Sekilas",
+    "devicesValue": "{count}",
+    "devices": "perangkat asli",
+    "atOnceValue": "4 sekaligus",
+    "atOnce": "berdampingan",
+    "syncValue": "Tersinkron",
+    "sync": "gulir, ketukan, dan halaman",
+    "privateValue": "Privat",
+    "private": "tanpa akun, tanpa pelacakan"
+  },
+  "tour": {
+    "workspaceTitle": "Empat perangkat. Satu ruang kerja.",
+    "workspaceText": "Pilih empat dari {count} perangkat asli dan lihat halaman Anda di semuanya sekaligus.",
+    "workspaceAlt": "Ruang kerja Mobile View menampilkan halaman di iPhone 18 Pro, iPhone Duo terlipat, MacBook Pro 14, dan Apple Watch secara berdampingan",
+    "syncTitle": "Gulir sekali. Semua layar ikut.",
+    "syncText": "Gulir, klik, dan navigasi tetap sinkron di semua perangkat.",
+    "syncAlt": "Empat perangkat digulir ke titik yang sama di halaman dengan sinkronisasi gulir dan navigasi aktif",
+    "allTitle": "Semua perangkat. Satu klik.",
+    "allText": "Buka satu kategori penuh sekaligus. Di sini, 16 dari 37 iPhone, dari iPhone 5 hingga iPhone 15 Pro.",
+    "allAlt": "Tampilan semua perangkat dengan dua baris iPhone, dari iPhone 5 dan iPhone SE hingga iPhone 15 Pro, masing-masing memuat halaman yang sama",
+    "designTitle": "Cocokkan dengan desain.",
+    "designText": "Taruh mockup Anda di samping halaman langsung di perangkat mana pun. Berdampingan atau ditumpuk, setiap selisih antara desain dan hasil jadi mudah terlihat.",
+    "designCaught": "Ditemukan dalam perbandingan ini",
+    "designItem1": "Teks judul berbeda",
+    "designItem1Detail": "Langsung: “Make room for your best work.” Desain: “Room for your best work.”",
+    "designItem2": "Gaya tombol berbeda",
+    "designItem2Detail": "Langsung: gelap, sudut siku. Desain: pil teal.",
+    "designAlt": "Bandingkan dengan desain: halaman langsung di iPhone 18 Pro di samping gambar desain, dengan judul dan gaya tombol berbeda",
+    "fixTitle": "Tandai bug. Salin perbaikannya.",
+    "fixText": "Coret di tangkapan layar, lalu salin prompt siap pakai untuk alat coding AI Anda. Tidak ada yang keluar dari komputer Anda.",
+    "fixAlt": "Editor anotasi dengan panah dan kotak yang menandai judul di iPhone, di samping panel prompt perbaikan yang mencantumkan perangkat terdampak",
+    "alsoInside": "Juga tersedia",
+    "chipRecord": "Rekam dan putar ulang alur",
+    "chipFocus": "Mode fokus",
+    "chipRotate": "Putar dan zoom",
+    "chipCustom": "Ukuran kustom",
+    "chipSets": "Set perangkat tersimpan"
+  },
+  "reviews": {
+    "title": "Dinilai para pembuat produk.",
+    "outOf": "dari 5",
+    "stars": "{rating} dari 5 bintang",
+    "summary": "{count} rating · {users} pengguna di Chrome Web Store",
+    "leave": "Tulis ulasan",
+    "readAll": "Baca semua",
+    "source": "Chrome Web Store",
+    "empty": "Jadilah salah satu yang pertama mengulas Mobile View."
+  },
+  "privacy": {
+    "title": "Privat sejak awal.",
+    "item1": "Tanpa akun",
+    "item2": "Tanpa pelacakan",
+    "item3": "Halaman Anda tetap di browser Anda",
+    "item4": "Open source",
+    "link": "Kebijakan privasi"
+  },
+  "faq": {
+    "title": "Pertanyaan.",
+    "q1": "Apakah gratis?",
+    "a1": "Ya. Gratis dan open source dengan lisensi MIT, tanpa akun.",
+    "q2": "Apakah bisa di localhost?",
+    "a2": "Ya. Buka halaman lokal Anda di Chrome, lalu buka Mobile View. Tidak ada yang keluar dari komputer Anda.",
+    "q3": "Apa bedanya dengan mode perangkat DevTools?",
+    "a3": "DevTools menampilkan satu viewport dalam satu waktu. Mobile View menampilkan empat perangkat asli berdampingan dan tetap sinkron.",
+    "q4": "Mengapa beberapa situs tidak termuat?",
+    "a4": "Beberapa situs memblokir tampil di dalam halaman lain. Mobile View akan memberi tahu Anda dan menawarkan untuk membukanya di tab.",
+    "q5": "Apakah prompt perbaikan mengunggah kode saya?",
+    "a5": "Tidak. Prompt dibuat di komputer Anda untuk Anda tempel ke alat coding Anda sendiri."
+  },
+  "cta": {
+    "title": "Coba di situs Anda sendiri.",
+    "text": "Gratis. Tanpa akun. Bisa di localhost.",
+    "install": "Tambahkan ke Chrome, gratis",
+    "review": "Tulis ulasan"
+  },
+  "footer": {
+    "blurb": "Penguji responsif gratis dan privat untuk Chrome. Open source dengan lisensi MIT.",
+    "product": "Produk",
+    "guides": "Panduan",
+    "project": "Proyek",
+    "tour": "Tur",
+    "reviews": "Ulasan",
+    "changelog": "Log perubahan",
+    "store": "Chrome Web Store",
+    "allGuides": "Semua panduan",
+    "source": "Kode sumber di GitHub",
+    "issue": "Laporkan masalah",
+    "privacy": "Kebijakan privasi",
+    "terms": "Ketentuan penggunaan",
+    "language": "Bahasa",
+    "copyright": "© {year} Edison Augusthy. Berlisensi MIT.",
+    "trademarks": "iPhone, iPad, Mac, dan Apple Watch adalah merek dagang Apple Inc. Galaxy adalah merek dagang Samsung; Pixel milik Google. Nama perangkat hanya menggambarkan ukuran layar; Mobile View tidak berafiliasi dengan perusahaan-perusahaan ini."
+  }
+}

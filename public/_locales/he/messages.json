@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: אמולטור מכשירים ובדיקת רספונסיביות"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "סימולטור נייד לבדיקת עיצוב רספונסיבי. השוו תצוגות מכשירים, סנכרנו גלילה וצלמו מסך."
+  },
+  "actionTitle": {
+    "message": "פתיחת אמולטור המכשירים Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "פתיחת הכרטיסייה הזאת ב-Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View פעיל — לחיצה לסגירה"
+  },
+  "unsupportedActionTitle": {
+    "message": "יש לפתוח אתר תחילה"
+  },
+  "unsupportedUrlHint": {
+    "message": "עברו לדף שאתם מפתחים ולחצו שוב על התוסף."
+  }
+}

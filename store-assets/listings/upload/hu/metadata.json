@@ -1,0 +1,20 @@
+{
+  "storeLocale": "hu",
+  "name": "Mobile View: Eszközemulátor és reszponzív teszt",
+  "summary": "Mobil szimulátor reszponzív webdesign teszteléséhez. Hasonlítsd össze a nézeteket, szinkronizáld a görgetést, készíts képernyőképet.",
+  "screenshotCaptions": [
+    "Minden képernyő egymás mellett.",
+    "Minden eszköz. Egy kattintás.",
+    "Fókuszban egy képernyő.",
+    "Pixelpontosan a terv szerint.",
+    "Jelölje meg a hibát. Rögzítse a folyamatot."
+  ],
+  "screenshotSubtitles": [
+    "Valódi eszközkeretek szinkronizált görgetéssel, kattintással és navigációval.",
+    "Nyissa meg mind a 110+ eszközt kategóriánként, a legkisebb telefontól a legnagyobb képernyőig.",
+    "Nagyítson ki bármely eszközt, majd fókusz módban rejtsen el minden kezelőelemet a letisztult áttekintésekhez és bemutatókhoz.",
+    "Egyik oldalon a látványterv, a másikon az élő oldal. Minden eltérést egy pillantással észrevesz.",
+    "Jegyzeteljen képernyőképet, másoljon javítási promptot az AI-eszközéhez, vagy játsszon le egy felhasználói folyamatot minden eszközön."
+  ],
+  "screenshotLocale": "en"
+}

@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: reszponzív tesztelő és eszközemulátor Chrome-hoz",
+    "description": "Ingyenes Chrome-bővítmény reszponzív oldalak teszteléséhez valódi iPhone, Android, iPad, Mac és Apple Watch keretekben, szinkron görgetéssel, localhoston is.",
+    "ogTitle": "Mobile View: az oldalad minden képernyőn egyszerre",
+    "ogImageAlt": "A Mobile View egy oldalt mutat egymás mellett iPhone-on, összecsukható telefonon, MacBookon és Apple Watchon"
+  },
+  "nav": {
+    "home": "Mobile View kezdőlap",
+    "main": "Fő",
+    "tour": "Bemutató",
+    "reviews": "Értékelések",
+    "faq": "GYIK",
+    "guides": "Útmutatók",
+    "privacy": "Adatvédelem",
+    "github": "Mobile View a GitHubon",
+    "leaveReview": "Értékelés írása",
+    "addToChrome": "Hozzáadás a Chrome-hoz",
+    "skip": "Ugrás a tartalomra"
+  },
+  "hero": {
+    "rating": "{rating} a Chrome Web Store-ban",
+    "title": "Az oldalad minden képernyőn, egyszerre.",
+    "lede": "Ingyenes Chrome-bővítmény, amely bármely oldalt, akár a localhostot is, valódi telefonokon, összecsukható eszközökön, tableteken, laptopokon és órákon mutat meg. Egymás mellett, szinkronban.",
+    "install": "Hozzáadás a Chrome-hoz – ingyenes",
+    "review": "Értékelés írása"
+  },
+  "demo": {
+    "label": "Élő demó",
+    "badge": "Élő. Görgess vagy koppints bármelyik képernyőn.",
+    "frameTitle": "Élő demóoldal: {device}"
+  },
+  "facts": {
+    "label": "Röviden",
+    "devicesValue": "{count}",
+    "devices": "valódi eszköz",
+    "atOnceValue": "4 egyszerre",
+    "atOnce": "egymás mellett",
+    "syncValue": "Szinkronban",
+    "sync": "görgetés, koppintás, oldalak",
+    "privateValue": "Privát",
+    "private": "nincs fiók, nincs követés"
+  },
+  "tour": {
+    "workspaceTitle": "Négy eszköz. Egy munkaterület.",
+    "workspaceText": "{count} valódi eszközből bármelyik négyet kiválaszthatod, és egyszerre láthatod rajtuk az oldalad.",
+    "workspaceAlt": "A Mobile View munkaterülete egy oldalt mutat egymás mellett iPhone 18 Pro, összecsukott iPhone Duo, MacBook Pro 14 és Apple Watch eszközön",
+    "syncTitle": "Egyszer görgetsz. Minden képernyő követi.",
+    "syncText": "A görgetés, a kattintások és a navigáció minden eszközön szinkronban marad.",
+    "syncAlt": "Négy eszköz az oldal ugyanazon pontjára görgetve, bekapcsolt görgetés- és navigációszinkronnal",
+    "allTitle": "Minden eszköz. Egy kattintás.",
+    "allText": "Nyiss meg egy teljes kategóriát egyszerre. Itt 37 iPhone-ból 16 látható, az iPhone 5-től az iPhone 15 Pro-ig.",
+    "allAlt": "Az összes eszköz nézet két sor iPhone-nal, az iPhone 5-től és iPhone SE-től az iPhone 15 Pro-ig, mindegyiken ugyanaz az oldal töltődik be",
+    "designTitle": "Egyezzen a dizájnnal.",
+    "designText": "Tedd a mockupot az élő oldal mellé bármelyik eszközön. Egymás mellett vagy egymásra fektetve a terv és a megvalósítás minden eltérése azonnal feltűnik.",
+    "designCaught": "Ebben az összevetésben kiszúrtuk",
+    "designItem1": "Eltér a címsor szövege",
+    "designItem1Detail": "Élő: „Make room for your best work.” Dizájn: „Room for your best work.”",
+    "designItem2": "Eltér a gomb stílusa",
+    "designItem2Detail": "Élő: sötét, szögletes sarkok. Dizájn: türkiz kapszula.",
+    "designAlt": "Összevetés a dizájnnal: az élő oldal iPhone 18 Pro-n a dizájnkép mellett, eltérő címsorral és gombstílussal",
+    "fixTitle": "Jelöld a hibát. Másold a javítást.",
+    "fixText": "Rajzolj a képernyőképre, majd másolj ki egy kész promptot az AI-kódolóeszközödhöz. Semmi sem hagyja el a gépedet.",
+    "fixAlt": "Jegyzetszerkesztő, amelyben nyíl és keret jelöl egy címsort az iPhone-on, mellette a javítási prompt panelje az érintett eszközök listájával",
+    "alsoInside": "Ezenkívül",
+    "chipRecord": "Folyamatok rögzítése és visszajátszása",
+    "chipFocus": "Fókusz mód",
+    "chipRotate": "Forgatás és nagyítás",
+    "chipCustom": "Egyéni méretek",
+    "chipSets": "Mentett eszközcsoportok"
+  },
+  "reviews": {
+    "title": "Fejlesztők értékelték.",
+    "outOf": "az 5-ből",
+    "stars": "{rating} / 5 csillag",
+    "summary": "{count} értékelés · {users} felhasználó a Chrome Web Store-ban",
+    "leave": "Értékelés írása",
+    "readAll": "Az összes",
+    "source": "Chrome Web Store",
+    "empty": "Légy az elsők között, aki értékeli a Mobile View-t."
+  },
+  "privacy": {
+    "title": "Alapból privát.",
+    "item1": "Nincs fiók",
+    "item2": "Nincs követés",
+    "item3": "Az oldalaid a böngésződben maradnak",
+    "item4": "Nyílt forráskód",
+    "link": "Adatvédelmi irányelvek"
+  },
+  "faq": {
+    "title": "Kérdések.",
+    "q1": "Ingyenes?",
+    "a1": "Igen. Ingyenes és nyílt forráskódú MIT licenc alatt, fiók nélkül.",
+    "q2": "Működik localhoston?",
+    "a2": "Igen. Nyisd meg a helyi oldalt a Chrome-ban, majd a Mobile View-t. Semmi sem hagyja el a számítógépedet.",
+    "q3": "Miben más, mint a DevTools eszközmódja?",
+    "a3": "A DevTools egyszerre egy nézetablakot mutat. A Mobile View négy valódi eszközt egymás mellett, szinkronban.",
+    "q4": "Miért nem töltődik be néhány oldal?",
+    "a4": "Egyes oldalak tiltják, hogy egy másik oldalba ágyazva jelenjenek meg. A Mobile View jelzi ezt, és felajánlja, hogy új lapon nyissa meg őket.",
+    "q5": "Feltölti a kódomat a javítási prompt?",
+    "a5": "Nem. A gépeden készül, hogy beilleszd a saját kódolóeszközödbe."
+  },
+  "cta": {
+    "title": "Próbáld ki a saját oldaladon.",
+    "text": "Ingyenes. Fiók nélkül. Akár localhoston is.",
+    "install": "Hozzáadás a Chrome-hoz – ingyenes",
+    "review": "Értékelés írása"
+  },
+  "footer": {
+    "blurb": "Ingyenes, privát reszponzív tesztelő Chrome-hoz. Nyílt forráskódú, MIT licenc alatt.",
+    "product": "Termék",
+    "guides": "Útmutatók",
+    "project": "Projekt",
+    "tour": "Bemutató",
+    "reviews": "Értékelések",
+    "changelog": "Változásnapló",
+    "store": "Chrome Web Store",
+    "allGuides": "Összes útmutató",
+    "source": "Forráskód a GitHubon",
+    "issue": "Hiba bejelentése",
+    "privacy": "Adatvédelmi irányelvek",
+    "terms": "Felhasználási feltételek",
+    "language": "Nyelv",
+    "copyright": "© {year} Edison Augusthy. MIT licenc.",
+    "trademarks": "Az iPhone, az iPad, a Mac és az Apple Watch az Apple Inc. védjegyei. A Galaxy a Samsung, a Pixel a Google védjegye. Az eszköznevek csak a képernyőméreteket jelölik; a Mobile View nem áll kapcsolatban ezekkel a cégekkel."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "storeLocale": "ca",
+  "name": "Mobile View: Emulador i prova responsiva",
+  "summary": "Simulador mòbil per provar dissenys responsius. Compara vistes de dispositius, sincronitza el desplaçament i captura pantalles.",
+  "screenshotCaptions": [
+    "Totes les pantalles, en paral·lel.",
+    "Tots els dispositius. Un clic.",
+    "Centra’t en una pantalla.",
+    "Fidel al disseny, píxel a píxel.",
+    "Marca l’error. Grava el flux."
+  ],
+  "screenshotSubtitles": [
+    "Marcs de dispositius reals amb desplaçament, clics i navegació sincronitzats.",
+    "Obre els 110+ dispositius per categories, des del telèfon més petit fins a la pantalla més gran.",
+    "Amplia qualsevol dispositiu i amaga totes les eines en mode focus per a revisions i demostracions netes.",
+    "La teva maqueta a un costat, la pàgina en directe a l’altre. Detecta cada diferència d’un cop d’ull.",
+    "Anota una captura de pantalla, copia una instrucció de correcció per a la teva eina d’IA o reprodueix un flux d’usuari a tots els dispositius."
+  ],
+  "screenshotLocale": "en"
+}

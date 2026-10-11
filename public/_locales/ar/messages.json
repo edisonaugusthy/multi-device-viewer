@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: محاكي أجهزة واختبار تجاوب"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "محاكي جوال لاختبار تصميم الويب المتجاوب. قارن عروض الأجهزة، وزامن التمرير والتقط لقطات الشاشة."
+  },
+  "actionTitle": {
+    "message": "فتح محاكي الأجهزة Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "فتح علامة التبويب هذه في Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View نشط — انقر للإغلاق"
+  },
+  "unsupportedActionTitle": {
+    "message": "افتح موقعًا إلكترونيًا أولًا"
+  },
+  "unsupportedUrlHint": {
+    "message": "انتقل إلى الصفحة التي تطورها، ثم انقر على الإضافة مرة أخرى."
+  }
+}

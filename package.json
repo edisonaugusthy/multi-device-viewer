@@ -1,0 +1,46 @@
+{
+  "name": "multi-device-viewer",
+  "version": "0.3.0",
+  "description": "A local-first Chrome extension for responsive device testing across phones, tablets, laptops, and desktops.",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:preview": "vite --config vite.preview.config.ts",
+    "dev:site": "node scripts/site/build.mjs && node scripts/site/serve.mjs",
+    "build:site": "node scripts/site/build.mjs",
+    "deploy:site": "npm run fetch:store-data && npm run build:site && npm run validate:site-seo && node scripts/site/deploy.mjs",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "compile": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "validate:locales": "node scripts/validate-locales.mjs",
+    "validate:site-seo": "node scripts/validate-site-seo.mjs",
+    "validate:chrome-zip": "node scripts/validate-chrome-extension-package.mjs",
+    "validate:artwork-privacy": "node scripts/check-artwork-privacy.mjs",
+    "test:artwork-privacy": "node --test scripts/artwork-privacy.test.mjs",
+    "test:extension": "node scripts/smoke-extension.mjs",
+    "stand-in:mockups": "node scripts/stand-in-mockups.mjs",
+    "serve:site": "node scripts/site/serve.mjs",
+    "fetch:store-data": "node scripts/site/fetch-store.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/chrome": "^0.1.37",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@wxt-dev/module-react": "^1.1.3",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.10",
+    "wxt": "^0.20.25"
+  }
+}

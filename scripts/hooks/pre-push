@@ -1,0 +1,4 @@
+#!/bin/sh
+# Check the commits Git is about to send, not just today's working tree.
+repository=$(git rev-parse --show-toplevel) || exit 1
+exec node "$repository/scripts/check-artwork-privacy.mjs" --pre-push "$1"

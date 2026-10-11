@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: Įrenginių emuliatorius ir adaptyvus testas"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobilusis simuliatorius adaptyviam dizainui testuoti. Lyginkite rodinius, sinchronizuokite slinkimą ir darykite ekrano nuotraukas."
+  },
+  "actionTitle": {
+    "message": "Atidaryti Mobile View įrenginių emuliatorių"
+  },
+  "contextMenuTitle": {
+    "message": "Atidaryti šį skirtuką per Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View aktyvus — spustelėkite, kad uždarytumėte"
+  },
+  "unsupportedActionTitle": {
+    "message": "Pirmiausia atidarykite svetainę"
+  },
+  "unsupportedUrlHint": {
+    "message": "Eikite į kuriamą puslapį ir dar kartą spustelėkite plėtinį."
+  }
+}

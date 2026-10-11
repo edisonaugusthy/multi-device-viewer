@@ -1,0 +1,69 @@
+<script type="application/json">
+{
+  "slug": "responsive-website-testing",
+  "title": "Responsive Website Testing Tool — Complete Workflow",
+  "description": "A practical responsive website testing workflow for comparing phone, tablet, laptop, and desktop viewports, checking breakpoints, and documenting fixes.",
+  "eyebrow": "Responsive website testing",
+  "h1": "Test the layout, not just the screen.",
+  "lead": "A responsive website testing tool is most useful when it turns a range of viewports into one repeatable workflow. Compare the same page and content state, find the breakpoint where the experience fails, and leave enough evidence for someone else to fix it.",
+  "headline": "Responsive website testing: a repeatable workflow",
+  "datePublished": "2026-08-07",
+  "dateModified": "2026-08-07",
+  "cardTitle": "Responsive website testing tool guide",
+  "cardText": "Build a repeatable responsive website testing workflow across phone, tablet, laptop, and desktop viewports."
+}
+</script>
+<h2>1. Choose representative viewports</h2>
+<p>
+Start with a compact phone, a large phone, a tablet, and a laptop. Add
+the exact widths around important CSS breakpoints instead of collecting
+many nearly identical device presets. A desktop view is useful for
+checking content density and navigation, but it should not replace the
+narrowest supported layout.
+</p>
+<h2>2. Keep the page state consistent</h2>
+<p>
+Open the same URL, account state, test data, and navigation path in
+every viewport. Side-by-side comparison is strongest when a changed
+layout is the only meaningful difference. Synchronized scrolling and
+navigation can shorten this pass when the previews share a matching
+structure.
+</p>
+<h2>3. Check the failure-prone details</h2>
+<ul>
+<li>Horizontal overflow, clipped controls, and unexpected fixed layers.</li>
+<li>Long translated strings, empty states, errors, and real content density.</li>
+<li>Navigation, dialogs, forms, keyboard focus, and touch target size.</li>
+<li>Breakpoints immediately above and below the expected transition.</li>
+</ul>
+<h2>4. Capture an actionable issue</h2>
+<p>
+Record the affected viewport, expected behavior, actual behavior, page
+URL, and a short reproduction path. A screenshot or annotated capture
+should show enough surrounding context to identify the component. A
+structured fix prompt can carry the same context into a coding tool,
+but the prompt is copied locally and does not produce or upload code by
+itself.
+</p>
+<h2>5. Finish on real devices</h2>
+<p>
+Viewport emulation is a fast responsive development check, not full
+hardware or browser-engine emulation. Validate critical flows on target
+browsers and physical devices, especially safe-area behavior, virtual
+keyboards, scrolling, performance, and touch interaction.
+</p>
+<div class="callout">
+<strong>Use a side-by-side responsive tester</strong>
+<p>
+Mobile View lets you compare up to four phone, tablet, laptop, and
+desktop previews locally, then capture evidence or continue on a
+physical phone.
+</p>
+<a href="@/">Open the Mobile View responsive testing workspace →</a>
+</div>
+<h2>Related guides</h2>
+<ul>
+<li><a href="@/guides/responsive-design-checker/">Responsive design checker workflow</a></li>
+<li><a href="@/guides/device-viewport-sizes/">Device viewport sizes and breakpoints</a></li>
+<li><a href="@/guides/responsive-testing/">Pre-release responsive testing checklist</a></li>
+</ul>

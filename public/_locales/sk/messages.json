@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: Emulátor zariadení a responzívny test"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobilný simulátor na testovanie responzívneho dizajnu. Porovnajte náhľady, synchronizujte posúvanie a vytvárajte snímky obrazovky."
+  },
+  "actionTitle": {
+    "message": "Otvoriť emulátor zariadení Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Otvoriť túto kartu v Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View je aktívny — kliknutím zavriete"
+  },
+  "unsupportedActionTitle": {
+    "message": "Najprv otvorte web"
+  },
+  "unsupportedUrlHint": {
+    "message": "Prejdite na vyvíjanú stránku a znova kliknite na rozšírenie."
+  }
+}

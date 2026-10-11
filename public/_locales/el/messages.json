@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: Εξομοιωτής και responsive έλεγχος"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Προσομοιωτής κινητού για δοκιμή responsive σχεδιασμού. Συγκρίνετε προβολές, συγχρονίστε κύλιση και τραβήξτε στιγμιότυπα."
+  },
+  "actionTitle": {
+    "message": "Άνοιγμα εξομοιωτή Mobile View"
+  },
+  "contextMenuTitle": {
+    "message": "Άνοιγμα αυτής της καρτέλας στο Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Το Mobile View είναι ενεργό — κλικ για κλείσιμο"
+  },
+  "unsupportedActionTitle": {
+    "message": "Ανοίξτε πρώτα έναν ιστότοπο"
+  },
+  "unsupportedUrlHint": {
+    "message": "Μεταβείτε στη σελίδα που αναπτύσσετε και κάντε ξανά κλικ στην επέκταση."
+  }
+}

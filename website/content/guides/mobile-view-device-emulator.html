@@ -1,0 +1,82 @@
+<script type="application/json">
+{
+  "slug": "mobile-view-device-emulator",
+  "title": "Mobile View & Device Emulator Guide — Free Chrome Extension",
+  "description": "Learn how to test a website in mobile view with a responsive device emulator, compare phone and desktop layouts, and know when to use a physical device.",
+  "eyebrow": "Mobile view testing guide",
+  "h1": "Test mobile view without losing the desktop context.",
+  "lead": "A responsive device emulator gives you a fast way to compare the same website at phone, tablet, laptop, and desktop widths. It is ideal for finding layout regressions before the slower physical-device pass.",
+  "headline": "How to test a website in mobile view with a responsive device emulator",
+  "datePublished": "2026-07-25",
+  "dateModified": "2026-07-25",
+  "cardTitle": "Mobile view and device emulator",
+  "cardText": "Understand viewport emulation, its limits, and how it complements Chrome DevTools and physical devices."
+}
+</script>
+<div class="callout">
+<strong>Free, private, and open source</strong>
+<p>
+Mobile View is an MIT-licensed Chrome extension. It has no
+account, subscription, extension telemetry, or remote application
+backend.
+</p>
+</div>
+<h2>What a responsive device emulator checks</h2>
+<p>
+The extension renders a page inside realistic viewport sizes and device
+presentation frames. You can compare up to four views side by side,
+rotate supported devices, create custom viewport sizes, synchronize
+scrolling, and capture the result. This makes responsive CSS,
+breakpoints, overflow, navigation, and content hierarchy easier to
+inspect than repeatedly resizing one browser window.
+</p>
+<h2>How to test a website in mobile view</h2>
+<ol>
+<li>Open the website you want to test in Chrome.</li>
+<li>Open Mobile View from the toolbar or page context menu.</li>
+<li>
+Start with a compact phone and a laptop, then add a tablet or the exact
+viewport reported by your analytics.
+</li>
+<li>
+Check navigation, forms, sticky UI, text wrapping, images, and
+horizontal overflow at each width.
+</li>
+<li>
+Capture and annotate a failure, or copy a structured fix prompt for
+your coding assistant.
+</li>
+</ol>
+<h2>Responsive viewport testing is not full hardware emulation</h2>
+<p>
+A browser extension can reproduce viewport dimensions and device
+presentation for everyday frontend work, but it does not replace a real
+phone or tablet. Hardware performance, browser-engine differences,
+sensors, operating-system keyboards, and platform UI still need a
+physical-device check.
+</p>
+<h2>Choose representative devices, not every device</h2>
+<p>
+Cover the width range with a small phone, a large phone, a tablet, and a
+laptop. Add device-specific profiles only when analytics, support
+reports, or a known issue justify them. The goal is reliable breakpoint
+coverage rather than a long screenshot collection.
+</p>
+<h2>Mobile view vs Chrome DevTools device mode</h2>
+<p>
+Chrome DevTools is excellent for detailed debugging of one emulated
+viewport. Mobile View is useful when the question is comparative: did a
+change fix the phone layout without breaking tablet and desktop? Use the
+side-by-side workspace for the comparison, then DevTools and physical
+devices for deeper investigation.
+</p>
+<div class="callout">
+<strong>Ready for a release pass?</strong>
+<p>
+Continue with the
+<a href="@/guides/responsive-testing/"
+>responsive website testing checklist</a
+>
+for layout, interaction, accessibility, and physical-device checks.
+</p>
+</div>

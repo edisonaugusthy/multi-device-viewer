@@ -1,0 +1,20 @@
+{
+  "storeLocale": "pt-PT",
+  "name": "Mobile View: Emulador móvel e teste responsivo",
+  "summary": "Simulador móvel para testar design responsivo. Compare vistas de dispositivos, sincronize o deslocamento e capture ecrãs.",
+  "screenshotCaptions": [
+    "Todos os ecrãs, lado a lado.",
+    "Todos os dispositivos. Um clique.",
+    "Concentre-se num só ecrã.",
+    "Fiel ao design, píxel a píxel.",
+    "Assinale o erro. Grave o fluxo."
+  ],
+  "screenshotSubtitles": [
+    "Molduras de dispositivos reais com deslocamento, cliques e navegação sincronizados.",
+    "Abra os 110+ dispositivos por categoria, do telemóvel mais pequeno ao maior ecrã.",
+    "Expanda qualquer dispositivo e oculte todas as ferramentas no modo de foco para revisões e demonstrações limpas.",
+    "O seu mockup de um lado, a página ativa do outro. Detete todas as diferenças num relance.",
+    "Anote uma captura de ecrã, copie um prompt de correção para a sua ferramenta de IA ou reproduza um fluxo de utilizador em todos os dispositivos."
+  ],
+  "screenshotLocale": "en"
+}

@@ -1,0 +1,20 @@
+{
+  "storeLocale": "sk",
+  "name": "Mobile View: Emulátor zariadení a responzívny test",
+  "summary": "Mobilný simulátor na testovanie responzívneho dizajnu. Porovnajte náhľady, synchronizujte posúvanie a vytvárajte snímky obrazovky.",
+  "screenshotCaptions": [
+    "Všetky obrazovky vedľa seba.",
+    "Všetky zariadenia. Jedným kliknutím.",
+    "Sústreďte sa na jednu obrazovku.",
+    "Presne podľa návrhu, pixel po pixeli.",
+    "Označte chybu. Nahrajte postup."
+  ],
+  "screenshotSubtitles": [
+    "Skutočné rámy zariadení so synchronizovaným posúvaním, kliknutiami a navigáciou.",
+    "Otvorte všetkých 110+ zariadení podľa kategórií, od najmenšieho telefónu po najväčšiu obrazovku.",
+    "Zväčšite ľubovoľné zariadenie a v režime sústredenia skryte všetky nástroje pre čisté kontroly a ukážky.",
+    "Na jednej strane váš návrh, na druhej živá stránka. Každý rozdiel odhalíte na prvý pohľad.",
+    "Pridajte poznámky do snímky obrazovky, skopírujte prompt s opravou pre svoj nástroj AI alebo prehrajte používateľský postup na všetkých zariadeniach."
+  ],
+  "screenshotLocale": "en"
+}

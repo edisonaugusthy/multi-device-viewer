@@ -1,0 +1,20 @@
+{
+  "storeLocale": "tr",
+  "name": "Mobile View: Cihaz emülatörü ve duyarlı tasarım testi",
+  "summary": "Duyarlı web tasarımını test etmek için mobil simülatör. Görünümleri karşılaştırın, kaydırmayı eşitleyin ve ekran görüntüsü alın.",
+  "screenshotCaptions": [
+    "Tüm ekranlar yan yana.",
+    "Tüm cihazlar. Tek tıkla.",
+    "Tek ekrana odaklanın.",
+    "Tasarımla piksel piksel eşleştirin.",
+    "Hatayı işaretleyin. Akışı kaydedin."
+  ],
+  "screenshotSubtitles": [
+    "Eşitlenmiş kaydırma, tıklama ve gezinmeyle gerçek cihaz çerçeveleri.",
+    "110+ cihazın tümünü kategoriye göre açın; en küçük telefondan en büyük ekrana kadar.",
+    "Herhangi bir cihazı büyütün, ardından temiz incelemeler ve demolar için odak modunda tüm araçları gizleyin.",
+    "Bir yanda maketiniz, diğer yanda canlı sayfa. Her farkı bir bakışta görün.",
+    "Ekran görüntüsüne not ekleyin, AI aracınız için düzeltme istemi kopyalayın veya bir kullanıcı akışını her cihazda yeniden oynatın."
+  ],
+  "screenshotLocale": "en"
+}

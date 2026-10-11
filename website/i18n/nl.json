@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: responsive tester en apparaatemulator voor Chrome",
+    "description": "Gratis Chrome-extensie: test responsive sites in echte iPhone-, Android-, iPad- en Mac-frames naast elkaar, met gesynchroniseerd scrollen. Werkt op localhost.",
+    "ogTitle": "Mobile View: je site op elk scherm tegelijk",
+    "ogImageAlt": "Mobile View toont één pagina naast elkaar op een iPhone, een vouwbare telefoon, een MacBook en een Apple Watch"
+  },
+  "nav": {
+    "home": "Mobile View home",
+    "main": "Hoofdmenu",
+    "tour": "Rondleiding",
+    "reviews": "Reviews",
+    "faq": "FAQ",
+    "guides": "Handleidingen",
+    "privacy": "Privacy",
+    "github": "Mobile View op GitHub",
+    "leaveReview": "Schrijf een review",
+    "addToChrome": "Toevoegen aan Chrome",
+    "skip": "Naar inhoud springen"
+  },
+  "hero": {
+    "rating": "{rating} in de Chrome Web Store",
+    "title": "Zie je site op elk scherm tegelijk.",
+    "lede": "Een gratis Chrome-extensie die elke pagina, ook localhost, toont op echte telefoons, vouwbare toestellen, tablets, laptops en horloges. Naast elkaar en synchroon.",
+    "install": "Toevoegen aan Chrome, gratis",
+    "review": "Schrijf een review"
+  },
+  "demo": {
+    "label": "Live demo",
+    "badge": "Live. Scroll of tik op een scherm.",
+    "frameTitle": "Live demopagina op {device}"
+  },
+  "facts": {
+    "label": "In één oogopslag",
+    "devicesValue": "{count}",
+    "devices": "echte apparaten",
+    "atOnceValue": "4 tegelijk",
+    "atOnce": "naast elkaar",
+    "syncValue": "Synchroon",
+    "sync": "scrollen, tikken en pagina's",
+    "privateValue": "Privé",
+    "private": "geen account, geen tracking"
+  },
+  "tour": {
+    "workspaceTitle": "Vier apparaten. Eén werkruimte.",
+    "workspaceText": "Kies er vier uit {count} echte apparaten en zie je pagina op alle vier tegelijk.",
+    "workspaceAlt": "Mobile View-werkruimte met een pagina naast elkaar op iPhone 18 Pro, een dichtgevouwen iPhone Duo, MacBook Pro 14 en Apple Watch",
+    "syncTitle": "Eén keer scrollen. Elk scherm volgt.",
+    "syncText": "Scrollen, klikken en navigatie blijven synchroon op alle apparaten.",
+    "syncAlt": "Vier apparaten gescrold naar hetzelfde punt van een pagina, met scroll- en navigatiesynchronisatie aan",
+    "allTitle": "Elk apparaat. Eén klik.",
+    "allText": "Open een hele categorie tegelijk. Hier 16 van de 37 iPhones, van de iPhone 5 tot de iPhone 15 Pro.",
+    "allAlt": "Weergave Alle apparaten met twee rijen iPhones, van iPhone 5 en iPhone SE tot iPhone 15 Pro, die allemaal dezelfde pagina laden",
+    "designTitle": "Klopt het met het ontwerp?",
+    "designText": "Zet je mockup naast de live pagina op elk apparaat. Naast elkaar of als overlay: elk verschil tussen ontwerp en build valt meteen op.",
+    "designCaught": "Gevonden in deze vergelijking",
+    "designItem1": "Kopregel wijkt af",
+    "designItem1Detail": "Live: “Make room for your best work.” Ontwerp: “Room for your best work.”",
+    "designItem2": "Knopstijl wijkt af",
+    "designItem2Detail": "Live: donker, vierkante hoeken. Ontwerp: blauwgroene pil.",
+    "designAlt": "Vergelijken met ontwerp: de live pagina op iPhone 18 Pro naast de ontwerpafbeelding, met een andere kopregel en knopstijl",
+    "fixTitle": "Markeer de bug. Kopieer de fix.",
+    "fixText": "Teken op een screenshot en kopieer een kant-en-klare prompt voor je AI-codeertool. Er verlaat niets je computer.",
+    "fixAlt": "Annotatie-editor met een pijl en kader rond een kop op de iPhone, naast het fixprompt-paneel met de betrokken apparaten",
+    "alsoInside": "Ook aan boord",
+    "chipRecord": "Flows opnemen en afspelen",
+    "chipFocus": "Focusmodus",
+    "chipRotate": "Draaien en zoomen",
+    "chipCustom": "Aangepaste formaten",
+    "chipSets": "Opgeslagen apparaatsets"
+  },
+  "reviews": {
+    "title": "Beoordeeld door mensen die opleveren.",
+    "outOf": "van de 5",
+    "stars": "{rating} van de 5 sterren",
+    "summary": "{count} beoordelingen · {users} gebruikers in de Chrome Web Store",
+    "leave": "Schrijf een review",
+    "readAll": "Alles lezen",
+    "source": "Chrome Web Store",
+    "empty": "Wees een van de eersten die Mobile View beoordeelt."
+  },
+  "privacy": {
+    "title": "Gebouwd voor privacy.",
+    "item1": "Geen account",
+    "item2": "Geen tracking",
+    "item3": "Je pagina's blijven in je browser",
+    "item4": "Open source",
+    "link": "Privacybeleid"
+  },
+  "faq": {
+    "title": "Vragen.",
+    "q1": "Is het gratis?",
+    "a1": "Ja. Gratis en open source onder de MIT-licentie, zonder account.",
+    "q2": "Werkt het op localhost?",
+    "a2": "Ja. Open je lokale pagina in Chrome en open daarna Mobile View. Er verlaat niets je computer.",
+    "q3": "Wat is het verschil met de apparaatmodus van DevTools?",
+    "a3": "DevTools toont één viewport tegelijk. Mobile View toont vier echte apparaten naast elkaar, volledig synchroon.",
+    "q4": "Waarom laden sommige sites niet?",
+    "a4": "Sommige sites blokkeren weergave binnen een andere pagina. Mobile View meldt dat en biedt aan ze in een tabblad te openen.",
+    "q5": "Uploadt de fixprompt mijn code?",
+    "a5": "Nee. De prompt wordt op je eigen computer gemaakt, zodat je hem in je eigen codeertool kunt plakken."
+  },
+  "cta": {
+    "title": "Probeer het op je eigen site.",
+    "text": "Gratis. Geen account. Werkt op localhost.",
+    "install": "Toevoegen aan Chrome, gratis",
+    "review": "Schrijf een review"
+  },
+  "footer": {
+    "blurb": "Een gratis, privé responsive tester voor Chrome. Open source onder de MIT-licentie.",
+    "product": "Product",
+    "guides": "Handleidingen",
+    "project": "Project",
+    "tour": "Rondleiding",
+    "reviews": "Reviews",
+    "changelog": "Wijzigingslog",
+    "store": "Chrome Web Store",
+    "allGuides": "Alle handleidingen",
+    "source": "Broncode op GitHub",
+    "issue": "Probleem melden",
+    "privacy": "Privacybeleid",
+    "terms": "Gebruiksvoorwaarden",
+    "language": "Taal",
+    "copyright": "© {year} Edison Augusthy. MIT-licentie.",
+    "trademarks": "iPhone, iPad, Mac en Apple Watch zijn handelsmerken van Apple Inc. Galaxy is een handelsmerk van Samsung, Pixel van Google. Apparaatnamen beschrijven alleen schermformaten; Mobile View is niet gelieerd aan deze bedrijven."
+  }
+}

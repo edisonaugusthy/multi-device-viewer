@@ -1,0 +1,20 @@
+{
+  "storeLocale": "sv",
+  "name": "Mobile View: Enhetsemulator och responsivt test",
+  "summary": "Mobilsimulator för test av responsiv webbdesign. Jämför enhetsvyer, synkronisera rullning och ta skärmbilder.",
+  "screenshotCaptions": [
+    "Alla skärmar, sida vid sida.",
+    "Alla enheter. Ett klick.",
+    "Fokusera på en skärm.",
+    "Exakt som designen, pixel för pixel.",
+    "Markera buggen. Spela in flödet."
+  ],
+  "screenshotSubtitles": [
+    "Riktiga enhetsramar med synkad rullning, klick och navigering.",
+    "Öppna alla 110+ enheter efter kategori, från den minsta telefonen till den största skärmen.",
+    "Förstora valfri enhet och dölj alla verktyg i fokusläget för rena granskningar och demos.",
+    "Din mockup på ena sidan, live-sidan på den andra. Se varje skillnad med en blick.",
+    "Kommentera en skärmbild, kopiera en rättningsprompt till ditt AI-verktyg eller spela upp ett användarflöde på alla enheter."
+  ],
+  "screenshotLocale": "en"
+}

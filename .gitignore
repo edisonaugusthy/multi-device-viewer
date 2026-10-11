@@ -1,0 +1,24 @@
+node_modules
+.output/
+.wxt/
+dist/
+dist-site/
+output/
+.playwright-cli/
+*.log
+.DS_Store
+__pycache__/
+
+# Internal notes, store operations and research (kept local, never published)
+internal/
+
+# Editable artwork inputs belong under ignored internal/artwork/.
+/scripts/device-frames/device-art.mjs
+/scripts/device-frames/frames.json
+/public/icons/*.svg
+/website/public/icons/*.svg
+/store-assets/source/store-listing-assets.html
+/store-assets/source/captures/
+/private-artwork/
+/public/mockups/
+/website/public/frames/

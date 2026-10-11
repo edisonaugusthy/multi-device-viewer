@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #050919; color: white; font: 18px system-ui; }
+  header { height: 76px; position: sticky; top: 0; z-index: 2; background: #050919; padding: 24px; }
+  section { padding: 24px; }
+  .dark { height: 224px; background: #050919; }
+  .light { height: 1200px; background: #f1f5f9; color: #0f172a; }
+</style>
+<header>Safari background alignment</header>
+<section class="dark">Dark page section</section>
+<section class="light"><h1>Light page section</h1><p>This background should continue through the right gutter.</p></section>
+<script type="module">
+  import { setupPreviewBridge } from "/src/app/preview-bridge.ts";
+  setupPreviewBridge();
+</script>
+</html>

@@ -1,0 +1,82 @@
+<script type="application/json">
+{
+  "slug": "responsive-testing",
+  "title": "Responsive Website Testing Checklist — Mobile View & Responsive Tester",
+  "description": "A practical responsive website testing checklist covering viewports, overflow, touch targets, accessibility, realistic content, and physical devices.",
+  "eyebrow": "Responsive testing guide",
+  "h1": "A practical pre-release checklist.",
+  "lead": "Use representative viewports and real content. The goal is not to collect screenshots—it is to find layout and interaction failures before users do.",
+  "headline": "A practical pre-release checklist.",
+  "datePublished": "2026-07-18",
+  "dateModified": "2026-10-04",
+  "cardTitle": "Pre-release testing checklist",
+  "cardText": "Cover layout integrity, touch and keyboard access, design comparison, evidence, and final physical-device checks."
+}
+</script>
+<h2>1. Cover the viewport range</h2>
+<ul>
+<li>Test a compact phone, a large phone, a tablet, and a laptop.</li>
+<li>
+Add the exact viewport dimensions from analytics or support reports.
+</li>
+<li>
+Rotate devices where orientation changes navigation or content
+hierarchy.
+</li>
+</ul>
+<h2>2. Check layout integrity</h2>
+<ul>
+<li>
+Look for horizontal page overflow, clipped controls, overlapping text,
+and fixed overlays.
+</li>
+<li>
+Verify long titles, translated strings, empty states, validation
+errors, and populated tables.
+</li>
+<li>
+Check adjacent widths around each breakpoint, not only the exact
+preset.
+</li>
+</ul>
+<h2>3. Check interaction and access</h2>
+<ul>
+<li>
+Keep touch targets comfortably usable and controls keyboard
+accessible.
+</li>
+<li>
+Verify accessible names, image alternatives, heading order, focus
+visibility, and intentional motion.
+</li>
+<li>
+Test forms, menus, dialogs, sticky elements, and critical navigation
+at every representative width.
+</li>
+</ul>
+<h2>4. Compare and document</h2>
+<ul>
+<li>Overlay the approved design where visual fidelity matters.</li>
+<li>
+Capture the failure with enough surrounding context to make it
+reproducible.
+</li>
+<li>
+Include the affected viewport, expected result, actual result, and any
+relevant constraints in the handoff.
+</li>
+</ul>
+<h2>5. Finish on physical devices</h2>
+<p>
+Responsive emulation creates a fast development loop. Validate critical
+journeys on physical devices and target browsers before release,
+especially interactions involving keyboards, safe areas, scrolling, and
+operating-system UI.
+</p>
+<p>
+Need help choosing between viewport testing and full device emulation?
+Read the
+<a href="@/guides/mobile-view-device-emulator/"
+>mobile view and responsive device emulator guide</a
+>.
+</p>

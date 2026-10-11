@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: Laite-emulaattori ja responsiivinen testi"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobiilisimulaattori responsiivisen verkkosuunnittelun testaukseen. Vertaa näkymiä, synkronoi vieritys ja ota kuvakaappauksia."
+  },
+  "actionTitle": {
+    "message": "Avaa Mobile View -laite-emulaattori"
+  },
+  "contextMenuTitle": {
+    "message": "Avaa tämä välilehti Mobile View’ssa"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View on käytössä — sulje napsauttamalla"
+  },
+  "unsupportedActionTitle": {
+    "message": "Avaa ensin verkkosivusto"
+  },
+  "unsupportedUrlHint": {
+    "message": "Siirry kehittämällesi sivulle ja napsauta laajennusta uudelleen."
+  }
+}

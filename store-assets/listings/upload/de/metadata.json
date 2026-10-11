@@ -1,0 +1,20 @@
+{
+  "storeLocale": "de",
+  "name": "Mobile View: Responsiver Geräte-Emulator",
+  "summary": "Mobiler Simulator für responsive Webdesign-Tests. Vergleiche Geräteansichten, synchronisiere Scrollen und mache Screenshots.",
+  "screenshotCaptions": [
+    "Alle Bildschirme nebeneinander.",
+    "Alle Geräte. Ein Klick.",
+    "Fokus auf einen Bildschirm.",
+    "Pixelgenau wie das Design.",
+    "Fehler markieren. Abläufe aufnehmen."
+  ],
+  "screenshotSubtitles": [
+    "Echte Geräterahmen mit synchronem Scrollen, Klicks und Navigation.",
+    "Öffne alle 110+ Geräte nach Kategorie – vom kleinsten Handy bis zum größten Bildschirm.",
+    "Vergrößere ein Gerät und blende im Fokusmodus alle Werkzeuge aus – ideal für Reviews und Demos.",
+    "Links dein Entwurf, rechts die Live-Seite. Jeden Unterschied auf einen Blick erkennen.",
+    "Screenshot kommentieren, Fix-Prompt für dein KI-Tool kopieren oder einen Benutzerablauf auf allen Geräten wiederholen."
+  ],
+  "screenshotLocale": "de"
+}

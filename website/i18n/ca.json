@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: provador de webs responsius i emulador per a Chrome",
+    "description": "Extensió gratuïta per a Chrome: prova webs responsius en marcs de dispositius reals, l'un al costat de l'altre, amb desplaçament sincronitzat. Va amb localhost.",
+    "ogTitle": "Mobile View: el teu web a totes les pantalles alhora",
+    "ogImageAlt": "Mobile View mostrant una pàgina en un iPhone, un plegable, un MacBook i un Apple Watch, l'un al costat de l'altre"
+  },
+  "nav": {
+    "home": "Inici de Mobile View",
+    "main": "Principal",
+    "tour": "Recorregut",
+    "reviews": "Ressenyes",
+    "faq": "PMF",
+    "guides": "Guies",
+    "privacy": "Privadesa",
+    "github": "Mobile View a GitHub",
+    "leaveReview": "Deixa una ressenya",
+    "addToChrome": "Afegeix a Chrome",
+    "skip": "Vés al contingut"
+  },
+  "hero": {
+    "rating": "{rating} a la Chrome Web Store",
+    "title": "El teu web a totes les pantalles alhora.",
+    "lede": "Una extensió gratuïta per a Chrome que mostra qualsevol pàgina, fins i tot localhost, en telèfons, plegables, tauletes, portàtils i rellotges reals. L'un al costat de l'altre, sincronitzats.",
+    "install": "Afegeix a Chrome, és gratis",
+    "review": "Deixa una ressenya"
+  },
+  "demo": {
+    "label": "Demo en directe",
+    "badge": "En directe. Desplaça't o toca qualsevol pantalla.",
+    "frameTitle": "Pàgina de demo en directe a {device}"
+  },
+  "facts": {
+    "label": "D'un cop d'ull",
+    "devicesValue": "{count}",
+    "devices": "dispositius reals",
+    "atOnceValue": "4 alhora",
+    "atOnce": "l'un al costat de l'altre",
+    "syncValue": "Sincronitzat",
+    "sync": "desplaçament, tocs i pàgines",
+    "privateValue": "Privat",
+    "private": "sense compte ni seguiment"
+  },
+  "tour": {
+    "workspaceTitle": "Quatre dispositius. Un espai de treball.",
+    "workspaceText": "Tria quatre dels {count} dispositius reals i veuràs la teva pàgina a tots alhora.",
+    "workspaceAlt": "Espai de treball de Mobile View amb una pàgina en un iPhone 18 Pro, un iPhone Duo plegat, un MacBook Pro 14 i un Apple Watch, l'un al costat de l'altre",
+    "syncTitle": "Desplaça't un cop. Totes les pantalles et segueixen.",
+    "syncText": "El desplaçament, els clics i la navegació es mantenen sincronitzats entre dispositius.",
+    "syncAlt": "Quatre dispositius desplaçats al mateix punt d'una pàgina amb la sincronització de desplaçament i navegació activada",
+    "allTitle": "Tots els dispositius. Un clic.",
+    "allText": "Obre una categoria sencera de cop. Aquí, 16 de 37 iPhone, de l'iPhone 5 a l'iPhone 15 Pro.",
+    "allAlt": "Vista de tots els dispositius amb dues files d'iPhone, de l'iPhone 5 i l'iPhone SE a l'iPhone 15 Pro, tots carregant la mateixa pàgina",
+    "designTitle": "Clava el disseny.",
+    "designText": "Posa la teva maqueta al costat de la pàgina en directe en qualsevol dispositiu. Al costat o superposada, qualsevol diferència entre disseny i implementació salta a la vista.",
+    "designCaught": "Detectat en aquesta comparació",
+    "designItem1": "El titular és diferent",
+    "designItem1Detail": "En directe: «Make room for your best work.» Disseny: «Room for your best work.»",
+    "designItem2": "L'estil del botó és diferent",
+    "designItem2Detail": "En directe: fosc, cantonades rectes. Disseny: arrodonit, verd blavós.",
+    "designAlt": "Comparació amb el disseny: la pàgina en directe a l'iPhone 18 Pro al costat de la imatge del disseny, amb un titular i un estil de botó diferents",
+    "fixTitle": "Marca l'error. Copia la solució.",
+    "fixText": "Dibuixa sobre una captura i copia un prompt llest per a la teva eina de programació amb IA. Res no surt del teu ordinador.",
+    "fixAlt": "Editor d'anotacions amb una fletxa i un requadre que marquen un títol a l'iPhone, al costat del tauler del prompt de correcció amb els dispositius afectats",
+    "alsoInside": "També inclou",
+    "chipRecord": "Grava i reprodueix fluxos",
+    "chipFocus": "Mode focus",
+    "chipRotate": "Gira i fes zoom",
+    "chipCustom": "Mides personalitzades",
+    "chipSets": "Conjunts de dispositius desats"
+  },
+  "reviews": {
+    "title": "Valorat per gent que llança productes.",
+    "outOf": "de 5",
+    "stars": "{rating} de 5 estrelles",
+    "summary": "{count} valoracions · {users} usuaris a la Chrome Web Store",
+    "leave": "Deixa una ressenya",
+    "readAll": "Llegeix-les totes",
+    "source": "Chrome Web Store",
+    "empty": "Sigues dels primers a valorar Mobile View."
+  },
+  "privacy": {
+    "title": "Privat per disseny.",
+    "item1": "Sense compte",
+    "item2": "Sense seguiment",
+    "item3": "Les teves pàgines es queden al navegador",
+    "item4": "Codi obert",
+    "link": "Política de privadesa"
+  },
+  "faq": {
+    "title": "Preguntes.",
+    "q1": "És gratuït?",
+    "a1": "Sí. Gratuït i de codi obert amb llicència MIT, sense compte.",
+    "q2": "Funciona amb localhost?",
+    "a2": "Sí. Obre la teva pàgina local a Chrome i després obre Mobile View. Res no surt del teu ordinador.",
+    "q3": "En què es diferencia del mode dispositiu de DevTools?",
+    "a3": "DevTools mostra una sola àrea de visualització cada cop. Mobile View mostra quatre dispositius reals l'un al costat de l'altre, sincronitzats.",
+    "q4": "Per què alguns llocs no es carreguen?",
+    "a4": "Alguns llocs no permeten que se'ls mostri dins d'una altra pàgina. Mobile View t'ho indica i t'ofereix obrir-los en una pestanya.",
+    "q5": "El prompt de correcció puja el meu codi?",
+    "a5": "No. Es genera al teu ordinador perquè l'enganxis a la teva pròpia eina de programació."
+  },
+  "cta": {
+    "title": "Prova-ho al teu propi web.",
+    "text": "Gratis. Sense compte. Funciona amb localhost.",
+    "install": "Afegeix a Chrome, és gratis",
+    "review": "Deixa una ressenya"
+  },
+  "footer": {
+    "blurb": "Un provador responsiu gratuït i privat per a Chrome. Codi obert amb llicència MIT.",
+    "product": "Producte",
+    "guides": "Guies",
+    "project": "Projecte",
+    "tour": "Recorregut",
+    "reviews": "Ressenyes",
+    "changelog": "Registre de canvis",
+    "store": "Chrome Web Store",
+    "allGuides": "Totes les guies",
+    "source": "Codi font a GitHub",
+    "issue": "Informa d'un problema",
+    "privacy": "Política de privadesa",
+    "terms": "Condicions d'ús",
+    "language": "Idioma",
+    "copyright": "© {year} Edison Augusthy. Llicència MIT.",
+    "trademarks": "iPhone, iPad, Mac i Apple Watch són marques comercials d'Apple Inc. Galaxy és una marca comercial de Samsung, i Pixel, de Google. Els noms de dispositius només descriuen mides de pantalla; Mobile View no està afiliat amb aquestes empreses."
+  }
+}

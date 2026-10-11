@@ -1,0 +1,20 @@
+{
+  "storeLocale": "fi",
+  "name": "Mobile View: Laite-emulaattori ja responsiivinen testi",
+  "summary": "Mobiilisimulaattori responsiivisen verkkosuunnittelun testaukseen. Vertaa näkymiä, synkronoi vieritys ja ota kuvakaappauksia.",
+  "screenshotCaptions": [
+    "Kaikki näytöt rinnakkain.",
+    "Kaikki laitteet. Yksi napsautus.",
+    "Keskity yhteen näyttöön.",
+    "Pikselintarkasti suunnitelman mukaan.",
+    "Merkitse bugi. Tallenna käyttöpolku."
+  ],
+  "screenshotSubtitles": [
+    "Aidot laitekehykset synkronoidulla vierityksellä, napsautuksilla ja siirtymisellä.",
+    "Avaa kaikki 110+ laitetta luokittain pienimmästä puhelimesta suurimpaan näyttöön.",
+    "Laajenna mikä tahansa laite ja piilota kaikki työkalut keskittymistilassa siistejä katselmointeja ja esittelyjä varten.",
+    "Mallikuva toisella puolella, live-sivu toisella. Huomaa jokainen ero yhdellä silmäyksellä.",
+    "Lisää merkintöjä kuvakaappaukseen, kopioi korjauskehote tekoälytyökaluusi tai toista käyttöpolku jokaisella laitteella."
+  ],
+  "screenshotLocale": "en"
+}

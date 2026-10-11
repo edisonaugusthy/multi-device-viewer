@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View፦ ለChrome ምላሽ ሰጪ ድር ጣቢያ ሞካሪ እና የመሣሪያ አስመሳይ",
+    "description": "ነፃ የChrome ቅጥያ፦ ምላሽ ሰጪ ድር ጣቢያዎችን በእውነተኛ የመሣሪያ ፍሬሞች ጎን ለጎን በተመሳሰለ ማሸብለል ይሞክሩ። በlocalhost ላይም ይሠራል።",
+    "ogTitle": "Mobile View፦ ጣቢያዎን በሁሉም ማያ ገጾች በአንድ ጊዜ ይመልከቱ",
+    "ogImageAlt": "Mobile View አንድ ገጽን በiPhone፣ በሚታጠፍ ስልክ፣ በMacBook እና በApple Watch ላይ ጎን ለጎን ሲያሳይ"
+  },
+  "nav": {
+    "home": "Mobile View መነሻ",
+    "main": "ዋና",
+    "tour": "ጉብኝት",
+    "reviews": "ግምገማዎች",
+    "faq": "ተደጋጋሚ ጥያቄዎች",
+    "guides": "መመሪያዎች",
+    "privacy": "ግላዊነት",
+    "github": "Mobile View በGitHub ላይ",
+    "leaveReview": "ግምገማ ይጻፉ",
+    "addToChrome": "ወደ Chrome ያክሉ",
+    "skip": "ወደ ይዘቱ ይዝለሉ"
+  },
+  "hero": {
+    "rating": "{rating} በChrome Web Store ላይ",
+    "title": "ጣቢያዎን በሁሉም ማያ ገጾች በአንድ ጊዜ ይመልከቱ።",
+    "lede": "ማንኛውንም ገጽ፣ localhostን ጨምሮ፣ በእውነተኛ ስልኮች፣ በሚታጠፉ መሣሪያዎች፣ በታብሌቶች፣ በላፕቶፖች እና በሰዓቶች ላይ የሚያሳይ ነፃ የChrome ቅጥያ። ጎን ለጎን፣ ተመሳስሎ።",
+    "install": "ወደ Chrome ያክሉ፣ ነፃ ነው",
+    "review": "ግምገማ ይጻፉ"
+  },
+  "demo": {
+    "label": "የቀጥታ ማሳያ",
+    "badge": "ቀጥታ። ማንኛውንም ማያ ገጽ ያሸብልሉ ወይም መታ ያድርጉ።",
+    "frameTitle": "የቀጥታ ማሳያ ገጽ በ{device} ላይ"
+  },
+  "facts": {
+    "label": "በአጭሩ",
+    "devicesValue": "{count}",
+    "devices": "እውነተኛ መሣሪያዎች",
+    "atOnceValue": "4 በአንድ ጊዜ",
+    "atOnce": "ጎን ለጎን",
+    "syncValue": "ተመሳስሎ",
+    "sync": "ማሸብለል፣ መታ ማድረግ እና ገጾች",
+    "privateValue": "ግላዊ",
+    "private": "መለያ የለም፣ ክትትል የለም"
+  },
+  "tour": {
+    "workspaceTitle": "አራት መሣሪያዎች። አንድ የሥራ ቦታ።",
+    "workspaceText": "ከ{count} እውነተኛ መሣሪያዎች ማንኛቸውንም አራቱን ይምረጡ እና ገጽዎን በሁሉም ላይ በአንድ ጊዜ ይመልከቱ።",
+    "workspaceAlt": "የMobile View የሥራ ቦታ አንድ ገጽን በiPhone 18 Pro፣ በታጠፈ iPhone Duo፣ በMacBook Pro 14 እና በApple Watch ላይ ጎን ለጎን ሲያሳይ",
+    "syncTitle": "አንድ ጊዜ ያሸብልሉ። ሁሉም ማያ ገጾች ይከተላሉ።",
+    "syncText": "ማሸብለል፣ ጠቅታዎች እና አሰሳ በሁሉም መሣሪያዎች ላይ ተመሳስለው ይቆያሉ።",
+    "syncAlt": "የማሸብለል እና የአሰሳ ማመሳሰል በርቶ ወደ ገጹ ተመሳሳይ ቦታ የተሸበለሉ አራት መሣሪያዎች",
+    "allTitle": "ሁሉም መሣሪያዎች። በአንድ ጠቅታ።",
+    "allText": "አንድን ሙሉ ምድብ በአንድ ጊዜ ይክፈቱ። እዚህ ከ37 iPhoneዎች 16ቱ፣ ከiPhone 5 እስከ iPhone 15 Pro።",
+    "allAlt": "የሁሉም መሣሪያዎች እይታ፦ ከiPhone 5 እና iPhone SE እስከ iPhone 15 Pro ያሉ ሁለት ረድፍ iPhoneዎች፣ እያንዳንዱ ተመሳሳይ ገጽ ሲጭን",
+    "designTitle": "ከንድፉ ጋር ያዛምዱ።",
+    "designText": "ንድፍዎን በማንኛውም መሣሪያ ላይ ካለው የቀጥታ ገጽ አጠገብ ያስቀምጡ። ጎን ለጎንም ሆነ ተደራርቦ፣ በንድፉ እና በተገነባው መካከል ያለው እያንዳንዱ ልዩነት በቀላሉ ይታያል።",
+    "designCaught": "በዚህ ንጽጽር የተገኘ",
+    "designItem1": "የርዕሱ ጽሑፍ ይለያል",
+    "designItem1Detail": "ቀጥታ፦ «Make room for your best work.» ንድፍ፦ «Room for your best work.»",
+    "designItem2": "የአዝራሩ ቅጥ ይለያል",
+    "designItem2Detail": "ቀጥታ፦ ጥቁር፣ ሹል ማዕዘኖች። ንድፍ፦ ሰማያዊ-አረንጓዴ፣ የተጠጋጋ።",
+    "designAlt": "ከንድፍ ጋር ማወዳደር፦ በiPhone 18 Pro ላይ ያለው የቀጥታ ገጽ ከንድፍ ምስሉ አጠገብ፣ የተለየ ርዕስ እና የአዝራር ቅጥ ያለው",
+    "fixTitle": "ስህተቱን ምልክት ያድርጉ። ጥገናውን ይቅዱ።",
+    "fixText": "በማያ ገጽ ፎቶ ላይ ይሳሉ፣ ከዚያ ለAI የኮድ መሣሪያዎ ዝግጁ የሆነ ጥያቄ ይቅዱ። ምንም ነገር ከኮምፒውተርዎ አይወጣም።",
+    "fixAlt": "በiPhone ላይ ያለን ርዕስ በቀስት እና በሳጥን ምልክት ያደረገ የማብራሪያ አርታዒ፣ የተጎዱ መሣሪያዎችን ከሚዘረዝረው የጥገና ጥያቄ ፓነል አጠገብ",
+    "alsoInside": "በተጨማሪም",
+    "chipRecord": "ሂደቶችን መቅዳት እና መድገም",
+    "chipFocus": "የትኩረት ሁነታ",
+    "chipRotate": "ማሽከርከር እና ማጉላት",
+    "chipCustom": "ብጁ መጠኖች",
+    "chipSets": "የተቀመጡ የመሣሪያ ስብስቦች"
+  },
+  "reviews": {
+    "title": "ሥራቸውን በሚያስረክቡ ሰዎች የተገመገመ።",
+    "outOf": "ከ5",
+    "stars": "ከ5 ኮከቦች {rating}",
+    "summary": "{count} ደረጃዎች · {users} ተጠቃሚዎች በChrome Web Store ላይ",
+    "leave": "ግምገማ ይጻፉ",
+    "readAll": "ሁሉንም ያንብቡ",
+    "source": "Chrome Web Store",
+    "empty": "Mobile Viewን ከሚገመግሙ የመጀመሪያዎቹ አንዱ ይሁኑ።"
+  },
+  "privacy": {
+    "title": "ከመሠረቱ ግላዊ።",
+    "item1": "መለያ የለም",
+    "item2": "ክትትል የለም",
+    "item3": "ገጾችዎ በአሳሽዎ ውስጥ ይቆያሉ",
+    "item4": "ክፍት ምንጭ",
+    "link": "የግላዊነት መመሪያ"
+  },
+  "faq": {
+    "title": "ጥያቄዎች።",
+    "q1": "ነፃ ነው?",
+    "a1": "አዎ። በMIT ፈቃድ ስር ነፃ እና ክፍት ምንጭ ነው፣ መለያም አያስፈልግም።",
+    "q2": "በlocalhost ላይ ይሠራል?",
+    "a2": "አዎ። የአካባቢ ገጽዎን በChrome ይክፈቱ፣ ከዚያ Mobile Viewን ይክፈቱ። ምንም ነገር ከኮምፒውተርዎ አይወጣም።",
+    "q3": "ከDevTools የመሣሪያ ሁነታ በምን ይለያል?",
+    "a3": "DevTools በአንድ ጊዜ አንድ እይታ ብቻ ያሳያል። Mobile View አራት እውነተኛ መሣሪያዎችን ጎን ለጎን፣ ተመሳስለው ያሳያል።",
+    "q4": "አንዳንድ ጣቢያዎች ለምን አይጫኑም?",
+    "a4": "አንዳንድ ጣቢያዎች በሌላ ገጽ ውስጥ እንዳይታዩ ያግዳሉ። Mobile View ይህን ያሳውቅዎታል እና በትር ውስጥ እንዲከፍቷቸው ያቀርባል።",
+    "q5": "የጥገና ጥያቄው ኮዴን ይሰቅላል?",
+    "a5": "አይ። በራስዎ የኮድ መሣሪያ ውስጥ እንዲለጥፉት በኮምፒውተርዎ ላይ ይጻፋል።"
+  },
+  "cta": {
+    "title": "በራስዎ ጣቢያ ላይ ይሞክሩት።",
+    "text": "ነፃ። መለያ የለም። በlocalhost ላይ ይሠራል።",
+    "install": "ወደ Chrome ያክሉ፣ ነፃ ነው",
+    "review": "ግምገማ ይጻፉ"
+  },
+  "footer": {
+    "blurb": "ለChrome ነፃ እና ግላዊ ምላሽ ሰጪ ሞካሪ። በMIT ፈቃድ ስር ክፍት ምንጭ።",
+    "product": "ምርት",
+    "guides": "መመሪያዎች",
+    "project": "ፕሮጀክት",
+    "tour": "ጉብኝት",
+    "reviews": "ግምገማዎች",
+    "changelog": "የለውጥ ማስታወሻ",
+    "store": "Chrome Web Store",
+    "allGuides": "ሁሉም መመሪያዎች",
+    "source": "ምንጭ ኮድ በGitHub ላይ",
+    "issue": "ችግር ሪፖርት ያድርጉ",
+    "privacy": "የግላዊነት መመሪያ",
+    "terms": "የአጠቃቀም ውል",
+    "language": "ቋንቋ",
+    "copyright": "© {year} Edison Augusthy። በMIT ፈቃድ የተሰጠ።",
+    "trademarks": "iPhone፣ iPad፣ Mac እና Apple Watch የApple Inc. የንግድ ምልክቶች ናቸው። Galaxy የSamsung፣ Pixel ደግሞ የGoogle የንግድ ምልክት ነው። የመሣሪያ ስሞች የማያ ገጽ መጠኖችን ብቻ ይገልጻሉ፤ Mobile View ከእነዚህ ኩባንያዎች ጋር ግንኙነት የለውም።"
+  }
+}

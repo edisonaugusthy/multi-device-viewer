@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: penguji laman responsif & emulator peranti Chrome",
+    "description": "Sambungan Chrome percuma untuk menguji laman web responsif dalam bingkai iPhone, Android, iPad dan Mac sebenar, dengan tatal segerak. Berfungsi di localhost.",
+    "ogTitle": "Mobile View: lihat laman anda pada semua skrin serentak",
+    "ogImageAlt": "Mobile View memaparkan satu halaman pada iPhone, telefon boleh lipat, MacBook dan Apple Watch sebelah-menyebelah"
+  },
+  "nav": {
+    "home": "Laman utama Mobile View",
+    "main": "Utama",
+    "tour": "Lawatan",
+    "reviews": "Ulasan",
+    "faq": "Soalan Lazim",
+    "guides": "Panduan",
+    "privacy": "Privasi",
+    "github": "Mobile View di GitHub",
+    "leaveReview": "Tulis ulasan",
+    "addToChrome": "Tambah ke Chrome",
+    "skip": "Langkau ke kandungan"
+  },
+  "hero": {
+    "rating": "{rating} di Chrome Web Store",
+    "title": "Lihat laman anda pada semua skrin serentak.",
+    "lede": "Sambungan Chrome percuma yang memaparkan sebarang halaman, termasuk localhost, pada telefon, peranti boleh lipat, tablet, komputer riba dan jam tangan sebenar. Sebelah-menyebelah, segerak.",
+    "install": "Tambah ke Chrome, percuma",
+    "review": "Tulis ulasan"
+  },
+  "demo": {
+    "label": "Demo langsung",
+    "badge": "Langsung. Tatal atau ketik mana-mana skrin.",
+    "frameTitle": "Halaman demo langsung pada {device}"
+  },
+  "facts": {
+    "label": "Sepintas lalu",
+    "devicesValue": "{count}",
+    "devices": "peranti sebenar",
+    "atOnceValue": "4 serentak",
+    "atOnce": "sebelah-menyebelah",
+    "syncValue": "Segerak",
+    "sync": "tatal, ketikan dan halaman",
+    "privateValue": "Peribadi",
+    "private": "tiada akaun, tiada penjejakan"
+  },
+  "tour": {
+    "workspaceTitle": "Empat peranti. Satu ruang kerja.",
+    "workspaceText": "Pilih mana-mana empat daripada {count} peranti sebenar dan lihat halaman anda pada semuanya serentak.",
+    "workspaceAlt": "Ruang kerja Mobile View memaparkan halaman pada iPhone 18 Pro, iPhone Duo dilipat, MacBook Pro 14 dan Apple Watch sebelah-menyebelah",
+    "syncTitle": "Tatal sekali. Semua skrin ikut.",
+    "syncText": "Tatal, klik dan navigasi kekal segerak merentas peranti.",
+    "syncAlt": "Empat peranti ditatal ke titik yang sama pada halaman dengan penyegerakan tatal dan navigasi dihidupkan",
+    "allTitle": "Semua peranti. Satu klik.",
+    "allText": "Buka seluruh kategori sekali gus. Di sini, 16 daripada 37 iPhone, dari iPhone 5 hingga iPhone 15 Pro.",
+    "allAlt": "Paparan semua peranti dengan dua baris iPhone, dari iPhone 5 dan iPhone SE hingga iPhone 15 Pro, masing-masing memuatkan halaman yang sama",
+    "designTitle": "Padankan dengan reka bentuk.",
+    "designText": "Letakkan mockup anda di sebelah halaman langsung pada mana-mana peranti. Sebelah-menyebelah atau bertindih, setiap perbezaan antara reka bentuk dan binaan mudah dikesan.",
+    "designCaught": "Dikesan dalam perbandingan ini",
+    "designItem1": "Teks tajuk berbeza",
+    "designItem1Detail": "Langsung: “Make room for your best work.” Reka bentuk: “Room for your best work.”",
+    "designItem2": "Gaya butang berbeza",
+    "designItem2Detail": "Langsung: gelap, bucu tajam. Reka bentuk: pil hijau kebiruan.",
+    "designAlt": "Bandingkan dengan reka bentuk: halaman langsung pada iPhone 18 Pro di sebelah imej reka bentuk, dengan tajuk dan gaya butang yang berbeza",
+    "fixTitle": "Tandakan pepijat. Salin pembaikan.",
+    "fixText": "Lukis pada tangkapan skrin, kemudian salin gesaan siap guna untuk alat pengekodan AI anda. Tiada apa yang keluar dari komputer anda.",
+    "fixAlt": "Editor anotasi dengan anak panah dan kotak menandakan tajuk pada iPhone, di sebelah panel gesaan pembaikan yang menyenaraikan peranti terjejas",
+    "alsoInside": "Turut disertakan",
+    "chipRecord": "Rakam dan main semula aliran",
+    "chipFocus": "Mod fokus",
+    "chipRotate": "Putar dan zum",
+    "chipCustom": "Saiz tersuai",
+    "chipSets": "Set peranti disimpan"
+  },
+  "reviews": {
+    "title": "Dinilai oleh mereka yang menghasilkan.",
+    "outOf": "daripada 5",
+    "stars": "{rating} daripada 5 bintang",
+    "summary": "{count} penilaian · {users} pengguna di Chrome Web Store",
+    "leave": "Tulis ulasan",
+    "readAll": "Baca semua",
+    "source": "Chrome Web Store",
+    "empty": "Jadilah antara yang pertama mengulas Mobile View."
+  },
+  "privacy": {
+    "title": "Privasi sejak awal.",
+    "item1": "Tiada akaun",
+    "item2": "Tiada penjejakan",
+    "item3": "Halaman anda kekal dalam pelayar anda",
+    "item4": "Sumber terbuka",
+    "link": "Dasar privasi"
+  },
+  "faq": {
+    "title": "Soalan.",
+    "q1": "Adakah ia percuma?",
+    "a1": "Ya. Percuma dan sumber terbuka di bawah lesen MIT, tanpa akaun.",
+    "q2": "Adakah ia berfungsi di localhost?",
+    "a2": "Ya. Buka halaman tempatan anda dalam Chrome, kemudian buka Mobile View. Tiada apa yang keluar dari komputer anda.",
+    "q3": "Apakah bezanya dengan mod peranti DevTools?",
+    "a3": "DevTools memaparkan satu port pandangan pada satu masa. Mobile View memaparkan empat peranti sebenar sebelah-menyebelah, sentiasa segerak.",
+    "q4": "Mengapa sesetengah laman tidak dimuatkan?",
+    "a4": "Sesetengah laman menyekat paparan di dalam halaman lain. Mobile View akan memaklumkan anda dan menawarkan untuk membukanya dalam tab.",
+    "q5": "Adakah gesaan pembaikan memuat naik kod saya?",
+    "a5": "Tidak. Ia dijana pada komputer anda untuk anda tampal ke dalam alat pengekodan anda sendiri."
+  },
+  "cta": {
+    "title": "Cuba pada laman anda sendiri.",
+    "text": "Percuma. Tiada akaun. Berfungsi di localhost.",
+    "install": "Tambah ke Chrome, percuma",
+    "review": "Tulis ulasan"
+  },
+  "footer": {
+    "blurb": "Penguji responsif percuma dan peribadi untuk Chrome. Sumber terbuka di bawah lesen MIT.",
+    "product": "Produk",
+    "guides": "Panduan",
+    "project": "Projek",
+    "tour": "Lawatan",
+    "reviews": "Ulasan",
+    "changelog": "Log perubahan",
+    "store": "Chrome Web Store",
+    "allGuides": "Semua panduan",
+    "source": "Kod sumber di GitHub",
+    "issue": "Laporkan isu",
+    "privacy": "Dasar privasi",
+    "terms": "Terma penggunaan",
+    "language": "Bahasa",
+    "copyright": "© {year} Edison Augusthy. Berlesen MIT.",
+    "trademarks": "iPhone, iPad, Mac dan Apple Watch ialah tanda dagangan Apple Inc. Galaxy ialah tanda dagangan Samsung; Pixel pula tanda dagangan Google. Nama peranti hanya menggambarkan saiz skrin; Mobile View tidak bergabung dengan syarikat-syarikat ini."
+  }
+}

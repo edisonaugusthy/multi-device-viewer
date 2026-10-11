@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Kipima tovuti sikivu na kiigaji cha vifaa kwa Chrome",
+    "description": "Kiendelezi cha bure cha Chrome: jaribu tovuti sikivu kwenye fremu halisi za iPhone, Android na iPad, kusogeza kukisawazishwa. Hufanya kazi kwenye localhost.",
+    "ogTitle": "Mobile View: ona tovuti yako kwenye kila skrini kwa wakati mmoja",
+    "ogImageAlt": "Mobile View ikionyesha ukurasa mmoja kwenye iPhone, simu inayokunjika, MacBook na Apple Watch kando kwa kando"
+  },
+  "nav": {
+    "home": "Ukurasa wa nyumbani wa Mobile View",
+    "main": "Kuu",
+    "tour": "Ziara",
+    "reviews": "Maoni",
+    "faq": "Maswali",
+    "guides": "Miongozo",
+    "privacy": "Faragha",
+    "github": "Mobile View kwenye GitHub",
+    "leaveReview": "Toa maoni",
+    "addToChrome": "Ongeza kwenye Chrome",
+    "skip": "Ruka hadi maudhui"
+  },
+  "hero": {
+    "rating": "{rating} kwenye Chrome Web Store",
+    "title": "Ona tovuti yako kwenye kila skrini kwa pamoja.",
+    "lede": "Kiendelezi cha bure cha Chrome kinachoonyesha ukurasa wowote, hata localhost, kwenye simu, vifaa vinavyokunjika, tableti, kompyuta mpakato na saa halisi. Kando kwa kando, kwa usawazisho.",
+    "install": "Ongeza kwenye Chrome, ni bure",
+    "review": "Toa maoni"
+  },
+  "demo": {
+    "label": "Onyesho la moja kwa moja",
+    "badge": "Moja kwa moja. Sogeza au gusa skrini yoyote.",
+    "frameTitle": "Ukurasa wa onyesho la moja kwa moja kwenye {device}"
+  },
+  "facts": {
+    "label": "Kwa ufupi",
+    "devicesValue": "{count}",
+    "devices": "vifaa halisi",
+    "atOnceValue": "4 kwa pamoja",
+    "atOnce": "kando kwa kando",
+    "syncValue": "Vimesawazishwa",
+    "sync": "kusogeza, kugusa na kurasa",
+    "privateValue": "Faragha",
+    "private": "bila akaunti, bila ufuatiliaji"
+  },
+  "tour": {
+    "workspaceTitle": "Vifaa vinne. Eneo moja la kazi.",
+    "workspaceText": "Chagua vifaa vyovyote vinne kati ya {count} halisi na uone ukurasa wako kwenye vyote kwa pamoja.",
+    "workspaceAlt": "Eneo la kazi la Mobile View likionyesha ukurasa kwenye iPhone 18 Pro, iPhone Duo iliyokunjwa, MacBook Pro 14 na Apple Watch kando kwa kando",
+    "syncTitle": "Sogeza mara moja. Kila skrini inafuata.",
+    "syncText": "Kusogeza, kubofya na urambazaji hubaki vimesawazishwa kwenye vifaa vyote.",
+    "syncAlt": "Vifaa vinne vimesogezwa hadi sehemu moja ya ukurasa, usawazishaji wa kusogeza na urambazaji ukiwa umewashwa",
+    "allTitle": "Kila kifaa. Bofya mara moja.",
+    "allText": "Fungua kundi zima kwa wakati mmoja. Hapa, iPhone 16 kati ya 37, kuanzia iPhone 5 hadi iPhone 15 Pro.",
+    "allAlt": "Mwonekano wa vifaa vyote ukionyesha safu mbili za iPhone, kuanzia iPhone 5 na iPhone SE hadi iPhone 15 Pro, kila moja ikipakia ukurasa uleule",
+    "designTitle": "Linganisha na muundo.",
+    "designText": "Weka mchoro wako kando ya ukurasa halisi kwenye kifaa chochote. Kando kwa kando au juu kwa juu, kila tofauti kati ya muundo na kilichojengwa inaonekana wazi.",
+    "designCaught": "Imegunduliwa katika ulinganisho huu",
+    "designItem1": "Maandishi ya kichwa yanatofautiana",
+    "designItem1Detail": "Halisi: \"Make room for your best work.\" Muundo: \"Room for your best work.\"",
+    "designItem2": "Mtindo wa kitufe unatofautiana",
+    "designItem2Detail": "Halisi: cheusi, pembe mraba. Muundo: kidonge cha samawati-kijani.",
+    "designAlt": "Linganisha na muundo: ukurasa halisi kwenye iPhone 18 Pro kando ya picha ya muundo, ukiwa na kichwa na mtindo wa kitufe tofauti",
+    "fixTitle": "Weka alama kwenye hitilafu. Nakili suluhisho.",
+    "fixText": "Chora juu ya picha ya skrini, kisha nakili maelekezo yaliyo tayari kwa zana yako ya kuandika msimbo ya AI. Hakuna kinachotoka kwenye kompyuta yako.",
+    "fixAlt": "Kihariri cha maelezo chenye mshale na kisanduku kinachoweka alama kwenye kichwa kwenye iPhone, kando ya paneli ya maelekezo ya suluhisho inayoorodhesha vifaa vilivyoathirika",
+    "alsoInside": "Pia ndani",
+    "chipRecord": "Rekodi na rudia mitiririko",
+    "chipFocus": "Hali ya umakini",
+    "chipRotate": "Zungusha na kuza",
+    "chipCustom": "Ukubwa maalum",
+    "chipSets": "Seti za vifaa zilizohifadhiwa"
+  },
+  "reviews": {
+    "title": "Imekadiriwa na wanaozindua bidhaa.",
+    "outOf": "kati ya 5",
+    "stars": "Nyota {rating} kati ya 5",
+    "summary": "Ukadiriaji {count} · watumiaji {users} kwenye Chrome Web Store",
+    "leave": "Toa maoni",
+    "readAll": "Soma yote",
+    "source": "Chrome Web Store",
+    "empty": "Kuwa miongoni mwa wa kwanza kukadiria Mobile View."
+  },
+  "privacy": {
+    "title": "Faragha tangu mwanzo.",
+    "item1": "Bila akaunti",
+    "item2": "Bila ufuatiliaji",
+    "item3": "Kurasa zako hubaki kwenye kivinjari chako",
+    "item4": "Programu huria",
+    "link": "Sera ya faragha"
+  },
+  "faq": {
+    "title": "Maswali.",
+    "q1": "Je, ni bure?",
+    "a1": "Ndiyo. Bure na huria chini ya leseni ya MIT, bila akaunti.",
+    "q2": "Je, inafanya kazi kwenye localhost?",
+    "a2": "Ndiyo. Fungua ukurasa wako wa ndani kwenye Chrome, kisha fungua Mobile View. Hakuna kinachotoka kwenye kompyuta yako.",
+    "q3": "Inatofautianaje na hali ya kifaa ya DevTools?",
+    "a3": "DevTools huonyesha eneo moja la mwonekano kwa wakati mmoja. Mobile View huonyesha vifaa vinne halisi kando kwa kando, vikiwa vimesawazishwa.",
+    "q4": "Kwa nini baadhi ya tovuti hazipakii?",
+    "a4": "Baadhi ya tovuti huzuia kuonyeshwa ndani ya ukurasa mwingine. Mobile View hukujulisha na hujitolea kuzifungua kwenye kichupo.",
+    "q5": "Je, maelekezo ya suluhisho hupakia msimbo wangu?",
+    "a5": "Hapana. Huandikwa kwenye kompyuta yako ili uyabandike kwenye zana yako mwenyewe ya kuandika msimbo."
+  },
+  "cta": {
+    "title": "Ijaribu kwenye tovuti yako.",
+    "text": "Bure. Bila akaunti. Inafanya kazi kwenye localhost.",
+    "install": "Ongeza kwenye Chrome, ni bure",
+    "review": "Toa maoni"
+  },
+  "footer": {
+    "blurb": "Kipima tovuti sikivu cha bure na cha faragha kwa Chrome. Huria chini ya leseni ya MIT.",
+    "product": "Bidhaa",
+    "guides": "Miongozo",
+    "project": "Mradi",
+    "tour": "Ziara",
+    "reviews": "Maoni",
+    "changelog": "Kumbukumbu ya mabadiliko",
+    "store": "Chrome Web Store",
+    "allGuides": "Miongozo yote",
+    "source": "Msimbo chanzo kwenye GitHub",
+    "issue": "Ripoti tatizo",
+    "privacy": "Sera ya faragha",
+    "terms": "Masharti ya matumizi",
+    "language": "Lugha",
+    "copyright": "© {year} Edison Augusthy. Leseni ya MIT.",
+    "trademarks": "iPhone, iPad, Mac na Apple Watch ni alama za biashara za Apple Inc. Galaxy ni alama ya biashara ya Samsung; Pixel ni ya Google. Majina ya vifaa yanaelezea ukubwa wa skrini pekee; Mobile View haihusiani na kampuni hizi."
+  }
+}

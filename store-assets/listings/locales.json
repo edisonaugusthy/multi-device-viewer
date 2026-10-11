@@ -1,0 +1,1437 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-10-11",
+  "copyPolicy": "Original Mobile View copy. Equivalent feature coverage; native-language review is recommended before publication.",
+  "locales": [
+    {
+      "locale": "en",
+      "storeLocale": "en",
+      "language": "English",
+      "name": "Mobile View: Device Emulator & Responsive Tester",
+      "summary": "Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots.",
+      "description": "Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.\n\n- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.\n- Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.\n- Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.\n- Save device sets and favorites for repeat responsive testing.\n- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.\n- Compare the live website with a local design reference, side by side or as an overlay.\n- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.\n\nOpen a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.\n\nNo Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.\n\nThese are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.",
+      "screenshotCaptions": [
+        "Every screen, side by side.",
+        "Every device. One click.",
+        "Focus on one screen.",
+        "Match the design, pixel for pixel.",
+        "Mark the bug. Record the flow."
+      ],
+      "screenshotSubtitles": [
+        "Real device frames with synced scroll, clicks and navigation.",
+        "Open all 110+ devices by category, from the smallest phone to the largest screen.",
+        "Expand any device, then hide every tool in focus mode for clean reviews and demos.",
+        "Your mockup on one side, the live page on the other. Spot every difference at a glance.",
+        "Annotate a screenshot, copy a fix prompt for your AI tool, or replay a user flow on every device."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "editor-reviewed",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "de",
+      "storeLocale": "de",
+      "language": "Deutsch",
+      "name": "Mobile View: Responsiver Geräte-Emulator",
+      "summary": "Mobiler Simulator für responsive Webdesign-Tests. Vergleiche Geräteansichten, synchronisiere Scrollen und mache Screenshots.",
+      "description": "Mobile View ist ein kostenloses Open-Source-Tool zum Testen responsiver Websites in Chrome. Vergleiche bis zu vier Ansichten nebeneinander, darunter eine mobile Vorschau, um Menüs, Text und Abstände zu prüfen.\n\n- Öffne alle Geräte mit einem Klick. Die Vorschauen sind nach Gerätetyp gruppiert und von kleinen zu großen Bildschirmen sortiert.\n- Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.\n- Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.\n- Für wiederholte Tests responsiver Layouts speichere Gerätesets, Favoriten und zuletzt verwendete Geräte oder fokussiere eine einzelne Ansicht.\n- Erfasse eine Ansicht oder den gesamten Arbeitsbereich und ergänze Stift, Rahmen, Pfeile, Text oder Zuschnitt.\n- Vergleiche einen lokalen Entwurf neben oder über der Live-Website und markiere Feedback ohne Upload.\n- Kopiere einen strukturierten Prompt zur Behebung responsiver Fehler mit URL, Geräten, Viewport-Größen und optionalen Problemdetails.\n\nAlles läuft lokal im Browser. Kein Konto, Abonnement, Analyse-, Telemetrie- oder Anwendungs-Backend ist erforderlich. URLs, Screenshots, Aufnahmen, Entwürfe, Anmerkungen und Einstellungen werden nicht an ein Backend gesendet.\n\nDies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emulation. Anmelde- und Einbettungsregeln der Websites gelten weiter. Die Originalseite bleibt erhalten; neue Vorschauen übernehmen keine ungespeicherten Änderungen.",
+      "screenshotCaptions": [
+        "Alle Bildschirme nebeneinander.",
+        "Alle Geräte. Ein Klick.",
+        "Fokus auf einen Bildschirm.",
+        "Pixelgenau wie das Design.",
+        "Fehler markieren. Abläufe aufnehmen."
+      ],
+      "screenshotSubtitles": [
+        "Echte Geräterahmen mit synchronem Scrollen, Klicks und Navigation.",
+        "Öffne alle 110+ Geräte nach Kategorie – vom kleinsten Handy bis zum größten Bildschirm.",
+        "Vergrößere ein Gerät und blende im Fokusmodus alle Werkzeuge aus – ideal für Reviews und Demos.",
+        "Links dein Entwurf, rechts die Live-Seite. Jeden Unterschied auf einen Blick erkennen.",
+        "Screenshot kommentieren, Fix-Prompt für dein KI-Tool kopieren oder einen Benutzerablauf auf allen Geräten wiederholen."
+      ],
+      "screenshotLocale": "de",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "es",
+      "storeLocale": "es",
+      "language": "Español",
+      "name": "Mobile View: Emulador móvil y prueba responsive",
+      "summary": "Simulador móvil para probar diseños responsive. Compara vistas de dispositivos, sincroniza el desplazamiento y captura pantallas.",
+      "description": "Mobile View es una herramienta gratuita y de código abierto para probar sitios web adaptables en Chrome. Compara hasta cuatro vistas en paralelo, incluida una vista previa móvil, para revisar menús, texto y espaciado.\n\n- Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.\n- Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.\n- Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.\n- Para repetir las pruebas de diseño adaptable, guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.\n- Captura una vista o todo el espacio de trabajo y añade trazos, cuadros, flechas, texto o recortes.\n- Compara un diseño local junto a la web activa o superpuesto sobre ella y marca comentarios sin subirlo.\n- Copia a tu herramienta de programación un prompt estructurado con la URL, dispositivos, tamaños y detalles opcionales del problema.\n\nTodo funciona localmente en el navegador. No requiere cuenta, suscripción, analítica, telemetría ni backend. Las URL, capturas, grabaciones, diseños, anotaciones y ajustes no se envían a ningún servidor.\n\nSon vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari. Siguen vigentes las reglas de acceso e integración de cada sitio. La página original se conserva; las nuevas vistas no copian cambios sin guardar.",
+      "screenshotCaptions": [
+        "Todas las pantallas, lado a lado.",
+        "Todos los dispositivos. Un clic.",
+        "Céntrate en una pantalla.",
+        "Igual que el diseño, píxel a píxel.",
+        "Marca el error. Graba el flujo."
+      ],
+      "screenshotSubtitles": [
+        "Marcos de dispositivos reales con desplazamiento, clics y navegación sincronizados.",
+        "Abre más de 110 dispositivos por categoría, del móvil más pequeño a la pantalla más grande.",
+        "Amplía cualquier dispositivo y oculta todas las herramientas en el modo enfoque para revisiones y demos limpias.",
+        "Tu diseño a un lado y la página en vivo al otro. Detecta cada diferencia de un vistazo.",
+        "Anota una captura, copia un prompt de corrección para tu herramienta de IA o repite un flujo de usuario en todos los dispositivos."
+      ],
+      "screenshotLocale": "es",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "fr",
+      "storeLocale": "fr",
+      "language": "Français",
+      "name": "Mobile View : Émulateur mobile et test responsive",
+      "summary": "Simulateur mobile pour tester le design responsive. Comparez les vues, synchronisez le défilement et faites des captures.",
+      "description": "Mobile View est un outil gratuit et open source pour tester des sites web adaptatifs dans Chrome. Comparez jusqu’à quatre vues côte à côte, dont un aperçu mobile, pour vérifier les menus, le texte et les espacements.\n\n- Affichez tous les appareils en un clic. Les aperçus sont regroupés par type d’appareil et classés du plus petit au plus grand écran.\n- Choisissez des appareils réalistes, modifiez l’orientation et le zoom, rechargez une vue ou créez des dimensions personnalisées.\n- Synchronisez le défilement, les interactions prises en charge et la navigation entre les aperçus correspondants.\n- Pour répéter vos tests de mise en page adaptative, enregistrez des ensembles, favoris et appareils récents, ou concentrez-vous sur une seule vue.\n- Capturez une vue ou tout l’espace de travail, puis ajoutez tracés, cadres, flèches, texte et recadrage.\n- Comparez une maquette locale à côté ou au-dessus du site et annotez-la sans l’envoyer.\n- Copiez vers votre outil de développement un prompt structuré contenant URL, appareils, dimensions et détails facultatifs du problème.\n\nTout fonctionne localement dans le navigateur. Aucun compte, abonnement, service d’analyse, télémétrie ou backend n’est requis. Les URL, captures, enregistrements, maquettes, annotations et réglages ne sont envoyés à aucun serveur.\n\nCes aperçus responsive utilisent Chrome, pas des appareils physiques ni le moteur Safari. Les règles de connexion et d’intégration des sites restent applicables. La page d’origine est préservée ; les nouveaux aperçus ne copient pas les modifications non enregistrées.",
+      "screenshotCaptions": [
+        "Tous les écrans, côte à côte.",
+        "Tous les appareils. Un clic.",
+        "Concentrez-vous sur un écran.",
+        "Fidèle au design, au pixel près.",
+        "Signalez le bug. Enregistrez le parcours."
+      ],
+      "screenshotSubtitles": [
+        "De vrais cadres d’appareils avec défilement, clics et navigation synchronisés.",
+        "Ouvrez plus de 110 appareils par catégorie, du plus petit téléphone au plus grand écran.",
+        "Agrandissez un appareil, puis masquez tous les outils en mode focus pour des revues et démos épurées.",
+        "Votre maquette d’un côté, la page en direct de l’autre. Repérez chaque différence d’un coup d’œil.",
+        "Annotez une capture, copiez un prompt de correction pour votre outil d’IA ou rejouez un parcours sur tous les appareils."
+      ],
+      "screenshotLocale": "fr",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "zh_CN",
+      "storeLocale": "zh-CN",
+      "language": "简体中文",
+      "name": "Mobile View：移动设备模拟器与响应式测试",
+      "summary": "移动模拟器与响应式设计测试工具：并排对比设备预览，同步滚动，截取并标注屏幕画面。",
+      "description": "Mobile View 是一款免费、开源的 Chrome 响应式网站测试工具。并排比较最多四个视图，包括移动端预览，以检查菜单、文字和间距。\n\n- 一键查看所有设备。预览按设备类型分组，并按屏幕尺寸从小到大排列。\n- 选择真实设备，切换方向与缩放，单独刷新预览，或创建自定义视口尺寸。\n- 在匹配的预览之间同步滚动、受支持的交互和页面导航。\n- 重复进行响应式测试时，保存设备组合、收藏和最近使用的设备，也可聚焦单个视口进行细致检查。\n- 截取单个视口或整个工作区，并使用画笔、方框、箭头、文字和裁剪工具标注。\n- 将本地设计稿放在实时网站旁边或叠加显示，无需上传即可标记反馈。\n- 将包含网址、设备、视口尺寸和可选问题说明的结构化修复提示复制到编程工具。\n\n所有功能均在浏览器本地运行，无需账户、订阅、分析、遥测或应用后端。网址、截图、录屏、设计稿、标注和设置都不会发送到后端。\n\n这些是使用 Chrome 的响应式视口预览，并非真机或 Safari 引擎模拟。网站的登录和嵌入规则仍适用。原始页面保持不变；新预览不会复制未保存的编辑。",
+      "screenshotCaptions": [
+        "所有屏幕，并排呈现。",
+        "所有设备，一键打开。",
+        "专注于一块屏幕。",
+        "与设计稿逐像素比对。",
+        "标出问题，录下流程。"
+      ],
+      "screenshotSubtitles": [
+        "真实设备外框，滚动、点击和页面跳转全部同步。",
+        "按类别打开 110 多款设备，从最小的手机到最大的屏幕。",
+        "放大任意设备，再用专注模式隐藏所有工具，评审和演示更清爽。",
+        "一边是设计稿，一边是实时页面，差异一目了然。",
+        "为截图添加标注，复制给 AI 工具的修复提示词，或在所有设备上重放用户流程。"
+      ],
+      "screenshotLocale": "zh_CN",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "zh_TW",
+      "storeLocale": "zh-TW",
+      "language": "繁體中文",
+      "name": "Mobile View：行動裝置模擬器與響應式測試",
+      "summary": "行動模擬器與響應式設計測試工具：並排比較裝置預覽，同步捲動，擷取畫面並註記問題。",
+      "description": "Mobile View 是免費、開源的 Chrome 響應式網站測試工具。並排比較最多四個檢視，包括行動版預覽，以檢查選單、文字與間距。\n\n- 一鍵查看所有裝置。預覽依裝置類型分組，並按螢幕尺寸由小到大排列。\n- 選擇真實裝置、切換方向與縮放、個別重新載入預覽，或建立自訂視區尺寸。\n- 在相符的預覽之間同步捲動、支援的互動與頁面導覽。\n- 重複進行響應式測試時，儲存裝置組合、收藏與最近使用的裝置，或聚焦單一視區進行詳細檢查。\n- 擷取單一視區或完整工作區，並以畫筆、方框、箭頭、文字及裁切工具標註。\n- 將本機設計稿放在即時網站旁或疊加顯示，不需上傳即可標記意見。\n- 將包含網址、裝置、視區尺寸與選填問題說明的結構化修正提示複製到程式開發工具。\n\n所有功能都在瀏覽器本機執行，不需要帳戶、訂閱、分析、遙測或應用程式後端。網址、螢幕截圖、錄影、設計稿、標註與設定不會傳送到後端。\n\n這些是使用 Chrome 的響應式檢視區預覽，並非實機或 Safari 引擎模擬。網站的登入與嵌入規則仍適用。原始頁面保持不變；新預覽不會複製未儲存的編輯。",
+      "screenshotCaptions": [
+        "所有螢幕，並排呈現。",
+        "所有裝置，一鍵開啟。",
+        "專注於單一螢幕。",
+        "對照設計稿，分毫不差。",
+        "標出錯誤，錄下流程。"
+      ],
+      "screenshotSubtitles": [
+        "真實裝置外框，同步捲動、點擊與頁面導覽。",
+        "依類別開啟全部 110+ 種裝置，從最小的手機到最大的螢幕。",
+        "放大任一裝置，再以專注模式隱藏所有工具，審查與展示都更清爽。",
+        "一邊是設計稿，一邊是即時頁面，所有差異一眼看出。",
+        "標註螢幕截圖、為 AI 工具複製修正提示，或在每部裝置上重播使用者流程。"
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "fil",
+      "storeLocale": "fil",
+      "language": "Filipino",
+      "name": "Mobile View: Device Emulator at Responsive Tester",
+      "summary": "Mobile simulator at responsive design tester. Ihambing ang mga device view, i-sync ang pag-scroll at kumuha ng screenshot.",
+      "description": "Ang Mobile View ay libre at open-source na tool para sa pagsusuri ng responsive na website sa Chrome. Ihambing ang hanggang apat na view nang magkatabi, kasama ang mobile preview, para suriin ang mga menu, teksto, at pagitan.\n\n- Buksan ang lahat ng device sa isang click. Nakapangkat ang mga preview ayon sa uri ng device at nakaayos mula sa mas maliit hanggang sa mas malaking screen.\n- Pumili ng makatotohanang device, baguhin ang orientation at zoom, i-reload ang isang preview, o gumawa ng custom viewport.\n- I-sync ang pag-scroll, suportadong interaction, at navigation sa magkatugmang preview.\n- Para sa paulit-ulit na responsive testing, mag-save ng device set, paborito, at recent device, o tumutok sa isang viewport.\n- Kunan ang isang viewport o buong workspace at lagyan ng pen, kahon, arrow, text, o crop.\n- Ikumpara ang lokal na design sa tabi o ibabaw ng live website at magmarka ng feedback nang walang upload.\n- Kumopya ng structured fix prompt na may URL, device, viewport size, at opsyonal na detalye papunta sa coding tool.\n\nLahat ay lokal na tumatakbo sa browser. Walang account, subscription, analytics, telemetry, o application backend. Hindi ipinapadala sa backend ang URL, screenshot, recording, design, annotation, o setting.\n\nMga responsive viewport preview ito sa Chrome, hindi totoong device o Safari engine. Nalalapat pa rin ang mga tuntunin ng site sa pag-sign in at pag-embed. Mananatili ang orihinal na pahina; hindi kinokopya ng bagong preview ang hindi na-save na pagbabago.",
+      "screenshotCaptions": [
+        "Bawat screen, magkakatabi.",
+        "Bawat device. Isang click.",
+        "Tumutok sa isang screen.",
+        "Tugma sa design, pixel por pixel.",
+        "Markahan ang bug. I-record ang flow."
+      ],
+      "screenshotSubtitles": [
+        "Totoong device frame na may naka-sync na scroll, click, at navigation.",
+        "Buksan ang lahat ng 110+ device ayon sa kategorya, mula sa pinakamaliit na phone hanggang sa pinakamalaking screen.",
+        "Palakihin ang anumang device, saka itago ang lahat ng tool sa focus mode para sa malinis na review at demo.",
+        "Ang mockup mo sa isang panig, ang live page sa kabila. Makita agad ang bawat pagkakaiba.",
+        "Mag-annotate ng screenshot, kopyahin ang fix prompt para sa iyong AI tool, o i-replay ang user flow sa bawat device."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "nl",
+      "storeLocale": "nl",
+      "language": "Nederlands",
+      "name": "Mobile View: Apparaatemulator & responsive tester",
+      "summary": "Mobiele simulator voor responsive designtests. Vergelijk apparaatweergaven, synchroniseer scrollen en maak screenshots.",
+      "description": "Mobile View is een gratis opensource hulpmiddel om responsieve websites in Chrome te testen. Vergelijk maximaal vier weergaven naast elkaar, waaronder een mobiele preview, om menu’s, tekst en witruimte te controleren.\n\n- Open alle apparaten met één klik. De voorbeelden zijn gegroepeerd op apparaattype en gesorteerd van kleine naar grote schermen.\n- Kies realistische apparaten, wijzig oriëntatie en zoom, laad één voorbeeld opnieuw of maak aangepaste viewportformaten.\n- Synchroniseer scrollen, ondersteunde interacties en navigatie tussen overeenkomende voorbeelden.\n- Voor herhaalde tests van responsieve lay-outs bewaar apparaatsets, favorieten en recente apparaten, of focus één viewport voor een detailcontrole.\n- Leg één viewport of de volledige werkruimte vast en voeg pen, kader, pijl, tekst of uitsnede toe.\n- Vergelijk een lokaal ontwerp naast of over de live website en markeer feedback zonder upload.\n- Kopieer een gestructureerde herstelprompt met URL, apparaten, viewportformaten en optionele probleeminformatie naar je codeertool.\n\nAlles draait lokaal in de browser. Geen account, abonnement, analyse, telemetrie of applicatiebackend nodig. URL’s, screenshots, opnamen, ontwerpen, aantekeningen en instellingen worden niet naar een backend gestuurd.\n\nDit zijn responsive previews in Chrome, geen fysieke apparaten of Safari-engine. De aanmeld- en insluitregels van websites blijven gelden. De oorspronkelijke pagina blijft intact; nieuwe previews kopiëren geen onopgeslagen wijzigingen.",
+      "screenshotCaptions": [
+        "Elk scherm, naast elkaar.",
+        "Elk apparaat. Eén klik.",
+        "Focus op één scherm.",
+        "Pixelperfect volgens ontwerp.",
+        "Markeer de bug. Neem de flow op."
+      ],
+      "screenshotSubtitles": [
+        "Echte apparaatframes met gesynchroniseerd scrollen, klikken en navigeren.",
+        "Open alle 110+ apparaten per categorie, van de kleinste telefoon tot het grootste scherm.",
+        "Vergroot elk apparaat en verberg in de focusmodus alle tools voor strakke reviews en demo’s.",
+        "Je mockup aan de ene kant, de live pagina aan de andere. Zie elk verschil in één oogopslag.",
+        "Annoteer een screenshot, kopieer een fixprompt voor je AI-tool of speel een gebruikersflow af op elk apparaat."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "vi",
+      "storeLocale": "vi",
+      "language": "Tiếng Việt",
+      "name": "Mobile View: Trình giả lập thiết bị & kiểm thử responsive",
+      "summary": "Mô phỏng di động và kiểm thử thiết kế responsive. So sánh các màn hình, đồng bộ cuộn và chụp màn hình.",
+      "description": "Mobile View là công cụ miễn phí, mã nguồn mở để kiểm thử website có bố cục thích ứng trong Chrome. So sánh tối đa bốn chế độ xem cạnh nhau, gồm bản xem trước trên di động, để kiểm tra menu, văn bản và khoảng cách.\n\n- Mở tất cả thiết bị chỉ với một cú nhấp. Các bản xem trước được nhóm theo loại thiết bị và sắp xếp từ màn hình nhỏ đến lớn.\n- Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.\n- Đồng bộ cuộn, tương tác được hỗ trợ và điều hướng giữa các bản xem trước phù hợp.\n- Để lặp lại việc kiểm thử bố cục thích ứng, lưu bộ thiết bị, mục yêu thích và thiết bị gần đây, hoặc tập trung vào một viewport.\n- Chụp một viewport hoặc toàn bộ không gian làm việc rồi thêm nét vẽ, khung, mũi tên, chữ và cắt ảnh.\n- So sánh thiết kế cục bộ bên cạnh hoặc phủ lên trang web trực tiếp và đánh dấu phản hồi mà không cần tải lên.\n- Sao chép prompt sửa lỗi có cấu trúc gồm URL, thiết bị, kích thước viewport và thông tin tùy chọn sang công cụ lập trình.\n\nMọi thứ chạy cục bộ trong trình duyệt. Không cần tài khoản, thuê bao, phân tích, đo từ xa hay backend ứng dụng. URL, ảnh chụp, bản ghi, thiết kế, chú thích và cài đặt không được gửi đến backend.\n\nĐây là bản xem trước viewport responsive bằng Chrome, không phải thiết bị thật hay bộ máy Safari. Quy tắc đăng nhập và nhúng của trang web vẫn áp dụng. Trang gốc được giữ nguyên; bản xem trước mới không sao chép thay đổi chưa lưu.",
+      "screenshotCaptions": [
+        "Mọi màn hình, đặt cạnh nhau.",
+        "Mọi thiết bị. Một cú nhấp.",
+        "Tập trung vào một màn hình.",
+        "Khớp thiết kế đến từng pixel.",
+        "Đánh dấu lỗi. Ghi lại thao tác."
+      ],
+      "screenshotSubtitles": [
+        "Khung thiết bị thật, đồng bộ cuộn, nhấp và điều hướng.",
+        "Mở toàn bộ 110+ thiết bị theo danh mục, từ điện thoại nhỏ nhất đến màn hình lớn nhất.",
+        "Phóng to bất kỳ thiết bị nào, rồi ẩn mọi công cụ ở chế độ tập trung để duyệt và demo gọn gàng.",
+        "Bản mockup một bên, trang trực tiếp một bên. Nhận ra mọi khác biệt chỉ trong nháy mắt.",
+        "Chú thích ảnh chụp màn hình, sao chép prompt sửa lỗi cho công cụ AI, hoặc phát lại luồng thao tác của người dùng trên mọi thiết bị."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "pt_BR",
+      "storeLocale": "pt-BR",
+      "language": "Português (Brasil)",
+      "name": "Mobile View: Emulador móvel e teste responsivo",
+      "summary": "Simulador móvel para testar design responsivo. Compare telas de dispositivos, sincronize a rolagem e faça capturas.",
+      "description": "O Mobile View é uma ferramenta gratuita e de código aberto para testar sites responsivos no Chrome. Compare até quatro telas lado a lado, incluindo uma prévia para celular, para verificar menus, textos e espaçamento.\n\n- Abra todos os dispositivos com um clique. As visualizações são agrupadas por tipo de dispositivo e ordenadas das telas menores às maiores.\n- Escolha dispositivos realistas, altere orientação e zoom, recarregue uma visualização ou crie tamanhos personalizados.\n- Sincronize rolagem, interações compatíveis e navegação entre visualizações correspondentes.\n- Para repetir os testes de layout responsivo, salve conjuntos, favoritos e dispositivos recentes ou foque em uma tela para revisão detalhada.\n- Capture uma tela ou todo o espaço de trabalho e use caneta, caixa, seta, texto e recorte.\n- Compare um design local ao lado ou sobre o site ativo e marque comentários sem fazer upload.\n- Copie para sua ferramenta de programação um prompt estruturado com URL, dispositivos, tamanhos e detalhes opcionais do problema.\n\nTudo funciona localmente no navegador. Não exige conta, assinatura, análise, telemetria ou backend. URLs, capturas, gravações, designs, anotações e configurações não são enviados a um servidor.\n\nSão prévias responsivas no Chrome, não dispositivos físicos nem o motor do Safari. As regras de login e incorporação dos sites continuam valendo. A página original é preservada; novas prévias não copiam alterações não salvas.",
+      "screenshotCaptions": [
+        "Todas as telas, lado a lado.",
+        "Todos os dispositivos. Um clique.",
+        "Foco em uma tela.",
+        "Igual ao design, pixel por pixel.",
+        "Marque o bug. Grave o fluxo."
+      ],
+      "screenshotSubtitles": [
+        "Molduras de dispositivos reais com rolagem, cliques e navegação sincronizados.",
+        "Abra mais de 110 dispositivos por categoria, do menor celular à maior tela.",
+        "Amplie qualquer dispositivo e oculte todas as ferramentas no modo foco para revisões e demos limpas.",
+        "Seu mockup de um lado, a página ao vivo do outro. Veja cada diferença num relance.",
+        "Anote uma captura, copie um prompt de correção para sua ferramenta de IA ou repita um fluxo do usuário em todos os dispositivos."
+      ],
+      "screenshotLocale": "pt_BR",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "it",
+      "storeLocale": "it",
+      "language": "Italiano",
+      "name": "Mobile View: Emulatore mobile e test responsive",
+      "summary": "Simulatore mobile per testare il design responsive. Confronta le viste, sincronizza lo scorrimento e acquisisci screenshot.",
+      "description": "Mobile View è uno strumento gratuito e open source per testare siti web responsive in Chrome. Confronta fino a quattro viste affiancate, inclusa un’anteprima mobile, per controllare menu, testo e spaziatura.\n\n- Apri tutti i dispositivi con un clic. Le anteprime sono raggruppate per tipo di dispositivo e ordinate dagli schermi più piccoli ai più grandi.\n- Scegli dispositivi realistici, modifica orientamento e zoom, ricarica una singola anteprima o crea viewport personalizzate.\n- Sincronizza scorrimento, interazioni supportate e navigazione tra anteprime corrispondenti.\n- Per ripetere i test dei layout responsive, salva set, preferiti e dispositivi recenti oppure concentra l’analisi su una sola viewport.\n- Acquisisci una vista o l’intera area di lavoro e aggiungi penna, riquadro, freccia, testo o ritaglio.\n- Confronta un design locale accanto o sopra il sito attivo e segna feedback senza caricarlo.\n- Copia nel tuo strumento di sviluppo un prompt strutturato con URL, dispositivi, dimensioni e dettagli facoltativi del problema.\n\nTutto viene eseguito localmente nel browser. Non servono account, abbonamento, analytics, telemetria o backend. URL, screenshot, registrazioni, design, annotazioni e impostazioni non vengono inviati a un server.\n\nSono anteprime responsive in Chrome, non dispositivi fisici né il motore Safari. Restano valide le regole di accesso e incorporamento dei siti. La pagina originale è preservata; le nuove anteprime non copiano modifiche non salvate.",
+      "screenshotCaptions": [
+        "Ogni schermo, fianco a fianco.",
+        "Ogni dispositivo. Un clic.",
+        "Concentrati su un solo schermo.",
+        "Fedele al design, pixel per pixel.",
+        "Segnala il bug. Registra il flusso."
+      ],
+      "screenshotSubtitles": [
+        "Cornici di dispositivi reali con scorrimento, clic e navigazione sincronizzati.",
+        "Apri tutti i 110+ dispositivi per categoria, dal telefono più piccolo allo schermo più grande.",
+        "Espandi qualsiasi dispositivo e nascondi ogni strumento in modalità focus per revisioni e demo pulite.",
+        "Il mockup da un lato, la pagina live dall’altro. Individua ogni differenza a colpo d’occhio.",
+        "Annota uno screenshot, copia un prompt di correzione per il tuo strumento AI o riproduci un flusso utente su ogni dispositivo."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ja",
+      "storeLocale": "ja",
+      "language": "日本語",
+      "name": "Mobile View：デバイスエミュレーター＆レスポンシブテスト",
+      "summary": "モバイルシミュレーターでレスポンシブデザインをテスト。端末ごとの表示を比較し、スクロールを同期してスクリーンショットを撮影できます。",
+      "description": "Mobile View は Chrome でレスポンシブなウェブサイトをテストできる、無料のオープンソースツールです。モバイルプレビューを含む最大4つの表示を並べて、メニュー、テキスト、余白を確認できます。\n\n- ワンクリックですべてのデバイスを表示できます。プレビューはデバイスの種類ごとにグループ化され、画面サイズの小さい順に並びます。\n- 実在デバイスのプロファイルを選び、向きやズームを変更し、個別に再読み込みしたり独自のビューポートを作成できます。\n- 対応するプレビュー間でスクロール、サポートされる操作、ナビゲーションを同期できます。\n- レスポンシブテストを繰り返す際は、デバイスセット、お気に入り、最近使った端末を保存し、1つの表示に集中することもできます。\n- 単一の表示またはワークスペース全体をキャプチャし、ペン、枠、矢印、文字、切り抜きで注釈できます。\n- ローカルのデザインをライブサイトの横または上に重ね、アップロードせずにフィードバックを記録できます。\n- URL、端末、表示サイズ、任意の問題説明を含む修正プロンプトを開発ツールへコピーできます。\n\nすべてブラウザ内でローカルに動作します。アカウント、サブスクリプション、分析、テレメトリ、アプリ用バックエンドは不要です。URL、画像、録画、デザイン、注釈、設定がバックエンドへ送信されることはありません。\n\nこれはChromeによるレスポンシブなビューポートのプレビューであり、実機やSafariエンジンのエミュレーションではありません。サイトのログインや埋め込み制限は引き続き適用されます。元のページは保持されますが、新しいプレビューには未保存の編集はコピーされません。",
+      "screenshotCaptions": [
+        "すべての画面を、並べて比較。",
+        "すべてのデバイスを、ワンクリックで。",
+        "ひとつの画面に集中。",
+        "デザインどおりか、ピクセル単位で確認。",
+        "バグを指摘。フローを記録。"
+      ],
+      "screenshotSubtitles": [
+        "実機フレームで、スクロール・クリック・ページ移動を同期。",
+        "110 以上のデバイスをカテゴリ別に。最小のスマホから最大の画面まで。",
+        "デバイスを拡大し、フォーカスモードでツールをすべて非表示に。レビューやデモに最適。",
+        "片側にデザイン、もう片側に実際のページ。違いがひと目でわかります。",
+        "スクリーンショットに注釈、AI ツール用の修正プロンプトをコピー、ユーザーフローを全デバイスで再実行。"
+      ],
+      "screenshotLocale": "ja",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ko",
+      "storeLocale": "ko",
+      "language": "한국어",
+      "name": "Mobile View: 기기 에뮬레이터 및 반응형 테스트",
+      "summary": "모바일 시뮬레이터로 반응형 웹 디자인을 테스트하세요. 기기별 화면을 비교하고 스크롤을 동기화하며 스크린샷을 촬영하세요.",
+      "description": "Mobile View는 Chrome에서 반응형 웹사이트를 테스트할 수 있는 무료 오픈 소스 도구입니다. 모바일 미리보기를 포함해 최대 4개의 화면을 나란히 비교하며 메뉴, 텍스트, 간격을 확인하세요.\n\n- 한 번의 클릭으로 모든 기기를 확인하세요. 미리보기는 기기 유형별로 묶이며 작은 화면부터 큰 화면 순으로 정렬됩니다.\n- 실제 기기 프로필을 선택하고 방향과 확대/축소를 변경하거나 개별 화면을 새로고침하고 사용자 지정 뷰포트를 만드세요.\n- 일치하는 미리보기 사이에서 스크롤, 지원되는 상호작용 및 탐색을 동기화하세요.\n- 반복적인 반응형 테스트를 위해 기기 세트, 즐겨찾기, 최근 기기를 저장하거나 하나의 뷰포트에 집중하세요.\n- 한 화면 또는 전체 작업 공간을 캡처하고 펜, 상자, 화살표, 텍스트 및 자르기로 주석을 추가하세요.\n- 로컬 디자인을 실시간 웹사이트 옆이나 위에 겹쳐 비교하고 업로드 없이 피드백을 표시하세요.\n- URL, 기기, 뷰포트 크기와 선택적 문제 설명이 포함된 구조화된 수정 프롬프트를 코딩 도구로 복사하세요.\n\n모든 기능은 브라우저에서 로컬로 실행됩니다. 계정, 구독, 분석, 원격 측정 또는 앱 백엔드가 필요 없습니다. URL, 스크린샷, 녹화, 디자인, 주석 및 설정은 백엔드로 전송되지 않습니다.\n\n이 기능은 Chrome의 반응형 뷰포트 미리보기이며 실제 기기나 Safari 엔진 에뮬레이션이 아닙니다. 사이트의 로그인 및 삽입 규칙은 계속 적용됩니다. 원래 페이지는 유지되지만 새 미리보기에는 저장하지 않은 편집 내용이 복사되지 않습니다.",
+      "screenshotCaptions": [
+        "모든 화면을 나란히.",
+        "모든 기기를 한 번의 클릭으로.",
+        "한 화면에 집중하세요.",
+        "디자인과 픽셀 단위로 일치.",
+        "버그를 표시하고, 플로를 기록하세요."
+      ],
+      "screenshotSubtitles": [
+        "실제 기기 프레임에서 스크롤, 클릭, 페이지 이동을 동기화합니다.",
+        "110개 이상의 기기를 카테고리별로. 가장 작은 휴대폰부터 가장 큰 화면까지.",
+        "기기를 크게 보고 포커스 모드에서 모든 도구를 숨겨 깔끔하게 검토하고 시연하세요.",
+        "한쪽에는 디자인 시안, 다른 쪽에는 실제 페이지. 차이를 한눈에 확인하세요.",
+        "스크린샷에 주석을 달고, AI 도구용 수정 프롬프트를 복사하거나, 사용자 플로를 모든 기기에서 다시 실행하세요."
+      ],
+      "screenshotLocale": "ko",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "hi",
+      "storeLocale": "hi",
+      "language": "हिन्दी",
+      "name": "Mobile View: डिवाइस एमुलेटर और रिस्पॉन्सिव टेस्टर",
+      "summary": "मोबाइल सिम्युलेटर से रिस्पॉन्सिव वेब डिज़ाइन जाँचें। डिवाइस व्यू की तुलना करें, स्क्रॉल सिंक करें और स्क्रीनशॉट लें।",
+      "description": "Mobile View Chrome में रिस्पॉन्सिव वेबसाइट की जाँच के लिए मुफ़्त और ओपन-सोर्स टूल है। मोबाइल प्रीव्यू सहित अधिकतम चार व्यू साथ-साथ देखकर मेनू, टेक्स्ट और खाली जगह की जाँच करें।\n\n- एक क्लिक में सभी डिवाइस खोलें। प्रीव्यू डिवाइस के प्रकार के अनुसार समूहों में और छोटी से बड़ी स्क्रीन के क्रम में दिखते हैं।\n- वास्तविक डिवाइस चुनें, दिशा और ज़ूम बदलें, किसी एक प्रीव्यू को रीलोड करें या कस्टम व्यूपोर्ट बनाएँ।\n- मेल खाते प्रीव्यू में स्क्रॉल, समर्थित इंटरैक्शन और नेविगेशन सिंक करें।\n- बार-बार रिस्पॉन्सिव जाँच करने के लिए डिवाइस सेट, पसंदीदा और हाल के डिवाइस सहेजें या किसी एक व्यूपोर्ट पर ध्यान दें।\n- एक व्यूपोर्ट या पूरा वर्कस्पेस कैप्चर करके पेन, बॉक्स, तीर, टेक्स्ट और क्रॉप से टिप्पणी जोड़ें।\n- स्थानीय डिज़ाइन को लाइव वेबसाइट के पास या उसके ऊपर रखकर तुलना करें और बिना अपलोड किए फ़ीडबैक चिह्नित करें।\n- URL, डिवाइस, व्यूपोर्ट आकार और वैकल्पिक समस्या विवरण वाला व्यवस्थित सुधार प्रॉम्प्ट अपने कोडिंग टूल में कॉपी करें।\n\nसब कुछ ब्राउज़र में स्थानीय रूप से चलता है। खाता, सदस्यता, एनालिटिक्स, टेलीमेट्री या ऐप बैकएंड की आवश्यकता नहीं है। URL, स्क्रीनशॉट, रिकॉर्डिंग, डिज़ाइन, टिप्पणियाँ और सेटिंग किसी बैकएंड को नहीं भेजी जातीं।\n\nये Chrome के रिस्पॉन्सिव व्यूपोर्ट पूर्वावलोकन हैं, असली डिवाइस या Safari इंजन नहीं। वेबसाइट के लॉगिन और एम्बेडिंग नियम लागू रहते हैं। मूल पेज सुरक्षित रहता है; नए पूर्वावलोकन बिना सहेजे बदलाव कॉपी नहीं करते।",
+      "screenshotCaptions": [
+        "हर स्क्रीन, साथ-साथ।",
+        "हर डिवाइस। एक क्लिक।",
+        "एक स्क्रीन पर फ़ोकस करें।",
+        "डिज़ाइन से मिलाएँ, पिक्सेल-दर-पिक्सेल।",
+        "बग मार्क करें। फ़्लो रिकॉर्ड करें।"
+      ],
+      "screenshotSubtitles": [
+        "असली डिवाइस फ़्रेम, जिनमें स्क्रॉल, क्लिक और नेविगेशन सिंक रहते हैं।",
+        "सभी 110+ डिवाइस श्रेणी के अनुसार खोलें, सबसे छोटे फ़ोन से सबसे बड़ी स्क्रीन तक।",
+        "किसी भी डिवाइस को बड़ा करें, फिर फ़ोकस मोड में सारे टूल छिपाकर साफ़-सुथरे रिव्यू और डेमो करें।",
+        "एक तरफ़ आपका मॉकअप, दूसरी तरफ़ लाइव पेज। हर अंतर एक नज़र में पकड़ें।",
+        "स्क्रीनशॉट पर एनोटेशन करें, अपने AI टूल के लिए फ़िक्स प्रॉम्प्ट कॉपी करें, या हर डिवाइस पर यूज़र फ़्लो दोबारा चलाएँ।"
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ru",
+      "storeLocale": "ru",
+      "language": "Русский",
+      "name": "Mobile View: эмулятор устройств и адаптивный тест",
+      "summary": "Мобильный симулятор для тестирования адаптивного дизайна. Сравнивайте экраны, синхронизируйте прокрутку и делайте снимки.",
+      "description": "Mobile View — бесплатный инструмент с открытым исходным кодом для проверки адаптивных сайтов в Chrome. Сравнивайте до четырёх видов рядом, включая мобильный предпросмотр, чтобы проверять меню, текст и отступы.\n\n- Откройте все устройства одним нажатием. Предпросмотры сгруппированы по типу устройства и упорядочены от меньших экранов к большим.\n- Выбирайте реалистичные устройства, меняйте ориентацию и масштаб, перезагружайте отдельные виды и создавайте собственные размеры области просмотра.\n- Синхронизируйте прокрутку, поддерживаемые действия и навигацию между соответствующими видами.\n- Для повторной проверки адаптивных макетов сохраняйте наборы, избранные и недавние устройства или сосредоточьтесь на одной области просмотра.\n- Снимайте отдельный вид или всю рабочую область и добавляйте рисунки, рамки, стрелки, текст и обрезку.\n- Сравнивайте локальный макет рядом с действующим сайтом или поверх него и отмечайте замечания без загрузки файлов.\n- Копируйте в инструмент разработки структурированный запрос на исправление с URL, устройствами, размерами и дополнительным описанием проблемы.\n\nВсе работает локально в браузере. Не нужны учетная запись, подписка, аналитика, телеметрия или сервер приложения. URL, снимки, записи, макеты, аннотации и настройки не отправляются на сервер.\n\nЭто адаптивные окна просмотра в Chrome, а не физические устройства или движок Safari. Правила входа и встраивания сайтов сохраняются. Исходная страница остаётся нетронутой; новые просмотры не копируют несохранённые изменения.",
+      "screenshotCaptions": [
+        "Все экраны рядом.",
+        "Все устройства. Одно нажатие.",
+        "Сосредоточьтесь на одном экране.",
+        "Точно по макету, пиксель в пиксель.",
+        "Отметьте баг. Запишите сценарий."
+      ],
+      "screenshotSubtitles": [
+        "Настоящие рамки устройств с синхронной прокруткой, нажатиями и навигацией.",
+        "Открывайте все 110+ устройств по категориям — от самого маленького телефона до самого большого экрана.",
+        "Разверните любое устройство и скройте все инструменты в режиме фокуса — для чистых проверок и демонстраций.",
+        "С одной стороны — ваш макет, с другой — действующая страница. Любое отличие видно с первого взгляда.",
+        "Добавьте пометки на снимок экрана, скопируйте промпт с исправлением для ИИ-инструмента или воспроизведите сценарий пользователя на всех устройствах."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ar",
+      "storeLocale": "ar",
+      "language": "العربية",
+      "name": "Mobile View: محاكي أجهزة واختبار تجاوب",
+      "summary": "محاكي جوال لاختبار تصميم الويب المتجاوب. قارن عروض الأجهزة، وزامن التمرير والتقط لقطات الشاشة.",
+      "description": "Mobile View أداة مجانية ومفتوحة المصدر لاختبار مواقع الويب المتجاوبة في Chrome. قارن ما يصل إلى أربع واجهات جنبًا إلى جنب، بما فيها معاينة الجوال، لفحص القوائم والنصوص والتباعد.\n\n- افتح جميع الأجهزة بنقرة واحدة. تُجمع المعاينات حسب نوع الجهاز وتُرتب من الشاشات الأصغر إلى الأكبر.\n- اختر أجهزة واقعية، وغيّر الاتجاه والتكبير، وأعد تحميل معاينة منفردة، أو أنشئ أحجام عرض مخصصة.\n- زامن التمرير والتفاعلات المدعومة والتنقل بين المعاينات المتطابقة.\n- لتكرار اختبارات التصميم المتجاوب، احفظ مجموعات الأجهزة والمفضلة والأجهزة الحديثة، أو ركّز على واجهة واحدة للفحص التفصيلي.\n- التقط واجهة واحدة أو مساحة العمل كاملة، ثم أضف القلم والمربعات والأسهم والنص والاقتصاص.\n- قارن تصميمًا محليًا بجانب الموقع المباشر أو فوقه وسجّل الملاحظات من دون رفع الملف.\n- انسخ إلى أداة البرمجة طلب إصلاح منظمًا يتضمن الرابط والأجهزة وأحجام العرض وتفاصيل المشكلة الاختيارية.\n\nتعمل جميع الميزات محليًا داخل المتصفح. لا يلزم حساب أو اشتراك أو تحليلات أو قياس عن بُعد أو خادم للتطبيق. لا تُرسل الروابط أو لقطات الشاشة أو التسجيلات أو التصاميم أو التعليقات أو الإعدادات إلى أي خادم.\n\nهذه معاينات متجاوبة في Chrome وليست أجهزة حقيقية أو محرك Safari. تظل قواعد تسجيل الدخول والتضمين الخاصة بالمواقع سارية. تبقى الصفحة الأصلية كما هي؛ لا تنسخ المعاينات الجديدة التعديلات غير المحفوظة.",
+      "screenshotCaptions": [
+        "كل الشاشات، جنبًا إلى جنب.",
+        "كل الأجهزة. بنقرة واحدة.",
+        "ركّز على شاشة واحدة.",
+        "طابِق التصميم بكسلًا ببكسل.",
+        "حدّد الخلل. سجّل المسار."
+      ],
+      "screenshotSubtitles": [
+        "إطارات أجهزة حقيقية مع تمرير ونقرات وتنقل متزامنة.",
+        "افتح كل الأجهزة الـ 110+ حسب الفئة، من أصغر هاتف إلى أكبر شاشة.",
+        "كبّر أي جهاز، ثم أخفِ كل الأدوات في وضع التركيز لمراجعات وعروض نظيفة.",
+        "تصميمك المبدئي في جانب، والصفحة المباشرة في الجانب الآخر. اكتشف كل فرق بنظرة واحدة.",
+        "أضف تعليقات توضيحية إلى لقطة شاشة، أو انسخ طلب إصلاح لأداة الذكاء الاصطناعي، أو أعد تشغيل مسار المستخدم على كل جهاز."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "am",
+      "storeLocale": "am",
+      "language": "አማርኛ",
+      "name": "Mobile View፦ የመሣሪያ አስመሳይ እና ምላሽ ሰጪ ሞካሪ",
+      "summary": "የሞባይል አስመሳይና የምላሽ ሰጪ ድር ንድፍ መሞከሪያ። የመሣሪያ እይታዎችን ያወዳድሩ፣ ማሸብለልን ያመሳስሉና የማያ ገጽ ፎቶ ያንሱ።",
+      "description": "Mobile View በChrome ውስጥ ምላሽ ሰጪ ድር ጣቢያዎችን ለመፈተሽ ነፃና ክፍት ምንጭ መሣሪያ ነው። የሞባይል ቅድመ እይታን ጨምሮ እስከ አራት እይታዎችን ጎን ለጎን በማወዳደር ምናሌዎችን፣ ጽሑፍንና ክፍተቶችን ይፈትሹ። የመሣሪያ መጠንና አቅጣጫ ይቀይሩ፣ ማሸብለልና አሰሳን ያመሳስሉ፣ ስክሪንሾት ያንሱ እና ከአካባቢያዊ ንድፍ ጋር ያወዳድሩ። ሁሉም ነገር በአሳሹ ውስጥ ይሰራል፤ መለያ፣ ምዝገባ፣ ትንታኔ ወይም የጀርባ አገልጋይ አያስፈልግም።\n\n- ሁሉንም መሣሪያዎች በአንድ ጠቅታ ይክፈቱ። ቅድመ እይታዎች በመሣሪያ ዓይነት ይመደባሉ፣ ከትንሽ ወደ ትልቅ ማያ ገጽም ይደረደራሉ።\n- ምላሽ ሰጪ አቀማመጦችን ደጋግመው ለመፈተሽ፣ የራስዎን የእይታ መጠኖች ይፍጠሩ፣ የመሣሪያ ስብስቦችንና ተወዳጆችን ያስቀምጡ ወይም በአንድ እይታ ላይ ያተኩሩ። በተዛማጅ እይታዎች የሚደገፉ ግንኙነቶችን ያመሳስሉ።\n- አንድ እይታ ወይም ሙሉ የሥራ ቦታ ይቅረጹ። ቀስቶች፣ ሳጥኖችና ጽሑፍ ያክሉ ወይም ይከርክሙ። የአካባቢ ንድፍን ከገጹ አጠገብ ወይም በላዩ ያሳዩ።\n- የገጽ አድራሻ፣ መሣሪያዎች፣ የእይታ መጠኖችና የችግር ማስታወሻዎች ያሉበትን የማስተካከያ መመሪያ ወደ ኮድ መሣሪያዎ ይቅዱ።\n\nእነዚህ በChrome የሚታዩ ምላሽ ሰጪ ቅድመ እይታዎች እንጂ እውነተኛ መሣሪያዎች ወይም የSafari ሞተር አይደሉም። የድረ ገጽ መግቢያ እና መክተቻ ደንቦች ይቀጥላሉ። ዋናው ገጽ ይጠበቃል፤ አዲስ ቅድመ እይታዎች ያልተቀመጡ ለውጦችን አይቀዱም።",
+      "screenshotCaptions": [
+        "ሁሉም ማያ ገጾች ጎን ለጎን።",
+        "ሁሉም መሣሪያዎች። በአንድ ጠቅታ።",
+        "በአንድ ማያ ገጽ ላይ ያተኩሩ።",
+        "ንድፉን በፒክሰል ደረጃ ያዛምዱ።",
+        "ስህተቱን ምልክት ያድርጉ። ፍሰቱን ይቅረጹ።"
+      ],
+      "screenshotSubtitles": [
+        "እውነተኛ የመሣሪያ ፍሬሞች ከተመሳሰለ ማሸብለል፣ ጠቅታ እና አሰሳ ጋር።",
+        "ከትንሹ ስልክ እስከ ትልቁ ማያ ገጽ ድረስ ሁሉንም 110+ መሣሪያዎች በምድብ ይክፈቱ።",
+        "ማንኛውንም መሣሪያ ያስፉ፣ ከዚያ ለንጹሕ ግምገማና ማሳያ በትኩረት ሁነታ ሁሉንም የመሣሪያ አሞሌዎች ይደብቁ።",
+        "ንድፍዎ በአንድ በኩል፣ ቀጥታ ገጹ በሌላ በኩል። እያንዳንዱን ልዩነት በአንድ እይታ ይለዩ።",
+        "በስክሪንሾት ላይ ማብራሪያ ያክሉ፣ ለAI መሣሪያዎ የማስተካከያ ጥያቄ ይቅዱ፣ ወይም የተጠቃሚ ፍሰትን በሁሉም መሣሪያዎች ላይ እንደገና ያጫውቱ።"
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "bg",
+      "storeLocale": "bg",
+      "language": "Български",
+      "name": "Mobile View: Емулатор и тест за адаптивност",
+      "summary": "Мобилен симулатор за тестване на адаптивен дизайн. Сравнявайте изгледи, синхронизирайте превъртането и правете екранни снимки.",
+      "description": "Mobile View е безплатен инструмент с отворен код за тестване на адаптивни уебсайтове в Chrome. Сравнявайте до четири изгледа един до друг, включително мобилен преглед, за да проверявате менюта, текст и отстояния. Избирайте реалистични устройства, променяйте ориентация и мащаб, синхронизирайте превъртане и навигация, правете екранни снимки и сравнявайте с локален дизайн. Всичко работи локално в браузъра без профил, абонамент, анализи, телеметрия или сървър.\n\n- Отворете всички устройства с едно щракване. Визуализациите са групирани по тип устройство и подредени от по-малки към по-големи екрани.\n- За повторно тестване на адаптивни оформления създавайте собствени размери на изгледа, запазвайте комплекти и любими устройства или фокусирайте един изглед. Синхронизирайте поддържаните взаимодействия между съответстващи изгледи.\n- Заснемайте един изглед или цялото работно пространство. Добавяйте стрелки, рамки, рисунки и текст или изрязвайте снимката. Показвайте локален дизайн до страницата или като наслагване.\n- Копирайте структурирана инструкция за поправка с URL, устройства, размери и бележки за проблема в инструмента си за програмиране.\n\nТова са адаптивни изгледи в Chrome, не физически устройства или енджин Safari. Правилата за вход и вграждане на сайтовете остават в сила. Оригиналната страница се запазва; новите изгледи не копират незаписани промени.",
+      "screenshotCaptions": [
+        "Всички екрани, един до друг.",
+        "Всички устройства. Едно щракване.",
+        "Фокус върху един екран.",
+        "Точно като дизайна, пиксел по пиксел.",
+        "Отбележете бъга. Запишете потока."
+      ],
+      "screenshotSubtitles": [
+        "Реални рамки на устройства със синхронизирано превъртане, щраквания и навигация.",
+        "Отворете всички 110+ устройства по категории – от най-малкия телефон до най-големия екран.",
+        "Разгънете което и да е устройство и скрийте всички инструменти във фокус режим за чисти прегледи и демонстрации.",
+        "Макетът ви от едната страна, активната страница от другата. Забележете всяка разлика с един поглед.",
+        "Анотирайте екранна снимка, копирайте промпт за поправка за своя AI инструмент или възпроизведете потребителски поток на всяко устройство."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "bn",
+      "storeLocale": "bn",
+      "language": "বাংলা",
+      "name": "Mobile View: ডিভাইস এমুলেটর ও রেসপনসিভ টেস্টার",
+      "summary": "মোবাইল সিমুলেটর দিয়ে রেসপনসিভ ওয়েব ডিজাইন পরীক্ষা করুন। ডিভাইস ভিউ তুলনা করুন, স্ক্রল সিঙ্ক করুন ও স্ক্রিনশট নিন।",
+      "description": "Mobile View হলো Chrome-এ রেসপনসিভ ওয়েবসাইট পরীক্ষা করার জন্য বিনামূল্যের ওপেন-সোর্স টুল। মেনু, লেখা ও ফাঁকা জায়গা পরীক্ষা করতে মোবাইল প্রিভিউসহ সর্বোচ্চ চারটি ভিউ পাশাপাশি তুলনা করুন। বাস্তবসম্মত ডিভাইস বেছে নিন, দিক ও জুম বদলান, স্ক্রল ও নেভিগেশন সিঙ্ক করুন, স্ক্রিনশট নিন এবং স্থানীয় ডিজাইনের সঙ্গে তুলনা করুন। সবকিছু ব্রাউজারেই চলে; অ্যাকাউন্ট, সাবস্ক্রিপশন, অ্যানালিটিক্স, টেলিমেট্রি বা ব্যাকএন্ড লাগে না।\n\n- এক ক্লিকেই সব ডিভাইস খুলুন। প্রিভিউগুলো ডিভাইসের ধরন অনুযায়ী গোষ্ঠীবদ্ধ এবং ছোট থেকে বড় স্ক্রিনের ক্রমে সাজানো থাকে।\n- বারবার রেসপনসিভ লেআউট পরীক্ষা করতে নিজস্ব ভিউপোর্টের মাপ তৈরি করুন, ডিভাইস সেট ও পছন্দের ডিভাইস সংরক্ষণ করুন অথবা একটি ভিউতে মনোযোগ দিন। মিল থাকা ভিউগুলোর সমর্থিত ইন্টারঅ্যাকশন সিঙ্ক করুন।\n- একটি ভিউ বা পুরো কর্মক্ষেত্রের ছবি নিন। তীর, বক্স, আঁকা ও লেখা যোগ করুন বা ছবি কাটুন। স্থানীয় ডিজাইন পৃষ্ঠার পাশে বা ওভারলে হিসেবে দেখুন।\n- URL, ডিভাইস, ভিউপোর্টের মাপ ও সমস্যার নোটসহ সাজানো সংশোধন প্রম্পট আপনার কোডিং টুলে কপি করুন।\n\nএগুলো Chrome-এর রেসপনসিভ ভিউপোর্ট প্রিভিউ, আসল ডিভাইস বা Safari ইঞ্জিন নয়। ওয়েবসাইটের লগইন ও এমবেডিং নিয়ম প্রযোজ্য থাকে। মূল পৃষ্ঠা অক্ষত থাকে; নতুন প্রিভিউ সংরক্ষণ না করা পরিবর্তন কপি করে না।",
+      "screenshotCaptions": [
+        "সব স্ক্রিন, পাশাপাশি।",
+        "সব ডিভাইস। এক ক্লিকে।",
+        "একটি স্ক্রিনে ফোকাস করুন।",
+        "ডিজাইনের সঙ্গে মিলিয়ে নিন, পিক্সেল ধরে।",
+        "বাগ চিহ্নিত করুন। ফ্লো রেকর্ড করুন।"
+      ],
+      "screenshotSubtitles": [
+        "আসল ডিভাইস ফ্রেম, সঙ্গে সিঙ্ক করা স্ক্রল, ক্লিক ও নেভিগেশন।",
+        "সব 110+ ডিভাইস ক্যাটাগরি অনুযায়ী খুলুন — সবচেয়ে ছোট ফোন থেকে সবচেয়ে বড় স্ক্রিন পর্যন্ত।",
+        "যেকোনো ডিভাইস বড় করুন, তারপর ফোকাস মোডে সব টুল লুকিয়ে পরিষ্কার রিভিউ ও ডেমো করুন।",
+        "এক পাশে আপনার মকআপ, অন্য পাশে লাইভ পেজ। প্রতিটি পার্থক্য এক নজরে ধরুন।",
+        "স্ক্রিনশটে টীকা যোগ করুন, আপনার AI টুলের জন্য ফিক্স প্রম্পট কপি করুন, বা প্রতিটি ডিভাইসে ইউজার ফ্লো আবার চালান।"
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ca",
+      "storeLocale": "ca",
+      "language": "Català",
+      "name": "Mobile View: Emulador i prova responsiva",
+      "summary": "Simulador mòbil per provar dissenys responsius. Compara vistes de dispositius, sincronitza el desplaçament i captura pantalles.",
+      "description": "Mobile View és una eina gratuïta i de codi obert per provar llocs web adaptables a Chrome. Compara fins a quatre vistes en paral·lel, inclosa una previsualització mòbil, per revisar menús, text i espais. Tria dispositius realistes, canvia l’orientació i el zoom, sincronitza el desplaçament i la navegació, captura pantalles i compara-les amb un disseny local. Tot funciona localment al navegador, sense compte, subscripció, analítica, telemetria ni servidor.\n\n- Obre tots els dispositius amb un clic. Les previsualitzacions s’agrupen per tipus de dispositiu i s’ordenen de pantalles petites a grans.\n- Per repetir les proves de disseny adaptable, crea mides de visualització pròpies, desa conjunts i dispositius preferits o centra’t en una sola vista. Sincronitza les interaccions compatibles entre vistes coincidents.\n- Captura una vista o tot l’espai de treball. Afegeix fletxes, quadres, traços i text o retalla la captura. Mostra un disseny local al costat de la pàgina o superposat.\n- Copia a la teva eina de programació una instrucció de correcció estructurada amb l’URL, els dispositius, les mides i les notes del problema.\n\nSón previsualitzacions responsives amb Chrome, no dispositius físics ni el motor Safari. Les regles d’accés i d’incrustació dels webs continuen vigents. Es conserva la pàgina original; les previsualitzacions noves no copien els canvis sense desar.",
+      "screenshotCaptions": [
+        "Totes les pantalles, en paral·lel.",
+        "Tots els dispositius. Un clic.",
+        "Centra’t en una pantalla.",
+        "Fidel al disseny, píxel a píxel.",
+        "Marca l’error. Grava el flux."
+      ],
+      "screenshotSubtitles": [
+        "Marcs de dispositius reals amb desplaçament, clics i navegació sincronitzats.",
+        "Obre els 110+ dispositius per categories, des del telèfon més petit fins a la pantalla més gran.",
+        "Amplia qualsevol dispositiu i amaga totes les eines en mode focus per a revisions i demostracions netes.",
+        "La teva maqueta a un costat, la pàgina en directe a l’altre. Detecta cada diferència d’un cop d’ull.",
+        "Anota una captura de pantalla, copia una instrucció de correcció per a la teva eina d’IA o reprodueix un flux d’usuari a tots els dispositius."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "cs",
+      "storeLocale": "cs",
+      "language": "Čeština",
+      "name": "Mobile View: Emulátor zařízení a responzivní test",
+      "summary": "Mobilní simulátor pro testování responzivního designu. Porovnejte náhledy, synchronizujte posouvání a pořizujte snímky obrazovky.",
+      "description": "Mobile View je bezplatný open-source nástroj pro testování responzivních webů v Chrome. Porovnávejte až čtyři pohledy vedle sebe, včetně mobilního náhledu, a kontrolujte nabídky, text a rozestupy. Vybírejte realistická zařízení, měňte orientaci a přiblížení, synchronizujte posouvání a navigaci, pořizujte snímky a porovnávejte je s místním návrhem. Vše běží lokálně v prohlížeči bez účtu, předplatného, analytiky, telemetrie či serveru.\n\n- Otevřete všechna zařízení jedním kliknutím. Náhledy jsou seskupeny podle typu zařízení a seřazeny od menších obrazovek po větší.\n- Pro opakované testování responzivních rozvržení vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.\n- Zachyťte jeden náhled nebo celý pracovní prostor. Přidejte šipky, rámečky, kresby a text nebo snímek ořízněte. Zobrazte místní návrh vedle stránky nebo jako překryv.\n- Zkopírujte do svého programovacího nástroje strukturované zadání opravy s URL, zařízeními, rozměry a poznámkami k problému.\n\nJde o responzivní náhledy v Chromu, nikoli fyzická zařízení nebo jádro Safari. Pravidla přihlašování a vkládání webů stále platí. Původní stránka zůstává zachována; nové náhledy nekopírují neuložené změny.",
+      "screenshotCaptions": [
+        "Všechny obrazovky vedle sebe.",
+        "Všechna zařízení. Jedním kliknutím.",
+        "Soustřeďte se na jednu obrazovku.",
+        "Přesně podle návrhu, pixel po pixelu.",
+        "Označte chybu. Nahrajte postup."
+      ],
+      "screenshotSubtitles": [
+        "Skutečné rámečky zařízení se synchronizovaným posouváním, kliknutími a navigací.",
+        "Otevřete všech 110+ zařízení podle kategorií, od nejmenšího telefonu po největší obrazovku.",
+        "Zvětšete libovolné zařízení a v režimu soustředění skryjte všechny nástroje pro čisté kontroly a ukázky.",
+        "Na jedné straně váš návrh, na druhé živá stránka. Každý rozdíl odhalíte na první pohled.",
+        "Doplňte poznámky do snímku obrazovky, zkopírujte prompt s opravou pro svůj AI nástroj nebo přehrajte uživatelský postup na všech zařízeních."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "da",
+      "storeLocale": "da",
+      "language": "Dansk",
+      "name": "Mobile View: Enhedsemulator og responsiv test",
+      "summary": "Mobil simulator til test af responsivt webdesign. Sammenlign enhedsvisninger, synkroniser rulning, og tag skærmbilleder.",
+      "description": "Mobile View er et gratis open source-værktøj til at teste responsive websites i Chrome. Sammenlign op til fire visninger side om side, inklusive en mobil forhåndsvisning, for at kontrollere menuer, tekst og afstande. Vælg realistiske enheder, skift retning og zoom, synkroniser rulning og navigation, tag skærmbilleder, og sammenlign med et lokalt design. Alt kører lokalt i browseren uden konto, abonnement, analyse, telemetri eller server.\n\nÅbn alle enheder med ét klik. Forhåndsvisningerne er grupperet efter enhedstype og sorteret fra mindre til større skærme.\n\nTil gentagne tests af responsive layouts gem enhedssæt og favoritter, eller opret egne skærmstørrelser. Tag et billede af en visning eller hele arbejdsområdet, og tilføj pile, rammer og tekst. Vis et lokalt design ved siden af eller oven på websitet, og kopiér et rettelsesforslag med URL, enheder, skærmstørrelser og noter til dit kodeværktøj.\n\nDette er responsive visninger i Chrome, ikke fysiske enheder eller Safari-motoren. Websteders regler for login og indlejring gælder stadig. Originalsiden bevares; nye visninger kopierer ikke ugemte ændringer.",
+      "screenshotCaptions": [
+        "Alle skærme, side om side.",
+        "Alle enheder. Ét klik.",
+        "Fokus på én skærm.",
+        "Præcis som designet, pixel for pixel.",
+        "Markér fejlen. Optag forløbet."
+      ],
+      "screenshotSubtitles": [
+        "Ægte enhedsrammer med synkroniseret rulning, klik og navigation.",
+        "Åbn alle 110+ enheder efter kategori, fra den mindste telefon til den største skærm.",
+        "Udvid en hvilken som helst enhed, og skjul alle værktøjer i fokustilstand til rene gennemgange og demoer.",
+        "Dit mockup på den ene side, live-siden på den anden. Se hver forskel med ét blik.",
+        "Tilføj noter til et skærmbillede, kopiér en rettelsesprompt til dit AI-værktøj, eller afspil et brugerforløb på alle enheder."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "el",
+      "storeLocale": "el",
+      "language": "Ελληνικά",
+      "name": "Mobile View: Εξομοιωτής και responsive έλεγχος",
+      "summary": "Προσομοιωτής κινητού για δοκιμή responsive σχεδιασμού. Συγκρίνετε προβολές, συγχρονίστε κύλιση και τραβήξτε στιγμιότυπα.",
+      "description": "Το Mobile View είναι ένα δωρεάν εργαλείο ανοιχτού κώδικα για τη δοκιμή προσαρμοζόμενων ιστοτόπων στο Chrome. Συγκρίνετε έως τέσσερις προβολές δίπλα δίπλα, μαζί με μια προεπισκόπηση για κινητά, για να ελέγχετε μενού, κείμενο και αποστάσεις. Επιλέξτε ρεαλιστικές συσκευές, αλλάξτε προσανατολισμό και ζουμ, συγχρονίστε κύλιση και πλοήγηση, τραβήξτε στιγμιότυπα και συγκρίνετε με τοπικό σχέδιο. Όλα εκτελούνται τοπικά, χωρίς λογαριασμό, συνδρομή, analytics, τηλεμετρία ή διακομιστή.\n\n- Ανοίξτε όλες τις συσκευές με ένα κλικ. Οι προεπισκοπήσεις ομαδοποιούνται ανά τύπο συσκευής και ταξινομούνται από τις μικρότερες στις μεγαλύτερες οθόνες.\n- Για επαναλαμβανόμενες δοκιμές προσαρμοζόμενων διατάξεων, δημιουργήστε προσαρμοσμένα μεγέθη viewport, αποθηκεύστε σύνολα και αγαπημένες συσκευές ή εστιάστε σε μία προβολή. Συγχρονίστε υποστηριζόμενες αλληλεπιδράσεις μεταξύ αντίστοιχων προβολών.\n- Καταγράψτε μία προβολή ή ολόκληρο τον χώρο εργασίας. Προσθέστε βέλη, πλαίσια, σχέδια και κείμενο ή περικόψτε την εικόνα. Εμφανίστε ένα τοπικό σχέδιο δίπλα στη σελίδα ή ως επικάλυψη.\n- Αντιγράψτε στο εργαλείο προγραμματισμού σας μια δομημένη οδηγία διόρθωσης με URL, συσκευές, διαστάσεις και σημειώσεις προβλήματος.\n\nΠρόκειται για responsive προεπισκοπήσεις στο Chrome, όχι φυσικές συσκευές ή μηχανή Safari. Οι κανόνες σύνδεσης και ενσωμάτωσης των ιστοτόπων εξακολουθούν να ισχύουν. Η αρχική σελίδα διατηρείται· οι νέες προεπισκοπήσεις δεν αντιγράφουν μη αποθηκευμένες αλλαγές.",
+      "screenshotCaptions": [
+        "Όλες οι οθόνες, δίπλα δίπλα.",
+        "Όλες οι συσκευές. Ένα κλικ.",
+        "Εστιάστε σε μία οθόνη.",
+        "Όπως το σχέδιο, pixel προς pixel.",
+        "Σημειώστε το σφάλμα. Καταγράψτε τη ροή."
+      ],
+      "screenshotSubtitles": [
+        "Πραγματικά πλαίσια συσκευών με συγχρονισμένη κύλιση, κλικ και πλοήγηση.",
+        "Ανοίξτε και τις 110+ συσκευές ανά κατηγορία, από το μικρότερο κινητό μέχρι τη μεγαλύτερη οθόνη.",
+        "Μεγεθύνετε οποιαδήποτε συσκευή και κρύψτε όλα τα εργαλεία στη λειτουργία εστίασης για καθαρές αξιολογήσεις και παρουσιάσεις.",
+        "Το mockup σας στη μία πλευρά, η ζωντανή σελίδα στην άλλη. Εντοπίστε κάθε διαφορά με μια ματιά.",
+        "Σχολιάστε ένα στιγμιότυπο, αντιγράψτε ένα prompt διόρθωσης για το εργαλείο AI σας ή αναπαραγάγετε μια ροή χρήστη σε κάθε συσκευή."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "en_AU",
+      "storeLocale": "en-AU",
+      "language": "English (Australia)",
+      "name": "Mobile View: Device Emulator & Responsive Tester",
+      "summary": "Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots.",
+      "description": "Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.\n\n- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.\n- Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.\n- Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.\n- Save device sets and favorites for repeat responsive testing.\n- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.\n- Compare the live website with a local design reference, side by side or as an overlay.\n- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.\n\nOpen a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.\n\nNo Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.\n\nThese are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.",
+      "screenshotCaptions": [
+        "Every screen, side by side.",
+        "Every device. One click.",
+        "Focus on one screen.",
+        "Match the design, pixel for pixel.",
+        "Mark the bug. Record the flow."
+      ],
+      "screenshotSubtitles": [
+        "Real device frames with synced scroll, clicks and navigation.",
+        "Open all 110+ devices by category, from the smallest phone to the largest screen.",
+        "Expand any device, then hide every tool in focus mode for clean reviews and demos.",
+        "Your mockup on one side, the live page on the other. Spot every difference at a glance.",
+        "Annotate a screenshot, copy a fix prompt for your AI tool, or replay a user flow on every device."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "editor-reviewed",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "en_GB",
+      "storeLocale": "en-GB",
+      "language": "English (Great Britain)",
+      "name": "Mobile View: Device Emulator & Responsive Tester",
+      "summary": "Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots.",
+      "description": "Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.\n\n- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.\n- Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.\n- Synchronise scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.\n- Save device sets and favorites for repeat responsive testing.\n- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.\n- Compare the live website with a local design reference, side by side or as an overlay.\n- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.\n\nOpen a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.\n\nNo Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.\n\nThese are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.",
+      "screenshotCaptions": [
+        "Every screen, side by side.",
+        "Every device. One click.",
+        "Focus on one screen.",
+        "Match the design, pixel for pixel.",
+        "Mark the bug. Record the flow."
+      ],
+      "screenshotSubtitles": [
+        "Real device frames with synced scroll, clicks and navigation.",
+        "Open all 110+ devices by category, from the smallest phone to the largest screen.",
+        "Expand any device, then hide every tool in focus mode for clean reviews and demos.",
+        "Your mockup on one side, the live page on the other. Spot every difference at a glance.",
+        "Annotate a screenshot, copy a fix prompt for your AI tool, or replay a user flow on every device."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "editor-reviewed",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "en_US",
+      "storeLocale": "en-US",
+      "language": "English (USA)",
+      "name": "Mobile View: Device Emulator & Responsive Tester",
+      "summary": "Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots.",
+      "description": "Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.\n\n- Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.\n- Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.\n- Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.\n- Save device sets and favorites for repeat responsive testing.\n- Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.\n- Compare the live website with a local design reference, side by side or as an overlay.\n- Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.\n\nOpen a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.\n\nNo Mobile View account or subscription is required. The extension processes your testing data locally, without an analytics service or application backend. It does not upload your screenshots, design references or annotations. Websites you open still make their normal network requests.\n\nThese are viewport previews using Chrome, not physical devices or the Safari engine. Website sign-in and embedding rules still apply. The original page stays intact; new previews do not copy unsaved edits.",
+      "screenshotCaptions": [
+        "Every screen, side by side.",
+        "Every device. One click.",
+        "Focus on one screen.",
+        "Match the design, pixel for pixel.",
+        "Mark the bug. Record the flow."
+      ],
+      "screenshotSubtitles": [
+        "Real device frames with synced scroll, clicks and navigation.",
+        "Open all 110+ devices by category, from the smallest phone to the largest screen.",
+        "Expand any device, then hide every tool in focus mode for clean reviews and demos.",
+        "Your mockup on one side, the live page on the other. Spot every difference at a glance.",
+        "Annotate a screenshot, copy a fix prompt for your AI tool, or replay a user flow on every device."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "editor-reviewed",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "es_419",
+      "storeLocale": "es-419",
+      "language": "Español (Latinoamérica y el Caribe)",
+      "name": "Mobile View: Emulador móvil y prueba responsiva",
+      "summary": "Simulador móvil para probar diseños responsive. Compara vistas de dispositivos, sincroniza el desplazamiento y captura pantallas.",
+      "description": "Mobile View es una herramienta gratuita y de código abierto para probar sitios web adaptables en Chrome. Compara hasta cuatro vistas en paralelo, incluida una vista previa móvil, para revisar menús, texto y espaciado.\n\n- Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.\n- Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.\n- Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.\n- Para repetir las pruebas de diseño adaptable, guarda conjuntos, favoritos y dispositivos recientes, o centra una sola vista para revisarla en detalle.\n- Captura una vista o todo el espacio de trabajo y añade trazos, cuadros, flechas, texto o recortes.\n- Compara un diseño local junto a la web activa o superpuesto sobre ella y marca comentarios sin subirlo.\n- Copia a tu herramienta de programación un prompt estructurado con la URL, dispositivos, tamaños y detalles opcionales del problema.\n\nTodo funciona localmente en el navegador. No requiere cuenta, suscripción, analítica, telemetría ni backend. Las URL, capturas, grabaciones, diseños, anotaciones y ajustes no se envían a ningún servidor.\n\nSon vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari. Siguen vigentes las reglas de acceso e integración de cada sitio. La página original se conserva; las nuevas vistas no copian cambios sin guardar.",
+      "screenshotCaptions": [
+        "Todas las pantallas, lado a lado.",
+        "Todos los dispositivos. Un clic.",
+        "Enfócate en una pantalla.",
+        "Igual al diseño, píxel por píxel.",
+        "Marca el error. Graba el flujo."
+      ],
+      "screenshotSubtitles": [
+        "Marcos de dispositivos reales con desplazamiento, clics y navegación sincronizados.",
+        "Abre los 110+ dispositivos por categoría, desde el celular más pequeño hasta la pantalla más grande.",
+        "Amplía cualquier dispositivo y oculta todas las herramientas en modo enfoque para revisiones y demos limpias.",
+        "Tu mockup de un lado, la página en vivo del otro. Detecta cada diferencia de un vistazo.",
+        "Anota una captura de pantalla, copia un prompt de corrección para tu herramienta de IA o reproduce un flujo de usuario en cada dispositivo."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "et",
+      "storeLocale": "et",
+      "language": "Eesti",
+      "name": "Mobile View: Seadmeemulaator ja kohanduvustest",
+      "summary": "Mobiilisimulaator kohanduva veebidisaini testimiseks. Võrdle seadmevaateid, sünkrooni kerimine ja tee kuvatõmmiseid.",
+      "description": "Mobile View on tasuta avatud lähtekoodiga tööriist kohanduvate veebilehtede testimiseks Chrome’is. Võrdle kõrvuti kuni nelja vaadet, sealhulgas mobiili eelvaadet, et kontrollida menüüsid, teksti ja vahesid. Vali realistlikud seadmed, muuda suunda ja suumi, sünkrooni kerimine ja navigeerimine, tee kuvatõmmiseid ning võrdle kohaliku kujundusega. Kõik töötab brauseris kohapeal ilma konto, tellimuse, analüütika, telemeetria või serverita.\n\nAvage kõik seadmed ühe klõpsuga. Eelvaated on rühmitatud seadmetüübi järgi ja järjestatud väiksematest ekraanidest suuremateni.\n\nKohanduvate paigutuste korduvaks testimiseks salvesta seadmekomplekte ja lemmikuid või loo kohandatud vaatesuurusi. Jäädvusta üks vaade või kogu tööala ning lisa nooli, kaste ja teksti. Võrdle kohalikku kujundust veebilehega kõrvuti või ülekattena ja kopeeri URL-i, seadmete, mõõtmete ning märkustega parandamisjuhis oma programmeerimistööriista.\n\nNeed on Chrome’i kohanduvad eelvaated, mitte füüsilised seadmed ega Safari mootor. Veebisaitide sisselogimis- ja manustamisreeglid kehtivad edasi. Algne leht säilib; uued eelvaated ei kopeeri salvestamata muudatusi.",
+      "screenshotCaptions": [
+        "Kõik ekraanid kõrvuti.",
+        "Kõik seadmed. Üks klõps.",
+        "Keskendu ühele ekraanile.",
+        "Täpselt nagu kujundus, piksel pikslilt.",
+        "Märgi viga. Salvesta kasutusvoog."
+      ],
+      "screenshotSubtitles": [
+        "Päris seadmeraamid sünkroonitud kerimise, klõpsude ja navigeerimisega.",
+        "Ava kõik 110+ seadet kategooriate kaupa, väikseimast telefonist suurima ekraanini.",
+        "Laienda mis tahes seade ja peida fookusrežiimis kõik tööriistad, et ülevaatused ja demod oleksid puhtad.",
+        "Ühel pool sinu makett, teisel pool päris leht. Märka iga erinevust ühe pilguga.",
+        "Lisa kuvatõmmisele märkmeid, kopeeri AI-tööriista jaoks parandusviip või esita kasutusvoog uuesti igas seadmes."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "fa",
+      "storeLocale": "fa",
+      "language": "فارسی",
+      "name": "Mobile View: شبیه‌ساز دستگاه و تست واکنش‌گرا",
+      "summary": "شبیه‌ساز موبایل برای آزمایش طراحی واکنش‌گرا. نماهای دستگاه‌ها را مقایسه کنید، پیمایش را همگام کنید و عکس صفحه بگیرید.",
+      "description": "Mobile View ابزاری رایگان و متن‌باز برای آزمایش وب‌سایت‌های واکنش‌گرا در Chrome است. حداکثر چهار نما، از جمله پیش‌نمایش موبایل، را کنار هم مقایسه کنید تا منوها، متن و فاصله‌ها را بررسی کنید. دستگاه واقعی انتخاب کنید، جهت و بزرگ‌نمایی را تغییر دهید، پیمایش و ناوبری را همگام کنید، تصویر بگیرید و با طرح محلی مقایسه کنید. همه‌چیز به‌صورت محلی در مرورگر اجرا می‌شود و به حساب، اشتراک، تحلیل، تله‌متری یا سرور نیاز ندارد.\n\n- همه دستگاه‌ها را با یک کلیک باز کنید. پیش‌نمایش‌ها بر اساس نوع دستگاه گروه‌بندی شده‌اند و از صفحه‌نمایش کوچک‌تر به بزرگ‌تر مرتب می‌شوند.\n- برای تکرار آزمایش طرح‌های واکنش‌گرا، اندازه‌های دلخواه نما بسازید، مجموعه‌ها و دستگاه‌های محبوب را ذخیره کنید یا روی یک نما تمرکز کنید. تعاملات پشتیبانی‌شده را بین نماهای متناظر همگام کنید.\n- از یک نما یا تمام فضای کار عکس بگیرید. پیکان، کادر، نقاشی و متن اضافه کنید یا تصویر را برش دهید. طرح محلی را کنار صفحه یا به‌صورت لایه روی آن نمایش دهید.\n- یک دستور اصلاح ساختاریافته شامل URL، دستگاه‌ها، اندازه‌های نما و یادداشت‌های مشکل را در ابزار کدنویسی خود کپی کنید.\n\nاین‌ها پیش‌نمایش‌های واکنش‌گرا در Chrome هستند، نه دستگاه واقعی یا موتور Safari. قوانین ورود و جاسازی وب‌سایت‌ها همچنان برقرار است. صفحه اصلی حفظ می‌شود؛ پیش‌نمایش‌های جدید ویرایش‌های ذخیره‌نشده را کپی نمی‌کنند.",
+      "screenshotCaptions": [
+        "همه صفحه‌نمایش‌ها، کنار هم.",
+        "همه دستگاه‌ها. با یک کلیک.",
+        "روی یک صفحه تمرکز کنید.",
+        "مطابق طرح، پیکسل به پیکسل.",
+        "باگ را علامت بزنید. مسیر را ضبط کنید."
+      ],
+      "screenshotSubtitles": [
+        "قاب واقعی دستگاه‌ها با پیمایش، کلیک و ناوبری همگام.",
+        "همه 110+ دستگاه را بر اساس دسته باز کنید، از کوچک‌ترین گوشی تا بزرگ‌ترین صفحه‌نمایش.",
+        "هر دستگاهی را بزرگ کنید، سپس در حالت تمرکز همه ابزارها را پنهان کنید تا بازبینی و نمایش تمیزتری داشته باشید.",
+        "طرح اولیه شما در یک سو، صفحه زنده در سوی دیگر. هر تفاوتی را در یک نگاه ببینید.",
+        "روی تصویر صفحه یادداشت بگذارید، یک پرامپت اصلاح برای ابزار هوش مصنوعی خود کپی کنید، یا مسیر کاربر را روی همه دستگاه‌ها دوباره پخش کنید."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "fi",
+      "storeLocale": "fi",
+      "language": "Suomi",
+      "name": "Mobile View: Laite-emulaattori ja responsiivinen testi",
+      "summary": "Mobiilisimulaattori responsiivisen verkkosuunnittelun testaukseen. Vertaa näkymiä, synkronoi vieritys ja ota kuvakaappauksia.",
+      "description": "Mobile View on maksuton avoimen lähdekoodin työkalu responsiivisten verkkosivustojen testaamiseen Chromessa. Vertaa rinnakkain jopa neljää näkymää, mukaan lukien mobiiliesikatselu, ja tarkista valikot, teksti ja välit. Valitse realistisia laitteita, muuta suuntaa ja zoomausta, synkronoi vieritys ja siirtyminen, ota kuvakaappauksia ja vertaa paikalliseen suunnitelmaan. Kaikki toimii paikallisesti ilman tiliä, tilausta, analytiikkaa, telemetriaa tai palvelinta.\n\nAvaa kaikki laitteet yhdellä napsautuksella. Esikatselut on ryhmitelty laitetyypin mukaan ja järjestetty pienemmistä näytöistä suurempiin.\n\nResponsiivisten asettelujen toistuvaa testaamista varten tallenna laitejoukkoja ja suosikkeja tai määritä omia näyttökokoja. Kuvaa yksi näkymä tai koko työtila ja lisää nuolia, kehyksiä ja tekstiä. Vertaa paikallista suunnitelmaa sivustoon rinnakkain tai päällekkäin ja kopioi URL:n, laitteet, näkymäkoot ja muistiinpanot sisältävä korjauskehotus koodaustyökaluusi.\n\nNämä ovat responsiivisia esikatseluja Chromessa, eivät fyysisiä laitteita tai Safari-moottori. Sivustojen kirjautumis- ja upotussäännöt ovat edelleen voimassa. Alkuperäinen sivu säilyy; uudet esikatselut eivät kopioi tallentamattomia muutoksia.",
+      "screenshotCaptions": [
+        "Kaikki näytöt rinnakkain.",
+        "Kaikki laitteet. Yksi napsautus.",
+        "Keskity yhteen näyttöön.",
+        "Pikselintarkasti suunnitelman mukaan.",
+        "Merkitse bugi. Tallenna käyttöpolku."
+      ],
+      "screenshotSubtitles": [
+        "Aidot laitekehykset synkronoidulla vierityksellä, napsautuksilla ja siirtymisellä.",
+        "Avaa kaikki 110+ laitetta luokittain pienimmästä puhelimesta suurimpaan näyttöön.",
+        "Laajenna mikä tahansa laite ja piilota kaikki työkalut keskittymistilassa siistejä katselmointeja ja esittelyjä varten.",
+        "Mallikuva toisella puolella, live-sivu toisella. Huomaa jokainen ero yhdellä silmäyksellä.",
+        "Lisää merkintöjä kuvakaappaukseen, kopioi korjauskehote tekoälytyökaluusi tai toista käyttöpolku jokaisella laitteella."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "gu",
+      "storeLocale": "gu",
+      "language": "ગુજરાતી",
+      "name": "Mobile View: ડિવાઇસ ઇમ્યુલેટર અને રિસ્પોન્સિવ ટેસ્ટર",
+      "summary": "મોબાઇલ સિમ્યુલેટરથી રિસ્પોન્સિવ વેબ ડિઝાઇન તપાસો. ઉપકરણના દૃશ્યો સરખાવો, સ્ક્રોલ સિંક કરો અને સ્ક્રીનશૉટ લો.",
+      "description": "Mobile View એ Chromeમાં રિસ્પોન્સિવ વેબસાઇટનું પરીક્ષણ કરવા માટેનું મફત ઓપન-સોર્સ સાધન છે। મેનુ, લખાણ અને અંતર તપાસવા માટે મોબાઇલ પૂર્વાવલોકન સહિત ચાર દૃશ્યો સુધી બાજુબાજુ સરખાવો। વાસ્તવિક ડિવાઇસ પસંદ કરો, દિશા અને ઝૂમ બદલો, સ્ક્રોલ અને નેવિગેશન સિંક કરો, સ્ક્રીનશૉટ લો અને સ્થાનિક ડિઝાઇન સાથે સરખાવો. બધું બ્રાઉઝરમાં સ્થાનિક રીતે ચાલે છે; એકાઉન્ટ, સબ્સ્ક્રિપ્શન, એનાલિટિક્સ, ટેલિમેટ્રી કે સર્વર જરૂરી નથી.\n\n- એક ક્લિકમાં બધા ડિવાઇસ ખોલો. પ્રીવ્યૂ ડિવાઇસના પ્રકાર પ્રમાણે જૂથમાં ગોઠવાય છે અને નાનીથી મોટી સ્ક્રીનના ક્રમમાં દેખાય છે.\n- રિસ્પોન્સિવ લેઆઉટનું વારંવાર પરીક્ષણ કરવા માટે પોતાના વ્યૂપોર્ટ માપ બનાવો, ઉપકરણ સેટ અને મનપસંદ ઉપકરણો સાચવો અથવા એક દૃશ્ય પર ધ્યાન આપો. મેળ ખાતાં દૃશ્યોમાં સમર્થિત ક્રિયાઓ સિંક કરો.\n- એક દૃશ્ય અથવા આખા કાર્યક્ષેત્રનો સ્ક્રીનશૉટ લો. તીર, બૉક્સ, રેખાંકન અને લખાણ ઉમેરો અથવા ચિત્ર કાપો. સ્થાનિક ડિઝાઇન પૃષ્ઠની બાજુમાં અથવા ઓવરલે તરીકે બતાવો.\n- URL, ઉપકરણો, વ્યૂપોર્ટ માપ અને સમસ્યાની નોંધો સાથેનો ગોઠવાયેલ સુધારા પ્રોમ્પ્ટ તમારા કોડિંગ ટૂલમાં કૉપિ કરો.\n\nઆ Chromeમાં રિસ્પોન્સિવ વ્યૂપોર્ટ પૂર્વાવલોકનો છે, વાસ્તવિક ઉપકરણો કે Safari એન્જિન નહીં. વેબસાઇટના લૉગિન અને એમ્બેડિંગ નિયમો લાગુ રહે છે. મૂળ પૃષ્ઠ જળવાય છે; નવા પૂર્વાવલોકનો સાચવ્યા વગરના ફેરફારો કૉપિ કરતા નથી.",
+      "screenshotCaptions": [
+        "દરેક સ્ક્રીન, બાજુબાજુમાં.",
+        "દરેક ડિવાઇસ. એક ક્લિક.",
+        "એક સ્ક્રીન પર ધ્યાન આપો.",
+        "ડિઝાઇન સાથે મેળ, પિક્સેલ-દર-પિક્સેલ.",
+        "બગ ચિહ્નિત કરો. ફ્લો રેકોર્ડ કરો."
+      ],
+      "screenshotSubtitles": [
+        "સિંક થયેલા સ્ક્રોલ, ક્લિક અને નેવિગેશન સાથે વાસ્તવિક ડિવાઇસ ફ્રેમ.",
+        "સૌથી નાના ફોનથી સૌથી મોટી સ્ક્રીન સુધી, બધા 110+ ડિવાઇસ કેટેગરી પ્રમાણે ખોલો.",
+        "કોઈપણ ડિવાઇસ મોટું કરો, પછી સ્વચ્છ સમીક્ષા અને ડેમો માટે ફોકસ મોડમાં બધા ટૂલ છુપાવો.",
+        "એક બાજુ તમારું મોકઅપ, બીજી બાજુ લાઇવ પેજ. દરેક તફાવત એક નજરમાં પકડો.",
+        "સ્ક્રીનશૉટ પર નોંધ ઉમેરો, તમારા AI ટૂલ માટે ફિક્સ પ્રોમ્પ્ટ કૉપિ કરો અથવા દરેક ડિવાઇસ પર યુઝર ફ્લો ફરી ચલાવો."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "he",
+      "storeLocale": "iw",
+      "language": "עברית",
+      "name": "Mobile View: אמולטור מכשירים ובדיקת רספונסיביות",
+      "summary": "סימולטור נייד לבדיקת עיצוב רספונסיבי. השוו תצוגות מכשירים, סנכרנו גלילה וצלמו מסך.",
+      "description": "Mobile View הוא כלי חינמי בקוד פתוח לבדיקת אתרים רספונסיביים ב-Chrome. השוו עד ארבע תצוגות זו לצד זו, כולל תצוגה מקדימה לנייד, כדי לבדוק תפריטים, טקסט וריווח. בחרו מכשירים מציאותיים, שנו כיוון וזום, סנכרנו גלילה וניווט, צלמו והשוו לעיצוב מקומי. הכול פועל מקומית בדפדפן ללא חשבון, מינוי, ניתוח, טלמטריה או שרת.\n\n- פתחו את כל המכשירים בלחיצה אחת. התצוגות המקדימות מקובצות לפי סוג המכשיר ומסודרות ממסכים קטנים לגדולים.\n- לבדיקות חוזרות של פריסות רספונסיביות, צרו גדלי תצוגה מותאמים, שמרו קבוצות ומכשירים מועדפים או התמקדו בתצוגה אחת. סנכרנו אינטראקציות נתמכות בין תצוגות תואמות.\n- צלמו תצוגה אחת או את כל סביבת העבודה. הוסיפו חצים, מסגרות, ציורים וטקסט או חתכו את התמונה. הציגו עיצוב מקומי לצד העמוד או כשכבה מעליו.\n- העתיקו לכלי התכנות שלכם הנחיית תיקון מובנית עם כתובת URL, מכשירים, מידות התצוגה והערות על הבעיה.\n\nאלו תצוגות רספונסיביות ב-Chrome, לא מכשירים פיזיים או מנוע Safari. כללי ההתחברות וההטמעה של האתרים עדיין חלים. העמוד המקורי נשמר; תצוגות חדשות אינן מעתיקות שינויים שלא נשמרו.",
+      "screenshotCaptions": [
+        "כל המסכים, זה לצד זה.",
+        "כל המכשירים. לחיצה אחת.",
+        "התמקדו במסך אחד.",
+        "תואם לעיצוב, פיקסל אחר פיקסל.",
+        "סמנו את הבאג. הקליטו את התהליך."
+      ],
+      "screenshotSubtitles": [
+        "מסגרות מכשירים אמיתיות עם גלילה, לחיצות וניווט מסונכרנים.",
+        "פתחו את כל 110+ המכשירים לפי קטגוריה, מהטלפון הקטן ביותר ועד המסך הגדול ביותר.",
+        "הגדילו כל מכשיר, ואז הסתירו את כל הכלים במצב מיקוד לסקירות והדגמות נקיות.",
+        "המוקאפ שלכם בצד אחד, הדף החי בצד השני. זהו כל הבדל במבט אחד.",
+        "הוסיפו הערות לצילום מסך, העתיקו הנחיית תיקון לכלי ה-AI שלכם, או הפעילו מחדש תהליך משתמש בכל מכשיר."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "hr",
+      "storeLocale": "hr",
+      "language": "Hrvatski",
+      "name": "Mobile View: Emulator uređaja i responzivni test",
+      "summary": "Mobilni simulator za testiranje responzivnog dizajna. Usporedite prikaze, sinkronizirajte pomicanje i snimite zaslon.",
+      "description": "Mobile View besplatan je alat otvorenog koda za testiranje responzivnih web-stranica u Chromeu. Usporedite do četiri prikaza jedan uz drugi, uključujući mobilni pretpregled, kako biste provjerili izbornike, tekst i razmake. Odaberite realistične uređaje, promijenite orijentaciju i zumiranje, sinkronizirajte pomicanje i navigaciju, snimite zaslon i usporedite s lokalnim dizajnom. Sve radi lokalno bez računa, pretplate, analitike, telemetrije ili poslužitelja.\n\n- Otvorite sve uređaje jednim klikom. Pretpregledi su grupirani prema vrsti uređaja i poredani od manjih zaslona prema većima.\n- Za ponovljeno testiranje responzivnih rasporeda izradite vlastite dimenzije prikaza, spremite skupove i omiljene uređaje ili se usredotočite na jedan prikaz. Sinkronizirajte podržane interakcije između odgovarajućih prikaza.\n- Snimite jedan prikaz ili cijeli radni prostor. Dodajte strelice, okvire, crteže i tekst ili izrežite snimku. Prikažite lokalni dizajn uz stranicu ili kao preklop.\n- Kopirajte strukturiranu uputu za popravak s URL-om, uređajima, dimenzijama i bilješkama o problemu u svoj alat za programiranje.\n\nTo su responzivni prikazi u Chromeu, a ne fizički uređaji ni pogon Safari. Pravila prijave i ugrađivanja web-mjesta i dalje vrijede. Izvorna stranica ostaje sačuvana; novi prikazi ne kopiraju nespremljene izmjene.",
+      "screenshotCaptions": [
+        "Svi zasloni, jedan uz drugi.",
+        "Svi uređaji. Jedan klik.",
+        "Usredotočite se na jedan zaslon.",
+        "Točno prema dizajnu, piksel po piksel.",
+        "Označite grešku. Snimite tijek."
+      ],
+      "screenshotSubtitles": [
+        "Stvarni okviri uređaja sa sinkroniziranim pomicanjem, klikovima i navigacijom.",
+        "Otvorite svih 110+ uređaja po kategorijama, od najmanjeg telefona do najvećeg zaslona.",
+        "Proširite bilo koji uređaj, a zatim u načinu fokusa sakrijte sve alate za čiste preglede i demonstracije.",
+        "Vaša maketa s jedne strane, živa stranica s druge. Uočite svaku razliku na prvi pogled.",
+        "Dodajte bilješke na snimku zaslona, kopirajte upit za ispravak za svoj AI alat ili ponovno reproducirajte korisnički tijek na svakom uređaju."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "hu",
+      "storeLocale": "hu",
+      "language": "Magyar",
+      "name": "Mobile View: Eszközemulátor és reszponzív teszt",
+      "summary": "Mobil szimulátor reszponzív webdesign teszteléséhez. Hasonlítsd össze a nézeteket, szinkronizáld a görgetést, készíts képernyőképet.",
+      "description": "A Mobile View ingyenes, nyílt forráskódú eszköz reszponzív webhelyek teszteléséhez a Chrome-ban. Hasonlítson össze legfeljebb négy nézetet egymás mellett, köztük egy mobilos előnézetet, hogy ellenőrizze a menüket, a szöveget és a térközöket. Válasszon valósághű eszközöket, módosítsa a tájolást és a nagyítást, szinkronizálja a görgetést és navigációt, készítsen képernyőképet, és hasonlítsa össze helyi tervvel. Minden helyben fut, fiók, előfizetés, analitika, telemetria vagy szerver nélkül.\n\n- Nyissa meg az összes eszközt egyetlen kattintással. Az előnézetek eszköztípus szerint vannak csoportosítva, és a kisebb képernyőktől a nagyobbak felé rendezve.\n- A reszponzív elrendezések ismételt teszteléséhez hozzon létre egyéni nézetméreteket, mentse az eszközcsoportokat és kedvenceket, vagy összpontosítson egy nézetre. Szinkronizálja a támogatott műveleteket az egyező nézetek között.\n- Rögzítsen egy nézetet vagy a teljes munkaterületet. Adjon hozzá nyilakat, kereteket, rajzokat és szöveget, vagy vágja körül a képet. Jelenítsen meg helyi tervet az oldal mellett vagy fedvényként.\n- Másoljon strukturált javítási utasítást a programozóeszközébe az URL-lel, eszközökkel, nézetméretekkel és a probléma jegyzeteivel.\n\nEzek a Chrome reszponzív nézetei, nem fizikai eszközök vagy Safari-motor. A webhelyek bejelentkezési és beágyazási szabályai továbbra is érvényesek. Az eredeti oldal megmarad; az új nézetek nem másolják a nem mentett módosításokat.",
+      "screenshotCaptions": [
+        "Minden képernyő egymás mellett.",
+        "Minden eszköz. Egy kattintás.",
+        "Fókuszban egy képernyő.",
+        "Pixelpontosan a terv szerint.",
+        "Jelölje meg a hibát. Rögzítse a folyamatot."
+      ],
+      "screenshotSubtitles": [
+        "Valódi eszközkeretek szinkronizált görgetéssel, kattintással és navigációval.",
+        "Nyissa meg mind a 110+ eszközt kategóriánként, a legkisebb telefontól a legnagyobb képernyőig.",
+        "Nagyítson ki bármely eszközt, majd fókusz módban rejtsen el minden kezelőelemet a letisztult áttekintésekhez és bemutatókhoz.",
+        "Egyik oldalon a látványterv, a másikon az élő oldal. Minden eltérést egy pillantással észrevesz.",
+        "Jegyzeteljen képernyőképet, másoljon javítási promptot az AI-eszközéhez, vagy játsszon le egy felhasználói folyamatot minden eszközön."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "id",
+      "storeLocale": "id",
+      "language": "Indonesia",
+      "name": "Mobile View: Emulator perangkat & penguji responsif",
+      "summary": "Simulator seluler untuk menguji desain responsif. Bandingkan tampilan perangkat, sinkronkan gulir dan ambil tangkapan layar.",
+      "description": "Mobile View adalah alat gratis dan sumber terbuka untuk menguji situs web responsif di Chrome. Bandingkan hingga empat tampilan berdampingan, termasuk pratinjau seluler, untuk memeriksa menu, teks, dan jarak. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.\n\n- Buka semua perangkat dengan satu klik. Pratinjau dikelompokkan berdasarkan jenis perangkat dan diurutkan dari layar kecil ke besar.\n- Untuk mengulangi pengujian tata letak responsif, buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.\n- Tangkap satu tampilan atau seluruh ruang kerja. Tambahkan panah, kotak, gambar, dan teks atau potong tangkapan layar. Tampilkan desain lokal di samping halaman atau sebagai overlay.\n- Salin instruksi perbaikan terstruktur berisi URL, perangkat, ukuran viewport, dan catatan masalah ke alat coding Anda.\n\nIni adalah pratinjau viewport responsif di Chrome, bukan perangkat fisik atau mesin Safari. Aturan masuk dan penyematan situs tetap berlaku. Halaman asli tetap utuh; pratinjau baru tidak menyalin perubahan yang belum disimpan.",
+      "screenshotCaptions": [
+        "Semua layar, berdampingan.",
+        "Semua perangkat. Satu klik.",
+        "Fokus pada satu layar.",
+        "Sesuai desain, piksel demi piksel.",
+        "Tandai bug. Rekam alurnya."
+      ],
+      "screenshotSubtitles": [
+        "Bingkai perangkat asli dengan gulir, klik, dan navigasi yang tersinkron.",
+        "Buka semua 110+ perangkat per kategori, dari ponsel terkecil hingga layar terbesar.",
+        "Perbesar perangkat mana pun, lalu sembunyikan semua alat dalam mode fokus untuk tinjauan dan demo yang bersih.",
+        "Mockup Anda di satu sisi, halaman langsung di sisi lain. Temukan setiap perbedaan dalam sekilas.",
+        "Beri anotasi pada tangkapan layar, salin prompt perbaikan untuk alat AI Anda, atau putar ulang alur pengguna di setiap perangkat."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "kn",
+      "storeLocale": "kn",
+      "language": "ಕನ್ನಡ",
+      "name": "Mobile View: ಸಾಧನ ಎಮ್ಯುಲೇಟರ್ ಮತ್ತು ರೆಸ್ಪಾನ್ಸಿವ್ ಪರೀಕ್ಷೆ",
+      "summary": "ಮೊಬೈಲ್ ಸಿಮ್ಯುಲೇಟರ್ ಮೂಲಕ ರೆಸ್ಪಾನ್ಸಿವ್ ವೆಬ್ ವಿನ್ಯಾಸ ಪರೀಕ್ಷಿಸಿ. ಸಾಧನದ ನೋಟಗಳನ್ನು ಹೋಲಿಸಿ, ಸ್ಕ್ರೋಲ್ ಸಿಂಕ್ ಮಾಡಿ, ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ತೆಗೆಯಿರಿ.",
+      "description": "Mobile View Chromeನಲ್ಲಿ ರೆಸ್ಪಾನ್ಸಿವ್ ವೆಬ್‌ಸೈಟ್‌ಗಳನ್ನು ಪರೀಕ್ಷಿಸಲು ಉಚಿತ ಓಪನ್ ಸೋರ್ಸ್ ಸಾಧನವಾಗಿದೆ. ಮೆನುಗಳು, ಪಠ್ಯ ಮತ್ತು ಅಂತರಗಳನ್ನು ಪರಿಶೀಲಿಸಲು ಮೊಬೈಲ್ ಪೂರ್ವವೀಕ್ಷಣೆಯೂ ಸೇರಿದಂತೆ ನಾಲ್ಕು ವೀಕ್ಷಣೆಗಳವರೆಗೆ ಅಕ್ಕಪಕ್ಕದಲ್ಲಿ ಹೋಲಿಸಿ. ನೈಜ ಸಾಧನಗಳನ್ನು ಆರಿಸಿ, ದಿಕ್ಕು ಮತ್ತು ಝೂಮ್ ಬದಲಿಸಿ, ಸ್ಕ್ರೋಲ್ ಮತ್ತು ನ್ಯಾವಿಗೇಶನ್ ಸಿಂಕ್ ಮಾಡಿ, ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ತೆಗೆದು ಸ್ಥಳೀಯ ವಿನ್ಯಾಸದೊಂದಿಗೆ ಹೋಲಿಸಿ. ಎಲ್ಲವೂ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಥಳೀಯವಾಗಿ ನಡೆಯುತ್ತದೆ; ಖಾತೆ, ಚಂದಾದಾರಿಕೆ, ಅನಾಲಿಟಿಕ್ಸ್, ಟೆಲಿಮೆಟ್ರಿ ಅಥವಾ ಸರ್ವರ್ ಅಗತ್ಯವಿಲ್ಲ.\n\n- ಒಂದೇ ಕ್ಲಿಕ್‌ನಲ್ಲಿ ಎಲ್ಲಾ ಸಾಧನಗಳನ್ನು ತೆರೆಯಿರಿ. ಪೂರ್ವವೀಕ್ಷಣೆಗಳನ್ನು ಸಾಧನದ ಪ್ರಕಾರ ಗುಂಪು ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಚಿಕ್ಕ ಪರದೆಗಳಿಂದ ದೊಡ್ಡ ಪರದೆಗಳವರೆಗೆ ಕ್ರಮವಾಗಿ ಜೋಡಿಸಲಾಗಿದೆ.\n- ರೆಸ್ಪಾನ್ಸಿವ್ ವಿನ್ಯಾಸಗಳನ್ನು ಮತ್ತೆ ಮತ್ತೆ ಪರೀಕ್ಷಿಸಲು ನಿಮ್ಮದೇ ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳನ್ನು ರಚಿಸಿ, ಸಾಧನ ಸೆಟ್‌ಗಳು ಮತ್ತು ಮೆಚ್ಚಿನವುಗಳನ್ನು ಉಳಿಸಿ ಅಥವಾ ಒಂದೇ ವೀಕ್ಷಣೆಯ ಮೇಲೆ ಗಮನ ಕೊಡಿ. ಹೊಂದುವ ವೀಕ್ಷಣೆಗಳ ನಡುವೆ ಬೆಂಬಲಿತ ಸಂವಹನಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿ.\n- ಒಂದು ವೀಕ್ಷಣೆ ಅಥವಾ ಸಂಪೂರ್ಣ ಕಾರ್ಯಸ್ಥಳವನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ. ಬಾಣಗಳು, ಬಾಕ್ಸ್‌ಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ಪಠ್ಯ ಸೇರಿಸಿ ಅಥವಾ ಚಿತ್ರ ಕತ್ತರಿಸಿ. ಸ್ಥಳೀಯ ವಿನ್ಯಾಸವನ್ನು ಪುಟದ ಪಕ್ಕದಲ್ಲಿ ಅಥವಾ ಓವರ್‌ಲೇ ಆಗಿ ತೋರಿಸಿ.\n- URL, ಸಾಧನಗಳು, ವ್ಯೂಪೋರ್ಟ್ ಗಾತ್ರಗಳು ಮತ್ತು ಸಮಸ್ಯೆಯ ಟಿಪ್ಪಣಿಗಳಿರುವ ರಚನಾತ್ಮಕ ತಿದ್ದುಪಡಿ ಪ್ರಾಂಪ್ಟ್ ಅನ್ನು ನಿಮ್ಮ ಕೋಡಿಂಗ್ ಸಾಧನಕ್ಕೆ ನಕಲಿಸಿ.\n\nಇವು Chromeನ ರೆಸ್ಪಾನ್ಸಿವ್ ವ್ಯೂಪೋರ್ಟ್ ಪೂರ್ವವೀಕ್ಷಣೆಗಳು, ನೈಜ ಸಾಧನಗಳು ಅಥವಾ Safari ಎಂಜಿನ್ ಅಲ್ಲ. ವೆಬ್‌ಸೈಟ್ ಲಾಗಿನ್ ಮತ್ತು ಎಂಬೆಡಿಂಗ್ ನಿಯಮಗಳು ಅನ್ವಯಿಸುತ್ತವೆ. ಮೂಲ ಪುಟ ಉಳಿಯುತ್ತದೆ; ಹೊಸ ಪೂರ್ವವೀಕ್ಷಣೆಗಳು ಉಳಿಸದ ಬದಲಾವಣೆಗಳನ್ನು ನಕಲಿಸುವುದಿಲ್ಲ.",
+      "screenshotCaptions": [
+        "ಎಲ್ಲಾ ಸ್ಕ್ರೀನ್‌ಗಳು, ಅಕ್ಕಪಕ್ಕದಲ್ಲಿ.",
+        "ಎಲ್ಲಾ ಸಾಧನಗಳು. ಒಂದೇ ಕ್ಲಿಕ್.",
+        "ಒಂದು ಸ್ಕ್ರೀನ್ ಮೇಲೆ ಗಮನ ಹರಿಸಿ.",
+        "ವಿನ್ಯಾಸಕ್ಕೆ ಪಿಕ್ಸೆಲ್‌ನಿಂದ ಪಿಕ್ಸೆಲ್ ಹೊಂದಿಸಿ.",
+        "ಬಗ್ ಗುರುತಿಸಿ. ಫ್ಲೋ ರೆಕಾರ್ಡ್ ಮಾಡಿ."
+      ],
+      "screenshotSubtitles": [
+        "ಸಿಂಕ್ ಮಾಡಿದ ಸ್ಕ್ರೋಲ್, ಕ್ಲಿಕ್ ಮತ್ತು ನ್ಯಾವಿಗೇಶನ್‌ನೊಂದಿಗೆ ನೈಜ ಸಾಧನ ಫ್ರೇಮ್‌ಗಳು.",
+        "ಚಿಕ್ಕ ಫೋನ್‌ನಿಂದ ದೊಡ್ಡ ಸ್ಕ್ರೀನ್‌ವರೆಗೆ, ಎಲ್ಲಾ 110+ ಸಾಧನಗಳನ್ನು ವರ್ಗಗಳ ಪ್ರಕಾರ ತೆರೆಯಿರಿ.",
+        "ಯಾವುದೇ ಸಾಧನವನ್ನು ದೊಡ್ಡದಾಗಿಸಿ, ನಂತರ ಸ್ವಚ್ಛ ವಿಮರ್ಶೆ ಮತ್ತು ಡೆಮೊಗಳಿಗಾಗಿ ಫೋಕಸ್ ಮೋಡ್‌ನಲ್ಲಿ ಎಲ್ಲಾ ಟೂಲ್‌ಗಳನ್ನು ಮರೆಮಾಡಿ.",
+        "ಒಂದು ಬದಿಯಲ್ಲಿ ನಿಮ್ಮ ಮಾಕಪ್, ಇನ್ನೊಂದು ಬದಿಯಲ್ಲಿ ಲೈವ್ ಪುಟ. ಪ್ರತಿಯೊಂದು ವ್ಯತ್ಯಾಸವನ್ನು ಒಂದೇ ನೋಟದಲ್ಲಿ ಗುರುತಿಸಿ.",
+        "ಸ್ಕ್ರೀನ್‌ಶಾಟ್‌ಗೆ ಟಿಪ್ಪಣಿ ಸೇರಿಸಿ, ನಿಮ್ಮ AI ಟೂಲ್‌ಗಾಗಿ ಫಿಕ್ಸ್ ಪ್ರಾಂಪ್ಟ್ ನಕಲಿಸಿ, ಅಥವಾ ಪ್ರತಿಯೊಂದು ಸಾಧನದಲ್ಲಿ ಬಳಕೆದಾರರ ಫ್ಲೋ ಮರುಪ್ಲೇ ಮಾಡಿ."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "lt",
+      "storeLocale": "lt",
+      "language": "Lietuvių",
+      "name": "Mobile View: Įrenginių emuliatorius ir adaptyvus testas",
+      "summary": "Mobilusis simuliatorius adaptyviam dizainui testuoti. Lyginkite rodinius, sinchronizuokite slinkimą ir darykite ekrano nuotraukas.",
+      "description": "Mobile View yra nemokamas atvirojo kodo įrankis prisitaikančioms svetainėms testuoti Chrome naršyklėje. Palyginkite iki keturių rodinių greta, įskaitant mobilųjį peržiūros rodinį, ir tikrinkite meniu, tekstą bei tarpus. Rinkitės tikroviškus įrenginius, keiskite orientaciją bei mastelį, sinchronizuokite slinkimą ir naršymą, fiksuokite ekraną ir lyginkite su vietiniu dizainu. Viskas veikia naršyklėje be paskyros, prenumeratos, analizės, telemetrijos ar serverio.\n\n- Atverkite visus įrenginius vienu spustelėjimu. Peržiūros sugrupuotos pagal įrenginio tipą ir surikiuotos nuo mažesnių ekranų iki didesnių.\n- Norėdami pakartotinai testuoti prisitaikančius maketus, kurkite pasirinktinius peržiūros dydžius, išsaugokite rinkinius ir mėgstamus įrenginius arba susitelkite į vieną vaizdą. Sinchronizuokite palaikomas sąveikas tarp atitinkamų vaizdų.\n- Fiksuokite vieną vaizdą arba visą darbo sritį. Pridėkite rodykles, rėmelius, piešinius ir tekstą arba apkirpkite vaizdą. Rodykite vietinį dizainą šalia puslapio arba kaip perdangą.\n- Nukopijuokite struktūruotą taisymo užklausą su URL, įrenginiais, peržiūros dydžiais ir problemos pastabomis į savo programavimo įrankį.\n\nTai adaptyvios peržiūros naršyklėje Chrome, o ne fiziniai įrenginiai ar Safari variklis. Svetainių prisijungimo ir įterpimo taisyklės tebegalioja. Pradinis puslapis išlieka; naujos peržiūros nekopijuoja neišsaugotų pakeitimų.",
+      "screenshotCaptions": [
+        "Visi ekranai greta.",
+        "Visi įrenginiai. Vienas spustelėjimas.",
+        "Sutelkite dėmesį į vieną ekraną.",
+        "Tiksliai pagal dizainą, iki pikselio.",
+        "Pažymėkite klaidą. Įrašykite eigą."
+      ],
+      "screenshotSubtitles": [
+        "Tikri įrenginių rėmeliai su sinchronizuotu slinkimu, paspaudimais ir naršymu.",
+        "Atverkite visus 110+ įrenginių pagal kategorijas – nuo mažiausio telefono iki didžiausio ekrano.",
+        "Išskleiskite bet kurį įrenginį ir fokusavimo režimu paslėpkite visus įrankius – švarioms peržiūroms ir demonstracijoms.",
+        "Vienoje pusėje jūsų maketas, kitoje – veikiantis puslapis. Pastebėkite kiekvieną skirtumą iš pirmo žvilgsnio.",
+        "Pridėkite pastabų prie ekrano kopijos, nukopijuokite taisymo užklausą savo DI įrankiui arba atkurkite naudotojo eigą kiekviename įrenginyje."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "lv",
+      "storeLocale": "lv",
+      "language": "Latviešu",
+      "name": "Mobile View: Ierīču emulators un adaptīvais tests",
+      "summary": "Mobilais simulators responsīvā dizaina testēšanai. Salīdziniet skatus, sinhronizējiet ritināšanu un veidojiet ekrānuzņēmumus.",
+      "description": "Mobile View ir bezmaksas atvērtā pirmkoda rīks pielāgojamu vietņu testēšanai pārlūkā Chrome. Salīdziniet līdz četriem skatiem blakus, tostarp mobilo priekšskatījumu, lai pārbaudītu izvēlnes, tekstu un atstarpes. Izvēlieties reālistiskas ierīces, mainiet orientāciju un mērogu, sinhronizējiet ritināšanu un navigāciju, uzņemiet ekrānattēlus un salīdziniet ar lokālu dizainu. Viss darbojas pārlūkā bez konta, abonementa, analītikas, telemetrijas vai servera.\n\n- Atveriet visas ierīces ar vienu klikšķi. Priekšskatījumi ir grupēti pēc ierīces veida un sakārtoti no mazākiem ekrāniem līdz lielākiem.\n- Atkārtotai pielāgojamu izkārtojumu testēšanai izveidojiet pielāgotus skata izmērus, saglabājiet ierīču kopas un izlasi vai koncentrējieties uz vienu skatu. Sinhronizējiet atbalstītās mijiedarbības starp atbilstošiem skatiem.\n- Uzņemiet vienu skatu vai visu darbvietu. Pievienojiet bultas, rāmjus, zīmējumus un tekstu vai apgrieziet attēlu. Parādiet lokālu dizainu blakus lapai vai kā pārklājumu.\n- Kopējiet strukturētu labošanas uzvedni ar URL, ierīcēm, skata izmēriem un piezīmēm par problēmu savā programmēšanas rīkā.\n\nTie ir adaptīvi priekšskatījumi pārlūkā Chrome, nevis fiziskas ierīces vai Safari dzinis. Vietņu pieteikšanās un iegulšanas noteikumi joprojām ir spēkā. Sākotnējā lapa saglabājas; jauni priekšskatījumi nekopē nesaglabātās izmaiņas.",
+      "screenshotCaptions": [
+        "Visi ekrāni blakus.",
+        "Visas ierīces. Viens klikšķis.",
+        "Koncentrējieties uz vienu ekrānu.",
+        "Precīzi pēc dizaina, līdz pikselim.",
+        "Atzīmējiet kļūdu. Ierakstiet plūsmu."
+      ],
+      "screenshotSubtitles": [
+        "Īsti ierīču rāmji ar sinhronizētu ritināšanu, klikšķiem un navigāciju.",
+        "Atveriet visas 110+ ierīces pa kategorijām – no mazākā tālruņa līdz lielākajam ekrānam.",
+        "Izvērsiet jebkuru ierīci un fokusa režīmā paslēpiet visus rīkus tīrām pārskatīšanām un demonstrācijām.",
+        "Vienā pusē jūsu makets, otrā – tiešsaistes lapa. Pamaniet katru atšķirību vienā mirklī.",
+        "Anotējiet ekrānuzņēmumu, kopējiet labojuma uzvedni savam MI rīkam vai atskaņojiet lietotāja plūsmu katrā ierīcē."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ml",
+      "storeLocale": "ml",
+      "language": "മലയാളം",
+      "name": "Mobile View: ഡിവൈസ് എമുലേറ്ററും റെസ്‌പോൺസീവ് ടെസ്റ്ററും",
+      "summary": "മൊബൈൽ സിമുലേറ്ററിൽ റെസ്പോൺസീവ് ഡിസൈൻ പരിശോധിക്കുക. കാഴ്ചകൾ താരതമ്യം ചെയ്യൂ, സ്ക്രോൾ സമന്വയിപ്പിക്കൂ, സ്ക്രീൻഷോട്ട് എടുക്കൂ.",
+      "description": "Mobile View Chrome-ൽ റെസ്‌പോൺസീവ് വെബ്‌സൈറ്റുകൾ പരിശോധിക്കാനുള്ള സൗജന്യ ഓപ്പൺ സോഴ്‌സ് ഉപകരണമാണ്. മെനു, എഴുത്ത്, ഇടവേളകൾ എന്നിവ പരിശോധിക്കാൻ മൊബൈൽ പ്രിവ്യൂ ഉൾപ്പെടെ നാല് കാഴ്ചകൾ വരെ അരികരികിൽ താരതമ്യം ചെയ്യൂ. യഥാർത്ഥ ഉപകരണങ്ങൾ തിരഞ്ഞെടുക്കുക, ദിശയും സൂമും മാറ്റുക, സ്ക്രോളും നാവിഗേഷനും സമന്വയിപ്പിക്കുക, സ്ക്രീൻഷോട്ട് എടുക്കുക, പ്രാദേശിക ഡിസൈനുമായി താരതമ്യം ചെയ്യുക. അക്കൗണ്ട്, സബ്‌സ്‌ക്രിപ്‌ഷൻ, അനലിറ്റിക്‌സ്, ടെലിമെട്രി, സെർവർ എന്നിവയില്ലാതെ എല്ലാം ബ്രൗസറിൽ പ്രവർത്തിക്കുന്നു.\n\n- ഒറ്റ ക്ലിക്കിൽ എല്ലാ ഉപകരണങ്ങളും തുറക്കുക. പ്രിവ്യൂകൾ ഉപകരണത്തിന്റെ തരം അനുസരിച്ച് ഗ്രൂപ്പുകളാക്കി, ചെറിയ സ്ക്രീനുകളിൽ നിന്ന് വലിയ സ്ക്രീനുകളിലേക്ക് ക്രമീകരിച്ചിരിക്കുന്നു.\n- റെസ്‌പോൺസീവ് വിന്യാസങ്ങൾ ആവർത്തിച്ച് പരിശോധിക്കാൻ സ്വന്തം വ്യൂപോർട്ട് വലുപ്പങ്ങൾ സൃഷ്ടിക്കൂ, ഉപകരണ സെറ്റുകളും പ്രിയപ്പെട്ടവയും സൂക്ഷിക്കൂ, അല്ലെങ്കിൽ ഒരു കാഴ്ചയിൽ ശ്രദ്ധ കേന്ദ്രീകരിക്കൂ. അനുയോജ്യമായ കാഴ്ചകളിലെ പിന്തുണയ്ക്കുന്ന ഇടപെടലുകൾ സമന്വയിപ്പിക്കൂ.\n- ഒരു കാഴ്ചയോ മുഴുവൻ പ്രവർത്തനസ്ഥലമോ പകർത്തൂ. അമ്പുകൾ, ബോക്സുകൾ, വരകൾ, എഴുത്ത് എന്നിവ ചേർക്കൂ അല്ലെങ്കിൽ ചിത്രം മുറിക്കൂ. പ്രാദേശിക ഡിസൈൻ പേജിന് അരികിലോ മുകളിലെ ഓവർലേയായോ കാണിക്കൂ.\n- URL, ഉപകരണങ്ങൾ, വ്യൂപോർട്ട് വലുപ്പങ്ങൾ, പ്രശ്നക്കുറിപ്പുകൾ എന്നിവയുള്ള ക്രമപ്പെടുത്തിയ പരിഹാര നിർദേശം നിങ്ങളുടെ കോഡിങ് ടൂളിലേക്ക് പകർത്തൂ.\n\nഇവ Chrome-ലെ റെസ്‌പോൺസീവ് വ്യൂപോർട്ട് പ്രിവ്യൂകളാണ്; യഥാർഥ ഉപകരണങ്ങളോ Safari എൻജിനോ അല്ല. സൈറ്റുകളുടെ ലോഗിൻ, എംബെഡിങ് നിയമങ്ങൾ ബാധകമാണ്. യഥാർഥ പേജ് നിലനിൽക്കും; പുതിയ പ്രിവ്യൂകൾ സംരക്ഷിക്കാത്ത മാറ്റങ്ങൾ പകർത്തില്ല.",
+      "screenshotCaptions": [
+        "എല്ലാ സ്ക്രീനുകളും, അരികരികിൽ.",
+        "എല്ലാ ഉപകരണങ്ങളും. ഒറ്റ ക്ലിക്കിൽ.",
+        "ഒരു സ്ക്രീനിൽ ശ്രദ്ധിക്കുക.",
+        "ഡിസൈനുമായി പിക്സൽ തോറും പൊരുത്തം.",
+        "ബഗ് അടയാളപ്പെടുത്തുക. ഫ്ലോ റെക്കോർഡ് ചെയ്യുക."
+      ],
+      "screenshotSubtitles": [
+        "സ്ക്രോൾ, ക്ലിക്ക്, നാവിഗേഷൻ എന്നിവ സമന്വയിപ്പിച്ച യഥാർത്ഥ ഉപകരണ ഫ്രെയിമുകൾ.",
+        "ഏറ്റവും ചെറിയ ഫോൺ മുതൽ ഏറ്റവും വലിയ സ്ക്രീൻ വരെ, എല്ലാ 110+ ഉപകരണങ്ങളും വിഭാഗം തിരിച്ച് തുറക്കുക.",
+        "ഏത് ഉപകരണവും വലുതാക്കുക, തുടർന്ന് വൃത്തിയുള്ള റിവ്യൂകൾക്കും ഡെമോകൾക്കുമായി ഫോക്കസ് മോഡിൽ എല്ലാ ടൂളുകളും മറയ്ക്കുക.",
+        "ഒരു വശത്ത് നിങ്ങളുടെ മോക്കപ്പ്, മറുവശത്ത് ലൈവ് പേജ്. എല്ലാ വ്യത്യാസങ്ങളും ഒറ്റനോട്ടത്തിൽ കണ്ടെത്തുക.",
+        "സ്ക്രീൻഷോട്ടിൽ കുറിപ്പുകൾ ചേർക്കുക, നിങ്ങളുടെ AI ടൂളിനായി ഫിക്സ് പ്രോംപ്റ്റ് പകർത്തുക, അല്ലെങ്കിൽ എല്ലാ ഉപകരണങ്ങളിലും യൂസർ ഫ്ലോ വീണ്ടും പ്ലേ ചെയ്യുക."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "mr",
+      "storeLocale": "mr",
+      "language": "मराठी",
+      "name": "Mobile View: डिव्हाइस एम्युलेटर आणि रिस्पॉन्सिव्ह टेस्टर",
+      "summary": "मोबाइल सिम्युलेटरने रिस्पॉन्सिव्ह वेब डिझाइन तपासा. डिव्हाइस दृश्यांची तुलना करा, स्क्रोल सिंक करा आणि स्क्रीनशॉट घ्या.",
+      "description": "Mobile View हे Chromeमध्ये रिस्पॉन्सिव्ह वेबसाइटची चाचणी करण्यासाठी मोफत मुक्त-स्रोत साधन आहे। मेनू, मजकूर आणि अंतर तपासण्यासाठी मोबाइल पूर्वावलोकनासह चार दृश्यांपर्यंत बाजूबाजूने तुलना करा। वास्तववादी डिव्हाइस निवडा, दिशा व झूम बदला, स्क्रोल व नेव्हिगेशन सिंक करा, स्क्रीनशॉट घ्या आणि स्थानिक डिझाइनशी तुलना करा. सर्व काही ब्राउझरमध्ये स्थानिकरीत्या चालते; खाते, सदस्यता, विश्लेषण, टेलिमेट्री किंवा सर्व्हर लागत नाही.\n\n- एका क्लिकमध्ये सर्व डिव्हाइस उघडा. प्रीव्ह्यू डिव्हाइसच्या प्रकारानुसार गटांमध्ये आणि लहान ते मोठ्या स्क्रीनच्या क्रमाने दिसतात.\n- रिस्पॉन्सिव्ह मांडणीची पुन्हा चाचणी करण्यासाठी स्वतःचे व्ह्यूपोर्ट आकार तयार करा, उपकरण संच व आवडती उपकरणे जतन करा किंवा एका दृश्यावर लक्ष केंद्रित करा. जुळणाऱ्या दृश्यांमध्ये समर्थित क्रिया समक्रमित करा.\n- एक दृश्य किंवा पूर्ण कार्यक्षेत्राचा स्क्रीनशॉट घ्या. बाण, चौकटी, रेखाचित्रे व मजकूर जोडा किंवा प्रतिमा कापा. स्थानिक डिझाइन पानाशेजारी किंवा ओव्हरले म्हणून दाखवा.\n- URL, उपकरणे, व्ह्यूपोर्ट आकार व समस्येच्या नोंदी असलेला संरचित दुरुस्ती प्रॉम्प्ट तुमच्या कोडिंग साधनात कॉपी करा.\n\nही Chrome मधील रिस्पॉन्सिव्ह व्ह्यूपोर्ट पूर्वदृश्ये आहेत, प्रत्यक्ष उपकरणे किंवा Safari इंजिन नाही. वेबसाइटचे लॉगिन व एम्बेडिंग नियम लागू राहतात. मूळ पान कायम राहते; नवीन पूर्वदृश्ये न जतन केलेले बदल कॉपी करत नाहीत.",
+      "screenshotCaptions": [
+        "प्रत्येक स्क्रीन, शेजारी शेजारी.",
+        "प्रत्येक डिव्हाइस. एक क्लिक.",
+        "एका स्क्रीनवर लक्ष केंद्रित करा.",
+        "डिझाइनशी जुळवा, पिक्सेल-दर-पिक्सेल.",
+        "बग चिन्हांकित करा. फ्लो रेकॉर्ड करा."
+      ],
+      "screenshotSubtitles": [
+        "सिंक केलेले स्क्रोल, क्लिक आणि नेव्हिगेशनसह खऱ्या डिव्हाइस फ्रेम.",
+        "सर्वात लहान फोनपासून सर्वात मोठ्या स्क्रीनपर्यंत, सर्व 110+ डिव्हाइस श्रेणीनुसार उघडा.",
+        "कोणतेही डिव्हाइस मोठे करा, मग स्वच्छ रिव्ह्यू आणि डेमोसाठी फोकस मोडमध्ये सर्व टूल्स लपवा.",
+        "एका बाजूला तुमचा मॉकअप, दुसऱ्या बाजूला लाइव्ह पेज. प्रत्येक फरक एका नजरेत ओळखा.",
+        "स्क्रीनशॉटवर टिपा जोडा, तुमच्या AI टूलसाठी फिक्स प्रॉम्प्ट कॉपी करा किंवा प्रत्येक डिव्हाइसवर युजर फ्लो पुन्हा प्ले करा."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ms",
+      "storeLocale": "ms",
+      "language": "Bahasa Melayu",
+      "name": "Mobile View: Emulator peranti & penguji responsif",
+      "summary": "Simulator mudah alih untuk menguji reka bentuk responsif. Bandingkan paparan, segerakkan tatal dan ambil tangkapan skrin.",
+      "description": "Mobile View ialah alat percuma dan sumber terbuka untuk menguji laman web responsif dalam Chrome. Bandingkan sehingga empat paparan bersebelahan, termasuk pratonton mudah alih, untuk memeriksa menu, teks dan jarak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.\n\n- Buka semua peranti dengan satu klik. Pratonton dikumpulkan mengikut jenis peranti dan disusun daripada skrin yang lebih kecil kepada yang lebih besar.\n- Untuk mengulangi ujian susun atur responsif, cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.\n- Tangkap satu paparan atau seluruh ruang kerja. Tambah anak panah, kotak, lukisan dan teks atau pangkas imej. Paparkan reka bentuk setempat di sebelah halaman atau sebagai tindanan.\n- Salin arahan pembaikan berstruktur dengan URL, peranti, saiz viewport dan nota masalah ke alat pengekodan anda.\n\nIni pratonton viewport responsif dalam Chrome, bukan peranti fizikal atau enjin Safari. Peraturan log masuk dan pembenaman laman masih terpakai. Halaman asal kekal; pratonton baharu tidak menyalin perubahan yang belum disimpan.",
+      "screenshotCaptions": [
+        "Setiap skrin, bersebelahan.",
+        "Setiap peranti. Satu klik.",
+        "Fokus pada satu skrin.",
+        "Padankan reka bentuk, piksel demi piksel.",
+        "Tandakan pepijat. Rakam alirannya."
+      ],
+      "screenshotSubtitles": [
+        "Bingkai peranti sebenar dengan tatal, klik dan navigasi yang disegerakkan.",
+        "Buka kesemua 110+ peranti mengikut kategori, daripada telefon terkecil hingga skrin terbesar.",
+        "Besarkan mana-mana peranti, kemudian sembunyikan semua alat dalam mod fokus untuk semakan dan demo yang kemas.",
+        "Mockup anda di satu sisi, halaman langsung di sisi lain. Kesan setiap perbezaan sekali imbas.",
+        "Anotasi tangkapan skrin, salin gesaan pembetulan untuk alat AI anda atau main semula aliran pengguna pada setiap peranti."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "no",
+      "storeLocale": "no",
+      "language": "Norsk",
+      "name": "Mobile View: Enhetsemulator og responsiv test",
+      "summary": "Mobilsimulator for testing av responsivt webdesign. Sammenlign enhetsvisninger, synkroniser rulling og ta skjermbilder.",
+      "description": "Mobile View er et gratis verktøy med åpen kildekode for å teste responsive nettsteder i Chrome. Sammenlign opptil fire visninger side om side, inkludert en mobil forhåndsvisning, for å kontrollere menyer, tekst og avstander. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.\n\nÅpne alle enheter med ett klikk. Forhåndsvisningene er gruppert etter enhetstype og sortert fra mindre til større skjermer.\n\nFor gjentatte tester av responsive oppsett lagre enhetssett og favoritter, eller lag egne skjermstørrelser. Ta bilde av en visning eller hele arbeidsområdet, og legg til piler, rammer og tekst. Sammenlign et lokalt design ved siden av eller over nettstedet, og kopier et forslag til retting med URL, enheter, skjermstørrelser og notater til kodeverktøyet.\n\nDette er responsive forhåndsvisninger i Chrome, ikke fysiske enheter eller Safari-motoren. Nettstedenes regler for innlogging og innbygging gjelder fortsatt. Originalsiden bevares; nye forhåndsvisninger kopierer ikke ulagrede endringer.",
+      "screenshotCaptions": [
+        "Alle skjermer, side om side.",
+        "Alle enheter. Ett klikk.",
+        "Fokuser på én skjerm.",
+        "Nøyaktig som designet, piksel for piksel.",
+        "Marker feilen. Ta opp flyten."
+      ],
+      "screenshotSubtitles": [
+        "Ekte enhetsrammer med synkronisert rulling, klikk og navigasjon.",
+        "Åpne alle 110+ enheter etter kategori, fra den minste telefonen til den største skjermen.",
+        "Utvid hvilken som helst enhet, og skjul alle verktøy i fokusmodus for ryddige gjennomganger og demoer.",
+        "Skissen din på den ene siden, live-siden på den andre. Se hver forskjell med et øyekast.",
+        "Annoter et skjermbilde, kopier en rettingsprompt til AI-verktøyet ditt, eller spill av en brukerflyt på alle enheter."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "pl",
+      "storeLocale": "pl",
+      "language": "Polski",
+      "name": "Mobile View: Emulator urządzeń i test responsywny",
+      "summary": "Symulator mobilny do testowania responsywnego projektu. Porównuj widoki, synchronizuj przewijanie i rób zrzuty ekranu.",
+      "description": "Mobile View to bezpłatne narzędzie open source do testowania responsywnych witryn w Chrome. Porównuj do czterech widoków obok siebie, w tym podgląd mobilny, aby sprawdzać menu, tekst i odstępy. Wybieraj realistyczne urządzenia, zmieniaj orientację i powiększenie, synchronizuj przewijanie i nawigację, rób zrzuty oraz porównuj z lokalnym projektem. Wszystko działa lokalnie w przeglądarce bez konta, subskrypcji, analityki, telemetrii ani serwera.\n\n- Otwórz wszystkie urządzenia jednym kliknięciem. Podglądy są pogrupowane według typu urządzenia i uporządkowane od mniejszych ekranów do większych.\n- Do ponownego testowania responsywnych układów twórz własne rozmiary widoku, zapisuj zestawy i ulubione urządzenia lub skup się na jednym widoku. Synchronizuj obsługiwane interakcje między odpowiadającymi sobie podglądami.\n- Przechwytuj jeden widok lub całą przestrzeń roboczą. Dodawaj strzałki, ramki, rysunki i tekst albo przycinaj obraz. Wyświetlaj lokalny projekt obok strony lub jako nakładkę.\n- Kopiuj uporządkowany prompt naprawy z adresem URL, urządzeniami, rozmiarami i notatkami o problemie do swojego narzędzia programistycznego.\n\nTo responsywne podglądy w Chrome, a nie fizyczne urządzenia ani silnik Safari. Nadal obowiązują zasady logowania i osadzania witryn. Oryginalna strona pozostaje bez zmian; nowe podglądy nie kopiują niezapisanych zmian.",
+      "screenshotCaptions": [
+        "Wszystkie ekrany obok siebie.",
+        "Wszystkie urządzenia. Jedno kliknięcie.",
+        "Skup się na jednym ekranie.",
+        "Zgodnie z projektem, co do piksela.",
+        "Zaznacz błąd. Nagraj ścieżkę."
+      ],
+      "screenshotSubtitles": [
+        "Prawdziwe ramki urządzeń z synchronizowanym przewijaniem, kliknięciami i nawigacją.",
+        "Otwórz wszystkie 110+ urządzeń według kategorii, od najmniejszego telefonu po największy ekran.",
+        "Powiększ dowolne urządzenie, a potem ukryj wszystkie narzędzia w trybie skupienia – do przejrzystych przeglądów i prezentacji.",
+        "Makieta po jednej stronie, działająca strona po drugiej. Każdą różnicę dostrzeżesz od razu.",
+        "Dodaj adnotacje do zrzutu ekranu, skopiuj prompt z poprawką dla swojego narzędzia AI lub odtwórz ścieżkę użytkownika na każdym urządzeniu."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "pt_PT",
+      "storeLocale": "pt-PT",
+      "language": "Português (Portugal)",
+      "name": "Mobile View: Emulador móvel e teste responsivo",
+      "summary": "Simulador móvel para testar design responsivo. Compare vistas de dispositivos, sincronize o deslocamento e capture ecrãs.",
+      "description": "O Mobile View é uma ferramenta gratuita e de código aberto para testar sites responsivos no Chrome. Compare até quatro vistas lado a lado, incluindo uma pré-visualização para telemóvel, para verificar menus, texto e espaçamento. Escolha dispositivos realistas, altere a orientação e o zoom, sincronize o deslocamento e a navegação, capture ecrãs e compare com um design local. Tudo funciona localmente no navegador sem conta, subscrição, análise, telemetria ou servidor.\n\n- Abra todos os dispositivos com um clique. As pré-visualizações são agrupadas por tipo de dispositivo e ordenadas dos ecrãs mais pequenos aos maiores.\n- Para repetir os testes de apresentação responsiva, crie dimensões de visualização próprias, guarde conjuntos e dispositivos favoritos ou concentre-se numa vista. Sincronize as interações suportadas entre vistas correspondentes.\n- Capture uma vista ou toda a área de trabalho. Adicione setas, caixas, desenhos e texto ou recorte a imagem. Apresente um design local ao lado da página ou sobreposto.\n- Copie para a sua ferramenta de programação uma instrução de correção estruturada com o URL, os dispositivos, as dimensões e as notas do problema.\n\nSão pré-visualizações responsivas no Chrome, não dispositivos físicos nem o motor Safari. As regras de início de sessão e incorporação dos sites continuam a aplicar-se. A página original é preservada; as novas vistas não copiam alterações por guardar.",
+      "screenshotCaptions": [
+        "Todos os ecrãs, lado a lado.",
+        "Todos os dispositivos. Um clique.",
+        "Concentre-se num só ecrã.",
+        "Fiel ao design, píxel a píxel.",
+        "Assinale o erro. Grave o fluxo."
+      ],
+      "screenshotSubtitles": [
+        "Molduras de dispositivos reais com deslocamento, cliques e navegação sincronizados.",
+        "Abra os 110+ dispositivos por categoria, do telemóvel mais pequeno ao maior ecrã.",
+        "Expanda qualquer dispositivo e oculte todas as ferramentas no modo de foco para revisões e demonstrações limpas.",
+        "O seu mockup de um lado, a página ativa do outro. Detete todas as diferenças num relance.",
+        "Anote uma captura de ecrã, copie um prompt de correção para a sua ferramenta de IA ou reproduza um fluxo de utilizador em todos os dispositivos."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ro",
+      "storeLocale": "ro",
+      "language": "Română",
+      "name": "Mobile View: Emulator de dispozitive și test responsiv",
+      "summary": "Simulator mobil pentru testarea designului responsive. Compară vizualizări, sincronizează derularea și fă capturi de ecran.",
+      "description": "Mobile View este un instrument gratuit și open-source pentru testarea site-urilor web responsive în Chrome. Compară până la patru vederi alăturate, inclusiv o previzualizare mobilă, pentru a verifica meniurile, textul și spațierea. Alege dispozitive realiste, schimbă orientarea și zoomul, sincronizează derularea și navigarea, capturează ecranul și compară-l cu un design local. Totul rulează local în browser fără cont, abonament, analiză, telemetrie sau server.\n\n- Deschide toate dispozitivele cu un clic. Previzualizările sunt grupate după tipul dispozitivului și ordonate de la ecrane mai mici la ecrane mai mari.\n- Pentru a repeta testele de aspect responsive, creează dimensiuni de viewport personalizate, salvează seturi și dispozitive favorite sau concentrează-te pe o singură vedere. Sincronizează interacțiunile acceptate între vederi corespunzătoare.\n- Capturează o vedere sau întregul spațiu de lucru. Adaugă săgeți, chenare, desene și text sau decupează imaginea. Afișează un design local lângă pagină sau suprapus.\n- Copiază în instrumentul de programare o instrucțiune structurată de remediere cu URL, dispozitive, dimensiuni și note despre problemă.\n\nAcestea sunt previzualizări responsive în Chrome, nu dispozitive fizice sau motorul Safari. Regulile de autentificare și încorporare ale site-urilor rămân valabile. Pagina originală se păstrează; previzualizările noi nu copiază modificările nesalvate.",
+      "screenshotCaptions": [
+        "Toate ecranele, alăturat.",
+        "Toate dispozitivele. Un clic.",
+        "Concentrează-te pe un singur ecran.",
+        "Fidel designului, pixel cu pixel.",
+        "Marchează bugul. Înregistrează fluxul."
+      ],
+      "screenshotSubtitles": [
+        "Rame reale de dispozitive, cu derulare, clicuri și navigare sincronizate.",
+        "Deschide toate cele 110+ dispozitive pe categorii, de la cel mai mic telefon la cel mai mare ecran.",
+        "Extinde orice dispozitiv, apoi ascunde toate instrumentele în modul focus pentru revizuiri și demonstrații curate.",
+        "Macheta ta într-o parte, pagina live în cealaltă. Observă orice diferență dintr-o privire.",
+        "Adnotează o captură de ecran, copiază un prompt de remediere pentru instrumentul tău AI sau redă un flux de utilizator pe fiecare dispozitiv."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "sk",
+      "storeLocale": "sk",
+      "language": "Slovenčina",
+      "name": "Mobile View: Emulátor zariadení a responzívny test",
+      "summary": "Mobilný simulátor na testovanie responzívneho dizajnu. Porovnajte náhľady, synchronizujte posúvanie a vytvárajte snímky obrazovky.",
+      "description": "Mobile View je bezplatný open-source nástroj na testovanie responzívnych webov v Chrome. Porovnávajte až štyri pohľady vedľa seba vrátane mobilného náhľadu a kontrolujte ponuky, text a rozostupy. Vyberajte realistické zariadenia, meňte orientáciu a priblíženie, synchronizujte posúvanie a navigáciu, vytvárajte snímky a porovnávajte ich s lokálnym návrhom. Všetko beží lokálne bez účtu, predplatného, analytiky, telemetrie či servera.\n\n- Otvorte všetky zariadenia jedným kliknutím. Náhľady sú zoskupené podľa typu zariadenia a zoradené od menších obrazoviek po väčšie.\n- Na opakované testovanie responzívnych rozložení vytvárajte vlastné rozmery viewportu, ukladajte súpravy a obľúbené zariadenia alebo sa sústreďte na jeden náhľad. Synchronizujte podporované interakcie medzi zodpovedajúcimi náhľadmi.\n- Zachyťte jeden náhľad alebo celý pracovný priestor. Pridajte šípky, rámčeky, kresby a text alebo obrázok orežte. Zobrazte miestny návrh vedľa stránky alebo ako prekrytie.\n- Skopírujte štruktúrované zadanie opravy s URL, zariadeniami, rozmermi a poznámkami k problému do svojho programovacieho nástroja.\n\nIde o responzívne náhľady v Chrome, nie fyzické zariadenia ani jadro Safari. Pravidlá prihlásenia a vkladania webov zostávajú platné. Pôvodná stránka sa zachová; nové náhľady nekopírujú neuložené zmeny.",
+      "screenshotCaptions": [
+        "Všetky obrazovky vedľa seba.",
+        "Všetky zariadenia. Jedným kliknutím.",
+        "Sústreďte sa na jednu obrazovku.",
+        "Presne podľa návrhu, pixel po pixeli.",
+        "Označte chybu. Nahrajte postup."
+      ],
+      "screenshotSubtitles": [
+        "Skutočné rámy zariadení so synchronizovaným posúvaním, kliknutiami a navigáciou.",
+        "Otvorte všetkých 110+ zariadení podľa kategórií, od najmenšieho telefónu po najväčšiu obrazovku.",
+        "Zväčšite ľubovoľné zariadenie a v režime sústredenia skryte všetky nástroje pre čisté kontroly a ukážky.",
+        "Na jednej strane váš návrh, na druhej živá stránka. Každý rozdiel odhalíte na prvý pohľad.",
+        "Pridajte poznámky do snímky obrazovky, skopírujte prompt s opravou pre svoj nástroj AI alebo prehrajte používateľský postup na všetkých zariadeniach."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "sl",
+      "storeLocale": "sl",
+      "language": "Slovenščina",
+      "name": "Mobile View: Emulator naprav in odzivni preizkus",
+      "summary": "Mobilni simulator za preizkušanje odzivnega oblikovanja. Primerjajte poglede, uskladite drsenje in zajemite zaslonske slike.",
+      "description": "Mobile View je brezplačno odprtokodno orodje za testiranje odzivnih spletnih mest v Chromu. Primerjajte do štiri poglede drug ob drugem, vključno z mobilnim predogledom, da preverite menije, besedilo in razmike. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.\n\n- Odprite vse naprave z enim klikom. Predogledi so združeni po vrsti naprave in razvrščeni od manjših zaslonov do večjih.\n- Za ponavljajoče se testiranje odzivnih postavitev ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.\n- Zajemite en pogled ali celotno delovno površino. Dodajte puščice, okvirje, risbe in besedilo ali obrežite sliko. Prikažite lokalni dizajn ob strani ali kot prekrivanje.\n- Kopirajte strukturirano navodilo za popravek z URL-jem, napravami, dimenzijami in opombami o težavi v svoje programsko orodje.\n\nTo so odzivni predogledi v Chromu, ne fizične naprave ali pogon Safari. Pravila prijave in vdelave spletnih mest še vedno veljajo. Izvirna stran se ohrani; novi predogledi ne kopirajo neshranjenih sprememb.",
+      "screenshotCaptions": [
+        "Vsi zasloni, drug ob drugem.",
+        "Vse naprave. En klik.",
+        "Osredotočite se na en zaslon.",
+        "Natančno po dizajnu, piksel za pikslom.",
+        "Označite napako. Posnemite potek."
+      ],
+      "screenshotSubtitles": [
+        "Pravi okvirji naprav s sinhroniziranim pomikanjem, kliki in navigacijo.",
+        "Odprite vseh 110+ naprav po kategorijah, od najmanjšega telefona do največjega zaslona.",
+        "Razširite katero koli napravo in v načinu osredotočenosti skrijte vsa orodja za čiste preglede in predstavitve.",
+        "Na eni strani vaša maketa, na drugi živa stran. Vsako razliko opazite na prvi pogled.",
+        "Dodajte opombe na posnetek zaslona, kopirajte poziv za popravek za svoje orodje UI ali predvajajte uporabniški potek na vseh napravah."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "sr",
+      "storeLocale": "sr",
+      "language": "Српски",
+      "name": "Mobile View: Емулатор уређаја и прилагодљиви тест",
+      "summary": "Мобилни симулатор за тестирање прилагодљивог дизајна. Поредите приказе, синхронизујте скроловање и направите снимке екрана.",
+      "description": "Mobile View је бесплатан алат отвореног кода за тестирање прилагодљивих веб-сајтова у Chrome-у. Упоредите до четири приказа један поред другог, укључујући мобилни преглед, да проверите меније, текст и размаке. Изаберите реалистичне уређаје, промените оријентацију и зумирање, синхронизујте померање и навигацију, снимите екран и упоредите га са локалним дизајном. Све ради локално без налога, претплате, аналитике, телеметрије или сервера.\n\n- Отворите све уређаје једним кликом. Прегледи су груписани по типу уређаја и поређани од мањих екрана ка већим.\n- За поновљено тестирање прилагодљивих распореда направите прилагођене величине приказа, сачувајте скупове и омиљене уређаје или се усредсредите на један приказ. Ускладите подржане интеракције између одговарајућих приказа.\n- Снимите један приказ или цео радни простор. Додајте стрелице, оквире, цртеже и текст или исеците слику. Прикажите локални дизајн поред странице или као преклоп.\n- Копирајте структурисано упутство за исправку са URL-ом, уређајима, димензијама и белешкама о проблему у свој алат за програмирање.\n\nОво су респонзивни прегледи у Chrome-у, а не физички уређаји или Safari механизам. Правила пријаве и уграђивања сајтова и даље важе. Изворна страница остаје сачувана; нови прегледи не копирају несачуване измене.",
+      "screenshotCaptions": [
+        "Сви екрани, један поред другог.",
+        "Сви уређаји. Један клик.",
+        "Фокусирајте се на један екран.",
+        "Тачно по дизајну, пиксел по пиксел.",
+        "Означите грешку. Снимите ток."
+      ],
+      "screenshotSubtitles": [
+        "Прави оквири уређаја са синхронизованим померањем, кликовима и навигацијом.",
+        "Отворите свих 110+ уређаја по категоријама, од најмањег телефона до највећег екрана.",
+        "Проширите било који уређај, па у режиму фокуса сакријте све алатке за чисте прегледе и демонстрације.",
+        "Ваш макет са једне стране, активна страница са друге. Уочите сваку разлику на први поглед.",
+        "Додајте белешке на снимак екрана, копирајте упит за исправку за свој AI алат или поново пустите кориснички ток на сваком уређају."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "sv",
+      "storeLocale": "sv",
+      "language": "Svenska",
+      "name": "Mobile View: Enhetsemulator och responsivt test",
+      "summary": "Mobilsimulator för test av responsiv webbdesign. Jämför enhetsvyer, synkronisera rullning och ta skärmbilder.",
+      "description": "Mobile View är ett kostnadsfritt verktyg med öppen källkod för att testa responsiva webbplatser i Chrome. Jämför upp till fyra vyer sida vid sida, inklusive en mobil förhandsvisning, för att kontrollera menyer, text och avstånd. Välj realistiska enheter, ändra orientering och zoom, synkronisera rullning och navigering, ta skärmbilder och jämför med en lokal design. Allt körs lokalt utan konto, prenumeration, analys, telemetri eller server.\n\nÖppna alla enheter med ett klick. Förhandsvisningarna är grupperade efter enhetstyp och sorterade från mindre till större skärmar.\n\nFör upprepade tester av responsiva layouter spara enhetsuppsättningar och favoriter eller skapa egna skärmstorlekar. Ta en bild av en vy eller hela arbetsytan och lägg till pilar, ramar och text. Jämför en lokal design bredvid eller ovanpå webbplatsen och kopiera ett korrigeringsförslag med URL, enheter, skärmstorlekar och anteckningar till ditt kodverktyg.\n\nDetta är responsiva förhandsvisningar i Chrome, inte fysiska enheter eller Safari-motorn. Webbplatsernas regler för inloggning och inbäddning gäller fortfarande. Originalsidan bevaras; nya förhandsvisningar kopierar inte osparade ändringar.",
+      "screenshotCaptions": [
+        "Alla skärmar, sida vid sida.",
+        "Alla enheter. Ett klick.",
+        "Fokusera på en skärm.",
+        "Exakt som designen, pixel för pixel.",
+        "Markera buggen. Spela in flödet."
+      ],
+      "screenshotSubtitles": [
+        "Riktiga enhetsramar med synkad rullning, klick och navigering.",
+        "Öppna alla 110+ enheter efter kategori, från den minsta telefonen till den största skärmen.",
+        "Förstora valfri enhet och dölj alla verktyg i fokusläget för rena granskningar och demos.",
+        "Din mockup på ena sidan, live-sidan på den andra. Se varje skillnad med en blick.",
+        "Kommentera en skärmbild, kopiera en rättningsprompt till ditt AI-verktyg eller spela upp ett användarflöde på alla enheter."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "sw",
+      "storeLocale": "sw",
+      "language": "Kiswahili",
+      "name": "Mobile View: Kiigaji cha kifaa na jaribio sikivu",
+      "summary": "Kiigaji cha simu cha kupima muundo wa tovuti unaobadilika. Linganisha mionekano, sawazisha kusogeza na piga picha za skrini.",
+      "description": "Mobile View ni zana ya bure na ya programu huria ya kupima tovuti zinazobadilika kulingana na ukubwa wa skrini katika Chrome. Linganisha hadi mionekano minne kando kwa kando, ikiwemo hakikisho la simu, ili kukagua menyu, maandishi na nafasi. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.\n\n- Fungua vifaa vyote kwa mbofyo mmoja. Muonekano wa awali umepangwa kwa aina ya kifaa na kuanzia skrini ndogo hadi kubwa.\n- Ili kurudia vipimo vya mipangilio inayobadilika kulingana na skrini, unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.\n- Piga picha ya mwonekano mmoja au eneo lote la kazi. Ongeza mishale, visanduku, michoro na maandishi au punguza picha. Onyesha muundo wa ndani kando ya ukurasa au kama tabaka juu yake.\n- Nakili agizo la marekebisho lenye mpangilio, URL, vifaa, vipimo vya mwonekano na maelezo ya tatizo kwenye zana yako ya kuandika msimbo.\n\nHaya ni maonyesho ya mwitikio katika Chrome, si vifaa halisi au injini ya Safari. Kanuni za kuingia na kupachika za tovuti bado zinatumika. Ukurasa wa asili huhifadhiwa; maonyesho mapya hayanukuu mabadiliko ambayo hayajahifadhiwa.",
+      "screenshotCaptions": [
+        "Kila skrini, kando kwa kando.",
+        "Kila kifaa. Mbofyo mmoja.",
+        "Lenga skrini moja.",
+        "Linganisha na muundo, pikseli kwa pikseli.",
+        "Weka alama kwenye hitilafu. Rekodi mtiririko."
+      ],
+      "screenshotSubtitles": [
+        "Fremu halisi za vifaa zenye kusogeza, kubofya na urambazaji uliosawazishwa.",
+        "Fungua vifaa vyote 110+ kwa kategoria, kuanzia simu ndogo kabisa hadi skrini kubwa kabisa.",
+        "Panua kifaa chochote, kisha ficha zana zote katika hali ya kulenga kwa ukaguzi na maonyesho safi.",
+        "Muundo wako upande mmoja, ukurasa hai upande mwingine. Ona kila tofauti kwa mtazamo mmoja.",
+        "Ongeza maelezo kwenye picha ya skrini, nakili maagizo ya kurekebisha kwa zana yako ya AI, au rudia mtiririko wa mtumiaji kwenye kila kifaa."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "ta",
+      "storeLocale": "ta",
+      "language": "தமிழ்",
+      "name": "Mobile View: சாதன முன்மாதிரி மற்றும் பதிலளிப்பு சோதனை",
+      "summary": "மொபைல் சிமுலேட்டரில் ரெஸ்பான்சிவ் வடிவமைப்பைச் சோதிக்கவும். காட்சிகளை ஒப்பிட்டு, ஸ்க்ரோலை ஒத்திசைத்து, திரைப்பிடிப்பு எடுக்கவும்.",
+      "description": "Mobile View என்பது Chrome-இல் ரெஸ்பான்சிவ் இணையதளங்களைச் சோதிக்க உதவும் இலவச திறந்த மூலக் கருவி. மெனுக்கள், உரை மற்றும் இடைவெளிகளைச் சரிபார்க்க, மொபைல் முன்னோட்டம் உட்பட நான்கு காட்சிகள் வரை அருகருகே ஒப்பிடுங்கள். உண்மையான சாதனங்களைத் தேர்ந்தெடுத்து, திசை மற்றும் பெரிதாக்கலை மாற்றி, ஸ்க்ரோல் மற்றும் வழிசெலுத்தலை ஒத்திசைத்து, திரைப்பிடிப்பு எடுத்து உள்ளூர் வடிவமைப்புடன் ஒப்பிடுங்கள். கணக்கு, சந்தா, பகுப்பாய்வு, டெலிமெட்ரி அல்லது சேவையகம் இல்லாமல் அனைத்தும் உலாவியிலேயே இயங்கும்.\n\n- ஒரே கிளிக்கில் எல்லா சாதனங்களையும் திறக்கவும். முன்னோட்டங்கள் சாதன வகையின்படி குழுவாக்கப்பட்டு, சிறிய திரைகளிலிருந்து பெரிய திரைகள் வரை வரிசைப்படுத்தப்பட்டுள்ளன.\n- ரெஸ்பான்சிவ் அமைப்புகளை மீண்டும் சோதிக்க, விருப்ப வியூபோர்ட் அளவுகளை உருவாக்கி, சாதனத் தொகுப்புகளையும் விருப்பங்களையும் சேமிக்கவும் அல்லது ஒரு காட்சியில் கவனம் செலுத்தவும். பொருந்தும் காட்சிகளில் ஆதரிக்கப்படும் தொடர்புகளை ஒத்திசைக்கவும்.\n- ஒரு காட்சியையோ முழுப் பணிப்பகுதியையோ படமெடுக்கவும். அம்புகள், பெட்டிகள், வரைபடங்கள், உரை சேர்க்கவும் அல்லது படத்தை வெட்டவும். உள்ளூர் வடிவமைப்பைப் பக்கத்தின் அருகில் அல்லது மேலடுக்காகக் காட்டவும்.\n- URL, சாதனங்கள், வியூபோர்ட் அளவுகள், சிக்கல் குறிப்புகள் அடங்கிய ஒழுங்கமைந்த திருத்த வழிமுறையை உங்கள் நிரலாக்கக் கருவிக்கு நகலெடுக்கவும்.\n\nஇவை Chrome-இன் ரெஸ்பான்சிவ் வியூபோர்ட் முன்னோட்டங்கள்; உண்மையான சாதனங்களோ Safari இயந்திரமோ அல்ல. தளங்களின் உள்நுழைவு மற்றும் உட்பொதிப்பு விதிகள் தொடரும். அசல் பக்கம் பாதுகாக்கப்படும்; புதிய முன்னோட்டங்கள் சேமிக்காத மாற்றங்களை நகலெடுக்காது.",
+      "screenshotCaptions": [
+        "எல்லா திரைகளும், அருகருகே.",
+        "எல்லா சாதனங்களும். ஒரே கிளிக்.",
+        "ஒரு திரையில் கவனம் செலுத்துங்கள்.",
+        "வடிவமைப்புடன் பிக்சல் பிக்சலாகப் பொருத்துங்கள்.",
+        "பிழையைக் குறியிடுங்கள். ஓட்டத்தைப் பதிவுசெய்யுங்கள்."
+      ],
+      "screenshotSubtitles": [
+        "ஒத்திசைந்த ஸ்க்ரோல், கிளிக் மற்றும் வழிசெலுத்தலுடன் உண்மையான சாதன ஃப்ரேம்கள்.",
+        "சிறிய ஃபோன் முதல் பெரிய திரை வரை, 110+ சாதனங்களையும் வகை வாரியாகத் திறக்கவும்.",
+        "எந்தச் சாதனத்தையும் பெரிதாக்கி, ஃபோகஸ் பயன்முறையில் எல்லா கருவிகளையும் மறைத்து, சுத்தமான மதிப்பாய்வுகளும் டெமோக்களும் செய்யுங்கள்.",
+        "ஒரு பக்கம் உங்கள் மாக்கப், மறுபக்கம் நேரடி பக்கம். ஒவ்வொரு வேறுபாட்டையும் ஒரே பார்வையில் கண்டறியுங்கள்.",
+        "திரைப்பிடிப்பில் குறிப்புகள் சேர்க்கவும், உங்கள் AI கருவிக்கான திருத்த ப்ராம்ப்டை நகலெடுக்கவும், அல்லது ஒவ்வொரு சாதனத்திலும் பயனர் ஓட்டத்தை மீண்டும் இயக்கவும்."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "te",
+      "storeLocale": "te",
+      "language": "తెలుగు",
+      "name": "Mobile View: పరికర ఎమ్యులేటర్ మరియు రెస్పాన్సివ్ టెస్టర్",
+      "summary": "మొబైల్ సిమ్యులేటర్‌తో రెస్పాన్సివ్ వెబ్ డిజైన్ పరీక్షించండి. వీక్షణలు పోల్చండి, స్క్రోల్ సమకాలీకరించి స్క్రీన్‌షాట్ తీయండి.",
+      "description": "Mobile View Chromeలో రెస్పాన్సివ్ వెబ్‌సైట్‌లను పరీక్షించడానికి ఉచిత ఓపెన్ సోర్స్ సాధనం. మెనూలు, వచనం, ఖాళీలను తనిఖీ చేయడానికి మొబైల్ ప్రివ్యూతో సహా నాలుగు వీక్షణల వరకు పక్కపక్కన పోల్చండి. నిజమైన పరికరాలను ఎంచుకోండి, దిశ మరియు జూమ్ మార్చండి, స్క్రోల్ మరియు నావిగేషన్ సమకాలీకరించండి, స్క్రీన్‌షాట్ తీసి స్థానిక డిజైన్‌తో పోల్చండి. ఖాతా, సబ్‌స్క్రిప్షన్, అనలిటిక్స్, టెలిమెట్రీ లేదా సర్వర్ లేకుండా అన్నీ బ్రౌజర్‌లోనే నడుస్తాయి.\n\n- ఒకే క్లిక్‌తో అన్ని పరికరాలను తెరవండి. ప్రివ్యూలు పరికర రకం ప్రకారం సమూహాలుగా, చిన్న స్క్రీన్‌ల నుంచి పెద్ద స్క్రీన్‌ల వరకు క్రమంగా అమర్చబడతాయి.\n- రెస్పాన్సివ్ లేఅవుట్‌లను మళ్లీ పరీక్షించడానికి మీ స్వంత వ్యూపోర్ట్ పరిమాణాలు సృష్టించండి, పరికర సెట్లు, ఇష్టమైనవి సేవ్ చేయండి లేదా ఒక వీక్షణపై దృష్టి పెట్టండి. సరిపోలే వీక్షణల్లో మద్దతు ఉన్న పరస్పర చర్యలను సమకాలీకరించండి.\n- ఒక వీక్షణ లేదా మొత్తం పని ప్రదేశాన్ని క్యాప్చర్ చేయండి. బాణాలు, బాక్సులు, చిత్రాలు, వచనం జోడించండి లేదా చిత్రాన్ని కత్తిరించండి. స్థానిక డిజైన్‌ను పేజీ పక్కన లేదా ఓవర్‌లేగా చూపించండి.\n- URL, పరికరాలు, వ్యూపోర్ట్ పరిమాణాలు, సమస్య గమనికలతో నిర్మాణాత్మక సవరణ ప్రాంప్ట్‌ను మీ కోడింగ్ సాధనానికి కాపీ చేయండి.\n\nఇవి Chromeలో రెస్పాన్సివ్ వ్యూపోర్ట్ ప్రివ్యూలు, నిజమైన పరికరాలు లేదా Safari ఇంజిన్ కాదు. సైట్ లాగిన్, ఎంబెడింగ్ నియమాలు వర్తిస్తాయి. అసలు పేజీ అలాగే ఉంటుంది; కొత్త ప్రివ్యూలు సేవ్ చేయని మార్పులను కాపీ చేయవు.",
+      "screenshotCaptions": [
+        "అన్ని స్క్రీన్‌లు, పక్కపక్కనే.",
+        "అన్ని పరికరాలు. ఒకే క్లిక్.",
+        "ఒకే స్క్రీన్‌పై దృష్టి పెట్టండి.",
+        "డిజైన్‌కు పిక్సెల్ పిక్సెల్‌గా సరిపోల్చండి.",
+        "బగ్‌ను గుర్తించండి. ఫ్లోను రికార్డ్ చేయండి."
+      ],
+      "screenshotSubtitles": [
+        "సింక్ అయిన స్క్రోల్, క్లిక్‌లు, నావిగేషన్‌తో నిజమైన పరికర ఫ్రేమ్‌లు.",
+        "అతి చిన్న ఫోన్ నుంచి అతి పెద్ద స్క్రీన్ వరకు, మొత్తం 110+ పరికరాలను వర్గాల వారీగా తెరవండి.",
+        "ఏ పరికరాన్నైనా పెద్దది చేసి, ఫోకస్ మోడ్‌లో అన్ని టూల్స్‌ను దాచండి — స్పష్టమైన రివ్యూలు, డెమోల కోసం.",
+        "ఒక వైపు మీ మాకప్, మరో వైపు లైవ్ పేజీ. ప్రతి తేడాను ఒక్క చూపులో గుర్తించండి.",
+        "స్క్రీన్‌షాట్‌పై గమనికలు జోడించండి, మీ AI టూల్ కోసం ఫిక్స్ ప్రాంప్ట్‌ను కాపీ చేయండి, లేదా ప్రతి పరికరంలో యూజర్ ఫ్లోను మళ్లీ ప్లే చేయండి."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "th",
+      "storeLocale": "th",
+      "language": "ไทย",
+      "name": "Mobile View: โปรแกรมจำลองอุปกรณ์และทดสอบ Responsive",
+      "summary": "โปรแกรมจำลองมือถือเพื่อทดสอบการออกแบบเว็บ responsive เปรียบเทียบหน้าจออุปกรณ์ ซิงค์การเลื่อนและจับภาพหน้าจอ",
+      "description": "Mobile View เป็นเครื่องมือโอเพนซอร์สฟรีสำหรับทดสอบเว็บไซต์แบบ responsive ใน Chrome เปรียบเทียบได้สูงสุดสี่มุมมองเคียงข้างกัน รวมถึงตัวอย่างบนมือถือ เพื่อตรวจสอบเมนู ข้อความ และระยะห่าง เลือกอุปกรณ์จริง เปลี่ยนแนวและซูม ซิงค์การเลื่อนและการนำทาง จับภาพหน้าจอ และเปรียบเทียบกับดีไซน์ในเครื่อง ทุกอย่างทำงานในเบราว์เซอร์โดยไม่ต้องมีบัญชี การสมัครสมาชิก การวิเคราะห์ เทเลเมทรี หรือเซิร์ฟเวอร์\n\n- เปิดอุปกรณ์ทั้งหมดได้ในคลิกเดียว ตัวอย่างจะจัดกลุ่มตามประเภทอุปกรณ์และเรียงจากหน้าจอขนาดเล็กไปใหญ่\n- สำหรับการทดสอบเลย์เอาต์แบบ responsive ซ้ำ สร้างขนาดวิวพอร์ตเอง บันทึกชุดอุปกรณ์และรายการโปรด หรือโฟกัสมุมมองเดียว ซิงค์การโต้ตอบที่รองรับระหว่างมุมมองที่ตรงกัน\n- จับภาพมุมมองเดียวหรือทั้งพื้นที่ทำงาน เพิ่มลูกศร กรอบ ภาพวาด และข้อความ หรือตัดภาพ แสดงดีไซน์ในเครื่องข้างหน้าเว็บหรือเป็นภาพซ้อนทับ\n- คัดลอกคำสั่งแก้ไขที่จัดโครงสร้างพร้อม URL อุปกรณ์ ขนาดวิวพอร์ต และบันทึกปัญหาไปยังเครื่องมือเขียนโค้ดของคุณ\n\nนี่คือการแสดงตัวอย่างวิวพอร์ตแบบ responsive ใน Chrome ไม่ใช่อุปกรณ์จริงหรือเอนจิน Safari กฎการเข้าสู่ระบบและการฝังของเว็บไซต์ยังมีผล หน้าเดิมจะคงอยู่ แต่ตัวอย่างใหม่จะไม่คัดลอกการแก้ไขที่ยังไม่บันทึก",
+      "screenshotCaptions": [
+        "ทุกหน้าจอ เคียงข้างกัน",
+        "ทุกอุปกรณ์ ในคลิกเดียว",
+        "โฟกัสที่หน้าจอเดียว",
+        "ตรงตามดีไซน์ทุกพิกเซล",
+        "มาร์กบั๊ก บันทึกโฟลว์"
+      ],
+      "screenshotSubtitles": [
+        "กรอบอุปกรณ์จริง พร้อมซิงค์การเลื่อน การคลิก และการนำทาง",
+        "เปิดอุปกรณ์ทั้งหมด 110+ รุ่นตามหมวดหมู่ ตั้งแต่มือถือที่เล็กที่สุดถึงหน้าจอที่ใหญ่ที่สุด",
+        "ขยายอุปกรณ์ใดก็ได้ แล้วซ่อนเครื่องมือทั้งหมดในโหมดโฟกัส เพื่อการรีวิวและเดโมที่สะอาดตา",
+        "ม็อกอัปอยู่ด้านหนึ่ง หน้าเว็บจริงอยู่อีกด้าน เห็นทุกความต่างได้ในพริบตา",
+        "ใส่คำอธิบายบนภาพหน้าจอ คัดลอกพรอมต์แก้ไขให้เครื่องมือ AI หรือเล่นโฟลว์ผู้ใช้ซ้ำบนทุกอุปกรณ์"
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "tr",
+      "storeLocale": "tr",
+      "language": "Türkçe",
+      "name": "Mobile View: Cihaz emülatörü ve duyarlı tasarım testi",
+      "summary": "Duyarlı web tasarımını test etmek için mobil simülatör. Görünümleri karşılaştırın, kaydırmayı eşitleyin ve ekran görüntüsü alın.",
+      "description": "Mobile View, Chrome’da duyarlı web sitelerini test etmek için ücretsiz ve açık kaynaklı bir araçtır. Menüleri, metni ve boşlukları kontrol etmek için mobil önizleme dahil en fazla dört görünümü yan yana karşılaştırın. Gerçekçi cihazlar seçin, yönü ve yakınlaştırmayı değiştirin, kaydırma ve gezinmeyi eşitleyin, ekran görüntüsü alın ve yerel bir tasarımla karşılaştırın. Her şey hesap, abonelik, analiz, telemetri veya sunucu olmadan tarayıcıda yerel olarak çalışır.\n\n- Tüm cihazları tek tıklamayla açın. Önizlemeler cihaz türüne göre gruplandırılır ve küçük ekranlardan büyük ekranlara doğru sıralanır.\n- Duyarlı düzenleri tekrar test etmek için özel görünüm boyutları oluşturun, cihaz setlerini ve favorileri kaydedin veya tek görünüme odaklanın. Eşleşen görünümler arasında desteklenen etkileşimleri eşitleyin.\n- Tek görünümü veya tüm çalışma alanını yakalayın. Ok, kutu, çizim ve metin ekleyin ya da görüntüyü kırpın. Yerel tasarımı sayfanın yanında veya kaplama olarak gösterin.\n- URL, cihazlar, görünüm boyutları ve sorun notlarını içeren yapılandırılmış düzeltme istemini kodlama aracınıza kopyalayın.\n\nBunlar Chrome üzerinde duyarlı görünüm önizlemeleridir; fiziksel cihazlar veya Safari motoru değildir. Sitelerin oturum açma ve yerleştirme kuralları geçerliliğini korur. Özgün sayfa korunur; yeni önizlemeler kaydedilmemiş değişiklikleri kopyalamaz.",
+      "screenshotCaptions": [
+        "Tüm ekranlar yan yana.",
+        "Tüm cihazlar. Tek tıkla.",
+        "Tek ekrana odaklanın.",
+        "Tasarımla piksel piksel eşleştirin.",
+        "Hatayı işaretleyin. Akışı kaydedin."
+      ],
+      "screenshotSubtitles": [
+        "Eşitlenmiş kaydırma, tıklama ve gezinmeyle gerçek cihaz çerçeveleri.",
+        "110+ cihazın tümünü kategoriye göre açın; en küçük telefondan en büyük ekrana kadar.",
+        "Herhangi bir cihazı büyütün, ardından temiz incelemeler ve demolar için odak modunda tüm araçları gizleyin.",
+        "Bir yanda maketiniz, diğer yanda canlı sayfa. Her farkı bir bakışta görün.",
+        "Ekran görüntüsüne not ekleyin, AI aracınız için düzeltme istemi kopyalayın veya bir kullanıcı akışını her cihazda yeniden oynatın."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    },
+    {
+      "locale": "uk",
+      "storeLocale": "uk",
+      "language": "Українська",
+      "name": "Mobile View: Емулятор пристроїв і адаптивний тест",
+      "summary": "Мобільний симулятор для тестування адаптивного дизайну. Порівнюйте екрани, синхронізуйте прокручування й робіть знімки.",
+      "description": "Mobile View — безкоштовний інструмент із відкритим кодом для перевірки адаптивних вебсайтів у Chrome. Порівнюйте до чотирьох вікон поруч, зокрема мобільний перегляд, щоб перевіряти меню, текст і відступи. Вибирайте реалістичні пристрої, змінюйте орієнтацію й масштаб, синхронізуйте прокручування та навігацію, робіть знімки й порівнюйте з локальним дизайном. Усе працює локально без облікового запису, підписки, аналітики, телеметрії чи сервера.\n\n- Відкрийте всі пристрої одним натисканням. Попередні перегляди згруповано за типом пристрою та впорядковано від менших екранів до більших.\n- Для повторного тестування адаптивних макетів створюйте власні розміри перегляду, зберігайте набори й улюблені пристрої або зосередьтеся на одному вікні. Синхронізуйте підтримувані взаємодії між відповідними переглядами.\n- Знімайте одне вікно або весь робочий простір. Додавайте стрілки, рамки, малюнки й текст або обрізайте знімок. Показуйте локальний дизайн поруч зі сторінкою чи як накладання.\n- Копіюйте структуроване завдання виправлення з URL, пристроями, розмірами й нотатками про проблему до свого інструмента програмування.\n\nЦе адаптивні вікна перегляду в Chrome, а не фізичні пристрої чи рушій Safari. Правила входу та вбудовування сайтів залишаються чинними. Початкова сторінка зберігається; нові перегляди не копіюють незбережені зміни.",
+      "screenshotCaptions": [
+        "Усі екрани поруч.",
+        "Усі пристрої. Одне натискання.",
+        "Зосередьтеся на одному екрані.",
+        "Точно за макетом, піксель у піксель.",
+        "Позначте баг. Запишіть сценарій."
+      ],
+      "screenshotSubtitles": [
+        "Справжні рамки пристроїв із синхронним прокручуванням, натисканнями й навігацією.",
+        "Відкрийте всі 110+ пристроїв за категоріями — від найменшого телефона до найбільшого екрана.",
+        "Розгорніть будь-який пристрій і сховайте всі інструменти в режимі фокусу — для чистих переглядів і демонстрацій.",
+        "З одного боку ваш макет, з іншого — жива сторінка. Помітьте кожну відмінність з першого погляду.",
+        "Додайте примітки до знімка екрана, скопіюйте промпт із виправленням для свого ШІ-інструмента або відтворіть сценарій користувача на кожному пристрої."
+      ],
+      "screenshotLocale": "en",
+      "languageReviewStatus": "native-review-recommended",
+      "publishedAt": null,
+      "publicVerificationHash": null
+    }
+  ]
+}

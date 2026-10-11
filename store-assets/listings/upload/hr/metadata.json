@@ -1,0 +1,20 @@
+{
+  "storeLocale": "hr",
+  "name": "Mobile View: Emulator uređaja i responzivni test",
+  "summary": "Mobilni simulator za testiranje responzivnog dizajna. Usporedite prikaze, sinkronizirajte pomicanje i snimite zaslon.",
+  "screenshotCaptions": [
+    "Svi zasloni, jedan uz drugi.",
+    "Svi uređaji. Jedan klik.",
+    "Usredotočite se na jedan zaslon.",
+    "Točno prema dizajnu, piksel po piksel.",
+    "Označite grešku. Snimite tijek."
+  ],
+  "screenshotSubtitles": [
+    "Stvarni okviri uređaja sa sinkroniziranim pomicanjem, klikovima i navigacijom.",
+    "Otvorite svih 110+ uređaja po kategorijama, od najmanjeg telefona do najvećeg zaslona.",
+    "Proširite bilo koji uređaj, a zatim u načinu fokusa sakrijte sve alate za čiste preglede i demonstracije.",
+    "Vaša maketa s jedne strane, živa stranica s druge. Uočite svaku razliku na prvi pogled.",
+    "Dodajte bilješke na snimku zaslona, kopirajte upit za ispravak za svoj AI alat ili ponovno reproducirajte korisnički tijek na svakom uređaju."
+  ],
+  "screenshotLocale": "en"
+}

@@ -1,0 +1,20 @@
+{
+  "storeLocale": "lv",
+  "name": "Mobile View: Ierīču emulators un adaptīvais tests",
+  "summary": "Mobilais simulators responsīvā dizaina testēšanai. Salīdziniet skatus, sinhronizējiet ritināšanu un veidojiet ekrānuzņēmumus.",
+  "screenshotCaptions": [
+    "Visi ekrāni blakus.",
+    "Visas ierīces. Viens klikšķis.",
+    "Koncentrējieties uz vienu ekrānu.",
+    "Precīzi pēc dizaina, līdz pikselim.",
+    "Atzīmējiet kļūdu. Ierakstiet plūsmu."
+  ],
+  "screenshotSubtitles": [
+    "Īsti ierīču rāmji ar sinhronizētu ritināšanu, klikšķiem un navigāciju.",
+    "Atveriet visas 110+ ierīces pa kategorijām – no mazākā tālruņa līdz lielākajam ekrānam.",
+    "Izvērsiet jebkuru ierīci un fokusa režīmā paslēpiet visus rīkus tīrām pārskatīšanām un demonstrācijām.",
+    "Vienā pusē jūsu makets, otrā – tiešsaistes lapa. Pamaniet katru atšķirību vienā mirklī.",
+    "Anotējiet ekrānuzņēmumu, kopējiet labojuma uzvedni savam MI rīkam vai atskaņojiet lietotāja plūsmu katrā ierīcē."
+  ],
+  "screenshotLocale": "en"
+}

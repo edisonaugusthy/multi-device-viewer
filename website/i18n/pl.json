@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: tester stron responsywnych i emulator dla Chrome",
+    "description": "Darmowe rozszerzenie Chrome: testuj strony responsywne w prawdziwych ramkach iPhone, Android, iPad i Mac, z synchronizacją przewijania. Działa z localhost.",
+    "ogTitle": "Mobile View: Twoja strona na wszystkich ekranach naraz",
+    "ogImageAlt": "Mobile View pokazuje jedną stronę obok siebie na iPhonie, składanym telefonie, MacBooku i Apple Watch"
+  },
+  "nav": {
+    "home": "Strona główna Mobile View",
+    "main": "Główne",
+    "tour": "Przegląd",
+    "reviews": "Opinie",
+    "faq": "FAQ",
+    "guides": "Poradniki",
+    "privacy": "Prywatność",
+    "github": "Mobile View na GitHubie",
+    "leaveReview": "Wystaw opinię",
+    "addToChrome": "Dodaj do Chrome",
+    "skip": "Przejdź do treści"
+  },
+  "hero": {
+    "rating": "{rating} w Chrome Web Store",
+    "title": "Twoja strona na wszystkich ekranach naraz.",
+    "lede": "Darmowe rozszerzenie Chrome, które pokazuje dowolną stronę, nawet z localhost, na prawdziwych telefonach, składakach, tabletach, laptopach i zegarkach. Obok siebie, w pełnej synchronizacji.",
+    "install": "Dodaj do Chrome, za darmo",
+    "review": "Wystaw opinię"
+  },
+  "demo": {
+    "label": "Demo na żywo",
+    "badge": "Na żywo. Przewiń lub dotknij dowolnego ekranu.",
+    "frameTitle": "Strona demo na żywo na urządzeniu {device}"
+  },
+  "facts": {
+    "label": "W skrócie",
+    "devicesValue": "{count}",
+    "devices": "prawdziwych urządzeń",
+    "atOnceValue": "4 naraz",
+    "atOnce": "obok siebie",
+    "syncValue": "Synchronizacja",
+    "sync": "przewijania, dotknięć i stron",
+    "privateValue": "Prywatnie",
+    "private": "bez konta, bez śledzenia"
+  },
+  "tour": {
+    "workspaceTitle": "Cztery urządzenia. Jeden obszar roboczy.",
+    "workspaceText": "Wybierz dowolne cztery z {count} prawdziwych urządzeń i zobacz swoją stronę na wszystkich naraz.",
+    "workspaceAlt": "Obszar roboczy Mobile View pokazujący stronę obok siebie na iPhonie 18 Pro, złożonym iPhonie Duo, MacBooku Pro 14 i Apple Watch",
+    "syncTitle": "Przewiń raz. Każdy ekran podąży.",
+    "syncText": "Przewijanie, kliknięcia i nawigacja są zsynchronizowane na wszystkich urządzeniach.",
+    "syncAlt": "Cztery urządzenia przewinięte do tego samego miejsca strony przy włączonej synchronizacji przewijania i nawigacji",
+    "allTitle": "Każde urządzenie. Jedno kliknięcie.",
+    "allText": "Otwórz całą kategorię naraz. Tutaj 16 z 37 iPhone'ów, od iPhone'a 5 do iPhone'a 15 Pro.",
+    "allAlt": "Widok wszystkich urządzeń z dwoma rzędami iPhone'ów, od iPhone'a 5 i iPhone'a SE do iPhone'a 15 Pro, każdy wczytuje tę samą stronę",
+    "designTitle": "Zgodnie z projektem.",
+    "designText": "Umieść makietę obok działającej strony na dowolnym urządzeniu. Obok siebie lub nałożone: każda różnica między projektem a wdrożeniem od razu rzuca się w oczy.",
+    "designCaught": "Wykryte w tym porównaniu",
+    "designItem1": "Inny tekst nagłówka",
+    "designItem1Detail": "Na żywo: „Make room for your best work.” Projekt: „Room for your best work.”",
+    "designItem2": "Inny styl przycisku",
+    "designItem2Detail": "Na żywo: ciemny, ostre rogi. Projekt: morska pigułka.",
+    "designAlt": "Porównanie z projektem: działająca strona na iPhonie 18 Pro obok obrazu projektu, z innym nagłówkiem i stylem przycisku",
+    "fixTitle": "Zaznacz błąd. Skopiuj poprawkę.",
+    "fixText": "Rysuj na zrzucie ekranu, a potem skopiuj gotowy prompt dla swojego narzędzia AI do kodowania. Nic nie opuszcza Twojego komputera.",
+    "fixAlt": "Edytor adnotacji ze strzałką i ramką zaznaczającą nagłówek na iPhonie, obok panelu promptu z poprawką i listą urządzeń, których dotyczy",
+    "alsoInside": "A do tego",
+    "chipRecord": "Nagrywanie i odtwarzanie ścieżek",
+    "chipFocus": "Tryb skupienia",
+    "chipRotate": "Obrót i powiększenie",
+    "chipCustom": "Własne rozmiary",
+    "chipSets": "Zapisane zestawy urządzeń"
+  },
+  "reviews": {
+    "title": "Oceniany przez tych, którzy wdrażają.",
+    "outOf": "na 5",
+    "stars": "{rating} na 5 gwiazdek",
+    "summary": "Oceny: {count} · użytkownicy: {users} w Chrome Web Store",
+    "leave": "Wystaw opinię",
+    "readAll": "Zobacz wszystkie",
+    "source": "Chrome Web Store",
+    "empty": "Bądź jedną z pierwszych osób, które ocenią Mobile View."
+  },
+  "privacy": {
+    "title": "Prywatność w standardzie.",
+    "item1": "Bez konta",
+    "item2": "Bez śledzenia",
+    "item3": "Twoje strony zostają w przeglądarce",
+    "item4": "Otwarte źródło",
+    "link": "Polityka prywatności"
+  },
+  "faq": {
+    "title": "Pytania.",
+    "q1": "Czy jest darmowe?",
+    "a1": "Tak. Darmowe i otwartoźródłowe na licencji MIT, bez zakładania konta.",
+    "q2": "Czy działa z localhost?",
+    "a2": "Tak. Otwórz lokalną stronę w Chrome, a potem uruchom Mobile View. Nic nie opuszcza Twojego komputera.",
+    "q3": "Czym różni się od trybu urządzenia w DevTools?",
+    "a3": "DevTools pokazuje jeden widok naraz. Mobile View pokazuje cztery prawdziwe urządzenia obok siebie, w pełnej synchronizacji.",
+    "q4": "Dlaczego niektóre strony się nie wczytują?",
+    "a4": "Niektóre strony blokują wyświetlanie wewnątrz innej strony. Mobile View o tym informuje i proponuje otwarcie ich w karcie.",
+    "q5": "Czy prompt z poprawką wysyła mój kod?",
+    "a5": "Nie. Powstaje na Twoim komputerze, abyś mógł wkleić go do własnego narzędzia do kodowania."
+  },
+  "cta": {
+    "title": "Wypróbuj na własnej stronie.",
+    "text": "Za darmo. Bez konta. Działa z localhost.",
+    "install": "Dodaj do Chrome, za darmo",
+    "review": "Wystaw opinię"
+  },
+  "footer": {
+    "blurb": "Darmowy, prywatny tester responsywności dla Chrome. Otwarte źródło na licencji MIT.",
+    "product": "Produkt",
+    "guides": "Poradniki",
+    "project": "Projekt",
+    "tour": "Przegląd",
+    "reviews": "Opinie",
+    "changelog": "Lista zmian",
+    "store": "Chrome Web Store",
+    "allGuides": "Wszystkie poradniki",
+    "source": "Kod źródłowy na GitHubie",
+    "issue": "Zgłoś problem",
+    "privacy": "Polityka prywatności",
+    "terms": "Warunki korzystania",
+    "language": "Język",
+    "copyright": "© {year} Edison Augusthy. Licencja MIT.",
+    "trademarks": "iPhone, iPad, Mac i Apple Watch są znakami towarowymi Apple Inc. Galaxy jest znakiem towarowym Samsung, a Pixel – Google. Nazwy urządzeń opisują wyłącznie rozmiary ekranów; Mobile View nie jest powiązany z tymi firmami."
+  }
+}

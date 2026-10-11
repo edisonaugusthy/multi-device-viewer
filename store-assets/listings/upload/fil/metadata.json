@@ -1,0 +1,20 @@
+{
+  "storeLocale": "fil",
+  "name": "Mobile View: Device Emulator at Responsive Tester",
+  "summary": "Mobile simulator at responsive design tester. Ihambing ang mga device view, i-sync ang pag-scroll at kumuha ng screenshot.",
+  "screenshotCaptions": [
+    "Bawat screen, magkakatabi.",
+    "Bawat device. Isang click.",
+    "Tumutok sa isang screen.",
+    "Tugma sa design, pixel por pixel.",
+    "Markahan ang bug. I-record ang flow."
+  ],
+  "screenshotSubtitles": [
+    "Totoong device frame na may naka-sync na scroll, click, at navigation.",
+    "Buksan ang lahat ng 110+ device ayon sa kategorya, mula sa pinakamaliit na phone hanggang sa pinakamalaking screen.",
+    "Palakihin ang anumang device, saka itago ang lahat ng tool sa focus mode para sa malinis na review at demo.",
+    "Ang mockup mo sa isang panig, ang live page sa kabila. Makita agad ang bawat pagkakaiba.",
+    "Mag-annotate ng screenshot, kopyahin ang fix prompt para sa iyong AI tool, o i-replay ang user flow sa bawat device."
+  ],
+  "screenshotLocale": "en"
+}

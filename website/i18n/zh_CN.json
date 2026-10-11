@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Chrome 响应式网站测试工具与设备模拟器",
+    "description": "免费 Chrome 扩展：在真实的 iPhone、Android、折叠屏、iPad、Mac 和 Apple Watch 设备框架中并排测试响应式网站，同步滚动，支持 localhost。",
+    "ogTitle": "Mobile View: 一次看遍所有屏幕上的网站",
+    "ogImageAlt": "Mobile View 在 iPhone、折叠屏手机、MacBook 和 Apple Watch 上并排显示同一页面"
+  },
+  "nav": {
+    "home": "Mobile View 首页",
+    "main": "主导航",
+    "tour": "功能导览",
+    "reviews": "评价",
+    "faq": "常见问题",
+    "guides": "指南",
+    "privacy": "隐私",
+    "github": "GitHub 上的 Mobile View",
+    "leaveReview": "写评价",
+    "addToChrome": "添加到 Chrome",
+    "skip": "跳到正文"
+  },
+  "hero": {
+    "rating": "Chrome Web Store 评分 {rating}",
+    "title": "一次看遍所有屏幕。",
+    "lede": "一款免费的 Chrome 扩展，可在真实的手机、折叠屏、平板、笔记本和手表上显示任意页面，连 localhost 也不例外。并排显示，同步联动。",
+    "install": "免费添加到 Chrome",
+    "review": "写评价"
+  },
+  "demo": {
+    "label": "在线演示",
+    "badge": "实时运行。滚动或点按任意屏幕试试。",
+    "frameTitle": "{device} 上的在线演示页面"
+  },
+  "facts": {
+    "label": "一览",
+    "devicesValue": "{count}",
+    "devices": "款真实设备",
+    "atOnceValue": "同时 4 台",
+    "atOnce": "并排显示",
+    "syncValue": "同步",
+    "sync": "滚动、点按和页面跳转",
+    "privateValue": "私密",
+    "private": "无需账号，无跟踪"
+  },
+  "tour": {
+    "workspaceTitle": "四台设备，一个工作区。",
+    "workspaceText": "从 {count} 款真实设备中任选四款，同时查看页面在每台设备上的效果。",
+    "workspaceAlt": "Mobile View 工作区：在 iPhone 18 Pro、折叠状态的 iPhone Duo、MacBook Pro 14 和 Apple Watch 上并排显示同一页面",
+    "syncTitle": "滚动一次，所有屏幕跟随。",
+    "syncText": "滚动、点击和导航在所有设备间保持同步。",
+    "syncAlt": "开启滚动和导航同步后，四台设备停在页面的同一位置",
+    "allTitle": "所有设备，一键打开。",
+    "allText": "一次打开整个类别。图中是 37 款 iPhone 中的 16 款，从 iPhone 5 到 iPhone 15 Pro。",
+    "allAlt": "所有设备视图：两排 iPhone，从 iPhone 5、iPhone SE 到 iPhone 15 Pro，都在加载同一页面",
+    "designTitle": "对照设计稿。",
+    "designText": "在任意设备上，把设计稿放在实时页面旁边。并排或叠加对比，设计与实现之间的每处差异都一目了然。",
+    "designCaught": "本次对比发现",
+    "designItem1": "标题文案不同",
+    "designItem1Detail": "实时页面：“Make room for your best work.” 设计稿：“Room for your best work.”",
+    "designItem2": "按钮样式不同",
+    "designItem2Detail": "实时页面：深色、直角。设计稿：青绿色胶囊形。",
+    "designAlt": "与设计稿对比：iPhone 18 Pro 上的实时页面与设计图并排，标题和按钮样式不同",
+    "fixTitle": "标出问题，复制修复提示。",
+    "fixText": "在截图上标注，然后为你的 AI 编程工具复制现成的提示词。任何内容都不会离开你的电脑。",
+    "fixAlt": "标注编辑器用箭头和方框标出 iPhone 上的标题，旁边是列出受影响设备的修复提示面板",
+    "alsoInside": "更多功能",
+    "chipRecord": "录制并重放流程",
+    "chipFocus": "专注模式",
+    "chipRotate": "旋转与缩放",
+    "chipCustom": "自定义尺寸",
+    "chipSets": "保存的设备组合"
+  },
+  "reviews": {
+    "title": "深受一线开发者好评。",
+    "outOf": "满分 5 分",
+    "stars": "{rating} 星（满分 5 星）",
+    "summary": "{count} 个评分 · Chrome Web Store 上有 {users} 位用户",
+    "leave": "写评价",
+    "readAll": "查看全部",
+    "source": "Chrome Web Store",
+    "empty": "成为首批评价 Mobile View 的用户。"
+  },
+  "privacy": {
+    "title": "生来注重隐私。",
+    "item1": "无需账号",
+    "item2": "无跟踪",
+    "item3": "页面始终留在你的浏览器中",
+    "item4": "开源",
+    "link": "隐私政策"
+  },
+  "faq": {
+    "title": "常见问题。",
+    "q1": "免费吗？",
+    "a1": "是的。基于 MIT 许可证免费开源，无需账号。",
+    "q2": "支持 localhost 吗？",
+    "a2": "支持。在 Chrome 中打开本地页面，再打开 Mobile View 即可。任何内容都不会离开你的电脑。",
+    "q3": "和 DevTools 的设备模式有什么不同？",
+    "a3": "DevTools 一次只显示一个视口。Mobile View 并排显示四台真实设备，并保持同步。",
+    "q4": "为什么有些网站无法加载？",
+    "a4": "有些网站禁止被嵌入到其他页面中显示。Mobile View 会提示你，并可在新标签页中打开。",
+    "q5": "修复提示会上传我的代码吗？",
+    "a5": "不会。提示在你的电脑上生成，供你粘贴到自己的编程工具中。"
+  },
+  "cta": {
+    "title": "在你自己的网站上试试。",
+    "text": "免费。无需账号。支持 localhost。",
+    "install": "免费添加到 Chrome",
+    "review": "写评价"
+  },
+  "footer": {
+    "blurb": "一款免费、注重隐私的 Chrome 响应式测试工具。基于 MIT 许可证开源。",
+    "product": "产品",
+    "guides": "指南",
+    "project": "项目",
+    "tour": "功能导览",
+    "reviews": "评价",
+    "changelog": "更新日志",
+    "store": "Chrome Web Store",
+    "allGuides": "所有指南",
+    "source": "GitHub 源代码",
+    "issue": "报告问题",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "language": "语言",
+    "copyright": "© {year} Edison Augusthy。采用 MIT 许可证。",
+    "trademarks": "iPhone、iPad、Mac 和 Apple Watch 是 Apple Inc. 的商标。Galaxy 是 Samsung 的商标，Pixel 是 Google 的商标。设备名称仅用于描述屏幕尺寸；Mobile View 与上述公司无任何关联。"
+  }
+}

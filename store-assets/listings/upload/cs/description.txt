@@ -1,0 +1,8 @@
+Mobile View je bezplatný open-source nástroj pro testování responzivních webů v Chrome. Porovnávejte až čtyři pohledy vedle sebe, včetně mobilního náhledu, a kontrolujte nabídky, text a rozestupy. Vybírejte realistická zařízení, měňte orientaci a přiblížení, synchronizujte posouvání a navigaci, pořizujte snímky a porovnávejte je s místním návrhem. Vše běží lokálně v prohlížeči bez účtu, předplatného, analytiky, telemetrie či serveru.
+
+- Otevřete všechna zařízení jedním kliknutím. Náhledy jsou seskupeny podle typu zařízení a seřazeny od menších obrazovek po větší.
+- Pro opakované testování responzivních rozvržení vytvářejte vlastní velikosti viewportu, ukládejte sady a oblíbená zařízení nebo se zaměřte na jeden náhled. Synchronizujte podporované interakce mezi odpovídajícími náhledy.
+- Zachyťte jeden náhled nebo celý pracovní prostor. Přidejte šipky, rámečky, kresby a text nebo snímek ořízněte. Zobrazte místní návrh vedle stránky nebo jako překryv.
+- Zkopírujte do svého programovacího nástroje strukturované zadání opravy s URL, zařízeními, rozměry a poznámkami k problému.
+
+Jde o responzivní náhledy v Chromu, nikoli fyzická zařízení nebo jádro Safari. Pravidla přihlašování a vkládání webů stále platí. Původní stránka zůstává zachována; nové náhledy nekopírují neuložené změny.

@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: Enhedsemulator og responsiv test"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "Mobil simulator til test af responsivt webdesign. Sammenlign enhedsvisninger, synkroniser rulning, og tag skærmbilleder."
+  },
+  "actionTitle": {
+    "message": "Åbn Mobile View-enhedsemulator"
+  },
+  "contextMenuTitle": {
+    "message": "Åbn denne fane i Mobile View"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View er aktiv — klik for at lukke"
+  },
+  "unsupportedActionTitle": {
+    "message": "Åbn først et website"
+  },
+  "unsupportedUrlHint": {
+    "message": "Gå til den side, du udvikler, og klik derefter på udvidelsen igen."
+  }
+}

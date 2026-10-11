@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Preizkus odzivnih strani in emulator za Chrome",
+    "description": "Brezplačna razširitev za Chrome: preizkusite odzivne strani v resničnih okvirjih iPhone, Android, iPad in Mac z usklajenim drsenjem. Deluje na localhost.",
+    "ogTitle": "Mobile View: vaša stran na vseh zaslonih hkrati",
+    "ogImageAlt": "Mobile View prikazuje eno stran na iPhonu, zložljivem telefonu, MacBooku in Apple Watchu drugo ob drugi"
+  },
+  "nav": {
+    "home": "Domača stran Mobile View",
+    "main": "Glavno",
+    "tour": "Predstavitev",
+    "reviews": "Ocene",
+    "faq": "Pogosta vprašanja",
+    "guides": "Vodiči",
+    "privacy": "Zasebnost",
+    "github": "Mobile View na GitHubu",
+    "leaveReview": "Oddajte oceno",
+    "addToChrome": "Dodaj v Chrome",
+    "skip": "Preskoči na vsebino"
+  },
+  "hero": {
+    "rating": "{rating} v Chrome Web Store",
+    "title": "Vaša stran na vseh zaslonih hkrati.",
+    "lede": "Brezplačna razširitev za Chrome, ki katero koli stran, tudi localhost, prikaže na resničnih telefonih, zložljivih napravah, tablicah, prenosnikih in urah. Drugo ob drugi, usklajeno.",
+    "install": "Dodaj v Chrome, brezplačno",
+    "review": "Oddajte oceno"
+  },
+  "demo": {
+    "label": "Predstavitev v živo",
+    "badge": "V živo. Podrsajte ali tapnite kateri koli zaslon.",
+    "frameTitle": "Predstavitvena stran v živo na {device}"
+  },
+  "facts": {
+    "label": "Na kratko",
+    "devicesValue": "{count}",
+    "devices": "resničnih naprav",
+    "atOnceValue": "4 hkrati",
+    "atOnce": "drugo ob drugi",
+    "syncValue": "Usklajeno",
+    "sync": "drsenje, tapi in strani",
+    "privateValue": "Zasebno",
+    "private": "brez računa, brez sledenja"
+  },
+  "tour": {
+    "workspaceTitle": "Štiri naprave. En delovni prostor.",
+    "workspaceText": "Izberite katere koli štiri od {count} resničnih naprav in si oglejte stran na vseh hkrati.",
+    "workspaceAlt": "Delovni prostor Mobile View s stranjo na iPhone 18 Pro, zloženem iPhone Duo, MacBook Pro 14 in Apple Watch drugo ob drugi",
+    "syncTitle": "Podrsajte enkrat. Vsi zasloni sledijo.",
+    "syncText": "Drsenje, kliki in navigacija ostanejo usklajeni na vseh napravah.",
+    "syncAlt": "Štiri naprave, podrsane do iste točke strani, z vklopljenim usklajevanjem drsenja in navigacije",
+    "allTitle": "Vse naprave. En klik.",
+    "allText": "Odprite celotno kategorijo naenkrat. Tukaj 16 od 37 iPhonov, od iPhone 5 do iPhone 15 Pro.",
+    "allAlt": "Pogled vseh naprav z dvema vrstama iPhonov, od iPhone 5 in iPhone SE do iPhone 15 Pro, vsak nalaga isto stran",
+    "designTitle": "Zvesto dizajnu.",
+    "designText": "Postavite svoj osnutek ob stran v živo na kateri koli napravi. Drugo ob drugi ali prekrito, vsako razliko med dizajnom in izvedbo hitro opazite.",
+    "designCaught": "Odkrito pri tej primerjavi",
+    "designItem1": "Besedilo naslova se razlikuje",
+    "designItem1Detail": "V živo: »Make room for your best work.« Dizajn: »Room for your best work.«",
+    "designItem2": "Slog gumba se razlikuje",
+    "designItem2Detail": "V živo: temen, oglati robovi. Dizajn: turkizna tabletka.",
+    "designAlt": "Primerjava z dizajnom: stran v živo na iPhone 18 Pro ob sliki dizajna, z drugačnim naslovom in slogom gumba",
+    "fixTitle": "Označite napako. Kopirajte popravek.",
+    "fixText": "Rišite po posnetku zaslona, nato kopirajte pripravljen poziv za svoje orodje za programiranje z UI. Nič ne zapusti vašega računalnika.",
+    "fixAlt": "Urejevalnik opomb s puščico in okvirjem, ki označujeta naslov na iPhonu, ob plošči s pozivom za popravek in seznamom prizadetih naprav",
+    "alsoInside": "Še več",
+    "chipRecord": "Snemanje in predvajanje potekov",
+    "chipFocus": "Način osredotočenosti",
+    "chipRotate": "Vrtenje in povečava",
+    "chipCustom": "Velikosti po meri",
+    "chipSets": "Shranjeni nabori naprav"
+  },
+  "reviews": {
+    "title": "Ocenjujejo ga tisti, ki izdajajo.",
+    "outOf": "od 5",
+    "stars": "{rating} od 5 zvezdic",
+    "summary": "{count} ocen · {users} uporabnikov v Chrome Web Store",
+    "leave": "Oddajte oceno",
+    "readAll": "Preberi vse",
+    "source": "Chrome Web Store",
+    "empty": "Bodite med prvimi, ki ocenijo Mobile View."
+  },
+  "privacy": {
+    "title": "Zasebno že v zasnovi.",
+    "item1": "Brez računa",
+    "item2": "Brez sledenja",
+    "item3": "Vaše strani ostanejo v brskalniku",
+    "item4": "Odprta koda",
+    "link": "Pravilnik o zasebnosti"
+  },
+  "faq": {
+    "title": "Vprašanja.",
+    "q1": "Je brezplačen?",
+    "a1": "Da. Brezplačen in odprtokoden pod licenco MIT, brez računa.",
+    "q2": "Ali deluje na localhost?",
+    "a2": "Da. Odprite lokalno stran v Chromu, nato odprite Mobile View. Nič ne zapusti vašega računalnika.",
+    "q3": "V čem se razlikuje od načina naprave v DevTools?",
+    "a3": "DevTools prikaže eno vidno polje naenkrat. Mobile View prikaže štiri resnične naprave drugo ob drugi, usklajeno.",
+    "q4": "Zakaj se nekatere strani ne naložijo?",
+    "a4": "Nekatere strani preprečujejo prikaz znotraj druge strani. Mobile View vas o tem obvesti in ponudi, da jih odprete v zavihku.",
+    "q5": "Ali poziv za popravek naloži mojo kodo?",
+    "a5": "Ne. Ustvari se na vašem računalniku, da ga prilepite v svoje orodje za programiranje."
+  },
+  "cta": {
+    "title": "Preizkusite ga na svoji strani.",
+    "text": "Brezplačno. Brez računa. Deluje na localhost.",
+    "install": "Dodaj v Chrome, brezplačno",
+    "review": "Oddajte oceno"
+  },
+  "footer": {
+    "blurb": "Brezplačen in zaseben preizkuševalnik odzivnosti za Chrome. Odprta koda pod licenco MIT.",
+    "product": "Izdelek",
+    "guides": "Vodiči",
+    "project": "Projekt",
+    "tour": "Predstavitev",
+    "reviews": "Ocene",
+    "changelog": "Dnevnik sprememb",
+    "store": "Chrome Web Store",
+    "allGuides": "Vsi vodiči",
+    "source": "Izvorna koda na GitHubu",
+    "issue": "Prijavite težavo",
+    "privacy": "Pravilnik o zasebnosti",
+    "terms": "Pogoji uporabe",
+    "language": "Jezik",
+    "copyright": "© {year} Edison Augusthy. Licenca MIT.",
+    "trademarks": "iPhone, iPad, Mac in Apple Watch so blagovne znamke družbe Apple Inc. Galaxy je blagovna znamka družbe Samsung; Pixel družbe Google. Imena naprav opisujejo le velikosti zaslonov; Mobile View ni povezan s temi družbami."
+  }
+}

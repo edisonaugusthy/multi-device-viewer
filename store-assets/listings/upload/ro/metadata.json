@@ -1,0 +1,20 @@
+{
+  "storeLocale": "ro",
+  "name": "Mobile View: Emulator de dispozitive și test responsiv",
+  "summary": "Simulator mobil pentru testarea designului responsive. Compară vizualizări, sincronizează derularea și fă capturi de ecran.",
+  "screenshotCaptions": [
+    "Toate ecranele, alăturat.",
+    "Toate dispozitivele. Un clic.",
+    "Concentrează-te pe un singur ecran.",
+    "Fidel designului, pixel cu pixel.",
+    "Marchează bugul. Înregistrează fluxul."
+  ],
+  "screenshotSubtitles": [
+    "Rame reale de dispozitive, cu derulare, clicuri și navigare sincronizate.",
+    "Deschide toate cele 110+ dispozitive pe categorii, de la cel mai mic telefon la cel mai mare ecran.",
+    "Extinde orice dispozitiv, apoi ascunde toate instrumentele în modul focus pentru revizuiri și demonstrații curate.",
+    "Macheta ta într-o parte, pagina live în cealaltă. Observă orice diferență dintr-o privire.",
+    "Adnotează o captură de ecran, copiază un prompt de remediere pentru instrumentul tău AI sau redă un flux de utilizator pe fiecare dispozitiv."
+  ],
+  "screenshotLocale": "en"
+}

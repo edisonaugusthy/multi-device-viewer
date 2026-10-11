@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Mobile View: ডিভাইস এমুলেটর ও রেসপনসিভ টেস্টার"
+  },
+  "extensionShortName": {
+    "message": "Mobile View"
+  },
+  "extensionDescription": {
+    "message": "মোবাইল সিমুলেটর দিয়ে রেসপনসিভ ওয়েব ডিজাইন পরীক্ষা করুন। ডিভাইস ভিউ তুলনা করুন, স্ক্রল সিঙ্ক করুন ও স্ক্রিনশট নিন।"
+  },
+  "actionTitle": {
+    "message": "Mobile View ডিভাইস এমুলেটর খুলুন"
+  },
+  "contextMenuTitle": {
+    "message": "এই ট্যাবটি Mobile View-এ খুলুন"
+  },
+  "activeActionTitle": {
+    "message": "Mobile View সক্রিয় — বন্ধ করতে ক্লিক করুন"
+  },
+  "unsupportedActionTitle": {
+    "message": "প্রথমে একটি ওয়েবসাইট খুলুন"
+  },
+  "unsupportedUrlHint": {
+    "message": "আপনি যে পেজটি তৈরি করছেন সেখানে যান, তারপর এক্সটেনশনটিতে আবার ক্লিক করুন।"
+  }
+}

@@ -1,0 +1,970 @@
+import type { Device, Size } from "./device.types";
+import { getDeviceChromeMeta, getMockupAssets, localMockupCatalog } from "./mockup-catalog";
+import { displayReferences } from "./display-references";
+
+const curatedDevices: Device[] = [
+  // Apple panel specifications; logical screens use provisional @3x sizing.
+{
+  "id": "apple-iphone-18-pro-2026",
+  "name": "Apple iPhone 18 Pro",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 402,
+    "height": 874
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 1206,
+    "height": 2622
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-18-pro/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-18-pro-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new"
+  ]
+},
+{
+  "id": "apple-iphone-18-pro-max-2026",
+  "name": "Apple iPhone 18 Pro Max",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 440,
+    "height": 956
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 1320,
+    "height": 2868
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-18-pro/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-18-pro-max-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new"
+  ]
+},
+{
+  "id": "apple-iphone-duo-folded-2026",
+  "name": "Apple iPhone Duo (folded)",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 466,
+    "height": 678
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 1398,
+    "height": 2034
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-duo/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-duo-folded-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new",
+    "foldable"
+  ]
+},
+{
+  "id": "apple-iphone-duo-unfolded-2026",
+  "name": "Apple iPhone Duo (unfolded)",
+  "brand": "Apple",
+  "family": "iPhone",
+  "year": 2026,
+  "type": "phone",
+  "os": "iOS 27",
+  "cssViewport": {
+    "width": 890,
+    "height": 626
+  },
+  "pixelRatio": 3,
+  "manufacturerResolution": {
+    "width": 2670,
+    "height": 1878
+  },
+  "resolutionSource": "reference",
+  "displayReferenceUrl": "https://www.apple.com/iphone-duo/specs/",
+  "mockupAssets": getMockupAssets("apple-iphone-duo-unfolded-2026"),
+  "updatedAt": "2026-09-10",
+  "tags": [
+    "ios",
+    "new",
+    "foldable"
+  ]
+},
+  {
+    id: "apple-iphone-14-pro-max-2022",
+    name: "Apple iPhone 14 Pro Max",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2022,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 428, height: 928 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1290, height: 2796 },
+    mockupAssets: getMockupAssets("apple-iphone-14-pro-max-2022"),
+    updatedAt: "2023-09-23",
+    tags: ["ios", "large"]
+  },
+  {
+    id: "apple-iphone-air-2025",
+    name: "Apple iPhone Air (2025)",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2025,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 420, height: 912 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1260, height: 2736 },
+    mockupAssets: getMockupAssets("apple-iphone-air-2025"),
+    updatedAt: "2025-10-22",
+    tags: ["notch", "ios"]
+  },
+  {
+    id: "apple-iphone-17-pro-max-2025",
+    name: "Apple iPhone 17 Pro Max (2025)",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2025,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 440, height: 956 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1320, height: 2868 },
+    mockupAssets: getMockupAssets("apple-iphone-17-pro-max-2025"),
+    updatedAt: "2025-10-22",
+    tags: ["ios", "large"]
+  },
+  {
+    id: "apple-iphone-16-pro-max-2024",
+    name: "Apple iPhone 16 Pro Max (2024)",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2024,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 440, height: 956 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1320, height: 2868 },
+    mockupAssets: getMockupAssets("apple-iphone-16-pro-max-2024"),
+    updatedAt: "2024-11-02",
+    tags: ["ios", "large"]
+  },
+  {
+    id: "apple-iphone-15",
+    name: "Apple iPhone 15",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2023,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 393, height: 852 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1179, height: 2556 },
+    mockupAssets: getMockupAssets("apple-iphone-15"),
+    updatedAt: "2024-11-02",
+    tags: ["ios"]
+  },
+  {
+    id: "apple-iphone-14",
+    name: "Apple iPhone 14",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2022,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 390, height: 844 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1170, height: 2532 },
+    mockupAssets: getMockupAssets("apple-iphone-14"),
+    updatedAt: "2023-09-23",
+    tags: ["ios"]
+  },
+  {
+    id: "apple-iphone-13-mini",
+    name: "Apple iPhone 13 Mini",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2021,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 375, height: 812 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2340 },
+    mockupAssets: getMockupAssets("apple-iphone-13-mini"),
+    updatedAt: "2022-02-10",
+    tags: ["ios", "compact"]
+  },
+  {
+    id: "apple-iphone-se-2018",
+    name: "Apple iPhone SE (1st generation)",
+    brand: "Apple",
+    family: "iPhone",
+    year: 2016,
+    type: "phone",
+    os: "iOS",
+    cssViewport: { width: 320, height: 568 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 640, height: 1136 },
+    mockupAssets: getMockupAssets("apple-iphone-se-2018"),
+    updatedAt: "2022-01-12",
+    tags: ["ios", "compact", "legacy"]
+  },
+  {
+    id: "samsung-galaxy-s24",
+    name: "Samsung Galaxy S24",
+    brand: "Samsung",
+    family: "Galaxy S",
+    year: 2024,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 360, height: 780 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2340 },
+    mockupAssets: getMockupAssets("samsung-galaxy-s24"),
+    updatedAt: "2025-02-20",
+    tags: ["android"]
+  },
+  {
+    id: "samsung-galaxy-s24-ultra",
+    name: "Samsung Galaxy S24 Ultra",
+    brand: "Samsung",
+    family: "Galaxy S",
+    year: 2024,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 384, height: 832 },
+    pixelRatio: 3.75,
+    manufacturerResolution: { width: 1440, height: 3120 },
+    mockupAssets: getMockupAssets("samsung-galaxy-s24-ultra"),
+    updatedAt: "2025-02-20",
+    tags: ["android", "large"]
+  },
+  // Announced devices remain in the catalog after their launch badge expires.
+  {
+    id: "samsung-galaxy-z-fold8-ultra-folded-2026",
+    name: "Samsung Galaxy Z Fold8 Ultra (folded)",
+    brand: "Samsung",
+    family: "Galaxy Z",
+    year: 2026,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 360, height: 840 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2520 },
+    mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-ultra-folded-2026"),
+    updatedAt: "2026-07-25",
+    tags: ["android", "foldable"]
+  },
+  {
+    id: "samsung-galaxy-z-fold8-ultra-unfolded-2026",
+    name: "Samsung Galaxy Z Fold8 Ultra (unfolded)",
+    brand: "Samsung",
+    family: "Galaxy Z",
+    year: 2026,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 902, height: 1002 },
+    pixelRatio: 2.5,
+    manufacturerResolution: { width: 2256, height: 2504 },
+    mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-ultra-unfolded-2026"),
+    updatedAt: "2026-07-25",
+    tags: ["android", "foldable", "large"]
+  },
+  {
+    id: "samsung-galaxy-z-fold8-folded-2026",
+    name: "Samsung Galaxy Z Fold8 (folded)",
+    brand: "Samsung",
+    family: "Galaxy Z",
+    year: 2026,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 416, height: 657 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1248, height: 1972 },
+    mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-folded-2026"),
+    updatedAt: "2026-07-25",
+    tags: ["android", "foldable"]
+  },
+  {
+    id: "samsung-galaxy-z-fold8-unfolded-2026",
+    name: "Samsung Galaxy Z Fold8 (unfolded)",
+    brand: "Samsung",
+    family: "Galaxy Z",
+    year: 2026,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 979, height: 739 },
+    pixelRatio: 2.5,
+    manufacturerResolution: { width: 2448, height: 1848 },
+    mockupAssets: getMockupAssets("samsung-galaxy-z-fold8-unfolded-2026"),
+    updatedAt: "2026-07-25",
+    tags: ["android", "foldable", "large"]
+  },
+  {
+    id: "samsung-galaxy-z-flip8-folded-2026",
+    name: "Samsung Galaxy Z Flip8 (folded)",
+    brand: "Samsung",
+    family: "Galaxy Z",
+    year: 2026,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 316, height: 349 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 948, height: 1048 },
+    mockupAssets: getMockupAssets("samsung-galaxy-z-flip8-folded-2026"),
+    updatedAt: "2026-07-25",
+    tags: ["android", "foldable"]
+  },
+  {
+    id: "samsung-galaxy-z-flip8-unfolded-2026",
+    name: "Samsung Galaxy Z Flip8 (unfolded)",
+    brand: "Samsung",
+    family: "Galaxy Z",
+    year: 2026,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 360, height: 840 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2520 },
+    mockupAssets: getMockupAssets("samsung-galaxy-z-flip8-unfolded-2026"),
+    updatedAt: "2026-07-25",
+    tags: ["android", "foldable"]
+  },
+  {
+    id: "samsung-galaxy-a27-5g-2026",
+    name: "Samsung Galaxy A27 5G",
+    brand: "Samsung",
+    family: "Galaxy A",
+    year: 2026,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 360, height: 780 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2340 },
+    mockupAssets: getMockupAssets("samsung-galaxy-a27-5g-2026"),
+    updatedAt: "2026-07-25",
+    tags: ["android"]
+  },
+  {
+    id: "google-pixel-8",
+    name: "Google Pixel 8",
+    brand: "Google",
+    family: "Pixel",
+    year: 2024,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 412, height: 916 },
+    pixelRatio: 2.625,
+    manufacturerResolution: { width: 1080, height: 2400 },
+    mockupAssets: getMockupAssets("google-pixel-8"),
+    updatedAt: "2025-02-20",
+    tags: ["android"]
+  },
+  ...[
+    ["google-pixel-11-2026", "Google Pixel 11", 412, 924, 2.625, 1080, 2424],
+    ["google-pixel-11-pro-2026", "Google Pixel 11 Pro", 410, 914, 3.125, 1280, 2856],
+    ["google-pixel-11-pro-xl-2026", "Google Pixel 11 Pro XL", 448, 997, 3, 1344, 2992],
+    ["google-pixel-11-pro-fold-2026", "Google Pixel 11 Pro Fold", 791, 823, 2.625, 2076, 2160],
+  ].map(([id, name, width, height, pixelRatio, resolutionWidth, resolutionHeight]) => ({
+    id: id as string,
+    name: name as string,
+    brand: "Google",
+    family: "Pixel",
+    year: 2026,
+    type: "phone" as const,
+    os: "Android",
+    cssViewport: { width: width as number, height: height as number },
+    pixelRatio: pixelRatio as number,
+    manufacturerResolution: { width: resolutionWidth as number, height: resolutionHeight as number },
+    mockupAssets: getMockupAssets(id as string),
+    updatedAt: "2026-08-14",
+    tags: ["android", ...(String(id).includes("fold") ? ["foldable"] : [])],
+  })),
+  {
+    id: "google-pixel-6-pro",
+    name: "Google Pixel 6 Pro",
+    brand: "Google",
+    family: "Pixel",
+    year: 2021,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 412, height: 892 },
+    pixelRatio: 3.5,
+    manufacturerResolution: { width: 1440, height: 3120 },
+    mockupAssets: getMockupAssets("google-pixel-6-pro"),
+    updatedAt: "2022-02-10",
+    tags: ["android", "large"]
+  },
+  {
+    id: "samsung-galaxy-z-fold-2",
+    name: "Samsung Galaxy Z Fold 2",
+    brand: "Samsung",
+    family: "Galaxy Z",
+    year: 2020,
+    type: "phone",
+    os: "Android",
+    cssViewport: { width: 884, height: 1104 },
+    pixelRatio: 2.5,
+    manufacturerResolution: { width: 1768, height: 2208 },
+    mockupAssets: getMockupAssets("samsung-galaxy-z-fold-2"),
+    updatedAt: "2022-01-13",
+    tags: ["android", "foldable"]
+  },
+  {
+    id: "apple-ipad-mini-6",
+    name: "Apple iPad Mini (6th Gen)",
+    brand: "Apple",
+    family: "iPad",
+    year: 2021,
+    type: "tablet",
+    os: "iPadOS",
+    cssViewport: { width: 768, height: 1024 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 1536, height: 2048 },
+    mockupAssets: getMockupAssets("apple-ipad-mini-6"),
+    updatedAt: "2022-01-02",
+    tags: ["tablet", "ios"]
+  },
+  {
+    id: "apple-ipad-air-4",
+    name: "Apple iPad Air 4",
+    brand: "Apple",
+    family: "iPad",
+    year: 2020,
+    type: "tablet",
+    os: "iPadOS",
+    cssViewport: { width: 820, height: 1180 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 1640, height: 2360 },
+    mockupAssets: getMockupAssets("apple-ipad-air-4"),
+    updatedAt: "2022-03-16",
+    tags: ["tablet", "ios"]
+  },
+  {
+    id: "samsung-galaxy-tab-s7",
+    name: "Samsung Galaxy Tab S7",
+    brand: "Samsung",
+    family: "Galaxy Tab",
+    year: 2020,
+    type: "tablet",
+    os: "Android",
+    cssViewport: { width: 800, height: 1280 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 1600, height: 2560 },
+    mockupAssets: getMockupAssets("samsung-galaxy-tab-s7"),
+    updatedAt: "2022-01-02",
+    tags: ["tablet", "android"]
+  },
+  {
+    id: "macbook-pro-16-2021",
+    name: "Apple MacBook Pro 16 inch",
+    brand: "Apple",
+    family: "MacBook",
+    year: 2021,
+    type: "laptop",
+    os: "macOS",
+    cssViewport: { width: 1728, height: 1085 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 3456, height: 2170 },
+    mockupAssets: getMockupAssets("macbook-pro-16-2021"),
+    updatedAt: "2022-04-30",
+    tags: ["desktop", "laptop"]
+  },
+  {
+    id: "macbook-air-2020-13",
+    name: "Apple MacBook Air 13 inch",
+    brand: "Apple",
+    family: "MacBook",
+    year: 2020,
+    type: "laptop",
+    os: "macOS",
+    cssViewport: { width: 1280, height: 800 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 2560, height: 1600 },
+    mockupAssets: getMockupAssets("macbook-air-2020-13"),
+    updatedAt: "2022-01-11",
+    tags: ["desktop", "laptop"]
+  },
+  {
+    id: "imac-24-2021",
+    name: "iMac 24 inch",
+    brand: "Apple",
+    family: "iMac",
+    year: 2021,
+    type: "desktop",
+    os: "macOS",
+    cssViewport: { width: 2048, height: 1152 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 4096, height: 2304 },
+    mockupAssets: getMockupAssets("imac-24-2021"),
+    updatedAt: "2022-05-02",
+    tags: ["desktop"]
+  },
+  // Current Apple Watch line-up (Apple specs: active area at 326 ppi, @2x).
+  {
+    id: "apple-watch-series-12-46mm",
+    name: "Apple Watch Series 12 (46mm)",
+    brand: "Apple",
+    family: "Watch",
+    year: 2026,
+    type: "watch",
+    os: "watchOS",
+    cssViewport: { width: 208, height: 248 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 416, height: 496 },
+    mockupAssets: getMockupAssets("apple-watch-series-12-46mm"),
+    updatedAt: "2026-10-10",
+    tags: ["watch", "compact"]
+  },
+  {
+    id: "apple-watch-series-12-42mm",
+    name: "Apple Watch Series 12 (42mm)",
+    brand: "Apple",
+    family: "Watch",
+    year: 2026,
+    type: "watch",
+    os: "watchOS",
+    cssViewport: { width: 187, height: 223 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 374, height: 446 },
+    mockupAssets: getMockupAssets("apple-watch-series-12-42mm"),
+    updatedAt: "2026-10-10",
+    tags: ["watch", "compact"]
+  },
+  {
+    id: "apple-watch-ultra-4",
+    name: "Apple Watch Ultra 4 (49mm)",
+    brand: "Apple",
+    family: "Watch",
+    year: 2026,
+    type: "watch",
+    os: "watchOS",
+    cssViewport: { width: 211, height: 257 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 422, height: 514 },
+    mockupAssets: getMockupAssets("apple-watch-ultra-4"),
+    updatedAt: "2026-10-10",
+    tags: ["watch", "compact"]
+  },
+  {
+    id: "samsung-neo-qled-4k-55",
+    name: "Samsung Smart TV Neo QLED 4K 55 inch",
+    brand: "Samsung",
+    family: "Smart TV",
+    year: 2021,
+    type: "tv",
+    os: "Tizen",
+    cssViewport: { width: 1920, height: 1080 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 3840, height: 2160 },
+    mockupAssets: getMockupAssets("samsung-neo-qled-4k-55"),
+    updatedAt: "2022-01-02",
+    tags: ["tv", "desktop"]
+  }
+];
+
+interface DeviceDisplaySpec {
+  cssViewport: Size;
+  pixelRatio: number;
+  manufacturerResolution: Size;
+}
+
+// Logical browser viewports and physical panel resolutions are related, but
+// they are not always exact integer multiples. Keep both values authoritative
+// so the device report does not invent a panel resolution by rounding CSS px.
+const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
+  "google-pixel-10-pro-xl-2025": {
+    cssViewport: { width: 448, height: 997 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1344, height: 2992 },
+  },
+  "motorola-edge-60-pro-2025": {
+    cssViewport: { width: 407, height: 904 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1220, height: 2712 },
+  },
+  "samsung-galaxy-xcover7-pro-2025": {
+    cssViewport: { width: 360, height: 803 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2408 },
+  },
+  "samsung-galaxy-z-flip7-2025": {
+    cssViewport: { width: 360, height: 840 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1080, height: 2520 },
+  },
+  "samsung-galaxy-z-fold7-unfolded-2025": {
+    cssViewport: { width: 787, height: 874 },
+    pixelRatio: 2.5,
+    manufacturerResolution: { width: 1968, height: 2184 },
+  },
+  "oneplus-nord-2": {
+    cssViewport: { width: 412, height: 915 },
+    pixelRatio: 2.625,
+    manufacturerResolution: { width: 1080, height: 2400 },
+  },
+  "apple-macbook-pro-14-m5-2025": {
+    cssViewport: { width: 1512, height: 982 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 3024, height: 1964 },
+  },
+  "modern-laptop-15": {
+    cssViewport: { width: 1440, height: 900 },
+    pixelRatio: 1,
+    manufacturerResolution: { width: 1440, height: 900 },
+  },
+  "apple-iphone-16e-2025": {
+    cssViewport: { width: 390, height: 844 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1170, height: 2532 },
+  },
+  "apple-iphone-16-pro-2024": {
+    cssViewport: { width: 402, height: 874 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1206, height: 2622 },
+  },
+  "apple-iphone-17e-2026": {
+    cssViewport: { width: 390, height: 844 },
+    pixelRatio: 3,
+    manufacturerResolution: { width: 1170, height: 2532 },
+  },
+  "google-pixel-10a-2026": {
+    cssViewport: { width: 412, height: 924 },
+    pixelRatio: 2.625,
+    manufacturerResolution: { width: 1080, height: 2424 },
+  },
+  "samsung-galaxy-s26-plus-2026": {
+    cssViewport: { width: 384, height: 832 },
+    pixelRatio: 3.75,
+    manufacturerResolution: { width: 1440, height: 3120 },
+  },
+  "apple-macbook-neo-13-2026": {
+    cssViewport: { width: 1204, height: 753 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 2408, height: 1506 },
+  },
+  "microsoft-surface-laptop-8-13-8-2026": {
+    cssViewport: { width: 1152, height: 768 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 2304, height: 1536 },
+  },
+  "apple-studio-display-xdr-27-2026": {
+    cssViewport: { width: 2560, height: 1440 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 5120, height: 2880 },
+  },
+};
+
+export const devices: Device[] = dedupeDevices([
+  ...curatedDevices,
+  ...createMockupOnlyDevices(curatedDevices)
+].map(device => {
+  const reference = displayReferences[device.id];
+  return reference ? { ...device, cssViewport: reference.screen, pixelRatio: reference.dpr,
+    manufacturerResolution: reference.panel, resolutionSource: "reference" as const,
+    displayReferenceUrl: reference.source, updatedAt: "2026-09-07" } : device;
+}));
+
+// Saved sessions and device sets may still name a retired preset.
+const replacedDeviceIds: Record<string, string> = {
+  "apple-watch-series-6-40": "apple-watch-series-12-42mm",
+  "motorola-razr-60-ultra-2025": "motorola-razr-70-ultra-2026",
+  "apple-macbook-air-13-m4-2025": "macbook-air-2020-13",
+  "microsoft-surface-laptop-7-2024": "microsoft-surface-laptop-8-13-8-2026",
+};
+
+export const currentDeviceId = (id: string) => replacedDeviceIds[id] ?? id;
+
+export const defaultDeviceIds = [
+  "apple-iphone-18-pro-2026",
+  "apple-iphone-duo-folded-2026",
+  "apple-macbook-pro-14-m5-2025",
+];
+
+export const quickDevicePresetIds = {
+  phoneTablet: [
+    "apple-iphone-18-pro-2026",
+    "apple-ipad-pro-13-m4-2024",
+  ],
+  iosAndroid: [
+    "apple-iphone-18-pro-2026",
+    "samsung-galaxy-s26-ultra-2026",
+  ],
+  mobileTabletLaptop: [
+    "apple-iphone-18-pro-2026",
+    "apple-ipad-pro-13-m4-2024",
+    "apple-macbook-pro-14-m5-2025",
+  ],
+} as const;
+
+function createMockupOnlyDevices(existing: Device[]): Device[] {
+  const usedIds = new Set(existing.map((device) => device.id));
+
+  return localMockupCatalog
+    .filter((asset) => !usedIds.has(asset.id))
+    .map((asset) => createDeviceFromMockup(asset.id));
+}
+
+function dedupeDevices(candidates: Device[]) {
+  const unique = new Map<string, Device>();
+  const distinctSameShellDeviceIds = new Set(["apple-iphone-16e-2025", "apple-iphone-16-pro-2024", "apple-iphone-17-pro-2025", "apple-ipad-mini-6", "apple-ipad-mini-a17-pro-2024"]);
+
+  for (const candidate of candidates) {
+    const image = candidate.mockupAssets.find((asset) => asset.localPath);
+    // A different marketing name is not a different preview. Keep a model only
+    // when its shell, viewport geometry, or supported posture actually differs.
+    const key = image
+      ? [
+          "render",
+          candidate.type,
+          image.localPath,
+          `${image.width ?? 0}x${image.height ?? 0}`,
+          `${candidate.cssViewport.width}x${candidate.cssViewport.height}`,
+          Object.keys(image.viewport ?? {}).sort().join(","),
+          distinctSameShellDeviceIds.has(candidate.id) ? candidate.id : "",
+        ].join("|")
+      : `identity|${candidate.name.toLowerCase()}|${candidate.year ?? ""}|${candidate.type}`;
+    const current = unique.get(key);
+    if (!current || (!current.mockupAssets.length && candidate.mockupAssets.length)) unique.set(key, candidate);
+  }
+
+  return [...unique.values()];
+}
+
+function createDeviceFromMockup(id: string): Device {
+  const type = deviceTypeFromId(id);
+  const brand = brandFromId(id);
+  const year = yearFromId(id);
+  const os = osFromId(id, type, brand);
+  const mockupAssets = getMockupAssets(id);
+  const displaySpec = deviceDisplaySpecs[id];
+  // Every generated frame carries the CSS viewport it was drawn for.
+  const cssViewport = displaySpec?.cssViewport ?? mockupAssets[0]!.cssViewport!;
+  const pixelRatio = displaySpec?.pixelRatio ?? getDeviceChromeMeta(id)?.devicePixelRatio
+    ?? (type === "desktop" || type === "laptop" || type === "tv" ? 2 : type === "watch" ? 2 : 3);
+
+  return {
+    id,
+    name: nameFromId(id),
+    brand,
+    family: familyFromId(id, brand, type),
+    year,
+    type,
+    os,
+    cssViewport,
+    pixelRatio,
+    resolutionSource: displaySpec ? "catalog" : "derived",
+    manufacturerResolution: displaySpec?.manufacturerResolution ?? {
+      width: Math.round(cssViewport.width * pixelRatio),
+      height: Math.round(cssViewport.height * pixelRatio)
+    },
+    mockupAssets,
+    updatedAt: "2026-05-07",
+    tags: tagsFromId(id, type, os)
+  };
+}
+
+function deviceTypeFromId(id: string): Device["type"] {
+  if (id.includes("self-service-kiosk") || id.includes("nspanel")) return "custom";
+  if (id.includes("watch")) return "watch";
+  if (id.includes("tv")) return "tv";
+  if (id.includes("macbook") || id.includes("latitude") || id.includes("laptop")) return "laptop";
+  if (id.includes("imac") || id.includes("studio-display")) return "desktop";
+  if (id.includes("ipad") || id.includes("tab") || id.includes("surface-duo") || id.includes("toughbook-s1")) return "tablet";
+  return "phone";
+}
+
+function brandFromId(id: string) {
+  if (id.startsWith("apple") || id.includes("macbook")) return "Apple";
+  if (id.startsWith("samsung")) return "Samsung";
+  if (id.startsWith("google")) return "Google";
+  if (id.startsWith("motorola")) return "Motorola";
+  if (id.startsWith("infinix")) return "Infinix";
+  if (id.startsWith("xiaomi")) return "Xiaomi";
+  if (id.startsWith("huawei")) return "Huawei";
+  if (id.startsWith("oneplus")) return "OnePlus";
+  if (id.startsWith("oppo")) return "OPPO";
+  if (id.startsWith("microsoft")) return "Microsoft";
+  if (id.startsWith("dell")) return "Dell";
+  if (id.startsWith("zebra")) return "Zebra";
+  if (id.startsWith("panasonic")) return "Panasonic";
+  if (id.startsWith("sonoff")) return "Sonoff";
+  if (id.startsWith("non-branded")) return "Non-branded";
+  if (id.startsWith("self-service")) return "Self-service";
+  return "Generic";
+}
+
+function osFromId(id: string, type: Device["type"], brand: string) {
+  if (id.includes("self-service-kiosk")) return "Kiosk";
+  if (id.includes("nspanel")) return "Embedded";
+  if (type === "watch") return brand === "Apple" ? "watchOS" : "Wear OS";
+  if (type === "tv") return brand === "Samsung" ? "Tizen" : "TV";
+  if (type === "desktop" || type === "laptop") return brand === "Apple" ? "macOS" : "Windows";
+  if (id.includes("ipad")) return "iPadOS";
+  if (brand === "Apple") return "iOS";
+  return "Android";
+}
+
+function familyFromId(id: string, brand: string, type: Device["type"]) {
+  if (id.includes("self-service-kiosk")) return "Kiosk";
+  if (id.includes("nspanel")) return "Control Panel";
+  if (brand === "Zebra") return id.includes("mc330") ? "Mobile Computer" : "Handheld";
+  if (brand === "Non-branded") return "Android Smartphone";
+  if (type === "watch") return "Watch";
+  if (type === "tv") return "Smart TV";
+  if (type === "tablet") return brand === "Apple" ? "iPad" : "Tablet";
+  if (type === "desktop") return "Desktop";
+  if (type === "laptop") return brand === "Apple" ? "MacBook" : "Laptop";
+  if (brand === "Apple") return "iPhone";
+  if (brand === "Samsung") return id.includes("fold") || id.includes("flip") ? "Galaxy Z" : "Galaxy";
+  if (brand === "Google") return "Pixel";
+  if (brand === "Motorola" && id.includes("razr")) return "Razr";
+  if (brand === "Infinix" && id.includes("hot")) return "Hot";
+  return "Phone";
+}
+
+// Launch years for presets whose IDs do not carry one. Generic presets
+// (unbranded phone, kiosk, Modern Laptop 15) have none and list last.
+function releaseYears(): Record<string, number> {
+  return {
+    "apple-iphone-5": 2012,
+    "apple-iphone-x": 2017,
+    "apple-iphone-xr": 2018,
+    "apple-iphone-11": 2019,
+    "apple-iphone-11-pro": 2019,
+    "apple-iphone-11-pro-max": 2019,
+    "apple-iphone-12": 2020,
+    "apple-iphone-12-mini": 2020,
+    "apple-iphone-12-pro": 2020,
+    "apple-iphone-12-pro-max": 2020,
+    "huawei-p30-pro": 2019,
+    "google-pixel-5": 2020,
+    "samsung-galaxy-s20": 2020,
+    "samsung-galaxy-note20-ultra": 2020,
+    "microsoft-surface-duo": 2020,
+    "samsung-galaxy-s21-ultra": 2021,
+    "oneplus-nord-2": 2021,
+    "oppo-find-x3-pro": 2021,
+    "xiaomi-mi-11i": 2021,
+    "dell-latitude-14-3420": 2021,
+    "zebra-mc330": 2017,
+    "zebra-tc78": 2023,
+    "sonoff-nspanel-pro": 2022,
+  };
+}
+
+
+function yearFromId(id: string) {
+  // Preserve legacy storage IDs while correcting the user-facing launch year.
+  if (id.startsWith("google-pixel-10-") && id.endsWith("-2026")) return 2025;
+  const known = releaseYears()[id];
+  if (known) return known;
+  const match = id.match(/20\d{2}/);
+  return match ? Number(match[0]) : undefined;
+}
+
+function tagsFromId(id: string, type: Device["type"], os: string) {
+  const latestCatalogIds = new Set([
+    "apple-iphone-18-pro-2026",
+    "apple-iphone-18-pro-max-2026",
+    "apple-iphone-duo-folded-2026",
+    "apple-iphone-duo-unfolded-2026"
+]);
+  return [
+    type,
+    os.toLowerCase(),
+    ...(latestCatalogIds.has(id) ? ["new"] : []),
+    ...(id.includes("fold") || id.includes("flip") || id.includes("razr") || id.includes("duo") ? ["foldable"] : []),
+    ...(id.includes("self-service-kiosk") || id.includes("nspanel") ? ["special"] : []),
+    ...(id.includes("xcover") || id.includes("zebra") || id.includes("toughbook") ? ["rugged", "enterprise"] : []),
+    ...(id.includes("zebra-mc330") ? ["special", "android"] : [])
+  ];
+}
+
+function nameFromId(id: string) {
+  const normalizedNames: Record<string, string> = {
+    "apple-iphone-14-max-2022": "Apple iPhone 14 Plus",
+    "google-pixel-10-pro-xl-2025": "Google Pixel 10 Pro XL",
+    "samsung-galaxy-z-fold7-unfolded-2025": "Samsung Galaxy Z Fold7 (unfolded)",
+    "modern-laptop-15": "Modern Laptop 15 inch",
+    "zebra-mc330": "Zebra MC330",
+    "zebra-tc78": "Zebra TC78",
+    "apple-iphone-16-pro-2024": "Apple iPhone 16 Pro",
+    "apple-iphone-16e-2025": "Apple iPhone 16e",
+    "apple-iphone-17e-2026": "Apple iPhone 17e",
+    "apple-ipad-pro-13-m4-2024": "Apple iPad Pro 13-inch (M4)",
+    "apple-ipad-air-13-m4-2026": "Apple iPad Air 13-inch (M4)",
+    "apple-ipad-mini-a17-pro-2024": "Apple iPad mini (A17 Pro)",
+    "apple-macbook-pro-14-m5-2025": "Apple MacBook Pro 14-inch (M5)",
+    "samsung-galaxy-s26-plus-2026": "Samsung Galaxy S26+",
+    "samsung-galaxy-z-flip7-2025": "Samsung Galaxy Z Flip7",
+    "samsung-galaxy-tab-s11-ultra-2025": "Samsung Galaxy Tab S11 Ultra",
+    "samsung-galaxy-xcover7-pro-2025": "Samsung Galaxy XCover7 Pro",
+    "google-pixel-10a-2026": "Google Pixel 10a",
+    "motorola-edge-60-pro-2025": "Motorola Edge 60 Pro",
+    "zebra-tc58-2022": "Zebra TC58",
+    "panasonic-toughbook-s1-2021": "Panasonic Toughbook S1",
+    "apple-macbook-neo-13-2026": "Apple MacBook Neo 13-inch",
+    "microsoft-surface-laptop-8-13-8-2026": "Microsoft Surface Laptop 13.8-inch (8th Edition)",
+    "apple-studio-display-xdr-27-2026": "Apple Studio Display XDR 27-inch",
+  };
+  if (normalizedNames[id]) return normalizedNames[id];
+
+  const brand = brandFromId(id);
+  const uppercaseTokens = new Set(["se", "xr", "tv", "mi"]);
+  const words = id
+    .replace(/^apple-/, "")
+    .replace(/^samsung-/, "")
+    .replace(/^google-/, "")
+    .replace(/^motorola-/, "")
+    .replace(/^infinix-/, "")
+    .replace(/^xiaomi-/, "")
+    .replace(/^huawei-/, "")
+    .replace(/^oneplus-/, "")
+    .replace(/^oppo-/, "")
+    .replace(/^microsoft-/, "")
+    .replace(/^dell-/, "")
+    .replace(/^zebra-/, "")
+    .replace(/^panasonic-/, "")
+    .replace(/^sonoff-/, "")
+    .replace(/^non-branded-/, "")
+    .replace(/^self-service-/, "")
+    .split("-")
+    .filter((word) => !/^20\d{2}$/.test(word))
+    .map((word) => (
+      uppercaseTokens.has(word) || /^[a-z]\d+$/i.test(word)
+        ? word.toUpperCase()
+        : word[0].toUpperCase() + word.slice(1)
+    ))
+    .join(" ");
+
+  const formatted = words
+    .replace(/\bIphone\b/g, "iPhone")
+    .replace(/\bIpad\b/g, "iPad")
+    .replace(/\bImac\b/g, "iMac")
+    .replace(/\bMacbook\b/g, "MacBook")
+    .replace(/\bHOT\b/g, "Hot");
+
+  return brand === "Generic" ? formatted : `${brand} ${formatted}`;
+}

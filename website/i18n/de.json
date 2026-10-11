@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Responsive-Tester & Geräte-Emulator für Chrome",
+    "description": "Kostenlose Chrome-Erweiterung: Teste responsive Websites in echten Geräterahmen nebeneinander, mit synchronem Scrollen. Funktioniert auch auf localhost.",
+    "ogTitle": "Mobile View: Deine Website auf allen Bildschirmen zugleich",
+    "ogImageAlt": "Mobile View zeigt eine Seite nebeneinander auf iPhone, Foldable, MacBook und Apple Watch"
+  },
+  "nav": {
+    "home": "Mobile View Startseite",
+    "main": "Hauptmenü",
+    "tour": "Tour",
+    "reviews": "Bewertungen",
+    "faq": "FAQ",
+    "guides": "Anleitungen",
+    "privacy": "Datenschutz",
+    "github": "Mobile View auf GitHub",
+    "leaveReview": "Bewertung schreiben",
+    "addToChrome": "Zu Chrome hinzufügen",
+    "skip": "Zum Inhalt springen"
+  },
+  "hero": {
+    "rating": "{rating} im Chrome Web Store",
+    "title": "Deine Website auf allen Bildschirmen zugleich.",
+    "lede": "Eine kostenlose Chrome-Erweiterung, die jede Seite, sogar localhost, auf echten Smartphones, Foldables, Tablets, Laptops und Smartwatches zeigt. Nebeneinander und synchron.",
+    "install": "Zu Chrome hinzufügen – kostenlos",
+    "review": "Bewertung schreiben"
+  },
+  "demo": {
+    "label": "Live-Demo",
+    "badge": "Live. Scrolle oder tippe auf einen Bildschirm.",
+    "frameTitle": "Live-Demoseite auf {device}"
+  },
+  "facts": {
+    "label": "Auf einen Blick",
+    "devicesValue": "{count}",
+    "devices": "echte Geräte",
+    "atOnceValue": "4 gleichzeitig",
+    "atOnce": "nebeneinander",
+    "syncValue": "Synchron",
+    "sync": "Scrollen, Tippen und Seitenwechsel",
+    "privateValue": "Privat",
+    "private": "kein Konto, kein Tracking"
+  },
+  "tour": {
+    "workspaceTitle": "Vier Geräte. Ein Arbeitsbereich.",
+    "workspaceText": "Wähle beliebige vier von {count} echten Geräten und sieh deine Seite auf allen zugleich.",
+    "workspaceAlt": "Mobile View-Arbeitsbereich mit einer Seite auf iPhone 18 Pro, zugeklapptem iPhone Duo, MacBook Pro 14 und Apple Watch nebeneinander",
+    "syncTitle": "Einmal scrollen. Alle Bildschirme folgen.",
+    "syncText": "Scrollen, Klicks und Navigation bleiben auf allen Geräten synchron.",
+    "syncAlt": "Vier Geräte, an dieselbe Stelle einer Seite gescrollt, mit aktivierter Scroll- und Navigationssynchronisierung",
+    "allTitle": "Alle Geräte. Ein Klick.",
+    "allText": "Öffne eine ganze Kategorie auf einmal. Hier 16 von 37 iPhones, vom iPhone 5 bis zum iPhone 15 Pro.",
+    "allAlt": "Ansicht aller Geräte mit zwei Reihen iPhones, vom iPhone 5 und iPhone SE bis zum iPhone 15 Pro, die alle dieselbe Seite laden",
+    "designTitle": "Design abgleichen.",
+    "designText": "Lege dein Mockup neben die Live-Seite auf einem beliebigen Gerät. Nebeneinander oder überlagert: Jede Abweichung zwischen Design und Umsetzung fällt sofort auf.",
+    "designCaught": "In diesem Vergleich entdeckt",
+    "designItem1": "Überschrift weicht ab",
+    "designItem1Detail": "Live: „Make room for your best work.“ Design: „Room for your best work.“",
+    "designItem2": "Button-Stil weicht ab",
+    "designItem2Detail": "Live: dunkel, eckig. Design: abgerundet in Petrol.",
+    "designAlt": "Design-Vergleich: die Live-Seite auf dem iPhone 18 Pro neben dem Designbild, mit abweichender Überschrift und anderem Button-Stil",
+    "fixTitle": "Bug markieren. Fix kopieren.",
+    "fixText": "Zeichne auf einem Screenshot und kopiere dann einen fertigen Prompt für dein KI-Coding-Tool. Nichts verlässt deinen Rechner.",
+    "fixAlt": "Anmerkungseditor mit Pfeil und Rahmen um eine Überschrift auf dem iPhone, daneben das Fix-Prompt-Panel mit den betroffenen Geräten",
+    "alsoInside": "Außerdem dabei",
+    "chipRecord": "Abläufe aufzeichnen und abspielen",
+    "chipFocus": "Fokusmodus",
+    "chipRotate": "Drehen und zoomen",
+    "chipCustom": "Eigene Größen",
+    "chipSets": "Gespeicherte Geräte-Sets"
+  },
+  "reviews": {
+    "title": "Bewertet von Leuten, die liefern.",
+    "outOf": "von 5",
+    "stars": "{rating} von 5 Sternen",
+    "summary": "{count} Bewertungen · {users} Nutzer im Chrome Web Store",
+    "leave": "Bewertung schreiben",
+    "readAll": "Alle lesen",
+    "source": "Chrome Web Store",
+    "empty": "Gehöre zu den Ersten, die Mobile View bewerten."
+  },
+  "privacy": {
+    "title": "Datenschutz von Grund auf.",
+    "item1": "Kein Konto",
+    "item2": "Kein Tracking",
+    "item3": "Deine Seiten bleiben in deinem Browser",
+    "item4": "Open Source",
+    "link": "Datenschutzerklärung"
+  },
+  "faq": {
+    "title": "Fragen.",
+    "q1": "Ist es kostenlos?",
+    "a1": "Ja. Kostenlos und Open Source unter der MIT-Lizenz, ganz ohne Konto.",
+    "q2": "Funktioniert es mit localhost?",
+    "a2": "Ja. Öffne deine lokale Seite in Chrome und dann Mobile View. Nichts verlässt deinen Computer.",
+    "q3": "Was unterscheidet es vom Gerätemodus der DevTools?",
+    "a3": "Die DevTools zeigen jeweils nur einen Viewport. Mobile View zeigt vier echte Geräte nebeneinander, synchronisiert.",
+    "q4": "Warum laden manche Websites nicht?",
+    "a4": "Manche Websites verhindern, dass sie in einer anderen Seite angezeigt werden. Mobile View weist darauf hin und bietet an, sie in einem Tab zu öffnen.",
+    "q5": "Lädt der Fix-Prompt meinen Code hoch?",
+    "a5": "Nein. Er wird auf deinem Rechner erstellt, damit du ihn in dein eigenes Coding-Tool einfügen kannst."
+  },
+  "cta": {
+    "title": "Probier es mit deiner eigenen Website.",
+    "text": "Kostenlos. Kein Konto. Funktioniert mit localhost.",
+    "install": "Zu Chrome hinzufügen – kostenlos",
+    "review": "Bewertung schreiben"
+  },
+  "footer": {
+    "blurb": "Ein kostenloser, privater Responsive-Tester für Chrome. Open Source unter der MIT-Lizenz.",
+    "product": "Produkt",
+    "guides": "Anleitungen",
+    "project": "Projekt",
+    "tour": "Tour",
+    "reviews": "Bewertungen",
+    "changelog": "Änderungsprotokoll",
+    "store": "Chrome Web Store",
+    "allGuides": "Alle Anleitungen",
+    "source": "Quellcode auf GitHub",
+    "issue": "Problem melden",
+    "privacy": "Datenschutzerklärung",
+    "terms": "Nutzungsbedingungen",
+    "language": "Sprache",
+    "copyright": "© {year} Edison Augusthy. MIT-lizenziert.",
+    "trademarks": "iPhone, iPad, Mac und Apple Watch sind Marken von Apple Inc. Galaxy ist eine Marke von Samsung, Pixel eine Marke von Google. Gerätenamen beschreiben nur Bildschirmgrößen; Mobile View steht in keiner Verbindung zu diesen Unternehmen."
+  }
+}

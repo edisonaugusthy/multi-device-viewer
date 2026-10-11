@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "Mobile View: Chrome için Duyarlı Site Testi ve Cihaz Emülatörü",
+    "description": "Duyarlı siteleri gerçek iPhone, Android, iPad, Mac ve Apple Watch çerçevelerinde yan yana test edin. Ücretsiz Chrome eklentisi, eş kaydırma, localhost desteği.",
+    "ogTitle": "Mobile View: sitenizi tüm ekranlarda aynı anda görün",
+    "ogImageAlt": "Mobile View, aynı sayfayı iPhone, katlanabilir telefon, MacBook ve Apple Watch üzerinde yan yana gösteriyor"
+  },
+  "nav": {
+    "home": "Mobile View ana sayfa",
+    "main": "Ana menü",
+    "tour": "Tur",
+    "reviews": "Yorumlar",
+    "faq": "SSS",
+    "guides": "Rehberler",
+    "privacy": "Gizlilik",
+    "github": "GitHub'da Mobile View",
+    "leaveReview": "Yorum yazın",
+    "addToChrome": "Chrome'a ekle",
+    "skip": "İçeriğe geç"
+  },
+  "hero": {
+    "rating": "Chrome Web Store'da {rating}",
+    "title": "Sitenizi tüm ekranlarda aynı anda görün.",
+    "lede": "Her sayfayı, localhost dahil, gerçek telefon, katlanabilir, tablet, dizüstü ve saat ekranlarında gösteren ücretsiz bir Chrome eklentisi. Yan yana ve eş zamanlı.",
+    "install": "Chrome'a ekleyin, ücretsiz",
+    "review": "Yorum yazın"
+  },
+  "demo": {
+    "label": "Canlı demo",
+    "badge": "Canlı. Herhangi bir ekranı kaydırın veya dokunun.",
+    "frameTitle": "{device} üzerinde canlı demo sayfası"
+  },
+  "facts": {
+    "label": "Bir bakışta",
+    "devicesValue": "{count}",
+    "devices": "gerçek cihaz",
+    "atOnceValue": "Aynı anda 4",
+    "atOnce": "yan yana",
+    "syncValue": "Eş zamanlı",
+    "sync": "kaydırma, dokunma ve sayfalar",
+    "privateValue": "Gizli",
+    "private": "hesap yok, izleme yok"
+  },
+  "tour": {
+    "workspaceTitle": "Dört cihaz. Tek çalışma alanı.",
+    "workspaceText": "{count} gerçek cihaz arasından istediğiniz dördünü seçin, sayfanızı hepsinde aynı anda görün.",
+    "workspaceAlt": "Bir sayfayı iPhone 18 Pro, katlanmış iPhone Duo, MacBook Pro 14 ve Apple Watch üzerinde yan yana gösteren Mobile View çalışma alanı",
+    "syncTitle": "Bir kez kaydırın. Tüm ekranlar takip etsin.",
+    "syncText": "Kaydırma, tıklama ve gezinme tüm cihazlarda eş zamanlı kalır.",
+    "syncAlt": "Kaydırma ve gezinme eşitlemesi açıkken sayfanın aynı noktasına kaydırılmış dört cihaz",
+    "allTitle": "Tüm cihazlar. Tek tık.",
+    "allText": "Bir kategorinin tamamını tek seferde açın. Burada 37 iPhone'dan 16'sı var: iPhone 5'ten iPhone 15 Pro'ya.",
+    "allAlt": "iPhone 5 ve iPhone SE'den iPhone 15 Pro'ya kadar iki sıra iPhone'un aynı sayfayı yüklediği tüm cihazlar görünümü",
+    "designTitle": "Tasarımla eşleştirin.",
+    "designText": "Tasarım görselinizi herhangi bir cihazda canlı sayfanın yanına koyun. Yan yana ya da üst üste, tasarım ile uygulama arasındaki her fark kolayca göze çarpar.",
+    "designCaught": "Bu karşılaştırmada yakalananlar",
+    "designItem1": "Başlık metni farklı",
+    "designItem1Detail": "Canlı: “Make room for your best work.” Tasarım: “Room for your best work.”",
+    "designItem2": "Düğme stili farklı",
+    "designItem2Detail": "Canlı: koyu, köşeli. Tasarım: turkuaz, hap biçimli.",
+    "designAlt": "Tasarımla karşılaştırma: iPhone 18 Pro'daki canlı sayfa, farklı başlık ve düğme stiline sahip tasarım görselinin yanında",
+    "fixTitle": "Hatayı işaretleyin. Çözümü kopyalayın.",
+    "fixText": "Ekran görüntüsünün üzerine çizin, ardından AI kodlama aracınız için hazır bir istemi kopyalayın. Hiçbir şey bilgisayarınızdan çıkmaz.",
+    "fixAlt": "iPhone'daki bir başlığı ok ve kutuyla işaretleyen not düzenleyicisi; yanında etkilenen cihazları listeleyen düzeltme istemi paneli",
+    "alsoInside": "Ayrıca",
+    "chipRecord": "Akış kaydı ve tekrar oynatma",
+    "chipFocus": "Odak modu",
+    "chipRotate": "Döndürme ve yakınlaştırma",
+    "chipCustom": "Özel boyutlar",
+    "chipSets": "Kayıtlı cihaz setleri"
+  },
+  "reviews": {
+    "title": "Ürün çıkaranların tercihi.",
+    "outOf": "5 üzerinden",
+    "stars": "5 üzerinden {rating} yıldız",
+    "summary": "{count} puan · Chrome Web Store'da {users} kullanıcı",
+    "leave": "Yorum yazın",
+    "readAll": "Tümünü okuyun",
+    "source": "Chrome Web Store",
+    "empty": "Mobile View'u ilk değerlendirenlerden biri olun."
+  },
+  "privacy": {
+    "title": "Tasarımı gereği gizli.",
+    "item1": "Hesap yok",
+    "item2": "İzleme yok",
+    "item3": "Sayfalarınız tarayıcınızda kalır",
+    "item4": "Açık kaynak",
+    "link": "Gizlilik politikası"
+  },
+  "faq": {
+    "title": "Sorular.",
+    "q1": "Ücretsiz mi?",
+    "a1": "Evet. MIT lisansıyla ücretsiz ve açık kaynak; hesap gerekmez.",
+    "q2": "localhost'ta çalışıyor mu?",
+    "a2": "Evet. Yerel sayfanızı Chrome'da açın, ardından Mobile View'u açın. Hiçbir şey bilgisayarınızdan çıkmaz.",
+    "q3": "DevTools cihaz modundan farkı ne?",
+    "a3": "DevTools aynı anda tek bir görünüm alanı gösterir. Mobile View ise dört gerçek cihazı yan yana ve eş zamanlı gösterir.",
+    "q4": "Bazı siteler neden yüklenmiyor?",
+    "a4": "Bazı siteler başka bir sayfanın içinde gösterilmeyi engeller. Mobile View bunu size bildirir ve siteyi bir sekmede açmayı önerir.",
+    "q5": "Düzeltme istemi kodumu yüklüyor mu?",
+    "a5": "Hayır. İstem kendi bilgisayarınızda oluşturulur; siz de kendi kodlama aracınıza yapıştırırsınız."
+  },
+  "cta": {
+    "title": "Kendi sitenizde deneyin.",
+    "text": "Ücretsiz. Hesap gerekmez. localhost'ta çalışır.",
+    "install": "Chrome'a ekleyin, ücretsiz",
+    "review": "Yorum yazın"
+  },
+  "footer": {
+    "blurb": "Chrome için ücretsiz ve gizlilik dostu duyarlı tasarım test aracı. MIT lisansıyla açık kaynak.",
+    "product": "Ürün",
+    "guides": "Rehberler",
+    "project": "Proje",
+    "tour": "Tur",
+    "reviews": "Yorumlar",
+    "changelog": "Değişiklik günlüğü",
+    "store": "Chrome Web Store",
+    "allGuides": "Tüm rehberler",
+    "source": "GitHub'daki kaynak kod",
+    "issue": "Sorun bildirin",
+    "privacy": "Gizlilik politikası",
+    "terms": "Kullanım koşulları",
+    "language": "Dil",
+    "copyright": "© {year} Edison Augusthy. MIT lisanslıdır.",
+    "trademarks": "iPhone, iPad, Mac ve Apple Watch, Apple Inc.'in ticari markalarıdır. Galaxy, Samsung'un; Pixel ise Google'ın ticari markasıdır. Cihaz adları yalnızca ekran boyutlarını tanımlar; Mobile View bu şirketlerle bağlantılı değildir."
+  }
+}

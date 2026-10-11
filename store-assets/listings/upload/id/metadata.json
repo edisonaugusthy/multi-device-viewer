@@ -1,0 +1,20 @@
+{
+  "storeLocale": "id",
+  "name": "Mobile View: Emulator perangkat & penguji responsif",
+  "summary": "Simulator seluler untuk menguji desain responsif. Bandingkan tampilan perangkat, sinkronkan gulir dan ambil tangkapan layar.",
+  "screenshotCaptions": [
+    "Semua layar, berdampingan.",
+    "Semua perangkat. Satu klik.",
+    "Fokus pada satu layar.",
+    "Sesuai desain, piksel demi piksel.",
+    "Tandai bug. Rekam alurnya."
+  ],
+  "screenshotSubtitles": [
+    "Bingkai perangkat asli dengan gulir, klik, dan navigasi yang tersinkron.",
+    "Buka semua 110+ perangkat per kategori, dari ponsel terkecil hingga layar terbesar.",
+    "Perbesar perangkat mana pun, lalu sembunyikan semua alat dalam mode fokus untuk tinjauan dan demo yang bersih.",
+    "Mockup Anda di satu sisi, halaman langsung di sisi lain. Temukan setiap perbedaan dalam sekilas.",
+    "Beri anotasi pada tangkapan layar, salin prompt perbaikan untuk alat AI Anda, atau putar ulang alur pengguna di setiap perangkat."
+  ],
+  "screenshotLocale": "en"
+}

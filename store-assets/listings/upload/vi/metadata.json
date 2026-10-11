@@ -1,0 +1,20 @@
+{
+  "storeLocale": "vi",
+  "name": "Mobile View: Trình giả lập thiết bị & kiểm thử responsive",
+  "summary": "Mô phỏng di động và kiểm thử thiết kế responsive. So sánh các màn hình, đồng bộ cuộn và chụp màn hình.",
+  "screenshotCaptions": [
+    "Mọi màn hình, đặt cạnh nhau.",
+    "Mọi thiết bị. Một cú nhấp.",
+    "Tập trung vào một màn hình.",
+    "Khớp thiết kế đến từng pixel.",
+    "Đánh dấu lỗi. Ghi lại thao tác."
+  ],
+  "screenshotSubtitles": [
+    "Khung thiết bị thật, đồng bộ cuộn, nhấp và điều hướng.",
+    "Mở toàn bộ 110+ thiết bị theo danh mục, từ điện thoại nhỏ nhất đến màn hình lớn nhất.",
+    "Phóng to bất kỳ thiết bị nào, rồi ẩn mọi công cụ ở chế độ tập trung để duyệt và demo gọn gàng.",
+    "Bản mockup một bên, trang trực tiếp một bên. Nhận ra mọi khác biệt chỉ trong nháy mắt.",
+    "Chú thích ảnh chụp màn hình, sao chép prompt sửa lỗi cho công cụ AI, hoặc phát lại luồng thao tác của người dùng trên mọi thiết bị."
+  ],
+  "screenshotLocale": "en"
+}

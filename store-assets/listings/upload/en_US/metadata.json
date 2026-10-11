@@ -1,0 +1,20 @@
+{
+  "storeLocale": "en-US",
+  "name": "Mobile View: Device Emulator & Responsive Tester",
+  "summary": "Mobile simulator and responsive design tester. Compare phone, tablet and desktop views, sync scrolling and capture screenshots.",
+  "screenshotCaptions": [
+    "Every screen, side by side.",
+    "Every device. One click.",
+    "Focus on one screen.",
+    "Match the design, pixel for pixel.",
+    "Mark the bug. Record the flow."
+  ],
+  "screenshotSubtitles": [
+    "Real device frames with synced scroll, clicks and navigation.",
+    "Open all 110+ devices by category, from the smallest phone to the largest screen.",
+    "Expand any device, then hide every tool in focus mode for clean reviews and demos.",
+    "Your mockup on one side, the live page on the other. Spot every difference at a glance.",
+    "Annotate a screenshot, copy a fix prompt for your AI tool, or replay a user flow on every device."
+  ],
+  "screenshotLocale": "en"
+}

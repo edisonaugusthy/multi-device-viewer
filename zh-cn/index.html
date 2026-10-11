@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-CN" dir="ltr" data-script="wide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Mobile View: Chrome 响应式网站测试工具与设备模拟器</title>
+<meta name="description" content="免费 Chrome 扩展：在真实的 iPhone、Android、折叠屏、iPad、Mac 和 Apple Watch 设备框架中并排测试响应式网站，同步滚动，支持 localhost。">
+
+<link rel="canonical" href="https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/">
+<link rel="alternate" hreflang="en" href="https://edisonaugusthy.github.io/multi-device-viewer/">
+<link rel="alternate" hreflang="am" href="https://edisonaugusthy.github.io/multi-device-viewer/am/">
+<link rel="alternate" hreflang="ar" href="https://edisonaugusthy.github.io/multi-device-viewer/ar/">
+<link rel="alternate" hreflang="bg" href="https://edisonaugusthy.github.io/multi-device-viewer/bg/">
+<link rel="alternate" hreflang="bn" href="https://edisonaugusthy.github.io/multi-device-viewer/bn/">
+<link rel="alternate" hreflang="ca" href="https://edisonaugusthy.github.io/multi-device-viewer/ca/">
+<link rel="alternate" hreflang="cs" href="https://edisonaugusthy.github.io/multi-device-viewer/cs/">
+<link rel="alternate" hreflang="da" href="https://edisonaugusthy.github.io/multi-device-viewer/da/">
+<link rel="alternate" hreflang="de" href="https://edisonaugusthy.github.io/multi-device-viewer/de/">
+<link rel="alternate" hreflang="el" href="https://edisonaugusthy.github.io/multi-device-viewer/el/">
+<link rel="alternate" hreflang="es" href="https://edisonaugusthy.github.io/multi-device-viewer/es/">
+<link rel="alternate" hreflang="es-419" href="https://edisonaugusthy.github.io/multi-device-viewer/es-419/">
+<link rel="alternate" hreflang="et" href="https://edisonaugusthy.github.io/multi-device-viewer/et/">
+<link rel="alternate" hreflang="fa" href="https://edisonaugusthy.github.io/multi-device-viewer/fa/">
+<link rel="alternate" hreflang="fi" href="https://edisonaugusthy.github.io/multi-device-viewer/fi/">
+<link rel="alternate" hreflang="tl" href="https://edisonaugusthy.github.io/multi-device-viewer/fil/">
+<link rel="alternate" hreflang="fr" href="https://edisonaugusthy.github.io/multi-device-viewer/fr/">
+<link rel="alternate" hreflang="gu" href="https://edisonaugusthy.github.io/multi-device-viewer/gu/">
+<link rel="alternate" hreflang="he" href="https://edisonaugusthy.github.io/multi-device-viewer/he/">
+<link rel="alternate" hreflang="hi" href="https://edisonaugusthy.github.io/multi-device-viewer/hi/">
+<link rel="alternate" hreflang="hr" href="https://edisonaugusthy.github.io/multi-device-viewer/hr/">
+<link rel="alternate" hreflang="hu" href="https://edisonaugusthy.github.io/multi-device-viewer/hu/">
+<link rel="alternate" hreflang="id" href="https://edisonaugusthy.github.io/multi-device-viewer/id/">
+<link rel="alternate" hreflang="it" href="https://edisonaugusthy.github.io/multi-device-viewer/it/">
+<link rel="alternate" hreflang="ja" href="https://edisonaugusthy.github.io/multi-device-viewer/ja/">
+<link rel="alternate" hreflang="kn" href="https://edisonaugusthy.github.io/multi-device-viewer/kn/">
+<link rel="alternate" hreflang="ko" href="https://edisonaugusthy.github.io/multi-device-viewer/ko/">
+<link rel="alternate" hreflang="lt" href="https://edisonaugusthy.github.io/multi-device-viewer/lt/">
+<link rel="alternate" hreflang="lv" href="https://edisonaugusthy.github.io/multi-device-viewer/lv/">
+<link rel="alternate" hreflang="ml" href="https://edisonaugusthy.github.io/multi-device-viewer/ml/">
+<link rel="alternate" hreflang="mr" href="https://edisonaugusthy.github.io/multi-device-viewer/mr/">
+<link rel="alternate" hreflang="ms" href="https://edisonaugusthy.github.io/multi-device-viewer/ms/">
+<link rel="alternate" hreflang="nl" href="https://edisonaugusthy.github.io/multi-device-viewer/nl/">
+<link rel="alternate" hreflang="no" href="https://edisonaugusthy.github.io/multi-device-viewer/no/">
+<link rel="alternate" hreflang="pl" href="https://edisonaugusthy.github.io/multi-device-viewer/pl/">
+<link rel="alternate" hreflang="pt-BR" href="https://edisonaugusthy.github.io/multi-device-viewer/pt-br/">
+<link rel="alternate" hreflang="pt-PT" href="https://edisonaugusthy.github.io/multi-device-viewer/pt-pt/">
+<link rel="alternate" hreflang="ro" href="https://edisonaugusthy.github.io/multi-device-viewer/ro/">
+<link rel="alternate" hreflang="ru" href="https://edisonaugusthy.github.io/multi-device-viewer/ru/">
+<link rel="alternate" hreflang="sk" href="https://edisonaugusthy.github.io/multi-device-viewer/sk/">
+<link rel="alternate" hreflang="sl" href="https://edisonaugusthy.github.io/multi-device-viewer/sl/">
+<link rel="alternate" hreflang="sr" href="https://edisonaugusthy.github.io/multi-device-viewer/sr/">
+<link rel="alternate" hreflang="sv" href="https://edisonaugusthy.github.io/multi-device-viewer/sv/">
+<link rel="alternate" hreflang="sw" href="https://edisonaugusthy.github.io/multi-device-viewer/sw/">
+<link rel="alternate" hreflang="ta" href="https://edisonaugusthy.github.io/multi-device-viewer/ta/">
+<link rel="alternate" hreflang="te" href="https://edisonaugusthy.github.io/multi-device-viewer/te/">
+<link rel="alternate" hreflang="th" href="https://edisonaugusthy.github.io/multi-device-viewer/th/">
+<link rel="alternate" hreflang="tr" href="https://edisonaugusthy.github.io/multi-device-viewer/tr/">
+<link rel="alternate" hreflang="uk" href="https://edisonaugusthy.github.io/multi-device-viewer/uk/">
+<link rel="alternate" hreflang="vi" href="https://edisonaugusthy.github.io/multi-device-viewer/vi/">
+<link rel="alternate" hreflang="zh-CN" href="https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/">
+<link rel="alternate" hreflang="zh-TW" href="https://edisonaugusthy.github.io/multi-device-viewer/zh-tw/">
+<link rel="alternate" hreflang="x-default" href="https://edisonaugusthy.github.io/multi-device-viewer/">
+<meta name="theme-color" content="#F7F7F4">
+<meta name="color-scheme" content="light">
+<meta property="og:site_name" content="Mobile View">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mobile View: 一次看遍所有屏幕上的网站">
+<meta property="og:description" content="免费 Chrome 扩展：在真实的 iPhone、Android、折叠屏、iPad、Mac 和 Apple Watch 设备框架中并排测试响应式网站，同步滚动，支持 localhost。">
+<meta property="og:url" content="https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://edisonaugusthy.github.io/multi-device-viewer/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mobile View 在 iPhone、折叠屏手机、MacBook 和 Apple Watch 上并排显示同一页面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mobile View: 一次看遍所有屏幕上的网站">
+<meta name="twitter:description" content="免费 Chrome 扩展：在真实的 iPhone、Android、折叠屏、iPad、Mac 和 Apple Watch 设备框架中并排测试响应式网站，同步滚动，支持 localhost。">
+<meta name="twitter:image" content="https://edisonaugusthy.github.io/multi-device-viewer/og.png">
+<meta name="google-site-verification" content="htTwPty3Iq08Xc3GtR8nX_t78rbN5BL1MX1WuAU8Zmc">
+<link rel="icon" href="/multi-device-viewer/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/multi-device-viewer/icons/icon-128.png">
+<link rel="manifest" href="/multi-device-viewer/site.webmanifest">
+<link rel="preload" href="/multi-device-viewer/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/multi-device-viewer/assets/site-a0b53bf080.css">
+<link rel="preload" href="/multi-device-viewer/data/store.json" as="fetch" crossorigin>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://edisonaugusthy.github.io/multi-device-viewer/#author","name":"Edison Augusthy","url":"https://github.com/edisonaugusthy"},{"@type":"WebSite","@id":"https://edisonaugusthy.github.io/multi-device-viewer/#website","url":"https://edisonaugusthy.github.io/multi-device-viewer/","name":"Mobile View","alternateName":"Mobile View: Device Emulator & Responsive Tester","inLanguage":["en","am","ar","bg","bn","ca","cs","da","de","el","es","es-419","et","fa","fi","fil","fr","gu","he","hi","hr","hu","id","it","ja","kn","ko","lt","lv","ml","mr","ms","nl","no","pl","pt-BR","pt-PT","ro","ru","sk","sl","sr","sv","sw","ta","te","th","tr","uk","vi","zh-CN","zh-TW"],"publisher":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#author"}},{"@type":"SoftwareApplication","@id":"https://edisonaugusthy.github.io/multi-device-viewer/#software","name":"Mobile View: Device Emulator & Responsive Tester","alternateName":"Mobile View","applicationCategory":"DeveloperApplication","applicationSubCategory":"Responsive web design testing","operatingSystem":"Windows, macOS, Linux, ChromeOS","browserRequirements":"Requires Google Chrome on desktop","description":"免费 Chrome 扩展：在真实的 iPhone、Android、折叠屏、iPad、Mac 和 Apple Watch 设备框架中并排测试响应式网站，同步滚动，支持 localhost。","url":"https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/","downloadUrl":"https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb","installUrl":"https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb","softwareVersion":"0.2.11","dateModified":"2026-10-08","image":"https://edisonaugusthy.github.io/multi-device-viewer/icons/icon-128.png","screenshot":["https://edisonaugusthy.github.io/multi-device-viewer/screenshots/workspace-1280.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/sync-1280.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/all-devices-1920.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/design-compare-1280.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/fix-prompt-1280.webp"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"},"isAccessibleForFree":true,"license":"https://opensource.org/license/mit","codeRepository":"https://github.com/edisonaugusthy/multi-device-viewer","author":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#author"},"featureList":["Up to four real device frames side by side","111 device profiles: phones, foldables, tablets, laptops, desktops and watches","Synchronized scrolling, clicks and navigation","Design comparison side by side or overlaid","Annotated screenshots and AI coding fix prompts","Record and replay user flows","Works on localhost"]},{"@type":"WebPage","@id":"https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/#webpage","url":"https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/","name":"Mobile View: Chrome 响应式网站测试工具与设备模拟器","description":"免费 Chrome 扩展：在真实的 iPhone、Android、折叠屏、iPad、Mac 和 Apple Watch 设备框架中并排测试响应式网站，同步滚动，支持 localhost。","inLanguage":"zh-CN","isPartOf":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#website"},"about":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#software"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://edisonaugusthy.github.io/multi-device-viewer/screenshots/workspace-1280.webp","width":1280,"height":720}},{"@type":"FAQPage","@id":"https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/#faq","inLanguage":"zh-CN","mainEntity":[{"@type":"Question","name":"免费吗？","acceptedAnswer":{"@type":"Answer","text":"是的。基于 MIT 许可证免费开源，无需账号。"}},{"@type":"Question","name":"支持 localhost 吗？","acceptedAnswer":{"@type":"Answer","text":"支持。在 Chrome 中打开本地页面，再打开 Mobile View 即可。任何内容都不会离开你的电脑。"}},{"@type":"Question","name":"和 DevTools 的设备模式有什么不同？","acceptedAnswer":{"@type":"Answer","text":"DevTools 一次只显示一个视口。Mobile View 并排显示四台真实设备，并保持同步。"}},{"@type":"Question","name":"为什么有些网站无法加载？","acceptedAnswer":{"@type":"Answer","text":"有些网站禁止被嵌入到其他页面中显示。Mobile View 会提示你，并可在新标签页中打开。"}},{"@type":"Question","name":"修复提示会上传我的代码吗？","acceptedAnswer":{"@type":"Answer","text":"不会。提示在你的电脑上生成，供你粘贴到自己的编程工具中。"}}]}]}</script>
+<script type="module" src="/multi-device-viewer/assets/main-5065f512c2.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="/multi-device-viewer/zh-cn/" aria-label="Mobile View 首页"><img src="/multi-device-viewer/icons/icon-128.png" width="34" height="34" alt="" aria-hidden="true"><span>Mobile View</span></a>
+    <nav class="main-nav" aria-label="主导航">
+      <a href="/multi-device-viewer/zh-cn/#tour" aria-current="page">功能导览</a>
+      <a href="/multi-device-viewer/zh-cn/#reviews" aria-current="page">评价</a>
+      <a href="/multi-device-viewer/zh-cn/#faq" aria-current="page">常见问题</a>
+      <a href="/multi-device-viewer/guides/">指南</a>
+      <a href="/multi-device-viewer/privacy/">隐私</a>
+    </nav>
+    <div class="header-actions">
+      <details class="lang-menu" data-lang-menu>
+        <summary aria-label="语言: 简体中文"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="label">简体中文</span></summary>
+        <ul><li><a href="/multi-device-viewer/" hreflang="en" lang="en" data-lang-choice="en">English</a></li><li><a href="/multi-device-viewer/am/" hreflang="am" lang="am" data-lang-choice="am">አማርኛ</a></li><li><a href="/multi-device-viewer/ar/" hreflang="ar" lang="ar" data-lang-choice="ar">العربية</a></li><li><a href="/multi-device-viewer/bg/" hreflang="bg" lang="bg" data-lang-choice="bg">Български</a></li><li><a href="/multi-device-viewer/bn/" hreflang="bn" lang="bn" data-lang-choice="bn">বাংলা</a></li><li><a href="/multi-device-viewer/ca/" hreflang="ca" lang="ca" data-lang-choice="ca">Català</a></li><li><a href="/multi-device-viewer/cs/" hreflang="cs" lang="cs" data-lang-choice="cs">Čeština</a></li><li><a href="/multi-device-viewer/da/" hreflang="da" lang="da" data-lang-choice="da">Dansk</a></li><li><a href="/multi-device-viewer/de/" hreflang="de" lang="de" data-lang-choice="de">Deutsch</a></li><li><a href="/multi-device-viewer/el/" hreflang="el" lang="el" data-lang-choice="el">Ελληνικά</a></li><li><a href="/multi-device-viewer/es/" hreflang="es" lang="es" data-lang-choice="es">Español</a></li><li><a href="/multi-device-viewer/es-419/" hreflang="es-419" lang="es-419" data-lang-choice="es-419">Español (Latinoamérica y el Caribe)</a></li><li><a href="/multi-device-viewer/et/" hreflang="et" lang="et" data-lang-choice="et">Eesti</a></li><li><a href="/multi-device-viewer/fa/" hreflang="fa" lang="fa" data-lang-choice="fa">فارسی</a></li><li><a href="/multi-device-viewer/fi/" hreflang="fi" lang="fi" data-lang-choice="fi">Suomi</a></li><li><a href="/multi-device-viewer/fil/" hreflang="tl" lang="fil" data-lang-choice="fil">Filipino</a></li><li><a href="/multi-device-viewer/fr/" hreflang="fr" lang="fr" data-lang-choice="fr">Français</a></li><li><a href="/multi-device-viewer/gu/" hreflang="gu" lang="gu" data-lang-choice="gu">ગુજરાતી</a></li><li><a href="/multi-device-viewer/he/" hreflang="he" lang="he" data-lang-choice="he">עברית</a></li><li><a href="/multi-device-viewer/hi/" hreflang="hi" lang="hi" data-lang-choice="hi">हिन्दी</a></li><li><a href="/multi-device-viewer/hr/" hreflang="hr" lang="hr" data-lang-choice="hr">Hrvatski</a></li><li><a href="/multi-device-viewer/hu/" hreflang="hu" lang="hu" data-lang-choice="hu">Magyar</a></li><li><a href="/multi-device-viewer/id/" hreflang="id" lang="id" data-lang-choice="id">Indonesia</a></li><li><a href="/multi-device-viewer/it/" hreflang="it" lang="it" data-lang-choice="it">Italiano</a></li><li><a href="/multi-device-viewer/ja/" hreflang="ja" lang="ja" data-lang-choice="ja">日本語</a></li><li><a href="/multi-device-viewer/kn/" hreflang="kn" lang="kn" data-lang-choice="kn">ಕನ್ನಡ</a></li><li><a href="/multi-device-viewer/ko/" hreflang="ko" lang="ko" data-lang-choice="ko">한국어</a></li><li><a href="/multi-device-viewer/lt/" hreflang="lt" lang="lt" data-lang-choice="lt">Lietuvių</a></li><li><a href="/multi-device-viewer/lv/" hreflang="lv" lang="lv" data-lang-choice="lv">Latviešu</a></li><li><a href="/multi-device-viewer/ml/" hreflang="ml" lang="ml" data-lang-choice="ml">മലയാളം</a></li><li><a href="/multi-device-viewer/mr/" hreflang="mr" lang="mr" data-lang-choice="mr">मराठी</a></li><li><a href="/multi-device-viewer/ms/" hreflang="ms" lang="ms" data-lang-choice="ms">Bahasa Melayu</a></li><li><a href="/multi-device-viewer/nl/" hreflang="nl" lang="nl" data-lang-choice="nl">Nederlands</a></li><li><a href="/multi-device-viewer/no/" hreflang="no" lang="no" data-lang-choice="no">Norsk</a></li><li><a href="/multi-device-viewer/pl/" hreflang="pl" lang="pl" data-lang-choice="pl">Polski</a></li><li><a href="/multi-device-viewer/pt-br/" hreflang="pt-BR" lang="pt-BR" data-lang-choice="pt-br">Português (Brasil)</a></li><li><a href="/multi-device-viewer/pt-pt/" hreflang="pt-PT" lang="pt-PT" data-lang-choice="pt-pt">Português (Portugal)</a></li><li><a href="/multi-device-viewer/ro/" hreflang="ro" lang="ro" data-lang-choice="ro">Română</a></li><li><a href="/multi-device-viewer/ru/" hreflang="ru" lang="ru" data-lang-choice="ru">Русский</a></li><li><a href="/multi-device-viewer/sk/" hreflang="sk" lang="sk" data-lang-choice="sk">Slovenčina</a></li><li><a href="/multi-device-viewer/sl/" hreflang="sl" lang="sl" data-lang-choice="sl">Slovenščina</a></li><li><a href="/multi-device-viewer/sr/" hreflang="sr" lang="sr" data-lang-choice="sr">Српски</a></li><li><a href="/multi-device-viewer/sv/" hreflang="sv" lang="sv" data-lang-choice="sv">Svenska</a></li><li><a href="/multi-device-viewer/sw/" hreflang="sw" lang="sw" data-lang-choice="sw">Kiswahili</a></li><li><a href="/multi-device-viewer/ta/" hreflang="ta" lang="ta" data-lang-choice="ta">தமிழ்</a></li><li><a href="/multi-device-viewer/te/" hreflang="te" lang="te" data-lang-choice="te">తెలుగు</a></li><li><a href="/multi-device-viewer/th/" hreflang="th" lang="th" data-lang-choice="th">ไทย</a></li><li><a href="/multi-device-viewer/tr/" hreflang="tr" lang="tr" data-lang-choice="tr">Türkçe</a></li><li><a href="/multi-device-viewer/uk/" hreflang="uk" lang="uk" data-lang-choice="uk">Українська</a></li><li><a href="/multi-device-viewer/vi/" hreflang="vi" lang="vi" data-lang-choice="vi">Tiếng Việt</a></li><li><a href="/multi-device-viewer/zh-cn/" hreflang="zh-CN" lang="zh-CN" data-lang-choice="zh-cn" aria-current="true">简体中文</a></li><li><a href="/multi-device-viewer/zh-tw/" hreflang="zh-TW" lang="zh-TW" data-lang-choice="zh-tw">繁體中文</a></li></ul>
+      </details>
+      <a class="icon-btn" href="https://github.com/edisonaugusthy/multi-device-viewer" aria-label="GitHub 上的 Mobile View"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
+      <a class="btn btn-ghost" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews"><svg width="16" height="16" viewBox="0 0 24 24" fill="#D97706" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><span class="label">写评价</span></a>
+      <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">添加到 Chrome</a>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="hero" aria-labelledby="hero-title">
+  <a class="rating-chip" href="#reviews"><span class="stars" aria-hidden="true" data-stars style="--size:15px;--gap:2px;--fill:94.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span><span>Chrome Web Store 评分 <strong data-store="rating">4.7</strong></span></a>
+  <h1 id="hero-title">一次看遍所有屏幕。</h1>
+  <p class="lede">一款免费的 Chrome 扩展，可在真实的手机、折叠屏、平板、笔记本和手表上显示任意页面，连 localhost 也不例外。并排显示，同步联动。</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>免费添加到 Chrome</a>
+    <a class="btn btn-ghost btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews"><svg width="18" height="18" viewBox="0 0 24 24" fill="#D97706" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>写评价</a>
+  </div>
+</section>
+
+<section class="stage-section" aria-label="在线演示">
+  <div class="stage">
+    <div class="live-row"><span class="live-badge"><span class="pulse" aria-hidden="true"></span>实时运行。滚动或点按任意屏幕试试。</span></div>
+    <div class="stage-view">
+      <div class="stage-canvas" data-stage>
+        <div class="stage-inner">
+            <div class="device" data-device style="left:250px;bottom:64px;z-index:1;width:690px;height:461.1px">
+              <div class="device-scale" style="width:1745.53px;height:1166.59px;transform:scale(0.3953)">
+                <div class="device-screen" style="left:116.23px;top:54.99px;width:1512px;height:982px;clip-path:path(evenodd, &quot;M19 0H1493A19 19 0 0 1 1512 19V982H0V19A19 19 0 0 1 19 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=0" width="1512" height="982" title="MacBook Pro 14″ 上的在线演示页面" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-macbook-pro-14-m5-2025.webp" width="1745.53" height="1166.59" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:0px;bottom:0px;z-index:2;width:303.5px;height:420px">
+              <div class="device-scale" style="width:940.73px;height:1301.73px;transform:scale(0.32265)">
+                <div class="device-screen" style="left:53.36px;top:53.46px;width:834px;height:1194px;clip-path:path(evenodd, &quot;M18 0H816A18 18 0 0 1 834 18V1176A18 18 0 0 1 816 1194H18A18 18 0 0 1 0 1176V18A18 18 0 0 1 18 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=24" width="834" height="1194" title="iPad Pro 11″ 上的在线演示页面" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-ipad-pro-11-2018.webp" width="940.73" height="1301.73" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:892px;bottom:0px;z-index:3;width:215.6px;height:300px">
+              <div class="device-scale" style="width:516px;height:718px;transform:scale(0.41783)">
+                <div class="device-screen" style="left:24.82px;top:19.89px;width:466px;height:678px;clip-path:path(evenodd, &quot;M6 0H426A40 40 0 0 1 466 40V638A40 40 0 0 1 426 678H6A6 6 0 0 1 0 672V6A6 6 0 0 1 6 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=70" width="466" height="678" title="iPhone Duo (folded) 上的在线演示页面" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-iphone-duo-folded-2026.webp" width="516" height="718" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:1092px;bottom:0px;z-index:4;width:165.2px;height:340px">
+              <div class="device-scale" style="width:446.05px;height:917.9px;transform:scale(0.37041)">
+                <div class="device-screen" style="left:21.79px;top:21.67px;width:402px;height:874px;clip-path:path(evenodd, &quot;M62 0H340A62 62 0 0 1 402 62V812A62 62 0 0 1 340 874H62A62 62 0 0 1 0 812V62A62 62 0 0 1 62 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=59" width="402" height="874" title="iPhone 18 Pro 上的在线演示页面" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-iphone-18-pro-2026.webp" width="446.05" height="917.9" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:1240px;bottom:0px;z-index:5;width:78.3px;height:160px">
+              <div class="device-scale" style="width:276.5px;height:565px;transform:scale(0.28319)">
+                <div class="device-screen" style="left:27.68px;top:158.47px;width:208px;height:248px;clip-path:path(evenodd, &quot;M54 0H154A54 54 0 0 1 208 54V194A54 54 0 0 1 154 248H54A54 54 0 0 1 0 194V54A54 54 0 0 1 54 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=10" width="208" height="248" title="Apple Watch Series 12 上的在线演示页面" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-watch-series-12-46mm.webp" width="276.5" height="565" alt="" decoding="async">
+              </div>
+            </div>
+        </div>
+      </div>
+      <script>(()=>{const s=document.querySelector("[data-stage]"),v=s.parentElement,c=getComputedStyle(v),w=v.clientWidth-parseFloat(c.paddingLeft)-parseFloat(c.paddingRight),h=(innerHeight-s.getBoundingClientRect().top-parseFloat(c.paddingBottom)-24)/560;s.style.setProperty("--z",Math.min(1,w/1320,Math.max(h,.55)))})()</script>
+    </div>
+  </div>
+</section>
+
+<section class="facts" aria-label="一览">
+  <ul>
+    <li><strong>111</strong><span>款真实设备</span></li>
+    <li><strong>同时 4 台</strong><span>并排显示</span></li>
+    <li><strong>同步</strong><span>滚动、点按和页面跳转</span></li>
+    <li><strong>私密</strong><span>无需账号，无跟踪</span></li>
+  </ul>
+</section>
+
+<section id="tour" class="section" aria-labelledby="tour-workspace">
+  <div class="section-head">
+    <h2 id="tour-workspace" class="display">四台设备，一个工作区。</h2>
+    <p>从 111 款真实设备中任选四款，同时查看页面在每台设备上的效果。</p>
+  </div>
+  <figure class="shot"><div class="shot-bar" aria-hidden="true"><span></span><span></span><span></span></div><img src="/multi-device-viewer/screenshots/workspace-1280.webp" srcset="/multi-device-viewer/screenshots/workspace-640.webp 640w, /multi-device-viewer/screenshots/workspace-1280.webp 1280w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1280" height="720" alt="Mobile View 工作区：在 iPhone 18 Pro、折叠状态的 iPhone Duo、MacBook Pro 14 和 Apple Watch 上并排显示同一页面" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="section" aria-labelledby="tour-sync">
+  <div class="section-head">
+    <h2 id="tour-sync" class="display">滚动一次，所有屏幕跟随。</h2>
+    <p>滚动、点击和导航在所有设备间保持同步。</p>
+  </div>
+  <figure class="shot"><img src="/multi-device-viewer/screenshots/sync-1280.webp" srcset="/multi-device-viewer/screenshots/sync-640.webp 640w, /multi-device-viewer/screenshots/sync-1280.webp 1280w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1280" height="720" alt="开启滚动和导航同步后，四台设备停在页面的同一位置" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="section" aria-labelledby="tour-all">
+  <div class="section-head">
+    <h2 id="tour-all" class="display">所有设备，一键打开。</h2>
+    <p>一次打开整个类别。图中是 37 款 iPhone 中的 16 款，从 iPhone 5 到 iPhone 15 Pro。</p>
+  </div>
+  <figure class="shot"><img src="/multi-device-viewer/screenshots/all-devices-1280.webp" srcset="/multi-device-viewer/screenshots/all-devices-640.webp 640w, /multi-device-viewer/screenshots/all-devices-1280.webp 1280w, /multi-device-viewer/screenshots/all-devices-1920.webp 1920w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1920" height="1080" alt="所有设备视图：两排 iPhone，从 iPhone 5、iPhone SE 到 iPhone 15 Pro，都在加载同一页面" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="compare" aria-labelledby="tour-design">
+  <div class="compare-copy">
+    <h2 id="tour-design" class="display">对照设计稿。</h2>
+    <p>在任意设备上，把设计稿放在实时页面旁边。并排或叠加对比，设计与实现之间的每处差异都一目了然。</p>
+    <div class="caught">
+      <span class="caught-title">本次对比发现</span>
+      <ul>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>标题文案不同</strong><span>实时页面：“Make room for your best work.” 设计稿：“Room for your best work.”</span></span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>按钮样式不同</strong><span>实时页面：深色、直角。设计稿：青绿色胶囊形。</span></span></li>
+      </ul>
+    </div>
+  </div>
+  <figure class="shot"><img src="/multi-device-viewer/screenshots/design-compare-1280.webp" srcset="/multi-device-viewer/screenshots/design-compare-640.webp 640w, /multi-device-viewer/screenshots/design-compare-1280.webp 1280w" sizes="(min-width: 1312px) 820px, calc(100vw - 48px)" width="1280" height="720" alt="与设计稿对比：iPhone 18 Pro 上的实时页面与设计图并排，标题和按钮样式不同" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="dark-band" aria-labelledby="tour-fix">
+  <div class="section">
+    <div class="section-head">
+      <h2 id="tour-fix" class="display">标出问题，复制修复提示。</h2>
+      <p>在截图上标注，然后为你的 AI 编程工具复制现成的提示词。任何内容都不会离开你的电脑。</p>
+    </div>
+    <figure class="shot shot-dark"><img src="/multi-device-viewer/screenshots/fix-prompt-1280.webp" srcset="/multi-device-viewer/screenshots/fix-prompt-640.webp 640w, /multi-device-viewer/screenshots/fix-prompt-1280.webp 1280w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1280" height="720" alt="标注编辑器用箭头和方框标出 iPhone 上的标题，旁边是列出受影响设备的修复提示面板" loading="lazy" decoding="async"></figure>
+    <ul class="chips">
+      <li class="chips-label">更多功能</li>
+      <li>录制并重放流程</li><li>专注模式</li><li>旋转与缩放</li><li>自定义尺寸</li><li>保存的设备组合</li>
+    </ul>
+  </div>
+</section>
+
+<section id="reviews" class="reviews" aria-labelledby="reviews-title">
+  <div class="rating-card">
+    <h2 id="reviews-title">深受一线开发者好评。</h2>
+    <div class="score"><strong data-store="rating">4.7</strong><span>满分 5 分</span></div>
+    <span class="stars" role="img" aria-label="4.7 星（满分 5 星）" data-stars style="--size:22px;--gap:3px;--fill:94.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+    <p class="summary"><span data-store="ratingCount">12</span> 个评分 · Chrome Web Store 上有 <span data-store="users">2,000</span> 位用户</p>
+    <div class="card-actions">
+      <a class="btn btn-dark" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews">写评价</a>
+      <a class="link-strong" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews">查看全部 ↗</a>
+    </div>
+  </div>
+  <div class="review-grid">
+        <figure class="review">
+          <span class="stars" role="img" aria-label="5 星（满分 5 星）" style="--size:16px;--gap:2px;--fill:100.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+          <blockquote lang="en">Such a great tool I've ever used for viewing responsive design across multiple device at the same time.</blockquote>
+          <figcaption><strong>Siam Al Rabbi</strong><span>2026年10月8日 · Chrome Web Store</span></figcaption>
+        </figure>
+        <figure class="review">
+          <span class="stars" role="img" aria-label="5 星（满分 5 星）" style="--size:16px;--gap:2px;--fill:100.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+          <blockquote lang="en">Fantastic Extension!! God bless the day I found you! Thank you!</blockquote>
+          <figcaption><strong>Victoria Finebone</strong><span>2026年10月8日 · Chrome Web Store</span></figcaption>
+        </figure>
+        <figure class="review">
+          <span class="stars" role="img" aria-label="5 星（满分 5 星）" style="--size:16px;--gap:2px;--fill:100.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+          <blockquote lang="en">What a great tool to have! I use this daily and it's the first extension in the panel. It's got many uses, but if you just want to make sure your sites and apps look good on all screens, this is hands down the best!</blockquote>
+          <figcaption><strong>Rod Arnold</strong><span>2026年9月18日 · Chrome Web Store</span></figcaption>
+        </figure>
+  </div>
+</section>
+
+<section class="privacy-strip" aria-labelledby="privacy-title">
+  <div class="strip">
+    <div class="strip-title"><span class="strip-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span><h2 id="privacy-title">生来注重隐私。</h2></div>
+    <ul><li>无需账号</li><li>无跟踪</li><li>页面始终留在你的浏览器中</li><li>开源</li></ul>
+    <a class="link-strong" href="/multi-device-viewer/privacy/">隐私政策 →</a>
+  </div>
+</section>
+
+<section id="faq" class="faq" aria-labelledby="faq-title">
+  <h2 id="faq-title" class="display">常见问题。</h2>
+  <div class="faq-list">
+    <details><summary>免费吗？<span aria-hidden="true">+</span></summary><p>是的。基于 MIT 许可证免费开源，无需账号。</p></details>
+    <details><summary>支持 localhost 吗？<span aria-hidden="true">+</span></summary><p>支持。在 Chrome 中打开本地页面，再打开 Mobile View 即可。任何内容都不会离开你的电脑。</p></details>
+    <details><summary>和 DevTools 的设备模式有什么不同？<span aria-hidden="true">+</span></summary><p>DevTools 一次只显示一个视口。Mobile View 并排显示四台真实设备，并保持同步。</p></details>
+    <details><summary>为什么有些网站无法加载？<span aria-hidden="true">+</span></summary><p>有些网站禁止被嵌入到其他页面中显示。Mobile View 会提示你，并可在新标签页中打开。</p></details>
+    <details><summary>修复提示会上传我的代码吗？<span aria-hidden="true">+</span></summary><p>不会。提示在你的电脑上生成，供你粘贴到自己的编程工具中。</p></details>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="cta-title">
+  <div class="cta-card">
+    <div>
+      <h2 id="cta-title" class="display">在你自己的网站上试试。</h2>
+      <p>免费。无需账号。支持 localhost。</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-aqua btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">免费添加到 Chrome</a>
+      <a class="btn btn-outline-dark btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews"><svg width="18" height="18" viewBox="0 0 24 24" fill="#F5A623" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>写评价</a>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/multi-device-viewer/zh-cn/" aria-label="Mobile View 首页"><img src="/multi-device-viewer/icons/icon-128.png" width="34" height="34" alt="" aria-hidden="true"><span>Mobile View</span></a>
+        <p>一款免费、注重隐私的 Chrome 响应式测试工具。基于 MIT 许可证开源。</p>
+        <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">添加到 Chrome</a>
+      </div>
+      <nav class="footer-col" aria-label="产品">
+        <h2>产品</h2>
+        <a href="/multi-device-viewer/zh-cn/#tour">功能导览</a>
+        <a href="/multi-device-viewer/zh-cn/#reviews">评价</a>
+        <a href="/multi-device-viewer/changelog/">更新日志</a>
+        <a href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">Chrome Web Store</a>
+      </nav>
+      <nav class="footer-col wide" aria-label="指南">
+        <h2>指南</h2>
+        <a href="/multi-device-viewer/guides/device-viewport-sizes/" lang="en">Device viewport sizes</a>
+        <a href="/multi-device-viewer/guides/responsive-design-checker/" lang="en">Responsive design checker</a>
+        <a href="/multi-device-viewer/guides/responsive-website-testing/" lang="en">Responsive website testing</a>
+        <a href="/multi-device-viewer/guides/">所有指南</a>
+      </nav>
+      <nav class="footer-col" aria-label="项目">
+        <h2>项目</h2>
+        <a href="https://github.com/edisonaugusthy/multi-device-viewer">GitHub 源代码</a>
+        <a href="https://github.com/edisonaugusthy/multi-device-viewer/issues">报告问题</a>
+        <a href="/multi-device-viewer/privacy/">隐私政策</a>
+        <a href="/multi-device-viewer/terms/">使用条款</a>
+      </nav>
+    </div>
+    <details class="languages">
+      <summary><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>语言: 简体中文</summary>
+      <ul><li><a href="/multi-device-viewer/" hreflang="en" lang="en" data-lang-choice="en">English</a></li><li><a href="/multi-device-viewer/am/" hreflang="am" lang="am" data-lang-choice="am">አማርኛ</a></li><li><a href="/multi-device-viewer/ar/" hreflang="ar" lang="ar" data-lang-choice="ar">العربية</a></li><li><a href="/multi-device-viewer/bg/" hreflang="bg" lang="bg" data-lang-choice="bg">Български</a></li><li><a href="/multi-device-viewer/bn/" hreflang="bn" lang="bn" data-lang-choice="bn">বাংলা</a></li><li><a href="/multi-device-viewer/ca/" hreflang="ca" lang="ca" data-lang-choice="ca">Català</a></li><li><a href="/multi-device-viewer/cs/" hreflang="cs" lang="cs" data-lang-choice="cs">Čeština</a></li><li><a href="/multi-device-viewer/da/" hreflang="da" lang="da" data-lang-choice="da">Dansk</a></li><li><a href="/multi-device-viewer/de/" hreflang="de" lang="de" data-lang-choice="de">Deutsch</a></li><li><a href="/multi-device-viewer/el/" hreflang="el" lang="el" data-lang-choice="el">Ελληνικά</a></li><li><a href="/multi-device-viewer/es/" hreflang="es" lang="es" data-lang-choice="es">Español</a></li><li><a href="/multi-device-viewer/es-419/" hreflang="es-419" lang="es-419" data-lang-choice="es-419">Español (Latinoamérica y el Caribe)</a></li><li><a href="/multi-device-viewer/et/" hreflang="et" lang="et" data-lang-choice="et">Eesti</a></li><li><a href="/multi-device-viewer/fa/" hreflang="fa" lang="fa" data-lang-choice="fa">فارسی</a></li><li><a href="/multi-device-viewer/fi/" hreflang="fi" lang="fi" data-lang-choice="fi">Suomi</a></li><li><a href="/multi-device-viewer/fil/" hreflang="tl" lang="fil" data-lang-choice="fil">Filipino</a></li><li><a href="/multi-device-viewer/fr/" hreflang="fr" lang="fr" data-lang-choice="fr">Français</a></li><li><a href="/multi-device-viewer/gu/" hreflang="gu" lang="gu" data-lang-choice="gu">ગુજરાતી</a></li><li><a href="/multi-device-viewer/he/" hreflang="he" lang="he" data-lang-choice="he">עברית</a></li><li><a href="/multi-device-viewer/hi/" hreflang="hi" lang="hi" data-lang-choice="hi">हिन्दी</a></li><li><a href="/multi-device-viewer/hr/" hreflang="hr" lang="hr" data-lang-choice="hr">Hrvatski</a></li><li><a href="/multi-device-viewer/hu/" hreflang="hu" lang="hu" data-lang-choice="hu">Magyar</a></li><li><a href="/multi-device-viewer/id/" hreflang="id" lang="id" data-lang-choice="id">Indonesia</a></li><li><a href="/multi-device-viewer/it/" hreflang="it" lang="it" data-lang-choice="it">Italiano</a></li><li><a href="/multi-device-viewer/ja/" hreflang="ja" lang="ja" data-lang-choice="ja">日本語</a></li><li><a href="/multi-device-viewer/kn/" hreflang="kn" lang="kn" data-lang-choice="kn">ಕನ್ನಡ</a></li><li><a href="/multi-device-viewer/ko/" hreflang="ko" lang="ko" data-lang-choice="ko">한국어</a></li><li><a href="/multi-device-viewer/lt/" hreflang="lt" lang="lt" data-lang-choice="lt">Lietuvių</a></li><li><a href="/multi-device-viewer/lv/" hreflang="lv" lang="lv" data-lang-choice="lv">Latviešu</a></li><li><a href="/multi-device-viewer/ml/" hreflang="ml" lang="ml" data-lang-choice="ml">മലയാളം</a></li><li><a href="/multi-device-viewer/mr/" hreflang="mr" lang="mr" data-lang-choice="mr">मराठी</a></li><li><a href="/multi-device-viewer/ms/" hreflang="ms" lang="ms" data-lang-choice="ms">Bahasa Melayu</a></li><li><a href="/multi-device-viewer/nl/" hreflang="nl" lang="nl" data-lang-choice="nl">Nederlands</a></li><li><a href="/multi-device-viewer/no/" hreflang="no" lang="no" data-lang-choice="no">Norsk</a></li><li><a href="/multi-device-viewer/pl/" hreflang="pl" lang="pl" data-lang-choice="pl">Polski</a></li><li><a href="/multi-device-viewer/pt-br/" hreflang="pt-BR" lang="pt-BR" data-lang-choice="pt-br">Português (Brasil)</a></li><li><a href="/multi-device-viewer/pt-pt/" hreflang="pt-PT" lang="pt-PT" data-lang-choice="pt-pt">Português (Portugal)</a></li><li><a href="/multi-device-viewer/ro/" hreflang="ro" lang="ro" data-lang-choice="ro">Română</a></li><li><a href="/multi-device-viewer/ru/" hreflang="ru" lang="ru" data-lang-choice="ru">Русский</a></li><li><a href="/multi-device-viewer/sk/" hreflang="sk" lang="sk" data-lang-choice="sk">Slovenčina</a></li><li><a href="/multi-device-viewer/sl/" hreflang="sl" lang="sl" data-lang-choice="sl">Slovenščina</a></li><li><a href="/multi-device-viewer/sr/" hreflang="sr" lang="sr" data-lang-choice="sr">Српски</a></li><li><a href="/multi-device-viewer/sv/" hreflang="sv" lang="sv" data-lang-choice="sv">Svenska</a></li><li><a href="/multi-device-viewer/sw/" hreflang="sw" lang="sw" data-lang-choice="sw">Kiswahili</a></li><li><a href="/multi-device-viewer/ta/" hreflang="ta" lang="ta" data-lang-choice="ta">தமிழ்</a></li><li><a href="/multi-device-viewer/te/" hreflang="te" lang="te" data-lang-choice="te">తెలుగు</a></li><li><a href="/multi-device-viewer/th/" hreflang="th" lang="th" data-lang-choice="th">ไทย</a></li><li><a href="/multi-device-viewer/tr/" hreflang="tr" lang="tr" data-lang-choice="tr">Türkçe</a></li><li><a href="/multi-device-viewer/uk/" hreflang="uk" lang="uk" data-lang-choice="uk">Українська</a></li><li><a href="/multi-device-viewer/vi/" hreflang="vi" lang="vi" data-lang-choice="vi">Tiếng Việt</a></li><li><a href="/multi-device-viewer/zh-cn/" hreflang="zh-CN" lang="zh-CN" data-lang-choice="zh-cn" aria-current="true">简体中文</a></li><li><a href="/multi-device-viewer/zh-tw/" hreflang="zh-TW" lang="zh-TW" data-lang-choice="zh-tw">繁體中文</a></li></ul>
+    </details>
+    <div class="footer-bottom">
+      <span>© 2026 Edison Augusthy。采用 MIT 许可证。</span>
+      <span>iPhone、iPad、Mac 和 Apple Watch 是 Apple Inc. 的商标。Galaxy 是 Samsung 的商标，Pixel 是 Google 的商标。设备名称仅用于描述屏幕尺寸；Mobile View 与上述公司无任何关联。</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

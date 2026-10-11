@@ -1,0 +1,16 @@
+{
+  "name": "Mobile View: Device Emulator & Responsive Tester",
+  "short_name": "Mobile View",
+  "start_url": "/multi-device-viewer/",
+  "scope": "/multi-device-viewer/",
+  "display": "browser",
+  "background_color": "#F7F7F4",
+  "theme_color": "#F7F7F4",
+  "icons": [
+    {
+      "src": "/multi-device-viewer/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}

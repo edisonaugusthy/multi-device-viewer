@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ml" dir="ltr" data-script="wide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Mobile View: Chrome-നുള്ള റെസ്‌പോൺസീവ് ടെസ്റ്ററും ഡിവൈസ് എമുലേറ്ററും</title>
+<meta name="description" content="സൗജന്യ Chrome എക്സ്റ്റൻഷൻ: റെസ്‌പോൺസീവ് സൈറ്റുകൾ യഥാർത്ഥ iPhone, Android, iPad, Mac ഫ്രെയിമുകളിൽ സ്ക്രോൾ സിങ്കോടെ പരിശോധിക്കൂ. localhost-ലും പ്രവർത്തിക്കും.">
+
+<link rel="canonical" href="https://edisonaugusthy.github.io/multi-device-viewer/ml/">
+<link rel="alternate" hreflang="en" href="https://edisonaugusthy.github.io/multi-device-viewer/">
+<link rel="alternate" hreflang="am" href="https://edisonaugusthy.github.io/multi-device-viewer/am/">
+<link rel="alternate" hreflang="ar" href="https://edisonaugusthy.github.io/multi-device-viewer/ar/">
+<link rel="alternate" hreflang="bg" href="https://edisonaugusthy.github.io/multi-device-viewer/bg/">
+<link rel="alternate" hreflang="bn" href="https://edisonaugusthy.github.io/multi-device-viewer/bn/">
+<link rel="alternate" hreflang="ca" href="https://edisonaugusthy.github.io/multi-device-viewer/ca/">
+<link rel="alternate" hreflang="cs" href="https://edisonaugusthy.github.io/multi-device-viewer/cs/">
+<link rel="alternate" hreflang="da" href="https://edisonaugusthy.github.io/multi-device-viewer/da/">
+<link rel="alternate" hreflang="de" href="https://edisonaugusthy.github.io/multi-device-viewer/de/">
+<link rel="alternate" hreflang="el" href="https://edisonaugusthy.github.io/multi-device-viewer/el/">
+<link rel="alternate" hreflang="es" href="https://edisonaugusthy.github.io/multi-device-viewer/es/">
+<link rel="alternate" hreflang="es-419" href="https://edisonaugusthy.github.io/multi-device-viewer/es-419/">
+<link rel="alternate" hreflang="et" href="https://edisonaugusthy.github.io/multi-device-viewer/et/">
+<link rel="alternate" hreflang="fa" href="https://edisonaugusthy.github.io/multi-device-viewer/fa/">
+<link rel="alternate" hreflang="fi" href="https://edisonaugusthy.github.io/multi-device-viewer/fi/">
+<link rel="alternate" hreflang="tl" href="https://edisonaugusthy.github.io/multi-device-viewer/fil/">
+<link rel="alternate" hreflang="fr" href="https://edisonaugusthy.github.io/multi-device-viewer/fr/">
+<link rel="alternate" hreflang="gu" href="https://edisonaugusthy.github.io/multi-device-viewer/gu/">
+<link rel="alternate" hreflang="he" href="https://edisonaugusthy.github.io/multi-device-viewer/he/">
+<link rel="alternate" hreflang="hi" href="https://edisonaugusthy.github.io/multi-device-viewer/hi/">
+<link rel="alternate" hreflang="hr" href="https://edisonaugusthy.github.io/multi-device-viewer/hr/">
+<link rel="alternate" hreflang="hu" href="https://edisonaugusthy.github.io/multi-device-viewer/hu/">
+<link rel="alternate" hreflang="id" href="https://edisonaugusthy.github.io/multi-device-viewer/id/">
+<link rel="alternate" hreflang="it" href="https://edisonaugusthy.github.io/multi-device-viewer/it/">
+<link rel="alternate" hreflang="ja" href="https://edisonaugusthy.github.io/multi-device-viewer/ja/">
+<link rel="alternate" hreflang="kn" href="https://edisonaugusthy.github.io/multi-device-viewer/kn/">
+<link rel="alternate" hreflang="ko" href="https://edisonaugusthy.github.io/multi-device-viewer/ko/">
+<link rel="alternate" hreflang="lt" href="https://edisonaugusthy.github.io/multi-device-viewer/lt/">
+<link rel="alternate" hreflang="lv" href="https://edisonaugusthy.github.io/multi-device-viewer/lv/">
+<link rel="alternate" hreflang="ml" href="https://edisonaugusthy.github.io/multi-device-viewer/ml/">
+<link rel="alternate" hreflang="mr" href="https://edisonaugusthy.github.io/multi-device-viewer/mr/">
+<link rel="alternate" hreflang="ms" href="https://edisonaugusthy.github.io/multi-device-viewer/ms/">
+<link rel="alternate" hreflang="nl" href="https://edisonaugusthy.github.io/multi-device-viewer/nl/">
+<link rel="alternate" hreflang="no" href="https://edisonaugusthy.github.io/multi-device-viewer/no/">
+<link rel="alternate" hreflang="pl" href="https://edisonaugusthy.github.io/multi-device-viewer/pl/">
+<link rel="alternate" hreflang="pt-BR" href="https://edisonaugusthy.github.io/multi-device-viewer/pt-br/">
+<link rel="alternate" hreflang="pt-PT" href="https://edisonaugusthy.github.io/multi-device-viewer/pt-pt/">
+<link rel="alternate" hreflang="ro" href="https://edisonaugusthy.github.io/multi-device-viewer/ro/">
+<link rel="alternate" hreflang="ru" href="https://edisonaugusthy.github.io/multi-device-viewer/ru/">
+<link rel="alternate" hreflang="sk" href="https://edisonaugusthy.github.io/multi-device-viewer/sk/">
+<link rel="alternate" hreflang="sl" href="https://edisonaugusthy.github.io/multi-device-viewer/sl/">
+<link rel="alternate" hreflang="sr" href="https://edisonaugusthy.github.io/multi-device-viewer/sr/">
+<link rel="alternate" hreflang="sv" href="https://edisonaugusthy.github.io/multi-device-viewer/sv/">
+<link rel="alternate" hreflang="sw" href="https://edisonaugusthy.github.io/multi-device-viewer/sw/">
+<link rel="alternate" hreflang="ta" href="https://edisonaugusthy.github.io/multi-device-viewer/ta/">
+<link rel="alternate" hreflang="te" href="https://edisonaugusthy.github.io/multi-device-viewer/te/">
+<link rel="alternate" hreflang="th" href="https://edisonaugusthy.github.io/multi-device-viewer/th/">
+<link rel="alternate" hreflang="tr" href="https://edisonaugusthy.github.io/multi-device-viewer/tr/">
+<link rel="alternate" hreflang="uk" href="https://edisonaugusthy.github.io/multi-device-viewer/uk/">
+<link rel="alternate" hreflang="vi" href="https://edisonaugusthy.github.io/multi-device-viewer/vi/">
+<link rel="alternate" hreflang="zh-CN" href="https://edisonaugusthy.github.io/multi-device-viewer/zh-cn/">
+<link rel="alternate" hreflang="zh-TW" href="https://edisonaugusthy.github.io/multi-device-viewer/zh-tw/">
+<link rel="alternate" hreflang="x-default" href="https://edisonaugusthy.github.io/multi-device-viewer/">
+<meta name="theme-color" content="#F7F7F4">
+<meta name="color-scheme" content="light">
+<meta property="og:site_name" content="Mobile View">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mobile View: നിങ്ങളുടെ സൈറ്റ് എല്ലാ സ്ക്രീനിലും ഒരേസമയം">
+<meta property="og:description" content="സൗജന്യ Chrome എക്സ്റ്റൻഷൻ: റെസ്‌പോൺസീവ് സൈറ്റുകൾ യഥാർത്ഥ iPhone, Android, iPad, Mac ഫ്രെയിമുകളിൽ സ്ക്രോൾ സിങ്കോടെ പരിശോധിക്കൂ. localhost-ലും പ്രവർത്തിക്കും.">
+<meta property="og:url" content="https://edisonaugusthy.github.io/multi-device-viewer/ml/">
+<meta property="og:locale" content="ml">
+<meta property="og:image" content="https://edisonaugusthy.github.io/multi-device-viewer/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ഒരു പേജ് iPhone, ഫോൾഡബിൾ ഫോൺ, MacBook, Apple Watch എന്നിവയിൽ അടുത്തടുത്തായി കാണിക്കുന്ന Mobile View">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mobile View: നിങ്ങളുടെ സൈറ്റ് എല്ലാ സ്ക്രീനിലും ഒരേസമയം">
+<meta name="twitter:description" content="സൗജന്യ Chrome എക്സ്റ്റൻഷൻ: റെസ്‌പോൺസീവ് സൈറ്റുകൾ യഥാർത്ഥ iPhone, Android, iPad, Mac ഫ്രെയിമുകളിൽ സ്ക്രോൾ സിങ്കോടെ പരിശോധിക്കൂ. localhost-ലും പ്രവർത്തിക്കും.">
+<meta name="twitter:image" content="https://edisonaugusthy.github.io/multi-device-viewer/og.png">
+<meta name="google-site-verification" content="htTwPty3Iq08Xc3GtR8nX_t78rbN5BL1MX1WuAU8Zmc">
+<link rel="icon" href="/multi-device-viewer/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/multi-device-viewer/icons/icon-128.png">
+<link rel="manifest" href="/multi-device-viewer/site.webmanifest">
+<link rel="preload" href="/multi-device-viewer/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/multi-device-viewer/assets/site-a0b53bf080.css">
+<link rel="preload" href="/multi-device-viewer/data/store.json" as="fetch" crossorigin>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://edisonaugusthy.github.io/multi-device-viewer/#author","name":"Edison Augusthy","url":"https://github.com/edisonaugusthy"},{"@type":"WebSite","@id":"https://edisonaugusthy.github.io/multi-device-viewer/#website","url":"https://edisonaugusthy.github.io/multi-device-viewer/","name":"Mobile View","alternateName":"Mobile View: Device Emulator & Responsive Tester","inLanguage":["en","am","ar","bg","bn","ca","cs","da","de","el","es","es-419","et","fa","fi","fil","fr","gu","he","hi","hr","hu","id","it","ja","kn","ko","lt","lv","ml","mr","ms","nl","no","pl","pt-BR","pt-PT","ro","ru","sk","sl","sr","sv","sw","ta","te","th","tr","uk","vi","zh-CN","zh-TW"],"publisher":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#author"}},{"@type":"SoftwareApplication","@id":"https://edisonaugusthy.github.io/multi-device-viewer/#software","name":"Mobile View: Device Emulator & Responsive Tester","alternateName":"Mobile View","applicationCategory":"DeveloperApplication","applicationSubCategory":"Responsive web design testing","operatingSystem":"Windows, macOS, Linux, ChromeOS","browserRequirements":"Requires Google Chrome on desktop","description":"സൗജന്യ Chrome എക്സ്റ്റൻഷൻ: റെസ്‌പോൺസീവ് സൈറ്റുകൾ യഥാർത്ഥ iPhone, Android, iPad, Mac ഫ്രെയിമുകളിൽ സ്ക്രോൾ സിങ്കോടെ പരിശോധിക്കൂ. localhost-ലും പ്രവർത്തിക്കും.","url":"https://edisonaugusthy.github.io/multi-device-viewer/ml/","downloadUrl":"https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb","installUrl":"https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb","softwareVersion":"0.2.11","dateModified":"2026-10-08","image":"https://edisonaugusthy.github.io/multi-device-viewer/icons/icon-128.png","screenshot":["https://edisonaugusthy.github.io/multi-device-viewer/screenshots/workspace-1280.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/sync-1280.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/all-devices-1920.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/design-compare-1280.webp","https://edisonaugusthy.github.io/multi-device-viewer/screenshots/fix-prompt-1280.webp"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"},"isAccessibleForFree":true,"license":"https://opensource.org/license/mit","codeRepository":"https://github.com/edisonaugusthy/multi-device-viewer","author":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#author"},"featureList":["Up to four real device frames side by side","111 device profiles: phones, foldables, tablets, laptops, desktops and watches","Synchronized scrolling, clicks and navigation","Design comparison side by side or overlaid","Annotated screenshots and AI coding fix prompts","Record and replay user flows","Works on localhost"]},{"@type":"WebPage","@id":"https://edisonaugusthy.github.io/multi-device-viewer/ml/#webpage","url":"https://edisonaugusthy.github.io/multi-device-viewer/ml/","name":"Mobile View: Chrome-നുള്ള റെസ്‌പോൺസീവ് ടെസ്റ്ററും ഡിവൈസ് എമുലേറ്ററും","description":"സൗജന്യ Chrome എക്സ്റ്റൻഷൻ: റെസ്‌പോൺസീവ് സൈറ്റുകൾ യഥാർത്ഥ iPhone, Android, iPad, Mac ഫ്രെയിമുകളിൽ സ്ക്രോൾ സിങ്കോടെ പരിശോധിക്കൂ. localhost-ലും പ്രവർത്തിക്കും.","inLanguage":"ml","isPartOf":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#website"},"about":{"@id":"https://edisonaugusthy.github.io/multi-device-viewer/#software"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://edisonaugusthy.github.io/multi-device-viewer/screenshots/workspace-1280.webp","width":1280,"height":720}},{"@type":"FAQPage","@id":"https://edisonaugusthy.github.io/multi-device-viewer/ml/#faq","inLanguage":"ml","mainEntity":[{"@type":"Question","name":"ഇത് സൗജന്യമാണോ?","acceptedAnswer":{"@type":"Answer","text":"അതെ. MIT ലൈസൻസിൽ സൗജന്യവും ഓപ്പൺ സോഴ്സും, അക്കൗണ്ട് ആവശ്യമില്ല."}},{"@type":"Question","name":"localhost-ൽ പ്രവർത്തിക്കുമോ?","acceptedAnswer":{"@type":"Answer","text":"ഉവ്വ്. നിങ്ങളുടെ ലോക്കൽ പേജ് Chrome-ൽ തുറന്ന ശേഷം Mobile View തുറക്കൂ. ഒന്നും നിങ്ങളുടെ കമ്പ്യൂട്ടർ വിട്ട് പോകില്ല."}},{"@type":"Question","name":"DevTools ഡിവൈസ് മോഡിൽ നിന്ന് ഇത് എങ്ങനെ വ്യത്യസ്തമാണ്?","acceptedAnswer":{"@type":"Answer","text":"DevTools ഒരു സമയം ഒരു വ്യൂപോർട്ട് മാത്രമേ കാണിക്കൂ. Mobile View നാല് യഥാർത്ഥ ഡിവൈസുകൾ അടുത്തടുത്ത്, സിങ്കിൽ കാണിക്കുന്നു."}},{"@type":"Question","name":"ചില സൈറ്റുകൾ എന്തുകൊണ്ട് ലോഡ് ആകുന്നില്ല?","acceptedAnswer":{"@type":"Answer","text":"ചില സൈറ്റുകൾ മറ്റൊരു പേജിനുള്ളിൽ കാണിക്കുന്നത് തടയുന്നു. Mobile View അത് അറിയിക്കുകയും അവ ഒരു ടാബിൽ തുറക്കാൻ നിർദ്ദേശിക്കുകയും ചെയ്യും."}},{"@type":"Question","name":"ഫിക്സ് പ്രോംപ്റ്റ് എന്റെ കോഡ് അപ്‌ലോഡ് ചെയ്യുമോ?","acceptedAnswer":{"@type":"Answer","text":"ഇല്ല. നിങ്ങളുടെ സ്വന്തം കോഡിംഗ് ടൂളിൽ പേസ്റ്റ് ചെയ്യാനായി അത് നിങ്ങളുടെ കമ്പ്യൂട്ടറിൽ തന്നെ തയ്യാറാക്കുന്നു."}}]}]}</script>
+<script type="module" src="/multi-device-viewer/assets/main-5065f512c2.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">ഉള്ളടക്കത്തിലേക്ക് പോകൂ</a>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="/multi-device-viewer/ml/" aria-label="Mobile View ഹോം"><img src="/multi-device-viewer/icons/icon-128.png" width="34" height="34" alt="" aria-hidden="true"><span>Mobile View</span></a>
+    <nav class="main-nav" aria-label="പ്രധാനം">
+      <a href="/multi-device-viewer/ml/#tour" aria-current="page">ടൂർ</a>
+      <a href="/multi-device-viewer/ml/#reviews" aria-current="page">റിവ്യൂകൾ</a>
+      <a href="/multi-device-viewer/ml/#faq" aria-current="page">ചോദ്യങ്ങൾ</a>
+      <a href="/multi-device-viewer/guides/">ഗൈഡുകൾ</a>
+      <a href="/multi-device-viewer/privacy/">സ്വകാര്യത</a>
+    </nav>
+    <div class="header-actions">
+      <details class="lang-menu" data-lang-menu>
+        <summary aria-label="ഭാഷ: മലയാളം"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="label">മലയാളം</span></summary>
+        <ul><li><a href="/multi-device-viewer/" hreflang="en" lang="en" data-lang-choice="en">English</a></li><li><a href="/multi-device-viewer/am/" hreflang="am" lang="am" data-lang-choice="am">አማርኛ</a></li><li><a href="/multi-device-viewer/ar/" hreflang="ar" lang="ar" data-lang-choice="ar">العربية</a></li><li><a href="/multi-device-viewer/bg/" hreflang="bg" lang="bg" data-lang-choice="bg">Български</a></li><li><a href="/multi-device-viewer/bn/" hreflang="bn" lang="bn" data-lang-choice="bn">বাংলা</a></li><li><a href="/multi-device-viewer/ca/" hreflang="ca" lang="ca" data-lang-choice="ca">Català</a></li><li><a href="/multi-device-viewer/cs/" hreflang="cs" lang="cs" data-lang-choice="cs">Čeština</a></li><li><a href="/multi-device-viewer/da/" hreflang="da" lang="da" data-lang-choice="da">Dansk</a></li><li><a href="/multi-device-viewer/de/" hreflang="de" lang="de" data-lang-choice="de">Deutsch</a></li><li><a href="/multi-device-viewer/el/" hreflang="el" lang="el" data-lang-choice="el">Ελληνικά</a></li><li><a href="/multi-device-viewer/es/" hreflang="es" lang="es" data-lang-choice="es">Español</a></li><li><a href="/multi-device-viewer/es-419/" hreflang="es-419" lang="es-419" data-lang-choice="es-419">Español (Latinoamérica y el Caribe)</a></li><li><a href="/multi-device-viewer/et/" hreflang="et" lang="et" data-lang-choice="et">Eesti</a></li><li><a href="/multi-device-viewer/fa/" hreflang="fa" lang="fa" data-lang-choice="fa">فارسی</a></li><li><a href="/multi-device-viewer/fi/" hreflang="fi" lang="fi" data-lang-choice="fi">Suomi</a></li><li><a href="/multi-device-viewer/fil/" hreflang="tl" lang="fil" data-lang-choice="fil">Filipino</a></li><li><a href="/multi-device-viewer/fr/" hreflang="fr" lang="fr" data-lang-choice="fr">Français</a></li><li><a href="/multi-device-viewer/gu/" hreflang="gu" lang="gu" data-lang-choice="gu">ગુજરાતી</a></li><li><a href="/multi-device-viewer/he/" hreflang="he" lang="he" data-lang-choice="he">עברית</a></li><li><a href="/multi-device-viewer/hi/" hreflang="hi" lang="hi" data-lang-choice="hi">हिन्दी</a></li><li><a href="/multi-device-viewer/hr/" hreflang="hr" lang="hr" data-lang-choice="hr">Hrvatski</a></li><li><a href="/multi-device-viewer/hu/" hreflang="hu" lang="hu" data-lang-choice="hu">Magyar</a></li><li><a href="/multi-device-viewer/id/" hreflang="id" lang="id" data-lang-choice="id">Indonesia</a></li><li><a href="/multi-device-viewer/it/" hreflang="it" lang="it" data-lang-choice="it">Italiano</a></li><li><a href="/multi-device-viewer/ja/" hreflang="ja" lang="ja" data-lang-choice="ja">日本語</a></li><li><a href="/multi-device-viewer/kn/" hreflang="kn" lang="kn" data-lang-choice="kn">ಕನ್ನಡ</a></li><li><a href="/multi-device-viewer/ko/" hreflang="ko" lang="ko" data-lang-choice="ko">한국어</a></li><li><a href="/multi-device-viewer/lt/" hreflang="lt" lang="lt" data-lang-choice="lt">Lietuvių</a></li><li><a href="/multi-device-viewer/lv/" hreflang="lv" lang="lv" data-lang-choice="lv">Latviešu</a></li><li><a href="/multi-device-viewer/ml/" hreflang="ml" lang="ml" data-lang-choice="ml" aria-current="true">മലയാളം</a></li><li><a href="/multi-device-viewer/mr/" hreflang="mr" lang="mr" data-lang-choice="mr">मराठी</a></li><li><a href="/multi-device-viewer/ms/" hreflang="ms" lang="ms" data-lang-choice="ms">Bahasa Melayu</a></li><li><a href="/multi-device-viewer/nl/" hreflang="nl" lang="nl" data-lang-choice="nl">Nederlands</a></li><li><a href="/multi-device-viewer/no/" hreflang="no" lang="no" data-lang-choice="no">Norsk</a></li><li><a href="/multi-device-viewer/pl/" hreflang="pl" lang="pl" data-lang-choice="pl">Polski</a></li><li><a href="/multi-device-viewer/pt-br/" hreflang="pt-BR" lang="pt-BR" data-lang-choice="pt-br">Português (Brasil)</a></li><li><a href="/multi-device-viewer/pt-pt/" hreflang="pt-PT" lang="pt-PT" data-lang-choice="pt-pt">Português (Portugal)</a></li><li><a href="/multi-device-viewer/ro/" hreflang="ro" lang="ro" data-lang-choice="ro">Română</a></li><li><a href="/multi-device-viewer/ru/" hreflang="ru" lang="ru" data-lang-choice="ru">Русский</a></li><li><a href="/multi-device-viewer/sk/" hreflang="sk" lang="sk" data-lang-choice="sk">Slovenčina</a></li><li><a href="/multi-device-viewer/sl/" hreflang="sl" lang="sl" data-lang-choice="sl">Slovenščina</a></li><li><a href="/multi-device-viewer/sr/" hreflang="sr" lang="sr" data-lang-choice="sr">Српски</a></li><li><a href="/multi-device-viewer/sv/" hreflang="sv" lang="sv" data-lang-choice="sv">Svenska</a></li><li><a href="/multi-device-viewer/sw/" hreflang="sw" lang="sw" data-lang-choice="sw">Kiswahili</a></li><li><a href="/multi-device-viewer/ta/" hreflang="ta" lang="ta" data-lang-choice="ta">தமிழ்</a></li><li><a href="/multi-device-viewer/te/" hreflang="te" lang="te" data-lang-choice="te">తెలుగు</a></li><li><a href="/multi-device-viewer/th/" hreflang="th" lang="th" data-lang-choice="th">ไทย</a></li><li><a href="/multi-device-viewer/tr/" hreflang="tr" lang="tr" data-lang-choice="tr">Türkçe</a></li><li><a href="/multi-device-viewer/uk/" hreflang="uk" lang="uk" data-lang-choice="uk">Українська</a></li><li><a href="/multi-device-viewer/vi/" hreflang="vi" lang="vi" data-lang-choice="vi">Tiếng Việt</a></li><li><a href="/multi-device-viewer/zh-cn/" hreflang="zh-CN" lang="zh-CN" data-lang-choice="zh-cn">简体中文</a></li><li><a href="/multi-device-viewer/zh-tw/" hreflang="zh-TW" lang="zh-TW" data-lang-choice="zh-tw">繁體中文</a></li></ul>
+      </details>
+      <a class="icon-btn" href="https://github.com/edisonaugusthy/multi-device-viewer" aria-label="GitHub-ൽ Mobile View"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
+      <a class="btn btn-ghost" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews"><svg width="16" height="16" viewBox="0 0 24 24" fill="#D97706" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><span class="label">റിവ്യൂ എഴുതൂ</span></a>
+      <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">Chrome-ൽ ചേർക്കൂ</a>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="hero" aria-labelledby="hero-title">
+  <a class="rating-chip" href="#reviews"><span class="stars" aria-hidden="true" data-stars style="--size:15px;--gap:2px;--fill:94.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span><span>Chrome Web Store-ൽ <strong data-store="rating">4.7</strong></span></a>
+  <h1 id="hero-title">നിങ്ങളുടെ സൈറ്റ് എല്ലാ സ്ക്രീനിലും ഒരേസമയം.</h1>
+  <p class="lede">ഏത് പേജും, localhost പോലും, യഥാർത്ഥ ഫോണുകൾ, ഫോൾഡബിളുകൾ, ടാബ്‌ലെറ്റുകൾ, ലാപ്‌ടോപ്പുകൾ, വാച്ചുകൾ എന്നിവയിൽ കാണിക്കുന്ന സൗജന്യ Chrome എക്സ്റ്റൻഷൻ. അടുത്തടുത്ത്, ഒരേ താളത്തിൽ.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Chrome-ൽ ചേർക്കൂ, സൗജന്യം</a>
+    <a class="btn btn-ghost btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews"><svg width="18" height="18" viewBox="0 0 24 24" fill="#D97706" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>റിവ്യൂ എഴുതൂ</a>
+  </div>
+</section>
+
+<section class="stage-section" aria-label="ലൈവ് ഡെമോ">
+  <div class="stage">
+    <div class="live-row"><span class="live-badge"><span class="pulse" aria-hidden="true"></span>ലൈവ്. ഏത് സ്ക്രീനിലും സ്ക്രോൾ ചെയ്യൂ, ടാപ്പ് ചെയ്യൂ.</span></div>
+    <div class="stage-view">
+      <div class="stage-canvas" data-stage>
+        <div class="stage-inner">
+            <div class="device" data-device style="left:250px;bottom:64px;z-index:1;width:690px;height:461.1px">
+              <div class="device-scale" style="width:1745.53px;height:1166.59px;transform:scale(0.3953)">
+                <div class="device-screen" style="left:116.23px;top:54.99px;width:1512px;height:982px;clip-path:path(evenodd, &quot;M19 0H1493A19 19 0 0 1 1512 19V982H0V19A19 19 0 0 1 19 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=0" width="1512" height="982" title="MacBook Pro 14″-ലെ ലൈവ് ഡെമോ പേജ്" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-macbook-pro-14-m5-2025.webp" width="1745.53" height="1166.59" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:0px;bottom:0px;z-index:2;width:303.5px;height:420px">
+              <div class="device-scale" style="width:940.73px;height:1301.73px;transform:scale(0.32265)">
+                <div class="device-screen" style="left:53.36px;top:53.46px;width:834px;height:1194px;clip-path:path(evenodd, &quot;M18 0H816A18 18 0 0 1 834 18V1176A18 18 0 0 1 816 1194H18A18 18 0 0 1 0 1176V18A18 18 0 0 1 18 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=24" width="834" height="1194" title="iPad Pro 11″-ലെ ലൈവ് ഡെമോ പേജ്" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-ipad-pro-11-2018.webp" width="940.73" height="1301.73" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:892px;bottom:0px;z-index:3;width:215.6px;height:300px">
+              <div class="device-scale" style="width:516px;height:718px;transform:scale(0.41783)">
+                <div class="device-screen" style="left:24.82px;top:19.89px;width:466px;height:678px;clip-path:path(evenodd, &quot;M6 0H426A40 40 0 0 1 466 40V638A40 40 0 0 1 426 678H6A6 6 0 0 1 0 672V6A6 6 0 0 1 6 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=70" width="466" height="678" title="iPhone Duo (folded)-ലെ ലൈവ് ഡെമോ പേജ്" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-iphone-duo-folded-2026.webp" width="516" height="718" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:1092px;bottom:0px;z-index:4;width:165.2px;height:340px">
+              <div class="device-scale" style="width:446.05px;height:917.9px;transform:scale(0.37041)">
+                <div class="device-screen" style="left:21.79px;top:21.67px;width:402px;height:874px;clip-path:path(evenodd, &quot;M62 0H340A62 62 0 0 1 402 62V812A62 62 0 0 1 340 874H62A62 62 0 0 1 0 812V62A62 62 0 0 1 62 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=59" width="402" height="874" title="iPhone 18 Pro-ലെ ലൈവ് ഡെമോ പേജ്" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-iphone-18-pro-2026.webp" width="446.05" height="917.9" alt="" decoding="async">
+              </div>
+            </div>
+            <div class="device" data-device style="left:1240px;bottom:0px;z-index:5;width:78.3px;height:160px">
+              <div class="device-scale" style="width:276.5px;height:565px;transform:scale(0.28319)">
+                <div class="device-screen" style="left:27.68px;top:158.47px;width:208px;height:248px;clip-path:path(evenodd, &quot;M54 0H154A54 54 0 0 1 208 54V194A54 54 0 0 1 154 248H54A54 54 0 0 1 0 194V54A54 54 0 0 1 54 0Z&quot;)">
+                  <iframe data-demo-frame src="/multi-device-viewer/demo/?top=10" width="208" height="248" title="Apple Watch Series 12-ലെ ലൈവ് ഡെമോ പേജ്" loading="eager"></iframe>
+                </div>
+                <img class="device-frame" src="/multi-device-viewer/frames/apple-watch-series-12-46mm.webp" width="276.5" height="565" alt="" decoding="async">
+              </div>
+            </div>
+        </div>
+      </div>
+      <script>(()=>{const s=document.querySelector("[data-stage]"),v=s.parentElement,c=getComputedStyle(v),w=v.clientWidth-parseFloat(c.paddingLeft)-parseFloat(c.paddingRight),h=(innerHeight-s.getBoundingClientRect().top-parseFloat(c.paddingBottom)-24)/560;s.style.setProperty("--z",Math.min(1,w/1320,Math.max(h,.55)))})()</script>
+    </div>
+  </div>
+</section>
+
+<section class="facts" aria-label="ഒറ്റനോട്ടത്തിൽ">
+  <ul>
+    <li><strong>111</strong><span>യഥാർത്ഥ ഡിവൈസുകൾ</span></li>
+    <li><strong>ഒരേസമയം 4</strong><span>അടുത്തടുത്ത്</span></li>
+    <li><strong>സിങ്കിൽ</strong><span>സ്ക്രോൾ, ടാപ്പ്, പേജുകൾ</span></li>
+    <li><strong>സ്വകാര്യം</strong><span>അക്കൗണ്ട് വേണ്ട, ട്രാക്കിംഗ് ഇല്ല</span></li>
+  </ul>
+</section>
+
+<section id="tour" class="section" aria-labelledby="tour-workspace">
+  <div class="section-head">
+    <h2 id="tour-workspace" class="display">നാല് ഡിവൈസുകൾ. ഒരു വർക്ക്‌സ്‌പേസ്.</h2>
+    <p>111 യഥാർത്ഥ ഡിവൈസുകളിൽ ഏതെങ്കിലും നാലെണ്ണം തിരഞ്ഞെടുത്ത് നിങ്ങളുടെ പേജ് എല്ലാറ്റിലും ഒരേസമയം കാണൂ.</p>
+  </div>
+  <figure class="shot"><div class="shot-bar" aria-hidden="true"><span></span><span></span><span></span></div><img src="/multi-device-viewer/screenshots/workspace-1280.webp" srcset="/multi-device-viewer/screenshots/workspace-640.webp 640w, /multi-device-viewer/screenshots/workspace-1280.webp 1280w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1280" height="720" alt="iPhone 18 Pro, മടക്കിയ iPhone Duo, MacBook Pro 14, Apple Watch എന്നിവയിൽ ഒരു പേജ് അടുത്തടുത്തായി കാണിക്കുന്ന Mobile View വർക്ക്‌സ്‌പേസ്" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="section" aria-labelledby="tour-sync">
+  <div class="section-head">
+    <h2 id="tour-sync" class="display">ഒരിക്കൽ സ്ക്രോൾ ചെയ്യൂ. എല്ലാ സ്ക്രീനും ഒപ്പം വരും.</h2>
+    <p>സ്ക്രോളിംഗ്, ക്ലിക്കുകൾ, നാവിഗേഷൻ എന്നിവ എല്ലാ ഡിവൈസുകളിലും സിങ്കിൽ തുടരും.</p>
+  </div>
+  <figure class="shot"><img src="/multi-device-viewer/screenshots/sync-1280.webp" srcset="/multi-device-viewer/screenshots/sync-640.webp 640w, /multi-device-viewer/screenshots/sync-1280.webp 1280w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1280" height="720" alt="സ്ക്രോൾ, നാവിഗേഷൻ സിങ്ക് ഓണാക്കി, ഒരു പേജിന്റെ ഒരേ ഭാഗത്തേക്ക് സ്ക്രോൾ ചെയ്ത നാല് ഡിവൈസുകൾ" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="section" aria-labelledby="tour-all">
+  <div class="section-head">
+    <h2 id="tour-all" class="display">എല്ലാ ഡിവൈസുകളും. ഒറ്റ ക്ലിക്കിൽ.</h2>
+    <p>ഒരു വിഭാഗം മുഴുവൻ ഒരുമിച്ച് തുറക്കൂ. ഇവിടെ 37 iPhone-കളിൽ 16 എണ്ണം, iPhone 5 മുതൽ iPhone 15 Pro വരെ.</p>
+  </div>
+  <figure class="shot"><img src="/multi-device-viewer/screenshots/all-devices-1280.webp" srcset="/multi-device-viewer/screenshots/all-devices-640.webp 640w, /multi-device-viewer/screenshots/all-devices-1280.webp 1280w, /multi-device-viewer/screenshots/all-devices-1920.webp 1920w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1920" height="1080" alt="iPhone 5, iPhone SE മുതൽ iPhone 15 Pro വരെയുള്ള iPhone-കളുടെ രണ്ട് നിരകൾ, ഓരോന്നിലും ഒരേ പേജ് ലോഡ് ചെയ്യുന്ന എല്ലാ ഡിവൈസുകളുടെയും കാഴ്ച" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="compare" aria-labelledby="tour-design">
+  <div class="compare-copy">
+    <h2 id="tour-design" class="display">ഡിസൈനുമായി ഒത്തുനോക്കൂ.</h2>
+    <p>ഏത് ഡിവൈസിലും ലൈവ് പേജിനരികെ നിങ്ങളുടെ മോക്കപ്പ് വെക്കൂ. അടുത്തടുത്തോ ഓവർലേയായോ, ഡിസൈനും ബിൽഡും തമ്മിലുള്ള ഓരോ വ്യത്യാസവും എളുപ്പം കണ്ടെത്താം.</p>
+    <div class="caught">
+      <span class="caught-title">ഈ താരതമ്യത്തിൽ കണ്ടെത്തിയത്</span>
+      <ul>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>തലക്കെട്ടിലെ വാചകം വ്യത്യസ്തം</strong><span>ലൈവ്: “Make room for your best work.” ഡിസൈൻ: “Room for your best work.”</span></span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>ബട്ടൺ ശൈലി വ്യത്യസ്തം</strong><span>ലൈവ്: ഇരുണ്ടത്, ചതുര മൂലകൾ. ഡിസൈൻ: ടീൽ നിറമുള്ള പിൽ.</span></span></li>
+      </ul>
+    </div>
+  </div>
+  <figure class="shot"><img src="/multi-device-viewer/screenshots/design-compare-1280.webp" srcset="/multi-device-viewer/screenshots/design-compare-640.webp 640w, /multi-device-viewer/screenshots/design-compare-1280.webp 1280w" sizes="(min-width: 1312px) 820px, calc(100vw - 48px)" width="1280" height="720" alt="ഡിസൈനുമായി താരതമ്യം: iPhone 18 Pro-യിലെ ലൈവ് പേജ് ഡിസൈൻ ചിത്രത്തിനരികെ, വ്യത്യസ്ത തലക്കെട്ടും ബട്ടൺ ശൈലിയുമായി" loading="lazy" decoding="async"></figure>
+</section>
+
+<section class="dark-band" aria-labelledby="tour-fix">
+  <div class="section">
+    <div class="section-head">
+      <h2 id="tour-fix" class="display">ബഗ് അടയാളപ്പെടുത്തൂ. ഫിക്സ് കോപ്പി ചെയ്യൂ.</h2>
+      <p>സ്ക്രീൻഷോട്ടിൽ വരച്ച് അടയാളപ്പെടുത്തൂ, എന്നിട്ട് നിങ്ങളുടെ AI കോഡിംഗ് ടൂളിനായി തയ്യാറായ പ്രോംപ്റ്റ് കോപ്പി ചെയ്യൂ. ഒന്നും നിങ്ങളുടെ കമ്പ്യൂട്ടർ വിട്ട് പോകില്ല.</p>
+    </div>
+    <figure class="shot shot-dark"><img src="/multi-device-viewer/screenshots/fix-prompt-1280.webp" srcset="/multi-device-viewer/screenshots/fix-prompt-640.webp 640w, /multi-device-viewer/screenshots/fix-prompt-1280.webp 1280w" sizes="(min-width: 1312px) 1264px, calc(100vw - 48px)" width="1280" height="720" alt="iPhone-ലെ ഒരു തലക്കെട്ട് അമ്പടയാളവും ബോക്സും കൊണ്ട് അടയാളപ്പെടുത്തിയ അനോട്ടേഷൻ എഡിറ്റർ, ബാധിച്ച ഡിവൈസുകൾ ലിസ്റ്റ് ചെയ്യുന്ന ഫിക്സ് പ്രോംപ്റ്റ് പാനലിനരികെ" loading="lazy" decoding="async"></figure>
+    <ul class="chips">
+      <li class="chips-label">ഇതുകൂടാതെ</li>
+      <li>ഫ്ലോകൾ റെക്കോർഡ് ചെയ്ത് റീപ്ലേ ചെയ്യൂ</li><li>ഫോക്കസ് മോഡ്</li><li>റൊട്ടേറ്റ്, സൂം</li><li>കസ്റ്റം വലുപ്പങ്ങൾ</li><li>സേവ് ചെയ്ത ഡിവൈസ് സെറ്റുകൾ</li>
+    </ul>
+  </div>
+</section>
+
+<section id="reviews" class="reviews" aria-labelledby="reviews-title">
+  <div class="rating-card">
+    <h2 id="reviews-title">ഷിപ്പ് ചെയ്യുന്നവരുടെ റേറ്റിംഗ്.</h2>
+    <div class="score"><strong data-store="rating">4.7</strong><span>5-ൽ</span></div>
+    <span class="stars" role="img" aria-label="5-ൽ 4.7 നക്ഷത്രങ്ങൾ" data-stars style="--size:22px;--gap:3px;--fill:94.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+    <p class="summary"><span data-store="ratingCount">12</span> റേറ്റിംഗുകൾ · Chrome Web Store-ൽ <span data-store="users">2,000</span> ഉപയോക്താക്കൾ</p>
+    <div class="card-actions">
+      <a class="btn btn-dark" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews">റിവ്യൂ എഴുതൂ</a>
+      <a class="link-strong" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews">എല്ലാം വായിക്കൂ ↗</a>
+    </div>
+  </div>
+  <div class="review-grid">
+        <figure class="review">
+          <span class="stars" role="img" aria-label="5-ൽ 5 നക്ഷത്രങ്ങൾ" style="--size:16px;--gap:2px;--fill:100.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+          <blockquote lang="en">Such a great tool I've ever used for viewing responsive design across multiple device at the same time.</blockquote>
+          <figcaption><strong>Siam Al Rabbi</strong><span>2026 ഒക്ടോ 8 · Chrome Web Store</span></figcaption>
+        </figure>
+        <figure class="review">
+          <span class="stars" role="img" aria-label="5-ൽ 5 നക്ഷത്രങ്ങൾ" style="--size:16px;--gap:2px;--fill:100.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+          <blockquote lang="en">Fantastic Extension!! God bless the day I found you! Thank you!</blockquote>
+          <figcaption><strong>Victoria Finebone</strong><span>2026 ഒക്ടോ 8 · Chrome Web Store</span></figcaption>
+        </figure>
+        <figure class="review">
+          <span class="stars" role="img" aria-label="5-ൽ 5 നക്ഷത്രങ്ങൾ" style="--size:16px;--gap:2px;--fill:100.0%"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><span class="stars-fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></span>
+          <blockquote lang="en">What a great tool to have! I use this daily and it's the first extension in the panel. It's got many uses, but if you just want to make sure your sites and apps look good on all screens, this is hands down the best!</blockquote>
+          <figcaption><strong>Rod Arnold</strong><span>2026 സെപ്റ്റം 18 · Chrome Web Store</span></figcaption>
+        </figure>
+  </div>
+</section>
+
+<section class="privacy-strip" aria-labelledby="privacy-title">
+  <div class="strip">
+    <div class="strip-title"><span class="strip-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span><h2 id="privacy-title">സ്വകാര്യതയ്ക്കായി രൂപകൽപ്പന ചെയ്തത്.</h2></div>
+    <ul><li>അക്കൗണ്ട് വേണ്ട</li><li>ട്രാക്കിംഗ് ഇല്ല</li><li>നിങ്ങളുടെ പേജുകൾ ബ്രൗസറിൽ തന്നെ</li><li>ഓപ്പൺ സോഴ്സ്</li></ul>
+    <a class="link-strong" href="/multi-device-viewer/privacy/">സ്വകാര്യതാ നയം →</a>
+  </div>
+</section>
+
+<section id="faq" class="faq" aria-labelledby="faq-title">
+  <h2 id="faq-title" class="display">ചോദ്യങ്ങൾ.</h2>
+  <div class="faq-list">
+    <details><summary>ഇത് സൗജന്യമാണോ?<span aria-hidden="true">+</span></summary><p>അതെ. MIT ലൈസൻസിൽ സൗജന്യവും ഓപ്പൺ സോഴ്സും, അക്കൗണ്ട് ആവശ്യമില്ല.</p></details>
+    <details><summary>localhost-ൽ പ്രവർത്തിക്കുമോ?<span aria-hidden="true">+</span></summary><p>ഉവ്വ്. നിങ്ങളുടെ ലോക്കൽ പേജ് Chrome-ൽ തുറന്ന ശേഷം Mobile View തുറക്കൂ. ഒന്നും നിങ്ങളുടെ കമ്പ്യൂട്ടർ വിട്ട് പോകില്ല.</p></details>
+    <details><summary>DevTools ഡിവൈസ് മോഡിൽ നിന്ന് ഇത് എങ്ങനെ വ്യത്യസ്തമാണ്?<span aria-hidden="true">+</span></summary><p>DevTools ഒരു സമയം ഒരു വ്യൂപോർട്ട് മാത്രമേ കാണിക്കൂ. Mobile View നാല് യഥാർത്ഥ ഡിവൈസുകൾ അടുത്തടുത്ത്, സിങ്കിൽ കാണിക്കുന്നു.</p></details>
+    <details><summary>ചില സൈറ്റുകൾ എന്തുകൊണ്ട് ലോഡ് ആകുന്നില്ല?<span aria-hidden="true">+</span></summary><p>ചില സൈറ്റുകൾ മറ്റൊരു പേജിനുള്ളിൽ കാണിക്കുന്നത് തടയുന്നു. Mobile View അത് അറിയിക്കുകയും അവ ഒരു ടാബിൽ തുറക്കാൻ നിർദ്ദേശിക്കുകയും ചെയ്യും.</p></details>
+    <details><summary>ഫിക്സ് പ്രോംപ്റ്റ് എന്റെ കോഡ് അപ്‌ലോഡ് ചെയ്യുമോ?<span aria-hidden="true">+</span></summary><p>ഇല്ല. നിങ്ങളുടെ സ്വന്തം കോഡിംഗ് ടൂളിൽ പേസ്റ്റ് ചെയ്യാനായി അത് നിങ്ങളുടെ കമ്പ്യൂട്ടറിൽ തന്നെ തയ്യാറാക്കുന്നു.</p></details>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="cta-title">
+  <div class="cta-card">
+    <div>
+      <h2 id="cta-title" class="display">നിങ്ങളുടെ സ്വന്തം സൈറ്റിൽ പരീക്ഷിക്കൂ.</h2>
+      <p>സൗജന്യം. അക്കൗണ്ട് വേണ്ട. localhost-ലും പ്രവർത്തിക്കും.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-aqua btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">Chrome-ൽ ചേർക്കൂ, സൗജന്യം</a>
+      <a class="btn btn-outline-dark btn-lg" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb/reviews"><svg width="18" height="18" viewBox="0 0 24 24" fill="#F5A623" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>റിവ്യൂ എഴുതൂ</a>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="/multi-device-viewer/ml/" aria-label="Mobile View ഹോം"><img src="/multi-device-viewer/icons/icon-128.png" width="34" height="34" alt="" aria-hidden="true"><span>Mobile View</span></a>
+        <p>Chrome-നുള്ള സൗജന്യവും സ്വകാര്യവുമായ റെസ്‌പോൺസീവ് ടെസ്റ്റർ. MIT ലൈസൻസിൽ ഓപ്പൺ സോഴ്സ്.</p>
+        <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">Chrome-ൽ ചേർക്കൂ</a>
+      </div>
+      <nav class="footer-col" aria-label="പ്രോഡക്റ്റ്">
+        <h2>പ്രോഡക്റ്റ്</h2>
+        <a href="/multi-device-viewer/ml/#tour">ടൂർ</a>
+        <a href="/multi-device-viewer/ml/#reviews">റിവ്യൂകൾ</a>
+        <a href="/multi-device-viewer/changelog/">മാറ്റങ്ങളുടെ ലോഗ്</a>
+        <a href="https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb">Chrome Web Store</a>
+      </nav>
+      <nav class="footer-col wide" aria-label="ഗൈഡുകൾ">
+        <h2>ഗൈഡുകൾ</h2>
+        <a href="/multi-device-viewer/guides/device-viewport-sizes/" lang="en">Device viewport sizes</a>
+        <a href="/multi-device-viewer/guides/responsive-design-checker/" lang="en">Responsive design checker</a>
+        <a href="/multi-device-viewer/guides/responsive-website-testing/" lang="en">Responsive website testing</a>
+        <a href="/multi-device-viewer/guides/">എല്ലാ ഗൈഡുകളും</a>
+      </nav>
+      <nav class="footer-col" aria-label="പ്രോജക്റ്റ്">
+        <h2>പ്രോജക്റ്റ്</h2>
+        <a href="https://github.com/edisonaugusthy/multi-device-viewer">GitHub-ലെ സോഴ്സ് കോഡ്</a>
+        <a href="https://github.com/edisonaugusthy/multi-device-viewer/issues">പ്രശ്നം റിപ്പോർട്ട് ചെയ്യൂ</a>
+        <a href="/multi-device-viewer/privacy/">സ്വകാര്യതാ നയം</a>
+        <a href="/multi-device-viewer/terms/">ഉപയോഗ നിബന്ധനകൾ</a>
+      </nav>
+    </div>
+    <details class="languages">
+      <summary><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>ഭാഷ: മലയാളം</summary>
+      <ul><li><a href="/multi-device-viewer/" hreflang="en" lang="en" data-lang-choice="en">English</a></li><li><a href="/multi-device-viewer/am/" hreflang="am" lang="am" data-lang-choice="am">አማርኛ</a></li><li><a href="/multi-device-viewer/ar/" hreflang="ar" lang="ar" data-lang-choice="ar">العربية</a></li><li><a href="/multi-device-viewer/bg/" hreflang="bg" lang="bg" data-lang-choice="bg">Български</a></li><li><a href="/multi-device-viewer/bn/" hreflang="bn" lang="bn" data-lang-choice="bn">বাংলা</a></li><li><a href="/multi-device-viewer/ca/" hreflang="ca" lang="ca" data-lang-choice="ca">Català</a></li><li><a href="/multi-device-viewer/cs/" hreflang="cs" lang="cs" data-lang-choice="cs">Čeština</a></li><li><a href="/multi-device-viewer/da/" hreflang="da" lang="da" data-lang-choice="da">Dansk</a></li><li><a href="/multi-device-viewer/de/" hreflang="de" lang="de" data-lang-choice="de">Deutsch</a></li><li><a href="/multi-device-viewer/el/" hreflang="el" lang="el" data-lang-choice="el">Ελληνικά</a></li><li><a href="/multi-device-viewer/es/" hreflang="es" lang="es" data-lang-choice="es">Español</a></li><li><a href="/multi-device-viewer/es-419/" hreflang="es-419" lang="es-419" data-lang-choice="es-419">Español (Latinoamérica y el Caribe)</a></li><li><a href="/multi-device-viewer/et/" hreflang="et" lang="et" data-lang-choice="et">Eesti</a></li><li><a href="/multi-device-viewer/fa/" hreflang="fa" lang="fa" data-lang-choice="fa">فارسی</a></li><li><a href="/multi-device-viewer/fi/" hreflang="fi" lang="fi" data-lang-choice="fi">Suomi</a></li><li><a href="/multi-device-viewer/fil/" hreflang="tl" lang="fil" data-lang-choice="fil">Filipino</a></li><li><a href="/multi-device-viewer/fr/" hreflang="fr" lang="fr" data-lang-choice="fr">Français</a></li><li><a href="/multi-device-viewer/gu/" hreflang="gu" lang="gu" data-lang-choice="gu">ગુજરાતી</a></li><li><a href="/multi-device-viewer/he/" hreflang="he" lang="he" data-lang-choice="he">עברית</a></li><li><a href="/multi-device-viewer/hi/" hreflang="hi" lang="hi" data-lang-choice="hi">हिन्दी</a></li><li><a href="/multi-device-viewer/hr/" hreflang="hr" lang="hr" data-lang-choice="hr">Hrvatski</a></li><li><a href="/multi-device-viewer/hu/" hreflang="hu" lang="hu" data-lang-choice="hu">Magyar</a></li><li><a href="/multi-device-viewer/id/" hreflang="id" lang="id" data-lang-choice="id">Indonesia</a></li><li><a href="/multi-device-viewer/it/" hreflang="it" lang="it" data-lang-choice="it">Italiano</a></li><li><a href="/multi-device-viewer/ja/" hreflang="ja" lang="ja" data-lang-choice="ja">日本語</a></li><li><a href="/multi-device-viewer/kn/" hreflang="kn" lang="kn" data-lang-choice="kn">ಕನ್ನಡ</a></li><li><a href="/multi-device-viewer/ko/" hreflang="ko" lang="ko" data-lang-choice="ko">한국어</a></li><li><a href="/multi-device-viewer/lt/" hreflang="lt" lang="lt" data-lang-choice="lt">Lietuvių</a></li><li><a href="/multi-device-viewer/lv/" hreflang="lv" lang="lv" data-lang-choice="lv">Latviešu</a></li><li><a href="/multi-device-viewer/ml/" hreflang="ml" lang="ml" data-lang-choice="ml" aria-current="true">മലയാളം</a></li><li><a href="/multi-device-viewer/mr/" hreflang="mr" lang="mr" data-lang-choice="mr">मराठी</a></li><li><a href="/multi-device-viewer/ms/" hreflang="ms" lang="ms" data-lang-choice="ms">Bahasa Melayu</a></li><li><a href="/multi-device-viewer/nl/" hreflang="nl" lang="nl" data-lang-choice="nl">Nederlands</a></li><li><a href="/multi-device-viewer/no/" hreflang="no" lang="no" data-lang-choice="no">Norsk</a></li><li><a href="/multi-device-viewer/pl/" hreflang="pl" lang="pl" data-lang-choice="pl">Polski</a></li><li><a href="/multi-device-viewer/pt-br/" hreflang="pt-BR" lang="pt-BR" data-lang-choice="pt-br">Português (Brasil)</a></li><li><a href="/multi-device-viewer/pt-pt/" hreflang="pt-PT" lang="pt-PT" data-lang-choice="pt-pt">Português (Portugal)</a></li><li><a href="/multi-device-viewer/ro/" hreflang="ro" lang="ro" data-lang-choice="ro">Română</a></li><li><a href="/multi-device-viewer/ru/" hreflang="ru" lang="ru" data-lang-choice="ru">Русский</a></li><li><a href="/multi-device-viewer/sk/" hreflang="sk" lang="sk" data-lang-choice="sk">Slovenčina</a></li><li><a href="/multi-device-viewer/sl/" hreflang="sl" lang="sl" data-lang-choice="sl">Slovenščina</a></li><li><a href="/multi-device-viewer/sr/" hreflang="sr" lang="sr" data-lang-choice="sr">Српски</a></li><li><a href="/multi-device-viewer/sv/" hreflang="sv" lang="sv" data-lang-choice="sv">Svenska</a></li><li><a href="/multi-device-viewer/sw/" hreflang="sw" lang="sw" data-lang-choice="sw">Kiswahili</a></li><li><a href="/multi-device-viewer/ta/" hreflang="ta" lang="ta" data-lang-choice="ta">தமிழ்</a></li><li><a href="/multi-device-viewer/te/" hreflang="te" lang="te" data-lang-choice="te">తెలుగు</a></li><li><a href="/multi-device-viewer/th/" hreflang="th" lang="th" data-lang-choice="th">ไทย</a></li><li><a href="/multi-device-viewer/tr/" hreflang="tr" lang="tr" data-lang-choice="tr">Türkçe</a></li><li><a href="/multi-device-viewer/uk/" hreflang="uk" lang="uk" data-lang-choice="uk">Українська</a></li><li><a href="/multi-device-viewer/vi/" hreflang="vi" lang="vi" data-lang-choice="vi">Tiếng Việt</a></li><li><a href="/multi-device-viewer/zh-cn/" hreflang="zh-CN" lang="zh-CN" data-lang-choice="zh-cn">简体中文</a></li><li><a href="/multi-device-viewer/zh-tw/" hreflang="zh-TW" lang="zh-TW" data-lang-choice="zh-tw">繁體中文</a></li></ul>
+    </details>
+    <div class="footer-bottom">
+      <span>© 2026 Edison Augusthy. MIT ലൈസൻസ്.</span>
+      <span>iPhone, iPad, Mac, Apple Watch എന്നിവ Apple Inc.-ന്റെ ട്രേഡ്‌മാർക്കുകളാണ്. Galaxy Samsung-ന്റെയും Pixel Google-ന്റെയും ട്രേഡ്‌മാർക്കുകളാണ്. ഡിവൈസ് പേരുകൾ സ്ക്രീൻ വലുപ്പങ്ങൾ മാത്രം സൂചിപ്പിക്കുന്നു; Mobile View-ന് ഈ കമ്പനികളുമായി ബന്ധമില്ല.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

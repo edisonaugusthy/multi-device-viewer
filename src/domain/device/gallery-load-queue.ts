@@ -13,6 +13,8 @@ interface GalleryLoadOptions {
   concurrency?: number;
   intervalMs?: number;
   timeoutMs?: number;
+  /** Only start prioritized (near-viewport) cards; keep other documents queued. */
+  visibleOnly?: boolean;
 }
 
 // Keep a small set of pages loading in parallel so their scripts and styles
@@ -68,9 +70,10 @@ export function createGalleryLoadQueue(ids: string[], options: GalleryLoadOption
     if (!started || disposed || pumping || paused) return;
     pumping = true;
     try {
-      const replacing = (id: string) => replacements.has(id) && running.has(id);
+      const eligible = (id: string) => !options.visibleOnly || priority.has(id);
+      const replacing = (id: string) => eligible(id) && replacements.has(id) && running.has(id);
       while (!disposed && !paused && (running.size < concurrency || pending.some(replacing))) {
-        const available = (id: string) => !running.has(id);
+        const available = (id: string) => eligible(id) && !running.has(id);
         let index = pending.findIndex(replacing);
         if (index < 0) index = pending.findIndex(id => available(id) && priority.has(id));
         if (index < 0) index = pending.findIndex(available);
@@ -123,6 +126,7 @@ export function createGalleryLoadQueue(ids: string[], options: GalleryLoadOption
       pump();
     },
     start: () => { if (!started && !disposed) { started = true; changed = true; pump(); } },
+    // Visibility changes affect future starts, never an existing document.
     prioritize: (ids: Iterable<string>) => { priority = new Set(ids); pump(); },
     enqueue: (id: string) => enqueue(id),
     retry: (id: string) => enqueue(id, true),

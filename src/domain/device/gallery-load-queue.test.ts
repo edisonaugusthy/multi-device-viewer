@@ -150,6 +150,77 @@ describe("gallery background loading", () => {
     queue.dispose();
   });
 
+  it("defers distant pages until they approach the viewport, retaining loaded documents", () => {
+    const ids = Array.from({ length: 150 }, (_, index) => `device-${index}`);
+    const onStart = vi.fn();
+    let snapshot: GalleryLoadSnapshot;
+    const queue = createGalleryLoadQueue(ids, {
+      visibleOnly: true, onStart, onChange: next => { snapshot = next; },
+    });
+    queue.start();
+    expect(onStart).not.toHaveBeenCalled();
+    queue.prioritize(ids.slice(0, 3));
+    for (const id of ids.slice(0, 3)) queue.release(id, snapshot!.requests.get(id)!);
+    vi.advanceTimersByTime(60000);
+    expect(onStart.mock.calls.map(([id]) => id)).toEqual(ids.slice(0, 3));
+    expect(snapshot!.states.get(ids[3])).toBe("queued");
+    const firstRequest = snapshot!.requests.get(ids[0]);
+    queue.prioritize(ids.slice(147));
+    expect(onStart.mock.calls.map(([id]) => id)).toEqual([...ids.slice(0, 3), ...ids.slice(147)]);
+    queue.prioritize(ids.slice(0, 3));
+    expect(snapshot!.requests.get(ids[0])).toBe(firstRequest);
+    expect(onStart).toHaveBeenCalledTimes(6);
+    queue.dispose();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("defers offscreen navigation and retries, then uses the latest request on return", () => {
+    const onStart = vi.fn();
+    let snapshot: GalleryLoadSnapshot;
+    const queue = createGalleryLoadQueue(["a", "b", "c"], {
+      visibleOnly: true, concurrency: 1, onStart, onChange: next => { snapshot = next; },
+    });
+    queue.start();
+    queue.prioritize(["a"]);
+    const firstRequest = snapshot!.requests.get("a")!;
+    queue.prioritize([]);
+    queue.enqueue("a");
+    queue.retry("a");
+    vi.advanceTimersByTime(60000);
+    expect(onStart).toHaveBeenCalledTimes(1);
+    queue.prioritize(["a"]);
+    expect(onStart.mock.calls.map(([id]) => id)).toEqual(["a", "a"]);
+    queue.settle("a", firstRequest, "loaded");
+    expect(snapshot!.states.get("a")).toBe("loading");
+    queue.release("a", snapshot!.requests.get("a")!);
+    expect(snapshot!.states.get("a")).toBe("loaded");
+    expect(snapshot!.states.get("b")).toBe("queued");
+    queue.dispose();
+  });
+
+  it("respects pause and gentle pacing when new rows become visible", () => {
+    const onStart = vi.fn();
+    let snapshot: GalleryLoadSnapshot;
+    const queue = createGalleryLoadQueue(["a", "b", "c"], {
+      visibleOnly: true, onStart, onChange: next => { snapshot = next; },
+    });
+    queue.configure({ paused: true, concurrency: 2, intervalMs: 1000 });
+    queue.start();
+    queue.prioritize(["a", "b"]);
+    vi.advanceTimersByTime(10000);
+    expect(onStart).not.toHaveBeenCalled();
+    queue.configure({ concurrency: 2, intervalMs: 1000 });
+    expect(onStart.mock.calls.map(([id]) => id)).toEqual(["a"]);
+    queue.prioritize(["c"]);
+    vi.advanceTimersByTime(1000);
+    expect(onStart.mock.calls.map(([id]) => id)).toEqual(["a", "c"]);
+    queue.release("a", snapshot!.requests.get("a")!);
+    queue.release("c", snapshot!.requests.get("c")!);
+    vi.advanceTimersByTime(10000);
+    expect(onStart).toHaveBeenCalledTimes(2);
+    queue.dispose();
+  });
+
   it("keeps stalled network loads within the limit and accepts their eventual completion", () => {
     const { queue, onStart, complete, state } = setup(["a", "b", "c"]);
     vi.advanceTimersByTime(60000);

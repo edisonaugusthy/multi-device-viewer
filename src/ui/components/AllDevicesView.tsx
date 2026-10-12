@@ -187,6 +187,9 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
     ?? (id === POPUP_SLOT_ID ? popupRef.current?.url : slots.find(slot => slot.id === id)?.url) ?? url, [slots, url]);
   useEffect(() => {
     const queue = createGalleryLoadQueue(loadOrder, {
+      // Loading every offscreen iframe multiplies the site's scripts, timers
+      // and network requests. Start only the rows the user is approaching.
+      visibleOnly: true,
       onChange: snapshot => setLoadState({ ...snapshot, generation: refreshVersion }),
       onStart: id => {
         const nextUrl = pendingNavigation.current.get(id);
@@ -291,8 +294,8 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
       if (!detail || !baseSlots.some(slot => slot.id === detail.slotId)) return;
       pendingNavigation.current.delete(detail.slotId);
       loadQueueRef.current?.queue.cancelPending(detail.slotId);
-      // Follow across this category, including offscreen previews. Keep the
-      // source document intact and coalesce fast navigation to the latest URL.
+      // Queue the latest URL across this category, applying it to offscreen
+      // previews when they approach the viewport. Keep the source intact.
       for (const base of baseSlots) if (base.id !== detail.slotId) queueNavigation(base.id, detail.url);
     };
     window.addEventListener("MDV_NAVIGATION_EVENT", followNavigation);
@@ -514,13 +517,14 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { root: scrollRef.current, rootMargin: "600px 0px" });
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { root: scrollRef.current, rootMargin: "200px 0px" });
     observer.observe(element);
     return () => observer.disconnect();
   }, [scrollRef]);
 
   const incomplete = loadStatus === "incomplete" || loadStatus === "error";
   const settled = incomplete || loadStatus === "loaded";
+  const deferredNavigation = loadStatus === "queued" && loadRequest !== undefined;
   const statusDot = loadStatus === "loaded" ? "bg-accent" : incomplete ? "bg-warn" : loadStatus === "queued" ? "border-[1.5px] border-faint" : "bg-sky-500";
   const statusText = loadStatus === "loaded" ? (scale === null ? "" : `${Math.round(scale * 100)}%`)
     : incomplete ? t("incomplete") : loadStatus === "queued" ? t("queuedPosition") : t("loading");
@@ -532,8 +536,9 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
       !inactive && "hover:z-20 focus-within:z-20",
       // Far-offscreen cards whose page has settled skip style, layout and paint
       // (and their pages' rendering) while keeping each document and its state.
-      // Pages still loading keep rendering so they can report completion.
-      !visible && settled && "[content-visibility:hidden]")}>
+      // Retained documents awaiting navigation also stay quiet; pages still
+      // loading keep rendering so they can report completion.
+      !visible && (settled || deferredNavigation) && "[content-visibility:hidden]")}>
     <article onPointerDownCapture={() => simulator.current.setActiveSlot(slot.id)} onFocusCapture={() => simulator.current.setActiveSlot(slot.id)}
       className="group/card flex h-full min-h-0 min-w-0 flex-col">
       {captions && incomplete && (
@@ -550,7 +555,7 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
               showToolbar={captions} onExpand={enlarge} expandLabel={t("enlargePreview")}
               align="bottom" removable={false} focused={false} first last/>
           : <div className="flex h-full flex-col items-center justify-end gap-2 pb-8 text-muted">
-              <span className="text-[11px]">{t("galleryQueuedPreview")}</span>
+              <span className="text-[11px]">{t("queuedPosition")}</span>
             </div>}
       </div>
 

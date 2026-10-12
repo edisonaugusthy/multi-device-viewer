@@ -1,4 +1,5 @@
 import { createOverlayLifecycle } from "../src/app/overlay-lifecycle";
+import type { ViewerRestoreState } from "../src/app/viewer-context";
 import { defineContentScript } from "wxt/utils/define-content-script";
 
 type ViewerModule = typeof import("../src/app/viewer-mount");
@@ -10,6 +11,9 @@ const loadViewer = () => viewer ??= (import.meta.env.DEV
   : import(/* @vite-ignore */ chrome.runtime.getURL("/viewer.js")) as Promise<ViewerModule>)
   .catch((error) => { viewer = undefined; throw error; });
 let mountViewer: ViewerModule["mountViewer"] | undefined;
+// Set while the page is going away, so the background can tell a reload
+// (bring the viewer back afterwards) from the user closing the viewer.
+let unloading = false;
 
 export default defineContentScript({
   matches: ["https://*/*", "http://*/*"],
@@ -22,6 +26,7 @@ export default defineContentScript({
     ctx.onInvalidated(() => { void overlayLifecycle.invalidate().catch(console.error); });
 
     if (window.top === window) {
+      window.addEventListener("pagehide", () => { unloading = true; });
       notifyOverlayState(false);
       const onMessage: Parameters<typeof chrome.runtime.onMessage.addListener>[0] = (message, _sender, sendResponse) => {
         if (message !== null && typeof message === "object") {
@@ -33,6 +38,7 @@ export default defineContentScript({
             void overlayLifecycle.toggle({
               url: typeof message.url === "string" ? message.url : window.location.href,
               sourceTabId: typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,
+              restore: message.restore && typeof message.restore === "object" ? message.restore as ViewerRestoreState : undefined,
             }).then(() => sendResponse({ ok: true, active: overlayLifecycle.active }))
               .catch(error => sendResponse({ ok: false, error: String(error) }));
             return true;
@@ -46,7 +52,7 @@ export default defineContentScript({
 });
 
 
-const overlayLifecycle = createOverlayLifecycle<{ url: string; sourceTabId?: number }>({
+const overlayLifecycle = createOverlayLifecycle<{ url: string; sourceTabId?: number; restore?: ViewerRestoreState }>({
   prepare: async ({ url }) => {
     const [prepared, module] = await Promise.all([chrome.runtime.sendMessage({ type: "MDV_PREVIEW_HOST", url }), loadViewer()]);
     mountViewer = module.mountViewer;
@@ -58,5 +64,5 @@ const overlayLifecycle = createOverlayLifecycle<{ url: string; sourceTabId?: num
 });
 
 function notifyOverlayState(active: boolean) {
-  void chrome.runtime.sendMessage({ type: "MDV_OVERLAY_STATE", active }).catch(() => undefined);
+  void chrome.runtime.sendMessage({ type: "MDV_OVERLAY_STATE", active, unloading }).catch(() => undefined);
 }

@@ -1,5 +1,6 @@
 import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
 import { getViewerContext, getViewerEventTarget, getViewerRoot } from "../../app/viewer-context";
+import { reportViewerState } from "../../app/viewer-state";
 import {
   useCallback,
   useEffect,
@@ -122,7 +123,9 @@ export function SimulatorApp() {
   const [flowResults, setFlowResults] = useState<Record<string, FlowReplayResult>>({});
   const [viewMode, setViewMode] = useState(false);
   const [viewSingle, setViewSingle] = useState(false);
-  const [allDevicesUrl, setAllDevicesUrl] = useState<string | null>(null);
+  // After the page reloaded with the gallery open, open it again on the same page.
+  const [galleryRestore] = useState(() => getViewerContext()?.restore?.allDevices ?? undefined);
+  const [allDevicesUrl, setAllDevicesUrl] = useState<string | null>(() => galleryRestore ? getViewerContext()?.url ?? null : null);
   const [narrowLayout, setNarrowLayout] = useState(
     () => typeof window !== "undefined" && window.innerWidth <= 760,
   );
@@ -520,8 +523,10 @@ export function SimulatorApp() {
     setAllDevicesUrl(getSlotUrl(activeSlotId));
   }
 
+  const reportGalleryState = useCallback((state: { category: string; scrollTop: number }) => reportViewerState({ allDevices: state }), []);
   const closeAllDevices = useCallback(() => {
     setAllDevicesUrl(null);
+    reportViewerState({ allDevices: null });
     requestAnimationFrame(() => getViewerRoot().querySelector<HTMLButtonElement>("[data-all-devices-toggle]")?.focus());
   }, []);
 
@@ -955,6 +960,8 @@ export function SimulatorApp() {
           onOpenDevice={openGalleryDevice}
           onAddDevice={addGalleryDevice}
           onCaptureDevice={captureGalleryDevice}
+          restore={galleryRestore}
+          onStateChange={reportGalleryState}
           settings={{
             browserBar,
             onBrowserBarChange: changeBrowserBar,

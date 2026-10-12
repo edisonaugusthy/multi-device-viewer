@@ -1,8 +1,13 @@
+/** What a reopened viewer shows again after its page reloaded with it open. */
+export interface ViewerRestoreState {
+  allDevices?: { category: string; scrollTop: number } | null;
+}
 /** Explicit launch data prevents a website's query parameters from configuring the extension. */
 export interface ViewerContext {
   root: HTMLElement;
   url: string;
   sourceTabId?: number;
+  restore?: ViewerRestoreState;
   close: () => void;
 }
 let context: ViewerContext | undefined;

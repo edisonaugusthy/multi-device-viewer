@@ -1,6 +1,19 @@
 export type GalleryLoadStatus = "queued" | "loading" | "loaded" | "error" | "incomplete" | "slow";
 export type GalleryLoadResult = "loaded" | "error" | "incomplete";
 export const FAST_GALLERY_CONCURRENCY = 6;
+// Local dev servers answer over HTTP/1.1, where Chrome allows six connections
+// per host, and serve each module as its own request. Fewer pages at once
+// means the ones in view finish sooner.
+export const LOCAL_GALLERY_CONCURRENCY = 3;
+
+export function isLocalDevelopmentUrl(value: string): boolean {
+  try {
+    const host = new URL(value).hostname;
+    return host === "localhost" || host === "[::1]" || host === "0.0.0.0"
+      || host.endsWith(".localhost") || host.endsWith(".local")
+      || /^(127|10)\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host);
+  } catch { return false; }
+}
 
 export interface GalleryLoadSnapshot {
   states: ReadonlyMap<string, GalleryLoadStatus>;
@@ -130,6 +143,21 @@ export function createGalleryLoadQueue(ids: string[], options: GalleryLoadOption
     prioritize: (ids: Iterable<string>) => { priority = new Set(ids); pump(); },
     enqueue: (id: string) => enqueue(id),
     retry: (id: string) => enqueue(id, true),
+    // Give a started document back to the queue: its card unmounts the page
+    // until the card is prioritized again. Nothing of the page's state survives.
+    unload: (id: string) => {
+      if (disposed || !states.has(id) || !requests.has(id)) return;
+      clearTimeout(running.get(id));
+      running.delete(id);
+      replacements.delete(id);
+      requests.delete(id);
+      requestSnapshot = undefined;
+      results.delete(id);
+      if (!queued.has(id)) { queued.add(id); pending.push(id); }
+      states.set(id, "queued");
+      publish();
+      pump();
+    },
     // The page is usable once its HTML is ready, so it shows as loaded and the
     // next device starts. Its images, ads and trackers keep loading; a script
     // or stylesheet that fails later still marks it incomplete through settle.

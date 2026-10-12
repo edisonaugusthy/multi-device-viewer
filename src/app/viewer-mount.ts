@@ -5,14 +5,14 @@ import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { AppProviders } from "./AppProviders";
 import { SimulatorApp } from "../ui/components/SimulatorApp";
-import { setViewerContext } from "./viewer-context";
+import { setViewerContext, type ViewerRestoreState } from "./viewer-context";
 import viewerCss from "../ui/styles/global.css?inline";
 import { registerViewerFonts } from "../ui/fonts";
 
 const OVERLAY_ID = "multi-device-viewer-overlay";
 
 /** Mounts the viewer over the current page and returns its cleanup. */
-export function mountViewer({ url: pageUrl, sourceTabId, close }: { url: string; sourceTabId?: number; close: () => void }) {
+export function mountViewer({ url: pageUrl, sourceTabId, restore, close }: { url: string; sourceTabId?: number; restore?: ViewerRestoreState; close: () => void }) {
   const overlay = document.createElement("div");
   overlay.id = OVERLAY_ID;
   overlay.style.cssText = "all:initial!important;position:fixed!important;inset:0!important;width:100%!important;height:100%!important;z-index:2147483647!important;display:block!important;isolation:isolate!important;";
@@ -60,7 +60,7 @@ export function mountViewer({ url: pageUrl, sourceTabId, close }: { url: string;
     window.removeEventListener("pagehide", close);
     root.unmount();
   };
-  setViewerContext({ root: container, url: pageUrl, sourceTabId, close });
+  setViewerContext({ root: container, url: pageUrl, sourceTabId, restore, close });
   (document.body ?? document.documentElement).appendChild(overlay);
   removalObserver.observe(document.body ?? document.documentElement, { childList: true });
   document.documentElement.style.setProperty("overflow", "hidden", "important");

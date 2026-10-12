@@ -4,7 +4,7 @@ import { useI18n, type TranslationKey } from "../../app/i18n";
 import { SimulatorScopeProvider, useSimulator, useSimulatorRef } from "../../app/SimulatorProvider";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { groupGalleryDevices, newestFirst, type DeviceGalleryGroupId, type DeviceGalleryGroup } from "../../domain/device/device-gallery";
-import { createGalleryLoadQueue, type GalleryLoadSnapshot, type GalleryLoadStatus, type GalleryLoadResult } from "../../domain/device/gallery-load-queue";
+import { createGalleryLoadQueue, isLocalDevelopmentUrl, LOCAL_GALLERY_CONCURRENCY, type GalleryLoadSnapshot, type GalleryLoadStatus, type GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { getDefaultOrientation, nextOrientation, supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
 import { getBrowserGeometry, type BrowserPreferences } from "../../domain/device/browser-geometry";
 import { getFrameProfile } from "../../domain/device/frame-profiles";
@@ -47,9 +47,13 @@ const GALLERY_PREVIEW_MAX = 568;
 const GALLERY_WATCH_PREVIEW_MAX = 348;
 const GALLERY_CAPTION_HEIGHT = 52;
 const GALLERY_TOOLBAR_SPACE = 56;
+// Cards this far outside the viewport keep their page; further away they give
+// it back to the queue, so a category never runs every page at once.
+const GALLERY_KEEP_MARGIN = 800;
+const GALLERY_UNLOAD_DELAY_MS = 1000;
 const LOADING_MODE_KEY = "mdvGalleryLoadingMode";
-const loadingPolicy = (mode: GalleryLoadingMode | null, paused: boolean) => ({
-  concurrency: mode === "gentle" ? 2 : undefined,
+const loadingPolicy = (mode: GalleryLoadingMode | null, paused: boolean, local: boolean) => ({
+  concurrency: mode === "gentle" ? 2 : local ? LOCAL_GALLERY_CONCURRENCY : undefined,
   intervalMs: mode === "gentle" ? 1000 : 0,
   paused: paused || mode === null,
 });
@@ -81,13 +85,19 @@ interface AllDevicesViewProps {
   /** Screenshot of one device, cut out of the page; resolves when the capture is done. */
   onCaptureDevice: (target: HTMLElement, device: Device, url: string, slot: PreviewSlot, size: { width: number; height: number }) => Promise<void>;
   settings: GallerySettings;
+  /** After the page reloaded with the gallery open: where to return to. */
+  restore?: { category: string; scrollTop: number };
+  onStateChange?: (state: { category: DeviceGalleryGroupId; scrollTop: number }) => void;
 }
 
 export function AllDevicesView(props: AllDevicesViewProps) {
   const { devices } = useDeviceCatalog();
   // Each category lists the latest devices first.
   const groups = useMemo(() => groupGalleryDevices(devices).map(group => ({ ...group, devices: [...group.devices].sort(newestFirst) })), [devices]);
-  const [page, setPage] = useState<{ id: DeviceGalleryGroupId; url: string; focusCategory: boolean }>({ id: "ios", url: props.url, focusCategory: false });
+  const [page, setPage] = useState<{ id: DeviceGalleryGroupId; url: string; focusCategory: boolean }>(() => ({
+    id: groups.some(group => group.id === props.restore?.category) ? props.restore!.category as DeviceGalleryGroupId : "ios",
+    url: props.url, focusCategory: false,
+  }));
   const [loadingMode, setLoadingMode] = useState<GalleryLoadingMode | null>(null);
   const [loadingPaused, setLoadingPaused] = useState(false);
   useEffect(() => {
@@ -112,7 +122,7 @@ export function AllDevicesView(props: AllDevicesViewProps) {
 }
 
 function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice, settings, group, groups, onSelectGroup, focusCategory,
-  loadingMode, changeLoadingMode, loadingPaused, onToggleLoading }: AllDevicesViewProps & {
+  loadingMode, changeLoadingMode, loadingPaused, onToggleLoading, restore, onStateChange }: AllDevicesViewProps & {
   focusCategory: boolean;
   group: DeviceGalleryGroup;
   groups: DeviceGalleryGroup[];
@@ -128,8 +138,9 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const [refreshVersion, setRefreshVersion] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [viewMode, setViewMode] = useState(false);
-  const loadPolicy = useRef(loadingPolicy(loadingMode, loadingPaused));
-  loadPolicy.current = loadingPolicy(loadingMode, loadingPaused);
+  const local = useMemo(() => isLocalDevelopmentUrl(url), [url]);
+  const loadPolicy = useRef(loadingPolicy(loadingMode, loadingPaused, local));
+  loadPolicy.current = loadingPolicy(loadingMode, loadingPaused, local);
   // The enlarged device lives in its own popup slot with its own document,
   // so opening it never pulls the card out of the grid behind it.
   const [popup, setPopup] = useState<PreviewSlot | null>(null);
@@ -139,6 +150,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const [activeSlotId, setActiveSlot] = useState("");
   const [changes, setChanges] = useState<Record<string, PreviewSlot>>({});
   const [liveSlotIds, setLiveSlotIds] = useState(() => new Set<string>());
+  const [nearSlotIds, setNearSlotIds] = useState(() => new Set<string>());
   const [loadState, setLoadState] = useState<GalleryLoadSnapshot & { generation: number }>(() => ({ generation: -1, states: new Map(), requests: new Map() }));
   const loadQueueRef = useRef<{ generation: number; queue: ReturnType<typeof createGalleryLoadQueue> } | null>(null);
   const pendingNavigation = useRef(new Map<string, string>());
@@ -164,6 +176,14 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
       if (current.has(id) === live) return current;
       const next = new Set(current);
       if (live) next.add(id); else next.delete(id);
+      return next;
+    });
+  }, []);
+  const setSlotNear = useCallback((id: string, near: boolean) => {
+    setNearSlotIds(current => {
+      if (current.has(id) === near) return current;
+      const next = new Set(current);
+      if (near) next.add(id); else next.delete(id);
       return next;
     });
   }, []);
@@ -205,8 +225,50 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
     queue.start();
     return () => { queue.dispose(); if (loadQueueRef.current?.queue === queue) loadQueueRef.current = null; };
   }, [loadOrder, refreshVersion, updateSlot]);
-  useEffect(() => { loadQueueRef.current?.queue.configure(loadingPolicy(loadingMode, loadingPaused)); }, [loadingMode, loadingPaused]);
+  useEffect(() => { loadQueueRef.current?.queue.configure(loadingPolicy(loadingMode, loadingPaused, local)); }, [loadingMode, loadingPaused, local]);
   useEffect(() => { loadQueueRef.current?.queue.prioritize(liveSlotIds); }, [liveSlotIds, refreshVersion]);
+  // Pages far from the viewport go back to the queue once they have been far
+  // for a moment, so a quick scroll past a row does not reload pages the user
+  // is about to come back to. Each page gets its own grace period.
+  const startedIds = currentLoads?.requests;
+  const farSince = useRef(new Map<string, number>());
+  useEffect(() => {
+    if (!startedIds) return;
+    const now = Date.now();
+    for (const id of startedIds.keys()) {
+      if (nearSlotIds.has(id) || liveSlotIds.has(id)) farSince.current.delete(id);
+      else if (!farSince.current.has(id)) farSince.current.set(id, now);
+    }
+    for (const id of farSince.current.keys()) if (!startedIds.has(id)) farSince.current.delete(id);
+    const due = [...farSince.current.values()].map(since => since + GALLERY_UNLOAD_DELAY_MS - now);
+    if (!due.length) return;
+    const timer = setTimeout(() => {
+      const current = loadQueueRef.current;
+      if (!current || current.generation !== refreshVersion) return;
+      const cutoff = Date.now() - GALLERY_UNLOAD_DELAY_MS;
+      for (const [id, since] of farSince.current) if (since <= cutoff) { farSince.current.delete(id); current.queue.unload(id); }
+    }, Math.max(0, Math.min(...due)));
+    return () => clearTimeout(timer);
+  }, [startedIds, nearSlotIds, liveSlotIds, refreshVersion]);
+  // After a reload with the viewer open, return to where the gallery was, and
+  // keep the background told where that is.
+  const restoreScroll = useRef(restore?.category === group.id ? restore.scrollTop : 0);
+  useEffect(() => {
+    const top = restoreScroll.current;
+    restoreScroll.current = 0;
+    if (!top) return;
+    let frame = requestAnimationFrame(() => { frame = requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = top; }); });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!onStateChange || !scroller) return;
+    onStateChange({ category: group.id, scrollTop: scroller.scrollTop });
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => { clearTimeout(timer); timer = setTimeout(() => onStateChange({ category: group.id, scrollTop: scroller.scrollTop }), 300); };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    return () => { clearTimeout(timer); scroller.removeEventListener("scroll", onScroll); };
+  }, [group.id, onStateChange]);
   const previewLoaded = useCallback((id: string, request: number, status: GalleryLoadResult) => {
     if (loadQueueRef.current?.generation === refreshVersion) loadQueueRef.current.queue.settle(id, request, status);
   }, [refreshVersion]);
@@ -422,7 +484,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
                 inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}
-                onPreviewLoad={previewLoaded} onPreviewReady={previewReady} onReload={reloadSlot} onEnlarge={enlarge} onLiveChange={setSlotLive}/>)}
+                onPreviewLoad={previewLoaded} onPreviewReady={previewReady} onReload={reloadSlot} onEnlarge={enlarge} onLiveChange={setSlotLive} onNearChange={setSlotNear}/>)}
             </div>
           </section>
         </div>
@@ -465,7 +527,7 @@ function SyncToggle({ label, description, pressed, onClick, children }: { label:
   );
 }
 
-const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange }: {
+const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange, onNearChange }: {
   device: Device; slot: PreviewSlot; display: DisplaySettings; scrollRef: RefObject<HTMLDivElement | null>;
   /** True while the enlarged popup is open: the card stays in place but goes quiet. */
   inactive: boolean; captions: boolean;
@@ -474,10 +536,13 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
   onPreviewReady: (id: string, request: number) => void;
   onReload: (id: string) => void; onEnlarge: (id: string) => void;
   onLiveChange: (id: string, live: boolean) => void;
+  /** Within the keep zone around the viewport: the card may keep its page. */
+  onNearChange: (id: string, near: boolean) => void;
 }) {
   const { t } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [near, setNear] = useState(false);
   const [scale, setScale] = useState<number | null>(null);
   const simulator = useSimulatorRef();
   const live = !inactive && visible;
@@ -493,6 +558,10 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
     onLiveChange(slot.id, live);
     return () => onLiveChange(slot.id, false);
   }, [live, onLiveChange, slot.id]);
+  useEffect(() => {
+    onNearChange(slot.id, near);
+    return () => onNearChange(slot.id, false);
+  }, [near, onNearChange, slot.id]);
   const size = supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport;
   // Each card is as tall as its device needs at the column width, so wide
   // laptops, desktops and TVs do not sit under a phone-sized gap. Rows take
@@ -519,8 +588,10 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
     const element = ref.current;
     if (!element) return;
     const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { root: scrollRef.current, rootMargin: "200px 0px" });
+    const keep = new IntersectionObserver(([entry]) => setNear(entry.isIntersecting), { root: scrollRef.current, rootMargin: `${GALLERY_KEEP_MARGIN}px 0px` });
     observer.observe(element);
-    return () => observer.disconnect();
+    keep.observe(element);
+    return () => { observer.disconnect(); keep.disconnect(); };
   }, [scrollRef]);
 
   const incomplete = loadStatus === "incomplete" || loadStatus === "error";

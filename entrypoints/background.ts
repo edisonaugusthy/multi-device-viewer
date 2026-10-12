@@ -2,6 +2,7 @@ import { createPreviewSessions } from "../src/app/preview-sessions";
 import { VisualRegressionError } from "../src/domain/visual-regression/visual-regression.types";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
+import type { ViewerRestoreState } from "../src/app/viewer-context";
 import { LAST_SEEN_RELEASE_VERSION_KEY, PENDING_RELEASE_VERSION_KEY } from "../src/app/release-notes";
 import { CHROME_STORE_URL, createReviewCoordinator, isReviewCommand, LEGACY_REVIEW_DISMISSED_KEY, REVIEW_PROMPT_STORAGE_KEY, SUPPORT_URL } from "../src/domain/review/review-coordinator";
 
@@ -12,6 +13,11 @@ const UNSUPPORTED_PAGE_PATH = "/unsupported.html";
 
 const message = (key: string, fallback: string) =>
   chrome.i18n.getMessage(key) || fallback;
+// Tabs showing the in-page viewer, kept across service-worker restarts so the
+// viewer comes back after the page reloads (a dev server's reload or F5).
+const OPEN_VIEWERS_KEY = "mdvOpenViewers";
+interface OpenViewer { origin: string; restore?: ViewerRestoreState }
+const originOf = (url?: string) => { try { return url ? new URL(url).origin : undefined; } catch { return undefined; } };
 
 export default defineBackground(() => {
   const launches = new Map<number, Promise<void>>();
@@ -29,9 +35,36 @@ export default defineBackground(() => {
   createContextMenu();
   syncAllActionStates();
 
+  let viewerUpdates = Promise.resolve();
+  async function openViewers(): Promise<Record<string, OpenViewer>> {
+    const stored: Record<string, Record<string, OpenViewer> | undefined> = await chrome.storage.session.get(OPEN_VIEWERS_KEY);
+    return stored[OPEN_VIEWERS_KEY] ?? {};
+  }
+  function updateOpenViewer(tabId: number, change: (entry: OpenViewer | undefined) => OpenViewer | undefined) {
+    viewerUpdates = viewerUpdates.then(async () => {
+      const all = await openViewers();
+      const next = change(all[tabId]);
+      if (next) all[tabId] = next; else delete all[tabId];
+      await chrome.storage.session.set({ [OPEN_VIEWERS_KEY]: all });
+    }).catch(console.error);
+    return viewerUpdates;
+  }
+  chrome.tabs.onRemoved.addListener(tabId => { void updateOpenViewer(tabId, () => undefined); });
+
   chrome.runtime.onMessage.addListener((message, sender) => {
-    if (!message || message.type !== "MDV_OVERLAY_STATE" || typeof sender.tab?.id !== "number" || sender.frameId !== 0) return;
-    setActiveIndicator(sender.tab.id, Boolean(message.active));
+    if (!message || typeof sender.tab?.id !== "number" || sender.frameId !== 0) return;
+    const tabId = sender.tab.id;
+    if (message.type === "MDV_VIEWER_STATE" && message.state && typeof message.state === "object") {
+      void updateOpenViewer(tabId, entry => entry && { ...entry, restore: message.state as ViewerRestoreState });
+      return;
+    }
+    if (message.type !== "MDV_OVERLAY_STATE") return;
+    setActiveIndicator(tabId, Boolean(message.active));
+    const origin = originOf(sender.tab.url);
+    if (message.active && origin) void updateOpenViewer(tabId, entry => ({ origin, restore: entry?.restore }));
+    // A page that is unloading keeps its entry: the viewer returns when the
+    // same site has loaded again. Closing the viewer forgets it.
+    else if (!message.unloading) void updateOpenViewer(tabId, () => undefined);
   });
 
   chrome.action.onClicked.addListener((tab) => {
@@ -66,6 +99,14 @@ export default defineBackground(() => {
       void previews.close(_tabId).catch(console.error);
     }
     if (changeInfo.url || changeInfo.status === "complete") syncActionState(tab);
+    if (changeInfo.status === "complete") {
+      void openViewers().then(all => {
+        const entry = all[_tabId];
+        if (!entry) return;
+        if (isPreviewableUrl(tab.url) && originOf(tab.url) === entry.origin) openSimulatorForTab(tab, entry.restore);
+        else return updateOpenViewer(_tabId, () => undefined);
+      }).catch(console.error);
+    }
   });
 
   chrome.tabs.onActivated.addListener(({ tabId }) => {
@@ -100,7 +141,7 @@ export default defineBackground(() => {
     });
   }
 
-  function openSimulatorForTab(tab: chrome.tabs.Tab) {
+  function openSimulatorForTab(tab: chrome.tabs.Tab, restore?: ViewerRestoreState) {
     clearUpdateIndicator();
 
     if (!isPreviewableUrl(tab.url)) {
@@ -121,7 +162,7 @@ export default defineBackground(() => {
     // Keep the viewer on the current page. The content script owns the
     // full-screen overlay, so the source page remains underneath it.
     const tabId = tab.id;
-    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId };
+    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId, restore };
     // Acknowledge each toggle before processing the next click, including the
     // first launch into a tab that needs content-script injection.
     const work = (launches.get(tabId) ?? Promise.resolve()).then(async () => {

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createGalleryLoadQueue, type GalleryLoadSnapshot } from "./gallery-load-queue";
+import { createGalleryLoadQueue, isLocalDevelopmentUrl, type GalleryLoadSnapshot } from "./gallery-load-queue";
 
 describe("gallery background loading", () => {
   beforeEach(() => vi.useFakeTimers());
@@ -301,5 +301,56 @@ describe("gallery background loading", () => {
     queue.release("b", 999);
     expect(state().states.get("b")).toBe("slow");
     queue.dispose();
+  });
+});
+
+describe("giving documents back to the queue", () => {
+  it("unloads a started document so its card unmounts, and restarts it when prioritized again", () => {
+    const snapshots: Array<{ requests: ReadonlyMap<string, number>; states: ReadonlyMap<string, string> }> = [];
+    const starts: string[] = [];
+    const queue = createGalleryLoadQueue(["a", "b", "c"], { visibleOnly: true, concurrency: 2, onStart: id => starts.push(id), onChange: snapshot => snapshots.push(snapshot) });
+    queue.start();
+    queue.prioritize(["a", "b"]);
+    expect(starts).toEqual(["a", "b"]);
+    queue.release("a", snapshots.at(-1)!.requests.get("a")!);
+    queue.settle("a", snapshots.at(-1)!.requests.get("a")!, "loaded");
+    expect(snapshots.at(-1)!.states.get("a")).toBe("loaded");
+    // Scrolled away: no longer prioritized, then unloaded.
+    queue.prioritize([]);
+    queue.unload("a");
+    const after = snapshots.at(-1)!;
+    expect(after.requests.has("a")).toBe(false);
+    expect(after.states.get("a")).toBe("queued");
+    // A document still loading can be unloaded too; its permit is freed.
+    queue.unload("b");
+    expect(snapshots.at(-1)!.requests.has("b")).toBe(false);
+    queue.prioritize(["c"]);
+    expect(starts).toEqual(["a", "b", "c"]);
+    // Back in view: a fresh request, so stale load reports are ignored.
+    queue.prioritize(["a", "c"]);
+    expect(starts).toEqual(["a", "b", "c", "a"]);
+    expect(snapshots.at(-1)!.requests.has("a")).toBe(true);
+    queue.dispose();
+  });
+  it("ignores unloading documents that never started or are unknown", () => {
+    const snapshots: unknown[] = [];
+    const queue = createGalleryLoadQueue(["a"], { visibleOnly: true, onStart: () => {}, onChange: snapshot => snapshots.push(snapshot) });
+    queue.start();
+    const before = snapshots.length;
+    queue.unload("a");
+    queue.unload("zzz");
+    expect(snapshots.length).toBe(before);
+    queue.dispose();
+  });
+});
+
+describe("local development servers", () => {
+  it("recognises localhost, loopback, .localhost and private network addresses", () => {
+    for (const url of ["http://localhost:5173/", "http://127.0.0.1:3000/app", "http://[::1]:8080/", "http://app.localhost/", "http://10.0.0.5/", "http://192.168.1.20:8000/", "http://172.20.3.4/", "http://myapp.local/"]) {
+      expect(isLocalDevelopmentUrl(url), url).toBe(true);
+    }
+    for (const url of ["https://example.com/", "http://172.32.0.1/", "http://localhost.evil.com/", "not a url"]) {
+      expect(isLocalDevelopmentUrl(url), url).toBe(false);
+    }
   });
 });

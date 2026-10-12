@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type DragEvent, type ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import { getViewerEventTarget } from "../../app/viewer-context";
-import { BackIcon, LockIcon, MinusIcon, OverlayIcon, PencilIcon, PlusIcon, SideBySideIcon, UnlockIcon, UploadIcon, CloseIcon } from "../icons";
+import { AdjustIcon, BackIcon, LinkIcon, MinusIcon, OverlayIcon, PencilIcon, PlusIcon, SideBySideIcon, UploadIcon, CloseIcon } from "../icons";
+import { placeDesign, sizeDesign, type DesignFit, type DesignFrame, type DesignSize } from "../interactions/design-frame";
 import { BrandMark } from "./BrandMark";
-import { cx, focusRing, IconButton, Segmented, Switch } from "./ui";
+import { cx, focusRing, IconButton, Segmented, Switch, Tooltip } from "./ui";
 
 export type CompareMode = "side-by-side" | "overlay";
 export type CompareBlend = "normal" | "difference";
@@ -176,19 +177,18 @@ export function DesignPane({ image, fileName, deviceName, width, height, scrollT
   );
 }
 
-export function CompareControls({ mode, opacity, blend, locked, scrollLinked, zoomLabel, hasDesign,
-  onOpacityChange, onBlendChange, onLockedChange, onReset, onScrollLinkedChange, onZoomOut, onZoomIn, onZoomReset, onAddDesign }: {
+export function CompareControls({ mode, opacity, blend, adjusting, scrollLinked, zoomLabel, hasDesign,
+  onOpacityChange, onBlendChange, onAdjustingChange, onScrollLinkedChange, onZoomOut, onZoomIn, onZoomReset, onAddDesign }: {
   mode: CompareMode;
   opacity: number;
   blend: CompareBlend;
-  locked: boolean;
+  adjusting: boolean;
   scrollLinked: boolean;
   zoomLabel: string;
   hasDesign: boolean;
   onOpacityChange: (opacity: number) => void;
   onBlendChange: (blend: CompareBlend) => void;
-  onLockedChange: (locked: boolean) => void;
-  onReset: () => void;
+  onAdjustingChange: (adjusting: boolean) => void;
   onScrollLinkedChange: (linked: boolean) => void;
   onZoomOut: () => void;
   onZoomIn: () => void;
@@ -210,13 +210,14 @@ export function CompareControls({ mode, opacity, blend, locked, scrollLinked, zo
         <Segmented label={t("blend")} value={blend} onChange={onBlendChange}
           options={[{ value: "normal", label: t("normal") }, { value: "difference", label: t("difference"), title: t("differenceHint") }]} />
         <Divider />
-        <button type="button" aria-pressed={locked} title={t("lockOverlayHint")} onClick={() => onLockedChange(!locked)}
-          className={cx("flex h-[34px] items-center gap-1.5 rounded-[9px] border px-2.5 text-[12.5px] font-semibold",
-            locked ? "border-design-line bg-design-soft text-design-ink" : "border-line bg-surface text-ink", focusRing)}>
-          {locked ? <LockIcon size={14} /> : <UnlockIcon size={14} />}
-          {locked ? t("locked") : t("unlocked")}
-        </button>
-        <button type="button" title={t("resetOverlayHint")} onClick={onReset} className={cx("h-[34px] rounded-[9px] px-2.5 text-[12.5px] font-semibold text-ink hover:bg-sunken", focusRing)}>{t("reset")}</button>
+        <Tooltip title={t("adjustDesign")} description={t("adjustDesignHint")}>
+          <button type="button" aria-pressed={adjusting} onClick={() => onAdjustingChange(!adjusting)}
+            className={cx("flex h-[34px] items-center gap-1.5 rounded-[9px] border px-2.5 text-[12.5px] font-semibold",
+              adjusting ? "border-design-line bg-design-soft text-design-ink" : "border-line bg-surface text-ink", focusRing)}>
+            <AdjustIcon size={15} />
+            {t("adjustDesign")}
+          </button>
+        </Tooltip>
         <Divider />
       </> : <>
         <button type="button" onClick={onAddDesign} className={cx("h-[34px] rounded-[9px] border-[1.5px] border-dashed border-faint px-3.5 text-[13px] font-semibold text-ink", focusRing)}>{t("addDesignToOverlay")}</button>
@@ -238,4 +239,87 @@ export function CompareControls({ mode, opacity, blend, locked, scrollLinked, zo
 
 function Divider() {
   return <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />;
+}
+
+/**
+ * Exact control over the overlaid design while it is being adjusted: fit
+ * presets, position and size in CSS pixels of the screen, and a reset. It
+ * floats beside the device so the handles stay reachable.
+ */
+export function DesignAdjustPanel({ frame, screen, canReset, onFrameChange, onFit, onReset, onClose }: {
+  frame: DesignFrame;
+  screen: DesignSize;
+  canReset: boolean;
+  onFrameChange: (frame: DesignFrame) => void;
+  onFit: (fit: DesignFit) => void;
+  onReset: () => void;
+  onClose: () => void;
+}) {
+  const { t } = useI18n();
+  const [keepRatio, setKeepRatio] = useState(true);
+  const fits: Array<{ fit: DesignFit; label: string; hint: string }> = [
+    { fit: "width", label: t("fitWidth"), hint: t("fitWidthHint") },
+    { fit: "screen", label: t("fitScreen"), hint: t("fitScreenHint") },
+    { fit: "stretch", label: t("stretchToScreen"), hint: t("stretchToScreenHint") },
+  ];
+  return (
+    <section role="group" aria-label={t("adjustDesign")} data-design-adjust-panel
+      className="absolute end-5 top-10 z-30 w-[280px] max-w-[calc(100%-40px)] rounded-[14px] border border-line bg-surface p-3.5 shadow-bar">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h2 className="text-[13px] font-semibold">{t("adjustDesign")}</h2>
+        <IconButton size="sm" label={t("done")} onClick={onClose}><CloseIcon size={14} /></IconButton>
+      </div>
+      <div className="grid grid-cols-3 gap-1.5">
+        {fits.map(({ fit, label, hint }) => (
+          <button key={fit} type="button" data-design-fit={fit} title={hint} onClick={() => onFit(fit)}
+            className={cx("h-[30px] rounded-[8px] border border-line bg-surface px-1 text-xs font-semibold text-ink hover:bg-sunken", focusRing)}>
+            {label}
+          </button>
+        ))}
+      </div>
+      <div className="mt-3 grid grid-cols-[56px_1fr_1fr_28px] items-center gap-x-1.5 gap-y-2">
+        <span className="text-xs font-semibold text-ink-2">{t("designPosition")}</span>
+        <NumberField name={`${t("designPosition")} X`} prefix="X" value={frame.x} onChange={x => onFrameChange(placeDesign(frame, { x }, screen))} />
+        <NumberField name={`${t("designPosition")} Y`} prefix="Y" value={frame.y} onChange={y => onFrameChange(placeDesign(frame, { y }, screen))} />
+        <span />
+        <span className="text-xs font-semibold text-ink-2">{t("designSize")}</span>
+        <NumberField name={`${t("designSize")} W`} prefix="W" value={frame.width} onChange={width => onFrameChange(sizeDesign(frame, { width }, keepRatio))} />
+        <NumberField name={`${t("designSize")} H`} prefix="H" value={frame.height} onChange={height => onFrameChange(sizeDesign(frame, { height }, keepRatio))} />
+        <IconButton size="sm" label={t("keepProportions")} pressed={keepRatio} onClick={() => setKeepRatio(value => !value)}><LinkIcon size={13} /></IconButton>
+      </div>
+      <p className="mt-2.5 text-[11.5px] leading-snug text-muted">{t("designFrameUnits")}</p>
+      <p className="mt-1.5 text-[11.5px] leading-snug text-muted">{t("designDragHint")}</p>
+      <div className="mt-3 flex items-center justify-between">
+        <button type="button" onClick={onReset} disabled={!canReset} title={t("resetOverlayHint")}
+          className={cx("h-[30px] rounded-[8px] px-2.5 text-xs font-semibold text-ink hover:bg-sunken disabled:cursor-not-allowed disabled:opacity-40", focusRing)}>
+          {t("reset")}
+        </button>
+        <button type="button" onClick={onClose} className={cx("h-[30px] rounded-[8px] bg-primary px-3 text-xs font-semibold text-on-primary hover:opacity-90", focusRing)}>{t("done")}</button>
+      </div>
+    </section>
+  );
+}
+
+// Typing keeps the draft until it parses, so a cleared field does not snap back.
+function NumberField({ name, prefix, value, onChange }: { name: string; prefix: string; value: number; onChange: (value: number) => void }) {
+  const [draft, setDraft] = useState<string | null>(null);
+  return (
+    <label className="flex h-[30px] min-w-0 items-center gap-1 rounded-[8px] border border-line bg-surface px-1.5 focus-within:border-ink">
+      <span aria-hidden="true" className="font-mono text-[11px] text-muted">{prefix}</span>
+      <input
+        type="number"
+        step={1}
+        inputMode="numeric"
+        aria-label={name}
+        value={draft ?? String(Math.round(value))}
+        onChange={event => {
+          setDraft(event.target.value);
+          const next = Number(event.target.value);
+          if (event.target.value.trim() !== "" && Number.isFinite(next)) onChange(next);
+        }}
+        onBlur={() => setDraft(null)}
+        className="w-full min-w-0 bg-transparent font-mono text-xs text-ink outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+    </label>
+  );
 }

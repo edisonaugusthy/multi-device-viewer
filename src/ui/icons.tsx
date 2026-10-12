@@ -61,6 +61,7 @@ export const SetsIcon = icon(<><rect x="2" y="6" width="6" height="12" rx="1.5" 
 export const CustomSizeIcon = icon(<rect x="4" y="4" width="16" height="16" rx="2" strokeDasharray="3 2.5" />);
 export const SideBySideIcon = icon(<><rect x="2" y="4" width="8" height="16" rx="2" /><rect x="14" y="4" width="8" height="16" rx="2" /></>);
 export const OverlayIcon = icon(<><rect x="3" y="3" width="13" height="13" rx="2" /><rect x="8" y="8" width="13" height="13" rx="2" strokeDasharray="3 2" /></>);
+export const AdjustIcon = icon(<><rect x="6" y="6" width="12" height="12" rx="1" /><path d="M3 3h4v4H3zM17 3h4v4h-4zM3 17h4v4H3zM17 17h4v4h-4z" /></>, { strokeWidth: 1.9 });
 export const LockIcon = icon(<><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></>, { strokeWidth: 2.2 });
 export const UnlockIcon = icon(<><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 7.5-2" /></>, { strokeWidth: 2.2 });
 export const AlertIcon = icon(<><path d="M12 3 2 20h20z" /><path d="M12 10v4M12 17h.01" /></>, { strokeWidth: 2.2 });

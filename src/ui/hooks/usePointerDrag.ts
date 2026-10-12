@@ -5,7 +5,7 @@ export function usePointerDrag() {
   const cleanup = useRef<(() => void) | undefined>(undefined);
   useEffect(() => () => cleanup.current?.(), []);
 
-  return useCallback((event: ReactPointerEvent, onMove: (deltaX: number, deltaY: number) => void) => {
+  return useCallback((event: ReactPointerEvent, onMove: (deltaX: number, deltaY: number, move: PointerEvent) => void) => {
     if (event.button !== 0) return;
     cleanup.current?.();
     event.preventDefault();
@@ -27,7 +27,7 @@ export function usePointerDrag() {
     const move = (next: PointerEvent) => {
       if (next.pointerId !== pointerId) return;
       if ((next.buttons & 1) !== 1) return finish();
-      onMove(next.clientX - clientX, next.clientY - clientY);
+      onMove(next.clientX - clientX, next.clientY - clientY, next);
     };
     cleanup.current = finish;
     target.addEventListener("pointermove", move);

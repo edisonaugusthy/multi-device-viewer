@@ -1350,3 +1350,90 @@ test("shows one header in Compare and All devices, whose close returns to the wo
   await expect(gallery).toHaveCount(0);
   await expect(mainHeader).toBeVisible();
 });
+
+test("overlays a design on the screen at its own proportions and lets it be moved, resized, and reset", async ({ page }) => {
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Compare with design" }).click();
+  // A design that covers only the top of the 402 × 874 screen, like a component mock.
+  const png = Buffer.from(await page.evaluate(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 402;
+    canvas.height = 520;
+    const context = canvas.getContext("2d")!;
+    context.fillStyle = "#4f46e5";
+    context.fillRect(0, 0, 402, 520);
+    return canvas.toDataURL("image/png").split(",")[1];
+  }), "base64");
+  await page.locator('input[type="file"]').first().setInputFiles({ name: "home-top.png", mimeType: "image/png", buffer: png });
+  await page.locator("[data-compare-toolbar]").getByRole("button", { name: "Overlay" }).click();
+
+  const screen = page.locator("[data-device-logical-screen]").first();
+  const frame = page.locator("[data-design-frame]");
+  await expect(frame).toBeVisible();
+  const screenBox = (await screen.boundingBox())!;
+  const scale = screenBox.width / 402;
+  const near = (actual: number, expected: number) => expect(Math.abs(actual - expected)).toBeLessThan(1.5);
+  let frameBox = (await frame.boundingBox())!;
+  near(frameBox.x, screenBox.x);
+  near(frameBox.y, screenBox.y);
+  near(frameBox.width, screenBox.width);
+  near(frameBox.height, 520 * scale);
+
+  // Adjusting is on as soon as the design is overlaid; the bar button turns it off and on.
+  const controls = page.getByRole("toolbar", { name: "Comparison controls" });
+  const adjust = controls.getByRole("button", { name: "Adjust design" });
+  const panel = page.getByRole("group", { name: "Adjust design" });
+  await expect(panel).toBeVisible();
+  await expect(adjust).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("[data-design-handle]")).toHaveCount(8);
+  await adjust.click();
+  await expect(panel).toHaveCount(0);
+  await expect(page.locator("[data-design-handle]")).toHaveCount(0);
+  await adjust.click();
+  await expect(panel).toBeVisible();
+  await expect(panel.getByLabel("Size W")).toHaveValue("402");
+  await expect(panel.getByLabel("Size H")).toHaveValue("520");
+  await expect(panel.getByRole("button", { name: "Reset" })).toBeDisabled();
+
+  // A corner keeps the proportions; the opposite corner stays put.
+  const corner = (await page.locator('[data-design-handle="se"]').boundingBox())!;
+  await page.mouse.move(corner.x + corner.width / 2, corner.y + corner.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(corner.x + corner.width / 2 - 100 * scale, corner.y + corner.height / 2, { steps: 5 });
+  await page.mouse.up();
+  await expect(panel.getByLabel("Size W")).toHaveValue("302");
+  await expect(panel.getByLabel("Size H")).toHaveValue(String(Math.round(302 * 520 / 402)));
+  frameBox = (await frame.boundingBox())!;
+  near(frameBox.x, screenBox.x);
+  near(frameBox.y, screenBox.y);
+
+  // Typed values move it, in CSS pixels of the screen.
+  await panel.getByLabel("Position Y").fill("354");
+  frameBox = (await frame.boundingBox())!;
+  near(frameBox.y, screenBox.y + 354 * scale);
+  await expect(page.locator("[data-design-frame-size]")).toHaveText(/302 × 391 · 0, 354/);
+
+  // Stretch covers the whole screen; Fit screen shows the whole design inside it.
+  await panel.getByRole("button", { name: "Stretch" }).click();
+  frameBox = (await frame.boundingBox())!;
+  near(frameBox.width, screenBox.width);
+  near(frameBox.height, screenBox.height);
+  await panel.getByRole("button", { name: "Fit screen" }).click();
+  await expect(panel.getByLabel("Size H")).toHaveValue("520");
+  await expect(panel.getByLabel("Position Y")).toHaveValue("177");
+
+  // Reset returns to the default fit, Escape finishes adjusting without leaving
+  // Compare, and the frame survives a reload, where adjusting starts again.
+  await panel.getByRole("button", { name: "Reset" }).click();
+  await expect(panel.getByLabel("Position Y")).toHaveValue("0");
+  await panel.getByLabel("Position X").fill("40");
+  await page.keyboard.press("Escape");
+  await expect(panel).toHaveCount(0);
+  await expect(page.locator("[data-design-handle]")).toHaveCount(0);
+  await expect(page.locator("[data-compare-toolbar]")).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.reload();
+  await dismissFirstRunGuide(page);
+  await expect(page.getByRole("group", { name: "Adjust design" })).toBeVisible();
+  frameBox = (await page.locator("[data-design-frame]").boundingBox())!;
+  near(frameBox.x, screenBox.x + 40 * scale);
+});

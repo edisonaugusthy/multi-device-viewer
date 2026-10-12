@@ -165,6 +165,7 @@ export function DeviceFrame({
   if (!showFrame) {
     return (
       <div
+        data-device-logical-screen={device.id}
         className={`relative overflow-hidden rounded-[10px] border shadow-sm ${darkMode ? "border-white/10 bg-[#0f172a]" : "border-slate-200 bg-white"}`}
         style={{ width: viewportSize.width, height: viewportSize.height }}
       >
@@ -199,6 +200,7 @@ export function DeviceFrame({
         style={{ width: viewportSize.width + 16, height: viewportSize.height + 16 }}
       >
         <div
+          data-device-logical-screen={device.id}
           className={`relative h-full w-full overflow-hidden rounded-[13px] ${darkMode ? "bg-[#0f172a]" : "bg-white"}`}
         >
           {showStatusBar && <StatusBar platform="ios" showBattery={showBattery} compact={compact} dark={darkMode} height={customStatusH} />}

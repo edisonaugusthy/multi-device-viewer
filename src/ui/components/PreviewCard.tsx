@@ -1,7 +1,7 @@
 import { usePointerDrag } from "../hooks/usePointerDrag";
 import { useVisualRegression } from "../hooks/useVisualRegression";
 import { useStableCallback } from "../hooks/useStableCallback";
-import { adjustPlacement, type PlacementAdjustment } from "../interactions/placement";
+import { DesignOverlay, type DesignOverlayProps, type ScreenBox } from "./DesignOverlay";
 import { readPreviewHealthReport } from "../../domain/device/preview-health";
 import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
@@ -99,14 +99,8 @@ interface PreviewCardProps {
   onFlowResult?: (result: FlowReplayResult) => void;
   /** The page's HTML is ready (DOMContentLoaded); images and other resources may still be loading. */
   onPageReady?: (slotId: string) => void;
-  designOverlay?: {
-    image: string;
-    opacity: number;
-    adjusting: boolean;
-    blend?: "normal" | "difference";
-    placement?: { x: number; y: number; width: number; height: number };
-    onPlacementChange: (placement: { x: number; y: number; width: number; height: number }) => void;
-  };
+  /** A design laid over the device screen; its frame is in CSS pixels of that screen. */
+  designOverlay?: DesignOverlayProps;
   /** Bottom-aligns the device so every preview in a row shares a baseline. */
   align?: "bottom" | "center";
   showCaption?: boolean;
@@ -313,25 +307,21 @@ export const PreviewCard = memo(function PreviewCard({
     simulator.current.setSlotZoomMode(slot.id, "fit");
   }
 
-  const fittedOverlayPlacement = {
-    x: containerSize.width > 0 ? (((containerSize.width - frameSize.width * scale) / 2 + offset.x) / containerSize.width) * 100 : 0,
-    y: containerSize.height > 0 ? (((containerSize.height - frameSize.height * scale) / (align === "bottom" ? 1 : 2) + offset.y) / containerSize.height) * 100 : 0,
-    width: containerSize.width > 0 ? (frameSize.width * scale / containerSize.width) * 100 : 100,
-    height: containerSize.height > 0 ? (frameSize.height * scale / containerSize.height) * 100 : 100,
-  };
-  const overlayPlacement = designOverlay?.placement ?? fittedOverlayPlacement;
-
-
-  function startOverlayAdjustment(event: React.PointerEvent, kind: PlacementAdjustment) {
-    if (!designOverlay?.adjusting || event.button !== 0) return;
-    const surface = event.currentTarget.closest("[data-design-overlay-surface]")?.getBoundingClientRect();
-    if (!surface?.width || !surface.height) return;
-    event.stopPropagation();
-    startDrag(event, (deltaX, deltaY) => designOverlay.onPlacementChange(adjustPlacement(
-      overlayPlacement, kind, deltaX / surface.width * 100, deltaY / surface.height * 100,
-      { x: [-1000, 1000], y: [-1000, 1000], size: [1, 1000] },
-    )));
-  }
+  // The design overlay follows the logical screen wherever zoom, dragging, or
+  // the frame put it. Measured in a layout effect so it lands before paint.
+  const [screenBox, setScreenBox] = useState<ScreenBox | undefined>();
+  const hasDesignOverlay = designOverlay !== undefined;
+  useLayoutEffect(() => {
+    if (!hasDesignOverlay) { setScreenBox(undefined); return; }
+    const container = containerRef.current;
+    // The logical screen is nested in the device box, so look for it first.
+    const screen = container?.querySelector("[data-device-logical-screen]") ?? container?.querySelector("[data-device-capture]");
+    if (!container || !screen) return;
+    const outer = container.getBoundingClientRect();
+    const inner = screen.getBoundingClientRect();
+    const next = { left: inner.left - outer.left, top: inner.top - outer.top, width: inner.width, height: inner.height };
+    setScreenBox(current => current && (["left", "top", "width", "height"] as const).every(key => Math.abs(current[key] - next[key]) < 0.05) ? current : next);
+  }, [hasDesignOverlay, scale, offset.x, offset.y, containerSize.width, containerSize.height, device.id, effectiveOrientation, slot.showFrame, freeView, keyboardHeight, align]);
 
   const syncScrollBridge = (iframe: HTMLIFrameElement | null) => {
     if (!iframe?.contentWindow) return;
@@ -822,19 +812,7 @@ export const PreviewCard = memo(function PreviewCard({
               {renderFrame()}
             </div>
           )}
-          {designOverlay && <div
-            className={`absolute z-30 touch-none select-none ${designOverlay.blend === "difference" ? "mix-blend-difference" : ""} ${designOverlay.adjusting ? "cursor-move outline-2 outline-design shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "pointer-events-none outline-2 outline-design"}`}
-            style={{ left: `${overlayPlacement.x}%`, top: `${overlayPlacement.y}%`, width: `${overlayPlacement.width}%`, height: `${overlayPlacement.height}%`, opacity: designOverlay.opacity / 100 }}
-            onPointerDown={(event) => startOverlayAdjustment(event, "move")}
-            aria-label={t("adjustableDesignOverlay")}
-          >
-            <img src={designOverlay.image} alt={t("designOverlay")} draggable={false} className="block size-full" />
-            {designOverlay.adjusting && <>
-              <button type="button" aria-label={t("resizeOverlayWidth")} onPointerDown={(event) => startOverlayAdjustment(event, "width")} className="absolute -right-2 top-1/2 h-8 w-4 -translate-y-1/2 cursor-ew-resize rounded-full border-2 border-white bg-design shadow" />
-              <button type="button" aria-label={t("resizeOverlayHeight")} onPointerDown={(event) => startOverlayAdjustment(event, "height")} className="absolute -bottom-2 left-1/2 h-4 w-8 -translate-x-1/2 cursor-ns-resize rounded-full border-2 border-white bg-design shadow" />
-              <button type="button" aria-label={t("resizeOverlayBoth")} onPointerDown={(event) => startOverlayAdjustment(event, "both")} className="absolute -bottom-2 -right-2 size-5 cursor-nwse-resize rounded-full border-2 border-white bg-design shadow" />
-            </>}
-          </div>}
+          {designOverlay && screenBox && <DesignOverlay {...designOverlay} screen={viewportSize} screenBox={screenBox} />}
         </div>
 
 

@@ -66,7 +66,7 @@ Phones and tablets rotate where the real device does, and you can add custom vie
 - Assign a separate reference to each viewport.
 - Compare mode shows one device at a time, chosen from tabs that show which devices have a design.
 - **Side by side** places the design next to the live page at the same size, optionally scrolling with the page.
-- **Overlay** lays the design over the device with opacity, a Difference blend to highlight mismatches, lock, and reset. Unlock it to resize, stretch, and reposition it.
+- **Overlay** lays the design over the device screen at its own proportions, matching the screen width from the top, with opacity and a Difference blend to highlight mismatches. **Adjust design** starts on when the overlay opens: handles move it, resize it from a corner or stretch it from an edge, and a panel offers Fit width, Fit screen and Stretch presets plus the exact position and size in CSS pixels. Done or Escape turns it off so the page underneath is usable again.
 - Mark a reference with the built-in annotation tools.
 - References and overlay settings are stored locally so the workspace can resume later.
 

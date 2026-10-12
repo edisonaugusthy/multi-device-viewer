@@ -41,7 +41,9 @@ import { readStore, writeStore } from "../../infrastructure/storage/local-store"
 import { GripIcon } from "../icons";
 import { AllDevicesView } from "./AllDevicesView";
 import { AnnotationOverlay } from "./AnnotationOverlay";
-import { CompareBar, CompareControls, CompareLabel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
+import { CompareBar, CompareControls, CompareLabel, DesignAdjustPanel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
+import { fitDesign, type DesignFrame } from "../interactions/design-frame";
+import { useImageSize } from "../hooks/useImageSize";
 import { DevicePicker, type PickerTarget } from "./DevicePicker";
 import { FirstRunGuide } from "./FirstRunGuide";
 import { FixPromptPopover, type FixPromptDevice } from "./FixPrompt";
@@ -59,7 +61,6 @@ import { useStableCallback } from "../hooks/useStableCallback";
 import { ViewModeBar } from "./ViewModeBar";
 import { WorkspaceHeader } from "./WorkspaceHeader";
 
-type OverlayPlacement = { x: number; y: number; width: number; height: number };
 type Popover = "picker" | "settings" | "fix" | "record" | null;
 
 interface SavedWorkspaceView {
@@ -71,7 +72,8 @@ interface SavedWorkspaceView {
   designNames?: Record<string, string>;
   referenceMode?: CompareMode;
   referenceOpacity?: number;
-  overlayPlacements?: Record<string, OverlayPlacement>;
+  /** Where each device's design sits, in CSS pixels of that device's screen. */
+  designFrames?: Record<string, DesignFrame>;
   overlayBlend?: CompareBlend;
   designScrollLinked?: boolean;
 }
@@ -141,8 +143,8 @@ export function SimulatorApp() {
   const [compareMode, setCompareMode] = useState<CompareMode>("side-by-side");
   const [overlayOpacity, setOverlayOpacity] = useState(50);
   const [overlayBlend, setOverlayBlend] = useState<CompareBlend>("normal");
-  const [overlayLocked, setOverlayLocked] = useState(true);
-  const [overlayPlacements, setOverlayPlacements] = useState<Record<string, OverlayPlacement>>({});
+  const [overlayAdjusting, setOverlayAdjusting] = useState(false);
+  const [designFrames, setDesignFrames] = useState<Record<string, DesignFrame>>({});
   const [designScrollLinked, setDesignScrollLinked] = useState(true);
   const [designScrollTop, setDesignScrollTop] = useState(0);
   const [scales, setScales] = useState<Record<string, number>>({});
@@ -209,16 +211,22 @@ export function SimulatorApp() {
       if (saved?.designNames) setDesignNames(saved.designNames);
       if (saved?.referenceMode) setCompareMode(saved.referenceMode);
       if (typeof saved?.referenceOpacity === "number") setOverlayOpacity(saved.referenceOpacity);
-      if (saved?.overlayPlacements) setOverlayPlacements(saved.overlayPlacements);
+      if (saved?.designFrames) setDesignFrames(saved.designFrames);
       if (saved?.overlayBlend) setOverlayBlend(saved.overlayBlend);
       if (typeof saved?.designScrollLinked === "boolean") setDesignScrollLinked(saved.designScrollLinked);
       setWorkspaceHydrated(true);
     });
   }, []);
 
+  // Dragging a design changes its frame many times a second, so the workspace
+  // is written once that settles, and on the way out if a write is pending.
+  const pendingWorkspaceView = useRef<SavedWorkspaceView | null>(null);
+  useEffect(() => () => {
+    if (pendingWorkspaceView.current) void writeStore<SavedWorkspaceView>("mdvWorkspaceView", pendingWorkspaceView.current);
+  }, []);
   useEffect(() => {
     if (!workspaceHydrated) return;
-    void writeStore<SavedWorkspaceView>("mdvWorkspaceView", {
+    pendingWorkspaceView.current = {
       widths,
       focusedSlotId,
       showDesignReference: compare,
@@ -227,11 +235,17 @@ export function SimulatorApp() {
       designNames,
       referenceMode: compareMode,
       referenceOpacity: overlayOpacity,
-      overlayPlacements,
+      designFrames,
       overlayBlend,
       designScrollLinked,
-    });
-  }, [compare, compareMode, compareSlotId, designNames, designReferences, designScrollLinked, focusedSlotId, overlayBlend, overlayOpacity, overlayPlacements, widths, workspaceHydrated]);
+    };
+    const timer = setTimeout(() => {
+      const view = pendingWorkspaceView.current;
+      pendingWorkspaceView.current = null;
+      if (view) void writeStore<SavedWorkspaceView>("mdvWorkspaceView", view);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [compare, compareMode, compareSlotId, designFrames, designNames, designReferences, designScrollLinked, focusedSlotId, overlayBlend, overlayOpacity, widths, workspaceHydrated]);
 
   useEffect(() => {
     if (!recording) {
@@ -275,13 +289,14 @@ export function SimulatorApp() {
     if (viewMode || popover !== null || (!focusedSlotId && !compare) || allDevicesUrl !== null || annotationOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || event.defaultPrevented) return;
-      if (focusedSlotId) setFocusedSlotId(null);
+      if (overlayAdjusting) setOverlayAdjusting(false);
+      else if (focusedSlotId) setFocusedSlotId(null);
       else setCompare(false);
     };
     const target = getViewerEventTarget();
     target.addEventListener("keydown", onKey);
     return () => target.removeEventListener("keydown", onKey);
-  }, [allDevicesUrl, annotationOpen, compare, focusedSlotId, popover, viewMode]);
+  }, [allDevicesUrl, annotationOpen, compare, focusedSlotId, overlayAdjusting, popover, viewMode]);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 760px)");
@@ -655,6 +670,16 @@ export function SimulatorApp() {
   const compareScale = scales[compareSlotId] ?? 0;
   const comparePaneWidth = Math.max(160, Math.round(compareSize.width * compareScale));
   const comparePaneHeight = Math.max(160, Math.round(compareSize.height * compareScale));
+  // The design starts at the screen width from the top; adjustments are kept per device.
+  const compareImageSize = useImageSize(compareImage);
+  const compareFrame = compareImage && compareImageSize ? designFrames[compareSlotId] ?? fitDesign(compareImageSize, compareSize, "width") : undefined;
+  const setCompareFrame = useCallback((frame: DesignFrame) => setDesignFrames((current) => ({ ...current, [compareSlotId]: frame })), [compareSlotId]);
+  const resetCompareFrame = () => setDesignFrames((current) => { const next = { ...current }; delete next[compareSlotId]; return next; });
+  const overlayShown = compare && !viewMode && compareMode === "overlay" && compareFrame !== undefined;
+  // Adjusting starts whenever a design is overlaid (opening Overlay, adding a
+  // design, or switching device) and ends when the overlay goes; Done or
+  // Escape turns it off in between so the page underneath can be used.
+  useEffect(() => { setOverlayAdjusting(overlayShown); }, [overlayShown, compareSlotId]);
 
   function setDesign(slotId: string, image?: string, name?: string) {
     setDesignReferences((current) => {
@@ -806,13 +831,13 @@ export function SimulatorApp() {
                     focusNavigation={focusNavigation}
                     onScaleChange={updateScale}
                     onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}
-                    designOverlay={comparing && compareMode === "overlay" && designReferences[slot.id] ? {
-                      image: designReferences[slot.id],
+                    designOverlay={comparing && overlayShown && compareImage ? {
+                      image: compareImage,
                       opacity: overlayOpacity,
-                      adjusting: !overlayLocked,
+                      adjusting: overlayAdjusting,
                       blend: overlayBlend,
-                      placement: overlayPlacements[slot.id],
-                      onPlacementChange: (placement) => setOverlayPlacements((current) => ({ ...current, [slot.id]: placement })),
+                      frame: compareFrame,
+                      onFrameChange: setCompareFrame,
                     } : undefined}
                   />
                   {showChrome && !focusMode && index < slots.length - 1 && !narrowLayout && (
@@ -861,14 +886,13 @@ export function SimulatorApp() {
                 mode={compareMode}
                 opacity={overlayOpacity}
                 blend={overlayBlend}
-                locked={overlayLocked}
+                adjusting={overlayAdjusting}
                 scrollLinked={designScrollLinked}
                 zoomLabel={`${Math.round(compareScale * 100)}%`}
                 hasDesign={Boolean(compareImage)}
                 onOpacityChange={setOverlayOpacity}
                 onBlendChange={setOverlayBlend}
-                onLockedChange={setOverlayLocked}
-                onReset={() => setOverlayPlacements((current) => { const next = { ...current }; delete next[compareSlotId]; return next; })}
+                onAdjustingChange={setOverlayAdjusting}
                 onScrollLinkedChange={setDesignScrollLinked}
                 onZoomOut={() => zoomSlot(compareSlotId, "out")}
                 onZoomIn={() => zoomSlot(compareSlotId, "in")}
@@ -877,6 +901,17 @@ export function SimulatorApp() {
               />
               <input ref={overlayFileInput} type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="sr-only" tabIndex={-1}
                 onChange={(event) => { readDesignFile(event.target.files?.[0], (image, name) => setDesign(compareSlotId, image, name)); event.target.value = ""; }} />
+              {overlayShown && overlayAdjusting && compareFrame && compareImageSize && (
+                <DesignAdjustPanel
+                  frame={compareFrame}
+                  screen={compareSize}
+                  canReset={designFrames[compareSlotId] !== undefined}
+                  onFrameChange={setCompareFrame}
+                  onFit={(fit) => setCompareFrame(fitDesign(compareImageSize, compareSize, fit))}
+                  onReset={resetCompareFrame}
+                  onClose={() => setOverlayAdjusting(false)}
+                />
+              )}
             </>
           )}
 

@@ -1,4 +1,5 @@
 import { usePointerDrag } from "../hooks/usePointerDrag";
+import { useVisualRegression } from "../hooks/useVisualRegression";
 import { useStableCallback } from "../hooks/useStableCallback";
 import { adjustPlacement, type PlacementAdjustment } from "../interactions/placement";
 import { readPreviewHealthReport } from "../../domain/device/preview-health";
@@ -196,6 +197,11 @@ export const PreviewCard = memo(function PreviewCard({
   const syncSettingsRef = useRef({ scroll: display.scrollSync, flow: flowRecording, visuals: sampleVisuals });
   syncSettingsRef.current = { scroll: display.scrollSync, flow: flowRecording, visuals: sampleVisuals };
   const currentPageUrlRef = useRef(slot.url);
+  const visualChecks = useVisualRegression({
+    deviceId: device.id, deviceName: device.name, orientation: slot.orientation,
+    menuOpen: controlsOpen, getFrame: () => iframeRef.current,
+    getUrl: () => currentPageUrlRef.current, dismissMenu: () => setControlsOpen(false),
+  });
   const sentFlowRunRef = useRef<string | null>(null);
   const pendingReplayStepRef = useRef<number | null>(null);
   // The step a replay continues from when one of its steps opens another page.
@@ -843,7 +849,7 @@ export const PreviewCard = memo(function PreviewCard({
         </div>}
       </div>
 
-      {showToolbar && !capturePending && (
+      {showToolbar && !capturePending && !visualChecks.capturing && (
         <div ref={toolbarRef} className="pointer-events-none absolute inset-x-0 z-40"
           onPointerEnter={() => setPinnedToolbar({ top: toolbarTop, shift: toolbarShift })}
           onPointerLeave={() => setPinnedToolbar(null)}
@@ -873,6 +879,8 @@ export const PreviewCard = memo(function PreviewCard({
             onOpenInTab={openInTab}
             onExpand={onExpand && (() => onExpand(slot.id))}
             onFixPrompt={onFixPrompt && (() => onFixPrompt(slot.id))}
+            onCompareBefore={visualChecks.hasBefore() ? visualChecks.compare : undefined}
+            compareBeforeLabel={t("visualCompareButton")}
             onMenu={() => setControlsOpen(value => !value)}
             onRemove={() => simulator.current.removeSlot(slot.id)}
             menu={
@@ -886,6 +894,7 @@ export const PreviewCard = memo(function PreviewCard({
                 ) : <>
                   <MenuItem label={t("openInTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
                   {onCapture && <MenuItem label={t("captureAndAnnotate")} disabled={capturePending} onClick={() => { setControlsOpen(false); onCapture(slot.id); }}><CameraIcon size={15}/></MenuItem>}
+                  {visualChecks.menuItems}
                   {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
                   {!focused && !first && <MenuItem label={t("moveViewportLeft")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "left"); }}><ChevronLeftIcon size={15}/></MenuItem>}
                   {!focused && !last && <MenuItem label={t("moveViewportRight")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "right"); }}><ChevronRightIcon size={15}/></MenuItem>}
@@ -905,6 +914,7 @@ export const PreviewCard = memo(function PreviewCard({
           </button>
         </div>
       )}
+      {visualChecks.dialog}
     </section>
   );
 

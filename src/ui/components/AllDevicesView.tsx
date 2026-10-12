@@ -37,6 +37,7 @@ import { PreviewCard, shortName } from "./PreviewCard";
 import { SettingsPopover, type BrowserBarPosition } from "./SettingsPopover";
 import { cx, focusRing, IconButton, Segmented, Tooltip } from "./ui";
 import { ViewModeBar } from "./ViewModeBar";
+import { useVisualRegression } from "../hooks/useVisualRegression";
 import { readStore, writeStore } from "../../infrastructure/storage/local-store";
 
 type GalleryLoadingMode = "fast" | "gentle";
@@ -596,6 +597,11 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
   const [scale, setScale] = useState<number | null>(null);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [capturing, setCapturing] = useState(false);
+  const visualChecks = useVisualRegression({
+    deviceId: device.id, deviceName: device.name, orientation: slot.orientation,
+    menuOpen: optionsOpen, getFrame: () => popupRef.current?.querySelector("iframe"),
+    getUrl: () => simulator.current.getSlotUrl(slot.id), dismissMenu: () => setOptionsOpen(false),
+  });
   const size = supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport;
   const ios = getFrameProfile(device).platform === "ios";
   const geometry = getBrowserGeometry(device, size, slot.browserPreferences, { orientation: slot.orientation });
@@ -669,6 +675,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
               if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closeOptions(); }
             }} className="absolute end-0 top-full z-30 mt-1 flex w-64 flex-col gap-1 whitespace-normal rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
               <button type="button" onClick={() => { setOptionsOpen(false); onOpen(); }} className={menuItem}>{t("openDeviceInWorkspace", { name: shortName(device.name) })}</button>
+              {visualChecks.menuItems}
               <button type="button" onClick={() => { setOptionsOpen(false); simulator.current.setSlotZoomMode(slot.id, "fit"); }} className={cx(menuItem, "hidden @max-[720px]/popup:flex")}>{t("resetFit")}</button>
               <button type="button" onClick={() => { setOptionsOpen(false); onReload(); }} className={cx(menuItem, "hidden @max-[620px]/popup:flex")}>{t("reloadPreview")}</button>
               <button type="button" onClick={() => { setOptionsOpen(false); onOpenTab(); }} className={cx(menuItem, "hidden @max-[620px]/popup:flex")}>{t("openInTab")}</button>
@@ -679,6 +686,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
           <IconButton ref={closeRef} size="sm" label={t("backToGallery")} onClick={onClose}><CloseIcon size={16} /></IconButton>
         </div>
       </header>
+      {visualChecks.dialog}
       <div className="relative min-h-0 flex-1 p-6">
         {/* A fresh document per device: the popup keeps its own page, while
             the gallery card behind it keeps its own. */}

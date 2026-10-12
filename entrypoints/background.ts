@@ -1,4 +1,5 @@
 import { createPreviewSessions } from "../src/app/preview-sessions";
+import { VisualRegressionError } from "../src/domain/visual-regression/visual-regression.types";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
 import { LAST_SEEN_RELEASE_VERSION_KEY, PENDING_RELEASE_VERSION_KEY } from "../src/app/release-notes";
@@ -203,6 +204,19 @@ export default defineBackground(() => {
     return tabs[0] ?? null;
   }
 
+  // Chrome allows two captureVisibleTab calls per second per extension.
+  let lastVisualCapture = 0;
+  async function captureSenderTab(tabId?: number): Promise<Blob> {
+    const tab = typeof tabId === "number" ? await chrome.tabs.get(tabId).catch(() => undefined) : undefined;
+    if (!tab?.active || typeof tab.windowId !== "number") throw new VisualRegressionError("capture");
+    const wait = lastVisualCapture + 550 - Date.now();
+    if (wait > 0) await new Promise(resolve => setTimeout(resolve, wait));
+    lastVisualCapture = Date.now();
+    const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" })
+      .catch(() => { throw new VisualRegressionError("capture"); });
+    return (await fetch(dataUrl)).blob();
+  }
+
   function downloadFinished(id: number): Promise<void> {
     return new Promise((resolve) => {
       const done = () => { chrome.downloads.onChanged.removeListener(listener); resolve(); };
@@ -230,6 +244,15 @@ export default defineBackground(() => {
   }
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message?.type === "MDV_VISUAL_REGRESSION") {
+      if (sender.id !== chrome.runtime.id || (sender.frameId ?? 0) !== 0) return;
+      // Capture the tab showing the viewer, never a tab the page names.
+      const host = { captureTab: () => captureSenderTab(sender.tab?.id) };
+      void import("../src/domain/visual-regression/visual-regression-service").then(module => module.handleVisualRegression(message.command, host))
+        .then(result => sendResponse({ ok: true, result }))
+        .catch(error => sendResponse({ ok: false, code: error instanceof VisualRegressionError ? error.code : "engine" }));
+      return true;
+    }
     if ((message?.type === "MDV_PREVIEW_HOST" || message?.type === "MDV_PREVIEW_CLOSE") && typeof sender.tab?.id === "number" && sender.frameId === 0) {
       const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url);
       void work.then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));

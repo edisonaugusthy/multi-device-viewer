@@ -21,6 +21,9 @@ export default defineConfig({
     short_name: "__MSG_extensionShortName__",
     description: "__MSG_extensionDescription__",
     version: "0.3.0",
+    content_security_policy: {
+      extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+    },
     permissions: [
       "activeTab",
       "contextMenus",

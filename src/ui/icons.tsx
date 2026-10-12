@@ -82,6 +82,8 @@ export const CropIcon = icon(<path d="M6 2v16h16M2 6h16v16" />);
 export const UndoIcon = icon(<><path d="M9 14 4 9l5-5" /><path d="M4 9h10a6 6 0 0 1 0 12h-3" /></>);
 export const PencilIcon = icon(<path d="M4 20l4-1 11-11-3-3L5 16z" />);
 export const TrashIcon = icon(<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />);
+export const SaveIcon = icon(<><path d="M5 4h11l3 3v13H5z" /><path d="M8 4v5h7V4M8 20v-6h8v6" /></>);
+export const ListIcon = icon(<path d="M4 7h16M4 12h16M4 17h10" />);
 export const PauseIcon = icon(<path d="M9 5v14M15 5v14" />, { strokeWidth: 2.6 });
 export const PlayIcon = icon(<path d="M7 5v14l12-7z" fill="currentColor" stroke="none" />);
 export const StopIcon = icon(<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" stroke="none" />);

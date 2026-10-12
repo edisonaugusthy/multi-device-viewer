@@ -2,6 +2,7 @@ import { forwardRef, type ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import {
   ChangeDeviceIcon,
+  CompareIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
@@ -50,6 +51,9 @@ export interface PreviewToolbarProps {
   onOpenInTab: () => void;
   onExpand?: () => void;
   onFixPrompt?: () => void;
+  /** Shown once this page has a "before" picture. */
+  onCompareBefore?: () => void;
+  compareBeforeLabel?: string;
   onMenu: () => void;
   onRemove: () => void;
   onMoveStart?: (event: React.PointerEvent) => void;
@@ -121,6 +125,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
         {focus && <ToolButton label={t("openInTab")} onClick={props.onOpenInTab}><OpenInTabIcon size={15} /></ToolButton>}
         {!focus && props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
         {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
+        {props.onCompareBefore && <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}><CompareIcon size={15} /></ToolButton>}
         <div className="relative">
           <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu}><MoreIcon size={16} /></ToolButton>
           {props.menuOpen && props.menu}
@@ -138,12 +143,13 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
   );
 });
 
-function ToolButton({ label, onClick, children, disabled, danger, expanded, testId, dataRemove }: {
+function ToolButton({ label, onClick, children, disabled, danger, accent, expanded, testId, dataRemove }: {
   label: string;
   onClick: () => void;
   children: ReactNode;
   disabled?: boolean;
   danger?: boolean;
+  accent?: boolean;
   expanded?: boolean;
   testId?: string;
   dataRemove?: boolean;
@@ -160,7 +166,7 @@ function ToolButton({ label, onClick, children, disabled, danger, expanded, test
       onClick={onClick}
       className={cx(
         "grid size-7 place-items-center rounded-[7px] disabled:opacity-30",
-        danger ? "text-danger hover:bg-danger/10" : "text-ink hover:bg-sunken",
+        danger ? "text-danger hover:bg-danger/10" : accent ? "bg-accent-soft text-accent hover:bg-accent-soft/70" : "text-ink hover:bg-sunken",
         expanded && "bg-sunken",
         focusRing,
       )}

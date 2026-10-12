@@ -22,3 +22,6 @@ internal/
 /private-artwork/
 /public/mockups/
 /website/public/frames/
+
+# Built by npm run build:wasm (dev, build, zip and test run it first).
+/public/wasm/

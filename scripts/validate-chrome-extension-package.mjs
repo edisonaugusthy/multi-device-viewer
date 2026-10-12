@@ -84,7 +84,14 @@ export async function validateChromeExtensionPackage(zipPath) {
   }
 
   const extensionCsp = manifest.content_security_policy?.extension_pages ?? "";
-  if (/unsafe-eval|https?:\/\//i.test(extensionCsp)) {
+  if (!files.includes("wasm/pixel-diff.wasm")) throw new Error("Package is missing the visual comparison WASM module.");
+  const { stdout: wasmBytes } = await execFileAsync("unzip", ["-p", zipPath, "wasm/pixel-diff.wasm"], { encoding: "buffer" });
+  if (!WebAssembly.validate(wasmBytes)) throw new Error("Packaged visual comparison WASM module is invalid.");
+  if (createHash("sha256").update(wasmBytes).digest("hex") !== createHash("sha256").update(await readFile(new URL("../public/wasm/pixel-diff.wasm", import.meta.url))).digest("hex")) {
+    throw new Error("Packaged visual comparison WASM module does not match the current build.");
+  }
+  // WASM compilation is allowed separately from JavaScript eval().
+  if (/(?:^|[\s;])'unsafe-eval'|https?:\/\//i.test(extensionCsp)) {
     throw new Error(
       `Extension CSP must not permit remote code or unsafe evaluation: ${extensionCsp}`,
     );

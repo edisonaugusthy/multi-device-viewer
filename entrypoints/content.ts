@@ -35,6 +35,9 @@ export default defineContentScript({
             return;
           }
           if (message.type === "OPEN_SIMULATOR") {
+            // Bringing the viewer back after a reload must never close one
+            // that is already open.
+            if (message.restore && overlayLifecycle.active) { sendResponse({ ok: true, active: true }); return; }
             void overlayLifecycle.toggle({
               url: typeof message.url === "string" ? message.url : window.location.href,
               sourceTabId: typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,

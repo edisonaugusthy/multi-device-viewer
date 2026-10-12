@@ -16,7 +16,7 @@ const message = (key: string, fallback: string) =>
 // Tabs showing the in-page viewer, kept across service-worker restarts so the
 // viewer comes back after the page reloads (a dev server's reload or F5).
 const OPEN_VIEWERS_KEY = "mdvOpenViewers";
-interface OpenViewer { origin: string; restore?: ViewerRestoreState }
+interface OpenViewer { origin: string; restore?: ViewerRestoreState; unloaded?: boolean }
 const originOf = (url?: string) => { try { return url ? new URL(url).origin : undefined; } catch { return undefined; } };
 
 export default defineBackground(() => {
@@ -64,7 +64,8 @@ export default defineBackground(() => {
     if (message.active && origin) void updateOpenViewer(tabId, entry => ({ origin, restore: entry?.restore }));
     // A page that is unloading keeps its entry: the viewer returns when the
     // same site has loaded again. Closing the viewer forgets it.
-    else if (!message.unloading) void updateOpenViewer(tabId, () => undefined);
+    else if (message.unloading) void updateOpenViewer(tabId, entry => entry && { ...entry, unloaded: true });
+    else void updateOpenViewer(tabId, () => undefined);
   });
 
   chrome.action.onClicked.addListener((tab) => {
@@ -99,10 +100,15 @@ export default defineBackground(() => {
       void previews.close(_tabId).catch(console.error);
     }
     if (changeInfo.url || changeInfo.status === "complete") syncActionState(tab);
+    // A tab also reports loading when a preview inside the viewer navigates,
+    // so only a page that said it was unloading, and no longer answers for
+    // the viewer, is brought back.
     if (changeInfo.status === "complete") {
-      void openViewers().then(all => {
+      void openViewers().then(async all => {
         const entry = all[_tabId];
-        if (!entry) return;
+        if (!entry?.unloaded) return;
+        const state = await chrome.tabs.sendMessage(_tabId, { type: "MDV_GET_OVERLAY_STATE" }, { frameId: 0 }).catch(() => undefined);
+        if (state?.active) return updateOpenViewer(_tabId, current => current && { ...current, unloaded: false });
         if (isPreviewableUrl(tab.url) && originOf(tab.url) === entry.origin) openSimulatorForTab(tab, entry.restore);
         else return updateOpenViewer(_tabId, () => undefined);
       }).catch(console.error);

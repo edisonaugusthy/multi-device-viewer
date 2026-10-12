@@ -75,7 +75,7 @@ Phones and tablets rotate where the real device does, and you can add custom vie
 - Each change is outlined, numbered and listed with a before → after crop of that spot. Click one to zoom in, or step through them with N and P. Switch between Changes, Slider, Before and After, choose how closely to look (Every pixel, Normal, Big changes), or use the "after" picture as the new "before".
 - Pictures are stored locally in extension IndexedDB, separately for each URL (including query and fragment), device, orientation and viewport size. **All saved pictures** lists them by page with storage use, and deletes one or all. Storage is limited to 100 pictures and 64 MB; captures are limited to four million pixels.
 - Comparisons capture the currently visible webpage viewport. Keep the whole preview visible and use the same scroll position; animations and live content can also show up as changes. If the window size or zoom changed, captures of the same shape are compared at the smaller size, where text edges can differ slightly; a different viewport shape needs a new "before" picture.
-- The extension background worker captures and crops the tab, so the website's main thread does no image work. A bundled WebAssembly module compares pixels, groups changes into areas and packs the overlay mask. Pictures stay on the device.
+- The extension background worker captures and crops the tab, so the website's main thread does no image work. A bundled WebAssembly module (SIMD) compares pixels with a perceptual colour difference (YIQ, as pixelmatch does), ignores anti-aliasing differences at Normal and Big changes, groups changes into areas with exact pixel bounds and packs the overlay mask. Pictures stay on the device.
 
 ### Capture and communication
 

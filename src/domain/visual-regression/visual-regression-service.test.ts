@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { alignedSource, commonSize, handleVisualRegression } from "./visual-regression-service";
+import { alignedSource, commonSize, handleVisualRegression, ignoreBorder } from "./visual-regression-service";
 import type { BaselineIdentity, CaptureFrame } from "./visual-regression.types";
 
 const identity: BaselineIdentity = { deviceId: "iphone", url: "https://example.com/", orientation: "portrait", viewportWidth: 390, viewportHeight: 844 };
@@ -22,6 +22,16 @@ describe("visual regression service", () => {
     expect(source.width).toBeCloseTo(779 * 1.5);
     expect(source.height).toBeCloseTo(1687 * 1.5);
   });
+  it("makes the outermost pixel ring identical when captures were resampled", () => {
+    const width = 5, height = 4;
+    const a = new Uint8ClampedArray(width * height * 4).fill(1), b = new Uint8ClampedArray(width * height * 4).fill(9);
+    ignoreBorder(a, b, width, height);
+    const pixel = (x: number, y: number) => b[(y * width + x) * 4];
+    for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+      const border = x === 0 || y === 0 || x === width - 1 || y === height - 1;
+      expect(pixel(x, y), `${x},${y}`).toBe(border ? 1 : 9);
+    }
+  });
   it("rejects clipped or malformed frames and non-web pages before capturing", async () => {
     const host = { captureTab: vi.fn() };
     const capture = (patch: Partial<CaptureFrame["rect"]>, id = identity) =>
@@ -39,8 +49,8 @@ describe("visual regression service", () => {
   it("treats unknown captures and comparisons as expired", async () => {
     const host = { captureTab: vi.fn() };
     await expect(handleVisualRegression({ action: "save", captureId: "nope" }, host)).rejects.toThrow("expired");
-    await expect(handleVisualRegression({ action: "compare", captureId: "nope", threshold: 16 }, host)).rejects.toThrow("expired");
-    await expect(handleVisualRegression({ action: "rediff", comparisonId: "nope", threshold: 16 }, host)).rejects.toThrow("expired");
+    await expect(handleVisualRegression({ action: "compare", captureId: "nope", threshold: 10 }, host)).rejects.toThrow("expired");
+    await expect(handleVisualRegression({ action: "rediff", comparisonId: "nope", threshold: 10 }, host)).rejects.toThrow("expired");
     await expect(handleVisualRegression({ action: "accept", comparisonId: "nope" }, host)).rejects.toThrow("expired");
     await expect(handleVisualRegression({ action: "discard", captureId: "nope" }, host)).resolves.toBeNull();
     await expect(handleVisualRegression({ action: "bogus" } as never, host)).rejects.toThrow("image");

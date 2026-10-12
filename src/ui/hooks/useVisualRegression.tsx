@@ -34,7 +34,7 @@ const errors: Record<VisualRegressionErrorCode, TranslationKey> = {
   changed: "visualPageChanged", expired: "visualExpired", unsupported: "visualUnsupportedPage",
 };
 const messageFor = (error: unknown): TranslationKey => error instanceof VisualRegressionError ? errors[error.code] ?? "visualEngineError" : "visualEngineError";
-const DEFAULT_SENSITIVITY = 16;
+const DEFAULT_SENSITIVITY = 10;
 const TOAST_MS = 6000;
 
 function MenuButton({ icon, label, onClick, disabled = false, danger = false, strong = false }: {

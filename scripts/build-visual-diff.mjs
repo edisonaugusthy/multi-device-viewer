@@ -3,7 +3,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 
 const toolkit = await wabt();
 const source = new URL("../src/domain/visual-regression/pixel-diff.wat", import.meta.url);
-const module = toolkit.parseWat("pixel-diff.wat", await readFile(source, "utf8"));
+const module = toolkit.parseWat("pixel-diff.wat", await readFile(source, "utf8"), { simd: true, bulk_memory: true, multi_value: true });
 try {
   module.resolveNames();
   module.validate();

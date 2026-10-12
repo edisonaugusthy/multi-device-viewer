@@ -18,7 +18,7 @@ export interface VisualRegressionHost { captureTab(): Promise<Blob> }
 const SESSION_TTL_MS = 120_000;
 const MAX_SESSIONS = 3;
 const PREVIEW_EDGE = 1400;
-const THRESHOLD_LIMIT = 255;
+const THRESHOLD_LIMIT = 100;
 
 interface Comparison { baseline: BaselineMeta; a: Uint8ClampedArray; b: Uint8ClampedArray; width: number; height: number }
 interface Session {
@@ -154,6 +154,19 @@ export function commonSize(a: { width: number; height: number }, b: { width: num
   const smaller = a.width * a.height <= b.width * b.height ? a : b;
   return { width: smaller.width, height: smaller.height, resized: true };
 }
+/**
+ * Resampled captures sample just outside their edges, so the outermost pixel
+ * ring differs for no reason. Copying it across makes the diff ignore it.
+ */
+export function ignoreBorder(a: Uint8ClampedArray, b: Uint8ClampedArray, width: number, height: number) {
+  const row = width * 4;
+  b.set(a.subarray(0, row), 0);
+  b.set(a.subarray((height - 1) * row), (height - 1) * row);
+  for (let y = 1; y < height - 1; y++) {
+    b.set(a.subarray(y * row, y * row + 4), y * row);
+    b.set(a.subarray((y + 1) * row - 4, (y + 1) * row), (y + 1) * row - 4);
+  }
+}
 async function compare(session: Session, tolerance: number): Promise<VisualComparison> {
   const baseline = await readBaselineMeta(session.identity);
   const png = baseline && await readBaselineImage(session.identity, "png");
@@ -168,6 +181,7 @@ async function compare(session: Session, tolerance: number): Promise<VisualCompa
     // at the smaller size; glyph edges can still differ slightly.
     const a = pixels(previous, size.width, size.height, size.resized && !baselineSmaller ? alignedSource(latest, old) : undefined);
     const b = pixels(session.image, size.width, size.height, size.resized && baselineSmaller ? alignedSource(old, latest) : undefined);
+    if (size.resized) ignoreBorder(a, b, size.width, size.height);
     // Only one comparison dialog is open at a time: keep one pair of pixel
     // arrays resident. Older captures stay available for Accept.
     for (const other of sessions.values()) other.comparison = undefined;

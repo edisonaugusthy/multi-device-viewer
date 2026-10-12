@@ -9,9 +9,10 @@ import { CheckIcon, CloseIcon } from "../icons";
 import { cx, focusRing, Segmented } from "./ui";
 
 export const SENSITIVITY_PRESETS = [
+  // pixelmatch thresholds as percentages; 10 is pixelmatch's default.
   { value: 0, label: "visualSensitivityExact", help: "visualSensitivityExactHelp" },
-  { value: 16, label: "visualSensitivityNormal", help: "visualSensitivityHelp" },
-  { value: 40, label: "visualSensitivityRelaxed", help: "visualSensitivityRelaxedHelp" },
+  { value: 10, label: "visualSensitivityNormal", help: "visualSensitivityHelp" },
+  { value: 30, label: "visualSensitivityRelaxed", help: "visualSensitivityRelaxedHelp" },
 ] as const satisfies ReadonlyArray<{ value: number; label: TranslationKey; help: TranslationKey }>;
 const MASK_COLOR = [239, 68, 68, 150];
 const outline = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border bg-surface px-3 text-xs font-semibold hover:bg-sunken disabled:opacity-50", focusRing);

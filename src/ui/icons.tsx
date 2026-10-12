@@ -43,6 +43,7 @@ export const LinkIcon = icon(<><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7
 export const ReloadIcon = icon(<><path d="M21 12a9 9 0 1 1-3-6.7" /><path d="M21 4v5h-5" /></>);
 export const CompareIcon = icon(<><rect x="3" y="3" width="13" height="13" rx="2" /><rect x="8" y="8" width="13" height="13" rx="2" /></>);
 export const CameraIcon = icon(<><path d="M3 8h4l2-3h6l2 3h4v11H3z" /><circle cx="12" cy="13" r="3.5" /></>);
+export const LayoutCheckIcon = icon(<><rect x="3" y="4" width="13" height="16" rx="2" /><path d="M7 10h12M7 14h7" /><path d="M20 6v12" strokeDasharray="2 2.5" /></>);
 export const FixPromptIcon = icon(<><path d="M4 5h16v11H9l-5 4z" /><path d="m10 9-2 2 2 2M14 9l2 2-2 2" /></>);
 export const EyeIcon = icon(<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></>);
 export const SettingsIcon = icon(<><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1" /><circle cx="15" cy="6" r="2" /><circle cx="9" cy="12" r="2" /><circle cx="17" cy="18" r="2" /></>);

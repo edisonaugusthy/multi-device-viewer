@@ -23,6 +23,7 @@ const TOUR_TRANSLATION_KEYS: Array<{ title: TranslationKey; text: TranslationKey
   { title: "tourMoveTitle", text: "tourMoveText" },
   { title: "syncBetweenDevices", text: "tourSyncText" },
   { title: "fixPrompt", text: "tourFixPromptText" },
+  { title: "checkLayout", text: "tourLayoutCheckText" },
   { title: "captureAndAnnotate", text: "tourScreenshotText" },
   { title: "record", text: "tourRecordText" },
 ];

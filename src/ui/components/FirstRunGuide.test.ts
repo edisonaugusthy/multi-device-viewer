@@ -6,7 +6,7 @@ import {
 } from "./first-run-tour";
 
 describe("first-run feature tour", () => {
-  it("walks through the eight main features in order", () => {
+  it("walks through the nine main features in order", () => {
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.target)).toEqual([
       '[data-tour="add-viewport"]',
       "[data-all-devices-toggle]",
@@ -14,6 +14,7 @@ describe("first-run feature tour", () => {
       '[data-tour="device-controls"]',
       '[data-tour="sync"]',
       '[data-tour="fix-prompt"]',
+      '[data-tour="layout-check"]',
       '[data-tour="screenshot"]',
       '[data-tour="record"]',
     ]);
@@ -24,6 +25,7 @@ describe("first-run feature tour", () => {
       "Move and change devices",
       "Sync between devices",
       "Fix prompt",
+      "Check layout",
       "Screenshot and annotate",
       "Record",
     ]);

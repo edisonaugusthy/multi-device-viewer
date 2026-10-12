@@ -46,7 +46,9 @@ import { fitDesign, type DesignFrame } from "../interactions/design-frame";
 import { useImageSize } from "../hooks/useImageSize";
 import { DevicePicker, type PickerTarget } from "./DevicePicker";
 import { FirstRunGuide } from "./FirstRunGuide";
-import { FixPromptPopover, type FixPromptDevice } from "./FixPrompt";
+import { FixPromptPopover, type FixPromptDevice, type FixPromptPrefill } from "./FixPrompt";
+import { LayoutCheckPanel } from "./LayoutCheckPanel";
+import { useLayoutCheck } from "../hooks/useLayoutCheck";
 import { HelpModal } from "./HelpModal";
 import { PermissionsInfoModal } from "./PermissionsInfoModal";
 import { PreviewCard, shortName } from "./PreviewCard";
@@ -134,6 +136,7 @@ export function SimulatorApp() {
   const [popover, setPopover] = useState<Popover>(null);
   const [pickerTarget, setPickerTarget] = useState<PickerTarget>({ kind: "add" });
   const [fixDeviceIds, setFixDeviceIds] = useState<string[] | undefined>();
+  const [fixPrefill, setFixPrefill] = useState<FixPromptPrefill | undefined>();
   const [showPermissions, setShowPermissions] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [compare, setCompare] = useState(false);
@@ -575,8 +578,9 @@ export function SimulatorApp() {
     openPicker({ kind: "add" });
   }
 
-  function openFixPrompt(deviceIds?: string[]) {
+  function openFixPrompt(deviceIds?: string[], prefill?: FixPromptPrefill) {
     setFixDeviceIds(deviceIds);
+    setFixPrefill(prefill);
     setPopover("fix");
   }
 
@@ -705,6 +709,29 @@ export function SimulatorApp() {
   const neighbours = useMemo(() => new Map(slots.map(slot => [slot.id, adjacentPickerDevices(devices, slot.deviceId)])), [devices, slots]);
   const focusSlot = useStableCallback((slotId: string) => { setFocusedSlotId(slotId); setActiveSlot(slotId); });
   const fixPromptForSlot = useStableCallback((slotId: string) => openFixPrompt([slotId]));
+  // Stable for the layout check, whose marks are re-sent only when its inputs change.
+  const slotSizeStable = useCallback((slotId: string) => slotSize(slotId), [slots, findDevice]);
+  const layoutCheck = useLayoutCheck({ slots, findDevice, slotSize: slotSizeStable });
+  const layoutCheckSlot = useStableCallback((slotId: string) => layoutCheck.run([slotId]));
+  const showLayoutProblems = useStableCallback((slotId: string) => {
+    const group = layoutCheck.view.groups.find((item) => item.devices.some((device) => device.slotId === slotId));
+    layoutCheck.select(group?.key ?? null);
+  });
+  const layoutPanelShown = layoutCheck.view.open && !viewMode && !compare;
+  // N and P step through the listed problems while the panel is open and nothing else has the keyboard.
+  useEffect(() => {
+    if (!layoutPanelShown || popover !== null || annotationOpen || allDevicesUrl !== null) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable)) return;
+      if (event.key === "n" || event.key === "N") { event.preventDefault(); layoutCheck.step(1); }
+      else if (event.key === "p" || event.key === "P") { event.preventDefault(); layoutCheck.step(-1); }
+    };
+    const target = getViewerEventTarget();
+    target.addEventListener("keydown", onKey);
+    return () => target.removeEventListener("keydown", onKey);
+  }, [allDevicesUrl, annotationOpen, layoutCheck.step, layoutPanelShown, popover]);
   const updateScale = useCallback((scale: number, slotId: string) => setScales((current) => current[slotId] === scale ? current : { ...current, [slotId]: scale }), []);
   const focusPrevious = useStableCallback(() => stepFocus(-1));
   const focusNext = useStableCallback(() => stepFocus(1));
@@ -745,6 +772,10 @@ export function SimulatorApp() {
             recordingActive={recording || flowRecording}
             fixRef={fixRef}
             fixOpen={popover === "fix"}
+            layoutOpen={layoutCheck.view.open}
+            layoutChecking={layoutCheck.view.checking}
+            layoutCount={layoutCheck.view.totals.problems}
+            onLayoutCheck={() => layoutCheck.view.open ? layoutCheck.close() : layoutCheck.run()}
             settingsRef={settingsRef}
             settingsOpen={popover === "settings"}
             onAllDevices={openAllDevices}
@@ -775,11 +806,12 @@ export function SimulatorApp() {
         )}
 
         <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div className="flex min-h-0 flex-1">
           <div
             ref={boardRef}
             data-capture-board
             className={cx(
-              "flex min-h-0 flex-1",
+              "flex min-h-0 min-w-0 flex-1",
               narrowLayout && "flex-col",
               viewMode ? "px-6 pb-[100px] pt-6" : compare ? "gap-16 px-6 pb-[88px] pt-3" : "px-3 pb-1 pt-1",
             )}
@@ -828,6 +860,10 @@ export function SimulatorApp() {
                     positionKey={singleSlotId === null ? "all" : "one"}
                     onExpand={focusSlot}
                     onFixPrompt={fixPromptForSlot}
+                    layoutStatus={layoutCheck.statusBySlot.get(slot.id)}
+                    onLayoutCheck={layoutCheckSlot}
+                    onLayoutProblems={showLayoutProblems}
+                    onPageReady={layoutCheck.onPageReady}
                     focusNavigation={focusNavigation}
                     onScaleChange={updateScale}
                     onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}
@@ -878,6 +914,17 @@ export function SimulatorApp() {
                 />
               </div>
             )}
+          </div>
+          {layoutPanelShown && (
+            <LayoutCheckPanel
+              view={layoutCheck.view}
+              onClose={layoutCheck.close}
+              onCheckAgain={() => layoutCheck.run()}
+              onSelect={layoutCheck.select}
+              onFixPrompt={(group) => { const { deviceIds, prefill } = layoutCheck.fixPromptFor(group); openFixPrompt(deviceIds, prefill); }}
+              onSettingsChange={layoutCheck.updateSettings}
+            />
+          )}
           </div>
 
           {compare && !viewMode && compareSlot && (
@@ -968,6 +1015,7 @@ export function SimulatorApp() {
         pageUrl={getSlotUrl(activeSlotId) || slots[0]?.url || ""}
         devices={reviewDevices}
         initialDeviceIds={fixDeviceIds}
+        initialIssue={fixPrefill}
       />
       <RecordMenu
         open={popover === "record"}

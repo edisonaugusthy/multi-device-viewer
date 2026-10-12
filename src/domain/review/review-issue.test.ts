@@ -28,6 +28,24 @@ describe("buildAiReviewPrompt", () => {
     expect(prompt).toContain("state the blocker instead of guessing");
   });
 
+  it("lists layout check findings as measured facts", () => {
+    const prompt = buildAiReviewPrompt({
+      pageUrl: "http://localhost:5173/",
+      summary: ".hero-art crosses the right edge of the viewport",
+      expected: "",
+      actual: "",
+      selector: ".hero-art",
+      findings: [
+        "iPhone 18 Pro (402×874): .hero-art is 454 px wide, 72 px past the right edge",
+        "Pixel 10 (412×915): .hero-art is 454 px wide, 62 px past the right edge",
+      ],
+      devices: [{ name: "iPhone 18 Pro", width: 402, height: 874, orientation: "portrait" }],
+    });
+
+    expect(prompt).toContain("Layout check findings:\n- iPhone 18 Pro (402×874): .hero-art is 454 px wide, 72 px past the right edge\n- Pixel 10");
+    expect(prompt.indexOf("Layout check findings:")).toBeLessThan(prompt.indexOf("Affected viewports:"));
+  });
+
   it("uses useful fallbacks without inventing private page data", () => {
     const prompt = buildAiReviewPrompt({
       pageUrl: "",

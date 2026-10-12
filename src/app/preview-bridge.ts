@@ -2,6 +2,8 @@ import { hasVerificationChallenge } from "../domain/flow/challenge-detection";
 import { getKeyboardScrollDelta, shouldKeepKeyboardSessionOnBlur } from "../domain/device/mobile-keyboard";
 import { samplePageSurfaces } from "../domain/device/page-surfaces";
 import { createSurfaceScheduler } from "./surface-scheduler";
+import { clearLayoutMarks, measureLayout, renderLayoutMarks, scrollToLayoutMark } from "./layout-check-bridge";
+import type { LayoutMark } from "../domain/layout-check/layout-check.types";
 
 export function setupPreviewBridge() {
   if (window.parent === window) return;
@@ -912,6 +914,31 @@ export function setupPreviewBridge() {
       keepFocusedEditableVisible();
       window.clearTimeout(keyboardVisibilityTimer);
       keyboardVisibilityTimer = window.setTimeout(keepFocusedEditableVisible, 220);
+      return;
+    }
+
+    if (data.type === "MDV_LAYOUT_CHECK_REQUEST" && typeof data.slotId === "string" && data.slotId === slotId) {
+      const requestId = typeof data.requestId === "string" ? data.requestId : "";
+      // Marks from an earlier check would be measured as page content.
+      clearLayoutMarks();
+      try {
+        const report = measureLayout({ tapTargets: data.tapTargets === true, smallText: data.smallText === true }, buildSelector);
+        window.parent.postMessage({ type: "MDV_LAYOUT_CHECK_RESULT", slotId, requestId, documentId, ...report }, "*");
+      } catch {
+        window.parent.postMessage({ type: "MDV_LAYOUT_CHECK_RESULT", slotId, requestId, documentId, error: "measure" }, "*");
+      }
+      return;
+    }
+
+    if (data.type === "MDV_LAYOUT_MARKS" && typeof data.slotId === "string" && data.slotId === slotId) {
+      const marks = Array.isArray(data.marks) ? (data.marks as LayoutMark[]).filter(mark => mark && typeof mark === "object"
+        && typeof mark.id === "string" && [mark.x, mark.y, mark.width, mark.height, mark.number].every(value => typeof value === "number" && Number.isFinite(value))) : [];
+      renderLayoutMarks(marks, document.documentElement.clientWidth || window.innerWidth);
+      return;
+    }
+
+    if (data.type === "MDV_LAYOUT_SHOW" && typeof data.slotId === "string" && data.slotId === slotId) {
+      if (typeof data.id === "string") scrollToLayoutMark(data.id);
       return;
     }
 

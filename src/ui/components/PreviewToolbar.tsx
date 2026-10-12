@@ -10,6 +10,7 @@ import {
   ExpandIcon,
   FixPromptIcon,
   GripIcon,
+  LayoutCheckIcon,
   MinusIcon,
   MoreIcon,
   OpenInTabIcon,
@@ -54,6 +55,9 @@ export interface PreviewToolbarProps {
   /** Shown once this page has a "before" picture. */
   onCompareBefore?: () => void;
   compareBeforeLabel?: string;
+  /** Shown once a layout check found problems on this device. */
+  onLayoutProblems?: () => void;
+  layoutProblemCount?: number;
   onMenu: () => void;
   onRemove: () => void;
   onMoveStart?: (event: React.PointerEvent) => void;
@@ -126,6 +130,14 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
         {!focus && props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
         {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
         {props.onCompareBefore && <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}><CompareIcon size={15} /></ToolButton>}
+        {props.onLayoutProblems && (
+          <ToolButton label={t("layoutShowProblems")} accent onClick={props.onLayoutProblems}>
+            <span className="relative grid place-items-center">
+              <LayoutCheckIcon size={15} />
+              {props.layoutProblemCount ? <span aria-hidden="true" className="absolute -end-2 -top-2 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-red-500 px-[3px] font-mono text-[9px] font-bold text-white">{props.layoutProblemCount}</span> : null}
+            </span>
+          </ToolButton>
+        )}
         <div className="relative">
           <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu}><MoreIcon size={16} /></ToolButton>
           {props.menuOpen && props.menu}

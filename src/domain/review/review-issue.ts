@@ -14,6 +14,8 @@ export interface ResponsiveIssue {
   reproduction?: string;
   selector?: string;
   notes?: string;
+  /** Measured facts from the Layout check, one per line. */
+  findings?: string[];
   devices: ReviewDevice[];
 }
 
@@ -40,6 +42,7 @@ export function buildAiReviewPrompt(issue: ResponsiveIssue): string {
     "Actual behavior:",
     issue.actual.trim() || "The layout breaks or differs from the expected result.",
     ...optionalSection("Reproduction steps", issue.reproduction),
+    ...(issue.findings?.length ? ["", "Layout check findings:", ...issue.findings.map((line) => `- ${line}`)] : []),
     "",
     "Affected viewports:",
     devices || "- Reproduce across the active responsive previews.",

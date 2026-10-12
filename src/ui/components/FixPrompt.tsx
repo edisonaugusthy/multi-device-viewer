@@ -1,12 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useI18n } from "../../app/i18n";
 import { buildAiReviewPrompt, type ReviewDevice } from "../../domain/review/review-issue";
-import { CheckIcon, ChevronRightIcon, CloseIcon, CopyIcon } from "../icons";
+import { CheckIcon, ChevronRightIcon, CloseIcon, CopyIcon, LayoutCheckIcon } from "../icons";
 import { shortName } from "./PreviewCard";
 import { cx, focusRing, positionStyle, popoverPanel, useAnchoredPosition, useDismiss } from "./ui";
 
 export interface FixPromptDevice extends ReviewDevice {
   id: string;
+}
+
+/** Fields another feature fills in before the form opens, e.g. a Layout check problem. */
+export interface FixPromptPrefill {
+  wrong: string;
+  expected?: string;
+  selector?: string;
+  findings?: string[];
+  /** Shown as "Filled in from Layout check · problem {index} of {count}". */
+  source?: { index: number; count: number };
 }
 
 function summarize(text: string) {
@@ -15,20 +25,21 @@ function summarize(text: string) {
 }
 
 // The short form behind every fix prompt: what is wrong, where, and optional detail.
-export function FixPromptForm({ pageUrl, devices, initialDeviceIds, onClose, compact = false }: {
+export function FixPromptForm({ pageUrl, devices, initialDeviceIds, initialIssue, onClose, compact = false }: {
   pageUrl: string;
   devices: FixPromptDevice[];
   initialDeviceIds?: string[];
+  initialIssue?: FixPromptPrefill;
   onClose?: () => void;
   compact?: boolean;
 }) {
   const { t } = useI18n();
-  const [wrong, setWrong] = useState("");
-  const [expected, setExpected] = useState("");
+  const [wrong, setWrong] = useState(initialIssue?.wrong ?? "");
+  const [expected, setExpected] = useState(initialIssue?.expected ?? "");
   const [steps, setSteps] = useState("");
-  const [selector, setSelector] = useState("");
+  const [selector, setSelector] = useState(initialIssue?.selector ?? "");
   const [notes, setNotes] = useState("");
-  const [moreOpen, setMoreOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(Boolean(initialIssue?.selector));
   const [previewOpen, setPreviewOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [selected, setSelected] = useState(() => new Set(initialDeviceIds ?? devices.map(device => device.id)));
@@ -45,8 +56,9 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, onClose, com
     reproduction: steps,
     selector,
     notes,
+    findings: initialIssue?.findings,
     devices: devices.filter(device => selected.has(device.id)),
-  }), [devices, expected, notes, pageUrl, selected, selector, steps, wrong]);
+  }), [devices, expected, initialIssue?.findings, notes, pageUrl, selected, selector, steps, wrong]);
 
   async function copy() {
     await navigator.clipboard.writeText(prompt);
@@ -68,6 +80,12 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, onClose, com
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3.5 pb-3">
+        {initialIssue?.source && (
+          <span className="inline-flex h-6 items-center gap-1.5 self-start rounded-full bg-accent-soft pe-2.5 ps-2 text-[11.5px] font-semibold text-accent-strong">
+            <LayoutCheckIcon size={12} strokeWidth={2.2} />
+            {t("layoutFilledFrom", { index: initialIssue.source.index, count: initialIssue.source.count })}
+          </span>
+        )}
         <label className="flex flex-col gap-1.5">
           <span className="text-[12.5px] font-semibold">{t("whatsWrong")}</span>
           <textarea
@@ -166,6 +184,7 @@ export function FixPromptPopover({ open, anchorRef, onClose, ...form }: {
   pageUrl: string;
   devices: FixPromptDevice[];
   initialDeviceIds?: string[];
+  initialIssue?: FixPromptPrefill;
 }) {
   const { t } = useI18n();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -175,7 +194,7 @@ export function FixPromptPopover({ open, anchorRef, onClose, ...form }: {
   if (!open) return null;
   return (
     <div ref={panelRef} role="dialog" aria-label={t("fixPrompt")} className={cx(popoverPanel, "fixed")} style={positionStyle(position)}>
-      <FixPromptForm key={(form.initialDeviceIds ?? []).join()} {...form} onClose={onClose} />
+      <FixPromptForm key={`${(form.initialDeviceIds ?? []).join()}|${form.initialIssue?.wrong ?? ""}`} {...form} onClose={onClose} />
     </div>
   );
 }

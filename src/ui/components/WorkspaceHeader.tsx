@@ -7,6 +7,7 @@ import {
   EyeIcon,
   FixPromptIcon,
   GridIcon,
+  LayoutCheckIcon,
   LinkIcon,
   NavigationSyncIcon,
   PlusIcon,
@@ -37,6 +38,9 @@ export interface WorkspaceHeaderProps {
   recordingActive: boolean;
   fixRef: RefObject<HTMLButtonElement | null>;
   fixOpen: boolean;
+  layoutOpen: boolean;
+  layoutChecking: boolean;
+  layoutCount: number;
   settingsRef: RefObject<HTMLButtonElement | null>;
   settingsOpen: boolean;
   onAllDevices: () => void;
@@ -49,6 +53,7 @@ export interface WorkspaceHeaderProps {
   onCompare: () => void;
   onCapture: () => void;
   onFixPrompt: () => void;
+  onLayoutCheck: () => void;
   onRecord: () => void;
   onViewMode: () => void;
   onSettings: () => void;
@@ -188,6 +193,16 @@ export function WorkspaceHeader(props: WorkspaceHeaderProps) {
       </IconButton>
       <IconButton data-tour="screenshot" label={t("captureAndAnnotate")} tooltip={t("tipScreenshot")} onClick={props.onCapture} disabled={props.capturing}><CameraIcon size={16} /></IconButton>
       <IconButton ref={props.fixRef} data-tour="fix-prompt" label={t("fixPrompt")} tooltip={t("tipFixPrompt")} pressed={props.fixOpen} aria-expanded={props.fixOpen} onClick={props.onFixPrompt}><FixPromptIcon size={16} /></IconButton>
+      <span className="relative shrink-0">
+        <IconButton data-tour="layout-check" data-layout-check-toggle label={props.layoutCount > 0 ? `${t("checkLayout")} · ${props.layoutCount}` : t("checkLayout")} tooltip={t("tipCheckLayout")} pressed={props.layoutOpen} aria-expanded={props.layoutOpen} onClick={props.onLayoutCheck}>
+          {props.layoutChecking
+            ? <span aria-hidden="true" className="size-3.5 animate-spin rounded-full border-2 border-accent-line border-t-accent motion-reduce:animate-none" />
+            : <LayoutCheckIcon size={16} />}
+        </IconButton>
+        {props.layoutCount > 0 && (
+          <span aria-hidden="true" className="pointer-events-none absolute -end-1.5 -top-1.5 grid h-[17px] min-w-[17px] place-items-center rounded-full border-2 border-surface bg-red-500 px-1 font-mono text-[10px] font-bold text-white">{props.layoutCount}</span>
+        )}
+      </span>
       <IconButton ref={props.recordRef} data-tour="record" label={t("record")} tooltip={t("tipRecord")} tooltipAlign="end" pressed={props.recordOpen} aria-expanded={props.recordOpen} onClick={props.onRecord}>
         <RecordIcon size={16} active={props.recordingActive} />
       </IconButton>

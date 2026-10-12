@@ -10,7 +10,8 @@ import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
-import { AlertIcon, CameraIcon, ChevronLeftIcon, ChevronRightIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
+import { AlertIcon, CameraIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
+import type { LayoutSlotStatus } from "../hooks/useLayoutCheck";
 import { PreviewToolbar, type FocusNavigation } from "./PreviewToolbar";
 import { memo, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -119,6 +120,10 @@ interface PreviewCardProps {
   onFixPrompt?: (slotId: string) => void;
   onPageScroll?: (scrollTop: number) => void;
   expandLabel?: string;
+  /** This device's part of an open Layout check: shown under the caption and on the toolbar. */
+  layoutStatus?: LayoutSlotStatus;
+  onLayoutCheck?: (slotId: string) => void;
+  onLayoutProblems?: (slotId: string) => void;
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -176,6 +181,9 @@ export const PreviewCard = memo(function PreviewCard({
   onFixPrompt,
   onPageScroll,
   expandLabel,
+  layoutStatus,
+  onLayoutCheck,
+  onLayoutProblems,
 }: PreviewCardProps) {
   const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -859,6 +867,8 @@ export const PreviewCard = memo(function PreviewCard({
             onFixPrompt={onFixPrompt && (() => onFixPrompt(slot.id))}
             onCompareBefore={visualChecks.hasBefore() ? visualChecks.compare : undefined}
             compareBeforeLabel={t("visualCompareButton")}
+            onLayoutProblems={onLayoutProblems && layoutStatus?.status === "done" && layoutStatus.count > 0 ? () => onLayoutProblems(slot.id) : undefined}
+            layoutProblemCount={layoutStatus?.count}
             onMenu={() => setControlsOpen(value => !value)}
             onRemove={() => simulator.current.removeSlot(slot.id)}
             menu={
@@ -873,6 +883,13 @@ export const PreviewCard = memo(function PreviewCard({
                   <MenuItem label={t("openInTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
                   {onCapture && <MenuItem label={t("captureAndAnnotate")} disabled={capturePending} onClick={() => { setControlsOpen(false); onCapture(slot.id); }}><CameraIcon size={15}/></MenuItem>}
                   {visualChecks.menuItems}
+                  {onLayoutCheck && (
+                    <div className="mb-1 grid gap-px border-b border-line-soft pb-1.5" role="group" aria-label={t("layoutCheck")}>
+                      <span className="px-2 pb-0.5 text-[11px] font-semibold text-muted">{t("layoutCheck")}</span>
+                      <MenuItem label={t("checkLayoutOnDevice")} onClick={() => { setControlsOpen(false); onLayoutCheck(slot.id); }}><LayoutCheckIcon size={15}/></MenuItem>
+                      <p className="px-2 pt-1 text-[11.5px] leading-snug text-muted">{t("layoutCheckMenuHelp")}</p>
+                    </div>
+                  )}
                   {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
                   {!focused && !first && <MenuItem label={t("moveViewportLeft")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "left"); }}><ChevronLeftIcon size={15}/></MenuItem>}
                   {!focused && !last && <MenuItem label={t("moveViewportRight")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "right"); }}><ChevronRightIcon size={15}/></MenuItem>}
@@ -889,6 +906,7 @@ export const PreviewCard = memo(function PreviewCard({
             className={`flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent ${isActive ? "font-semibold text-ink" : "font-medium text-ink-2"}`}>
             <span className="truncate text-[13px]">{shortName(device.name)}</span>
             <span dir="ltr" className="shrink-0 font-mono text-xs font-medium text-muted">{viewportLabel}</span>
+            {layoutStatus && <LayoutChip status={layoutStatus} />}
           </button>
         </div>
       )}
@@ -1012,6 +1030,19 @@ function BlockedView({
         {onCapture && <button type="button" className={secondary} onClick={onCapture}>{t("captureCurrentTab")}</button>}
       </div>
     </div>
+  );
+}
+
+function LayoutChip({ status }: { status: LayoutSlotStatus }) {
+  const { t } = useI18n();
+  const chip = "inline-flex h-5 shrink-0 items-center gap-1 self-center whitespace-nowrap rounded-full text-[11px] font-semibold";
+  if (status.status === "checking") return <span className={`${chip} bg-sunken px-2 text-muted`}>{t("layoutChecking")}</span>;
+  if (status.status === "failed") return <span className={`${chip} bg-warn-soft pe-2 ps-1.5 text-warn`}><AlertIcon size={10} strokeWidth={3} />{t("layoutNotChecked")}</span>;
+  if (status.count === 0) return <span className={`${chip} bg-accent-soft pe-2 ps-1.5 text-accent-strong`}><CheckIcon size={10} strokeWidth={3.2} />{t("layoutFits")}</span>;
+  return (
+    <span className={`${chip} bg-red-500/10 pe-2 ps-1.5 text-danger`}>
+      <AlertIcon size={10} strokeWidth={3} />{status.count === 1 ? t("layoutProblemOne") : t("layoutProblemMany", { count: status.count })}
+    </span>
   );
 }
 

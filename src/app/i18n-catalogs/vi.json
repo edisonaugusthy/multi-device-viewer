@@ -478,5 +478,6 @@
   "layoutAfterReload": "Kiểm tra lại sau mỗi lần tải lại",
   "layoutCheckHelp": "Đo trang như khi đã tải trong từng bản xem trước. Vị trí cuộn, hoạt ảnh và nội dung tải sau có thể làm thay đổi kết quả. Nhấn N và P để chuyển giữa các vấn đề.",
   "layoutFilledFrom": "Điền sẵn từ kiểm tra bố cục · vấn đề {index}/{count}",
-  "tourLayoutCheckText": "Tìm trên mọi thiết bị những gì tràn ra ngoài mép khung nhìn hoặc quá nhỏ để chạm."
+  "tourLayoutCheckText": "Tìm trên mọi thiết bị những gì tràn ra ngoài mép khung nhìn hoặc quá nhỏ để chạm.",
+  "layoutTruncated": "Mỗi thiết bị chỉ liệt kê {count} mục đầu tiên của mỗi loại."
 }

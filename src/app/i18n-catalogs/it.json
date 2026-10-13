@@ -478,5 +478,6 @@
   "layoutAfterReload": "Controlla di nuovo dopo ogni ricaricamento",
   "layoutCheckHelp": "Misura la pagina così come è caricata in ogni anteprima. Posizione di scorrimento, animazioni e contenuti caricati dopo possono cambiare il risultato. Premi N e P per passare da un problema all’altro.",
   "layoutFilledFrom": "Compilato dal controllo del layout · problema {index} di {count}",
-  "tourLayoutCheckText": "Trova su ogni dispositivo ciò che sporge dal bordo della viewport o è troppo piccolo da toccare."
+  "tourLayoutCheckText": "Trova su ogni dispositivo ciò che sporge dal bordo della viewport o è troppo piccolo da toccare.",
+  "layoutTruncated": "Per ogni dispositivo sono elencati solo i primi {count} di ogni tipo."
 }

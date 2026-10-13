@@ -527,6 +527,7 @@ const en = {
   layoutAfterReload: "Check again after each reload",
   layoutCheckHelp: "Measures the page as loaded in each preview. Scroll position, animations and content that loads later can change the result. Press N and P to step through problems.",
   layoutFilledFrom: "Filled in from Layout check · problem {index} of {count}",
+  layoutTruncated: "Only the first {count} of each kind are listed per device.",
   tourLayoutCheckText: "Find what crosses the viewport edge or is too small to tap.",
 } as const;
 

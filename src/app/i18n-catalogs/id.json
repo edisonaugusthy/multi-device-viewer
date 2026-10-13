@@ -478,5 +478,6 @@
   "layoutAfterReload": "Periksa lagi setelah setiap muat ulang",
   "layoutCheckHelp": "Mengukur halaman seperti yang dimuat di setiap pratinjau. Posisi gulir, animasi, dan konten yang dimuat belakangan bisa mengubah hasilnya. Tekan N dan P untuk berpindah antar masalah.",
   "layoutFilledFrom": "Diisi dari pemeriksaan tata letak · masalah {index} dari {count}",
-  "tourLayoutCheckText": "Menemukan di setiap perangkat apa yang melewati tepi viewport atau terlalu kecil untuk diketuk."
+  "tourLayoutCheckText": "Menemukan di setiap perangkat apa yang melewati tepi viewport atau terlalu kecil untuk diketuk.",
+  "layoutTruncated": "Hanya {count} pertama dari setiap jenis yang dicantumkan per perangkat."
 }

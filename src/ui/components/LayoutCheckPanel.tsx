@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "../../app/i18n";
 import { formatOverflow, type LayoutProblemGroup } from "../../domain/layout-check/layout-check";
-import { SMALL_TEXT_MIN, TAP_TARGET_MIN, type LayoutProblemKind } from "../../domain/layout-check/layout-check.types";
+import { MAX_PROBLEMS_PER_KIND, SMALL_TEXT_MIN, TAP_TARGET_MIN, type LayoutProblemKind } from "../../domain/layout-check/layout-check.types";
 import type { LayoutCheckSettings, LayoutCheckView } from "../hooks/useLayoutCheck";
 import { AlertIcon, CheckIcon, CloseIcon, CopyIcon, FixPromptIcon, ReloadIcon } from "../icons";
 import { shortName } from "./PreviewCard";
@@ -35,7 +35,9 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
   const problemsLabel = totals.problems === 1 ? t("layoutProblemOne") : t("layoutProblemMany", { count: totals.problems });
   const subtitle = checking
     ? t("layoutCheckingDevices", { count: totals.total })
-    : totals.problems > 0
+    : checkedDevices.length === 0
+      ? t("layoutNotChecked")
+      : totals.problems > 0
       ? t("layoutSummary", { problems: problemsLabel, affected: totals.affected, total: totals.total, when })
       : t("layoutCleanSummary", { count: checkedDevices.length, when });
   const describe = (group: LayoutProblemGroup) => group.kind === "overflow"
@@ -133,6 +135,9 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
                 </li>
               );
             })}
+            {view.truncated && (
+              <li className="px-3 py-2 text-xs text-muted">{t("layoutTruncated", { count: MAX_PROBLEMS_PER_KIND })}</li>
+            )}
             {checkedDevices.filter(device => device.count === 0).map(device => (
               <li key={device.slotId} className="flex items-center gap-2 px-3 py-2 text-xs text-muted">
                 <span className="text-accent"><CheckIcon size={13} /></span>

@@ -478,5 +478,6 @@
   "layoutAfterReload": "Kontrollera igen efter varje omladdning",
   "layoutCheckHelp": "Mäter sidan så som den laddats i varje förhandsvisning. Rullningsläge, animationer och innehåll som laddas senare kan ändra resultatet. Tryck N och P för att stega mellan problemen.",
   "layoutFilledFrom": "Ifyllt från layoutkontrollen · problem {index} av {count}",
-  "tourLayoutCheckText": "Hittar på varje enhet det som sticker ut utanför visningsytan eller är för litet att trycka på."
+  "tourLayoutCheckText": "Hittar på varje enhet det som sticker ut utanför visningsytan eller är för litet att trycka på.",
+  "layoutTruncated": "Bara de första {count} av varje slag listas per enhet."
 }

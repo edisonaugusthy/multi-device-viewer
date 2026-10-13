@@ -39,6 +39,8 @@ export interface LayoutCheckView {
   settings: LayoutCheckSettings;
   devices: LayoutDeviceRow[];
   totals: { problems: number; affected: number; total: number };
+  /** Some device hit a check's limit, so its list is incomplete. */
+  truncated: boolean;
 }
 
 type SlotState =
@@ -48,8 +50,8 @@ type SlotState =
 
 const SETTINGS_KEY = "mdvLayoutCheck";
 const DEFAULT_SETTINGS: LayoutCheckSettings = { tapTargets: true, smallText: false, afterReload: true };
-/** A preview that cannot answer (blocked, standalone, still loading) fails instead of hanging. */
-const ANSWER_TIMEOUT_MS = 6000;
+/** A preview that cannot answer (blocked, standalone, still loading) fails instead of hanging; a heavy page can take a while. */
+const ANSWER_TIMEOUT_MS = 15000;
 /** Lets a reloaded page lay out before it is measured again. */
 const RELOAD_SETTLE_MS = 700;
 
@@ -245,6 +247,7 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
     return {
       open, checking: devices.some(device => device.status === "checking"), groups, selected, checkedAt, settings, devices,
       totals: { problems: groups.length, affected: checked.filter(device => device.count > 0).length, total: devices.length },
+      truncated: Object.values(states).some(state => state.status === "done" && state.report.truncated),
     };
   }, [checkedAt, findDevice, groups, open, selected, settings, slotSize, slots, states]);
 

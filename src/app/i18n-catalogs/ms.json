@@ -478,5 +478,6 @@
   "layoutAfterReload": "Semak semula selepas setiap muat semula",
   "layoutCheckHelp": "Mengukur halaman sebagaimana ia dimuatkan dalam setiap pratonton. Kedudukan tatal, animasi dan kandungan yang dimuatkan kemudian boleh mengubah keputusan. Tekan N dan P untuk beralih antara masalah.",
   "layoutFilledFrom": "Diisi daripada semakan susun atur · masalah {index} daripada {count}",
-  "tourLayoutCheckText": "Mencari pada setiap peranti apa yang melepasi tepi viewport atau terlalu kecil untuk diketik."
+  "tourLayoutCheckText": "Mencari pada setiap peranti apa yang melepasi tepi viewport atau terlalu kecil untuk diketik.",
+  "layoutTruncated": "Hanya {count} yang pertama bagi setiap jenis disenaraikan untuk setiap peranti."
 }

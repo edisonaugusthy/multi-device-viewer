@@ -478,5 +478,6 @@
   "layoutAfterReload": "Sprawdzaj ponownie po każdym przeładowaniu",
   "layoutCheckHelp": "Mierzy stronę w stanie załadowanym w każdym podglądzie. Pozycja przewijania, animacje i treści ładowane później mogą zmienić wynik. Naciskaj N i P, aby przechodzić między problemami.",
   "layoutFilledFrom": "Wypełniono na podstawie sprawdzania układu · problem {index} z {count}",
-  "tourLayoutCheckText": "Znajduje na każdym urządzeniu to, co wystaje poza krawędź viewportu lub jest za małe do dotknięcia."
+  "tourLayoutCheckText": "Znajduje na każdym urządzeniu to, co wystaje poza krawędź viewportu lub jest za małe do dotknięcia.",
+  "layoutTruncated": "Dla każdego urządzenia wymieniono tylko pierwsze {count} z każdego rodzaju."
 }

@@ -94,6 +94,7 @@ export function measureLayout(options: LayoutCheckOptions, buildSelector: (eleme
       if (style.display === "none" || style.visibility === "hidden" || rect.width === 0 || rect.height === 0) continue;
       if ((element as HTMLButtonElement).disabled || element.getAttribute("aria-hidden") === "true") continue;
       // Links inside running text are exempt; the line gives them room.
+      if (style.display === "inline" && element.tagName === "A") continue;
       if (style.display === "inline" && element.parentElement && hasOwnText(element.parentElement)) continue;
       // A checkbox or radio inside a big enough label is tapped through the label.
       const label = element.closest("label");

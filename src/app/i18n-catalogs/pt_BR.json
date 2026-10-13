@@ -478,5 +478,6 @@
   "layoutAfterReload": "Verificar de novo após cada recarregamento",
   "layoutCheckHelp": "Mede a página como foi carregada em cada prévia. Posição de rolagem, animações e conteúdo carregado depois podem mudar o resultado. Pressione N e P para percorrer os problemas.",
   "layoutFilledFrom": "Preenchido pela verificação de layout · problema {index} de {count}",
-  "tourLayoutCheckText": "Encontra em cada dispositivo o que ultrapassa a borda da viewport ou é pequeno demais para tocar."
+  "tourLayoutCheckText": "Encontra em cada dispositivo o que ultrapassa a borda da viewport ou é pequeno demais para tocar.",
+  "layoutTruncated": "Só os primeiros {count} de cada tipo são listados por dispositivo."
 }

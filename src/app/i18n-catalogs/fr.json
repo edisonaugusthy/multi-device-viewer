@@ -478,5 +478,6 @@
   "layoutAfterReload": "Vérifier à nouveau après chaque rechargement",
   "layoutCheckHelp": "Mesure la page telle qu’elle est chargée dans chaque aperçu. La position de défilement, les animations et le contenu chargé plus tard peuvent changer le résultat. Appuyez sur N et P pour passer d’un problème à l’autre.",
   "layoutFilledFrom": "Rempli depuis la vérification de la mise en page · problème {index} sur {count}",
-  "tourLayoutCheckText": "Trouve sur chaque appareil ce qui dépasse du viewport ou est trop petit pour être touché."
+  "tourLayoutCheckText": "Trouve sur chaque appareil ce qui dépasse du viewport ou est trop petit pour être touché.",
+  "layoutTruncated": "Seuls les {count} premiers de chaque type sont listés par appareil."
 }

@@ -478,5 +478,6 @@
   "layoutAfterReload": "Nach jedem Neuladen erneut prüfen",
   "layoutCheckHelp": "Misst die Seite so, wie sie in jeder Vorschau geladen ist. Scrollposition, Animationen und nachgeladene Inhalte können das Ergebnis verändern. Mit N und P springst du durch die Probleme.",
   "layoutFilledFrom": "Aus der Layout-Prüfung übernommen · Problem {index} von {count}",
-  "tourLayoutCheckText": "Findet auf jedem Gerät, was über den Viewport-Rand ragt oder zu klein zum Antippen ist."
+  "tourLayoutCheckText": "Findet auf jedem Gerät, was über den Viewport-Rand ragt oder zu klein zum Antippen ist.",
+  "layoutTruncated": "Pro Gerät werden nur die ersten {count} jeder Art aufgeführt."
 }

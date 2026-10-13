@@ -478,5 +478,6 @@
   "layoutAfterReload": "Na elke herlaadbeurt opnieuw controleren",
   "layoutCheckHelp": "Meet de pagina zoals die in elke voorvertoning is geladen. Scrollpositie, animaties en later geladen inhoud kunnen het resultaat veranderen. Druk op N en P om door de problemen te stappen.",
   "layoutFilledFrom": "Ingevuld vanuit de lay-outcontrole · probleem {index} van {count}",
-  "tourLayoutCheckText": "Vindt op elk apparaat wat over de viewportrand steekt of te klein is om aan te tikken."
+  "tourLayoutCheckText": "Vindt op elk apparaat wat over de viewportrand steekt of te klein is om aan te tikken.",
+  "layoutTruncated": "Per apparaat worden alleen de eerste {count} van elke soort vermeld."
 }

@@ -478,5 +478,6 @@
   "layoutAfterReload": "Suriin ulit pagkatapos ng bawat reload",
   "layoutCheckHelp": "Sinusukat ang page gaya ng pagka-load nito sa bawat preview. Puwedeng magbago ang resulta dahil sa scroll position, mga animation at content na na-load nang mas huli. Pindutin ang N at P para lumipat sa mga problema.",
   "layoutFilledFrom": "Pinunan mula sa pagsusuri ng layout · problema {index} sa {count}",
-  "tourLayoutCheckText": "Hanapin sa bawat device ang lumalagpas sa gilid ng viewport o masyadong maliit para pindutin."
+  "tourLayoutCheckText": "Hanapin sa bawat device ang lumalagpas sa gilid ng viewport o masyadong maliit para pindutin.",
+  "layoutTruncated": "Ang unang {count} lang ng bawat uri ang nakalista bawat device."
 }

@@ -70,13 +70,13 @@ Phones and tablets rotate where the real device does, and you can add custom vie
 - Mark a reference with the built-in annotation tools.
 - References and overlay settings are stored locally so the workspace can resume later.
 
-### Layout check: find what breaks
+### Layout check: find what makes the page scroll sideways
 
 - **Check layout** in the header measures every device in the workspace at once; a device's **Viewport options** menu checks that device alone. Nothing leaves the page: the preview bridge already running inside each frame measures the DOM and answers the viewer.
-- **Overflow** finds the outermost elements that cross the viewport's edge and make the page scroll sideways, including unbroken text that runs past its box. Subtrees that an ancestor clips sideways are not counted, and neither are fixed elements. **Tap targets** (phones, tablets and watches) applies WCAG 2.5.8: a control under 24×24 px is flagged unless a 24 px square around it clears every other control, and links inside running text and checkboxes inside a large enough label are exempt. **Small text** (off by default) flags text under 12 px.
-- Each culprit is outlined and numbered on the device itself, in page pixels, so the marks scroll and reflow with the page. Overflowing elements get a "+N px" pill at the edge they cross and a hatched strip down that edge; tap targets are amber, small text blue. The device caption shows "3 problems" or "Fits", and the device toolbar gains a shortcut to the panel.
+- It finds the outermost elements that cross the viewport's edge and make the page scroll sideways, including unbroken text that runs past its box. Subtrees that an ancestor clips sideways are not counted, and neither are fixed elements or pages that clip the viewport themselves. Each page lists at most 20 culprits.
+- Each culprit is outlined and numbered on the device itself, in page pixels, so the marks scroll and reflow with the page, with a "+N px" pill at the edge it crosses and a hatched strip down that edge. The device caption shows "3 problems" or "Fits", and the device toolbar gains a shortcut to the panel.
 - The docked panel lists each element once with every device it fails on and the overrun per device, widest first. Click a row to select it: the mark gets a ring and a label, and every affected device scrolls to it. N and P step through problems. **Fix prompt** opens the fix prompt filled in with what is wrong, the expected behaviour, the selector, the affected devices and a "Layout check findings" section; **Copy selector** copies it.
-- With **Check again after each reload** on, a device that reloads is measured again, so the marks follow your edits. Checks and this switch are remembered. Each check is capped at 20 elements per page, and a preview that cannot answer (blocked, or still loading) is listed as not checked.
+- With **Check again after each reload** on, a device that reloads is measured again, so the marks follow your edits. The switch is remembered. A preview that cannot answer (blocked, or still loading) is listed as not checked.
 - Measurements describe the page as loaded in each preview. Scroll position, animations and content that loads later can change the result.
 
 ### Compare before & after

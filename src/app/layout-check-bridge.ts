@@ -1,17 +1,10 @@
-// Runs inside a preview frame: measures the page for the Layout check and
-// draws its marks over the page in page pixels, so they scroll with it.
-import { findOverflowOffenders, findSmallTapTargets, type OverflowCandidate, type TargetBox } from "../domain/layout-check/layout-check";
-import {
-  MAX_PROBLEMS_PER_KIND, SMALL_TEXT_MIN, TAP_TARGET_MIN,
-  type LayoutCheckOptions, type LayoutCheckReport, type LayoutMark, type LayoutProblem, type LayoutProblemKind,
-} from "../domain/layout-check/layout-check.types";
+// Runs inside a preview frame: finds what makes the page scroll sideways and
+// draws the marks over the page in page pixels, so they scroll with it.
+import { findOverflowOffenders, type OverflowCandidate } from "../domain/layout-check/layout-check";
+import { MAX_PROBLEMS, type LayoutCheckReport, type LayoutMark, type LayoutProblem } from "../domain/layout-check/layout-check.types";
 
 const MARKS_ID = "mdv-layout-marks";
-const COLORS: Record<LayoutProblemKind, string> = { overflow: "239, 68, 68", "tap-target": "180, 83, 9", "small-text": "37, 99, 235" };
-const TAP_TARGET_SELECTOR = [
-  'a[href]', 'button', 'input:not([type="hidden"])', 'select', 'textarea', 'summary',
-  '[role="button"]', '[role="link"]', '[role="checkbox"]', '[role="radio"]', '[role="switch"]', '[role="tab"]', '[role="menuitem"]', '[role="option"]',
-].join(",");
+const COLOR = "239, 68, 68";
 
 const round = (value: number) => Math.round(value * 10) / 10;
 
@@ -19,12 +12,8 @@ function isOurs(element: Element) {
   return element.closest(`#${MARKS_ID}`) !== null;
 }
 
-function hasOwnText(element: Element) {
-  return Array.from(element.childNodes).some(node => node.nodeType === Node.TEXT_NODE && (node.textContent ?? "").trim() !== "");
-}
-
 /** Measures the current document. Selectors come from the bridge so they match its other messages. */
-export function measureLayout(options: LayoutCheckOptions, buildSelector: (element: Element) => string): LayoutCheckReport {
+export function measureLayout(buildSelector: (element: Element) => string): LayoutCheckReport {
   const root = document.documentElement;
   const viewportWidth = root.clientWidth || window.innerWidth;
   const viewportHeight = root.clientHeight || window.innerHeight;
@@ -33,21 +22,10 @@ export function measureLayout(options: LayoutCheckOptions, buildSelector: (eleme
   const problems: LayoutProblem[] = [];
   const ids = new Set<string>();
   let truncated = false;
-  const add = (kind: LayoutProblemKind, element: Element, rect: DOMRect, extra: Partial<LayoutProblem> = {}) => {
-    const selector = buildSelector(element);
-    let id = `${kind}:${selector}`;
-    for (let n = 2; ids.has(id); n++) id = `${kind}:${selector}#${n}`;
-    ids.add(id);
-    problems.push({
-      id, kind, selector, tagName: element.tagName.toLowerCase(),
-      x: round(rect.left + scrollX), y: round(rect.top + scrollY), width: round(rect.width), height: round(rect.height),
-      ...extra,
-    });
-  };
   const body = document.body;
   if (!body) return { url: location.href, viewportWidth, viewportHeight, problems, truncated };
 
-  // Overflow: every element in document order, so parents precede children.
+  // Every element in document order, so parents precede children.
   const elements = Array.from(body.querySelectorAll("*")).filter(element => !isOurs(element));
   const index = new Map<Element, number>();
   const rects: DOMRect[] = [];
@@ -70,65 +48,24 @@ export function measureLayout(options: LayoutCheckOptions, buildSelector: (eleme
       ignore: hidden || style.position === "fixed",
     };
   });
-  const bodyStyle = getComputedStyle(body);
-  const rootClips = getComputedStyle(root).overflowX !== "visible" || bodyStyle.overflowX !== "visible";
+  // A page that clips the viewport itself cannot scroll sideways.
+  const rootClips = getComputedStyle(root).overflowX !== "visible" || getComputedStyle(body).overflowX !== "visible";
   if (!rootClips) {
-    const offenders = findOverflowOffenders(candidates, viewportWidth, MAX_PROBLEMS_PER_KIND + 1);
-    if (offenders.length > MAX_PROBLEMS_PER_KIND) { truncated = true; offenders.length = MAX_PROBLEMS_PER_KIND; }
+    const offenders = findOverflowOffenders(candidates, viewportWidth, MAX_PROBLEMS + 1);
+    if (offenders.length > MAX_PROBLEMS) { truncated = true; offenders.length = MAX_PROBLEMS; }
     for (const i of offenders) {
       const { left, right } = candidates[i];
-      add("overflow", elements[i], rects[i], {
-        width: round(right - left),
+      const element = elements[i];
+      const selector = buildSelector(element);
+      let id = selector;
+      for (let n = 2; ids.has(id); n++) id = `${selector}#${n}`;
+      ids.add(id);
+      problems.push({
+        id, selector, tagName: element.tagName.toLowerCase(),
+        x: round(left), y: round(rects[i].top + scrollY), width: round(right - left), height: round(rects[i].height),
         overflowRight: right > viewportWidth + 1 ? round(right - viewportWidth) : undefined,
         overflowLeft: left < -1 ? round(-left) : undefined,
       });
-    }
-  }
-
-  if (options.tapTargets) {
-    // Every visible control takes part: an undersized one only fails when it is crowded.
-    const controls: { element: HTMLElement; rect: DOMRect }[] = [];
-    const boxes: TargetBox[] = [];
-    for (const element of body.querySelectorAll<HTMLElement>(TAP_TARGET_SELECTOR)) {
-      if (isOurs(element)) continue;
-      const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
-      if (style.display === "none" || style.visibility === "hidden" || rect.width === 0 || rect.height === 0) continue;
-      if ((element as HTMLButtonElement).disabled || element.getAttribute("aria-hidden") === "true") continue;
-      // Links inside running text are exempt; the line gives them room.
-      if (style.display === "inline" && element.tagName === "A") continue;
-      if (style.display === "inline" && element.parentElement && hasOwnText(element.parentElement)) continue;
-      // A checkbox or radio inside a big enough label is tapped through the label.
-      const label = element.closest("label");
-      if (label && label !== element) {
-        const labelRect = label.getBoundingClientRect();
-        if (labelRect.width >= TAP_TARGET_MIN && labelRect.height >= TAP_TARGET_MIN) continue;
-      }
-      controls.push({ element, rect });
-      boxes.push({ left: rect.left + scrollX, top: rect.top + scrollY, width: rect.width, height: rect.height });
-    }
-    const failing = findSmallTapTargets(boxes, TAP_TARGET_MIN);
-    if (failing.length > MAX_PROBLEMS_PER_KIND) { truncated = true; failing.length = MAX_PROBLEMS_PER_KIND; }
-    for (const index of failing) add("tap-target", controls[index].element, controls[index].rect);
-  }
-
-  if (options.smallText) {
-    let count = 0;
-    const seen = new Set<Element>();
-    const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
-    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-      if ((node.textContent ?? "").trim().length < 2) continue;
-      const element = node.parentElement;
-      if (!element || seen.has(element) || isOurs(element) || element.closest("script, style, noscript, template")) continue;
-      seen.add(element);
-      const style = getComputedStyle(element);
-      const fontSize = parseFloat(style.fontSize);
-      if (!(fontSize < SMALL_TEXT_MIN) || style.visibility === "hidden" || style.display === "none") continue;
-      const rect = element.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) continue;
-      if (count >= MAX_PROBLEMS_PER_KIND) { truncated = true; break; }
-      count++;
-      add("small-text", element, rect, { fontSize: round(fontSize) });
     }
   }
 
@@ -143,30 +80,27 @@ export function renderLayoutMarks(marks: LayoutMark[], viewportWidth: number) {
   container.id = MARKS_ID;
   container.setAttribute("aria-hidden", "true");
   container.style.cssText = "position:absolute!important;left:0!important;top:0!important;width:0!important;height:0!important;margin:0!important;padding:0!important;border:0!important;z-index:2147483646!important;pointer-events:none!important;font:600 10.5px/1 ui-monospace,Menlo,Consolas,monospace!important;color-scheme:light!important;";
-  if (marks.some(mark => mark.kind === "overflow")) {
-    const strip = document.createElement("div");
-    strip.style.cssText = "position:fixed;top:0;right:0;bottom:0;width:6px;background:repeating-linear-gradient(135deg,rgba(239,68,68,.6) 0 4px,rgba(239,68,68,.12) 4px 8px);";
-    container.appendChild(strip);
-  }
+  const strip = document.createElement("div");
+  strip.style.cssText = `position:fixed;top:0;right:0;bottom:0;width:6px;background:repeating-linear-gradient(135deg,rgba(${COLOR},.6) 0 4px,rgba(${COLOR},.12) 4px 8px);`;
+  container.appendChild(strip);
   for (const mark of marks) {
-    const color = COLORS[mark.kind] ?? COLORS.overflow;
     const box = document.createElement("div");
     box.dataset.layoutMark = mark.id;
     box.style.cssText = `position:absolute;left:${mark.x}px;top:${mark.y}px;width:${mark.width}px;height:${mark.height}px;box-sizing:border-box;border-radius:3px;`
-      + `outline:${mark.selected ? 3 : 2}px solid rgb(${color});outline-offset:-1px;background:rgba(${color},.08);`
-      + (mark.selected ? `box-shadow:0 0 0 5px rgba(${color},.3);` : "");
+      + `outline:${mark.selected ? 3 : 2}px solid rgb(${COLOR});outline-offset:-1px;background:rgba(${COLOR},.08);`
+      + (mark.selected ? `box-shadow:0 0 0 5px rgba(${COLOR},.3);` : "");
     const badge = document.createElement("span");
     badge.textContent = String(mark.number);
-    badge.style.cssText = `position:absolute;left:-9px;top:-9px;width:18px;height:18px;border-radius:50%;background:rgb(${color});color:#fff;display:flex;align-items:center;justify-content:center;font:700 10.5px/1 ui-monospace,Menlo,Consolas,monospace;`;
+    badge.style.cssText = `position:absolute;left:-9px;top:-9px;width:18px;height:18px;border-radius:50%;background:rgb(${COLOR});color:#fff;display:flex;align-items:center;justify-content:center;font:700 10.5px/1 ui-monospace,Menlo,Consolas,monospace;`;
     box.appendChild(badge);
     const overflow = Math.max(mark.overflowRight ?? 0, mark.overflowLeft ?? 0);
-    if (mark.kind === "overflow" && overflow > 0) {
+    if (overflow > 0) {
       const pill = document.createElement("span");
       pill.textContent = `+${Math.round(overflow)} px`;
       // Hugs the viewport edge the element crosses, level with the element's middle.
       const atRight = (mark.overflowRight ?? 0) >= (mark.overflowLeft ?? 0);
       pill.style.cssText = `position:absolute;top:${mark.y + mark.height / 2}px;${atRight ? `left:${viewportWidth}px;transform:translate(-100%,-50%);border-radius:12px 0 0 12px;padding:0 8px 0 10px;` : "left:0;transform:translateY(-50%);border-radius:0 12px 12px 0;padding:0 10px 0 8px;"}`
-        + `height:24px;display:flex;align-items:center;background:rgb(${color});color:#fff;font:700 11px/1 ui-monospace,Menlo,Consolas,monospace;white-space:nowrap;`;
+        + `height:24px;display:flex;align-items:center;background:rgb(${COLOR});color:#fff;font:700 11px/1 ui-monospace,Menlo,Consolas,monospace;white-space:nowrap;`;
       container.appendChild(pill);
     }
     if (mark.selected && mark.label) {

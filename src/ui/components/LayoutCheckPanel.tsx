@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "../../app/i18n";
 import { formatOverflow, type LayoutProblemGroup } from "../../domain/layout-check/layout-check";
-import { MAX_PROBLEMS_PER_KIND, SMALL_TEXT_MIN, TAP_TARGET_MIN, type LayoutProblemKind } from "../../domain/layout-check/layout-check.types";
-import type { LayoutCheckSettings, LayoutCheckView } from "../hooks/useLayoutCheck";
+import { MAX_PROBLEMS } from "../../domain/layout-check/layout-check.types";
+import type { LayoutCheckView } from "../hooks/useLayoutCheck";
 import { AlertIcon, CheckIcon, CloseIcon, CopyIcon, FixPromptIcon, ReloadIcon } from "../icons";
 import { shortName } from "./PreviewCard";
 import { cx, focusRing, Switch } from "./ui";
 import { useFormatters } from "./VisualChecks";
 
-const MARK_COLOR: Record<LayoutProblemKind, string> = { overflow: "bg-red-500", "tap-target": "bg-amber-700", "small-text": "bg-blue-600" };
 const button = cx("inline-flex h-7 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-2.5 text-xs font-semibold text-ink hover:bg-sunken", focusRing);
 
-/** The docked list of layout problems, one culprit per row with the devices it fails on. */
-export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixPrompt, onSettingsChange }: {
+/** The docked list of elements that make the page scroll sideways, one culprit per row with the devices it fails on. */
+export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixPrompt, onAfterReloadChange }: {
   view: LayoutCheckView;
   onClose: () => void;
   onCheckAgain: () => void;
   onSelect: (key: string | null) => void;
   onFixPrompt: (group: LayoutProblemGroup) => void;
-  onSettingsChange: (change: Partial<LayoutCheckSettings>, recheck: boolean) => void;
+  onAfterReloadChange: (on: boolean) => void;
 }) {
   const { t } = useI18n();
   const format = useFormatters();
@@ -38,17 +37,12 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
     : checkedDevices.length === 0
       ? t("layoutNotChecked")
       : totals.problems > 0
-      ? t("layoutSummary", { problems: problemsLabel, affected: totals.affected, total: totals.total, when })
-      : t("layoutCleanSummary", { count: checkedDevices.length, when });
-  const describe = (group: LayoutProblemGroup) => group.kind === "overflow"
-    ? t(group.overflowLeft ? "layoutOverflowLeft" : "layoutOverflowRight")
-    : group.kind === "tap-target"
-      ? t("layoutTapTarget", { size: TAP_TARGET_MIN })
-      : t("layoutSmallText", { size: group.devices[0]?.fontSize ?? 0, min: SMALL_TEXT_MIN });
+        ? t("layoutSummary", { problems: problemsLabel, affected: totals.affected, total: totals.total, when })
+        : t("layoutCleanSummary", { count: checkedDevices.length, when });
 
   return (
     <aside data-layout-check-panel aria-label={t("layoutCheck")} className="flex w-[360px] shrink-0 flex-col border-s border-line bg-surface text-ink">
-      <div className="flex items-start gap-2 pb-2.5 pe-2.5 ps-4 pt-3.5">
+      <div className="flex items-start gap-2 pb-3 pe-2.5 ps-4 pt-3.5">
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <h2 className="text-sm font-semibold">{t("layoutCheck")}</h2>
           <p role="status" className="text-xs text-muted">{subtitle}</p>
@@ -62,12 +56,6 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
           className={cx("grid size-[30px] shrink-0 place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}>
           <CloseIcon size={15} strokeWidth={2.2} />
         </button>
-      </div>
-
-      <div role="group" aria-label={t("layoutCheck")} className="flex flex-wrap gap-1.5 px-4 pb-3">
-        <CheckChip label={t("layoutCheckOverflow")} on disabled />
-        <CheckChip label={t("layoutCheckTapTargets")} on={view.settings.tapTargets} onToggle={on => onSettingsChange({ tapTargets: on }, true)} />
-        <CheckChip label={t("layoutCheckSmallText")} on={view.settings.smallText} onToggle={on => onSettingsChange({ smallText: on }, true)} />
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto border-t border-line-soft">
@@ -103,18 +91,18 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
                     onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelect(on ? null : group.key); } }}
                     className={cx("grid w-full cursor-pointer grid-cols-[20px_minmax(0,1fr)] items-start gap-2.5 rounded-[10px] px-2 py-2.5 text-start hover:bg-sunken", on && "bg-surface shadow-[0_1px_2px_rgb(20_23_26/0.18),0_0_0_1px_var(--color-line-soft)]", focusRing)}
                   >
-                    <span className={cx("mt-px grid size-5 place-items-center rounded-full font-mono text-[10.5px] font-bold text-white", MARK_COLOR[group.kind])}>{group.number}</span>
+                    <span className="mt-px grid size-5 place-items-center rounded-full bg-red-500 font-mono text-[10.5px] font-bold text-white">{group.number}</span>
                     <span className="grid min-w-0 gap-1.5">
                       <span className="flex items-baseline gap-2">
                         <span dir="ltr" className="truncate font-mono text-[12.5px] font-semibold">{group.selector}</span>
                         <span dir="ltr" className="shrink-0 text-[11px] text-faint">{Math.round(group.width)}×{Math.round(group.height)}</span>
                       </span>
-                      <span className="text-[12.5px] leading-snug text-ink-2">{describe(group)}</span>
+                      <span className="text-[12.5px] leading-snug text-ink-2">{t(group.overflowLeft ? "layoutOverflowLeft" : "layoutOverflowRight")}</span>
                       <span className="flex flex-wrap gap-1.5">
                         {group.devices.map(device => (
                           <span key={device.slotId} className="inline-flex h-[22px] items-center gap-1 rounded-md bg-sunken px-2 text-[11.5px] font-semibold text-ink-2">
                             {shortName(device.deviceName)}
-                            {device.overflow !== undefined && device.overflow > 0 && <span dir="ltr" className="font-mono text-danger">{formatOverflow(device.overflow)}</span>}
+                            {device.overflow > 0 && <span dir="ltr" className="font-mono text-danger">{formatOverflow(device.overflow)}</span>}
                           </span>
                         ))}
                       </span>
@@ -136,7 +124,7 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
               );
             })}
             {view.truncated && (
-              <li className="px-3 py-2 text-xs text-muted">{t("layoutTruncated", { count: MAX_PROBLEMS_PER_KIND })}</li>
+              <li className="px-3 py-2 text-xs text-muted">{t("layoutTruncated", { count: MAX_PROBLEMS })}</li>
             )}
             {checkedDevices.filter(device => device.count === 0).map(device => (
               <li key={device.slotId} className="flex items-center gap-2 px-3 py-2 text-xs text-muted">
@@ -169,23 +157,10 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
       <div className="grid gap-2.5 border-t border-line bg-surface-2 px-4 pb-3.5 pt-3">
         <label className="flex items-center justify-between gap-3 text-[12.5px] font-semibold">
           {t("layoutAfterReload")}
-          <Switch size="sm" checked={view.settings.afterReload} onChange={on => onSettingsChange({ afterReload: on }, false)} label={t("layoutAfterReload")} />
+          <Switch size="sm" checked={view.afterReload} onChange={onAfterReloadChange} label={t("layoutAfterReload")} />
         </label>
         <p className="text-[11.5px] leading-snug text-muted">{t("layoutCheckHelp")}</p>
       </div>
     </aside>
-  );
-}
-
-function CheckChip({ label, on, disabled = false, onToggle }: { label: string; on: boolean; disabled?: boolean; onToggle?: (on: boolean) => void }) {
-  return (
-    <button type="button" role="switch" aria-checked={on} disabled={disabled} onClick={() => onToggle?.(!on)}
-      className={cx("flex h-7 items-center gap-1.5 whitespace-nowrap rounded-full border pe-2.5 ps-1.5 text-xs font-semibold disabled:cursor-default",
-        on ? "border-accent-line bg-accent-soft text-accent-strong" : "border-line bg-surface text-muted", focusRing)}>
-      <span className={cx("grid size-3.5 place-items-center rounded-full text-on-accent", on ? "bg-accent" : "bg-line")}>
-        {on && <CheckIcon size={9} strokeWidth={4} />}
-      </span>
-      {label}
-    </button>
   );
 }

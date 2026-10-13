@@ -922,7 +922,7 @@ export function setupPreviewBridge() {
       // Marks from an earlier check would be measured as page content.
       clearLayoutMarks();
       try {
-        const report = measureLayout({ tapTargets: data.tapTargets === true, smallText: data.smallText === true }, buildSelector);
+        const report = measureLayout(buildSelector);
         window.parent.postMessage({ type: "MDV_LAYOUT_CHECK_RESULT", slotId, requestId, documentId, ...report }, "*");
       } catch {
         window.parent.postMessage({ type: "MDV_LAYOUT_CHECK_RESULT", slotId, requestId, documentId, error: "measure" }, "*");

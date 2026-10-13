@@ -922,7 +922,7 @@ export function SimulatorApp() {
               onCheckAgain={() => layoutCheck.run()}
               onSelect={layoutCheck.select}
               onFixPrompt={(group) => { const { deviceIds, prefill } = layoutCheck.fixPromptFor(group); openFixPrompt(deviceIds, prefill); }}
-              onSettingsChange={layoutCheck.updateSettings}
+              onAfterReloadChange={layoutCheck.setAfterReload}
             />
           )}
           </div>

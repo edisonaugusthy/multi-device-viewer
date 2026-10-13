@@ -1,4 +1,4 @@
-import type { LayoutCheckReport, LayoutProblem, LayoutProblemKind } from "./layout-check.types";
+import type { LayoutCheckReport, LayoutProblem } from "./layout-check.types";
 
 /** One element of a page in document order, as the preview bridge measured it. */
 export interface OverflowCandidate {
@@ -36,34 +36,6 @@ export function findOverflowOffenders(candidates: OverflowCandidate[], viewportW
   return offenders;
 }
 
-/** A visible control's box in document coordinates. */
-export interface TargetBox {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
-/**
- * WCAG 2.5.8: a control under `min` px in either direction fails, unless a
- * `min` px square centred on it clears every other control and every other
- * undersized control's square. Returns the indexes of the failing controls.
- */
-export function findSmallTapTargets(targets: TargetBox[], min: number): number[] {
-  const square = (box: TargetBox): TargetBox => ({
-    left: box.left + box.width / 2 - min / 2, top: box.top + box.height / 2 - min / 2, width: min, height: min,
-  });
-  const overlaps = (a: TargetBox, b: TargetBox) =>
-    a.left < b.left + b.width && b.left < a.left + a.width && a.top < b.top + b.height && b.top < a.top + a.height;
-  const small = targets.map(box => box.width < min - 0.5 || box.height < min - 0.5);
-  return targets.flatMap((box, index) => {
-    if (!small[index]) return [];
-    const own = square(box);
-    const crowded = targets.some((other, i) => i !== index && (overlaps(own, other) || (small[i] && overlaps(own, square(other)))));
-    return crowded ? [index] : [];
-  });
-}
-
 export interface DeviceLayoutReport {
   slotId: string;
   deviceName: string;
@@ -79,62 +51,51 @@ export interface LayoutProblemDevice {
   width: number;
   height: number;
   /** How far past the edge, on this device. */
-  overflow?: number;
-  fontSize?: number;
+  overflow: number;
 }
 
 /** One culprit, listed once with every device it fails on. */
 export interface LayoutProblemGroup {
   key: string;
   number: number;
-  kind: LayoutProblemKind;
   selector: string;
   tagName: string;
   width: number;
   height: number;
-  /** The widest overrun or the smallest font size across devices. */
+  /** It crosses the left edge on at least one device. */
   overflowLeft: boolean;
   devices: LayoutProblemDevice[];
 }
 
-const KIND_ORDER: Record<LayoutProblemKind, number> = { overflow: 0, "tap-target": 1, "small-text": 2 };
-
-export function layoutProblemKey(problem: Pick<LayoutProblem, "kind" | "selector">): string {
-  return `${problem.kind}\u0000${problem.selector}`;
+export function layoutProblemKey(problem: Pick<LayoutProblem, "selector">): string {
+  return problem.selector;
 }
 
-/**
- * Merges every device's report into one numbered list: overflow first, widest
- * overrun first, then tap targets and small text in page order.
- */
+/** Merges every device's report into one numbered list, widest overrun first. */
 export function groupLayoutProblems(reports: DeviceLayoutReport[]): LayoutProblemGroup[] {
-  const groups = new Map<string, LayoutProblemGroup & { y: number }>();
+  const groups = new Map<string, LayoutProblemGroup>();
   for (const { slotId, deviceName, report } of reports) {
     for (const problem of report.problems) {
       const key = layoutProblemKey(problem);
       let group = groups.get(key);
       if (!group) {
         group = {
-          key, number: 0, kind: problem.kind, selector: problem.selector, tagName: problem.tagName,
-          width: problem.width, height: problem.height, overflowLeft: false, devices: [], y: problem.y,
+          key, number: 0, selector: problem.selector, tagName: problem.tagName,
+          width: problem.width, height: problem.height, overflowLeft: false, devices: [],
         };
         groups.set(key, group);
       }
       if ((problem.overflowLeft ?? 0) > (problem.overflowRight ?? 0)) group.overflowLeft = true;
-      const overflow = Math.max(problem.overflowRight ?? 0, problem.overflowLeft ?? 0);
       group.devices.push({
         slotId, deviceName, problemId: problem.id, width: problem.width, height: problem.height,
-        overflow: problem.kind === "overflow" ? overflow : undefined,
-        fontSize: problem.fontSize,
+        overflow: Math.max(problem.overflowRight ?? 0, problem.overflowLeft ?? 0),
       });
     }
   }
-  const widest = (group: LayoutProblemGroup) => Math.max(0, ...group.devices.map(device => device.overflow ?? 0));
-  const sorted = [...groups.values()].sort((a, b) =>
-    KIND_ORDER[a.kind] - KIND_ORDER[b.kind]
-    || (a.kind === "overflow" ? widest(b) - widest(a) : a.y - b.y)
-    || a.selector.localeCompare(b.selector));
-  return sorted.map(({ y: _y, ...group }, index) => ({ ...group, number: index + 1 }));
+  const widest = (group: LayoutProblemGroup) => Math.max(0, ...group.devices.map(device => device.overflow));
+  return [...groups.values()]
+    .sort((a, b) => widest(b) - widest(a) || a.selector.localeCompare(b.selector))
+    .map((group, index) => ({ ...group, number: index + 1 }));
 }
 
 export function formatOverflow(amount: number): string {

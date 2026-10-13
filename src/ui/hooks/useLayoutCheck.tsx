@@ -5,16 +5,10 @@ import {
   formatOverflow, groupLayoutProblems, layoutProblemKey,
   type DeviceLayoutReport, type LayoutProblemGroup,
 } from "../../domain/layout-check/layout-check";
-import { SMALL_TEXT_MIN, TAP_TARGET_MIN, type LayoutCheckReport, type LayoutMark, type LayoutProblem } from "../../domain/layout-check/layout-check.types";
+import type { LayoutCheckReport, LayoutMark, LayoutProblem } from "../../domain/layout-check/layout-check.types";
 import type { Device, Size } from "../../domain/device/device.types";
 import type { PreviewSlot } from "../../domain/simulator/simulator.types";
 import type { FixPromptPrefill } from "../components/FixPrompt";
-
-export interface LayoutCheckSettings {
-  tapTargets: boolean;
-  smallText: boolean;
-  afterReload: boolean;
-}
 
 export interface LayoutSlotStatus {
   status: "checking" | "done" | "failed";
@@ -36,10 +30,10 @@ export interface LayoutCheckView {
   groups: LayoutProblemGroup[];
   selected: string | null;
   checkedAt: number | null;
-  settings: LayoutCheckSettings;
+  afterReload: boolean;
   devices: LayoutDeviceRow[];
   totals: { problems: number; affected: number; total: number };
-  /** Some device hit a check's limit, so its list is incomplete. */
+  /** Some device hit the limit, so its list is incomplete. */
   truncated: boolean;
 }
 
@@ -49,8 +43,7 @@ type SlotState =
   | { status: "failed" };
 
 const SETTINGS_KEY = "mdvLayoutCheck";
-const DEFAULT_SETTINGS: LayoutCheckSettings = { tapTargets: true, smallText: false, afterReload: true };
-/** A preview that cannot answer (blocked, standalone, still loading) fails instead of hanging; a heavy page can take a while. */
+/** A preview that cannot answer (blocked, standalone, still loading) fails instead of hanging; a heavy page takes a while. */
 const ANSWER_TIMEOUT_MS = 15000;
 /** Lets a reloaded page lay out before it is measured again. */
 const RELOAD_SETTLE_MS = 700;
@@ -65,7 +58,12 @@ function post(slotId: string, message: Record<string, unknown>) {
 
 const joinNames = (names: string[]) => names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 
-/** Runs the Layout check across the workspace's previews and owns its results, marks and settings. */
+const isProblem = (problem: unknown): problem is LayoutProblem => typeof problem === "object" && problem !== null
+  && typeof (problem as LayoutProblem).id === "string" && typeof (problem as LayoutProblem).selector === "string"
+  && [(problem as LayoutProblem).x, (problem as LayoutProblem).y, (problem as LayoutProblem).width, (problem as LayoutProblem).height]
+    .every(value => typeof value === "number" && Number.isFinite(value));
+
+/** Runs the Layout check across the workspace's previews and owns its results, marks and setting. */
 export function useLayoutCheck({ slots, findDevice, slotSize }: {
   slots: PreviewSlot[];
   findDevice: (deviceId: string) => Device;
@@ -75,24 +73,19 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
   const [states, setStates] = useState<Record<string, SlotState>>({});
   const [checkedAt, setCheckedAt] = useState<number | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
-  const [settings, setSettings] = useState<LayoutCheckSettings>(DEFAULT_SETTINGS);
+  const [afterReload, setAfterReloadState] = useState(true);
   const statesRef = useRef(states); statesRef.current = states;
-  const settingsRef = useRef(settings); settingsRef.current = settings;
+  const afterReloadRef = useRef(afterReload); afterReloadRef.current = afterReload;
   const slotsRef = useRef(slots); slotsRef.current = slots;
   const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
 
   useEffect(() => {
     let active = true;
-    void readStore<Partial<LayoutCheckSettings>>(SETTINGS_KEY, {}).then(stored => {
-      if (active) setSettings({ ...DEFAULT_SETTINGS, ...stored });
+    void readStore<{ afterReload?: boolean }>(SETTINGS_KEY, {}).then(stored => {
+      if (active && typeof stored?.afterReload === "boolean") setAfterReloadState(stored.afterReload);
     }).catch(() => undefined);
     return () => { active = false; };
   }, []);
-
-  const deviceOf = useCallback((slotId: string) => {
-    const slot = slotsRef.current.find(item => item.id === slotId);
-    return slot ? findDevice(slot.deviceId) : undefined;
-  }, [findDevice]);
 
   const run = useCallback((slotIds?: string[]) => {
     const ids = slotIds ?? slotsRef.current.map(slot => slot.id);
@@ -102,15 +95,10 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
       const next = { ...current };
       for (const slotId of ids) {
         const frame = frameFor(slotId);
-        const device = deviceOf(slotId);
-        if (!frame?.contentWindow || !device) { next[slotId] = { status: "failed" }; continue; }
+        if (!frame?.contentWindow) { next[slotId] = { status: "failed" }; continue; }
         const requestId = crypto.randomUUID();
         next[slotId] = { status: "checking", requestId };
-        frame.contentWindow.postMessage({
-          type: "MDV_LAYOUT_CHECK_REQUEST", slotId, requestId,
-          tapTargets: settingsRef.current.tapTargets && (device.type === "phone" || device.type === "tablet" || device.type === "watch"),
-          smallText: settingsRef.current.smallText,
-        }, "*");
+        frame.contentWindow.postMessage({ type: "MDV_LAYOUT_CHECK_REQUEST", slotId, requestId }, "*");
         clearTimeout(timers.current.get(slotId));
         timers.current.set(slotId, setTimeout(() => {
           setStates(latest => latest[slotId]?.status === "checking" && latest[slotId].requestId === requestId
@@ -120,7 +108,7 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
       return next;
     });
     setCheckedAt(Date.now());
-  }, [deviceOf]);
+  }, []);
 
   // Answers arrive from the preview frames; only the newest request per device counts.
   useEffect(() => {
@@ -133,9 +121,6 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
       if (!pending || pending.status !== "checking" || pending.requestId !== data.requestId) return;
       clearTimeout(timers.current.get(slotId));
       const problems: unknown[] | null = Array.isArray(data.problems) ? data.problems : null;
-      const isProblem = (problem: unknown): problem is LayoutProblem => typeof problem === "object" && problem !== null
-        && typeof (problem as LayoutProblem).id === "string" && typeof (problem as LayoutProblem).selector === "string"
-        && [(problem as LayoutProblem).x, (problem as LayoutProblem).y, (problem as LayoutProblem).width, (problem as LayoutProblem).height].every(value => typeof value === "number" && Number.isFinite(value));
       const report: LayoutCheckReport | null = problems && typeof data.viewportWidth === "number" ? {
         url: typeof data.url === "string" ? data.url : "",
         viewportWidth: data.viewportWidth,
@@ -182,11 +167,11 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
         const key = layoutProblemKey(problem);
         const overflow = Math.max(problem.overflowRight ?? 0, problem.overflowLeft ?? 0);
         return {
-          id: problem.id, number: numberOf.get(key) ?? 0, kind: problem.kind,
+          id: problem.id, number: numberOf.get(key) ?? 0,
           x: problem.x, y: problem.y, width: problem.width, height: problem.height,
           overflowRight: problem.overflowRight, overflowLeft: problem.overflowLeft,
           selected: key === selected,
-          label: `${problem.selector} · ${Math.round(problem.width)}×${Math.round(problem.height)}${problem.kind === "overflow" && overflow ? ` · ${formatOverflow(overflow)}` : problem.fontSize ? ` · ${problem.fontSize} px` : ""}`,
+          label: `${problem.selector} · ${Math.round(problem.width)}×${Math.round(problem.height)}${overflow ? ` · ${formatOverflow(overflow)}` : ""}`,
         };
       });
       post(slotId, { type: "MDV_LAYOUT_MARKS", marks });
@@ -209,17 +194,15 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
 
   const close = useCallback(() => { setOpen(false); setSelected(null); }, []);
 
-  const updateSettings = useCallback((change: Partial<LayoutCheckSettings>, recheck: boolean) => {
-    const next = { ...settingsRef.current, ...change };
-    settingsRef.current = next;
-    setSettings(next);
-    void writeStore(SETTINGS_KEY, next).catch(() => undefined);
-    if (recheck) run();
-  }, [run]);
+  const setAfterReload = useCallback((on: boolean) => {
+    afterReloadRef.current = on;
+    setAfterReloadState(on);
+    void writeStore(SETTINGS_KEY, { afterReload: on }).catch(() => undefined);
+  }, []);
 
   // A reloaded page is measured again when the check is open, so the marks follow the edit.
   const onPageReady = useCallback((slotId: string) => {
-    if (!settingsRef.current.afterReload || !statesRef.current[slotId]) return;
+    if (!afterReloadRef.current || !statesRef.current[slotId]) return;
     clearTimeout(timers.current.get(`ready:${slotId}`));
     timers.current.set(`ready:${slotId}`, setTimeout(() => run([slotId]), RELOAD_SETTLE_MS));
   }, [run]);
@@ -245,38 +228,28 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
     });
     const checked = devices.filter(device => device.status === "done");
     return {
-      open, checking: devices.some(device => device.status === "checking"), groups, selected, checkedAt, settings, devices,
+      open, checking: devices.some(device => device.status === "checking"), groups, selected, checkedAt, afterReload, devices,
       totals: { problems: groups.length, affected: checked.filter(device => device.count > 0).length, total: devices.length },
       truncated: Object.values(states).some(state => state.status === "done" && state.report.truncated),
     };
-  }, [checkedAt, findDevice, groups, open, selected, settings, slotSize, slots, states]);
+  }, [afterReload, checkedAt, findDevice, groups, open, selected, slotSize, slots, states]);
 
   /** The fix prompt's fields for one culprit, in the prompt's own language. */
   const fixPromptFor = useCallback((group: LayoutProblemGroup): { deviceIds: string[]; prefill: FixPromptPrefill } => {
     const size = `${Math.round(group.width)}×${Math.round(group.height)}`;
-    const names = group.devices.map(device => device.deviceName);
+    const side = group.overflowLeft ? "left" : "right";
     const sizeOf = (slotId: string) => { const s = slotSize(slotId); return `${s.width}×${s.height}`; };
-    let wrong: string, expected: string, findings: string[];
-    if (group.kind === "overflow") {
-      const side = group.overflowLeft ? "left" : "right";
-      wrong = `${group.selector} (${size}) crosses the ${side} edge of the viewport by ${joinNames(group.devices.map(device => `${Math.round(device.overflow ?? 0)} px on ${device.deviceName}`))}, so the page scrolls sideways.`;
-      expected = "Nothing wider than the viewport. No sideways scrolling at any phone width.";
-      findings = group.devices.map(device => `${device.deviceName} (${sizeOf(device.slotId)}): ${group.selector} is ${Math.round(device.width)} px wide, ${Math.round(device.overflow ?? 0)} px past the ${side} edge`);
-    } else if (group.kind === "tap-target") {
-      wrong = `${group.selector} is ${size} px, smaller than the ${TAP_TARGET_MIN}×${TAP_TARGET_MIN} px tap target minimum, on ${joinNames(names)}.`;
-      expected = `Every tap target is at least ${TAP_TARGET_MIN}×${TAP_TARGET_MIN} px, including its padding.`;
-      findings = group.devices.map(device => `${device.deviceName} (${sizeOf(device.slotId)}): ${group.selector} is ${Math.round(device.width)}×${Math.round(device.height)} px`);
-    } else {
-      const fontSize = group.devices[0]?.fontSize ?? 0;
-      wrong = `${group.selector} renders at ${fontSize} px, below the ${SMALL_TEXT_MIN} px minimum, on ${joinNames(names)}.`;
-      expected = `Body text is at least ${SMALL_TEXT_MIN} px on phones.`;
-      findings = group.devices.map(device => `${device.deviceName} (${sizeOf(device.slotId)}): ${group.selector} renders at ${device.fontSize ?? fontSize} px`);
-    }
     return {
       deviceIds: group.devices.map(device => device.slotId),
-      prefill: { wrong, expected, selector: group.selector, findings, source: { index: group.number, count: groups.length } },
+      prefill: {
+        wrong: `${group.selector} (${size}) crosses the ${side} edge of the viewport by ${joinNames(group.devices.map(device => `${Math.round(device.overflow)} px on ${device.deviceName}`))}, so the page scrolls sideways.`,
+        expected: "Nothing wider than the viewport. No sideways scrolling at any phone width.",
+        selector: group.selector,
+        findings: group.devices.map(device => `${device.deviceName} (${sizeOf(device.slotId)}): ${group.selector} is ${Math.round(device.width)} px wide, ${Math.round(device.overflow)} px past the ${side} edge`),
+        source: { index: group.number, count: groups.length },
+      },
     };
   }, [groups.length, slotSize]);
 
-  return { view, statusBySlot, run, close, select, step, onPageReady, updateSettings, fixPromptFor };
+  return { view, statusBySlot, run, close, select, step, onPageReady, setAfterReload, fixPromptFor };
 }

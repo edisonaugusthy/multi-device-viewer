@@ -22,7 +22,7 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
   { title: "Move and change devices", text: "Drag the grip to move a device, or use the arrows to switch it.", target: '[data-tour="device-controls"]' },
   { title: "Sync between devices", text: "Scroll or open a page once, and every device follows.", target: '[data-tour="sync"]' },
   { title: "Fix prompt", text: "Describe a bug and copy a prompt for your AI coding tool.", target: '[data-tour="fix-prompt"]' },
-  { title: "Check layout", text: "Find what crosses the viewport edge or is too small to tap.", target: '[data-tour="layout-check"]' },
+  { title: "Check layout", text: "Find what makes the page scroll sideways.", target: '[data-tour="layout-check"]' },
   { title: "Screenshot and annotate", text: "Capture your devices and mark them up.", target: '[data-tour="screenshot"]' },
   { title: "Record", text: "Record a video, or a user flow to replay on every device.", target: '[data-tour="record"]' },
 ];

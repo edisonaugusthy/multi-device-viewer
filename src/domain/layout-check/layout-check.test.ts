@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findOverflowOffenders, findSmallTapTargets, groupLayoutProblems, type DeviceLayoutReport, type OverflowCandidate } from "./layout-check";
+import { findOverflowOffenders, groupLayoutProblems, type DeviceLayoutReport, type OverflowCandidate } from "./layout-check";
 import type { LayoutProblem } from "./layout-check.types";
 
 const box = (parent: number, left: number, right: number, extra: Partial<OverflowCandidate> = {}): OverflowCandidate =>
@@ -42,30 +42,8 @@ describe("findOverflowOffenders", () => {
   });
 });
 
-describe("findSmallTapTargets", () => {
-  const box = (left: number, top: number, width: number, height: number) => ({ left, top, width, height });
-
-  it("accepts a wide button that is a little under 24 px tall", () => {
-    expect(findSmallTapTargets([box(20, 300, 157, 20), box(20, 400, 120, 48)], 24)).toEqual([]);
-  });
-
-  it("flags small controls that crowd each other", () => {
-    // Carousel dots: 8 px wide, 8 px apart, so their 24 px squares overlap.
-    expect(findSmallTapTargets([box(100, 500, 8, 8), box(116, 500, 8, 8), box(132, 500, 8, 8)], 24)).toEqual([0, 1, 2]);
-  });
-
-  it("accepts an undersized control with clear space around it", () => {
-    expect(findSmallTapTargets([box(300, 20, 16, 16), box(20, 20, 120, 40)], 24)).toEqual([]);
-  });
-
-  it("flags an undersized control whose square touches a neighbouring control", () => {
-    // A 20 px icon right beside a 40 px button: the square reaches into the button.
-    expect(findSmallTapTargets([box(20, 20, 120, 40), box(141, 30, 20, 20)], 24)).toEqual([1]);
-  });
-});
-
-const problem = (partial: Partial<LayoutProblem> & Pick<LayoutProblem, "kind" | "selector">): LayoutProblem => ({
-  id: `${partial.kind}:${partial.selector}`, tagName: "div", x: 20, y: 300, width: 454, height: 240, ...partial,
+const problem = (partial: Partial<LayoutProblem> & Pick<LayoutProblem, "selector">): LayoutProblem => ({
+  id: partial.selector, tagName: "div", x: 20, y: 300, width: 454, height: 240, ...partial,
 });
 
 const report = (slotId: string, deviceName: string, problems: LayoutProblem[]): DeviceLayoutReport => ({
@@ -74,39 +52,27 @@ const report = (slotId: string, deviceName: string, problems: LayoutProblem[]): 
 });
 
 describe("groupLayoutProblems", () => {
-  it("lists each culprit once with the devices it fails on, widest overflow first", () => {
+  it("lists each culprit once with the devices it fails on, widest overrun first", () => {
     const groups = groupLayoutProblems([
       report("a", "iPhone 15", [
-        problem({ kind: "tap-target", selector: "button.nav__menu", y: 38, width: 28, height: 28 }),
-        problem({ kind: "overflow", selector: ".hero__image", overflowRight: 84 }),
-        problem({ kind: "overflow", selector: "table.pricing", y: 674, width: 602, height: 172, overflowRight: 232 }),
+        problem({ selector: ".hero__image", overflowRight: 84 }),
+        problem({ selector: "table.pricing", y: 674, width: 602, height: 172, overflowRight: 232 }),
       ]),
       report("b", "Pixel 8", [
-        problem({ kind: "overflow", selector: ".hero__image", overflowRight: 62 }),
-        problem({ kind: "tap-target", selector: "button.nav__menu", y: 38, width: 28, height: 28 }),
+        problem({ selector: ".hero__image", overflowRight: 62 }),
+        problem({ selector: ".promo", overflowLeft: 30 }),
       ]),
       report("c", "iPad Air", []),
     ]);
 
-    expect(groups.map(group => [group.number, group.kind, group.selector])).toEqual([
-      [1, "overflow", "table.pricing"],
-      [2, "overflow", ".hero__image"],
-      [3, "tap-target", "button.nav__menu"],
+    expect(groups.map(group => [group.number, group.selector])).toEqual([
+      [1, "table.pricing"],
+      [2, ".hero__image"],
+      [3, ".promo"],
     ]);
     expect(groups[1].devices.map(device => [device.deviceName, device.overflow])).toEqual([["iPhone 15", 84], ["Pixel 8", 62]]);
-    expect(groups[2].devices.map(device => device.slotId)).toEqual(["a", "b"]);
-    expect(groups[2].devices[0].overflow).toBeUndefined();
-  });
-
-  it("orders tap targets and small text by their position on the page", () => {
-    const groups = groupLayoutProblems([
-      report("a", "iPhone 15", [
-        problem({ kind: "small-text", selector: "footer small", y: 900, fontSize: 10 }),
-        problem({ kind: "tap-target", selector: "a.skip", y: 10, width: 20, height: 20 }),
-        problem({ kind: "tap-target", selector: "button.close", y: 5, width: 20, height: 20 }),
-      ]),
-    ]);
-    expect(groups.map(group => group.selector)).toEqual(["button.close", "a.skip", "footer small"]);
-    expect(groups[2].devices[0].fontSize).toBe(10);
+    expect(groups[0].devices.map(device => device.slotId)).toEqual(["a"]);
+    expect(groups[2].overflowLeft).toBe(true);
+    expect(groups[1].overflowLeft).toBe(false);
   });
 });

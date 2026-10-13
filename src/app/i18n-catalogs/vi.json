@@ -451,7 +451,7 @@
   "checkLayout": "Kiểm tra bố cục",
   "tipCheckLayout": "Tìm trên mọi thiết bị những phần tử tràn ra ngoài mép khung nhìn hoặc quá nhỏ để chạm.",
   "checkLayoutOnDevice": "Kiểm tra bố cục trên thiết bị này",
-  "layoutCheckMenuHelp": "Tìm phần tử tràn ra ngoài mép khung nhìn, vùng chạm nhỏ hơn 44 px và chữ nhỏ hơn 12 px. Không có gì rời khỏi trang.",
+  "layoutCheckMenuHelp": "Tìm phần tử tràn ra ngoài mép khung nhìn, vùng chạm nhỏ hơn 24 px và chữ nhỏ hơn 12 px. Không có gì rời khỏi trang.",
   "layoutShowProblems": "Hiện các vấn đề bố cục",
   "closeLayoutCheck": "Đóng kiểm tra bố cục",
   "layoutCheckAgain": "Kiểm tra lại",

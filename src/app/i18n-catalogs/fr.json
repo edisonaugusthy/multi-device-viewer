@@ -451,7 +451,7 @@
   "checkLayout": "Vérifier la mise en page",
   "tipCheckLayout": "Trouve sur chaque appareil tout ce qui dépasse du viewport ou est trop petit pour être touché.",
   "checkLayoutOnDevice": "Vérifier la mise en page sur cet appareil",
-  "layoutCheckMenuHelp": "Trouve ce qui dépasse du bord du viewport, les cibles tactiles de moins de 44 px et le texte de moins de 12 px. Rien ne quitte la page.",
+  "layoutCheckMenuHelp": "Trouve ce qui dépasse du bord du viewport, les cibles tactiles de moins de 24 px et le texte de moins de 12 px. Rien ne quitte la page.",
   "layoutShowProblems": "Afficher les problèmes de mise en page",
   "closeLayoutCheck": "Fermer la vérification",
   "layoutCheckAgain": "Vérifier à nouveau",

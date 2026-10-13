@@ -451,7 +451,7 @@
   "checkLayout": "Lay-out controleren",
   "tipCheckLayout": "Vindt op elk apparaat alles wat over de rand van de viewport steekt of te klein is om aan te tikken.",
   "checkLayoutOnDevice": "Lay-out op dit apparaat controleren",
-  "layoutCheckMenuHelp": "Vindt alles wat over de viewportrand steekt, tikdoelen kleiner dan 44 px en tekst kleiner dan 12 px. Niets verlaat de pagina.",
+  "layoutCheckMenuHelp": "Vindt alles wat over de viewportrand steekt, tikdoelen kleiner dan 24 px en tekst kleiner dan 12 px. Niets verlaat de pagina.",
   "layoutShowProblems": "Lay-outproblemen tonen",
   "closeLayoutCheck": "Lay-outcontrole sluiten",
   "layoutCheckAgain": "Opnieuw controleren",

@@ -500,7 +500,7 @@ const en = {
   checkLayout: "Check layout",
   tipCheckLayout: "Find anything that crosses the viewport edge or is too small to tap, on every device.",
   checkLayoutOnDevice: "Check layout on this device",
-  layoutCheckMenuHelp: "Finds anything that crosses the viewport edge, tap targets under 44 px and text under 12 px. Nothing leaves the page.",
+  layoutCheckMenuHelp: "Finds anything that crosses the viewport edge, crowded tap targets under 24 px and text under 12 px. Nothing leaves the page.",
   layoutShowProblems: "Show layout problems",
   closeLayoutCheck: "Close layout check",
   layoutCheckAgain: "Check again",

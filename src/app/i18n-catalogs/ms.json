@@ -451,7 +451,7 @@
   "checkLayout": "Semak susun atur",
   "tipCheckLayout": "Mencari pada setiap peranti apa sahaja yang melepasi tepi viewport atau terlalu kecil untuk diketik.",
   "checkLayoutOnDevice": "Semak susun atur pada peranti ini",
-  "layoutCheckMenuHelp": "Mencari apa sahaja yang melepasi tepi viewport, sasaran ketik di bawah 44 px dan teks di bawah 12 px. Tiada apa-apa yang keluar dari halaman.",
+  "layoutCheckMenuHelp": "Mencari apa sahaja yang melepasi tepi viewport, sasaran ketik di bawah 24 px dan teks di bawah 12 px. Tiada apa-apa yang keluar dari halaman.",
   "layoutShowProblems": "Tunjukkan masalah susun atur",
   "closeLayoutCheck": "Tutup semakan susun atur",
   "layoutCheckAgain": "Semak semula",

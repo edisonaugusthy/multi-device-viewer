@@ -451,7 +451,7 @@
   "checkLayout": "Controlla il layout",
   "tipCheckLayout": "Trova su ogni dispositivo tutto ciò che sporge dal bordo della viewport o è troppo piccolo da toccare.",
   "checkLayoutOnDevice": "Controlla il layout su questo dispositivo",
-  "layoutCheckMenuHelp": "Trova ciò che sporge dal bordo della viewport, i target di tocco sotto i 44 px e il testo sotto i 12 px. Nulla lascia la pagina.",
+  "layoutCheckMenuHelp": "Trova ciò che sporge dal bordo della viewport, i target di tocco sotto i 24 px e il testo sotto i 12 px. Nulla lascia la pagina.",
   "layoutShowProblems": "Mostra i problemi di layout",
   "closeLayoutCheck": "Chiudi il controllo del layout",
   "layoutCheckAgain": "Controlla di nuovo",

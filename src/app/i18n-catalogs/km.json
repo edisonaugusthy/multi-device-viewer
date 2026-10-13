@@ -451,7 +451,7 @@
   "checkLayout": "ត្រួតពិនិត្យប្លង់",
   "tipCheckLayout": "រកឃើញនៅលើឧបករណ៍នីមួយៗនូវអ្វីដែលលើសគែម viewport ឬតូចពេកមិនអាចប៉ះបាន។",
   "checkLayoutOnDevice": "ត្រួតពិនិត្យប្លង់នៅលើឧបករណ៍នេះ",
-  "layoutCheckMenuHelp": "រកឃើញអ្វីដែលលើសគែម viewport គោលដៅប៉ះតូចជាង 44 px និងអក្សរតូចជាង 12 px។ គ្មានអ្វីចេញពីទំព័រឡើយ។",
+  "layoutCheckMenuHelp": "រកឃើញអ្វីដែលលើសគែម viewport គោលដៅប៉ះតូចជាង 24 px និងអក្សរតូចជាង 12 px។ គ្មានអ្វីចេញពីទំព័រឡើយ។",
   "layoutShowProblems": "បង្ហាញបញ្ហាប្លង់",
   "closeLayoutCheck": "បិទការត្រួតពិនិត្យប្លង់",
   "layoutCheckAgain": "ត្រួតពិនិត្យម្ដងទៀត",

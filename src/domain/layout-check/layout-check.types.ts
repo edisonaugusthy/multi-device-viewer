@@ -49,8 +49,8 @@ export interface LayoutMark {
   selected?: boolean;
 }
 
-/** Apple's and Material's recommended minimum, in CSS pixels. */
-export const TAP_TARGET_MIN = 44;
+/** WCAG 2.5.8 Target Size (Minimum), in CSS pixels. */
+export const TAP_TARGET_MIN = 24;
 export const SMALL_TEXT_MIN = 12;
 /** Per check and page; a page with hundreds of offenders needs one fix, not a long list. */
 export const MAX_PROBLEMS_PER_KIND = 20;

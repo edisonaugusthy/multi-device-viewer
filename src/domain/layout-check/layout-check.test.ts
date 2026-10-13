@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findOverflowOffenders, groupLayoutProblems, type DeviceLayoutReport, type OverflowCandidate } from "./layout-check";
+import { findOverflowOffenders, findSmallTapTargets, groupLayoutProblems, type DeviceLayoutReport, type OverflowCandidate } from "./layout-check";
 import type { LayoutProblem } from "./layout-check.types";
 
 const box = (parent: number, left: number, right: number, extra: Partial<OverflowCandidate> = {}): OverflowCandidate =>
@@ -39,6 +39,28 @@ describe("findOverflowOffenders", () => {
   it("tolerates sub-pixel rounding and honours the limit", () => {
     const candidates = [box(-1, 0, 390.6), box(0, 0, 395), box(0, 0, 396), box(0, 0, 397)];
     expect(findOverflowOffenders(candidates, 390, 2)).toEqual([1, 2]);
+  });
+});
+
+describe("findSmallTapTargets", () => {
+  const box = (left: number, top: number, width: number, height: number) => ({ left, top, width, height });
+
+  it("accepts a wide button that is a little under 24 px tall", () => {
+    expect(findSmallTapTargets([box(20, 300, 157, 20), box(20, 400, 120, 48)], 24)).toEqual([]);
+  });
+
+  it("flags small controls that crowd each other", () => {
+    // Carousel dots: 8 px wide, 8 px apart, so their 24 px squares overlap.
+    expect(findSmallTapTargets([box(100, 500, 8, 8), box(116, 500, 8, 8), box(132, 500, 8, 8)], 24)).toEqual([0, 1, 2]);
+  });
+
+  it("accepts an undersized control with clear space around it", () => {
+    expect(findSmallTapTargets([box(300, 20, 16, 16), box(20, 20, 120, 40)], 24)).toEqual([]);
+  });
+
+  it("flags an undersized control whose square touches a neighbouring control", () => {
+    // A 20 px icon right beside a 40 px button: the square reaches into the button.
+    expect(findSmallTapTargets([box(20, 20, 120, 40), box(141, 30, 20, 20)], 24)).toEqual([1]);
   });
 });
 

@@ -451,7 +451,7 @@
   "checkLayout": "Comprobar diseño",
   "tipCheckLayout": "Encuentra en cada dispositivo todo lo que sobresale del viewport o es demasiado pequeño para tocarlo.",
   "checkLayoutOnDevice": "Comprobar el diseño en este dispositivo",
-  "layoutCheckMenuHelp": "Encuentra lo que sobresale del borde del viewport, objetivos táctiles menores de 44 px y texto menor de 12 px. Nada sale de la página.",
+  "layoutCheckMenuHelp": "Encuentra lo que sobresale del borde del viewport, objetivos táctiles menores de 24 px y texto menor de 12 px. Nada sale de la página.",
   "layoutShowProblems": "Mostrar problemas de diseño",
   "closeLayoutCheck": "Cerrar la comprobación de diseño",
   "layoutCheckAgain": "Comprobar de nuevo",

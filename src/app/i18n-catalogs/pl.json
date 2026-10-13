@@ -451,7 +451,7 @@
   "checkLayout": "Sprawdź układ",
   "tipCheckLayout": "Znajduje na każdym urządzeniu wszystko, co wystaje poza krawędź viewportu lub jest za małe do dotknięcia.",
   "checkLayoutOnDevice": "Sprawdź układ na tym urządzeniu",
-  "layoutCheckMenuHelp": "Znajduje elementy wystające poza krawędź viewportu, cele dotyku mniejsze niż 44 px i tekst mniejszy niż 12 px. Nic nie opuszcza strony.",
+  "layoutCheckMenuHelp": "Znajduje elementy wystające poza krawędź viewportu, cele dotyku mniejsze niż 24 px i tekst mniejszy niż 12 px. Nic nie opuszcza strony.",
   "layoutShowProblems": "Pokaż problemy z układem",
   "closeLayoutCheck": "Zamknij sprawdzanie układu",
   "layoutCheckAgain": "Sprawdź ponownie",

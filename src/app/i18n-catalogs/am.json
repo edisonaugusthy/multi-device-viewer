@@ -451,7 +451,7 @@
   "checkLayout": "አቀማመጥ ፈትሽ",
   "tipCheckLayout": "በእያንዳንዱ መሣሪያ ላይ ከእይታ መስኮቱ ጠርዝ የሚያልፍ ወይም ለመንካት በጣም ትንሽ የሆነውን ሁሉ ያገኛል።",
   "checkLayoutOnDevice": "በዚህ መሣሪያ ላይ አቀማመጥ ፈትሽ",
-  "layoutCheckMenuHelp": "ከእይታ መስኮቱ ጠርዝ የሚያልፈውን፣ ከ44 px በታች የሆኑ የመንካት ዒላማዎችን እና ከ12 px በታች የሆነ ጽሑፍን ያገኛል። ምንም ከገጹ አይወጣም።",
+  "layoutCheckMenuHelp": "ከእይታ መስኮቱ ጠርዝ የሚያልፈውን፣ ከ24 px በታች የሆኑ የመንካት ዒላማዎችን እና ከ12 px በታች የሆነ ጽሑፍን ያገኛል። ምንም ከገጹ አይወጣም።",
   "layoutShowProblems": "የአቀማመጥ ችግሮችን አሳይ",
   "closeLayoutCheck": "የአቀማመጥ ፍተሻን ዝጋ",
   "layoutCheckAgain": "እንደገና ፈትሽ",

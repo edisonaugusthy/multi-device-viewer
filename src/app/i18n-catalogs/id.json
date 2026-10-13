@@ -451,7 +451,7 @@
   "checkLayout": "Periksa tata letak",
   "tipCheckLayout": "Menemukan di setiap perangkat apa pun yang melewati tepi viewport atau terlalu kecil untuk diketuk.",
   "checkLayoutOnDevice": "Periksa tata letak di perangkat ini",
-  "layoutCheckMenuHelp": "Menemukan apa pun yang melewati tepi viewport, target ketuk di bawah 44 px, dan teks di bawah 12 px. Tidak ada yang keluar dari halaman.",
+  "layoutCheckMenuHelp": "Menemukan apa pun yang melewati tepi viewport, target ketuk di bawah 24 px, dan teks di bawah 12 px. Tidak ada yang keluar dari halaman.",
   "layoutShowProblems": "Tampilkan masalah tata letak",
   "closeLayoutCheck": "Tutup pemeriksaan tata letak",
   "layoutCheckAgain": "Periksa lagi",

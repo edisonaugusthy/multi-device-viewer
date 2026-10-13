@@ -451,7 +451,7 @@
   "checkLayout": "レイアウトをチェック",
   "tipCheckLayout": "各デバイスで、ビューポートの端からはみ出す要素や小さすぎてタップしにくい要素を見つけます。",
   "checkLayoutOnDevice": "このデバイスのレイアウトをチェック",
-  "layoutCheckMenuHelp": "ビューポートの端からはみ出す要素、44 px 未満のタップ領域、12 px 未満の文字を見つけます。データがページの外に出ることはありません。",
+  "layoutCheckMenuHelp": "ビューポートの端からはみ出す要素、24 px 未満のタップ領域、12 px 未満の文字を見つけます。データがページの外に出ることはありません。",
   "layoutShowProblems": "レイアウトの問題を表示",
   "closeLayoutCheck": "レイアウトチェックを閉じる",
   "layoutCheckAgain": "再チェック",

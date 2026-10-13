@@ -451,7 +451,7 @@
   "checkLayout": "Verificar layout",
   "tipCheckLayout": "Encontra em cada dispositivo tudo o que ultrapassa a borda da viewport ou é pequeno demais para tocar.",
   "checkLayoutOnDevice": "Verificar o layout neste dispositivo",
-  "layoutCheckMenuHelp": "Encontra o que ultrapassa a borda da viewport, alvos de toque menores que 44 px e texto menor que 12 px. Nada sai da página.",
+  "layoutCheckMenuHelp": "Encontra o que ultrapassa a borda da viewport, alvos de toque menores que 24 px e texto menor que 12 px. Nada sai da página.",
   "layoutShowProblems": "Mostrar problemas de layout",
   "closeLayoutCheck": "Fechar verificação de layout",
   "layoutCheckAgain": "Verificar de novo",

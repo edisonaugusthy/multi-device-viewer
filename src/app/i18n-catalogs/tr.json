@@ -451,7 +451,7 @@
   "checkLayout": "Yerleşimi denetle",
   "tipCheckLayout": "Her cihazda görünüm alanının kenarını aşan veya dokunmak için fazla küçük olan her şeyi bulur.",
   "checkLayoutOnDevice": "Bu cihazda yerleşimi denetle",
-  "layoutCheckMenuHelp": "Görünüm alanının kenarını aşanları, 44 px altındaki dokunma hedeflerini ve 12 px altındaki metinleri bulur. Hiçbir şey sayfadan çıkmaz.",
+  "layoutCheckMenuHelp": "Görünüm alanının kenarını aşanları, 24 px altındaki dokunma hedeflerini ve 12 px altındaki metinleri bulur. Hiçbir şey sayfadan çıkmaz.",
   "layoutShowProblems": "Yerleşim sorunlarını göster",
   "closeLayoutCheck": "Yerleşim denetimini kapat",
   "layoutCheckAgain": "Yeniden denetle",

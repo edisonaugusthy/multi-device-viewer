@@ -451,7 +451,7 @@
   "checkLayout": "레이아웃 검사",
   "tipCheckLayout": "모든 기기에서 뷰포트 가장자리를 벗어나거나 탭하기에 너무 작은 요소를 찾습니다.",
   "checkLayoutOnDevice": "이 기기에서 레이아웃 검사",
-  "layoutCheckMenuHelp": "뷰포트 가장자리를 벗어나는 요소, 44 px 미만의 탭 영역, 12 px 미만의 텍스트를 찾습니다. 어떤 데이터도 페이지 밖으로 나가지 않습니다.",
+  "layoutCheckMenuHelp": "뷰포트 가장자리를 벗어나는 요소, 24 px 미만의 탭 영역, 12 px 미만의 텍스트를 찾습니다. 어떤 데이터도 페이지 밖으로 나가지 않습니다.",
   "layoutShowProblems": "레이아웃 문제 보기",
   "closeLayoutCheck": "레이아웃 검사 닫기",
   "layoutCheckAgain": "다시 검사",

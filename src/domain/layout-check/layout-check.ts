@@ -36,6 +36,34 @@ export function findOverflowOffenders(candidates: OverflowCandidate[], viewportW
   return offenders;
 }
 
+/** A visible control's box in document coordinates. */
+export interface TargetBox {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * WCAG 2.5.8: a control under `min` px in either direction fails, unless a
+ * `min` px square centred on it clears every other control and every other
+ * undersized control's square. Returns the indexes of the failing controls.
+ */
+export function findSmallTapTargets(targets: TargetBox[], min: number): number[] {
+  const square = (box: TargetBox): TargetBox => ({
+    left: box.left + box.width / 2 - min / 2, top: box.top + box.height / 2 - min / 2, width: min, height: min,
+  });
+  const overlaps = (a: TargetBox, b: TargetBox) =>
+    a.left < b.left + b.width && b.left < a.left + a.width && a.top < b.top + b.height && b.top < a.top + a.height;
+  const small = targets.map(box => box.width < min - 0.5 || box.height < min - 0.5);
+  return targets.flatMap((box, index) => {
+    if (!small[index]) return [];
+    const own = square(box);
+    const crowded = targets.some((other, i) => i !== index && (overlaps(own, other) || (small[i] && overlaps(own, square(other)))));
+    return crowded ? [index] : [];
+  });
+}
+
 export interface DeviceLayoutReport {
   slotId: string;
   deviceName: string;

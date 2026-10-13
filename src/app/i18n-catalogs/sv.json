@@ -451,7 +451,7 @@
   "checkLayout": "Kontrollera layouten",
   "tipCheckLayout": "Hittar på varje enhet allt som sticker ut utanför visningsytans kant eller är för litet att trycka på.",
   "checkLayoutOnDevice": "Kontrollera layouten på den här enheten",
-  "layoutCheckMenuHelp": "Hittar allt som sticker ut utanför visningsytans kant, tryckytor under 44 px och text under 12 px. Inget lämnar sidan.",
+  "layoutCheckMenuHelp": "Hittar allt som sticker ut utanför visningsytans kant, tryckytor under 24 px och text under 12 px. Inget lämnar sidan.",
   "layoutShowProblems": "Visa layoutproblem",
   "closeLayoutCheck": "Stäng layoutkontrollen",
   "layoutCheckAgain": "Kontrollera igen",

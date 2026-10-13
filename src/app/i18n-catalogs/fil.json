@@ -451,7 +451,7 @@
   "checkLayout": "Suriin ang layout",
   "tipCheckLayout": "Hanapin sa bawat device ang lahat ng lumalagpas sa gilid ng viewport o masyadong maliit para pindutin.",
   "checkLayoutOnDevice": "Suriin ang layout sa device na ito",
-  "layoutCheckMenuHelp": "Hinahanap ang lumalagpas sa gilid ng viewport, mga tap target na wala pang 44 px at tekstong wala pang 12 px. Walang umaalis sa page.",
+  "layoutCheckMenuHelp": "Hinahanap ang lumalagpas sa gilid ng viewport, mga tap target na wala pang 24 px at tekstong wala pang 12 px. Walang umaalis sa page.",
   "layoutShowProblems": "Ipakita ang mga problema sa layout",
   "closeLayoutCheck": "Isara ang pagsusuri ng layout",
   "layoutCheckAgain": "Suriin ulit",

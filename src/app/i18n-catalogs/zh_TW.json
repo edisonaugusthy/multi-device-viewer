@@ -451,7 +451,7 @@
   "checkLayout": "檢查版面",
   "tipCheckLayout": "在每部裝置上找出超出可視區域邊緣或太小而無法點按的元素。",
   "checkLayoutOnDevice": "在此裝置上檢查版面",
-  "layoutCheckMenuHelp": "找出超出可視區域邊緣的元素、小於 44 px 的點按目標和小於 12 px 的文字。所有內容都不會離開本頁面。",
+  "layoutCheckMenuHelp": "找出超出可視區域邊緣的元素、小於 24 px 的點按目標和小於 12 px 的文字。所有內容都不會離開本頁面。",
   "layoutShowProblems": "顯示版面問題",
   "closeLayoutCheck": "關閉版面檢查",
   "layoutCheckAgain": "重新檢查",

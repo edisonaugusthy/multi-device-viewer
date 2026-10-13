@@ -1,6 +1,6 @@
 // Runs inside a preview frame: measures the page for the Layout check and
 // draws its marks over the page in page pixels, so they scroll with it.
-import { findOverflowOffenders, type OverflowCandidate } from "../domain/layout-check/layout-check";
+import { findOverflowOffenders, findSmallTapTargets, type OverflowCandidate, type TargetBox } from "../domain/layout-check/layout-check";
 import {
   MAX_PROBLEMS_PER_KIND, SMALL_TEXT_MIN, TAP_TARGET_MIN,
   type LayoutCheckOptions, type LayoutCheckReport, type LayoutMark, type LayoutProblem, type LayoutProblemKind,
@@ -86,7 +86,9 @@ export function measureLayout(options: LayoutCheckOptions, buildSelector: (eleme
   }
 
   if (options.tapTargets) {
-    let count = 0;
+    // Every visible control takes part: an undersized one only fails when it is crowded.
+    const controls: { element: HTMLElement; rect: DOMRect }[] = [];
+    const boxes: TargetBox[] = [];
     for (const element of body.querySelectorAll<HTMLElement>(TAP_TARGET_SELECTOR)) {
       if (isOurs(element)) continue;
       const style = getComputedStyle(element);
@@ -102,11 +104,12 @@ export function measureLayout(options: LayoutCheckOptions, buildSelector: (eleme
         const labelRect = label.getBoundingClientRect();
         if (labelRect.width >= TAP_TARGET_MIN && labelRect.height >= TAP_TARGET_MIN) continue;
       }
-      if (rect.width >= TAP_TARGET_MIN - 0.5 && rect.height >= TAP_TARGET_MIN - 0.5) continue;
-      if (count >= MAX_PROBLEMS_PER_KIND) { truncated = true; break; }
-      count++;
-      add("tap-target", element, rect);
+      controls.push({ element, rect });
+      boxes.push({ left: rect.left + scrollX, top: rect.top + scrollY, width: rect.width, height: rect.height });
     }
+    const failing = findSmallTapTargets(boxes, TAP_TARGET_MIN);
+    if (failing.length > MAX_PROBLEMS_PER_KIND) { truncated = true; failing.length = MAX_PROBLEMS_PER_KIND; }
+    for (const index of failing) add("tap-target", controls[index].element, controls[index].rect);
   }
 
   if (options.smallText) {

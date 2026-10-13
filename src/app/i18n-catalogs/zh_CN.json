@@ -451,7 +451,7 @@
   "checkLayout": "检查布局",
   "tipCheckLayout": "在每台设备上找出超出视口边缘或太小而无法点按的元素。",
   "checkLayoutOnDevice": "在此设备上检查布局",
-  "layoutCheckMenuHelp": "找出超出视口边缘的元素、小于 44 px 的点按目标和小于 12 px 的文字。所有内容都不会离开本页面。",
+  "layoutCheckMenuHelp": "找出超出视口边缘的元素、小于 24 px 的点按目标和小于 12 px 的文字。所有内容都不会离开本页面。",
   "layoutShowProblems": "显示布局问题",
   "closeLayoutCheck": "关闭布局检查",
   "layoutCheckAgain": "重新检查",

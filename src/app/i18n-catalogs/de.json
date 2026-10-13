@@ -451,7 +451,7 @@
   "checkLayout": "Layout prüfen",
   "tipCheckLayout": "Findet auf jedem Gerät alles, was über den Viewport-Rand ragt oder zu klein zum Antippen ist.",
   "checkLayoutOnDevice": "Layout auf diesem Gerät prüfen",
-  "layoutCheckMenuHelp": "Findet alles, was über den Viewport-Rand ragt, Tippziele unter 44 px und Text unter 12 px. Nichts verlässt die Seite.",
+  "layoutCheckMenuHelp": "Findet alles, was über den Viewport-Rand ragt, Tippziele unter 24 px und Text unter 12 px. Nichts verlässt die Seite.",
   "layoutShowProblems": "Layout-Probleme anzeigen",
   "closeLayoutCheck": "Layout-Prüfung schließen",
   "layoutCheckAgain": "Erneut prüfen",

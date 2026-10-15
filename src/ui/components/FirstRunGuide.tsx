@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { useI18n, type TranslationKey } from "../../app/i18n";
+import { FEATURES } from "../../app/feature-flags";
 import {
   FIRST_RUN_TOUR_STEPS,
   highlightRectForTarget,
@@ -28,18 +29,23 @@ const TOUR_TRANSLATION_KEYS: Array<{ title: TranslationKey; text: TranslationKey
   { title: "record", text: "tourRecordText" },
 ];
 
+// Steps whose feature is held back are left out, with their translation keys.
+const TOUR_STEPS = FIRST_RUN_TOUR_STEPS
+  .map((step, index) => ({ ...step, keys: TOUR_TRANSLATION_KEYS[index] }))
+  .filter(step => FEATURES.layoutCheck || step.keys.title !== "checkLayout");
+
 export function FirstRunGuide({ onClose }: { onClose: () => void }) {
   const { locale, t } = useI18n();
   const [stepIndex, setStepIndex] = useState(0);
   const [highlight, setHighlight] = useState<HighlightRect | null>(null);
-  const baseStep = FIRST_RUN_TOUR_STEPS[stepIndex];
-  const stepKeys = TOUR_TRANSLATION_KEYS[stepIndex];
+  const baseStep = TOUR_STEPS[stepIndex];
+  const stepKeys = baseStep.keys;
   const step = {
     ...baseStep,
     title: locale === "en" ? baseStep.title : t(stepKeys.title),
     text: locale === "en" ? baseStep.text : t(stepKeys.text),
   };
-  const finalStep = stepIndex === FIRST_RUN_TOUR_STEPS.length - 1;
+  const finalStep = stepIndex === TOUR_STEPS.length - 1;
 
   const findTarget = useCallback(() => {
     if (!step.target) return null;
@@ -145,15 +151,15 @@ export function FirstRunGuide({ onClose }: { onClose: () => void }) {
         <p className="mt-1 text-[13px] leading-relaxed text-ink-2">{step.text}</p>
 
         <div className="mt-4 flex items-center justify-between gap-3">
-          <div className="flex gap-1.5" aria-label={t("tourStep", { current: stepIndex + 1, total: FIRST_RUN_TOUR_STEPS.length })}>
-            {FIRST_RUN_TOUR_STEPS.map((item, index) => (
+          <div className="flex gap-1.5" aria-label={t("tourStep", { current: stepIndex + 1, total: TOUR_STEPS.length })}>
+            {TOUR_STEPS.map((item, index) => (
               <button
                 key={item.title}
                 type="button"
                 onClick={() => setStepIndex(index)}
                 aria-label={t("goToTourStep", {
                   current: index + 1,
-                  title: locale === "en" ? item.title : t(TOUR_TRANSLATION_KEYS[index].title),
+                  title: locale === "en" ? item.title : t(item.keys.title),
                 })}
                 aria-current={index === stepIndex ? "step" : undefined}
                 className={cx("h-1.5 rounded-full transition-all", index === stepIndex ? "w-5 bg-accent" : "w-1.5 bg-line hover:bg-faint", focusRing)}

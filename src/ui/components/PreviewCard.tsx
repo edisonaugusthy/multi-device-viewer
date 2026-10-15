@@ -29,6 +29,7 @@ import type {
 } from "../../domain/simulator/simulator.types";
 import { useSimulatorRef, useSimulatorSelector } from "../../app/SimulatorProvider";
 import { useI18n } from "../../app/i18n";
+import { FEATURES } from "../../app/feature-flags";
 import {
   DeviceFrame,
   estimateDeviceFrameSize,
@@ -880,7 +881,7 @@ export const PreviewCard = memo(function PreviewCard({
             onOpenInTab={openInTab}
             onExpand={onExpand && (() => onExpand(slot.id))}
             onFixPrompt={onFixPrompt && (() => onFixPrompt(slot.id))}
-            onCompareBefore={visualChecks.hasBefore() ? visualChecks.compare : undefined}
+            onCompareBefore={FEATURES.visualChecks && visualChecks.hasBefore() ? visualChecks.compare : undefined}
             compareBeforeLabel={t("visualCompareButton")}
             onLayoutProblems={onLayoutProblems && layoutStatus?.status === "done" && layoutStatus.count > 0 ? () => onLayoutProblems(slot.id) : undefined}
             layoutProblemCount={layoutStatus?.count}
@@ -897,7 +898,7 @@ export const PreviewCard = memo(function PreviewCard({
                 ) : <>
                   <MenuItem label={t("openInTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
                   {onCapture && <MenuItem label={t("captureAndAnnotate")} disabled={capturePending} onClick={() => { setControlsOpen(false); onCapture(slot.id); }}><CameraIcon size={15}/></MenuItem>}
-                  {visualChecks.menuItems}
+                  {FEATURES.visualChecks && visualChecks.menuItems}
                   {onLayoutCheck && (
                     <div className="mb-1 grid gap-px border-b border-line-soft pb-1.5" role="group" aria-label={t("layoutCheck")}>
                       <span className="px-2 pb-0.5 text-[11px] font-semibold text-muted">{t("layoutCheck")}</span>

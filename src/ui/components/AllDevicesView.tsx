@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useI18n, type TranslationKey } from "../../app/i18n";
+import { FEATURES } from "../../app/feature-flags";
 import { SimulatorScopeProvider, useSimulator, useSimulatorRef } from "../../app/SimulatorProvider";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { groupGalleryDevices, newestFirst, type DeviceGalleryGroupId, type DeviceGalleryGroup } from "../../domain/device/device-gallery";
@@ -767,7 +768,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
               if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closeOptions(); }
             }} className="absolute end-0 top-full z-30 mt-1 flex w-64 flex-col gap-1 whitespace-normal rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
               <button type="button" onClick={() => { setOptionsOpen(false); onOpen(); }} className={menuItem}>{t("openDeviceInWorkspace", { name: shortName(device.name) })}</button>
-              {visualChecks.menuItems}
+              {FEATURES.visualChecks && visualChecks.menuItems}
               <button type="button" onClick={() => { setOptionsOpen(false); simulator.current.setSlotZoomMode(slot.id, "fit"); }} className={cx(menuItem, "hidden @max-[720px]/popup:flex")}>{t("resetFit")}</button>
               <button type="button" onClick={() => { setOptionsOpen(false); onReload(); }} className={cx(menuItem, "hidden @max-[620px]/popup:flex")}>{t("reloadPreview")}</button>
               <button type="button" onClick={() => { setOptionsOpen(false); onOpenTab(); }} className={cx(menuItem, "hidden @max-[620px]/popup:flex")}>{t("openInTab")}</button>

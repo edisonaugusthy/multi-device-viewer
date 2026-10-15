@@ -11,6 +11,7 @@ import {
 } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useI18n } from "../../app/i18n";
+import { FEATURES } from "../../app/feature-flags";
 import { useReviewPrompt } from "../../app/useReviewPrompt";
 import { useSimulator } from "../../app/SimulatorProvider";
 import { useDeviceSets } from "../../app/useDeviceSets";
@@ -717,7 +718,7 @@ export function SimulatorApp() {
     const group = layoutCheck.view.groups.find((item) => item.devices.some((device) => device.slotId === slotId));
     layoutCheck.select(group?.key ?? null);
   });
-  const layoutPanelShown = layoutCheck.view.open && !viewMode && !compare;
+  const layoutPanelShown = FEATURES.layoutCheck && layoutCheck.view.open && !viewMode && !compare;
   // N and P step through the listed problems while the panel is open and nothing else has the keyboard.
   useEffect(() => {
     if (!layoutPanelShown || popover !== null || annotationOpen || allDevicesUrl !== null) return;
@@ -860,10 +861,10 @@ export function SimulatorApp() {
                     positionKey={singleSlotId === null ? "all" : "one"}
                     onExpand={focusSlot}
                     onFixPrompt={fixPromptForSlot}
-                    layoutStatus={layoutCheck.statusBySlot.get(slot.id)}
-                    onLayoutCheck={layoutCheckSlot}
-                    onLayoutProblems={showLayoutProblems}
-                    onPageReady={layoutCheck.onPageReady}
+                    layoutStatus={FEATURES.layoutCheck ? layoutCheck.statusBySlot.get(slot.id) : undefined}
+                    onLayoutCheck={FEATURES.layoutCheck ? layoutCheckSlot : undefined}
+                    onLayoutProblems={FEATURES.layoutCheck ? showLayoutProblems : undefined}
+                    onPageReady={FEATURES.layoutCheck ? layoutCheck.onPageReady : undefined}
                     focusNavigation={focusNavigation}
                     onScaleChange={updateScale}
                     onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}

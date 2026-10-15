@@ -149,7 +149,7 @@ npm run build
 npm run zip
 npm run test:e2e
 npm run test:extension
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.3.0-chrome.zip
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.3.1-chrome.zip
 ```
 
 The production Chrome extension and zip are written to `.output/`.

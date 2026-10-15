@@ -38,8 +38,8 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with the redesigned workspace and groups every other note", () => {
-    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("releaseWorkspaceTitle");
+  it("leads with HomeView and groups the latest improvements", () => {
+    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("releaseHomeViewTitle");
     expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual([
       "releaseSectionDevices",
       "releaseSectionViews",
@@ -47,7 +47,7 @@ describe("decideStartupNotice", () => {
       "releaseSectionGeneral",
     ]);
     const titles = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes.map(note => note.title));
-    expect(titles).toHaveLength(21);
+    expect(titles).toHaveLength(5);
     expect(new Set(titles).size).toBe(titles.length);
   });
 });

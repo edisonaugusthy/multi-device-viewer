@@ -1178,7 +1178,10 @@ test("keeps the enlarged popup the same size for every device and posture, with 
   expect(await popup.boundingBox()).toEqual(size);
 
   await page.keyboard.press("Escape");
-  await page.locator('[data-gallery-page] nav button', { hasText: "Laptops" }).click();
+  const categories = page.getByRole("combobox", { name: "Device categories" });
+  if (await categories.isVisible()) await categories.selectOption("laptop");
+  else await page.locator('[data-gallery-page] nav button', { hasText: "Laptops" }).click();
+  await expect(page.locator("[data-gallery-page]")).toHaveAttribute("data-gallery-page", "laptop");
   await page.locator("[data-gallery-device-id]").first().locator("[data-gallery-enlarge]").click();
   expect(await popup.boundingBox()).toEqual(size);
   await expect(add).toBeInViewport();

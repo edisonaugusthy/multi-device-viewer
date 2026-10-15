@@ -35,45 +35,29 @@ export const FEATURE_TOUR_REVISION = "0.3.0";
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
   version,
-  featured: { title: "releaseWorkspaceTitle", description: "releaseWorkspaceDescription", icon: "workspace" },
+  featured: { title: "releaseHomeViewTitle", description: "releaseHomeViewDescription", icon: "homeview" },
   sections: [
     {
       title: "releaseSectionDevices",
       notes: [
-        { title: "releaseDragTitle", description: "releaseDragDescription", icon: "drag" },
-        { title: "releaseFramesTitle", description: "releaseFramesDescription", icon: "frames" },
-        { title: "releaseStepTitle", description: "releaseStepDescription", icon: "step" },
-        { title: "releasePickerTitle", description: "releasePickerDescription", icon: "picker" },
-        { title: "releaseHomeViewTitle", description: "releaseHomeViewDescription", icon: "homeview" },
         { title: "releaseScrollbarsTitle", description: "releaseScrollbarsDescription", icon: "scrollbars" },
       ],
     },
     {
       title: "releaseSectionViews",
       notes: [
-        { title: "releaseFocusTitle", description: "releaseFocusDescription", icon: "focus" },
-        { title: "releaseExpandTitle", description: "releaseExpandDescription", icon: "expand" },
-        { title: "releaseGalleryTitle", description: "releaseGalleryDescription", icon: "gallery" },
-        { title: "releaseGalleryShotTitle", description: "releaseGalleryShotDescription", icon: "camera" },
         { title: "releaseToolbarHoverTitle", description: "releaseToolbarHoverDescription", icon: "hover" },
       ],
     },
     {
       title: "releaseSectionReview",
       notes: [
-        { title: "releaseCompareTitle", description: "releaseCompareDescription", icon: "compare" },
         { title: "releaseAdjustDesignTitle", description: "releaseAdjustDesignDescription", icon: "adjust" },
-        { title: "releaseFixPromptTitle", description: "releaseFixPromptDescription", icon: "fixPrompt" },
-        { title: "releaseFlowTitle", description: "releaseFlowDescription", icon: "flow" },
-        { title: "releaseRecordingTitle", description: "releaseRecordingDescription", icon: "record" },
       ],
     },
     {
       title: "releaseSectionGeneral",
       notes: [
-        { title: "releaseLanguagesTitle", description: "releaseLanguagesDescription", icon: "languages" },
-        { title: "releaseFasterTitle", description: "releaseFasterDescription", icon: "speed" },
-        { title: "releaseHeadersTitle", description: "releaseHeadersDescription", icon: "headers" },
         { title: "releaseReloadTitle", description: "releaseReloadDescription", icon: "reload" },
         { title: "releaseMenusTitle", description: "releaseMenusDescription", icon: "menus" },
       ],

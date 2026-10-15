@@ -65,8 +65,9 @@ export interface PreviewToolbarProps {
   menu?: ReactNode;
 }
 
-// The floating per-device toolbar. It fades in while the device is hovered or
-// focused and lingers briefly after the pointer leaves so it can be reached.
+// The floating per-device toolbar. It fades in while the device itself is
+// hovered (`revealed`, tracked by the card) or focused, and lingers briefly
+// after the pointer leaves so it can be reached.
 export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(function PreviewToolbar(props, ref) {
   const { t } = useI18n();
   const focus = props.focusNavigation;
@@ -80,7 +81,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
         "absolute left-1/2 z-40 w-max -translate-x-1/2 transition duration-200 ease-out",
         visible
           ? "pointer-events-auto translate-y-0 opacity-100"
-          : "pointer-events-none translate-y-1 opacity-0 delay-[450ms] group-hover/device:pointer-events-auto group-hover/device:translate-y-0 group-hover/device:opacity-100 group-hover/device:delay-0 group-focus-within/device:pointer-events-auto group-focus-within/device:translate-y-0 group-focus-within/device:opacity-100 group-focus-within/device:delay-0",
+          : "pointer-events-none translate-y-1 opacity-0 delay-[450ms] group-focus-within/device:pointer-events-auto group-focus-within/device:translate-y-0 group-focus-within/device:opacity-100 group-focus-within/device:delay-0",
       )}
     >
       <div role="toolbar" aria-label={t("deviceControls", { name: props.deviceName })} data-tour={props.tourTarget}

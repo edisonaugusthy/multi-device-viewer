@@ -192,6 +192,17 @@ export const PreviewCard = memo(function PreviewCard({
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
   const [controlsOpen, setControlsOpen] = useState(false);
+  // The toolbar shows while the pointer is on the device itself (or its caption
+  // or the toolbar), not anywhere in the column. It lingers briefly after the
+  // pointer leaves so it can be reached across the gap above the device.
+  const [deviceHovered, setDeviceHovered] = useState(false);
+  const hoverTimer = useRef<number | undefined>(undefined);
+  const holdToolbar = useStableCallback(() => { window.clearTimeout(hoverTimer.current); setDeviceHovered(true); });
+  const releaseToolbar = useStableCallback(() => {
+    window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => setDeviceHovered(false), 300);
+  });
+  useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
   const bridgeStatusTimer = useRef<number | undefined>(undefined);
   const bridgeStatusRef = useRef<BridgeStatus>("checking");
   const previousScrollSyncRef = useRef(display.scrollSync);
@@ -817,6 +828,8 @@ export const PreviewCard = memo(function PreviewCard({
               className={`shrink-0 origin-center cursor-grab touch-none active:cursor-grabbing data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
               data-device-capture
               data-free-device-view={freeView ? "" : undefined}
+              onPointerEnter={holdToolbar}
+              onPointerLeave={releaseToolbar}
               onPointerDown={startMove}
               onDoubleClick={event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) setOffset({ x: 0, y: 0 }); }}
               style={{
@@ -853,8 +866,8 @@ export const PreviewCard = memo(function PreviewCard({
 
       {toolbarShown && (
         <div ref={toolbarRef} className="pointer-events-none absolute inset-x-0 z-40"
-          onPointerEnter={() => setPinnedToolbar({ top: toolbarTop, shift: toolbarShift })}
-          onPointerLeave={() => setPinnedToolbar(null)}
+          onPointerEnter={() => { holdToolbar(); setPinnedToolbar({ top: toolbarTop, shift: toolbarShift }); }}
+          onPointerLeave={() => { releaseToolbar(); setPinnedToolbar(null); }}
           style={{ top: pinnedToolbar?.top ?? toolbarTop, transform: `translateX(${pinnedToolbar?.shift ?? toolbarShift}px)` }}>
           <PreviewToolbar
             deviceName={device.name}
@@ -862,7 +875,7 @@ export const PreviewCard = memo(function PreviewCard({
             canRotate={canRotate}
             removable={removable}
             reloading={bridgeStatus === "checking"}
-            revealed={revealToolbar}
+            revealed={revealToolbar || deviceHovered}
             menuOpen={controlsOpen}
             tourTarget={first ? "device-controls" : undefined}
             focusNavigation={focusNavigation}
@@ -919,6 +932,7 @@ export const PreviewCard = memo(function PreviewCard({
       {showCaption && (
         <div className="flex h-11 shrink-0 items-center justify-center px-2">
           <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
+            onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
             className={`flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent ${isActive ? "font-semibold text-ink" : "font-medium text-ink-2"}`}>
             <span className="truncate text-[13px]">{shortName(device.name)}</span>
             <span dir="ltr" className="shrink-0 font-mono text-xs font-medium text-muted">{viewportLabel}</span>

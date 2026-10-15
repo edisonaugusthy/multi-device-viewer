@@ -47,7 +47,7 @@ describe("decideStartupNotice", () => {
       "releaseSectionGeneral",
     ]);
     const titles = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes.map(note => note.title));
-    expect(titles).toHaveLength(15);
+    expect(titles).toHaveLength(21);
     expect(new Set(titles).size).toBe(titles.length);
   });
 });

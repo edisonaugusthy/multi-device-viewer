@@ -4,7 +4,8 @@ import type { TranslationKey } from "./i18n";
 // Icon names map to UI icons in ReleaseNotesModal, keeping this module UI-free.
 export type ReleaseNoteIcon =
   | "workspace" | "drag" | "frames" | "step" | "picker" | "focus" | "expand" | "gallery" | "camera"
-  | "compare" | "fixPrompt" | "flow" | "record" | "languages" | "speed" | "headers";
+  | "compare" | "fixPrompt" | "flow" | "record" | "languages" | "speed" | "headers"
+  | "homeview" | "scrollbars" | "hover" | "adjust" | "reload" | "menus";
 
 export interface ReleaseNote {
   title: TranslationKey;
@@ -43,6 +44,8 @@ export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
         { title: "releaseFramesTitle", description: "releaseFramesDescription", icon: "frames" },
         { title: "releaseStepTitle", description: "releaseStepDescription", icon: "step" },
         { title: "releasePickerTitle", description: "releasePickerDescription", icon: "picker" },
+        { title: "releaseHomeViewTitle", description: "releaseHomeViewDescription", icon: "homeview" },
+        { title: "releaseScrollbarsTitle", description: "releaseScrollbarsDescription", icon: "scrollbars" },
       ],
     },
     {
@@ -52,12 +55,14 @@ export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
         { title: "releaseExpandTitle", description: "releaseExpandDescription", icon: "expand" },
         { title: "releaseGalleryTitle", description: "releaseGalleryDescription", icon: "gallery" },
         { title: "releaseGalleryShotTitle", description: "releaseGalleryShotDescription", icon: "camera" },
+        { title: "releaseToolbarHoverTitle", description: "releaseToolbarHoverDescription", icon: "hover" },
       ],
     },
     {
       title: "releaseSectionReview",
       notes: [
         { title: "releaseCompareTitle", description: "releaseCompareDescription", icon: "compare" },
+        { title: "releaseAdjustDesignTitle", description: "releaseAdjustDesignDescription", icon: "adjust" },
         { title: "releaseFixPromptTitle", description: "releaseFixPromptDescription", icon: "fixPrompt" },
         { title: "releaseFlowTitle", description: "releaseFlowDescription", icon: "flow" },
         { title: "releaseRecordingTitle", description: "releaseRecordingDescription", icon: "record" },
@@ -69,6 +74,8 @@ export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
         { title: "releaseLanguagesTitle", description: "releaseLanguagesDescription", icon: "languages" },
         { title: "releaseFasterTitle", description: "releaseFasterDescription", icon: "speed" },
         { title: "releaseHeadersTitle", description: "releaseHeadersDescription", icon: "headers" },
+        { title: "releaseReloadTitle", description: "releaseReloadDescription", icon: "reload" },
+        { title: "releaseMenusTitle", description: "releaseMenusDescription", icon: "menus" },
       ],
     },
   ],

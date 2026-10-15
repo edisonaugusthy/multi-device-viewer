@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import type { ReleaseNoteIcon, VersionReleaseNotes } from "../../app/release-notes";
 import { useI18n } from "../../app/i18n";
 import {
-  BugIcon, CameraIcon, ChevronRightIcon, ExpandIcon, EyeIcon, FixPromptIcon, GridIcon, GripIcon, NavigationSyncIcon,
-  PlayIcon, RecordIcon, SearchIcon, SideBySideIcon, TextToolIcon, WhatsNewIcon, WorkspaceIcon,
+  AdjustIcon, BugIcon, CameraIcon, ChevronRightIcon, CustomSizeIcon, ExpandIcon, EyeIcon, FixPromptIcon, GridIcon, GripIcon,
+  ListIcon, NavigationSyncIcon, PlayIcon, PointerIcon, RecordIcon, ReloadIcon, ScrollSyncIcon, SearchIcon, SideBySideIcon,
+  TextToolIcon, WhatsNewIcon, WorkspaceIcon,
 } from "../icons";
 import { Dialog } from "./Dialog";
 import { cx, focusRing } from "./ui";
@@ -25,6 +26,12 @@ const icons: Record<ReleaseNoteIcon, ReactNode> = {
   languages: <TextToolIcon size={15} />,
   speed: <PlayIcon size={13} />,
   headers: <BugIcon size={15} />,
+  homeview: <CustomSizeIcon size={15} />,
+  scrollbars: <ScrollSyncIcon size={15} />,
+  hover: <PointerIcon size={15} />,
+  adjust: <AdjustIcon size={15} />,
+  reload: <ReloadIcon size={15} />,
+  menus: <ListIcon size={15} />,
 };
 
 // A small sketch of the new layout: devices of different sizes on one baseline.

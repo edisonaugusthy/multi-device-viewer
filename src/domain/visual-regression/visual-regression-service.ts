@@ -27,6 +27,7 @@ interface Session {
   deviceName: string;
   image: ImageBitmap;
   crop: CaptureCrop;
+  zoom: number;
   timer?: ReturnType<typeof setTimeout>;
   comparison?: Comparison;
 }
@@ -90,7 +91,7 @@ async function capture(identity: BaselineIdentity, deviceName: unknown, frame: C
   if (width * height > MAX_IMAGE_PIXELS) throw new VisualRegressionError("image");
   // Crop while decoding: the rest of the tab is never rasterised into a canvas.
   const image = await createImageBitmap(shot, left, top, width, height).catch(() => { throw new VisualRegressionError("image"); });
-  const session: Session = { id: crypto.randomUUID(), identity, deviceName: typeof deviceName === "string" ? deviceName.slice(0, 160) : "", image, crop };
+  const session: Session = { id: crypto.randomUUID(), identity, deviceName: typeof deviceName === "string" ? deviceName.slice(0, 160) : "", image, crop, zoom: rect.width / identity.viewportWidth };
   remember(session);
   return { captureId: session.id };
 }
@@ -140,7 +141,7 @@ async function dataUrl(blob: Blob) {
 async function store(session: Session) {
   const images = await encode(session.image);
   const meta = await writeBaseline(session.identity, {
-    meta: { identity: session.identity, deviceName: session.deviceName, savedAt: Date.now(), width: session.image.width, height: session.image.height, crop: session.crop },
+    meta: { identity: session.identity, deviceName: session.deviceName, savedAt: Date.now(), width: session.image.width, height: session.image.height, crop: session.crop, zoom: session.zoom },
     images,
   });
   return meta!;

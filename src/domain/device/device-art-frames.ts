@@ -3187,6 +3187,34 @@ export const deviceArtFrames: LocalMockupAsset[] = [
     }
   },
   {
+    "id": "apple-homeview-2026",
+    "width": 1271,
+    "height": 1540,
+    "renderScale": 0.5,
+    "cssViewport": {
+      "width": 544,
+      "height": 544
+    },
+    "viewport": {
+      "portrait": {
+        "left": 45.69,
+        "top": 45.69,
+        "width": 544,
+        "height": 544,
+        "cornerRadius": 47.73,
+        "enableRotation": false
+      },
+      "landscape": {
+        "left": 45.69,
+        "top": 45.69,
+        "width": 544,
+        "height": 544,
+        "cornerRadius": 47.73,
+        "enableRotation": false
+      }
+    }
+  },
+  {
     "id": "xiaomi-12-2022",
     "width": 744,
     "height": 1601,

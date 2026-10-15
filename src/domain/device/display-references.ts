@@ -9,4 +9,7 @@ export const displayReferences: Record<string, { screen: Size; panel: Size; dpr:
   // This model downscales its rendered screen. Do not divide its panel by DPR.
   // Native Safari / Display Zoom calibration remains in the device checklist.
   "apple-iphone-12-mini": { screen: { width: 375, height: 812 }, panel: { width: 1080, height: 2340 }, dpr: 3, source: "https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json" },
+  // Apple publishes the panel only (1088 × 1088 at 220 ppi); 2× is the Apple
+  // density nearest that, so the logical screen is 544 × 544.
+  "apple-homeview-2026": { screen: { width: 544, height: 544 }, panel: { width: 1088, height: 1088 }, dpr: 2, source: "https://www.apple.com/apple-homeview/specs/" },
 };

@@ -45,6 +45,12 @@ export function supportsOrientation(device: Device): boolean {
   return device.type === "phone" || device.type === "tablet";
 }
 
+/** Touchscreens scroll without a visible scrollbar: handhelds and the built-in
+ *  touch panels (smart displays, kiosks), which the catalog tags "special". */
+export function hidesPageScrollbars(device: Pick<Device, "type" | "tags">): boolean {
+  return device.type === "phone" || device.type === "tablet" || device.tags.includes("special");
+}
+
 export function createCustomDevice(input: CustomDeviceInput): Device {
   const safeName = input.name.trim() || `${input.width} x ${input.height}`;
   const id = `${CUSTOM_PREFIX}${safeName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${input.width}x${input.height}`;

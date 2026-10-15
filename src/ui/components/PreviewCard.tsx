@@ -15,6 +15,7 @@ import type { LayoutSlotStatus } from "../hooks/useLayoutCheck";
 import { PreviewToolbar, type FocusNavigation } from "./PreviewToolbar";
 import { memo, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import {
+  hidesPageScrollbars,
   supportsOrientation,
   toLandscapeAwareSize,
 } from "../../domain/device/device-service";
@@ -199,10 +200,18 @@ export const PreviewCard = memo(function PreviewCard({
   const syncSettingsRef = useRef({ scroll: display.scrollSync, flow: flowRecording, visuals: sampleVisuals });
   syncSettingsRef.current = { scroll: display.scrollSync, flow: flowRecording, visuals: sampleVisuals };
   const currentPageUrlRef = useRef(slot.url);
+  // A before/after capture briefly shows the device at the "before" zoom.
+  // Local only: the slot's saved zoom never changes.
+  const [captureScale, setCaptureScale] = useState<number | null>(null);
+  const layoutScaleRef = useRef(1);
   const visualChecks = useVisualRegression({
-    deviceId: device.id, deviceName: device.name, orientation: slot.orientation,
+    slotId: slot.id, deviceId: device.id, deviceName: device.name, orientation: slot.orientation,
     menuOpen: controlsOpen, getFrame: () => iframeRef.current,
     getUrl: () => currentPageUrlRef.current, dismissMenu: () => setControlsOpen(false),
+    scaleForCapture: (factor) => new Promise(resolve => {
+      setCaptureScale(factor === null ? null : layoutScaleRef.current * factor);
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    }),
   });
   const sentFlowRunRef = useRef<string | null>(null);
   const pendingReplayStepRef = useRef<number | null>(null);
@@ -286,12 +295,14 @@ export const PreviewCard = memo(function PreviewCard({
     availH / frameSize.height,
   );
   const fitScale = rawFitScale;
-  const scale =
+  const layoutScale =
     slot.zoomMode === "actual"
       ? 1
       : slot.zoomMode === "fit"
         ? fitScale
         : fitScale * (slot.zoom / 0.58);
+  layoutScaleRef.current = layoutScale;
+  const scale = captureScale ?? layoutScale;
 
   useLayoutEffect(() => { onScaleChange?.(scale, slot.id); }, [onScaleChange, scale, slot.id]);
 
@@ -467,7 +478,7 @@ export const PreviewCard = memo(function PreviewCard({
         {
           type: "MDV_PREVIEW_REGISTER",
           slotId: slot.id,
-          hideScrollbars: device.type === "phone" || device.type === "tablet",
+          hideScrollbars: hidesPageScrollbars(device),
           sampleRightSurface: device.id.startsWith("apple-iphone-duo-"),
           visualsActive: syncSettingsRef.current.visuals,
         },
@@ -772,6 +783,10 @@ export const PreviewCard = memo(function PreviewCard({
   // While the pointer is on the toolbar it stays put, so repeated clicks on
   // previous/next keep hitting the same button as the device changes size.
   const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number } | null>(null);
+  // Hiding the toolbar for a capture removes it from under the pointer without
+  // a pointerleave; a pin kept from then would make it jump away on return.
+  const toolbarShown = showToolbar && !capturePending && !visualChecks.capturing;
+  useEffect(() => { if (!toolbarShown) setPinnedToolbar(null); }, [toolbarShown]);
   const statusTop = Math.max(6, TOOLBAR_SPACE * (showToolbar ? 1 : 0) + deviceTop + offset.y + 8);
   const openInTab = () => window.open(currentPageUrlRef.current || slot.url, "_blank", "noopener,noreferrer");
   const viewportLabel = `${viewportSize.width}×${viewportSize.height}`;
@@ -835,7 +850,7 @@ export const PreviewCard = memo(function PreviewCard({
         </div>}
       </div>
 
-      {showToolbar && !capturePending && !visualChecks.capturing && (
+      {toolbarShown && (
         <div ref={toolbarRef} className="pointer-events-none absolute inset-x-0 z-40"
           onPointerEnter={() => setPinnedToolbar({ top: toolbarTop, shift: toolbarShift })}
           onPointerLeave={() => setPinnedToolbar(null)}
@@ -949,14 +964,14 @@ export const PreviewCard = memo(function PreviewCard({
               ref={iframeRef}
               key={`${slot.id}-${slot.reloadToken}`}
               name={
-                device.type === "phone" || device.type === "tablet"
+                hidesPageScrollbars(device)
                   ? `mdv-mobile-preview-${slot.id}`
                   : `mdv-preview-${slot.id}`
               }
               title={t("devicePreview", { name: device.name })}
               src={preparedUrl === slot.url ? preparedUrl : "about:blank"}
               loading="eager"
-              className={`block size-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a] [color-scheme:dark]" : "bg-white [color-scheme:light]"} ${device.type === "phone" || device.type === "tablet" ? "[scrollbar-width:none]" : ""}`}
+              className={`block size-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a] [color-scheme:dark]" : "bg-white [color-scheme:light]"} ${hidesPageScrollbars(device) ? "[scrollbar-width:none]" : ""}`}
               // Match the page at fractional raster edges, including the clear
               // gaps between Duo's floating glass groups.
               style={pageSurfaces?.top ? { backgroundColor: pageSurfaces.top } : undefined}

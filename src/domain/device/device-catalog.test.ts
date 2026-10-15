@@ -116,6 +116,7 @@ describe("device catalog imports", () => {
         .map((device) => device.id)
         .sort(),
     ).toEqual([
+      "apple-homeview-2026",
       "apple-iphone-18-pro-2026",
       "apple-iphone-18-pro-max-2026",
       "apple-iphone-duo-folded-2026",
@@ -156,6 +157,25 @@ describe("device catalog imports", () => {
     });
     const asset = devices.find((device) => device.id === id)?.mockupAssets[0];
     expect(asset?.renderScale).toBeGreaterThan(0);
+  });
+
+  it("includes the Apple HomeView smart display as a new special device without browser chrome", () => {
+    const device = devices.find((candidate) => candidate.id === "apple-homeview-2026")!;
+    expect(device).toMatchObject({
+      name: "Apple HomeView",
+      brand: "Apple",
+      family: "Smart Display",
+      type: "custom",
+      os: "HomeView 27",
+      year: 2026,
+      cssViewport: { width: 544, height: 544 },
+      pixelRatio: 2,
+      manufacturerResolution: { width: 1088, height: 1088 },
+      resolutionSource: "reference",
+      mockupAssets: [expect.objectContaining({ localPath: "/mockups/apple-homeview-2026.webp" })],
+    });
+    expect(device.tags).toEqual(expect.arrayContaining(["new", "special", "custom"]));
+    expect(device.mockupAssets[0].viewport?.portrait).toMatchObject({ width: 544, height: 544, enableRotation: false });
   });
 
   it("clips the page around the drawn iPhone notch", () => {
@@ -486,6 +506,7 @@ describe("device catalog imports", () => {
     "apple-macbook-neo-13-2026",
     "microsoft-surface-laptop-8-13-8-2026",
     "apple-studio-display-xdr-27-2026",
+    "apple-homeview-2026",
   ])("keeps the calibrated screen for %s inside its rendered frame", (id) => {
     const device = devices.find((candidate) => candidate.id === id)!;
     const asset = device.mockupAssets[0];
@@ -522,6 +543,7 @@ describe("device catalog imports", () => {
     "apple-macbook-neo-13-2026",
     "microsoft-surface-laptop-8-13-8-2026",
     "apple-studio-display-xdr-27-2026",
+    "apple-homeview-2026",
   ])("keeps the generated screen inside its frame for %s", (id) => {
     const asset = devices.find((candidate) => candidate.id === id)!.mockupAssets[0];
     const frameWidth = asset.width! * asset.renderScale!;

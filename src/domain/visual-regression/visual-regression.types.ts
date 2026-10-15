@@ -16,6 +16,8 @@ export interface BaselineMeta {
   width: number;
   height: number;
   crop: CaptureCrop;
+  /** On-screen size of the webpage relative to its CSS size when captured. Missing on older pictures. */
+  zoom?: number;
   /** Stored bytes (lossless PNG plus display preview). */
   bytes: number;
 }

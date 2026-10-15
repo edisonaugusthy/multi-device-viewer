@@ -2,7 +2,7 @@ import { hasVerificationChallenge } from "../domain/flow/challenge-detection";
 import { getKeyboardScrollDelta, shouldKeepKeyboardSessionOnBlur } from "../domain/device/mobile-keyboard";
 import { samplePageSurfaces } from "../domain/device/page-surfaces";
 import { createSurfaceScheduler } from "./surface-scheduler";
-import { clearLayoutMarks, measureLayout, renderLayoutMarks, scrollToLayoutMark } from "./layout-check-bridge";
+import { clearLayoutMarks, measureLayout, renderLayoutMarks, scrollToLayoutMark, setLayoutMarksHidden } from "./layout-check-bridge";
 import type { LayoutMark } from "../domain/layout-check/layout-check.types";
 
 export function setupPreviewBridge() {
@@ -939,6 +939,16 @@ export function setupPreviewBridge() {
 
     if (data.type === "MDV_LAYOUT_SHOW" && typeof data.slotId === "string" && data.slotId === slotId) {
       if (typeof data.id === "string") scrollToLayoutMark(data.id);
+      return;
+    }
+
+    if (data.type === "MDV_CAPTURE_PREPARE" && typeof data.slotId === "string" && data.slotId === slotId) {
+      const requestId = typeof data.requestId === "string" ? data.requestId : "";
+      setLayoutMarksHidden(data.hidden === true);
+      // Reply after a frame has been painted without the marks.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        window.parent.postMessage({ type: "MDV_CAPTURE_PREPARED", slotId, requestId }, "*");
+      }));
       return;
     }
 

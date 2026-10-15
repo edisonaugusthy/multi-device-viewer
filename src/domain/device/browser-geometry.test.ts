@@ -17,7 +17,7 @@ describe("browser content boundaries", () => {
       expect(keyboard.top + keyboard.content.height + keyboard.bottom).toBe(size.height);
     }
   });
-  it("keeps all 111 device identities available", () => { expect(devices).toHaveLength(111); });
+  it("keeps all 112 device identities available", () => { expect(devices).toHaveLength(112); });
   it("uses the full width of a wide fold whose camera is in the top edge", () => {
     const device = devices.find(d => d.id === "samsung-galaxy-z-fold8-unfolded-2026")!;
     const geometry = getBrowserGeometry(device, device.cssViewport);

@@ -178,4 +178,5 @@ const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "apple-macbook-neo-13-2026": { osVersion: "26.0", devicePixelRatio: 2 },
   "microsoft-surface-laptop-8-13-8-2026": { osVersion: "11.0", devicePixelRatio: 2 },
   "apple-studio-display-xdr-27-2026": { osVersion: "26.0", devicePixelRatio: 2 },
+  "apple-homeview-2026": { osVersion: "27.2", devicePixelRatio: 2 },
 };

@@ -674,6 +674,12 @@ const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
     pixelRatio: 2,
     manufacturerResolution: { width: 5120, height: 2880 },
   },
+  // 7″ square smart display, 1088 × 1088 at 220 ppi, shown at 2×.
+  "apple-homeview-2026": {
+    cssViewport: { width: 544, height: 544 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 1088, height: 1088 },
+  },
 };
 
 export const devices: Device[] = dedupeDevices([
@@ -786,7 +792,7 @@ function createDeviceFromMockup(id: string): Device {
 }
 
 function deviceTypeFromId(id: string): Device["type"] {
-  if (id.includes("self-service-kiosk") || id.includes("nspanel")) return "custom";
+  if (id.includes("self-service-kiosk") || id.includes("nspanel") || id.includes("homeview")) return "custom";
   if (id.includes("watch")) return "watch";
   if (id.includes("tv")) return "tv";
   if (id.includes("macbook") || id.includes("latitude") || id.includes("laptop")) return "laptop";
@@ -818,6 +824,8 @@ function brandFromId(id: string) {
 function osFromId(id: string, type: Device["type"], brand: string) {
   if (id.includes("self-service-kiosk")) return "Kiosk";
   if (id.includes("nspanel")) return "Embedded";
+  // Apple names no OS for HomeView, only "HomeView software version 27.2".
+  if (id.includes("homeview")) return "HomeView 27";
   if (type === "watch") return brand === "Apple" ? "watchOS" : "Wear OS";
   if (type === "tv") return brand === "Samsung" ? "Tizen" : "TV";
   if (type === "desktop" || type === "laptop") return brand === "Apple" ? "macOS" : "Windows";
@@ -829,6 +837,7 @@ function osFromId(id: string, type: Device["type"], brand: string) {
 function familyFromId(id: string, brand: string, type: Device["type"]) {
   if (id.includes("self-service-kiosk")) return "Kiosk";
   if (id.includes("nspanel")) return "Control Panel";
+  if (id.includes("homeview")) return "Smart Display";
   if (brand === "Zebra") return id.includes("mc330") ? "Mobile Computer" : "Handheld";
   if (brand === "Non-branded") return "Android Smartphone";
   if (type === "watch") return "Watch";
@@ -889,14 +898,15 @@ function tagsFromId(id: string, type: Device["type"], os: string) {
     "apple-iphone-18-pro-2026",
     "apple-iphone-18-pro-max-2026",
     "apple-iphone-duo-folded-2026",
-    "apple-iphone-duo-unfolded-2026"
+    "apple-iphone-duo-unfolded-2026",
+    "apple-homeview-2026"
 ]);
   return [
     type,
     os.toLowerCase(),
     ...(latestCatalogIds.has(id) ? ["new"] : []),
     ...(id.includes("fold") || id.includes("flip") || id.includes("razr") || id.includes("duo") ? ["foldable"] : []),
-    ...(id.includes("self-service-kiosk") || id.includes("nspanel") ? ["special"] : []),
+    ...(id.includes("self-service-kiosk") || id.includes("nspanel") || id.includes("homeview") ? ["special"] : []),
     ...(id.includes("xcover") || id.includes("zebra") || id.includes("toughbook") ? ["rugged", "enterprise"] : []),
     ...(id.includes("zebra-mc330") ? ["special", "android"] : [])
   ];
@@ -928,6 +938,7 @@ function nameFromId(id: string) {
     "apple-macbook-neo-13-2026": "Apple MacBook Neo 13-inch",
     "microsoft-surface-laptop-8-13-8-2026": "Microsoft Surface Laptop 13.8-inch (8th Edition)",
     "apple-studio-display-xdr-27-2026": "Apple Studio Display XDR 27-inch",
+    "apple-homeview-2026": "Apple HomeView",
   };
   if (normalizedNames[id]) return normalizedNames[id];
 

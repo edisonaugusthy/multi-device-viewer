@@ -160,6 +160,9 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const scrollRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLButtonElement>(null);
   const settingsRef = useRef<HTMLButtonElement>(null);
+  const categoryNavRef = useRef<HTMLElement>(null);
+  // Category tabs show only when every tab fits; otherwise the dropdown does.
+  const [categoryTabsFit, setCategoryTabsFit] = useState(true);
   const baseSlots = useMemo(() => devices.map(device => ({
     id: `gallery-${device.id}`, deviceId: device.id, url,
     orientation: getDefaultOrientation(device), zoom: 0.58,
@@ -393,11 +396,26 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
     return () => { target.removeEventListener("keydown", closeOnEscape); window.removeEventListener("message", closeFromPreview); };
   }, [closePopup, expandedDeviceId, onClose, stepExpanded, viewMode]);
 
+  // The tabs stay laid out (invisibly) while the dropdown shows, so they can be
+  // measured at the same width and come back once the header is wide enough.
+  useLayoutEffect(() => {
+    const nav = categoryNavRef.current;
+    if (!nav) return;
+    const measure = () => setCategoryTabsFit(nav.scrollWidth <= nav.clientWidth + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, [viewMode, groups, t]);
+
   const jumpToGroup = (id: DeviceGalleryGroupId) => {
     if (id !== selectedGroup) onSelectGroup(id, display.navigationSync ? getSlotUrl(syncSourceId) : url);
   };
   const toggleSync = (key: "scrollSync" | "navigationSync") => simulator.updateDisplay(current => ({ ...current, [key]: !current[key] }));
-  const widthRange = `${group.devices[0].cssViewport.width}${group.devices[0].cssViewport.width !== group.devices.at(-1)!.cssViewport.width ? `–${group.devices.at(-1)!.cssViewport.width}` : ""}`;
+  // Groups are sorted newest first, so the narrowest and widest can be anywhere.
+  const groupWidths = group.devices.map(device => device.cssViewport.width);
+  const [narrowest, widest] = [Math.min(...groupWidths), Math.max(...groupWidths)];
+  const widthRange = narrowest === widest ? `${narrowest}` : `${narrowest}–${widest}`;
 
   return (
     <SimulatorScopeProvider value={scope}>
@@ -410,18 +428,21 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
             <BackIcon size={15} />{t("workspace")}
           </button>
 
-          <div className="min-w-[90px] flex-1">
-            <label className="sr-only" htmlFor="mdv-gallery-category">{t("deviceCategories")}</label>
-            <select id="mdv-gallery-category" aria-label={t("deviceCategories")} value={selectedGroup ?? ""} onChange={event => jumpToGroup(event.target.value as DeviceGalleryGroupId)}
-              className={cx("h-8 w-full max-w-48 rounded-lg border border-line bg-surface px-2 text-[12.5px] font-semibold text-ink @min-[1200px]/gallery:hidden", focusRing)}>
-              {groups.map(item => <option key={item.id} value={item.id}>{t(groupLabels[item.id])} · {item.devices.length}</option>)}
-            </select>
-            <nav aria-label={t("deviceCategories")} className="hidden min-w-0 items-center gap-0.5 overflow-x-auto [scrollbar-width:none] @min-[1200px]/gallery:flex">
+          <div className="relative min-w-[90px] flex-1">
+            {!categoryTabsFit && <>
+              <label className="sr-only" htmlFor="mdv-gallery-category">{t("deviceCategories")}</label>
+              <select id="mdv-gallery-category" aria-label={t("deviceCategories")} value={selectedGroup ?? ""} onChange={event => jumpToGroup(event.target.value as DeviceGalleryGroupId)}
+                className={cx("h-8 w-full max-w-48 rounded-lg border border-line bg-surface px-2 text-[12.5px] font-semibold text-ink", focusRing)}>
+                {groups.map(item => <option key={item.id} value={item.id}>{t(groupLabels[item.id])} · {item.devices.length}</option>)}
+              </select>
+            </>}
+            <nav ref={categoryNavRef} aria-label={t("deviceCategories")} aria-hidden={!categoryTabsFit || undefined}
+              className={cx("flex min-w-0 items-center gap-0.5 overflow-hidden", !categoryTabsFit && "invisible absolute inset-x-0 top-1/2 -translate-y-1/2")}>
               {groups.map(item => {
                 const current = selectedGroup === item.id;
                 return (
                   <button type="button" key={item.id} aria-current={current ? "page" : undefined} onClick={() => jumpToGroup(item.id)}
-                    className={cx("flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 text-[13px]",
+                    className={cx("flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-2 text-[13px]",
                       current ? "bg-primary font-semibold text-on-primary" : "font-medium text-ink-2 hover:bg-sunken hover:text-ink", focusRing)}>
                     {tabLabels[item.id] === "Android" ? "Android" : t(tabLabels[item.id] as TranslationKey)}
                     <span className={cx("font-mono text-[11.5px]", current ? "opacity-75" : "text-muted")}>{item.devices.length}</span>
@@ -472,7 +493,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
         </header>}
 
         <div ref={scrollRef} data-gallery-scroll tabIndex={expandedDeviceId ? -1 : 0} aria-label={t("allDevices")}
-          className={cx("min-h-0 flex-1 overscroll-contain outline-none [scrollbar-gutter:stable] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent", expandedDeviceId ? "overflow-hidden" : "overflow-y-auto")}>
+          className={cx("min-h-0 flex-1 overscroll-contain outline-none [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent", expandedDeviceId ? "overflow-hidden" : "overflow-y-auto")}>
           <section key={group.id} data-gallery-group={group.id} aria-labelledby={expandedDeviceId ? undefined : `gallery-heading-${group.id}`}
             className={cx("flex flex-col gap-4 px-6 pb-8", viewMode ? "pt-6" : "pt-[18px]")}>
             {!viewMode && <div inert={expandedDeviceId !== null} className="flex flex-wrap items-baseline gap-2.5">
@@ -669,7 +690,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const visualChecks = useVisualRegression({
-    deviceId: device.id, deviceName: device.name, orientation: slot.orientation,
+    slotId: slot.id, deviceId: device.id, deviceName: device.name, orientation: slot.orientation,
     menuOpen: optionsOpen, getFrame: () => popupRef.current?.querySelector("iframe"),
     getUrl: () => simulator.current.getSlotUrl(slot.id), dismissMenu: () => setOptionsOpen(false),
   });

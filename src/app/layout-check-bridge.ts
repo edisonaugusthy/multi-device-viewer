@@ -5,6 +5,8 @@ import { MAX_PROBLEMS, type LayoutCheckReport, type LayoutMark, type LayoutProbl
 
 const MARKS_ID = "mdv-layout-marks";
 const COLOR = "239, 68, 68";
+// Hidden while a "before"/"after" picture is taken, so marks never become page pixels.
+let marksHidden = false;
 
 const round = (value: number) => Math.round(value * 10) / 10;
 
@@ -112,11 +114,19 @@ export function renderLayoutMarks(marks: LayoutMark[], viewportWidth: number) {
     }
     container.appendChild(box);
   }
+  if (marksHidden) container.style.setProperty("visibility", "hidden", "important");
   document.documentElement.appendChild(container);
 }
 
 export function clearLayoutMarks() {
   document.getElementById(MARKS_ID)?.remove();
+}
+
+export function setLayoutMarksHidden(hidden: boolean) {
+  marksHidden = hidden;
+  const container = document.getElementById(MARKS_ID);
+  if (hidden) container?.style.setProperty("visibility", "hidden", "important");
+  else container?.style.removeProperty("visibility");
 }
 
 /** Scrolls the page so the mark sits in the middle of the viewport. */

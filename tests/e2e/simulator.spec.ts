@@ -1219,7 +1219,7 @@ test("keeps the browser appearance panel inside its menu", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
   await revealControls(page);
   await slot.getByRole("button", { name: "Viewport options", exact: true }).click();
-  await page.locator("[data-viewport-actions]").getByRole("button", { name: "Browser appearance" }).click();
+  await page.locator("[data-viewport-actions]").getByRole("button", { name: "Safari settings" }).click();
   const menu = page.locator("[data-viewport-actions]");
   await expect(menu.getByText("Browser layout")).toBeVisible();
   // The note wraps instead of widening the menu with a sideways scrollbar.

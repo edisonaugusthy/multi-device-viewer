@@ -58,7 +58,7 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
         </button>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto border-t border-line-soft">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain border-t border-line-soft [scrollbar-width:none]">
         {checking ? (
           <ol className="grid gap-1 p-3">
             {view.devices.map(device => (

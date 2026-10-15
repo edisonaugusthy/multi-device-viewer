@@ -16,6 +16,7 @@ import { ComparisonPanel, ManageBaselines, useFormatters, visualButton, VisualDi
 import { cx } from "../components/ui";
 
 interface Options {
+  slotId: string;
   deviceId: string;
   deviceName: string;
   orientation: "portrait" | "landscape";
@@ -23,6 +24,8 @@ interface Options {
   getFrame: () => HTMLIFrameElement | null | undefined;
   getUrl: () => string;
   dismissMenu: () => void;
+  /** Scales the device by `factor` for a capture (null restores it), resolving once laid out. */
+  scaleForCapture?: (factor: number | null) => Promise<void>;
 }
 type Dialog =
   | { kind: "comparison"; result: VisualComparison; updating?: boolean; accepted?: boolean; error?: TranslationKey }
@@ -36,6 +39,24 @@ const errors: Record<VisualRegressionErrorCode, TranslationKey> = {
 const messageFor = (error: unknown): TranslationKey => error instanceof VisualRegressionError ? errors[error.code] ?? "visualEngineError" : "visualEngineError";
 const DEFAULT_SENSITIVITY = 10;
 const TOAST_MS = 6000;
+// A page without the bridge never answers; capture it as it is.
+const PREPARE_TIMEOUT_MS = 400;
+
+/** Asks the preview to hide what the viewer draws inside the page (Layout check marks). */
+function preparePage(frame: HTMLIFrameElement, slotId: string, hidden: boolean): Promise<void> {
+  const target = frame.contentWindow;
+  if (!target) return Promise.resolve();
+  const requestId = crypto.randomUUID();
+  return new Promise(resolve => {
+    const done = () => { clearTimeout(timer); window.removeEventListener("message", onMessage); resolve(); };
+    const onMessage = (event: MessageEvent) => {
+      if (event.source === target && event.data?.type === "MDV_CAPTURE_PREPARED" && event.data.requestId === requestId) done();
+    };
+    const timer = setTimeout(done, PREPARE_TIMEOUT_MS);
+    window.addEventListener("message", onMessage);
+    target.postMessage({ type: "MDV_CAPTURE_PREPARE", slotId, requestId, hidden }, "*");
+  });
+}
 
 function MenuButton({ icon, label, onClick, disabled = false, danger = false, strong = false }: {
   icon: ReactNode; label: string; onClick: () => void; disabled?: boolean; danger?: boolean; strong?: boolean;
@@ -98,17 +119,32 @@ export function useVisualRegression(options: Options) {
   useEffect(() => { if (dialog) closeRef.current?.focus(); }, [dialog?.kind]);
   function close() { setDialog(null); current.current.getFrame()?.focus({ preventScroll: true }); }
 
-  /** Hide our controls, then let the background capture and crop the tab. */
-  async function capture() {
+  /**
+   * Hide our controls, then let the background capture and crop the tab.
+   * With `zoom`, the device is shown at that zoom for the capture, so text is
+   * drawn exactly as in the "before" picture; if that does not fit, as it is.
+   */
+  async function capture(zoom?: number) {
     current.current.dismissMenu();
     setDialog(null);
     setToast(false);
     setCapturing(true);
+    const frame = current.current.getFrame();
+    const { slotId, scaleForCapture } = current.current;
+    let scaled = false;
     try {
-      // Unmount the menu, dialog and hover toolbar before the screenshot.
-      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-      const frame = current.current.getFrame();
       if (!frame) throw new VisualRegressionError("capture");
+      // Unmount the menu, dialog and hover toolbar, and hide marks drawn in the page, before the screenshot.
+      await Promise.all([
+        preparePage(frame, slotId, true),
+        new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))),
+      ]);
+      const factor = zoom && frame.clientWidth ? zoom / (frame.getBoundingClientRect().width / frame.clientWidth) : 1;
+      if (scaleForCapture && Math.abs(factor - 1) > 0.002) {
+        await scaleForCapture(factor);
+        scaled = true;
+        try { measureViewport(frame); } catch { await scaleForCapture(null); scaled = false; }
+      }
       const target = identity();
       const source = frame.getAttribute("src");
       const { captureId } = await requestVisualRegression({
@@ -120,6 +156,8 @@ export function useVisualRegression(options: Options) {
       }
       return { captureId, target };
     } finally {
+      if (scaled) void scaleForCapture?.(null);
+      if (frame?.isConnected) void preparePage(frame, slotId, false);
       if (mounted.current) setCapturing(false);
     }
   }
@@ -127,7 +165,9 @@ export function useVisualRegression(options: Options) {
     if (pending.current) return;
     pending.current = true;
     try {
-      const { captureId, target } = await capture();
+      // Compare at the zoom the "before" picture was taken at.
+      const before = action === "compare" ? await requestVisualRegression({ action: "read", identity: identity() }).catch(() => null) : null;
+      const { captureId, target } = await capture(before?.zoom);
       if (!mounted.current) return;
       setProgress(action === "save" ? "saving" : "comparing");
       if (action === "save") {

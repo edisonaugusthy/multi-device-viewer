@@ -42,7 +42,7 @@ export function CompareBar({ tabs, activeSlotId, mode, onSelect, onModeChange, o
       <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />
       <span className="whitespace-nowrap text-[13px] font-semibold">{t("compareWithDesign")}</span>
       <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />
-      <div role="tablist" aria-label={t("deviceToCompare")} className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+      <div role="tablist" aria-label={t("deviceToCompare")} className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
         {tabs.map(tab => {
           const active = tab.slotId === activeSlotId;
           return (

@@ -14,7 +14,7 @@ Open the current website or local development server in up to four live device v
 
 ## Devices
 
-111 built-in devices, each with its CSS viewport, pixel ratio and an original device frame:
+112 built-in devices, each with its CSS viewport, pixel ratio and an original device frame:
 
 | Category | Presets | Examples |
 |---|---:|---|
@@ -24,7 +24,7 @@ Open the current website or local development server in up to four live device v
 | Laptops | 7 | MacBook Air, MacBook Pro, MacBook Neo, Surface Laptop, Dell Latitude |
 | Desktops | 2 | iMac 24, Studio Display |
 | TVs | 1 | 55-inch 4K smart TV |
-| Custom | 2 | Self-service kiosk, wall panel |
+| Custom | 3 | Self-service kiosk, wall panel, Apple HomeView smart display |
 | Watches | 3 | Apple Watch Series 12 (46mm and 42mm), Apple Watch Ultra 4 |
 
 Phones and tablets rotate where the real device does, and you can add custom viewport sizes. Device names identify the screen sizes being simulated and belong to their owners. The frames are stylised illustrations, not product photos.

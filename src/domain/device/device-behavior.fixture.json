@@ -1106,6 +1106,20 @@
     "rotate": false
   },
   {
+    "id": "apple-homeview-2026",
+    "name": "Apple HomeView",
+    "cssViewport": {
+      "width": 544,
+      "height": 544
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 1088,
+      "height": 1088
+    },
+    "rotate": false
+  },
+  {
     "id": "xiaomi-12-2022",
     "name": "Xiaomi 12",
     "cssViewport": {

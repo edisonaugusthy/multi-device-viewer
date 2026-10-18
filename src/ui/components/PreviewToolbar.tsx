@@ -2,7 +2,6 @@ import { forwardRef, type ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import {
   ChangeDeviceIcon,
-  CompareIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
@@ -17,6 +16,7 @@ import {
   PlusIcon,
   ReloadIcon,
   RotateIcon,
+  SideBySideIcon,
 } from "../icons";
 import { cx, focusRing } from "./ui";
 
@@ -130,7 +130,15 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
         {focus && <ToolButton label={t("openInTab")} onClick={props.onOpenInTab}><OpenInTabIcon size={15} /></ToolButton>}
         {!focus && props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
         {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
-        {props.onCompareBefore && <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}><CompareIcon size={15} /></ToolButton>}
+        {props.onCompareBefore && (
+          <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>
+            {/* The dot says a "before" picture is waiting to be compared. */}
+            <span className="relative grid size-7 place-items-center">
+              <SideBySideIcon size={16} />
+              <span aria-hidden="true" className="absolute right-[3px] top-[3px] size-1.5 rounded-full bg-accent" />
+            </span>
+          </ToolButton>
+        )}
         {props.onLayoutProblems && (
           <ToolButton label={t("layoutShowProblems")} accent onClick={props.onLayoutProblems}>
             <span className="relative grid place-items-center">

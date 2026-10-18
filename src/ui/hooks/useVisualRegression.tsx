@@ -11,8 +11,8 @@ import { requestVisualRegression } from "../../infrastructure/visual-regression/
 import {
   baselineIndexVersion, clearBaselineIndex, hasBaseline, loadBaselineIndex, markBaseline, subscribeBaselineIndex,
 } from "../../infrastructure/visual-regression/baseline-index";
-import { CheckIcon, CompareIcon, ListIcon, ReloadIcon, SaveIcon, TrashIcon } from "../icons";
-import { ComparisonPanel, ManageBaselines, useFormatters, visualButton, VisualDialog, visualPrimaryButton } from "../components/VisualChecks";
+import { CheckIcon, ListIcon, ReloadIcon, SideBySideIcon, SnapshotIcon, TrashIcon } from "../icons";
+import { ComparisonPanel, ManageBaselines, PageGlyph, UnchangedPanel, useFormatters, visualButton, VisualDialog, visualPrimaryButton } from "../components/VisualChecks";
 import { cx } from "../components/ui";
 
 interface Options {
@@ -29,6 +29,7 @@ interface Options {
 }
 type Dialog =
   | { kind: "comparison"; result: VisualComparison; updating?: boolean; accepted?: boolean; error?: TranslationKey }
+  | { kind: "unchanged"; result: VisualComparison }
   | { kind: "manage" }
   | { kind: "error"; error: TranslationKey };
 const errors: Record<VisualRegressionErrorCode, TranslationKey> = {
@@ -64,7 +65,7 @@ function MenuButton({ icon, label, onClick, disabled = false, danger = false, st
   return (
     <button type="button" disabled={disabled} onClick={event => { event.stopPropagation(); onClick(); }}
       className={cx("flex h-9 w-full items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40",
-        danger ? "text-danger" : "text-ink", strong ? "font-semibold" : "font-medium")}>
+        danger ? "text-danger" : "text-ink", strong ? "bg-sunken font-[650]" : "font-medium")}>
       <span className={cx("grid w-4 shrink-0 place-items-center", danger ? "text-danger" : strong ? "text-accent" : "text-ink-2")}>{icon}</span>
       <span className="min-w-0 truncate">{label}</span>
     </button>
@@ -180,7 +181,8 @@ export function useVisualRegression(options: Options) {
         if (!mounted.current) return;
         rediffRun.current++;
         remember(target, result.baseline);
-        setDialog({ kind: "comparison", result });
+        // A page that matches its "before" picture gets the short answer.
+        setDialog(result.changedPixels ? { kind: "comparison", result } : { kind: "unchanged", result });
       }
     } catch (error) {
       if (!mounted.current) return;
@@ -241,25 +243,28 @@ export function useVisualRegression(options: Options) {
   const menuItems = <div className="my-1 grid gap-px border-y border-line-soft py-1.5" role="group" aria-label={t("visualChecks")}>
     <span className="px-2 pb-0.5 text-[11px] font-semibold text-muted">{t("visualChecks")}</span>
     {baseline ? <>
-      <MenuButton strong icon={<CompareIcon size={15}/>} label={t("compareLatest")} disabled={busy} onClick={() => void run("compare")}/>
+      <MenuButton strong icon={<SideBySideIcon size={15}/>} label={t("compareLatest")} disabled={busy} onClick={() => void run("compare")}/>
       <MenuButton icon={<ReloadIcon size={15}/>} label={t("replaceBaseline")} disabled={busy} onClick={() => void run("save")}/>
       <MenuButton icon={<TrashIcon size={15}/>} label={t("deleteBaseline")} disabled={busy} danger onClick={() => void remove()}/>
-    </> : <MenuButton strong icon={<SaveIcon size={15}/>} label={t("saveBaseline")} disabled={busy || baseline === undefined} onClick={() => void run("save")}/>}
+    </> : <MenuButton strong icon={<SnapshotIcon size={15}/>} label={t("saveBaseline")} disabled={busy || baseline === undefined} onClick={() => void run("save")}/>}
     <MenuButton icon={<ListIcon size={15}/>} label={t("manageBaselines")} onClick={() => { current.current.dismissMenu(); setDialog({ kind: "manage" }); }}/>
     {/* Help sits after the actions it explains. */}
     {baseline ? (
-      <p className="mx-1 mt-1 grid gap-px rounded-lg bg-accent-soft px-2.5 py-1.5">
-        <span className="text-xs font-semibold text-accent" title={format.date(baseline.savedAt)}>{t("baselineSavedAt", { when: format.ago(baseline.savedAt) })}</span>
-        <span className="text-[11.5px] text-ink-2">{t("visualSavedHint")}</span>
-      </p>
-    ) : baseline === null && <p className="px-2 pt-1 text-[11.5px] leading-snug text-muted">{t("visualSaveHint")}</p>}
+      <div className="mx-1 mb-0.5 mt-1 flex items-center gap-2.5 rounded-[9px] bg-accent-soft px-2 py-[7px]">
+        <PageGlyph/>
+        <p className="grid gap-px">
+          <span className="text-xs font-[650] text-accent" title={format.date(baseline.savedAt)}>{t("baselineSavedAt", { when: format.ago(baseline.savedAt) })}</span>
+          <span className="text-[11.5px] text-ink-2">{t("visualSavedHint")}</span>
+        </p>
+      </div>
+    ) : baseline === null && <p className="mx-2 my-1 text-[11.5px] leading-normal text-muted">{t("visualSaveHint")}</p>}
   </div>;
 
   const name = options.deviceName;
   let content: ReactNode = null;
   if (dialog?.kind === "comparison") {
     const { result } = dialog;
-    content = <VisualDialog wide closeRef={closeRef} onClose={close}
+    content = <VisualDialog size="wide" closeRef={closeRef} onClose={close}
       title={`${t("visualChecks")} · ${name}`}
       subtitle={<span title={format.date(result.baseline.savedAt)}>{t("visualComparedAt", { when: format.ago(result.baseline.savedAt) })} · {result.identity.url.replace(/^https?:\/\//, "")}</span>}
       footer={<>
@@ -272,6 +277,13 @@ export function useVisualRegression(options: Options) {
       </>}>
       <ComparisonPanel result={result} threshold={threshold} onThreshold={value => void changeSensitivity(value)}
         updating={Boolean(dialog.updating)} accepted={Boolean(dialog.accepted)} error={dialog.error}/>
+    </VisualDialog>;
+  } else if (dialog?.kind === "unchanged") {
+    const { result } = dialog;
+    content = <VisualDialog size="sm" closeRef={closeRef} onClose={close}
+      title={`${t("visualChecks")} · ${name}`}
+      subtitle={<span title={format.date(result.baseline.savedAt)}>{t("visualComparedAt", { when: format.ago(result.baseline.savedAt) })}</span>}>
+      <UnchangedPanel/>
     </VisualDialog>;
   } else if (dialog?.kind === "manage") {
     content = <VisualDialog closeRef={closeRef} onClose={close} title={t("visualManageTitle")} subtitle={t("visualStoredLocally")}>
@@ -287,12 +299,12 @@ export function useVisualRegression(options: Options) {
     </VisualDialog>;
   } else if (progress || toast) {
     // Shown only after the capture, so it never appears in the screenshot.
-    content = <div role="status" aria-live="polite" className="pointer-events-none fixed bottom-6 left-1/2 z-[200] flex max-w-[calc(100vw-32px)] -translate-x-1/2 items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-2 text-xs text-ink-2 shadow-popover">
+    content = <div role="status" aria-live="polite" className="pointer-events-none fixed bottom-7 left-1/2 z-[200] flex max-w-[calc(100vw-32px)] -translate-x-1/2 items-center gap-2.5 rounded-full border border-line bg-surface py-[9px] pe-3.5 ps-3.5 text-[13px] text-ink-2 shadow-popover">
       {progress ? <>
         <span aria-hidden="true" className="size-3 shrink-0 animate-spin rounded-full border-2 border-accent-line border-t-accent motion-reduce:animate-none"/>
         <span className="font-semibold text-ink">{t(progress === "saving" ? "visualSaving" : "visualComparing")}</span>
       </> : <>
-        <span className="shrink-0 text-accent"><CheckIcon size={14}/></span>
+        <span className="shrink-0 text-accent"><CheckIcon size={16} strokeWidth={2.6}/></span>
         <span><b className="font-semibold text-ink">{t("baselineSaved")}</b> {t("visualSavedToast")}</span>
       </>}
     </div>;

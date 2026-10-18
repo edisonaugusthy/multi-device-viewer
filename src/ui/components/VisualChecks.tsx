@@ -14,11 +14,12 @@ export const SENSITIVITY_PRESETS = [
   { value: 10, label: "visualSensitivityNormal", help: "visualSensitivityHelp" },
   { value: 30, label: "visualSensitivityRelaxed", help: "visualSensitivityRelaxedHelp" },
 ] as const satisfies ReadonlyArray<{ value: number; label: TranslationKey; help: TranslationKey }>;
-const MASK_COLOR = [239, 68, 68, 150];
-const outline = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border bg-surface px-3 text-xs font-semibold hover:bg-sunken disabled:opacity-50", focusRing);
+// Matches the 14% red fill of the change boxes, so cells read as part of them.
+const MASK_COLOR = [229, 72, 77, 36];
+const outline = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border bg-surface px-3 text-[12.5px] font-semibold hover:bg-sunken disabled:opacity-50", focusRing);
 const button = cx(outline, "border-line text-ink");
 const danger = cx(outline, "border-line text-danger");
-const primary = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-3 text-xs font-semibold text-on-accent hover:bg-accent-strong disabled:opacity-50", focusRing);
+const primary = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-3 text-[12.5px] font-semibold text-on-accent hover:bg-accent-strong disabled:opacity-50", focusRing);
 const sectionTitle = "text-[11px] font-semibold uppercase tracking-wide text-muted";
 
 const UNITS: Array<[Intl.RelativeTimeFormatUnit, number]> = [["year", 31536000], ["month", 2592000], ["week", 604800], ["day", 86400], ["hour", 3600], ["minute", 60]];
@@ -45,16 +46,17 @@ export function useFormatters() {
 }
 
 /** Modal shell: traps focus and closes on Escape; the hook owns its state. */
-export function VisualDialog({ title, subtitle, onClose, closeRef, children, footer, wide = false }: {
+const DIALOG_WIDTH = { sm: "max-w-[440px]", md: "max-w-[560px]", wide: "max-w-[1000px]" } as const;
+export function VisualDialog({ title, subtitle, onClose, closeRef, children, footer, size = "md" }: {
   title: string; subtitle?: ReactNode; onClose: () => void; closeRef: RefObject<HTMLButtonElement | null>;
-  children: ReactNode; footer?: ReactNode; wide?: boolean;
+  children: ReactNode; footer?: ReactNode; size?: keyof typeof DIALOG_WIDTH;
 }) {
   const { t } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 p-4" onPointerDown={event => event.stopPropagation()}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/45 p-4" onPointerDown={event => event.stopPropagation()}>
       <div ref={ref} role="dialog" aria-modal="true" aria-labelledby="mdv-visual-title" data-visual-regression-result
-        className={cx("flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface text-ink shadow-popover", wide ? "max-w-5xl" : "max-w-lg")}
+        className={cx("flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface text-ink shadow-popover", DIALOG_WIDTH[size])}
         onKeyDown={event => {
           if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); onClose(); return; }
           if (event.key === "Tab") {
@@ -65,7 +67,7 @@ export function VisualDialog({ title, subtitle, onClose, closeRef, children, foo
             else if (!event.shiftKey && event.target === last) { event.preventDefault(); first.focus(); }
           }
         }}>
-        <header className="flex items-start justify-between gap-4 border-b border-line px-4 py-3">
+        <header className="flex items-start justify-between gap-4 border-b border-line px-4 py-3.5">
           <div className="grid min-w-0 gap-0.5">
             <h2 id="mdv-visual-title" className="text-[15px] font-semibold">{title}</h2>
             {subtitle && <p className="truncate text-xs text-muted">{subtitle}</p>}
@@ -75,6 +77,30 @@ export function VisualDialog({ title, subtitle, onClose, closeRef, children, foo
         <div className="min-h-0 flex-1 overflow-auto">{children}</div>
         {footer && <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3">{footer}</footer>}
       </div>
+    </div>
+  );
+}
+
+/** A small drawn page that stands for a saved "before" picture, as on the design. */
+export function PageGlyph({ size = "sm" }: { size?: "sm" | "md" }) {
+  const md = size === "md";
+  return (
+    <span aria-hidden="true" className={cx("flex shrink-0 flex-col rounded border border-line bg-surface", md ? "h-14 w-9 gap-[3px] rounded-[5px] p-1" : "h-[34px] w-[22px] gap-0.5 p-[3px]")}>
+      <span className={cx("rounded-[1px] bg-ink-2", md ? "h-1" : "h-[3px]")}/>
+      <span className={cx("rounded-[1px] bg-ink-2 opacity-80", md ? "h-[9px] rounded-[2px]" : "h-1.5")}/>
+      <span className={cx("rounded-[2px] bg-accent-soft", md ? "h-3.5" : "h-[9px]")}/>
+    </span>
+  );
+}
+
+/** The result when the page matches its "before" picture: no picture to study. */
+export function UnchangedPanel() {
+  const { t } = useI18n();
+  return (
+    <div className="flex flex-col items-center gap-1.5 px-5 pb-[38px] pt-[34px] text-center">
+      <span aria-hidden="true" className="mb-1 grid size-[46px] place-items-center rounded-full bg-accent-soft text-accent"><CheckIcon size={22} strokeWidth={2.6}/></span>
+      <span role="status" className="text-[17px] font-[650]">{t("visualUnchanged")}</span>
+      <span className="text-[13px] text-muted">{t("visualUnchangedSub")}</span>
     </div>
   );
 }
@@ -98,7 +124,7 @@ function ChangeMask({ result }: { result: VisualComparison }) {
 }
 
 /** The same spot cut from a preview, so a change can be read from the list. */
-const CROP_W = 80, CROP_H = 36, CROP_PAD = 20;
+const CROP_W = 84, CROP_H = 34, CROP_PAD = 20;
 function RegionCrop({ src, region, result, label }: { src?: string; region: ChangedRegion; result: VisualComparison; label: string }) {
   const scale = Math.min(CROP_W / (region.width + CROP_PAD * 2), CROP_H / (region.height + CROP_PAD * 2), 2);
   const x = (region.x + region.width / 2) * scale - CROP_W / 2, y = (region.y + region.height / 2) * scale - CROP_H / 2;
@@ -157,11 +183,11 @@ export function ComparisonPanel({ result, threshold, onThreshold, updating, acce
   const count = result.changedPixels ? Math.max(1, result.regionCount) : 0;
   const shown = view === "before" ? before : after;
   return (
-    <div ref={root} className="grid min-h-0 md:grid-cols-[minmax(0,1fr)_272px]">
-      <div className="grid min-w-0 content-start gap-3 border-line-soft p-4 md:border-e">
+    <div ref={root} className="grid min-h-0 md:grid-cols-[minmax(0,1fr)_280px]">
+      <div className="grid min-w-0 content-start gap-3 border-line-soft px-4 py-3.5 md:border-e">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div role="status" aria-live="polite" className="grid gap-0.5" data-visual-changed-pixels={result.changedPixels}>
-            <span className="flex items-center gap-2 text-[17px] font-semibold">
+            <span className="flex items-center gap-2 text-[17px] font-[650]">
               {count ? t(count === 1 ? "visualChangedOne" : "visualChangedMany", { count: format.integer(count) }) : <>
                 <span aria-hidden="true" className="grid size-5 place-items-center rounded-full bg-accent-soft text-accent"><CheckIcon size={12}/></span>
                 {t("visualUnchanged")}
@@ -188,8 +214,8 @@ export function ComparisonPanel({ result, threshold, onThreshold, updating, acce
               <img src={before} alt={t("visualBaseline")} draggable={false} className="absolute inset-0 size-full"
                 style={{ clipPath: `inset(0 ${100 - slider}% 0 0)` }}/>
               <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-accent" style={{ left: `${slider}%` }}/>
-              <span className="pointer-events-none absolute bottom-2 left-2 rounded-[5px] bg-black/70 px-1.5 py-0.5 text-[10.5px] font-semibold text-white">{t("visualBaseline")}</span>
-              <span className="pointer-events-none absolute bottom-2 right-2 rounded-[5px] bg-black/70 px-1.5 py-0.5 text-[10.5px] font-semibold text-white">{t("visualLatest")}</span>
+              <span className="pointer-events-none absolute left-2 top-2 rounded-[5px] bg-black/75 px-[7px] py-0.5 text-[10.5px] font-semibold text-white">{t("visualBaseline")}</span>
+              <span className="pointer-events-none absolute right-2 top-2 rounded-[5px] bg-black/75 px-[7px] py-0.5 text-[10.5px] font-semibold text-white">{t("visualLatest")}</span>
             </>}
             {view === "changes" && <>
               <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/40"/>
@@ -198,9 +224,9 @@ export function ComparisonPanel({ result, threshold, onThreshold, updating, acce
                 <button key={`${item.x}:${item.y}`} type="button" aria-pressed={selected === index}
                   aria-label={`${t("visualAreaNumber", { index: index + 1 })}, ${t(whereKey(item, result.height))}`}
                   onClick={() => setSelected(current => current === index ? null : index)}
-                  className={cx("absolute min-h-3 min-w-3 rounded-[3px] border-2 border-red-500 bg-red-500/10 outline-none focus-visible:ring-2 focus-visible:ring-accent", selected === index && "ring-[3px] ring-red-500/35")}
+                  className={cx("absolute min-h-3 min-w-3 rounded-[4px] border-2 border-[#E5484D] bg-[#E5484D]/[0.14] outline-none focus-visible:ring-2 focus-visible:ring-accent", selected === index && "ring-[3px] ring-[#E5484D]/35")}
                   style={{ left: `${item.x / result.width * 100}%`, top: `${item.y / result.height * 100}%`, width: `${item.width / result.width * 100}%`, height: `${item.height / result.height * 100}%` }}>
-                  <span className="absolute -left-2 -top-2 grid size-4 place-items-center rounded-full bg-red-500 font-mono text-[9.5px] font-bold text-white">{index + 1}</span>
+                  <span className="absolute -left-[9px] -top-[9px] grid size-[18px] place-items-center rounded-full bg-[#E5484D] font-mono text-[10.5px] font-bold text-white">{index + 1}</span>
                 </button>
               ))}
             </>}
@@ -216,7 +242,7 @@ export function ComparisonPanel({ result, threshold, onThreshold, updating, acce
         )}
         {error && <p role="alert" className="text-sm text-danger">{t(error)}</p>}
       </div>
-      <aside className="grid content-start gap-5 bg-surface-2 p-4">
+      <aside className="grid content-start gap-[18px] bg-surface-2 p-3.5">
         <section className="grid gap-1.5">
           <h3 className={sectionTitle}>{t("visualTolerance")}</h3>
           <Segmented size="sm" label={t("visualTolerance")} value={String(preset.value)} onChange={value => { if (!accepted) onThreshold(Number(value)); }}
@@ -230,8 +256,8 @@ export function ComparisonPanel({ result, threshold, onThreshold, updating, acce
             {regions.map((item, index) => (
               <li key={`${item.x}:${item.y}`}>
                 <button type="button" aria-pressed={selected === index} onClick={() => { setView("changes"); setSelected(current => current === index ? null : index); }}
-                  className={cx("grid w-full grid-cols-[18px_minmax(0,1fr)] items-start gap-2 rounded-lg px-2 py-2 text-start hover:bg-sunken", selected === index && "bg-surface shadow-lift", focusRing)}>
-                  <span className="mt-px grid size-[18px] place-items-center rounded-full bg-red-500 font-mono text-[10px] font-bold text-white">{index + 1}</span>
+                  className={cx("grid w-full grid-cols-[20px_minmax(0,1fr)] items-start gap-2 rounded-[9px] p-2 text-start", selected === index ? "bg-surface shadow-[inset_0_0_0_1px_var(--color-line)]" : "hover:bg-sunken", focusRing)}>
+                  <span className="mt-px grid size-[18px] place-items-center rounded-full bg-[#E5484D] font-mono text-[10.5px] font-bold text-white">{index + 1}</span>
                   <span className="grid min-w-0 gap-1.5">
                     <span className="text-[12.5px] font-semibold">{t(whereKey(item, result.height))}</span>
                     <span className="flex items-center gap-1.5">
@@ -246,7 +272,7 @@ export function ComparisonPanel({ result, threshold, onThreshold, updating, acce
           </ol>
           {result.regionCount > regions.length && <p className="px-2 text-xs text-muted">{t("visualMoreAreas", { count: format.integer(result.regionCount - regions.length) })}</p>}
           <p className="px-2 text-[11.5px] leading-snug text-muted">{t("visualStepHint")}</p>
-          {selected !== null && <button type="button" onClick={() => setSelected(null)} className={cx(button, "mt-1 w-fit")}>{t("visualShowWhole")}</button>}
+          {selected !== null && <button type="button" onClick={() => setSelected(null)} className={cx(button, "mt-1 h-[30px] w-fit px-2.5 text-xs")}>{t("visualShowWhole")}</button>}
         </section>}
       </aside>
     </div>
@@ -286,21 +312,24 @@ export function ManageBaselines({ onDeleted }: { onDeleted: (identity?: Baseline
       {!items.length && <p className="p-4 text-sm text-muted">{t("visualNoBaselines")}</p>}
       <ul className="grid">
         {groups.map(([url, metas]) => (
-          <li key={url} className="grid gap-1.5 border-b border-line-soft px-4 py-3 last:border-b-0">
-            <p className="break-all text-[13px] font-semibold">{url.replace(/^https?:\/\//, "")}</p>
-            <ul className="flex flex-wrap gap-1.5">
-              {metas.map(meta => {
-                const name = meta.deviceName || meta.identity.deviceId;
-                return (
-                  <li key={baselineKey(meta.identity)} title={`${meta.identity.viewportWidth}×${meta.identity.viewportHeight} · ${format.date(meta.savedAt)}`}
-                    className="inline-flex items-center gap-1 rounded-md bg-sunken py-0.5 pe-0.5 ps-2 text-[11.5px] text-ink-2">
-                    {name} <span className="text-faint">· {format.ago(meta.savedAt)}</span>
-                    <button type="button" onClick={() => void remove(meta.identity)} aria-label={t("deleteNamed", { name: `${name} · ${url}` })}
-                      className={cx("grid size-5 place-items-center rounded text-muted hover:bg-surface hover:text-danger", focusRing)}><CloseIcon size={11}/></button>
-                  </li>
-                );
-              })}
-            </ul>
+          <li key={url} className="grid grid-cols-[36px_minmax(0,1fr)] items-start gap-3 border-b border-line-soft px-4 py-3">
+            <PageGlyph size="md"/>
+            <div className="grid min-w-0 gap-1.5">
+              <p className="break-all text-[13px] font-semibold">{url.replace(/^https?:\/\//, "")}</p>
+              <ul className="flex flex-wrap gap-1.5">
+                {metas.map(meta => {
+                  const name = meta.deviceName || meta.identity.deviceId;
+                  return (
+                    <li key={baselineKey(meta.identity)} title={`${meta.identity.viewportWidth}×${meta.identity.viewportHeight} · ${format.date(meta.savedAt)}`}
+                      className="inline-flex h-6 items-center gap-1 rounded-md bg-sunken pe-0.5 ps-2 text-[11.5px] text-ink-2">
+                      {name} <span className="text-faint">· {format.ago(meta.savedAt)}</span>
+                      <button type="button" onClick={() => void remove(meta.identity)} aria-label={t("deleteNamed", { name: `${name} · ${url}` })}
+                        className={cx("grid size-5 place-items-center rounded text-muted hover:bg-surface hover:text-danger", focusRing)}><CloseIcon size={11}/></button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </li>
         ))}
       </ul>

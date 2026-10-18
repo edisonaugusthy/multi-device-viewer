@@ -2,7 +2,7 @@
 // bring its entry points back; the code behind each one stays in place.
 export const FEATURES = {
   // "Before & after" pictures in the device menus and the compare button.
-  visualChecks: false,
+  visualChecks: true,
   // Layout check: header button, panel, device menu entry and tour step.
-  layoutCheck: false,
+  layoutCheck: true,
 } as const;

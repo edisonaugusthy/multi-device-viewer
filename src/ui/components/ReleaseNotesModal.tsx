@@ -3,7 +3,7 @@ import type { ReleaseNoteIcon, VersionReleaseNotes } from "../../app/release-not
 import { useI18n } from "../../app/i18n";
 import {
   AdjustIcon, BugIcon, CameraIcon, ChevronRightIcon, CustomSizeIcon, ExpandIcon, EyeIcon, FixPromptIcon, GridIcon, GripIcon,
-  ListIcon, NavigationSyncIcon, PlayIcon, PointerIcon, RecordIcon, ReloadIcon, ScrollSyncIcon, SearchIcon, SideBySideIcon,
+  LayoutCheckIcon, ListIcon, NavigationSyncIcon, PlayIcon, PointerIcon, RecordIcon, ReloadIcon, ScrollSyncIcon, SearchIcon, SideBySideIcon,
   TextToolIcon, WhatsNewIcon, WorkspaceIcon,
 } from "../icons";
 import { Dialog } from "./Dialog";
@@ -32,6 +32,7 @@ const icons: Record<ReleaseNoteIcon, ReactNode> = {
   adjust: <AdjustIcon size={15} />,
   reload: <ReloadIcon size={15} />,
   menus: <ListIcon size={15} />,
+  layout: <LayoutCheckIcon size={15} />,
 };
 
 // A small sketch of the new layout: devices of different sizes on one baseline.

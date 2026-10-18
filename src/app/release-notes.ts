@@ -5,7 +5,7 @@ import type { TranslationKey } from "./i18n";
 export type ReleaseNoteIcon =
   | "workspace" | "drag" | "frames" | "step" | "picker" | "focus" | "expand" | "gallery" | "camera"
   | "compare" | "fixPrompt" | "flow" | "record" | "languages" | "speed" | "headers"
-  | "homeview" | "scrollbars" | "hover" | "adjust" | "reload" | "menus";
+  | "homeview" | "scrollbars" | "hover" | "adjust" | "reload" | "menus" | "layout";
 
 export interface ReleaseNote {
   title: TranslationKey;
@@ -35,31 +35,19 @@ export const FEATURE_TOUR_REVISION = "0.3.0";
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
   version,
-  featured: { title: "releaseHomeViewTitle", description: "releaseHomeViewDescription", icon: "homeview" },
+  featured: { title: "releaseBeforeAfterTitle", description: "releaseBeforeAfterDescription", icon: "compare" },
   sections: [
     {
       title: "releaseSectionDevices",
       notes: [
-        { title: "releaseScrollbarsTitle", description: "releaseScrollbarsDescription", icon: "scrollbars" },
-      ],
-    },
-    {
-      title: "releaseSectionViews",
-      notes: [
-        { title: "releaseToolbarHoverTitle", description: "releaseToolbarHoverDescription", icon: "hover" },
+        { title: "releaseNewDevicesTitle", description: "releaseNewDevicesDescription", icon: "frames" },
+        { title: "releasePickerNewTitle", description: "releasePickerNewDescription", icon: "picker" },
       ],
     },
     {
       title: "releaseSectionReview",
       notes: [
-        { title: "releaseAdjustDesignTitle", description: "releaseAdjustDesignDescription", icon: "adjust" },
-      ],
-    },
-    {
-      title: "releaseSectionGeneral",
-      notes: [
-        { title: "releaseReloadTitle", description: "releaseReloadDescription", icon: "reload" },
-        { title: "releaseMenusTitle", description: "releaseMenusDescription", icon: "menus" },
+        { title: "releaseLayoutCheckTitle", description: "releaseLayoutCheckDescription", icon: "layout" },
       ],
     },
   ],

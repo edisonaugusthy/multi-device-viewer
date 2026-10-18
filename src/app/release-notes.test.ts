@@ -38,16 +38,14 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with HomeView and groups the latest improvements", () => {
-    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("releaseHomeViewTitle");
+  it("leads with Before & after and groups the latest improvements", () => {
+    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("releaseBeforeAfterTitle");
     expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual([
       "releaseSectionDevices",
-      "releaseSectionViews",
       "releaseSectionReview",
-      "releaseSectionGeneral",
     ]);
     const titles = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes.map(note => note.title));
-    expect(titles).toHaveLength(5);
+    expect(titles).toHaveLength(3);
     expect(new Set(titles).size).toBe(titles.length);
   });
 });

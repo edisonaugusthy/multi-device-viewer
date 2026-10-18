@@ -1,6 +1,6 @@
 // Runs inside a preview frame: finds what makes the page scroll sideways and
 // draws the marks over the page in page pixels, so they scroll with it.
-import { findOverflowOffenders, type OverflowCandidate } from "../domain/layout-check/layout-check";
+import { findOverflowOffenders, pageClipsSideways, type OverflowCandidate } from "../domain/layout-check/layout-check";
 import { MAX_PROBLEMS, type LayoutCheckReport, type LayoutMark, type LayoutProblem } from "../domain/layout-check/layout-check.types";
 
 const MARKS_ID = "mdv-layout-marks";
@@ -30,18 +30,35 @@ export function measureLayout(buildSelector: (element: Element) => string): Layo
   // Every element in document order, so parents precede children.
   const elements = Array.from(body.querySelectorAll("*")).filter(element => !isOurs(element));
   const index = new Map<Element, number>();
+  elements.forEach((element, i) => index.set(element, i));
+  // Unbroken text runs past its box without widening it, also next to links
+  // and other inline elements; each text run's own extent shows it.
+  const textLeft = new Map<Element, number>();
+  const textRight = new Map<Element, number>();
+  const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const parent = node.parentElement;
+    if (!parent || !node.nodeValue?.trim() || !index.has(parent)) continue;
+    range.selectNodeContents(node);
+    const rect = range.getBoundingClientRect();
+    if (rect.width === 0) continue;
+    textLeft.set(parent, Math.min(textLeft.get(parent) ?? Infinity, rect.left + scrollX));
+    textRight.set(parent, Math.max(textRight.get(parent) ?? -Infinity, rect.right + scrollX));
+  }
+  range.detach();
   const rects: DOMRect[] = [];
   const candidates: OverflowCandidate[] = elements.map((element, i) => {
-    index.set(element, i);
     const style = getComputedStyle(element);
     const rect = element.getBoundingClientRect();
     rects[i] = rect;
     const hidden = style.display === "none" || style.visibility === "hidden" || (rect.width === 0 && rect.height === 0);
-    const left = rect.left + scrollX;
+    let left = rect.left + scrollX;
     let right = rect.right + scrollX;
-    // Unbroken text runs past its box without widening it; the box's scroll width shows it.
-    if (!hidden && element.childElementCount === 0 && style.overflowX === "visible" && element.clientWidth > 0 && element.scrollWidth > element.clientWidth + 1) {
-      right = Math.max(right, left + element.scrollWidth);
+    // Text an element clips itself (an ellipsis, a scroller) cannot widen the page.
+    if (!hidden && style.overflowX === "visible") {
+      left = Math.min(left, textLeft.get(element) ?? left);
+      right = Math.max(right, textRight.get(element) ?? right);
     }
     return {
       parent: element.parentElement ? index.get(element.parentElement) ?? -1 : -1,
@@ -50,8 +67,8 @@ export function measureLayout(buildSelector: (element: Element) => string): Layo
       ignore: hidden || style.position === "fixed",
     };
   });
-  // A page that clips the viewport itself cannot scroll sideways.
-  const rootClips = getComputedStyle(root).overflowX !== "visible" || getComputedStyle(body).overflowX !== "visible";
+  // A page that hides or clips sideways overflow at its root cannot scroll sideways.
+  const rootClips = pageClipsSideways(getComputedStyle(root).overflowX, getComputedStyle(body).overflowX);
   if (!rootClips) {
     const offenders = findOverflowOffenders(candidates, viewportWidth, MAX_PROBLEMS + 1);
     if (offenders.length > MAX_PROBLEMS) { truncated = true; offenders.length = MAX_PROBLEMS; }

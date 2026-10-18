@@ -14,6 +14,18 @@ export interface OverflowCandidate {
 }
 
 /**
+ * Whether the page itself is kept from scrolling sideways. Only `hidden` and
+ * `clip` do that: `auto` and `scroll` still scroll, and a root's `overflow-x`
+ * computes to `auto` whenever its `overflow-y` is set (`html { overflow-y: scroll }`).
+ * A clipping `body` stops it too, whether it is propagated to the viewport or
+ * clips its own content.
+ */
+export function pageClipsSideways(htmlOverflowX: string, bodyOverflowX: string): boolean {
+  const clips = (value: string) => value === "hidden" || value === "clip";
+  return clips(htmlOverflowX) || clips(bodyOverflowX);
+}
+
+/**
  * The outermost elements that cross the viewport's edges. A clipped subtree
  * cannot widen the page, and the children of an offender are its symptoms,
  * not separate culprits.

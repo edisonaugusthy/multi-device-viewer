@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findOverflowOffenders, groupLayoutProblems, type DeviceLayoutReport, type OverflowCandidate } from "./layout-check";
+import { findOverflowOffenders, groupLayoutProblems, pageClipsSideways, type DeviceLayoutReport, type OverflowCandidate } from "./layout-check";
 import type { LayoutProblem } from "./layout-check.types";
 
 const box = (parent: number, left: number, right: number, extra: Partial<OverflowCandidate> = {}): OverflowCandidate =>
@@ -49,6 +49,20 @@ const problem = (partial: Partial<LayoutProblem> & Pick<LayoutProblem, "selector
 const report = (slotId: string, deviceName: string, problems: LayoutProblem[]): DeviceLayoutReport => ({
   slotId, deviceName, viewportWidth: 390, viewportHeight: 844,
   report: { url: "http://localhost:5173/", viewportWidth: 390, viewportHeight: 844, problems, truncated: false },
+});
+
+describe("pageClipsSideways", () => {
+  it("lets a page with a scrolling root still scroll sideways", () => {
+    // html { overflow-y: scroll } computes overflow-x to auto.
+    expect(pageClipsSideways("auto", "visible")).toBe(false);
+    expect(pageClipsSideways("visible", "scroll")).toBe(false);
+    expect(pageClipsSideways("visible", "visible")).toBe(false);
+  });
+  it("stops sideways scrolling when html or body hides or clips it", () => {
+    expect(pageClipsSideways("hidden", "visible")).toBe(true);
+    expect(pageClipsSideways("visible", "hidden")).toBe(true);
+    expect(pageClipsSideways("auto", "clip")).toBe(true);
+  });
 });
 
 describe("groupLayoutProblems", () => {

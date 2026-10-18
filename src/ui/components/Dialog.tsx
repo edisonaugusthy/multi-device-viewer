@@ -6,10 +6,12 @@ import { cx, IconButton } from "./ui";
 // The one modal shell used across the viewer: a titled card over a dimmed
 // backdrop. It traps focus, closes on Escape (and on the backdrop when asked),
 // and returns focus to whatever opened it.
-export function Dialog({ title, titleAddon, icon, description, size = "md", busy = false, dismissOnBackdrop = true, closeLabel, onClose, children, footer }: {
+export function Dialog({ title, titleAddon, icon, hero, description, size = "md", busy = false, dismissOnBackdrop = true, closeLabel, onClose, children, footer }: {
   title: string;
   titleAddon?: ReactNode;
   icon?: ReactNode;
+  /** Centres the header under this artwork, for a dialog that asks for attention. */
+  hero?: ReactNode;
   description?: ReactNode;
   size?: "md" | "lg";
   busy?: boolean;
@@ -68,9 +70,19 @@ export function Dialog({ title, titleAddon, icon, description, size = "md", busy
             else if (event.shiftKey && (active === first || active === dialog)) { event.preventDefault(); last?.focus(); }
             else if (!event.shiftKey && active === last) { event.preventDefault(); first.focus(); }
           }}
-          className="flex max-h-[calc(100dvh-24px)] w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-line bg-surface text-start text-ink shadow-popover outline-none sm:max-h-[calc(100dvh-48px)]"
+          className={cx("flex max-h-[calc(100dvh-24px)] w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-line bg-surface text-start text-ink shadow-popover outline-none sm:max-h-[calc(100dvh-48px)]",
+            hero !== undefined && "animate-pop-in motion-reduce:animate-none")}
         >
-          <header className="flex shrink-0 items-start gap-3 px-5 pb-3 pt-4">
+          {hero ? (
+            <header className="relative flex shrink-0 flex-col items-center bg-gradient-to-b from-accent-soft to-surface px-6 pb-4 pt-7 text-center">
+              {hero}
+              <h2 id={`${id}-title`} className="mt-3.5 text-lg font-semibold leading-7 tracking-tight">{title}</h2>
+              {description && <p id={`${id}-description`} className="mt-1.5 max-w-[46ch] text-[13px] leading-relaxed text-ink-2">{description}</p>}
+              <IconButton label={closeLabel ?? t("close")} size="sm" disabled={busy} onClick={onClose} className="absolute end-3 top-3">
+                <CloseIcon size={16} />
+              </IconButton>
+            </header>
+          ) : <header className="flex shrink-0 items-start gap-3 px-5 pb-3 pt-4">
             {icon && <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-accent-soft text-accent-strong">{icon}</span>}
             <div className="min-w-0 flex-1 self-center">
               <div className="flex flex-wrap items-baseline gap-2">
@@ -82,7 +94,7 @@ export function Dialog({ title, titleAddon, icon, description, size = "md", busy
             <IconButton label={closeLabel ?? t("close")} size="sm" disabled={busy} onClick={onClose} className="-me-1.5 -mt-0.5">
               <CloseIcon size={16} />
             </IconButton>
-          </header>
+          </header>}
           {children && <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-4">{children}</div>}
           {footer && <footer className="flex shrink-0 items-center gap-2 border-t border-line-soft bg-surface-2 px-5 py-3">{footer}</footer>}
         </section>

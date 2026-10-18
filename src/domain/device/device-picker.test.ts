@@ -44,6 +44,21 @@ describe("device picker sections", () => {
     expect(ios[0].devices.at(-1)!.id).toBe("apple-iphone-5");
   });
 
+  it("lists every device by type, iOS first, newest first within each type", () => {
+    const all = buildPickerSections({ devices, favorites: [] }).find(section => section.key === "all")!.devices;
+    const groupOf = new Map(groupGalleryDevices(devices).flatMap((group, order) => group.devices.map(device => [device.id, order] as const)));
+    const order = all.map(device => groupOf.get(device.id)!);
+    expect(order).toEqual([...order].sort((left, right) => left - right));
+    expect(all[0].type).toBe("phone");
+    expect(all[0].os).toBe("iOS");
+    expect(all[0].year).toBe(2026);
+    expect(all.findIndex(device => device.os === "Android")).toBeGreaterThan(all.findLastIndex(device => device.os === "iOS"));
+    expect(all.findIndex(device => device.type === "tv")).toBeGreaterThan(all.findLastIndex(device => device.type === "laptop"));
+    for (let index = 1; index < all.length; index++) {
+      if (order[index] === order[index - 1]) expect(all[index].year ?? 0).toBeLessThanOrEqual(all[index - 1].year ?? 0);
+    }
+  });
+
   it("groups laptops and desktops as computers", () => {
     const types = new Set(buildPickerSections({ devices, favorites: [], tab: "computer" })[0].devices.map(device => device.type));
     expect([...types].sort()).toEqual(["desktop", "laptop"]);

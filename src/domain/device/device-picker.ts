@@ -19,15 +19,20 @@ export interface PickerSection {
 
 export const PICKER_RECENT_LIMIT = 4;
 
-// The devices of a tab matching the search, names starting with the query
-// first, then newest first. Saved custom sizes have their own view.
+// The devices of a tab, one type after another (iOS, Android, tablets,
+// laptops, TVs…) with the newest of each type first. A search ranks names
+// starting with the query first, then newest first, across types. Saved
+// custom sizes have their own view.
 function tabDevices(devices: Device[], tab: PickerTab, query: string) {
-  return groupGalleryDevices(devices, query)
+  const searching = query.trim() !== "";
+  const list = groupGalleryDevices(devices, query)
     .filter(group => tab === "all" || tab === "new" || TAB_GROUPS[tab].includes(group.id))
-    .flatMap(group => group.devices)
+    .flatMap(group => searching ? group.devices : [...group.devices].sort(newestFirst))
     .filter(device => tab !== "new" || device.tags.includes("new"))
-    .filter(device => device.brand !== "Custom")
-    .sort((left, right) => Number(nameStartsWith(right, query)) - Number(nameStartsWith(left, query)) || newestFirst(left, right));
+    .filter(device => device.brand !== "Custom");
+  return searching
+    ? list.sort((left, right) => Number(nameStartsWith(right, query)) - Number(nameStartsWith(left, query)) || newestFirst(left, right))
+    : list;
 }
 
 // The All tab pins the devices on screen, then starred devices (or, with

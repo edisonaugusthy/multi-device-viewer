@@ -4,6 +4,8 @@ export interface ProductTourStep {
   title: string;
   text: string;
   target?: string;
+  /** The tour revision that introduced this step; the first tour's steps have none. */
+  since?: string;
 }
 
 export interface HighlightRect {
@@ -22,10 +24,30 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
   { title: "Move and change devices", text: "Drag the grip to move a device, or use the arrows to switch it.", target: '[data-tour="device-controls"]' },
   { title: "Sync between devices", text: "Scroll or open a page once, and every device follows.", target: '[data-tour="sync"]' },
   { title: "Fix prompt", text: "Describe a bug and copy a prompt for your AI coding tool.", target: '[data-tour="fix-prompt"]' },
-  { title: "Check layout", text: "Find what makes the page scroll sideways.", target: '[data-tour="layout-check"]' },
+  { title: "Check layout", text: "Find what makes the page scroll sideways.", target: '[data-tour="layout-check"]', since: "0.4.0" },
+  { title: "Before & after", text: "Save a “before” picture in the device menu, then see what changed.", target: '[data-tour="device-controls"] [data-device-menu-toggle]', since: "0.4.0" },
   { title: "Screenshot and annotate", text: "Capture your devices and mark them up.", target: '[data-tour="screenshot"]' },
   { title: "Record", text: "Record a video, or a user flow to replay on every device.", target: '[data-tour="record"]' },
 ];
+
+const versionParts = (version: string) => version.split(".").map(part => Number.parseInt(part, 10) || 0);
+function newerThan(version: string, than: string) {
+  const [a, b] = [versionParts(version), versionParts(than)];
+  for (let index = 0; index < Math.max(a.length, b.length); index++) {
+    if ((a[index] ?? 0) !== (b[index] ?? 0)) return (a[index] ?? 0) > (b[index] ?? 0);
+  }
+  return false;
+}
+
+/**
+ * The steps someone who last saw the tour at `seenTour` has not seen yet, so an
+ * update shows only what is new. Without a seen tour, every step.
+ */
+export function tourStepsSince<T extends Pick<ProductTourStep, "since">>(steps: T[], seenTour: string | null): T[] {
+  if (!seenTour) return steps;
+  const added = steps.filter(step => step.since && newerThan(step.since, seenTour));
+  return added.length ? added : steps;
+}
 
 const CARD_WIDTH = 320;
 const CARD_HEIGHT = 170;

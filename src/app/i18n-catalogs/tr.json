@@ -494,6 +494,7 @@
   "layoutAfterReload": "Her yeniden yüklemeden sonra yeniden denetle",
   "layoutCheckHelp": "Sayfayı her önizlemede yüklendiği haliyle ölçer. Kaydırma konumu, animasyonlar ve sonradan yüklenen içerik sonucu değiştirebilir. Sorunlar arasında geçmek için N ve P tuşlarına basın.",
   "layoutFilledFrom": "Yerleşim denetiminden dolduruldu · sorun {index}/{count}",
+  "tourBeforeAfterText": "Cihaz menüsünden bir “önce” görüntüsü kaydedin, ardından neyin değiştiğini görün.",
   "tourLayoutCheckText": "Sayfayı yana kaydıran şeyi bulur.",
   "layoutTruncated": "Her cihaz için yalnızca ilk {count} tanesi listelenir."
 }

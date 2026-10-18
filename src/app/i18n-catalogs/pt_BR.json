@@ -494,6 +494,7 @@
   "layoutAfterReload": "Verificar de novo após cada recarregamento",
   "layoutCheckHelp": "Mede a página como foi carregada em cada prévia. Posição de rolagem, animações e conteúdo carregado depois podem mudar o resultado. Pressione N e P para percorrer os problemas.",
   "layoutFilledFrom": "Preenchido pela verificação de layout · problema {index} de {count}",
+  "tourBeforeAfterText": "Salve uma imagem de “antes” no menu do dispositivo e depois veja o que mudou.",
   "tourLayoutCheckText": "Encontra o que faz a página rolar para o lado.",
   "layoutTruncated": "Só os primeiros {count} são listados por dispositivo."
 }

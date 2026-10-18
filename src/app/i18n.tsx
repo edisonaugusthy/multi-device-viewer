@@ -544,6 +544,7 @@ const en = {
   layoutCheckHelp: "Measures the page as loaded in each preview. Scroll position, animations and content that loads later can change the result. Press N and P to step through problems.",
   layoutFilledFrom: "Filled in from Layout check · problem {index} of {count}",
   layoutTruncated: "Only the first {count} are listed per device.",
+  tourBeforeAfterText: "Save a “before” picture in the device menu, then see what changed.",
   tourLayoutCheckText: "Find what makes the page scroll sideways.",
 } as const;
 

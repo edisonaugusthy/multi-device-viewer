@@ -156,6 +156,8 @@ export function SimulatorApp() {
   const [releaseNotes, setReleaseNotes] = useState<VersionReleaseNotes | null>(null);
   // Set when the startup release notes should hand over to the feature tour.
   const [tourAfterRelease, setTourAfterRelease] = useState(false);
+  // The tour revision seen before this update: an update tour shows only newer steps.
+  const [tourSince, setTourSince] = useState<string | null>(null);
   const [widths, setWidths] = useState<number[]>(() => slots.map(() => 100 / slots.length));
   const [focusedSlotId, setFocusedSlotId] = useState<string | null>(null);
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
@@ -329,10 +331,12 @@ export function SimulatorApp() {
     ]).then(([firstRunComplete, pendingVersion, lastSeenVersion, lastSeenTour]) => {
       const notice = decideStartupNotice({ useCount, firstRunComplete, pendingVersion, lastSeenVersion, lastSeenTour });
       if (notice.kind === "welcome" || notice.kind === "tour") {
+        setTourSince(notice.kind === "tour" ? lastSeenTour : null);
         startTour();
         return;
       }
       if (notice.kind !== "release") return;
+      setTourSince(lastSeenTour);
       setReleaseNotes(CURRENT_RELEASE_NOTES);
       setTourAfterRelease(notice.tourAfter);
       void Promise.all([
@@ -1005,7 +1009,7 @@ export function SimulatorApp() {
         onThemeChange={(nextDark) => updateDisplay((current) => ({ ...current, darkMode: nextDark }))}
         onBrowserBarChange={changeBrowserBar}
         onHelp={() => setShowHelp(true)}
-        onTour={() => setShowFirstRun(true)}
+        onTour={() => { setTourSince(null); setShowFirstRun(true); }}
         onWhatsNew={() => setReleaseNotes(CURRENT_RELEASE_NOTES)}
         onPermissions={() => setShowPermissions(true)}
       />
@@ -1050,7 +1054,7 @@ export function SimulatorApp() {
             browserBar,
             onBrowserBarChange: changeBrowserBar,
             onHelp: () => setShowHelp(true),
-            onTour: () => { closeAllDevices(); setShowFirstRun(true); },
+            onTour: () => { closeAllDevices(); setTourSince(null); setShowFirstRun(true); },
             onWhatsNew: () => setReleaseNotes(CURRENT_RELEASE_NOTES),
             onPermissions: () => setShowPermissions(true),
           }}
@@ -1084,7 +1088,7 @@ export function SimulatorApp() {
       )}
       {showPermissions && <PermissionsInfoModal onClose={() => setShowPermissions(false)} />}
       {showHelp && <HelpModal review={reviewPrompt} onClose={() => setShowHelp(false)} />}
-      {showFirstRun && <FirstRunGuide onClose={finishFirstRun} />}
+      {showFirstRun && <FirstRunGuide onClose={finishFirstRun} seenTour={tourSince} />}
       {releaseNotes && <ReleaseNotesModal release={releaseNotes} onClose={closeReleaseNotes} />}
       {(reviewPrompt.visible || reviewPromptPreview) && (
         <ReviewPromptModal

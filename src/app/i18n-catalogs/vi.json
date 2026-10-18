@@ -494,6 +494,7 @@
   "layoutAfterReload": "Kiểm tra lại sau mỗi lần tải lại",
   "layoutCheckHelp": "Đo trang như khi đã tải trong từng bản xem trước. Vị trí cuộn, hoạt ảnh và nội dung tải sau có thể làm thay đổi kết quả. Nhấn N và P để chuyển giữa các vấn đề.",
   "layoutFilledFrom": "Điền sẵn từ kiểm tra bố cục · vấn đề {index}/{count}",
+  "tourBeforeAfterText": "Lưu ảnh \"trước\" trong menu thiết bị, rồi xem những gì đã thay đổi.",
   "tourLayoutCheckText": "Tìm những gì khiến trang cuộn ngang.",
   "layoutTruncated": "Mỗi thiết bị chỉ liệt kê {count} mục đầu tiên."
 }

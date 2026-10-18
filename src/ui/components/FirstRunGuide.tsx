@@ -13,6 +13,7 @@ import { FEATURES } from "../../app/feature-flags";
 import {
   FIRST_RUN_TOUR_STEPS,
   highlightRectForTarget,
+  tourStepsSince,
   positionCard,
   type HighlightRect,
 } from "./first-run-tour";
@@ -25,17 +26,20 @@ const TOUR_TRANSLATION_KEYS: Array<{ title: TranslationKey; text: TranslationKey
   { title: "syncBetweenDevices", text: "tourSyncText" },
   { title: "fixPrompt", text: "tourFixPromptText" },
   { title: "checkLayout", text: "tourLayoutCheckText" },
+  { title: "visualChecks", text: "tourBeforeAfterText" },
   { title: "captureAndAnnotate", text: "tourScreenshotText" },
   { title: "record", text: "tourRecordText" },
 ];
 
 // Steps whose feature is held back are left out, with their translation keys.
-const TOUR_STEPS = FIRST_RUN_TOUR_STEPS
+const ALL_TOUR_STEPS = FIRST_RUN_TOUR_STEPS
   .map((step, index) => ({ ...step, keys: TOUR_TRANSLATION_KEYS[index] }))
-  .filter(step => FEATURES.layoutCheck || step.keys.title !== "checkLayout");
+  .filter(step => (FEATURES.layoutCheck || step.keys.title !== "checkLayout") && (FEATURES.visualChecks || step.keys.title !== "visualChecks"));
 
-export function FirstRunGuide({ onClose }: { onClose: () => void }) {
+/** `seenTour` is the tour revision this person saw last: an update shows only the steps added since. */
+export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => void; seenTour?: string | null }) {
   const { locale, t } = useI18n();
+  const [TOUR_STEPS] = useState(() => tourStepsSince(ALL_TOUR_STEPS, seenTour));
   const [stepIndex, setStepIndex] = useState(0);
   const [highlight, setHighlight] = useState<HighlightRect | null>(null);
   const baseStep = TOUR_STEPS[stepIndex];

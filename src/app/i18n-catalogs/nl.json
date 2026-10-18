@@ -494,6 +494,7 @@
   "layoutAfterReload": "Na elke herlaadbeurt opnieuw controleren",
   "layoutCheckHelp": "Meet de pagina zoals die in elke voorvertoning is geladen. Scrollpositie, animaties en later geladen inhoud kunnen het resultaat veranderen. Druk op N en P om door de problemen te stappen.",
   "layoutFilledFrom": "Ingevuld vanuit de lay-outcontrole · probleem {index} van {count}",
+  "tourBeforeAfterText": "Bewaar een ‘voor’-afbeelding via het apparaatmenu en zie daarna wat er veranderd is.",
   "tourLayoutCheckText": "Vindt wat de pagina zijwaarts laat scrollen.",
   "layoutTruncated": "Per apparaat worden alleen de eerste {count} vermeld."
 }

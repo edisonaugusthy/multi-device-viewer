@@ -494,6 +494,7 @@
   "layoutAfterReload": "Vérifier à nouveau après chaque rechargement",
   "layoutCheckHelp": "Mesure la page telle qu’elle est chargée dans chaque aperçu. La position de défilement, les animations et le contenu chargé plus tard peuvent changer le résultat. Appuyez sur N et P pour passer d’un problème à l’autre.",
   "layoutFilledFrom": "Rempli depuis la vérification de la mise en page · problème {index} sur {count}",
+  "tourBeforeAfterText": "Enregistrez une image « avant » depuis le menu de l’appareil, puis voyez ce qui a changé.",
   "tourLayoutCheckText": "Trouve ce qui fait défiler la page sur le côté.",
   "layoutTruncated": "Seuls les {count} premiers sont listés par appareil."
 }

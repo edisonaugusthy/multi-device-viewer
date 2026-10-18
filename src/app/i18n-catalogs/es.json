@@ -494,6 +494,7 @@
   "layoutAfterReload": "Comprobar de nuevo tras cada recarga",
   "layoutCheckHelp": "Mide la página tal como se cargó en cada vista previa. La posición de desplazamiento, las animaciones y el contenido que carga después pueden cambiar el resultado. Pulsa N y P para recorrer los problemas.",
   "layoutFilledFrom": "Rellenado desde la comprobación de diseño · problema {index} de {count}",
+  "tourBeforeAfterText": "Guarda una imagen «antes» en el menú del dispositivo y luego mira qué cambió.",
   "tourLayoutCheckText": "Encuentra lo que hace que la página se desplace de lado.",
   "layoutTruncated": "Solo se muestran los primeros {count} por dispositivo."
 }

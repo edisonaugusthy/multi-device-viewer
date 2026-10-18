@@ -3,10 +3,11 @@ import {
   FIRST_RUN_TOUR_STEPS,
   highlightRectForTarget,
   positionCard,
+  tourStepsSince,
 } from "./first-run-tour";
 
 describe("first-run feature tour", () => {
-  it("walks through the nine main features in order", () => {
+  it("walks through the ten main features in order", () => {
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.target)).toEqual([
       '[data-tour="add-viewport"]',
       "[data-all-devices-toggle]",
@@ -15,6 +16,7 @@ describe("first-run feature tour", () => {
       '[data-tour="sync"]',
       '[data-tour="fix-prompt"]',
       '[data-tour="layout-check"]',
+      '[data-tour="device-controls"] [data-device-menu-toggle]',
       '[data-tour="screenshot"]',
       '[data-tour="record"]',
     ]);
@@ -26,10 +28,21 @@ describe("first-run feature tour", () => {
       "Sync between devices",
       "Fix prompt",
       "Check layout",
+      "Before & after",
       "Screenshot and annotate",
       "Record",
     ]);
     expect(FIRST_RUN_TOUR_STEPS.every((step) => step.text.length <= 70)).toBe(true);
+  });
+
+  it("shows an updated user only the steps added since their last tour", () => {
+    // Saw the 0.3.0 tour: only Check layout and Before & after are new.
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.3.0").map(step => step.title)).toEqual(["Check layout", "Before & after"]);
+    // Never saw a tour, or a fresh install: every step.
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, null)).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
+    // Nothing newer than the tour already seen falls back to the whole tour, for a manual replay.
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.4.0")).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.3.10").map(step => step.title)).toEqual(["Check layout", "Before & after"]);
   });
 
   it("centers the welcome card", () => {

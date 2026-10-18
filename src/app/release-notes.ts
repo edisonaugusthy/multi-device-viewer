@@ -28,9 +28,10 @@ export const PENDING_RELEASE_VERSION_KEY = "mdvPendingReleaseVersion";
 export const LAST_SEEN_RELEASE_VERSION_KEY = "mdvLastSeenReleaseVersion";
 export const LAST_SEEN_TOUR_KEY = "mdvLastSeenTour";
 
-// Raise this when the feature tour changes enough that existing users should
-// see it again. Updated users see it once, right after the release notes.
-export const FEATURE_TOUR_REVISION = "0.3.0";
+// Raise this when the feature tour gains steps that existing users should see.
+// Updated users see the steps added since their last tour once, right after
+// the release notes; a fresh install sees every step.
+export const FEATURE_TOUR_REVISION = "0.4.0";
 
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {

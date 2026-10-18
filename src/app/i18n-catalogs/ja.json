@@ -494,6 +494,7 @@
   "layoutAfterReload": "再読み込みのたびに再チェック",
   "layoutCheckHelp": "各プレビューに読み込まれた状態のページを測定します。スクロール位置、アニメーション、後から読み込まれる内容によって結果が変わることがあります。N と P で問題を順に移動できます。",
   "layoutFilledFrom": "レイアウトチェックから入力 · 問題 {index} / {count}",
+  "tourBeforeAfterText": "デバイスメニューで「ビフォー」画像を保存し、変更点を確認できます。",
   "tourLayoutCheckText": "ページが横にスクロールする原因を見つけます。",
   "layoutTruncated": "各デバイスについて最初の {count} 件のみ表示しています。"
 }

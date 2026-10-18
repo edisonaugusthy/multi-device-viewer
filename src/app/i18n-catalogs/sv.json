@@ -494,6 +494,7 @@
   "layoutAfterReload": "Kontrollera igen efter varje omladdning",
   "layoutCheckHelp": "Mäter sidan så som den laddats i varje förhandsvisning. Rullningsläge, animationer och innehåll som laddas senare kan ändra resultatet. Tryck N och P för att stega mellan problemen.",
   "layoutFilledFrom": "Ifyllt från layoutkontrollen · problem {index} av {count}",
+  "tourBeforeAfterText": "Spara en ”före”-bild i enhetsmenyn och se sedan vad som har ändrats.",
   "tourLayoutCheckText": "Hittar det som får sidan att rulla i sidled.",
   "layoutTruncated": "Bara de första {count} listas per enhet."
 }

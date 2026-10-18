@@ -494,6 +494,7 @@
   "layoutAfterReload": "每次重新加载后重新检查",
   "layoutCheckHelp": "按每个预览中已加载的页面进行测量。滚动位置、动画和稍后加载的内容可能改变结果。按 N 和 P 在问题之间切换。",
   "layoutFilledFrom": "由布局检查填写 · 第 {index} 个问题，共 {count} 个",
+  "tourBeforeAfterText": "在设备菜单中保存“修改前”图片，然后查看有哪些变化。",
   "tourLayoutCheckText": "找出导致页面横向滚动的元素。",
   "layoutTruncated": "每台设备只列出前 {count} 个。"
 }

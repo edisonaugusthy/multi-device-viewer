@@ -148,7 +148,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
           </ToolButton>
         )}
         <div className="relative">
-          <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu}><MoreIcon size={16} /></ToolButton>
+          <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu} menuToggle><MoreIcon size={16} /></ToolButton>
           {props.menuOpen && props.menu}
         </div>
         {focus ? (
@@ -164,7 +164,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
   );
 });
 
-function ToolButton({ label, onClick, children, disabled, danger, accent, expanded, testId, dataRemove }: {
+function ToolButton({ label, onClick, children, disabled, danger, accent, expanded, testId, dataRemove, menuToggle }: {
   label: string;
   onClick: () => void;
   children: ReactNode;
@@ -174,6 +174,7 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
   expanded?: boolean;
   testId?: string;
   dataRemove?: boolean;
+  menuToggle?: boolean;
 }) {
   return (
     <button
@@ -184,6 +185,7 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
       disabled={disabled}
       data-testid={testId}
       data-remove-viewport={dataRemove || undefined}
+      data-device-menu-toggle={menuToggle || undefined}
       onClick={onClick}
       className={cx(
         "grid size-7 place-items-center rounded-[7px] disabled:opacity-30",

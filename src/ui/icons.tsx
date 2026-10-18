@@ -74,7 +74,8 @@ export const TourIcon = icon(<><circle cx="12" cy="12" r="9" /><path d="m15.5 8.
 export const BugIcon = icon(<><path d="M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0Z" /><path d="M12 9v10M4 13h4M16 13h4M5 7l3 2M19 7l-3 2M5 19l3-2M19 19l-3-2M10 5 9 3M14 5l1-2" /></>);
 export const ShieldIcon = icon(<><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6Z" /><path d="m9 12 2 2 4-4" /></>);
 export const PointerIcon = icon(<><path d="m9 9 10 4-4 1.5L13.5 19Z" /><path d="M7 3v3M3 7h3M4.5 4.5l2 2M11 4l-1 2" /></>);
-export const WhatsNewIcon = icon(<path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M6 18l2-2M16 8l2-2" />);
+// A sparkle, not rays: rays read as a loading spinner.
+export const WhatsNewIcon = icon(<><path d="M11 3.5 12.9 9.1 18.5 11 12.9 12.9 11 18.5 9.1 12.9 3.5 11 9.1 9.1z" /><path d="M18.5 3v4M16.5 5h4M18 17.5v3M16.5 19h3" /></>);
 export const CopyIcon = icon(<path d="M8 8h12v12H8zM16 8V4H4v12h4" />, { strokeWidth: 2.4 });
 export const DownloadIcon = icon(<path d="M12 4v11M7 10l5 5 5-5M5 20h14" />);
 export const RectangleIcon = icon(<rect x="4" y="5" width="16" height="14" rx="1" />);

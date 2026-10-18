@@ -49,8 +49,30 @@ function LayoutSketch() {
   );
 }
 
+// Before & after: the same page on two screens, the change boxed in red on the "after" one.
+function BeforeAfterSketch() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 132 64" className="h-16 w-[132px] shrink-0 text-accent-strong" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <rect x="12" y="4" width="34" height="56" rx="6" />
+      <path d="M19 15h20M19 22h14" />
+      <rect x="19" y="30" width="20" height="10" rx="2" fill="currentColor" stroke="none" opacity=".25" />
+      <path d="M19 47h16" />
+      <path d="M57 32h16M68 27l5 5-5 5" opacity=".6" />
+      <rect x="84" y="4" width="34" height="56" rx="6" />
+      <path d="M91 15h20M91 22h14" />
+      <rect x="91" y="30" width="20" height="13" rx="2" fill="currentColor" stroke="none" opacity=".25" />
+      <path d="M91 50h16" />
+      <rect x="88" y="27" width="26" height="19" rx="3" stroke="#E5484D" strokeWidth="1.8" />
+      <circle cx="88" cy="27" r="4.5" fill="#E5484D" stroke="none" />
+    </svg>
+  );
+}
+
+const sketches: Partial<Record<ReleaseNoteIcon, () => ReactNode>> = { compare: BeforeAfterSketch };
+
 export function ReleaseNotesModal({ release, onClose }: { release: VersionReleaseNotes; onClose: () => void }) {
   const { t } = useI18n();
+  const noteCount = release.sections.reduce((total, section) => total + section.notes.length, 0);
   return (
     <Dialog icon={<WhatsNewIcon size={18} />} title={t("whatIsNew")} closeLabel={t("closeReleaseNotes")} onClose={onClose} size="lg"
       titleAddon={<span className="rounded-full bg-sunken px-2 py-0.5 font-mono text-[11px] font-medium text-muted">v{release.version}</span>}
@@ -61,23 +83,25 @@ export function ReleaseNotesModal({ release, onClose }: { release: VersionReleas
       </>}
     >
       <div className="grid gap-5">
-        <section className="flex items-center gap-4 rounded-xl border border-accent-line bg-accent-soft/60 px-4 py-3.5">
+        <section className="flex items-center gap-5 rounded-2xl border border-accent-line bg-gradient-to-br from-accent-soft to-surface px-5 py-4">
           <div className="min-w-0 flex-1">
-            <h3 className="text-[14px] font-semibold text-accent-strong">{t(release.featured.title)}</h3>
-            <p className="mt-1 text-xs leading-5 text-ink-2">{t(release.featured.description)}</p>
+            <span className="inline-flex rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold tracking-wide text-on-accent">{t("newLabel")}</span>
+            <h3 className="mt-2 text-base font-semibold tracking-tight text-ink">{t(release.featured.title)}</h3>
+            <p className="mt-1 text-[12.5px] leading-5 text-ink-2">{t(release.featured.description)}</p>
           </div>
-          <span className="hidden sm:block"><LayoutSketch /></span>
+          <span className="hidden sm:block">{(sketches[release.featured.icon] ?? LayoutSketch)()}</span>
         </section>
         {release.sections.map(section => (
           <section key={section.title}>
-            <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-muted">{t(section.title)}</h3>
-            <ul className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
+            <h3 className="mb-2.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-muted">{t(section.title)}</h3>
+            {/* One column reads best for a short release; long ones use two. */}
+            <ul className={cx("grid gap-x-5 gap-y-3.5", noteCount > 6 && "sm:grid-cols-2")}>
               {section.notes.map(note => (
-                <li key={note.title} className="flex min-w-0 gap-2.5">
-                  <span aria-hidden="true" className="grid size-7 shrink-0 place-items-center rounded-lg bg-sunken text-ink-2">{icons[note.icon]}</span>
+                <li key={note.title} className="flex min-w-0 items-start gap-3">
+                  <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-accent-soft text-accent-strong">{icons[note.icon]}</span>
                   <div className="min-w-0">
-                    <h4 className="text-[13px] font-semibold leading-5">{t(note.title)}</h4>
-                    <p className="mt-0.5 text-xs leading-[18px] text-ink-2">{t(note.description)}</p>
+                    <h4 className="text-[13.5px] font-semibold leading-5">{t(note.title)}</h4>
+                    <p className="mt-0.5 text-[12.5px] leading-[18px] text-ink-2">{t(note.description)}</p>
                   </div>
                 </li>
               ))}

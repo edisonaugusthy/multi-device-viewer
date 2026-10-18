@@ -316,6 +316,7 @@
   "onScreen": "Di layar",
   "computers": "Komputer",
   "otherDevices": "Lainnya",
+  "newDevicesTab": "Baru",
   "deviceType": "Jenis perangkat",
   "addADevice": "Tambahkan perangkat",
   "replaceNamed": "Ganti {name}",

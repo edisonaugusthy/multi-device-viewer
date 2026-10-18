@@ -316,6 +316,7 @@
   "onScreen": "На екрані",
   "computers": "Комп’ютери",
   "otherDevices": "Інші",
+  "newDevicesTab": "Нові",
   "deviceType": "Тип пристрою",
   "addADevice": "Додати пристрій",
   "replaceNamed": "Замінити {name}",

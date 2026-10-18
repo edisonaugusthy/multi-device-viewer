@@ -316,6 +316,7 @@
   "onScreen": "በማያ ገጽ ላይ",
   "computers": "ኮምፒውተሮች",
   "otherDevices": "ሌሎች",
+  "newDevicesTab": "አዲስ",
   "deviceType": "የመሣሪያ ዓይነት",
   "addADevice": "መሣሪያ ያክሉ",
   "replaceNamed": "{name} ተካ",

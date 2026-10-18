@@ -316,6 +316,7 @@
   "onScreen": "තිරයේ",
   "computers": "පරිගණක",
   "otherDevices": "වෙනත්",
+  "newDevicesTab": "නව",
   "deviceType": "උපාංග වර්ගය",
   "addADevice": "උපාංගයක් එක් කරන්න",
   "replaceNamed": "{name} ප්‍රතිස්ථාපනය කරන්න",

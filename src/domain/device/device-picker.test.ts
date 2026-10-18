@@ -73,7 +73,15 @@ describe("device picker sections", () => {
     const custom = { ...byId("apple-iphone-18-pro-2026"), id: "custom-390x700", name: "390 × 700", brand: "Custom" };
     const listed = buildPickerSections({ devices: [...devices, custom], favorites: [] }).flatMap(section => ids(section.devices));
     expect(listed).not.toContain("custom-390x700");
-    expect(availablePickerTabs(devices)).toEqual(["all", "ios", "android", "tablet", "computer", "other"]);
+    expect(availablePickerTabs(devices)).toEqual(["all", "ios", "android", "tablet", "computer", "other", "new"]);
+  });
+
+  it("lists every device tagged new, of any type, in the New tab", () => {
+    const listed = buildPickerSections({ devices, favorites: [], tab: "new" }).flatMap(section => ids(section.devices));
+    expect(listed.sort()).toEqual(devices.filter(device => device.tags.includes("new")).map(device => device.id).sort());
+    expect(new Set(listed.map(id => byId(id).type))).toEqual(new Set(["phone", "laptop", "desktop"]));
+    // With nothing new, the tab is not offered.
+    expect(availablePickerTabs(devices.filter(device => !device.tags.includes("new")))).not.toContain("new");
   });
 
   it("steps to the neighbouring devices of the same type, smallest screen first", () => {

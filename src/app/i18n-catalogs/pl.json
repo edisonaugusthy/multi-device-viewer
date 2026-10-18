@@ -316,6 +316,7 @@
   "onScreen": "Na ekranie",
   "computers": "Komputery",
   "otherDevices": "Inne",
+  "newDevicesTab": "Nowe",
   "deviceType": "Typ urządzenia",
   "addADevice": "Dodaj urządzenie",
   "replaceNamed": "Zastąp {name}",

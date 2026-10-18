@@ -316,6 +316,7 @@
   "onScreen": "화면에 표시 중",
   "computers": "컴퓨터",
   "otherDevices": "기타",
+  "newDevicesTab": "신규",
   "deviceType": "기기 유형",
   "addADevice": "기기 추가",
   "replaceNamed": "{name} 교체",

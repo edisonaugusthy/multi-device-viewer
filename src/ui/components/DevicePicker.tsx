@@ -87,7 +87,7 @@ export function DevicePicker({
 
   const tabs = useMemo(() => availablePickerTabs(devices), [devices]);
   const tabLabel = (id: PickerTab) => ({
-    all: t("allShort"), ios: "iOS", android: "Android", tablet: t("tablets"), computer: t("computers"), other: t("otherDevices"),
+    all: t("allShort"), ios: "iOS", android: "Android", tablet: t("tablets"), computer: t("computers"), other: t("otherDevices"), new: t("newDevicesTab"),
   })[id];
   const chooseTab = (id: PickerTab) => {
     setTab(id);

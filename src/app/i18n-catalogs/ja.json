@@ -316,6 +316,7 @@
   "onScreen": "表示中",
   "computers": "コンピュータ",
   "otherDevices": "その他",
+  "newDevicesTab": "新機種",
   "deviceType": "デバイスの種類",
   "addADevice": "デバイスを追加",
   "replaceNamed": "{name} を置き換え",

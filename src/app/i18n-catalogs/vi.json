@@ -316,6 +316,7 @@
   "onScreen": "Trên màn hình",
   "computers": "Máy tính",
   "otherDevices": "Khác",
+  "newDevicesTab": "Mới",
   "deviceType": "Loại thiết bị",
   "addADevice": "Thêm một thiết bị",
   "replaceNamed": "Thay thế {name}",

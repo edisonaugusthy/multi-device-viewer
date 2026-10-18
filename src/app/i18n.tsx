@@ -374,6 +374,7 @@ const en = {
   onScreen: "On screen",
   computers: "Computers",
   otherDevices: "Other",
+  newDevicesTab: "New",
   deviceType: "Device type",
   addADevice: "Add a device",
   replaceNamed: "Replace {name}",

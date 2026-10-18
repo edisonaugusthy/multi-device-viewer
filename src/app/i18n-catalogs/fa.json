@@ -316,6 +316,7 @@
   "onScreen": "روی صفحه",
   "computers": "رایانه‌ها",
   "otherDevices": "سایر",
+  "newDevicesTab": "جدید",
   "deviceType": "نوع دستگاه",
   "addADevice": "افزودن یک دستگاه",
   "replaceNamed": "جایگزینی {name}",

@@ -1,11 +1,12 @@
 import { groupGalleryDevices, nameStartsWith, newestFirst, type DeviceGalleryGroupId } from "./device-gallery";
 import type { Device } from "./device.types";
 
-// Five plain tabs. Computers are laptops and desktops; Other holds TVs,
-// watches, kiosks and phones that run neither iOS nor Android.
-export const pickerTabs = ["all", "ios", "android", "tablet", "computer", "other"] as const;
+// Plain tabs. Computers are laptops and desktops; Other holds TVs, watches,
+// kiosks and phones that run neither iOS nor Android; New lists the devices
+// tagged new, of any type.
+export const pickerTabs = ["all", "ios", "android", "tablet", "computer", "other", "new"] as const;
 export type PickerTab = typeof pickerTabs[number];
-const TAB_GROUPS: Record<Exclude<PickerTab, "all">, DeviceGalleryGroupId[]> = {
+const TAB_GROUPS: Record<Exclude<PickerTab, "all" | "new">, DeviceGalleryGroupId[]> = {
   ios: ["ios"], android: ["android"], tablet: ["tablet"], computer: ["laptop", "desktop"], other: ["phone", "tv", "watch", "custom"],
 };
 
@@ -22,8 +23,9 @@ export const PICKER_RECENT_LIMIT = 4;
 // first, then newest first. Saved custom sizes have their own view.
 function tabDevices(devices: Device[], tab: PickerTab, query: string) {
   return groupGalleryDevices(devices, query)
-    .filter(group => tab === "all" || TAB_GROUPS[tab].includes(group.id))
+    .filter(group => tab === "all" || tab === "new" || TAB_GROUPS[tab].includes(group.id))
     .flatMap(group => group.devices)
+    .filter(device => tab !== "new" || device.tags.includes("new"))
     .filter(device => device.brand !== "Custom")
     .sort((left, right) => Number(nameStartsWith(right, query)) - Number(nameStartsWith(left, query)) || newestFirst(left, right));
 }

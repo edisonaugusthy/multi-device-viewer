@@ -316,6 +316,7 @@
   "onScreen": "屏幕上",
   "computers": "电脑",
   "otherDevices": "其他",
+  "newDevicesTab": "新品",
   "deviceType": "设备类型",
   "addADevice": "添加设备",
   "replaceNamed": "替换 {name}",

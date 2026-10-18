@@ -26,8 +26,7 @@ const curatedDevices: Device[] = [
   "mockupAssets": getMockupAssets("apple-iphone-18-pro-2026"),
   "updatedAt": "2026-09-10",
   "tags": [
-    "ios",
-    "new"
+    "ios"
   ]
 },
 {
@@ -52,8 +51,7 @@ const curatedDevices: Device[] = [
   "mockupAssets": getMockupAssets("apple-iphone-18-pro-max-2026"),
   "updatedAt": "2026-09-10",
   "tags": [
-    "ios",
-    "new"
+    "ios"
   ]
 },
 {
@@ -79,7 +77,6 @@ const curatedDevices: Device[] = [
   "updatedAt": "2026-09-10",
   "tags": [
     "ios",
-    "new",
     "foldable"
   ]
 },
@@ -106,7 +103,6 @@ const curatedDevices: Device[] = [
   "updatedAt": "2026-09-10",
   "tags": [
     "ios",
-    "new",
     "foldable"
   ]
 },
@@ -928,12 +924,8 @@ function yearFromId(id: string) {
 }
 
 function tagsFromId(id: string, type: Device["type"], os: string) {
+  // Only the newest batch carries the NEW badge and fills the picker's New tab.
   const latestCatalogIds = new Set([
-    "apple-iphone-18-pro-2026",
-    "apple-iphone-18-pro-max-2026",
-    "apple-iphone-duo-folded-2026",
-    "apple-iphone-duo-unfolded-2026",
-    "apple-homeview-2026",
     "apple-iphone-se-2022",
     "apple-macbook-air-13-m4-2025",
     "lenovo-ideapad-slim-3-15-2024",

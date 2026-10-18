@@ -316,6 +316,7 @@
   "onScreen": "स्क्रीन पर",
   "computers": "कंप्यूटर",
   "otherDevices": "अन्य",
+  "newDevicesTab": "नए",
   "deviceType": "डिवाइस का प्रकार",
   "addADevice": "एक डिवाइस जोड़ें",
   "replaceNamed": "{name} बदलें",

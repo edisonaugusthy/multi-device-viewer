@@ -316,6 +316,7 @@
   "onScreen": "Ekranda",
   "computers": "Bilgisayarlar",
   "otherDevices": "Diğer",
+  "newDevicesTab": "Yeni",
   "deviceType": "Cihaz türü",
   "addADevice": "Cihaz ekle",
   "replaceNamed": "{name} cihazını değiştir",

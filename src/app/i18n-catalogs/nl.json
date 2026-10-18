@@ -316,6 +316,7 @@
   "onScreen": "Op het scherm",
   "computers": "Computers",
   "otherDevices": "Overig",
+  "newDevicesTab": "Nieuw",
   "deviceType": "Apparaattype",
   "addADevice": "Een apparaat toevoegen",
   "replaceNamed": "{name} vervangen",

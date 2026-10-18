@@ -316,6 +316,7 @@
   "onScreen": "På skärmen",
   "computers": "Datorer",
   "otherDevices": "Övriga",
+  "newDevicesTab": "Nya",
   "deviceType": "Enhetstyp",
   "addADevice": "Lägg till en enhet",
   "replaceNamed": "Ersätt {name}",

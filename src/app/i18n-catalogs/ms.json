@@ -316,6 +316,7 @@
   "onScreen": "Pada skrin",
   "computers": "Komputer",
   "otherDevices": "Lain-lain",
+  "newDevicesTab": "Baharu",
   "deviceType": "Jenis peranti",
   "addADevice": "Tambah peranti",
   "replaceNamed": "Gantikan {name}",

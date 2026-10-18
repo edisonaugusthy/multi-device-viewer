@@ -117,11 +117,6 @@ describe("device catalog imports", () => {
         .sort(),
     ).toEqual([
       "acer-chromebook-314-2023",
-      "apple-homeview-2026",
-      "apple-iphone-18-pro-2026",
-      "apple-iphone-18-pro-max-2026",
-      "apple-iphone-duo-folded-2026",
-      "apple-iphone-duo-unfolded-2026",
       "apple-iphone-se-2022",
       "apple-macbook-air-13-m4-2025",
       "dell-p2425h-24-2024",
@@ -181,7 +176,7 @@ describe("device catalog imports", () => {
     expect(currentDeviceId("apple-macbook-air-13-m4-2025")).toBe("apple-macbook-air-13-m4-2025");
   });
 
-  it("includes the Apple HomeView smart display as a new special device without browser chrome", () => {
+  it("includes the Apple HomeView smart display as a special device without browser chrome", () => {
     const device = devices.find((candidate) => candidate.id === "apple-homeview-2026")!;
     expect(device).toMatchObject({
       name: "Apple HomeView",
@@ -196,7 +191,7 @@ describe("device catalog imports", () => {
       resolutionSource: "reference",
       mockupAssets: [expect.objectContaining({ localPath: "/mockups/apple-homeview-2026.webp" })],
     });
-    expect(device.tags).toEqual(expect.arrayContaining(["new", "special", "custom"]));
+    expect(device.tags).toEqual(expect.arrayContaining(["special", "custom"]));
     expect(device.mockupAssets[0].viewport?.portrait).toMatchObject({ width: 544, height: 544, enableRotation: false });
   });
 

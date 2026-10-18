@@ -316,6 +316,7 @@
   "onScreen": "Nasa screen",
   "computers": "Mga computer",
   "otherDevices": "Iba pa",
+  "newDevicesTab": "Bago",
   "deviceType": "Uri ng device",
   "addADevice": "Magdagdag ng device",
   "replaceNamed": "Palitan ang {name}",

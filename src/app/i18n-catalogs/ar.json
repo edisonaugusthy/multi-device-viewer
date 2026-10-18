@@ -316,6 +316,7 @@
   "onScreen": "على الشاشة",
   "computers": "أجهزة الكمبيوتر",
   "otherDevices": "أخرى",
+  "newDevicesTab": "جديد",
   "deviceType": "نوع الجهاز",
   "addADevice": "إضافة جهاز",
   "replaceNamed": "استبدال {name}",

@@ -680,6 +680,36 @@ const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
     pixelRatio: 2,
     manufacturerResolution: { width: 1088, height: 1088 },
   },
+  // 4.7″ 750 × 1334 at 326 ppi: the iPhone 8 screen, still the smallest current-style iPhone.
+  "apple-iphone-se-2022": {
+    cssViewport: { width: 375, height: 667 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 750, height: 1334 },
+  },
+  // 13.6″ 2560 × 1664, shown by default at "looks like 1470 × 956".
+  "apple-macbook-air-13-m4-2025": {
+    cssViewport: { width: 1470, height: 956 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 2560, height: 1664 },
+  },
+  // 15.6″ 1920 × 1080 at Windows' recommended 125% scaling: the most common laptop viewport.
+  "lenovo-ideapad-slim-3-15-2024": {
+    cssViewport: { width: 1536, height: 864 },
+    pixelRatio: 1.25,
+    manufacturerResolution: { width: 1920, height: 1080 },
+  },
+  // 14″ HD panel at 100%: budget laptops and school Chromebooks.
+  "acer-chromebook-314-2023": {
+    cssViewport: { width: 1366, height: 768 },
+    pixelRatio: 1,
+    manufacturerResolution: { width: 1366, height: 768 },
+  },
+  // 23.8″ Full HD office monitor at 100%: the most common desktop screen.
+  "dell-p2425h-24-2024": {
+    cssViewport: { width: 1920, height: 1080 },
+    pixelRatio: 1,
+    manufacturerResolution: { width: 1920, height: 1080 },
+  },
 };
 
 export const devices: Device[] = dedupeDevices([
@@ -696,7 +726,6 @@ export const devices: Device[] = dedupeDevices([
 const replacedDeviceIds: Record<string, string> = {
   "apple-watch-series-6-40": "apple-watch-series-12-42mm",
   "motorola-razr-60-ultra-2025": "motorola-razr-70-ultra-2026",
-  "apple-macbook-air-13-m4-2025": "macbook-air-2020-13",
   "microsoft-surface-laptop-7-2024": "microsoft-surface-laptop-8-13-8-2026",
 };
 
@@ -795,8 +824,8 @@ function deviceTypeFromId(id: string): Device["type"] {
   if (id.includes("self-service-kiosk") || id.includes("nspanel") || id.includes("homeview")) return "custom";
   if (id.includes("watch")) return "watch";
   if (id.includes("tv")) return "tv";
-  if (id.includes("macbook") || id.includes("latitude") || id.includes("laptop")) return "laptop";
-  if (id.includes("imac") || id.includes("studio-display")) return "desktop";
+  if (id.includes("macbook") || id.includes("latitude") || id.includes("laptop") || id.includes("ideapad") || id.includes("chromebook")) return "laptop";
+  if (id.includes("imac") || id.includes("studio-display") || id.includes("p2425h")) return "desktop";
   if (id.includes("ipad") || id.includes("tab") || id.includes("surface-duo") || id.includes("toughbook-s1")) return "tablet";
   return "phone";
 }
@@ -813,6 +842,8 @@ function brandFromId(id: string) {
   if (id.startsWith("oppo")) return "OPPO";
   if (id.startsWith("microsoft")) return "Microsoft";
   if (id.startsWith("dell")) return "Dell";
+  if (id.startsWith("lenovo")) return "Lenovo";
+  if (id.startsWith("acer")) return "Acer";
   if (id.startsWith("zebra")) return "Zebra";
   if (id.startsWith("panasonic")) return "Panasonic";
   if (id.startsWith("sonoff")) return "Sonoff";
@@ -828,6 +859,7 @@ function osFromId(id: string, type: Device["type"], brand: string) {
   if (id.includes("homeview")) return "HomeView 27";
   if (type === "watch") return brand === "Apple" ? "watchOS" : "Wear OS";
   if (type === "tv") return brand === "Samsung" ? "Tizen" : "TV";
+  if (id.includes("chromebook")) return "ChromeOS";
   if (type === "desktop" || type === "laptop") return brand === "Apple" ? "macOS" : "Windows";
   if (id.includes("ipad")) return "iPadOS";
   if (brand === "Apple") return "iOS";
@@ -843,6 +875,8 @@ function familyFromId(id: string, brand: string, type: Device["type"]) {
   if (type === "watch") return "Watch";
   if (type === "tv") return "Smart TV";
   if (type === "tablet") return brand === "Apple" ? "iPad" : "Tablet";
+  if (id.includes("chromebook")) return "Chromebook";
+  if (id.includes("p2425h")) return "Monitor";
   if (type === "desktop") return "Desktop";
   if (type === "laptop") return brand === "Apple" ? "MacBook" : "Laptop";
   if (brand === "Apple") return "iPhone";
@@ -899,7 +933,12 @@ function tagsFromId(id: string, type: Device["type"], os: string) {
     "apple-iphone-18-pro-max-2026",
     "apple-iphone-duo-folded-2026",
     "apple-iphone-duo-unfolded-2026",
-    "apple-homeview-2026"
+    "apple-homeview-2026",
+    "apple-iphone-se-2022",
+    "apple-macbook-air-13-m4-2025",
+    "lenovo-ideapad-slim-3-15-2024",
+    "acer-chromebook-314-2023",
+    "dell-p2425h-24-2024"
 ]);
   return [
     type,
@@ -939,6 +978,11 @@ function nameFromId(id: string) {
     "microsoft-surface-laptop-8-13-8-2026": "Microsoft Surface Laptop 13.8-inch (8th Edition)",
     "apple-studio-display-xdr-27-2026": "Apple Studio Display XDR 27-inch",
     "apple-homeview-2026": "Apple HomeView",
+    "apple-iphone-se-2022": "Apple iPhone SE (3rd generation)",
+    "apple-macbook-air-13-m4-2025": "Apple MacBook Air 13-inch (M4)",
+    "lenovo-ideapad-slim-3-15-2024": "Lenovo IdeaPad Slim 3 15-inch",
+    "acer-chromebook-314-2023": "Acer Chromebook 314",
+    "dell-p2425h-24-2024": "Dell P2425H 24-inch Monitor",
   };
   if (normalizedNames[id]) return normalizedNames[id];
 
@@ -956,6 +1000,8 @@ function nameFromId(id: string) {
     .replace(/^oppo-/, "")
     .replace(/^microsoft-/, "")
     .replace(/^dell-/, "")
+    .replace(/^lenovo-/, "")
+    .replace(/^acer-/, "")
     .replace(/^zebra-/, "")
     .replace(/^panasonic-/, "")
     .replace(/^sonoff-/, "")

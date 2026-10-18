@@ -1120,6 +1120,76 @@
     "rotate": false
   },
   {
+    "id": "apple-iphone-se-2022",
+    "name": "Apple iPhone SE (3rd generation)",
+    "cssViewport": {
+      "width": 375,
+      "height": 667
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 750,
+      "height": 1334
+    },
+    "rotate": true
+  },
+  {
+    "id": "apple-macbook-air-13-m4-2025",
+    "name": "Apple MacBook Air 13-inch (M4)",
+    "cssViewport": {
+      "width": 1470,
+      "height": 956
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 2560,
+      "height": 1664
+    },
+    "rotate": false
+  },
+  {
+    "id": "lenovo-ideapad-slim-3-15-2024",
+    "name": "Lenovo IdeaPad Slim 3 15-inch",
+    "cssViewport": {
+      "width": 1536,
+      "height": 864
+    },
+    "pixelRatio": 1.25,
+    "manufacturerResolution": {
+      "width": 1920,
+      "height": 1080
+    },
+    "rotate": false
+  },
+  {
+    "id": "acer-chromebook-314-2023",
+    "name": "Acer Chromebook 314",
+    "cssViewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "pixelRatio": 1,
+    "manufacturerResolution": {
+      "width": 1366,
+      "height": 768
+    },
+    "rotate": false
+  },
+  {
+    "id": "dell-p2425h-24-2024",
+    "name": "Dell P2425H 24-inch Monitor",
+    "cssViewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "pixelRatio": 1,
+    "manufacturerResolution": {
+      "width": 1920,
+      "height": 1080
+    },
+    "rotate": false
+  },
+  {
     "id": "xiaomi-12-2022",
     "name": "Xiaomi 12",
     "cssViewport": {

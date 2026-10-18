@@ -179,4 +179,9 @@ const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "microsoft-surface-laptop-8-13-8-2026": { osVersion: "11.0", devicePixelRatio: 2 },
   "apple-studio-display-xdr-27-2026": { osVersion: "26.0", devicePixelRatio: 2 },
   "apple-homeview-2026": { osVersion: "27.2", devicePixelRatio: 2 },
+  "apple-iphone-se-2022": { osVersion: "26.0", devicePixelRatio: 2 },
+  "apple-macbook-air-13-m4-2025": { osVersion: "26.0", devicePixelRatio: 2 },
+  "lenovo-ideapad-slim-3-15-2024": { osVersion: "11.0", devicePixelRatio: 1.25 },
+  "acer-chromebook-314-2023": { osVersion: "140.0", devicePixelRatio: 1 },
+  "dell-p2425h-24-2024": { osVersion: "11.0", devicePixelRatio: 1 },
 };

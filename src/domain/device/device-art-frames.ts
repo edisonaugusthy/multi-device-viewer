@@ -3215,6 +3215,148 @@ export const deviceArtFrames: LocalMockupAsset[] = [
     }
   },
   {
+    "id": "apple-iphone-se-2022",
+    "width": 788,
+    "height": 1600,
+    "renderScale": 0.560947,
+    "cssViewport": {
+      "width": 375,
+      "height": 667
+    },
+    "viewport": {
+      "portrait": {
+        "left": 33.39,
+        "top": 115.26,
+        "width": 375,
+        "height": 667,
+        "cornerRadius": 0
+      },
+      "landscape": {
+        "left": 115.26,
+        "top": 33.39,
+        "width": 667,
+        "height": 375,
+        "cornerRadius": 0
+      }
+    }
+  },
+  {
+    "id": "apple-macbook-air-13-m4-2025",
+    "width": 1601,
+    "height": 1074,
+    "renderScale": 1.061233,
+    "cssViewport": {
+      "width": 1470,
+      "height": 956
+    },
+    "viewport": {
+      "landscape": {
+        "left": 114.03,
+        "top": 57.35,
+        "width": 1470,
+        "height": 956,
+        "paths": {
+          "landscape": "M18 0H1452A18 18 0 0 1 1470 18V956H0V18A18 18 0 0 1 18 0Z"
+        },
+        "enableRotation": false
+      },
+      "portrait": {
+        "left": 114.03,
+        "top": 57.35,
+        "width": 1470,
+        "height": 956,
+        "paths": {
+          "portrait": "M18 0H1452A18 18 0 0 1 1470 18V956H0V18A18 18 0 0 1 18 0Z"
+        },
+        "enableRotation": false
+      }
+    }
+  },
+  {
+    "id": "lenovo-ideapad-slim-3-15-2024",
+    "width": 1601,
+    "height": 991,
+    "renderScale": 1.061346,
+    "cssViewport": {
+      "width": 1536,
+      "height": 864
+    },
+    "viewport": {
+      "landscape": {
+        "left": 81.08,
+        "top": 38.47,
+        "width": 1536,
+        "height": 864,
+        "cornerRadius": 0,
+        "enableRotation": false
+      },
+      "portrait": {
+        "left": 81.08,
+        "top": 38.47,
+        "width": 1536,
+        "height": 864,
+        "cornerRadius": 0,
+        "enableRotation": false
+      }
+    }
+  },
+  {
+    "id": "acer-chromebook-314-2023",
+    "width": 1600,
+    "height": 1034,
+    "renderScale": 0.954198,
+    "cssViewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "viewport": {
+      "landscape": {
+        "left": 80.35,
+        "top": 48.27,
+        "width": 1366,
+        "height": 768,
+        "cornerRadius": 0,
+        "enableRotation": false
+      },
+      "portrait": {
+        "left": 80.35,
+        "top": 48.27,
+        "width": 1366,
+        "height": 768,
+        "cornerRadius": 0,
+        "enableRotation": false
+      }
+    }
+  },
+  {
+    "id": "dell-p2425h-24-2024",
+    "width": 1600,
+    "height": 1371,
+    "renderScale": 1.228501,
+    "cssViewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "viewport": {
+      "landscape": {
+        "left": 22.77,
+        "top": 22.77,
+        "width": 1920,
+        "height": 1080,
+        "cornerRadius": 0,
+        "enableRotation": false
+      },
+      "portrait": {
+        "left": 22.77,
+        "top": 22.77,
+        "width": 1920,
+        "height": 1080,
+        "cornerRadius": 0,
+        "enableRotation": false
+      }
+    }
+  },
+  {
     "id": "xiaomi-12-2022",
     "width": 744,
     "height": 1601,

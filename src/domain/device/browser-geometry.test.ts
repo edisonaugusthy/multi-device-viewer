@@ -17,7 +17,7 @@ describe("browser content boundaries", () => {
       expect(keyboard.top + keyboard.content.height + keyboard.bottom).toBe(size.height);
     }
   });
-  it("keeps all 112 device identities available", () => { expect(devices).toHaveLength(112); });
+  it("keeps all 117 device identities available", () => { expect(devices).toHaveLength(117); });
   it("uses the full width of a wide fold whose camera is in the top edge", () => {
     const device = devices.find(d => d.id === "samsung-galaxy-z-fold8-unfolded-2026")!;
     const geometry = getBrowserGeometry(device, device.cssViewport);
@@ -133,7 +133,7 @@ describe("browser content boundaries", () => {
     expect(getBrowserGeometry(phone, phone.cssViewport).status).toBeGreaterThan(cameraBottom + 4);
   });
   it("does not assign iOS 26 to incompatible iPhones", () => {
-    expect(devices.filter(d => d.type === "phone" && supportsIos26(d))).toHaveLength(33);
+    expect(devices.filter(d => d.type === "phone" && supportsIos26(d))).toHaveLength(34);
     for (const id of ["apple-iphone-5", "apple-iphone-se-2018", "apple-iphone-x", "apple-iphone-xr"]) expect(supportsIos26(devices.find(d => d.id === id)!)).toBe(false);
   });
   it("preserves aspect ratio even when an artwork aperture differs from the screen", () => {

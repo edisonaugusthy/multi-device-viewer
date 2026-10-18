@@ -116,11 +116,16 @@ describe("device catalog imports", () => {
         .map((device) => device.id)
         .sort(),
     ).toEqual([
+      "acer-chromebook-314-2023",
       "apple-homeview-2026",
       "apple-iphone-18-pro-2026",
       "apple-iphone-18-pro-max-2026",
       "apple-iphone-duo-folded-2026",
       "apple-iphone-duo-unfolded-2026",
+      "apple-iphone-se-2022",
+      "apple-macbook-air-13-m4-2025",
+      "dell-p2425h-24-2024",
+      "lenovo-ideapad-slim-3-15-2024",
     ]);
   });
 
@@ -157,6 +162,23 @@ describe("device catalog imports", () => {
     });
     const asset = devices.find((device) => device.id === id)?.mockupAssets[0];
     expect(asset?.renderScale).toBeGreaterThan(0);
+  });
+
+  it.each([
+    ["apple-iphone-se-2022", "Apple iPhone SE (3rd generation)", "Apple", "iPhone", "phone", "iOS", 375, 667, 2],
+    ["apple-macbook-air-13-m4-2025", "Apple MacBook Air 13-inch (M4)", "Apple", "MacBook", "laptop", "macOS", 1470, 956, 2],
+    ["lenovo-ideapad-slim-3-15-2024", "Lenovo IdeaPad Slim 3 15-inch", "Lenovo", "Laptop", "laptop", "Windows", 1536, 864, 1.25],
+    ["acer-chromebook-314-2023", "Acer Chromebook 314", "Acer", "Chromebook", "laptop", "ChromeOS", 1366, 768, 1],
+    ["dell-p2425h-24-2024", "Dell P2425H 24-inch Monitor", "Dell", "Monitor", "desktop", "Windows", 1920, 1080, 1],
+  ] as const)("adds %s as a new device at the common size it stands for", (id, name, brand, family, type, os, width, height, pixelRatio) => {
+    const device = devices.find((candidate) => candidate.id === id)!;
+    expect(device).toMatchObject({ name, brand, family, type, os, cssViewport: { width, height }, pixelRatio });
+    expect(device.tags).toEqual(expect.arrayContaining(["new", type]));
+    expect(device.mockupAssets[0]).toMatchObject({ localPath: `/mockups/${id}.webp` });
+  });
+
+  it("opens the retired M4 MacBook Air id as the drawn M4 again", () => {
+    expect(currentDeviceId("apple-macbook-air-13-m4-2025")).toBe("apple-macbook-air-13-m4-2025");
   });
 
   it("includes the Apple HomeView smart display as a new special device without browser chrome", () => {
@@ -507,6 +529,11 @@ describe("device catalog imports", () => {
     "microsoft-surface-laptop-8-13-8-2026",
     "apple-studio-display-xdr-27-2026",
     "apple-homeview-2026",
+    "apple-iphone-se-2022",
+    "apple-macbook-air-13-m4-2025",
+    "lenovo-ideapad-slim-3-15-2024",
+    "acer-chromebook-314-2023",
+    "dell-p2425h-24-2024",
   ])("keeps the calibrated screen for %s inside its rendered frame", (id) => {
     const device = devices.find((candidate) => candidate.id === id)!;
     const asset = device.mockupAssets[0];
@@ -544,6 +571,11 @@ describe("device catalog imports", () => {
     "microsoft-surface-laptop-8-13-8-2026",
     "apple-studio-display-xdr-27-2026",
     "apple-homeview-2026",
+    "apple-iphone-se-2022",
+    "apple-macbook-air-13-m4-2025",
+    "lenovo-ideapad-slim-3-15-2024",
+    "acer-chromebook-314-2023",
+    "dell-p2425h-24-2024",
   ])("keeps the generated screen inside its frame for %s", (id) => {
     const asset = devices.find((candidate) => candidate.id === id)!.mockupAssets[0];
     const frameWidth = asset.width! * asset.renderScale!;
@@ -658,7 +690,6 @@ describe("device catalog imports", () => {
     ]);
     for (const duplicateId of [
       "apple-watch-series-6-40",
-      "apple-macbook-air-13-m4-2025",
       "motorola-razr-60-ultra-2025",
       "motorola-thinkphone-25-2024",
       "honeywell-ct47-2023",
@@ -673,7 +704,7 @@ describe("device catalog imports", () => {
     expect(currentDeviceId("apple-watch-series-6-40")).toBe("apple-watch-series-12-42mm");
     expect(devices.some((device) => device.id === currentDeviceId("apple-watch-series-6-40"))).toBe(true);
     expect(currentDeviceId("apple-iphone-18-pro-2026")).toBe("apple-iphone-18-pro-2026");
-    for (const retired of ["motorola-razr-60-ultra-2025", "apple-macbook-air-13-m4-2025", "microsoft-surface-laptop-7-2024"]) {
+    for (const retired of ["motorola-razr-60-ultra-2025", "microsoft-surface-laptop-7-2024"]) {
       expect(devices.some((device) => device.id === currentDeviceId(retired)), retired).toBe(true);
     }
   });

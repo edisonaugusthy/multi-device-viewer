@@ -154,8 +154,9 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
         </div>
         <p className="mt-1 text-[13px] leading-relaxed text-ink-2">{step.text}</p>
 
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <div className="flex gap-1.5" aria-label={t("tourStep", { current: stepIndex + 1, total: TOUR_STEPS.length })}>
+        {/* A long button label moves the buttons under the dots instead of wrapping. */}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-2 gap-y-3">
+          <div className="flex gap-1" aria-label={t("tourStep", { current: stepIndex + 1, total: TOUR_STEPS.length })}>
             {TOUR_STEPS.map((item, index) => (
               <button
                 key={item.title}
@@ -170,7 +171,7 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
               />
             ))}
           </div>
-          <div className="flex gap-1.5">
+          <div className="ms-auto flex shrink-0 gap-1.5">
             {stepIndex > 0 && (
               <IconButton tone="outline" label={t("previousTourStep")} onClick={() => setStepIndex(current => current - 1)}>
                 <ChevronLeftIcon size={15} className="rtl:rotate-180" />
@@ -179,7 +180,7 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
             <button
               type="button"
               onClick={() => finalStep ? onClose() : setStepIndex(current => current + 1)}
-              className={cx("flex h-[34px] items-center justify-center gap-1.5 rounded-[9px] bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}
+              className={cx("flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-[9px] bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}
             >
               {finalStep
                 ? <><CheckIcon size={14} />{t("startTesting")}</>

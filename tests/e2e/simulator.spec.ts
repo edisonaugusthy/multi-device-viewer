@@ -382,9 +382,9 @@ test("discovers expanded current and rugged device families", async ({ page }) =
     await expect(tabs.filter({ hasText: name }).first()).toHaveAttribute("aria-selected", "true");
   };
 
-  // Six plain tabs in one row.
+  // Seven plain tabs in one row, New last.
   const tabBoxes = await tabs.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().top));
-  expect(await tabs.allTextContents()).toEqual(["All", "iOS", "Android", "Tablets", "Computers", "Other"]);
+  expect(await tabs.allTextContents()).toEqual(["All", "iOS", "Android", "Tablets", "Computers", "Other", "New"]);
   expect(new Set(tabBoxes.map(top => Math.round(top))).size).toBe(1);
   await expect(tabs.first()).toHaveAttribute("aria-selected", "true");
 

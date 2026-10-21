@@ -1104,6 +1104,21 @@ test("explains header controls in tooltips without getting in the way", async ({
   await expect(page.getByRole("dialog", { name: "Settings" })).toBeVisible();
 });
 
+test("keeps the All devices grid scrollbar for mouse users", async ({ page }) => {
+  await page.locator("[data-all-devices-toggle]").click();
+  await expect(page.locator("[data-gallery-device-id]").first()).toBeVisible();
+  // The cards are live pages that take the mouse wheel for themselves, so the
+  // scrollbar is the only way down for a mouse. Headless Chromium never draws
+  // scrollbars, so check the style that would hide it.
+  const grid = page.locator("[data-gallery-scroll]");
+  const { scrollbarWidth, overflows } = await grid.evaluate(element => ({
+    scrollbarWidth: getComputedStyle(element).scrollbarWidth,
+    overflows: element.scrollHeight > element.clientHeight,
+  }));
+  expect(overflows).toBe(true);
+  expect(scrollbarWidth).not.toBe("none");
+});
+
 test("shows an enlarged All devices preview above the backdrop", async ({ page }) => {
   await page.locator("[data-all-devices-toggle]").click();
   const card = page.locator("[data-gallery-device-id]").nth(1);

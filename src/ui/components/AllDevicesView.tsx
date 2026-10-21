@@ -494,7 +494,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
         </header>}
 
         <div ref={scrollRef} data-gallery-scroll tabIndex={expandedDeviceId ? -1 : 0} aria-label={t("allDevices")}
-          className={cx("min-h-0 flex-1 overscroll-contain outline-none [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent", expandedDeviceId ? "overflow-hidden" : "overflow-y-auto")}>
+          className={cx("min-h-0 flex-1 overscroll-contain outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent", expandedDeviceId ? "overflow-hidden" : "overflow-y-auto")}>
           <section key={group.id} data-gallery-group={group.id} aria-labelledby={expandedDeviceId ? undefined : `gallery-heading-${group.id}`}
             className={cx("flex flex-col gap-4 px-6 pb-8", viewMode ? "pt-6" : "pt-[18px]")}>
             {!viewMode && <div inert={expandedDeviceId !== null} className="flex flex-wrap items-baseline gap-2.5">

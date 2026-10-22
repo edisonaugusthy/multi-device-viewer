@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "Dafür wird Chromes Debugging-Schnittstelle genutzt, die Chrome nur mit Ihrer Erlaubnis freigibt. Solange der Viewer offen ist, zeigt Chrome eine Leiste mit dem Hinweis, dass Mobile View diesen Browser debuggt; ihre Schaltfläche „Abbrechen“ schaltet exakte Identitäten aus. Sie bleiben auch aus, solange die DevTools dieses Tabs offen sind. Sonst ändert sich an der Erweiterung nichts.",
   "exactIdentitiesAllow": "Erlauben und einschalten",
   "exactIdentitiesUnavailable": "In diesem Tab aus: Chromes Debugging-Schnittstelle ist belegt, etwa durch die DevTools. Die Vorschauen nutzen stattdessen die geteilten Identitäten.",
-  "permissionDebugger": "Optional und nur erfragt, wenn Sie exakte Geräteidentitäten einschalten: gibt jedem Vorschau-Frame über Chromes Debugging-Schnittstelle die Browser-Identität seines eigenen Geräts, solange der Viewer offen ist."
+  "permissionDebugger": "Nur in Builds mit exakten Geräteidentitäten; Chrome lässt diese Berechtigung nicht als optional zu: gibt jedem Vorschau-Frame über Chromes Debugging-Schnittstelle die Browser-Identität seines eigenen Geräts, solange der Viewer offen ist."
 }

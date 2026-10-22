@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "Dit gebruikt de debuginterface van Chrome, die Chrome alleen geeft als u het toestaat. Zolang de viewer open is, toont Chrome een balk met de melding dat Mobile View deze browser debugt; de knop Annuleren daarin schakelt exacte identiteiten uit. Ze blijven ook uit zolang de DevTools van dit tabblad open zijn. Verder verandert er niets aan de extensie.",
   "exactIdentitiesAllow": "Toestaan en inschakelen",
   "exactIdentitiesUnavailable": "Uit op dit tabblad: de debuginterface van Chrome is in gebruik, bijvoorbeeld door DevTools. De voorvertoningen gebruiken in plaats daarvan de gedeelde identiteiten.",
-  "permissionDebugger": "Optioneel en alleen gevraagd wanneer u exacte apparaatidentiteiten inschakelt: geeft elk voorvertoningsframe de browseridentiteit van zijn eigen apparaat via de debuginterface van Chrome zolang de viewer open is."
+  "permissionDebugger": "Alleen in builds met exacte apparaatidentiteiten; Chrome staat deze machtiging niet als optioneel toe: geeft elk voorvertoningsframe de browseridentiteit van zijn eigen apparaat via de debuginterface van Chrome zolang de viewer open is."
 }

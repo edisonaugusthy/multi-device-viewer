@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "Detta använder Chromes felsökningsgränssnitt, som Chrome bara ger när du tillåter det. Så länge visaren är öppen visar Chrome en list som säger att Mobile View felsöker den här webbläsaren; dess Avbryt-knapp stänger av exakta identiteter. De förblir också avstängda så länge flikens DevTools är öppna. Inget annat i tillägget ändras.",
   "exactIdentitiesAllow": "Tillåt och slå på",
   "exactIdentitiesUnavailable": "Av på den här fliken: Chromes felsökningsgränssnitt används, till exempel av DevTools. Förhandsvisningarna använder de delade identiteterna i stället.",
-  "permissionDebugger": "Valfri och efterfrågas bara när du slår på exakta enhetsidentiteter: ger varje förhandsvisningsram sin egen enhets webbläsaridentitet via Chromes felsökningsgränssnitt så länge visaren är öppen."
+  "permissionDebugger": "Bara i byggen med exakta enhetsidentiteter; Chrome tillåter inte den här behörigheten som valfri: ger varje förhandsvisningsram sin egen enhets webbläsaridentitet via Chromes felsökningsgränssnitt så länge visaren är öppen."
 }

@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "Esto usa la interfaz de depuración de Chrome, que Chrome solo concede cuando lo permites. Mientras el visor está abierto, Chrome muestra una barra que dice que Mobile View está depurando este navegador; su botón Cancelar desactiva las identidades exactas. También quedan desactivadas mientras las DevTools de esta pestaña estén abiertas. Nada más cambia en la extensión.",
   "exactIdentitiesAllow": "Permitir y activar",
   "exactIdentitiesUnavailable": "Desactivadas en esta pestaña: la interfaz de depuración de Chrome está en uso, por ejemplo por las DevTools. Las vistas previas usan las identidades compartidas.",
-  "permissionDebugger": "Opcional y solicitado solo al activar Identidades exactas de dispositivo: da a cada marco de vista previa la identidad del navegador de su propio dispositivo a través de la interfaz de depuración de Chrome mientras el visor está abierto."
+  "permissionDebugger": "Solo en compilaciones que ofrecen Identidades exactas de dispositivo, un permiso que Chrome no admite como opcional: da a cada marco de vista previa la identidad del navegador de su propio dispositivo a través de la interfaz de depuración de Chrome mientras el visor está abierto."
 }

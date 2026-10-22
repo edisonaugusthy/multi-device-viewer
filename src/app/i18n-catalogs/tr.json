@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "Bu, Chrome'un yalnızca siz izin verdiğinizde sunduğu hata ayıklama arabirimini kullanır. Görüntüleyici açıkken Chrome, Mobile View'in bu tarayıcıda hata ayıkladığını söyleyen bir çubuk gösterir; çubuktaki İptal düğmesi tam kimlikleri kapatır. Bu sekmenin DevTools'u açıkken de kapalı kalırlar. Uzantıda başka hiçbir şey değişmez.",
   "exactIdentitiesAllow": "İzin ver ve aç",
   "exactIdentitiesUnavailable": "Bu sekmede kapalı: Chrome'un hata ayıklama arabirimi kullanımda, örneğin DevTools tarafından. Önizlemeler bunun yerine paylaşılan kimlikleri kullanır.",
-  "permissionDebugger": "İsteğe bağlıdır ve yalnızca tam cihaz kimliklerini açtığınızda istenir: görüntüleyici açıkken Chrome'un hata ayıklama arabirimi üzerinden her önizleme çerçevesine kendi cihazının tarayıcı kimliğini verir."
+  "permissionDebugger": "Yalnızca tam cihaz kimlikleri sunan derlemelerde; Chrome bu izne isteğe bağlı olarak izin vermez: görüntüleyici açıkken Chrome'un hata ayıklama arabirimi üzerinden her önizleme çerçevesine kendi cihazının tarayıcı kimliğini verir."
 }

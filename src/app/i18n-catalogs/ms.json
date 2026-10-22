@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "Ini menggunakan antara muka penyahpepijatan Chrome, yang hanya diberikan Chrome apabila anda membenarkannya. Semasa pemapar dibuka, Chrome memaparkan bar yang menyatakan Mobile View sedang menyahpepijat pelayar ini; butang Batal padanya mematikan identiti yang tepat. Ia juga kekal dimatikan semasa DevTools tab ini dibuka. Tiada perkara lain pada sambungan yang berubah.",
   "exactIdentitiesAllow": "Benarkan dan hidupkan",
   "exactIdentitiesUnavailable": "Dimatikan pada tab ini: antara muka penyahpepijatan Chrome sedang digunakan, contohnya oleh DevTools. Pratonton menggunakan identiti kongsi sebagai gantinya.",
-  "permissionDebugger": "Pilihan, dan hanya diminta apabila anda menghidupkan Identiti peranti yang tepat: memberi setiap bingkai pratonton identiti pelayar perantinya sendiri melalui antara muka penyahpepijatan Chrome semasa pemapar dibuka."
+  "permissionDebugger": "Hanya dalam binaan yang menawarkan Identiti peranti yang tepat, kebenaran yang tidak dibenarkan Chrome sebagai pilihan: memberi setiap bingkai pratonton identiti pelayar perantinya sendiri melalui antara muka penyahpepijatan Chrome semasa pemapar dibuka."
 }

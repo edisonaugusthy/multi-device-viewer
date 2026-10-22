@@ -211,7 +211,7 @@ const en = {
   exactIdentitiesBar: "This uses Chrome's debugging interface, which Chrome only grants when you allow it. While the viewer is open, Chrome shows a bar saying Mobile View is debugging this browser; its Cancel button turns exact identities off. They also stay off while this tab's DevTools is open. Nothing else about the extension changes.",
   exactIdentitiesAllow: "Allow and turn on",
   exactIdentitiesUnavailable: "Off on this tab: Chrome's debugging interface is in use, for example by DevTools. Previews use the shared identities instead.",
-  permissionDebugger: "Optional, and asked for only when you turn on Exact device identities: gives each preview frame its own device's browser identity through Chrome's debugging interface while the viewer is open.",
+  permissionDebugger: "Only in builds that offer Exact device identities, which Chrome does not allow as an optional permission: gives each preview frame its own device's browser identity through Chrome's debugging interface while the viewer is open.",
   permissionsPrivacy: "No browsing history, page content, screenshots, or recordings are uploaded by the extension.",
   captureAndAnnotate: "Screenshot and annotate",
   stopAndSave: "Stop and save",

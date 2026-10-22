@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "Usa l'interfaccia di debug di Chrome, che Chrome concede solo con il tuo permesso. Finché il visualizzatore è aperto, Chrome mostra una barra che dice che Mobile View sta eseguendo il debug di questo browser; il suo pulsante Annulla disattiva le identità esatte. Restano disattivate anche finché i DevTools di questa scheda sono aperti. Nient'altro cambia nell'estensione.",
   "exactIdentitiesAllow": "Consenti e attiva",
   "exactIdentitiesUnavailable": "Disattivate in questa scheda: l'interfaccia di debug di Chrome è in uso, ad esempio dai DevTools. Le anteprime usano le identità condivise.",
-  "permissionDebugger": "Facoltativa e richiesta solo quando attivi le identità esatte dei dispositivi: dà a ogni frame di anteprima l'identità del browser del proprio dispositivo tramite l'interfaccia di debug di Chrome finché il visualizzatore è aperto."
+  "permissionDebugger": "Solo nelle build che offrono le identità esatte dei dispositivi, un'autorizzazione che Chrome non ammette come facoltativa: dà a ogni frame di anteprima l'identità del browser del proprio dispositivo tramite l'interfaccia di debug di Chrome finché il visualizzatore è aperto."
 }

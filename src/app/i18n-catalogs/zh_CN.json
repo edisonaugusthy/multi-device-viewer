@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "此功能使用 Chrome 的调试接口，仅在您允许时 Chrome 才会授予。查看器打开期间，Chrome 会显示“Mobile View 正在调试此浏览器”的横幅；其中的“取消”按钮会关闭精确标识。此标签页的 DevTools 打开时也会保持关闭。扩展程序的其他部分不会改变。",
   "exactIdentitiesAllow": "允许并开启",
   "exactIdentitiesUnavailable": "此标签页已关闭：Chrome 的调试接口正在使用中，例如被 DevTools 占用。预览改用共享标识。",
-  "permissionDebugger": "可选，仅在您开启精确设备标识时请求：查看器打开期间，通过 Chrome 的调试接口为每个预览框架提供其自身设备的浏览器标识。"
+  "permissionDebugger": "仅限提供精确设备标识的版本，Chrome 不允许将此权限设为可选：查看器打开期间，通过 Chrome 的调试接口为每个预览框架提供其自身设备的浏览器标识。"
 }

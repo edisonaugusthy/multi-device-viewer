@@ -11,7 +11,7 @@ import { getBrowserGeometry, type BrowserPreferences } from "../../domain/device
 import { getFrameProfile } from "../../domain/device/frame-profiles";
 import type { Device } from "../../domain/device/device.types";
 import type { ExactIdentities, PreviewIdentities } from "../../domain/simulator/preview-identity";
-import { canWrapPreviews, previewFrameName } from "../../app/preview-frame";
+import { previewFrameName } from "../../app/preview-frame";
 import { hidesPageScrollbars } from "../../domain/device/device-service";
 import { useExactIdentities } from "../hooks/useExactIdentities";
 import { ExactIdentitiesDialog } from "./ExactIdentitiesDialog";
@@ -543,7 +543,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
           browserBar={settings.browserBar}
           onClose={() => setSettingsOpen(false)}
           onThemeChange={dark => simulator.updateDisplay(current => ({ ...current, darkMode: dark }))}
-          exact={canWrapPreviews() ? {
+          exact={exactMode.permitted ? {
             enabled: display.exactIdentities === true,
             unavailable: exactMode.unavailable,
             onChange: enabled => { if (enabled) setExactDialog(true); else simulator.updateDisplay(current => ({ ...current, exactIdentities: false })); },

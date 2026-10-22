@@ -44,7 +44,7 @@ import { AllDevicesView } from "./AllDevicesView";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CompareBar, CompareControls, CompareLabel, DesignAdjustPanel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
 import { designFrameKey, fitDesign, type DesignFrame } from "../interactions/design-frame";
-import { canWrapPreviews, previewFrameName } from "../../app/preview-frame";
+import { previewFrameName } from "../../app/preview-frame";
 import { hidesPageScrollbars } from "../../domain/device/device-service";
 import { useExactIdentities } from "../hooks/useExactIdentities";
 import { ExactIdentitiesDialog } from "./ExactIdentitiesDialog";
@@ -1057,7 +1057,7 @@ export function SimulatorApp() {
         onClose={closePopover}
         onThemeChange={(nextDark) => updateDisplay((current) => ({ ...current, darkMode: nextDark }))}
         onBrowserBarChange={changeBrowserBar}
-        exact={canWrapPreviews() ? {
+        exact={exactMode.permitted ? {
           enabled: display.exactIdentities === true,
           unavailable: exactMode.unavailable,
           onChange: (enabled) => { if (enabled) setExactDialog(true); else updateDisplay((current) => ({ ...current, exactIdentities: false })); },

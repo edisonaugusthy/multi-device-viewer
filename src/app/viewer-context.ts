@@ -51,10 +51,10 @@ export async function preparePreview(url: string, identities?: PreviewIdentities
 }
 
 /**
- * The optional permission exact device identities need, asked for only when
- * the user turns them on. The viewer runs inside the website's page, which has
- * no permissions API, so the background answers for it; a request keeps the
- * user's click it was sent from, which Chrome's prompt requires.
+ * The debugger permission exact device identities need. Chrome does not allow
+ * it as an optional permission, so a build either holds it or not; the
+ * setting shows only where it does. The viewer runs inside the website's
+ * page, which has no permissions API, so the background answers for it.
  */
 async function exactPermission(action: "contains" | "request"): Promise<boolean> {
   if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) return false;

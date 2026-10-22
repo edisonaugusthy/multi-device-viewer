@@ -13,15 +13,14 @@ export interface PreviewFrameSpec { name: string; device: Device }
  * A tab that cannot attach the debugger, or loses it, falls back the same way.
  */
 export function useExactIdentities(enabled: boolean, frames: PreviewFrameSpec[]) {
+  // Whether this build holds the debugger permission: the setting shows only then.
   const [permitted, setPermitted] = useState<boolean | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
-    if (!enabled) { setPermitted(false); return; }
     let active = true;
-    setPermitted(null);
-    void hasExactPermission().then(granted => { if (active) setPermitted(granted); });
+    void hasExactPermission().then(granted => { if (active) setPermitted(granted && canWrapPreviews()); });
     return () => { active = false; };
-  }, [enabled]);
+  }, []);
   useEffect(() => { setUnavailable(false); }, [enabled]);
   // The background says when the debugger was taken away (the bar's Cancel, say).
   useEffect(() => {
@@ -46,6 +45,7 @@ export function useExactIdentities(enabled: boolean, frames: PreviewFrameSpec[])
   return {
     /** False while it is not yet known whether the permission is granted; previews wait for it to avoid loading twice. */
     settled: !enabled || permitted !== null,
+    permitted: permitted === true,
     active,
     /** Exact identities were asked for but this tab cannot have them. */
     unavailable: enabled && permitted === true && (unavailable || !wrapping),

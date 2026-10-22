@@ -503,5 +503,5 @@
   "exactIdentitiesBar": "此功能使用 Chrome 的偵錯介面，只有在您允許時 Chrome 才會授予。檢視器開啟期間，Chrome 會顯示「Mobile View 正在偵錯此瀏覽器」的橫幅；其中的「取消」按鈕會關閉精確識別。此分頁的 DevTools 開啟時也會保持關閉。擴充功能的其他部分不會改變。",
   "exactIdentitiesAllow": "允許並開啟",
   "exactIdentitiesUnavailable": "此分頁已關閉：Chrome 的偵錯介面使用中，例如被 DevTools 佔用。預覽改用共用識別。",
-  "permissionDebugger": "選用，且只在您開啟精確裝置識別時才會要求：檢視器開啟期間，透過 Chrome 的偵錯介面為每個預覽框架提供其自身裝置的瀏覽器識別。"
+  "permissionDebugger": "僅限提供精確裝置識別的版本，Chrome 不允許將此權限設為選用：檢視器開啟期間，透過 Chrome 的偵錯介面為每個預覽框架提供其自身裝置的瀏覽器識別。"
 }

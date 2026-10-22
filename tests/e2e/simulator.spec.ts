@@ -1369,19 +1369,24 @@ test("shows one header in Compare and All devices, whose close returns to the wo
   await expect(mainHeader).toBeVisible();
 });
 
+// A solid design image drawn in the page, so no fixture file is needed.
+async function designPng(page: Page, width: number, height: number) {
+  const base64 = await page.evaluate(([width, height]) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d")!;
+    context.fillStyle = "#4f46e5";
+    context.fillRect(0, 0, width, height);
+    return canvas.toDataURL("image/png").split(",")[1];
+  }, [width, height]);
+  return { name: "home-top.png", mimeType: "image/png", buffer: Buffer.from(base64, "base64") };
+}
+
 test("overlays a design on the screen at its own proportions and lets it be moved, resized, and reset", async ({ page }) => {
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Compare with design" }).click();
   // A design that covers only the top of the 402 × 874 screen, like a component mock.
-  const png = Buffer.from(await page.evaluate(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 402;
-    canvas.height = 520;
-    const context = canvas.getContext("2d")!;
-    context.fillStyle = "#4f46e5";
-    context.fillRect(0, 0, 402, 520);
-    return canvas.toDataURL("image/png").split(",")[1];
-  }), "base64");
-  await page.locator('input[type="file"]').first().setInputFiles({ name: "home-top.png", mimeType: "image/png", buffer: png });
+  await page.locator('input[type="file"]').first().setInputFiles(await designPng(page, 402, 520));
   await page.locator("[data-compare-toolbar]").getByRole("button", { name: "Overlay" }).click();
 
   const screen = page.locator("[data-device-logical-screen]").first();
@@ -1454,4 +1459,21 @@ test("overlays a design on the screen at its own proportions and lets it be move
   await expect(page.getByRole("group", { name: "Adjust design" })).toBeVisible();
   frameBox = (await page.locator("[data-design-frame]").boundingBox())!;
   near(frameBox.x, screenBox.x + 40 * scale);
+});
+
+test("forgets a removed device's design instead of keeping it in the saved workspace", async ({ page }) => {
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Compare with design" }).click();
+  await page.locator('input[type="file"]').first().setInputFiles(await designPng(page, 402, 520));
+  await expect(page.locator("[data-compare-toolbar]").getByRole("tab", { name: /iPhone 18 Pro/ })).toContainText("Design");
+  const savedDesigns = () => page.evaluate(() => {
+    const view = JSON.parse(localStorage.getItem("mdvWorkspaceView") ?? "{}");
+    return [view.designReferences, view.designNames].map((map) => Object.keys(map ?? {}).length);
+  });
+  await expect.poll(savedDesigns).toEqual([1, 1]);
+
+  await page.locator("[data-compare-toolbar]").getByRole("button", { name: "Back to workspace" }).first().click();
+  await revealControls(page);
+  await page.locator("[data-preview-slot-id]").first().getByRole("button", { name: "Remove device" }).click();
+  await expect(page.locator("[data-preview-slot-id]")).toHaveCount(2);
+  await expect.poll(savedDesigns).toEqual([0, 0]);
 });

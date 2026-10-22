@@ -716,6 +716,19 @@ export function SimulatorApp() {
   const fixPromptForSlot = useStableCallback((slotId: string) => openFixPrompt([slotId]));
   // Stable for the layout check, whose marks are re-sent only when its inputs change.
   const slotSizeStable = useCallback((slotId: string) => slotSize(slotId), [slots, findDevice]);
+  // A design belongs to its device slot: when the slot goes, its picture, name
+  // and frame go too, so the saved workspace never keeps pictures nobody can reach.
+  useEffect(() => {
+    if (!ready || !workspaceHydrated) return;
+    const live = new Set(slots.map((slot) => slot.id));
+    const prune = <T,>(current: Record<string, T>) => {
+      const next = Object.fromEntries(Object.entries(current).filter(([key]) => live.has(key)));
+      return Object.keys(next).length === Object.keys(current).length ? current : next;
+    };
+    setDesignReferences(prune);
+    setDesignNames(prune);
+    setDesignFrames(prune);
+  }, [ready, slots, workspaceHydrated]);
   const layoutCheck = useLayoutCheck({ slots, findDevice, slotSize: slotSizeStable });
   const layoutCheckSlot = useStableCallback((slotId: string) => layoutCheck.run([slotId]));
   const showLayoutProblems = useStableCallback((slotId: string) => {

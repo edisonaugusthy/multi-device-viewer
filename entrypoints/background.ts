@@ -96,23 +96,22 @@ export default defineBackground(() => {
   });
 
   chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
-    if (changeInfo.status === "loading") {
-      setActiveIndicator(_tabId, false);
-      void previews.close(_tabId).catch(console.error);
-    }
+    if (changeInfo.status === "loading") setActiveIndicator(_tabId, false);
     if (changeInfo.url || changeInfo.status === "complete") syncActionState(tab);
     // A tab also reports loading when a preview inside the viewer navigates,
-    // so only a page that said it was unloading, and no longer answers for
-    // the viewer, is brought back.
+    // so the preview rules stay until the page has loaded without a viewer
+    // answering for it, and only a page that said it was unloading, and no
+    // longer answers for the viewer, is brought back.
     if (changeInfo.status === "complete") {
-      void openViewers().then(async all => {
-        const entry = all[_tabId];
-        if (!entry?.unloaded) return;
+      void (async () => {
         const state = await chrome.tabs.sendMessage(_tabId, { type: "MDV_GET_OVERLAY_STATE" }, { frameId: 0 }).catch(() => undefined);
+        if (!state?.active) await previews.close(_tabId);
+        const entry = (await openViewers())[_tabId];
+        if (!entry?.unloaded) return;
         if (state?.active) return updateOpenViewer(_tabId, current => current && { ...current, unloaded: false });
         if (isPreviewableUrl(tab.url) && originOf(tab.url) === entry.origin) openSimulatorForTab(tab, entry.restore);
         else return updateOpenViewer(_tabId, () => undefined);
-      }).catch(console.error);
+      })().catch(console.error);
     }
   });
 

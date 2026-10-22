@@ -1,4 +1,5 @@
-import { PREVIEW_RULE_BASE, previewHost, previewRule } from "../domain/simulator/preview-rules";
+import type { PreviewIdentity } from "../domain/simulator/preview-identity";
+import { describeHeaders, identityHeaders, PREVIEW_RULE_BASE, previewHost, previewRule } from "../domain/simulator/preview-rules";
 
 /** Session rules survive worker suspension; the browser clears them on restart/update. */
 export function createPreviewSessions() {
@@ -8,18 +9,25 @@ export function createPreviewSessions() {
   };
   const ownRules = async () => (await chrome.declarativeNetRequest.getSessionRules()).filter(rule => rule.id >= PREVIEW_RULE_BASE);
   return {
-    prepare: (tabId: number, url: string) => serial(async () => {
+    /**
+     * Lets the tab frame a site, and makes its preview frames identify as the
+     * given device's browser. An absent identity keeps the tab's current one;
+     * null returns to the browser's own.
+     */
+    prepare: (tabId: number, url: string, identity?: PreviewIdentity | null) => serial(async () => {
       const domain = previewHost(url);
       const rules = await ownRules();
       const existing = rules.find(rule => rule.condition.tabIds?.includes(tabId));
       const domains = existing?.condition.requestDomains ?? [];
-      if (domains.includes(domain)) return;
-      if (domains.length >= 32) throw new Error("Close and reopen Mobile View before previewing more sites.");
+      const known = domains.includes(domain);
+      const requestHeaders = identity === undefined ? existing?.action.requestHeaders : identity ? identityHeaders(identity) : undefined;
+      if (known && describeHeaders(requestHeaders) === describeHeaders(existing?.action.requestHeaders)) return;
+      if (!known && domains.length >= 32) throw new Error("Close and reopen Mobile View before previewing more sites.");
       const used = new Set(rules.map(rule => rule.id));
       let id = existing?.id ?? PREVIEW_RULE_BASE;
       if (!existing) while (used.has(id)) id++;
       await chrome.declarativeNetRequest.updateSessionRules({
-        removeRuleIds: existing ? [id] : [], addRules: [previewRule(id, tabId, [...domains, domain])],
+        removeRuleIds: existing ? [id] : [], addRules: [previewRule(id, tabId, known ? domains : [...domains, domain], requestHeaders)],
       });
     }),
     close: (tabId: number) => serial(async () => {

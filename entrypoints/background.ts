@@ -1,4 +1,5 @@
 import { createPreviewSessions } from "../src/app/preview-sessions";
+import { previewIdentityFrom } from "../src/domain/simulator/preview-identity";
 import { VisualRegressionError } from "../src/domain/visual-regression/visual-regression.types";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
@@ -301,7 +302,7 @@ export default defineBackground(() => {
       return true;
     }
     if ((message?.type === "MDV_PREVIEW_HOST" || message?.type === "MDV_PREVIEW_CLOSE") && typeof sender.tab?.id === "number" && sender.frameId === 0) {
-      const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url);
+      const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url, previewIdentityFrom(message.identity));
       void work.then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
       return true;
     }

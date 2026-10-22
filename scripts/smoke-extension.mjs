@@ -13,7 +13,13 @@ import { chromium } from "@playwright/test";
 
 const extension = fileURLToPath(new URL("../.output/chrome-mv3", import.meta.url));
 const html = "<!doctype html><title>Smoke page</title><h1>Smoke page</h1><p>Mobile View extension smoke test.</p>";
-const server = createServer((_, res) => { res.writeHead(200, { "content-type": "text/html" }); res.end(html); });
+// The User-Agent of each request, by what it loaded: preview frames identify
+// as the workspace's iPhone while the page itself keeps the browser's own.
+const agents = { iframe: new Set(), document: new Set() };
+const server = createServer((req, res) => {
+  agents[req.headers["sec-fetch-dest"]]?.add(req.headers["user-agent"] ?? "");
+  res.writeHead(200, { "content-type": "text/html" }); res.end(html);
+});
 await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const pageUrl = `http://127.0.0.1:${server.address().port}/`;
 const profile = await mkdtemp(join(tmpdir(), "mdv-smoke-"));
@@ -74,6 +80,8 @@ try {
   if (!previewCount) failures.push("no live preview loaded the page");
   if (headings.some((text) => text !== "Smoke page")) failures.push("a preview did not render the page");
   if (!frameCount) failures.push("no device frame image loaded");
+  if (![...agents.iframe].some((agent) => agent.includes("iPhone"))) failures.push(`preview frames did not identify as the workspace's iPhone: ${[...agents.iframe].join(" | ") || "no frame request"}`);
+  if ([...agents.document].some((agent) => agent.includes("iPhone"))) failures.push("the page itself was requested as an iPhone");
   console.log(`viewer opened in ${opened} ms; ${previewCount} live previews; ${frameCount} device frames`);
 
   // A second click closes the viewer and restores the page.

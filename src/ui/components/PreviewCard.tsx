@@ -7,6 +7,7 @@ import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
+import type { PreviewIdentity } from "../../domain/simulator/preview-identity";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
@@ -104,6 +105,8 @@ interface PreviewCardProps {
   onPageReady?: (slotId: string) => void;
   /** A design laid over the device screen; its frame is in CSS pixels of that screen. */
   designOverlay?: DesignOverlayProps;
+  /** The browser this tab's preview requests identify as (null: the browser's own; absent: unchanged). */
+  identity?: PreviewIdentity | null;
   /** Bottom-aligns the device so every preview in a row shares a baseline. */
   align?: "bottom" | "center";
   showCaption?: boolean;
@@ -170,6 +173,7 @@ export const PreviewCard = memo(function PreviewCard({
   onFlowResult,
   onPageReady,
   designOverlay,
+  identity,
   align = "center",
   showCaption = false,
   revealToolbar = false,
@@ -242,14 +246,20 @@ export const PreviewCard = memo(function PreviewCard({
     setLoadIssue(null);
     return () => { healthRequest.current = null; clearTimeout(healthTimer.current); };
   }, [slot.id, slot.url, slot.reloadToken]);
+  const identityRef = useRef(identity);
+  identityRef.current = identity;
+  const identityKey = identity === undefined ? "" : JSON.stringify(identity);
   useEffect(() => {
     let active = true;
     setBlocked(false);
-    void preparePreview(slot.url).then(() => { if (active) setPreparedUrl(slot.url); }).catch(() => {
+    // The frame loads only once the tab's rules fit it, so a reload after the
+    // identity changed fetches the page that device gets.
+    setPreparedUrl(null);
+    void preparePreview(slot.url, identityRef.current).then(() => { if (active) setPreparedUrl(slot.url); }).catch(() => {
       if (active) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
     });
     return () => { active = false; };
-  }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange]);
+  }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange, identityKey]);
   const [blocked, setBlocked] = useState(false);
   useEffect(() => {
     const onPolicy = (event: SecurityPolicyViolationEvent) => {
@@ -745,7 +755,7 @@ export const PreviewCard = memo(function PreviewCard({
       pendingReplayStepRef.current = 0;
       setBridgeStatus("checking");
       const startUrl = flowReplay.startUrl;
-      void preparePreview(startUrl).then(() => { if (iframeRef.current) iframeRef.current.src = startUrl; }).catch(() => setBlocked(true));
+      void preparePreview(startUrl, identityRef.current).then(() => { if (iframeRef.current) iframeRef.current.src = startUrl; }).catch(() => setBlocked(true));
       return;
     }
     sendFlowReplay(startIndex ?? 0);

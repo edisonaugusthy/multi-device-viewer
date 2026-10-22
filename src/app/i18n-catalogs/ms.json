@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Diisi daripada semakan susun atur · masalah {index} daripada {count}",
   "tourBeforeAfterText": "Simpan gambar \"sebelum\" dari menu peranti, kemudian lihat apa yang berubah.",
   "tourLayoutCheckText": "Mencari apa yang menyebabkan halaman menatal ke sisi.",
-  "layoutTruncated": "Hanya {count} yang pertama disenaraikan untuk setiap peranti."
+  "layoutTruncated": "Hanya {count} yang pertama disenaraikan untuk setiap peranti.",
+  "exactIdentities": "Identiti peranti yang tepat",
+  "exactIdentitiesHint": "Setiap pratonton menghantar identiti pelayar peranti masing-masing melalui antara muka penyahpepijatan Chrome. Chrome memaparkan bar pada tab ini semasa pemapar dibuka.",
+  "exactIdentitiesIntro": "Buat masa ini, pratonton telefon berkongsi satu identiti pelayar dan pratonton lain berkongsi identiti lain, jadi tapak yang memilih halamannya mengikut pelayar dapat membezakan telefon daripada komputer, tetapi bukan iPhone daripada Pixel. Dengan identiti yang tepat, setiap pratonton menghantar pelayar perantinya sendiri: Safari untuk iPhone, Chrome untuk Android pada Pixel, Safari pada MacBook, Chrome untuk Windows pada Surface, semuanya dalam satu paparan, dan skrip halaman juga melihatnya.",
+  "exactIdentitiesBar": "Ini menggunakan antara muka penyahpepijatan Chrome, yang hanya diberikan Chrome apabila anda membenarkannya. Semasa pemapar dibuka, Chrome memaparkan bar yang menyatakan Mobile View sedang menyahpepijat pelayar ini; butang Batal padanya mematikan identiti yang tepat. Ia juga kekal dimatikan semasa DevTools tab ini dibuka. Tiada perkara lain pada sambungan yang berubah.",
+  "exactIdentitiesAllow": "Benarkan dan hidupkan",
+  "exactIdentitiesUnavailable": "Dimatikan pada tab ini: antara muka penyahpepijatan Chrome sedang digunakan, contohnya oleh DevTools. Pratonton menggunakan identiti kongsi sebagai gantinya.",
+  "permissionDebugger": "Pilihan, dan hanya diminta apabila anda menghidupkan Identiti peranti yang tepat: memberi setiap bingkai pratonton identiti pelayar perantinya sendiri melalui antara muka penyahpepijatan Chrome semasa pemapar dibuka."
 }

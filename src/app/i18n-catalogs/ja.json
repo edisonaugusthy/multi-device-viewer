@@ -496,5 +496,12 @@
   "layoutFilledFrom": "レイアウトチェックから入力 · 問題 {index} / {count}",
   "tourBeforeAfterText": "デバイスメニューで「ビフォー」画像を保存し、変更点を確認できます。",
   "tourLayoutCheckText": "ページが横にスクロールする原因を見つけます。",
-  "layoutTruncated": "各デバイスについて最初の {count} 件のみ表示しています。"
+  "layoutTruncated": "各デバイスについて最初の {count} 件のみ表示しています。",
+  "exactIdentities": "正確なデバイス識別",
+  "exactIdentitiesHint": "各プレビューが、Chrome のデバッグインターフェースを通じて自身のデバイスのブラウザー識別情報を送信します。ビューアーが開いている間、Chrome はこのタブにバーを表示します。",
+  "exactIdentitiesIntro": "現在、スマートフォンのプレビューは 1 つのブラウザー識別情報を、それ以外のプレビューは別の 1 つを共有しています。そのため、ブラウザーでページを選ぶサイトはスマートフォンとパソコンは区別できても、iPhone と Pixel は区別できません。正確な識別では、各プレビューが自身のデバイスのブラウザーを送信します。iPhone には Safari、Pixel には Android 版 Chrome、MacBook には Safari、Surface には Windows 版 Chrome を 1 つの画面で同時に送り、ページのスクリプトにも同じ情報が見えます。",
+  "exactIdentitiesBar": "これは Chrome のデバッグインターフェースを使用し、Chrome はあなたが許可した場合にのみ提供します。ビューアーが開いている間、Chrome は「Mobile View がこのブラウザーをデバッグしています」というバーを表示し、そのキャンセルボタンで正確な識別はオフになります。このタブの DevTools が開いている間もオフのままです。拡張機能のそれ以外は変わりません。",
+  "exactIdentitiesAllow": "許可してオンにする",
+  "exactIdentitiesUnavailable": "このタブではオフ: Chrome のデバッグインターフェースが DevTools などで使用中です。プレビューは代わりに共有の識別情報を使用します。",
+  "permissionDebugger": "任意で、正確なデバイス識別をオンにしたときにのみ求められます。ビューアーが開いている間、Chrome のデバッグインターフェースを通じて各プレビューフレームに自身のデバイスのブラウザー識別情報を与えます。"
 }

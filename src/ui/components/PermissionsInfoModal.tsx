@@ -14,6 +14,7 @@ const PERMISSIONS: PermissionExplanation[] = [
   { name: "contextMenus", description: "permissionContextMenus" },
   { name: "tabCapture", description: "permissionTabCapture" },
   { name: "offscreen", description: "permissionOffscreen" },
+  { name: "debugger (optional)", description: "permissionDebugger" },
 ];
 
 export function PermissionsInfoModal({ onClose }: { onClose: () => void }) {

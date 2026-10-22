@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Pinunan mula sa pagsusuri ng layout · problema {index} sa {count}",
   "tourBeforeAfterText": "Mag-save ng \"before\" na larawan sa menu ng device, saka tingnan kung ano ang nagbago.",
   "tourLayoutCheckText": "Hanapin ang nagpapa-scroll pagilid sa page.",
-  "layoutTruncated": "Ang unang {count} lang ang nakalista bawat device."
+  "layoutTruncated": "Ang unang {count} lang ang nakalista bawat device.",
+  "exactIdentities": "Eksaktong identity ng device",
+  "exactIdentitiesHint": "Ipinapadala ng bawat preview ang browser identity ng sarili nitong device, sa pamamagitan ng debugging interface ng Chrome. Nagpapakita ang Chrome ng bar sa tab na ito habang bukas ang viewer.",
+  "exactIdentitiesIntro": "Sa ngayon, iisang browser identity ang ginagamit ng mga preview ng telepono at iba naman ang sa iba pang preview, kaya ang site na pumipili ng page ayon sa browser ay nakakakilala ng telepono sa computer, pero hindi ng iPhone sa Pixel. Sa eksaktong identity, ipinapadala ng bawat preview ang browser ng sarili nitong device: Safari para sa iPhone, Chrome para sa Android sa Pixel, Safari sa MacBook, Chrome para sa Windows sa Surface, lahat sa iisang view, at nakikita rin ito ng mga script ng page.",
+  "exactIdentitiesBar": "Gumagamit ito ng debugging interface ng Chrome, na ibinibigay lang ng Chrome kapag pinayagan mo. Habang bukas ang viewer, nagpapakita ang Chrome ng bar na nagsasabing dine-debug ng Mobile View ang browser na ito; pinapatay ng Cancel button nito ang eksaktong identity. Nananatili rin itong naka-off habang bukas ang DevTools ng tab na ito. Wala nang ibang nagbabago sa extension.",
+  "exactIdentitiesAllow": "Payagan at i-on",
+  "exactIdentitiesUnavailable": "Naka-off sa tab na ito: ginagamit ang debugging interface ng Chrome, halimbawa ng DevTools. Ginagamit ng mga preview ang mga shared identity sa halip.",
+  "permissionDebugger": "Opsyonal, at hinihingi lang kapag in-on mo ang Eksaktong identity ng device: binibigyan ang bawat preview frame ng browser identity ng sarili nitong device sa pamamagitan ng debugging interface ng Chrome habang bukas ang viewer."
 }

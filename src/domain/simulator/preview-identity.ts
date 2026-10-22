@@ -8,9 +8,14 @@ import { getFrameProfile } from "../device/frame-profiles";
  */
 export interface PreviewIdentity {
   userAgent: string;
-  /** Low-entropy client hints; none for Safari and TV browsers, which send none. */
-  hints?: { mobile: boolean; platform: string };
+  /** The platform the browser would name in its client hints. */
+  platform: IdentityPlatform;
+  mobile: boolean;
+  /** Whether this browser sends client hints at all: Chrome does, Safari and TV browsers do not. */
+  hints: boolean;
 }
+export type IdentityPlatform = "iOS" | "macOS" | "Android" | "Windows" | "Chrome OS" | "Linux";
+const PLATFORMS: readonly IdentityPlatform[] = ["iOS", "macOS", "Android", "Windows", "Chrome OS", "Linux"];
 
 const FALLBACK_CHROME_MAJOR = 140;
 /** Safari's version follows the OS: iOS, iPadOS and macOS 26 ship Safari 26. */
@@ -28,11 +33,13 @@ export function chromeMajor(userAgent: string): number {
 // A device's catalog OS version shapes its browser chrome; its Safari is never
 // older than today's, so no site takes the preview for an outdated browser.
 const osMajor = (device: Device) => Math.max(getFrameProfile(device).osMajor, CURRENT_SAFARI_MAJOR);
-const safari = (platform: string, version: number): PreviewIdentity =>
-  ({ userAgent: `Mozilla/5.0 (${platform}) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/${version}.0 ${platform.startsWith("iPhone") ? "Mobile/15E148 Safari/604.1" : "Safari/605.1.15"}` });
-const chromeOn = (platform: string, chrome: number, hint: string, mobile = false): PreviewIdentity => ({
-  userAgent: `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chrome}.0.0.0 ${mobile ? "Mobile " : ""}Safari/537.36`,
-  hints: { mobile, platform: hint },
+const safari = (platform: IdentityPlatform, ua: string, version: number): PreviewIdentity => ({
+  userAgent: `Mozilla/5.0 (${ua}) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/${version}.0 ${ua.startsWith("iPhone") ? "Mobile/15E148 Safari/604.1" : "Safari/605.1.15"}`,
+  platform, mobile: platform === "iOS", hints: false,
+});
+const chromeOn = (platform: IdentityPlatform, ua: string, chrome: number, mobile = false): PreviewIdentity => ({
+  userAgent: `Mozilla/5.0 (${ua}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chrome}.0.0.0 ${mobile ? "Mobile " : ""}Safari/537.36`,
+  platform, mobile, hints: true,
 });
 
 /**
@@ -47,27 +54,27 @@ export function deviceIdentity(device: Device, chrome: number): PreviewIdentity 
   const { type, os } = device;
   if (type === "phone" || type === "tablet") {
     const ios = getFrameProfile(device).platform === "ios";
-    if (ios && type === "phone") return safari(`iPhone; CPU iPhone OS ${osMajor(device)}_0 like Mac OS X`, osMajor(device));
-    if (ios) return safari("Macintosh; Intel Mac OS X 10_15_7", osMajor(device));
-    return chromeOn("Linux; Android 10; K", chrome, "Android", type === "phone");
+    if (ios && type === "phone") return safari("iOS", `iPhone; CPU iPhone OS ${osMajor(device)}_0 like Mac OS X`, osMajor(device));
+    if (ios) return safari("macOS", "Macintosh; Intel Mac OS X 10_15_7", osMajor(device));
+    return chromeOn("Android", "Linux; Android 10; K", chrome, type === "phone");
   }
   if (type === "laptop" || type === "desktop") {
-    if (/macos/i.test(os)) return safari("Macintosh; Intel Mac OS X 10_15_7", osMajor(device));
-    if (/windows/i.test(os)) return chromeOn("Windows NT 10.0; Win64; x64", chrome, "Windows");
-    if (/chrome\s?os/i.test(os)) return chromeOn("X11; CrOS x86_64 14541.0.0", chrome, "Chrome OS");
+    if (/macos/i.test(os)) return safari("macOS", "Macintosh; Intel Mac OS X 10_15_7", osMajor(device));
+    if (/windows/i.test(os)) return chromeOn("Windows", "Windows NT 10.0; Win64; x64", chrome);
+    if (/chrome\s?os/i.test(os)) return chromeOn("Chrome OS", "X11; CrOS x86_64 14541.0.0", chrome);
     return undefined;
   }
   if (type === "tv" && /tizen/i.test(os)) {
-    return { userAgent: "Mozilla/5.0 (SMART-TV; Linux; Tizen 8.0) AppleWebKit/537.36 (KHTML, like Gecko) Version/8.0 Chrome/108.0.5359.1 TV Safari/537.36" };
+    return { userAgent: "Mozilla/5.0 (SMART-TV; Linux; Tizen 8.0) AppleWebKit/537.36 (KHTML, like Gecko) Version/8.0 Chrome/108.0.5359.1 TV Safari/537.36", platform: "Linux", mobile: false, hints: false };
   }
   return undefined;
 }
 
 /**
- * One identity per tab: request rules apply to every preview frame of a site
- * in the tab, so the most phone-like device speaks for all of them. Phones
- * come first, then tablets, laptops, desktops and TVs; among equals, the
- * first in the workspace.
+ * One identity per kind of frame: request rules apply to every preview frame
+ * of a site in the tab, so the most phone-like device speaks for all of them.
+ * Phones come first, then tablets, laptops, desktops and TVs; among equals,
+ * the first in the workspace.
  */
 export function previewIdentity(devices: Device[], chrome: number): PreviewIdentity | undefined {
   for (const type of TAB_PRIORITY) {
@@ -106,6 +113,22 @@ export function previewIdentities(devices: Device[], chrome: number, split: bool
   };
 }
 
+/**
+ * With exact identities, every preview frame gets its own device's browser
+ * through the debugger, keyed by the frame's name; the request rules then
+ * leave identities alone (see exact-identities.ts).
+ */
+export const EXACT_RULE_IDENTITIES: PreviewIdentities = { wrapped: null, direct: null };
+export type ExactIdentities = Record<string, PreviewIdentity>;
+export function exactIdentities(frames: Array<{ name: string; device: Device }>, chrome: number): ExactIdentities {
+  const result: ExactIdentities = {};
+  for (const frame of frames) {
+    const identity = deviceIdentity(frame.device, chrome);
+    if (identity) result[frame.name] = identity;
+  }
+  return result;
+}
+
 /** Identities received in a message; each kind is read as previewIdentityFrom does. */
 export function previewIdentitiesFrom(value: unknown): PreviewIdentities | null | undefined {
   if (value === null) return null;
@@ -118,11 +141,23 @@ export function previewIdentitiesFrom(value: unknown): PreviewIdentities | null 
 export function previewIdentityFrom(value: unknown): PreviewIdentity | null | undefined {
   if (value === null) return null;
   if (!value || typeof value !== "object") return undefined;
-  const { userAgent, hints } = value as Record<string, unknown>;
+  const { userAgent, platform, mobile, hints } = value as Record<string, unknown>;
   if (typeof userAgent !== "string" || !userAgent || userAgent.length > MAX_USER_AGENT || !/^[\x20-\x7e]+$/.test(userAgent)) return undefined;
-  if (hints === undefined) return { userAgent };
-  if (!hints || typeof hints !== "object") return undefined;
-  const { mobile, platform } = hints as Record<string, unknown>;
-  if (typeof mobile !== "boolean" || typeof platform !== "string" || !/^[A-Za-z ]{1,32}$/.test(platform)) return undefined;
-  return { userAgent, hints: { mobile, platform } };
+  if (!PLATFORMS.includes(platform as IdentityPlatform) || typeof mobile !== "boolean" || typeof hints !== "boolean") return undefined;
+  return { userAgent, platform: platform as IdentityPlatform, mobile, hints };
+}
+
+const MAX_EXACT_FRAMES = 300;
+const FRAME_NAME = /^mdv-(?:mobile-)?preview-[\w-]+$/;
+/** Exact identities received in a message, by frame name: null turns them off, anything malformed is ignored. */
+export function exactIdentitiesFrom(value: unknown): ExactIdentities | null | undefined {
+  if (value === null) return null;
+  if (!value || typeof value !== "object") return undefined;
+  const entries = Object.entries(value as Record<string, unknown>).slice(0, MAX_EXACT_FRAMES);
+  const result: ExactIdentities = {};
+  for (const [name, identity] of entries) {
+    const read = FRAME_NAME.test(name) ? previewIdentityFrom(identity) : undefined;
+    if (read) result[name] = read;
+  }
+  return result;
 }

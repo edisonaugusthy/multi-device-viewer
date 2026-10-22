@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Diisi dari pemeriksaan tata letak · masalah {index} dari {count}",
   "tourBeforeAfterText": "Simpan gambar \"sebelum\" dari menu perangkat, lalu lihat apa yang berubah.",
   "tourLayoutCheckText": "Menemukan apa yang membuat halaman menggulir ke samping.",
-  "layoutTruncated": "Hanya {count} pertama yang dicantumkan per perangkat."
+  "layoutTruncated": "Hanya {count} pertama yang dicantumkan per perangkat.",
+  "exactIdentities": "Identitas perangkat yang tepat",
+  "exactIdentitiesHint": "Setiap pratinjau mengirim identitas browser perangkatnya sendiri melalui antarmuka debugging Chrome. Chrome menampilkan bilah di tab ini selama penampil terbuka.",
+  "exactIdentitiesIntro": "Saat ini pratinjau ponsel berbagi satu identitas browser dan pratinjau lainnya identitas lain, sehingga situs yang memilih halamannya berdasarkan browser dapat membedakan ponsel dari komputer, tetapi tidak iPhone dari Pixel. Dengan identitas yang tepat, setiap pratinjau mengirim browser perangkatnya sendiri: Safari untuk iPhone, Chrome untuk Android di Pixel, Safari di MacBook, Chrome untuk Windows di Surface, semuanya dalam satu tampilan, dan skrip halaman juga melihatnya.",
+  "exactIdentitiesBar": "Ini menggunakan antarmuka debugging Chrome, yang hanya diberikan Chrome jika Anda mengizinkannya. Selama penampil terbuka, Chrome menampilkan bilah yang menyatakan Mobile View sedang men-debug browser ini; tombol Batal-nya mematikan identitas yang tepat. Fitur ini juga tetap mati selama DevTools tab ini terbuka. Tidak ada hal lain pada ekstensi yang berubah.",
+  "exactIdentitiesAllow": "Izinkan dan aktifkan",
+  "exactIdentitiesUnavailable": "Nonaktif di tab ini: antarmuka debugging Chrome sedang digunakan, misalnya oleh DevTools. Pratinjau memakai identitas bersama sebagai gantinya.",
+  "permissionDebugger": "Opsional, dan hanya diminta saat Anda mengaktifkan Identitas perangkat yang tepat: memberi setiap bingkai pratinjau identitas browser perangkatnya sendiri melalui antarmuka debugging Chrome selama penampil terbuka."
 }

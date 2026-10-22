@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Wypełniono na podstawie sprawdzania układu · problem {index} z {count}",
   "tourBeforeAfterText": "Zapisz obraz „przed” w menu urządzenia, a potem zobacz, co się zmieniło.",
   "tourLayoutCheckText": "Znajduje to, co sprawia, że strona przewija się na boki.",
-  "layoutTruncated": "Dla każdego urządzenia wymieniono tylko pierwsze {count}."
+  "layoutTruncated": "Dla każdego urządzenia wymieniono tylko pierwsze {count}.",
+  "exactIdentities": "Dokładne tożsamości urządzeń",
+  "exactIdentitiesHint": "Każdy podgląd wysyła tożsamość przeglądarki własnego urządzenia przez interfejs debugowania Chrome. Chrome pokazuje pasek na tej karcie, gdy przeglądarka widoków jest otwarta.",
+  "exactIdentitiesIntro": "Obecnie podglądy telefonów dzielą jedną tożsamość przeglądarki, a pozostałe podglądy inną, więc witryna wybierająca stronę według przeglądarki odróżnia telefony od komputerów, ale nie iPhone'a od Pixela. Z dokładnymi tożsamościami każdy podgląd wysyła przeglądarkę własnego urządzenia: Safari dla iPhone'a, Chrome dla Androida na Pixelu, Safari na MacBooku, Chrome dla Windows na Surface, wszystko w jednym widoku, a skrypty strony też to widzą.",
+  "exactIdentitiesBar": "Używa to interfejsu debugowania Chrome, który Chrome udostępnia tylko za Twoją zgodą. Gdy przeglądarka widoków jest otwarta, Chrome pokazuje pasek z informacją, że Mobile View debuguje tę przeglądarkę; jego przycisk Anuluj wyłącza dokładne tożsamości. Pozostają też wyłączone, gdy otwarte są DevTools tej karty. Nic innego w rozszerzeniu się nie zmienia.",
+  "exactIdentitiesAllow": "Zezwól i włącz",
+  "exactIdentitiesUnavailable": "Wyłączone na tej karcie: interfejs debugowania Chrome jest używany, np. przez DevTools. Podglądy używają zamiast tego wspólnych tożsamości.",
+  "permissionDebugger": "Opcjonalne i wymagane tylko po włączeniu dokładnych tożsamości urządzeń: nadaje każdej ramce podglądu tożsamość przeglądarki własnego urządzenia przez interfejs debugowania Chrome, gdy przeglądarka widoków jest otwarta."
 }

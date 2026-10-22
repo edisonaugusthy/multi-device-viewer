@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Rellenado desde la comprobación de diseño · problema {index} de {count}",
   "tourBeforeAfterText": "Guarda una imagen «antes» en el menú del dispositivo y luego mira qué cambió.",
   "tourLayoutCheckText": "Encuentra lo que hace que la página se desplace de lado.",
-  "layoutTruncated": "Solo se muestran los primeros {count} por dispositivo."
+  "layoutTruncated": "Solo se muestran los primeros {count} por dispositivo.",
+  "exactIdentities": "Identidades exactas de dispositivo",
+  "exactIdentitiesHint": "Cada vista previa envía la identidad del navegador de su propio dispositivo, a través de la interfaz de depuración de Chrome. Chrome muestra una barra en esta pestaña mientras el visor está abierto.",
+  "exactIdentitiesIntro": "Ahora mismo, las vistas previas de teléfono comparten una identidad de navegador y las demás otra, así que un sitio que elige su página según el navegador distingue teléfonos de ordenadores, pero no un iPhone de un Pixel. Con identidades exactas, cada vista previa envía el navegador de su propio dispositivo: Safari en un iPhone, Chrome para Android en un Pixel, Safari en un MacBook, Chrome para Windows en un Surface, todo en una sola vista, y los scripts de la página también lo ven.",
+  "exactIdentitiesBar": "Esto usa la interfaz de depuración de Chrome, que Chrome solo concede cuando lo permites. Mientras el visor está abierto, Chrome muestra una barra que dice que Mobile View está depurando este navegador; su botón Cancelar desactiva las identidades exactas. También quedan desactivadas mientras las DevTools de esta pestaña estén abiertas. Nada más cambia en la extensión.",
+  "exactIdentitiesAllow": "Permitir y activar",
+  "exactIdentitiesUnavailable": "Desactivadas en esta pestaña: la interfaz de depuración de Chrome está en uso, por ejemplo por las DevTools. Las vistas previas usan las identidades compartidas.",
+  "permissionDebugger": "Opcional y solicitado solo al activar Identidades exactas de dispositivo: da a cada marco de vista previa la identidad del navegador de su propio dispositivo a través de la interfaz de depuración de Chrome mientras el visor está abierto."
 }

@@ -7,7 +7,7 @@ import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
-import { isWrappedDevice, type PreviewIdentities } from "../../domain/simulator/preview-identity";
+import { isWrappedDevice, type ExactIdentities, type PreviewIdentities } from "../../domain/simulator/preview-identity";
 import { canWrapPreviews, PREVIEW_FRAME_PATH, PREVIEW_SANDBOX, previewFrameName, previewFrameUrl } from "../../app/preview-frame";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
@@ -108,6 +108,12 @@ interface PreviewCardProps {
   designOverlay?: DesignOverlayProps;
   /** The browsers this tab's preview frames identify as, by kind (null: the browser's own; absent: unchanged). */
   identities?: PreviewIdentities | null;
+  /** Each named frame's own identity through the debugger (null: off); the preview then loads wrapped. */
+  exact?: ExactIdentities | null;
+  /** Whether the tab has exact identities, as the preparation reported. */
+  onExact?: (attached: boolean) => void;
+  /** Loads inside the extension's wrapper frame even for a device that is not a phone. */
+  wrapped?: boolean;
   /** Bottom-aligns the device so every preview in a row shares a baseline. */
   align?: "bottom" | "center";
   showCaption?: boolean;
@@ -175,6 +181,9 @@ export const PreviewCard = memo(function PreviewCard({
   onPageReady,
   designOverlay,
   identities,
+  exact,
+  onExact,
+  wrapped: wrapRequested = false,
   align = "center",
   showCaption = false,
   revealToolbar = false,
@@ -249,24 +258,33 @@ export const PreviewCard = memo(function PreviewCard({
   }, [slot.id, slot.url, slot.reloadToken]);
   const identitiesRef = useRef(identities);
   identitiesRef.current = identities;
-  const identityKey = identities === undefined ? "" : JSON.stringify(identities);
+  const exactRef = useRef(exact);
+  exactRef.current = exact;
+  const onExactRef = useRef(onExact);
+  onExactRef.current = onExact;
+  const identityKey = `${identities === undefined ? "" : JSON.stringify(identities)}\n${exact === undefined ? "" : JSON.stringify(exact)}`;
   useEffect(() => {
     let active = true;
     setBlocked(false);
     // The frame loads only once the tab's rules fit it, so a reload after the
     // identity changed fetches the page that device gets.
     setPreparedUrl(null);
-    void preparePreview(slot.url, identitiesRef.current).then(() => { if (active) setPreparedUrl(slot.url); }).catch(() => {
+    void preparePreview(slot.url, identitiesRef.current, exactRef.current).then(({ exact: attached }) => {
+      if (!active) return;
+      setPreparedUrl(slot.url);
+      if (exactRef.current) onExactRef.current?.(attached);
+    }).catch(() => {
       if (active) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
     });
     return () => { active = false; };
   }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange, identityKey]);
   const [blocked, setBlocked] = useState(false);
   // A phone's page loads inside the extension's wrapper frame, which starts
-  // the page request from the extension's origin (see preview-frame.ts). A
-  // website whose policy keeps the wrapper out gets the page frame directly.
+  // the page request from the extension's origin (see preview-frame.ts); with
+  // exact identities every page does. A website whose policy keeps the
+  // wrapper out gets the page frame directly.
   const [wrapperBlocked, setWrapperBlocked] = useState(false);
-  const wrapped = isWrappedDevice(device) && !wrapperBlocked && canWrapPreviews();
+  const wrapped = (wrapRequested || isWrappedDevice(device)) && !wrapperBlocked && canWrapPreviews();
   const frameName = previewFrameName(slot.id, hidesPageScrollbars(device));
   const frameSrc = (url: string) => wrapped ? previewFrameUrl(url, frameName) : url;
   useEffect(() => {

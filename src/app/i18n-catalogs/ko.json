@@ -496,5 +496,12 @@
   "layoutFilledFrom": "레이아웃 검사에서 채움 · 문제 {index}/{count}",
   "tourBeforeAfterText": "기기 메뉴에서 '전' 사진을 저장한 뒤 무엇이 바뀌었는지 확인하세요.",
   "tourLayoutCheckText": "페이지가 옆으로 스크롤되게 만드는 원인을 찾습니다.",
-  "layoutTruncated": "기기마다 처음 {count}개만 표시합니다."
+  "layoutTruncated": "기기마다 처음 {count}개만 표시합니다.",
+  "exactIdentities": "정확한 기기 식별",
+  "exactIdentitiesHint": "각 미리보기가 Chrome 디버깅 인터페이스를 통해 자신의 기기 브라우저 식별 정보를 보냅니다. 뷰어가 열려 있는 동안 Chrome이 이 탭에 막대를 표시합니다.",
+  "exactIdentitiesIntro": "지금은 휴대전화 미리보기들이 하나의 브라우저 식별 정보를, 나머지 미리보기들이 다른 하나를 공유합니다. 그래서 브라우저에 따라 페이지를 고르는 사이트는 휴대전화와 컴퓨터는 구분하지만 iPhone과 Pixel은 구분하지 못합니다. 정확한 식별을 켜면 각 미리보기가 자신의 기기 브라우저를 보냅니다. iPhone은 Safari, Pixel은 Android용 Chrome, MacBook은 Safari, Surface는 Windows용 Chrome을 한 화면에서 동시에 보내며, 페이지의 스크립트도 이를 봅니다.",
+  "exactIdentitiesBar": "이 기능은 Chrome 디버깅 인터페이스를 사용하며, Chrome은 사용자가 허용할 때만 이를 제공합니다. 뷰어가 열려 있는 동안 Chrome은 Mobile View가 이 브라우저를 디버깅 중이라는 막대를 표시하고, 그 취소 버튼은 정확한 식별을 끕니다. 이 탭의 DevTools가 열려 있는 동안에도 꺼진 상태로 유지됩니다. 확장 프로그램의 다른 부분은 바뀌지 않습니다.",
+  "exactIdentitiesAllow": "허용하고 켜기",
+  "exactIdentitiesUnavailable": "이 탭에서는 꺼짐: Chrome 디버깅 인터페이스가 DevTools 등에서 사용 중입니다. 미리보기는 대신 공유 식별 정보를 사용합니다.",
+  "permissionDebugger": "선택 사항이며 정확한 기기 식별을 켤 때만 요청됩니다. 뷰어가 열려 있는 동안 Chrome 디버깅 인터페이스를 통해 각 미리보기 프레임에 자신의 기기 브라우저 식별 정보를 부여합니다."
 }

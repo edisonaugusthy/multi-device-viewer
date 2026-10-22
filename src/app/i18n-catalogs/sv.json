@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Ifyllt från layoutkontrollen · problem {index} av {count}",
   "tourBeforeAfterText": "Spara en ”före”-bild i enhetsmenyn och se sedan vad som har ändrats.",
   "tourLayoutCheckText": "Hittar det som får sidan att rulla i sidled.",
-  "layoutTruncated": "Bara de första {count} listas per enhet."
+  "layoutTruncated": "Bara de första {count} listas per enhet.",
+  "exactIdentities": "Exakta enhetsidentiteter",
+  "exactIdentitiesHint": "Varje förhandsvisning skickar sin egen enhets webbläsaridentitet via Chromes felsökningsgränssnitt. Chrome visar en list på den här fliken så länge visaren är öppen.",
+  "exactIdentitiesIntro": "Just nu delar telefonförhandsvisningarna en webbläsaridentitet och de övriga en annan, så en webbplats som väljer sida efter webbläsare skiljer telefoner från datorer men inte en iPhone från en Pixel. Med exakta identiteter skickar varje förhandsvisning sin egen enhets webbläsare: Safari för en iPhone, Chrome för Android på en Pixel, Safari på en MacBook, Chrome för Windows på en Surface, allt i samma vy, och sidans skript ser det också.",
+  "exactIdentitiesBar": "Detta använder Chromes felsökningsgränssnitt, som Chrome bara ger när du tillåter det. Så länge visaren är öppen visar Chrome en list som säger att Mobile View felsöker den här webbläsaren; dess Avbryt-knapp stänger av exakta identiteter. De förblir också avstängda så länge flikens DevTools är öppna. Inget annat i tillägget ändras.",
+  "exactIdentitiesAllow": "Tillåt och slå på",
+  "exactIdentitiesUnavailable": "Av på den här fliken: Chromes felsökningsgränssnitt används, till exempel av DevTools. Förhandsvisningarna använder de delade identiteterna i stället.",
+  "permissionDebugger": "Valfri och efterfrågas bara när du slår på exakta enhetsidentiteter: ger varje förhandsvisningsram sin egen enhets webbläsaridentitet via Chromes felsökningsgränssnitt så länge visaren är öppen."
 }

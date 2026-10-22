@@ -496,5 +496,12 @@
   "layoutFilledFrom": "由布局检查填写 · 第 {index} 个问题，共 {count} 个",
   "tourBeforeAfterText": "在设备菜单中保存“修改前”图片，然后查看有哪些变化。",
   "tourLayoutCheckText": "找出导致页面横向滚动的元素。",
-  "layoutTruncated": "每台设备只列出前 {count} 个。"
+  "layoutTruncated": "每台设备只列出前 {count} 个。",
+  "exactIdentities": "精确设备标识",
+  "exactIdentitiesHint": "每个预览通过 Chrome 的调试接口发送其自身设备的浏览器标识。查看器打开期间，Chrome 会在此标签页显示一条横幅。",
+  "exactIdentitiesIntro": "目前，手机预览共用一个浏览器标识，其他预览共用另一个，因此按浏览器选择页面的网站能区分手机和电脑，却分不清 iPhone 和 Pixel。启用精确标识后，每个预览发送其自身设备的浏览器：iPhone 用 Safari，Pixel 用 Android 版 Chrome，MacBook 用 Safari，Surface 用 Windows 版 Chrome，全部同时显示在一个视图中，页面脚本也能看到。",
+  "exactIdentitiesBar": "此功能使用 Chrome 的调试接口，仅在您允许时 Chrome 才会授予。查看器打开期间，Chrome 会显示“Mobile View 正在调试此浏览器”的横幅；其中的“取消”按钮会关闭精确标识。此标签页的 DevTools 打开时也会保持关闭。扩展程序的其他部分不会改变。",
+  "exactIdentitiesAllow": "允许并开启",
+  "exactIdentitiesUnavailable": "此标签页已关闭：Chrome 的调试接口正在使用中，例如被 DevTools 占用。预览改用共享标识。",
+  "permissionDebugger": "可选，仅在您开启精确设备标识时请求：查看器打开期间，通过 Chrome 的调试接口为每个预览框架提供其自身设备的浏览器标识。"
 }

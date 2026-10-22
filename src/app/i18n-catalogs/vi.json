@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Điền sẵn từ kiểm tra bố cục · vấn đề {index}/{count}",
   "tourBeforeAfterText": "Lưu ảnh \"trước\" trong menu thiết bị, rồi xem những gì đã thay đổi.",
   "tourLayoutCheckText": "Tìm những gì khiến trang cuộn ngang.",
-  "layoutTruncated": "Mỗi thiết bị chỉ liệt kê {count} mục đầu tiên."
+  "layoutTruncated": "Mỗi thiết bị chỉ liệt kê {count} mục đầu tiên.",
+  "exactIdentities": "Danh tính thiết bị chính xác",
+  "exactIdentitiesHint": "Mỗi bản xem trước gửi danh tính trình duyệt của chính thiết bị đó, qua giao diện gỡ lỗi của Chrome. Chrome hiển thị một thanh trên thẻ này khi trình xem đang mở.",
+  "exactIdentitiesIntro": "Hiện tại, các bản xem trước điện thoại dùng chung một danh tính trình duyệt và các bản xem trước khác dùng một danh tính khác, nên trang web chọn trang theo trình duyệt phân biệt được điện thoại với máy tính, nhưng không phân biệt được iPhone với Pixel. Với danh tính chính xác, mỗi bản xem trước gửi trình duyệt của chính thiết bị đó: Safari cho iPhone, Chrome cho Android trên Pixel, Safari trên MacBook, Chrome cho Windows trên Surface, tất cả trong một khung nhìn, và các tập lệnh của trang cũng thấy điều đó.",
+  "exactIdentitiesBar": "Tính năng này dùng giao diện gỡ lỗi của Chrome, mà Chrome chỉ cấp khi bạn cho phép. Khi trình xem đang mở, Chrome hiển thị một thanh cho biết Mobile View đang gỡ lỗi trình duyệt này; nút Hủy trên đó tắt danh tính chính xác. Tính năng cũng tắt khi DevTools của thẻ này đang mở. Không có gì khác trong tiện ích thay đổi.",
+  "exactIdentitiesAllow": "Cho phép và bật",
+  "exactIdentitiesUnavailable": "Tắt trên thẻ này: giao diện gỡ lỗi của Chrome đang được dùng, ví dụ bởi DevTools. Các bản xem trước dùng danh tính chung thay thế.",
+  "permissionDebugger": "Tùy chọn và chỉ được yêu cầu khi bạn bật Danh tính thiết bị chính xác: cấp cho mỗi khung xem trước danh tính trình duyệt của chính thiết bị đó qua giao diện gỡ lỗi của Chrome khi trình xem đang mở."
 }

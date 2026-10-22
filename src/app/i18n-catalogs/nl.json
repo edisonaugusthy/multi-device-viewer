@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Ingevuld vanuit de lay-outcontrole · probleem {index} van {count}",
   "tourBeforeAfterText": "Bewaar een ‘voor’-afbeelding via het apparaatmenu en zie daarna wat er veranderd is.",
   "tourLayoutCheckText": "Vindt wat de pagina zijwaarts laat scrollen.",
-  "layoutTruncated": "Per apparaat worden alleen de eerste {count} vermeld."
+  "layoutTruncated": "Per apparaat worden alleen de eerste {count} vermeld.",
+  "exactIdentities": "Exacte apparaatidentiteiten",
+  "exactIdentitiesHint": "Elke voorvertoning stuurt de browseridentiteit van zijn eigen apparaat, via de debuginterface van Chrome. Chrome toont een balk op dit tabblad zolang de viewer open is.",
+  "exactIdentitiesIntro": "Nu delen de telefoonvoorvertoningen één browseridentiteit en de overige voorvertoningen een andere, dus een site die zijn pagina op browser kiest, onderscheidt telefoons van computers, maar geen iPhone van een Pixel. Met exacte identiteiten stuurt elke voorvertoning de browser van zijn eigen apparaat: Safari voor een iPhone, Chrome voor Android op een Pixel, Safari op een MacBook, Chrome voor Windows op een Surface, alles in één weergave, en de scripts van de pagina zien het ook.",
+  "exactIdentitiesBar": "Dit gebruikt de debuginterface van Chrome, die Chrome alleen geeft als u het toestaat. Zolang de viewer open is, toont Chrome een balk met de melding dat Mobile View deze browser debugt; de knop Annuleren daarin schakelt exacte identiteiten uit. Ze blijven ook uit zolang de DevTools van dit tabblad open zijn. Verder verandert er niets aan de extensie.",
+  "exactIdentitiesAllow": "Toestaan en inschakelen",
+  "exactIdentitiesUnavailable": "Uit op dit tabblad: de debuginterface van Chrome is in gebruik, bijvoorbeeld door DevTools. De voorvertoningen gebruiken in plaats daarvan de gedeelde identiteiten.",
+  "permissionDebugger": "Optioneel en alleen gevraagd wanneer u exacte apparaatidentiteiten inschakelt: geeft elk voorvertoningsframe de browseridentiteit van zijn eigen apparaat via de debuginterface van Chrome zolang de viewer open is."
 }

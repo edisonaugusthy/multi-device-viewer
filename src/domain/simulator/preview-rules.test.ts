@@ -17,7 +17,7 @@ describe("temporary preview rules", () => {
     expect(previewRuleKind(direct)).toBe("direct");
   });
   it("sends an iPhone as Safari with no client hints at all", () => {
-    const headers = identityHeaders({ userAgent: "iPhone Safari" });
+    const headers = identityHeaders({ userAgent: "iPhone Safari", platform: "iOS", mobile: true, hints: false });
     expect(headers[0]).toEqual({ header: "user-agent", operation: "set", value: "iPhone Safari" });
     expect(headers.slice(1).every(header => header.operation === "remove" && header.header.startsWith("sec-ch-ua"))).toBe(true);
     expect(headers.map(header => header.header)).toContain("sec-ch-ua");
@@ -25,19 +25,20 @@ describe("temporary preview rules", () => {
     expect(previewRule(1000000, 7, ["example.com"], { kind: "direct", extensionId: "ext" }, headers).action.requestHeaders).toBe(headers);
   });
   it("sends an Android phone as the browser's own Chrome brands on a mobile Android platform", () => {
-    const headers = identityHeaders({ userAgent: "Android Chrome", hints: { mobile: true, platform: "Android" } });
+    const headers = identityHeaders({ userAgent: "Android Chrome", platform: "Android", mobile: true, hints: true });
     const byName = Object.fromEntries(headers.map(header => [header.header, header]));
     expect(byName["sec-ch-ua"]).toBeUndefined();
     expect(byName["sec-ch-ua-mobile"]).toEqual({ header: "sec-ch-ua-mobile", operation: "set", value: "?1" });
     expect(byName["sec-ch-ua-platform"]).toEqual({ header: "sec-ch-ua-platform", operation: "set", value: "\"Android\"" });
     expect(byName["sec-ch-ua-model"].operation).toBe("remove");
     expect(byName["sec-ch-ua-platform-version"].operation).toBe("remove");
-    expect(identityHeaders({ userAgent: "Tablet", hints: { mobile: false, platform: "Android" } }).find(header => header.header === "sec-ch-ua-mobile")?.value).toBe("?0");
+    expect(identityHeaders({ userAgent: "Tablet", platform: "Android", mobile: false, hints: true }).find(header => header.header === "sec-ch-ua-mobile")?.value).toBe("?0");
   });
   it("describes header changes by content, so rules read back from the browser compare", () => {
-    const headers = identityHeaders({ userAgent: "Agent" });
+    const safari = { platform: "macOS" as const, mobile: false, hints: false };
+    const headers = identityHeaders({ userAgent: "Agent", ...safari });
     expect(describeHeaders(headers)).toBe(describeHeaders(JSON.parse(JSON.stringify(headers))));
-    expect(describeHeaders(headers)).not.toBe(describeHeaders(identityHeaders({ userAgent: "Other" })));
+    expect(describeHeaders(headers)).not.toBe(describeHeaders(identityHeaders({ userAgent: "Other", ...safari })));
     expect(describeHeaders(undefined)).toBe("");
   });
 });

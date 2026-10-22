@@ -33,7 +33,12 @@ export default defineConfig({
       "storage",
       "offscreen",
       "tabCapture",
+      ...(process.env.MDV_DEBUGGER_REQUIRED === "1" ? ["debugger"] : []),
     ],
+    // Exact device identities ask for the debugger only when turned on
+    // (src/app/exact-identities.ts). MDV_DEBUGGER_REQUIRED=1 grants it at
+    // install for the extension smoke test, which cannot click Chrome's prompt.
+    ...(process.env.MDV_DEBUGGER_REQUIRED === "1" ? {} : { optional_permissions: ["debugger"] } as Record<string, unknown>),
     host_permissions: ["http://*/*", "https://*/*"],
     icons: {
       16: "/icons/icon-16.png",

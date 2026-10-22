@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Preenchido pela verificação de layout · problema {index} de {count}",
   "tourBeforeAfterText": "Salve uma imagem de “antes” no menu do dispositivo e depois veja o que mudou.",
   "tourLayoutCheckText": "Encontra o que faz a página rolar para o lado.",
-  "layoutTruncated": "Só os primeiros {count} são listados por dispositivo."
+  "layoutTruncated": "Só os primeiros {count} são listados por dispositivo.",
+  "exactIdentities": "Identidades exatas de dispositivo",
+  "exactIdentitiesHint": "Cada prévia envia a identidade de navegador do seu próprio dispositivo, pela interface de depuração do Chrome. O Chrome mostra uma barra nesta guia enquanto o visualizador estiver aberto.",
+  "exactIdentitiesIntro": "Hoje, as prévias de telefone compartilham uma identidade de navegador e as demais prévias outra, então um site que escolhe a página pelo navegador distingue telefones de computadores, mas não um iPhone de um Pixel. Com identidades exatas, cada prévia envia o navegador do seu próprio dispositivo: Safari em um iPhone, Chrome para Android em um Pixel, Safari em um MacBook, Chrome para Windows em um Surface, tudo em uma só visualização, e os scripts da página também veem isso.",
+  "exactIdentitiesBar": "Isso usa a interface de depuração do Chrome, que o Chrome só concede quando você permite. Enquanto o visualizador estiver aberto, o Chrome mostra uma barra dizendo que o Mobile View está depurando este navegador; o botão Cancelar dela desativa as identidades exatas. Elas também ficam desativadas enquanto o DevTools desta guia estiver aberto. Nada mais muda na extensão.",
+  "exactIdentitiesAllow": "Permitir e ativar",
+  "exactIdentitiesUnavailable": "Desativadas nesta guia: a interface de depuração do Chrome está em uso, por exemplo pelo DevTools. As prévias usam as identidades compartilhadas.",
+  "permissionDebugger": "Opcional e pedida apenas ao ativar Identidades exatas de dispositivo: dá a cada quadro de prévia a identidade de navegador do seu próprio dispositivo pela interface de depuração do Chrome enquanto o visualizador estiver aberto."
 }

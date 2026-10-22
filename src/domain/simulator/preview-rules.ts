@@ -20,11 +20,10 @@ const DEVICE_HINTS = ["sec-ch-ua-mobile", "sec-ch-ua-platform", "sec-ch-ua-platf
  * keeps the viewer's own brands and states its platform and form factor.
  */
 export function identityHeaders(identity: PreviewIdentity): HeaderChange[] {
-  const { hints } = identity;
-  const given: Record<string, string> = hints ? { "sec-ch-ua-mobile": hints.mobile ? "?1" : "?0", "sec-ch-ua-platform": `"${hints.platform}"` } : {};
+  const given: Record<string, string> = identity.hints ? { "sec-ch-ua-mobile": identity.mobile ? "?1" : "?0", "sec-ch-ua-platform": `"${identity.platform}"` } : {};
   return [
     set("user-agent", identity.userAgent),
-    ...(hints ? [] : [remove("sec-ch-ua")]),
+    ...(identity.hints ? [] : [remove("sec-ch-ua")]),
     ...DEVICE_HINTS.map(header => header in given ? set(header, given[header]) : remove(header)),
   ];
 }

@@ -1,5 +1,7 @@
 import { createPreviewSessions } from "../src/app/preview-sessions";
-import { previewIdentitiesFrom } from "../src/domain/simulator/preview-identity";
+import { exactIdentitiesFrom, previewIdentitiesFrom } from "../src/domain/simulator/preview-identity";
+import { chromeDebuggerApi, createExactIdentities } from "../src/app/exact-identities";
+import { PREVIEW_FRAME_PATH } from "../src/app/preview-frame";
 import { VisualRegressionError } from "../src/domain/visual-regression/visual-regression.types";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
@@ -24,7 +26,14 @@ export default defineBackground(() => {
   const launches = new Map<number, Promise<void>>();
   const previews = createPreviewSessions(chrome.runtime.id);
   void previews.prune().catch(console.error);
-  chrome.tabs.onRemoved.addListener(tabId => { void previews.close(tabId).catch(console.error); });
+  // Exact device identities live only while the debugger permission is granted
+  // and the viewer asks for them; a tab that loses them (the bar's Cancel) is told.
+  const browserBrands = (navigator as Navigator & { userAgentData?: { brands: Array<{ brand: string; version: string }> } }).userAgentData?.brands ?? [];
+  const exact = createExactIdentities(chromeDebuggerApi(), chrome.runtime.getURL(PREVIEW_FRAME_PATH), browserBrands, tabId => {
+    void chrome.tabs.sendMessage(tabId, { type: "MDV_EXACT_IDENTITIES_LOST" }, { frameId: 0 }).catch(() => undefined);
+  });
+  const closePreviews = (tabId: number) => Promise.all([previews.close(tabId), exact.close(tabId)]);
+  chrome.tabs.onRemoved.addListener(tabId => { void closePreviews(tabId).catch(console.error); });
   const review = createReviewCoordinator({
     read: async () => {
       const stored = await chrome.storage.local.get([REVIEW_PROMPT_STORAGE_KEY, LEGACY_REVIEW_DISMISSED_KEY]);
@@ -105,7 +114,7 @@ export default defineBackground(() => {
     if (changeInfo.status === "complete") {
       void (async () => {
         const state = await chrome.tabs.sendMessage(_tabId, { type: "MDV_GET_OVERLAY_STATE" }, { frameId: 0 }).catch(() => undefined);
-        if (!state?.active) await previews.close(_tabId);
+        if (!state?.active) await closePreviews(_tabId);
         const entry = (await openViewers())[_tabId];
         if (!entry?.unloaded) return;
         if (state?.active) return updateOpenViewer(_tabId, current => current && { ...current, unloaded: false });
@@ -300,9 +309,25 @@ export default defineBackground(() => {
         .catch(error => sendResponse({ ok: false, code: error instanceof VisualRegressionError ? error.code : "engine" }));
       return true;
     }
+    if (message?.type === "MDV_EXACT_PERMISSION" && sender.id === chrome.runtime.id) {
+      // The optional debugger permission for exact device identities. A request
+      // is sent from the user's click and must reach Chrome within it, so it is
+      // made right here, before anything is awaited.
+      const permission: chrome.permissions.Permissions = { permissions: ["debugger"] };
+      const asked = message.action === "request" ? chrome.permissions.request(permission) : chrome.permissions.contains(permission);
+      void asked.then(granted => sendResponse({ granted })).catch(() => sendResponse({ granted: false }));
+      return true;
+    }
     if ((message?.type === "MDV_PREVIEW_HOST" || message?.type === "MDV_PREVIEW_CLOSE") && typeof sender.tab?.id === "number" && sender.frameId === 0) {
-      const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url, previewIdentitiesFrom(message.identities));
-      void work.then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      const tabId = sender.tab.id;
+      const work = message.type === "MDV_PREVIEW_CLOSE" ? closePreviews(tabId).then(() => false) : (async () => {
+        await previews.prepare(tabId, message.url, previewIdentitiesFrom(message.identities));
+        const frames = exactIdentitiesFrom(message.exact);
+        if (frames === null) await exact.close(tabId);
+        else if (frames) return exact.update(tabId, frames);
+        return exact.attached(tabId);
+      })();
+      void work.then(attached => sendResponse({ ok: true, exact: attached })).catch(error => sendResponse({ ok: false, error: String(error) }));
       return true;
     }
     if (message?.type === "MDV_DOWNLOAD" && typeof message.dataUrl === "string" && /^data:image\/(png|jpeg);base64,/.test(message.dataUrl)) {

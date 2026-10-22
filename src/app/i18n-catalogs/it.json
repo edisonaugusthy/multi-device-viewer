@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Compilato dal controllo del layout · problema {index} di {count}",
   "tourBeforeAfterText": "Salva un’immagine «prima» dal menu del dispositivo, poi guarda cosa è cambiato.",
   "tourLayoutCheckText": "Trova ciò che fa scorrere la pagina di lato.",
-  "layoutTruncated": "Per ogni dispositivo sono elencati solo i primi {count}."
+  "layoutTruncated": "Per ogni dispositivo sono elencati solo i primi {count}.",
+  "exactIdentities": "Identità esatte dei dispositivi",
+  "exactIdentitiesHint": "Ogni anteprima invia l'identità del browser del proprio dispositivo, tramite l'interfaccia di debug di Chrome. Chrome mostra una barra in questa scheda finché il visualizzatore è aperto.",
+  "exactIdentitiesIntro": "Al momento le anteprime dei telefoni condividono un'identità di browser e le altre anteprime un'altra, quindi un sito che sceglie la pagina in base al browser distingue i telefoni dai computer, ma non un iPhone da un Pixel. Con le identità esatte ogni anteprima invia il browser del proprio dispositivo: Safari per un iPhone, Chrome per Android su un Pixel, Safari su un MacBook, Chrome per Windows su un Surface, tutto in una sola vista, e anche gli script della pagina lo vedono.",
+  "exactIdentitiesBar": "Usa l'interfaccia di debug di Chrome, che Chrome concede solo con il tuo permesso. Finché il visualizzatore è aperto, Chrome mostra una barra che dice che Mobile View sta eseguendo il debug di questo browser; il suo pulsante Annulla disattiva le identità esatte. Restano disattivate anche finché i DevTools di questa scheda sono aperti. Nient'altro cambia nell'estensione.",
+  "exactIdentitiesAllow": "Consenti e attiva",
+  "exactIdentitiesUnavailable": "Disattivate in questa scheda: l'interfaccia di debug di Chrome è in uso, ad esempio dai DevTools. Le anteprime usano le identità condivise.",
+  "permissionDebugger": "Facoltativa e richiesta solo quando attivi le identità esatte dei dispositivi: dà a ogni frame di anteprima l'identità del browser del proprio dispositivo tramite l'interfaccia di debug di Chrome finché il visualizzatore è aperto."
 }

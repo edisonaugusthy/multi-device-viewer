@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPreviewSessions } from "./preview-sessions";
 import { identityHeaders, previewRuleKind } from "../domain/simulator/preview-rules";
+import type { PreviewIdentity } from "../domain/simulator/preview-identity";
 
 const EXTENSION = "abcdefghijklmnopabcdefghijklmnop";
 
@@ -18,9 +19,9 @@ function fakeChrome(tabIds: number[] = [7]) {
   const headers = (tabId: number) => Object.fromEntries(ofTab(tabId).map(rule => [previewRuleKind(rule), rule.action.requestHeaders]));
   return { updateSessionRules, rules: () => rules, ofTab, headers };
 }
-const iphone = { userAgent: "iPhone Safari" };
-const mac = { userAgent: "Mac Safari" };
-const android = { userAgent: "Android Chrome", hints: { mobile: true, platform: "Android" } };
+const iphone: PreviewIdentity = { userAgent: "iPhone Safari", platform: "iOS", mobile: true, hints: false };
+const mac: PreviewIdentity = { userAgent: "Mac Safari", platform: "macOS", mobile: false, hints: false };
+const android: PreviewIdentity = { userAgent: "Android Chrome", platform: "Android", mobile: true, hints: true };
 
 describe("preview session rules", () => {
   let browser: ReturnType<typeof fakeChrome>;

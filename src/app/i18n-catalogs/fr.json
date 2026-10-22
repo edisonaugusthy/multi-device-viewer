@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Rempli depuis la vérification de la mise en page · problème {index} sur {count}",
   "tourBeforeAfterText": "Enregistrez une image « avant » depuis le menu de l’appareil, puis voyez ce qui a changé.",
   "tourLayoutCheckText": "Trouve ce qui fait défiler la page sur le côté.",
-  "layoutTruncated": "Seuls les {count} premiers sont listés par appareil."
+  "layoutTruncated": "Seuls les {count} premiers sont listés par appareil.",
+  "exactIdentities": "Identités d'appareil exactes",
+  "exactIdentitiesHint": "Chaque aperçu envoie l'identité du navigateur de son propre appareil, via l'interface de débogage de Chrome. Chrome affiche une barre dans cet onglet tant que la visionneuse est ouverte.",
+  "exactIdentitiesIntro": "Pour l'instant, les aperçus de téléphone partagent une identité de navigateur et les autres aperçus une autre : un site qui choisit sa page selon le navigateur distingue les téléphones des ordinateurs, mais pas un iPhone d'un Pixel. Avec les identités exactes, chaque aperçu envoie le navigateur de son propre appareil : Safari pour un iPhone, Chrome pour Android sur un Pixel, Safari sur un MacBook, Chrome pour Windows sur un Surface, le tout dans une seule vue, et les scripts de la page le voient aussi.",
+  "exactIdentitiesBar": "Cela utilise l'interface de débogage de Chrome, que Chrome n'accorde qu'avec votre autorisation. Tant que la visionneuse est ouverte, Chrome affiche une barre indiquant que Mobile View débogue ce navigateur ; son bouton Annuler désactive les identités exactes. Elles restent aussi désactivées tant que les DevTools de cet onglet sont ouverts. Rien d'autre ne change dans l'extension.",
+  "exactIdentitiesAllow": "Autoriser et activer",
+  "exactIdentitiesUnavailable": "Désactivées dans cet onglet : l'interface de débogage de Chrome est utilisée, par exemple par les DevTools. Les aperçus utilisent les identités partagées à la place.",
+  "permissionDebugger": "Facultative, demandée seulement quand vous activez les identités d'appareil exactes : donne à chaque cadre d'aperçu l'identité du navigateur de son propre appareil via l'interface de débogage de Chrome tant que la visionneuse est ouverte."
 }

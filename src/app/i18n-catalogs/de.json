@@ -496,5 +496,12 @@
   "layoutFilledFrom": "Aus der Layout-Prüfung übernommen · Problem {index} von {count}",
   "tourBeforeAfterText": "Speichere im Gerätemenü ein „Vorher“-Bild und sieh dann, was sich geändert hat.",
   "tourLayoutCheckText": "Findet, was die Seite seitwärts scrollen lässt.",
-  "layoutTruncated": "Pro Gerät werden nur die ersten {count} aufgeführt."
+  "layoutTruncated": "Pro Gerät werden nur die ersten {count} aufgeführt.",
+  "exactIdentities": "Exakte Geräteidentitäten",
+  "exactIdentitiesHint": "Jede Vorschau sendet die Browser-Identität ihres eigenen Geräts, über Chromes Debugging-Schnittstelle. Chrome zeigt in diesem Tab eine Leiste, solange der Viewer offen ist.",
+  "exactIdentitiesIntro": "Derzeit teilen sich die Telefon-Vorschauen eine Browser-Identität und die übrigen Vorschauen eine andere. Eine Website, die ihre Seite nach Browser wählt, unterscheidet so Telefone von Computern, aber kein iPhone von einem Pixel. Mit exakten Identitäten sendet jede Vorschau den Browser ihres eigenen Geräts: Safari für ein iPhone, Chrome für Android auf einem Pixel, Safari auf einem MacBook, Chrome für Windows auf einem Surface, alles in einer Ansicht, und auch die Skripte der Seite sehen es.",
+  "exactIdentitiesBar": "Dafür wird Chromes Debugging-Schnittstelle genutzt, die Chrome nur mit Ihrer Erlaubnis freigibt. Solange der Viewer offen ist, zeigt Chrome eine Leiste mit dem Hinweis, dass Mobile View diesen Browser debuggt; ihre Schaltfläche „Abbrechen“ schaltet exakte Identitäten aus. Sie bleiben auch aus, solange die DevTools dieses Tabs offen sind. Sonst ändert sich an der Erweiterung nichts.",
+  "exactIdentitiesAllow": "Erlauben und einschalten",
+  "exactIdentitiesUnavailable": "In diesem Tab aus: Chromes Debugging-Schnittstelle ist belegt, etwa durch die DevTools. Die Vorschauen nutzen stattdessen die geteilten Identitäten.",
+  "permissionDebugger": "Optional und nur erfragt, wenn Sie exakte Geräteidentitäten einschalten: gibt jedem Vorschau-Frame über Chromes Debugging-Schnittstelle die Browser-Identität seines eigenen Geräts, solange der Viewer offen ist."
 }

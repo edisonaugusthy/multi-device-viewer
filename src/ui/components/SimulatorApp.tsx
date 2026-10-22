@@ -44,7 +44,8 @@ import { AllDevicesView } from "./AllDevicesView";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CompareBar, CompareControls, CompareLabel, DesignAdjustPanel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
 import { designFrameKey, fitDesign, type DesignFrame } from "../interactions/design-frame";
-import { chromeMajor, previewIdentity } from "../../domain/simulator/preview-identity";
+import { chromeMajor, previewIdentities } from "../../domain/simulator/preview-identity";
+import { canWrapPreviews } from "../../app/preview-frame";
 import { useImageSize } from "../hooks/useImageSize";
 import { DevicePicker, type PickerTarget } from "./DevicePicker";
 import { FirstRunGuide } from "./FirstRunGuide";
@@ -708,10 +709,11 @@ export function SimulatorApp() {
 
   const onComparePageScroll = useCallback((scrollTop: number) => setDesignScrollTop(scrollTop), []);
 
-  // Preview requests identify as the most phone-like device in the workspace
-  // (see previewIdentity). When that changes, every preview reloads so each
-  // page is the one that browser gets.
-  const requestIdentity = useMemo(() => previewIdentity(slots.map((slot) => findDevice(slot.deviceId)), chromeMajor(navigator.userAgent)) ?? null, [findDevice, slots]);
+  // Phone previews identify as the workspace's most phone-like phone and the
+  // other previews as its most phone-like other device (see previewIdentities).
+  // When that changes, every preview reloads so each page is the one its
+  // browser gets.
+  const requestIdentity = useMemo(() => previewIdentities(slots.map((slot) => findDevice(slot.deviceId)), chromeMajor(navigator.userAgent), canWrapPreviews()), [findDevice, slots]);
   const requestIdentityKey = JSON.stringify(requestIdentity);
   const lastRequestIdentity = useRef<string | null>(null);
   useEffect(() => {
@@ -910,7 +912,7 @@ export function SimulatorApp() {
                     onPageReady={FEATURES.layoutCheck ? layoutCheck.onPageReady : undefined}
                     focusNavigation={focusNavigation}
                     onScaleChange={updateScale}
-                    identity={requestIdentity}
+                    identities={requestIdentity}
                     onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}
                     designOverlay={comparing && overlayShown && compareImage ? {
                       image: compareImage,

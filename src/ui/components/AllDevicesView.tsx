@@ -10,7 +10,8 @@ import { getDefaultOrientation, nextOrientation, supportsOrientation, toLandscap
 import { getBrowserGeometry, type BrowserPreferences } from "../../domain/device/browser-geometry";
 import { getFrameProfile } from "../../domain/device/frame-profiles";
 import type { Device } from "../../domain/device/device.types";
-import { chromeMajor, previewIdentity, type PreviewIdentity } from "../../domain/simulator/preview-identity";
+import { chromeMajor, previewIdentities, type PreviewIdentities } from "../../domain/simulator/preview-identity";
+import { canWrapPreviews } from "../../app/preview-frame";
 import { nextZoom } from "../../domain/simulator/simulator-service";
 import type { DisplaySettings, PreviewSlot } from "../../domain/simulator/simulator.types";
 import {
@@ -136,8 +137,8 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
 }) {
   const { t } = useI18n();
   const devices = group.devices;
-  // One identity per tab: this category's most phone-like device speaks for every card on the page.
-  const identity = useMemo(() => previewIdentity(devices, chromeMajor(navigator.userAgent)) ?? null, [devices]);
+  // This category's phones speak for the page's phone previews and its other devices for the rest.
+  const identity = useMemo(() => previewIdentities(devices, chromeMajor(navigator.userAgent), canWrapPreviews()), [devices]);
   const simulator = useSimulator();
   const [refreshVersion, setRefreshVersion] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -506,7 +507,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
             </div>}
             <div data-gallery-grid className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] items-end gap-x-6 gap-y-10">
               {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef}
-                identity={identity} inactive={expandedDeviceId !== null}
+                identities={identity} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}
                 onPreviewLoad={previewLoaded} onPreviewReady={previewReady} onReload={reloadSlot} onEnlarge={enlarge} onLiveChange={setSlotLive} onNearChange={setSlotNear}/>)}
@@ -515,7 +516,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
         </div>
         {popup && <>
           <div aria-hidden="true" data-gallery-backdrop onClick={closePopup} className="absolute inset-0 z-40 bg-black/45 backdrop-blur-[2px]"/>
-          <GalleryPopup device={devices[expandedIndex]} slot={popup} display={display} identity={identity} index={expandedIndex} count={count} stepFocus={stepFocus}
+          <GalleryPopup device={devices[expandedIndex]} slot={popup} display={display} identities={identity} index={expandedIndex} count={count} stepFocus={stepFocus}
             onStep={stepExpanded} onClose={closePopup} onReload={() => reloadSlot(POPUP_SLOT_ID)}
             onOpenTab={() => window.open(getSlotUrl(POPUP_SLOT_ID), "_blank", "noopener,noreferrer")}
             onOpen={() => onOpenDevice(popup.deviceId, getSlotUrl(POPUP_SLOT_ID))}
@@ -552,9 +553,9 @@ function SyncToggle({ label, description, pressed, onClick, children }: { label:
   );
 }
 
-const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, identity, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange, onNearChange }: {
+const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, identities, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange, onNearChange }: {
   device: Device; slot: PreviewSlot; display: DisplaySettings; scrollRef: RefObject<HTMLDivElement | null>;
-  identity: PreviewIdentity | null;
+  identities: PreviewIdentities;
   /** True while the enlarged popup is open: the card stays in place but goes quiet. */
   inactive: boolean; captions: boolean;
   loadRequest?: number; loadStatus: GalleryLoadStatus;
@@ -649,7 +650,7 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
 
       <div className="relative min-h-0 flex-1">
         {loadRequest !== undefined
-          ? <PreviewCard slot={slot} device={device} display={previewDisplay} identity={identity} visualsActive={live} onLoadStateChange={loaded} onPageReady={ready} onScaleChange={setScale}
+          ? <PreviewCard slot={slot} device={device} display={previewDisplay} identities={identities} visualsActive={live} onLoadStateChange={loaded} onPageReady={ready} onScaleChange={setScale}
               showToolbar={captions} onExpand={enlarge} expandLabel={t("enlargePreview")}
               align="bottom" removable={false} focused={false} first last/>
           : <div className="flex h-full flex-col items-center justify-end gap-2 pb-8 text-muted">
@@ -676,8 +677,8 @@ type StepDirection = "previous" | "next";
 
 // One enlarged device at a time, always the same size whatever the device or
 // its orientation; the device scales to fit inside it.
-function GalleryPopup({ device, slot, display, identity, index, count, stepFocus, onStep, onClose, onOpenTab, onOpen, onAdd, onReload, onCapture }: {
-  device: Device; slot: PreviewSlot; display: DisplaySettings; identity: PreviewIdentity | null;
+function GalleryPopup({ device, slot, display, identities, index, count, stepFocus, onStep, onClose, onOpenTab, onOpen, onAdd, onReload, onCapture }: {
+  device: Device; slot: PreviewSlot; display: DisplaySettings; identities: PreviewIdentities;
   index: number; count: number; stepFocus: RefObject<StepDirection | null>;
   onStep: (direction: StepDirection) => void; onClose: () => void;
   onOpenTab: () => void; onOpen: () => void; onAdd: () => void; onReload: () => void;
@@ -787,7 +788,7 @@ function GalleryPopup({ device, slot, display, identity, index, count, stepFocus
       <div className="relative min-h-0 flex-1 p-6">
         {/* A fresh document per device: the popup keeps its own page, while
             the gallery card behind it keeps its own. */}
-        <PreviewCard key={device.id} slot={slot} device={device} display={display} identity={identity} onScaleChange={setScale}
+        <PreviewCard key={device.id} slot={slot} device={device} display={display} identities={identities} onScaleChange={setScale}
           capturePending={capturing} showToolbar={false} align="center" removable={false} focused={false} first last/>
       </div>
       <span tabIndex={0} aria-hidden="true" className="sr-only" onFocus={() => cycleFocus(false)}/>

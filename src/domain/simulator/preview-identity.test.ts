@@ -3,7 +3,7 @@ import { devices } from "../device/device-catalog";
 import { createCustomDevice } from "../device/device-service";
 import type { Device } from "../device/device.types";
 import { getFrameProfile } from "../device/frame-profiles";
-import { chromeMajor, deviceIdentity, previewIdentity, previewIdentityFrom } from "./preview-identity";
+import { chromeMajor, deviceIdentity, previewIdentities, previewIdentitiesFrom, previewIdentity, previewIdentityFrom } from "./preview-identity";
 
 const device = (id: string) => devices.find(candidate => candidate.id === id)!;
 const first = (type: Device["type"], os: RegExp) => devices.find(candidate => candidate.type === type && os.test(candidate.os))!;
@@ -73,6 +73,18 @@ describe("the browser a preview identifies as", () => {
     expect(previewIdentity([watch, mac], CHROME)).toEqual(deviceIdentity(mac, CHROME));
     expect(previewIdentity([watch], CHROME)).toBeUndefined();
     expect(previewIdentity([], CHROME)).toBeUndefined();
+  });
+
+  it("splits a tab's identities between its phone frames and the rest, or gives every frame one", () => {
+    const iphone = device("apple-iphone-18-pro-2026");
+    const mac = first("laptop", /macos/i), tablet = first("tablet", /android/i);
+    expect(previewIdentities([mac, tablet, iphone], CHROME, true)).toEqual({ wrapped: deviceIdentity(iphone, CHROME), direct: deviceIdentity(tablet, CHROME) });
+    expect(previewIdentities([mac], CHROME, true)).toEqual({ wrapped: null, direct: deviceIdentity(mac, CHROME) });
+    expect(previewIdentities([mac, iphone], CHROME, false)).toEqual({ wrapped: deviceIdentity(iphone, CHROME), direct: null });
+    expect(previewIdentitiesFrom({ wrapped: deviceIdentity(iphone, CHROME), direct: null })).toEqual({ wrapped: deviceIdentity(iphone, CHROME), direct: null });
+    expect(previewIdentitiesFrom({ wrapped: "bad" })).toEqual({ wrapped: undefined, direct: undefined });
+    expect(previewIdentitiesFrom(null)).toBeNull();
+    expect(previewIdentitiesFrom("x")).toBeUndefined();
   });
 
   it("accepts only a well-formed identity from a message, and null as the browser's own", () => {

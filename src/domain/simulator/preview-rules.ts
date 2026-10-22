@@ -34,11 +34,24 @@ export function describeHeaders(changes: HeaderChange[] | undefined): string {
   return (changes ?? []).map(change => `${change.header}:${change.operation}:${change.value ?? ""}`).join("\n");
 }
 
-/** Only active preview hosts in one tab. Never changes cookies or top-level responses. */
-export function previewRule(id: number, tabId: number, domains: string[], requestHeaders?: HeaderChange[]): chrome.declarativeNetRequest.Rule {
+/** Which frames a rule covers: those the extension's own pages navigate, or those the website's do. */
+export type PreviewFrameKind = "wrapped" | "direct";
+
+export function previewRuleKind(rule: chrome.declarativeNetRequest.Rule): PreviewFrameKind {
+  return rule.condition.initiatorDomains ? "wrapped" : "direct";
+}
+
+/**
+ * Only active preview hosts in one tab, and only the frames of one kind.
+ * Never changes cookies or top-level responses.
+ */
+export function previewRule(id: number, tabId: number, domains: string[], scope: { kind: PreviewFrameKind; extensionId: string }, requestHeaders?: HeaderChange[]): chrome.declarativeNetRequest.Rule {
   return {
     id, priority: 1,
-    condition: { tabIds: [tabId], requestDomains: [...new Set(domains)].sort(), resourceTypes: ["sub_frame" as chrome.declarativeNetRequest.ResourceType] },
+    condition: {
+      tabIds: [tabId], requestDomains: [...new Set(domains)].sort(), resourceTypes: ["sub_frame" as chrome.declarativeNetRequest.ResourceType],
+      ...(scope.kind === "wrapped" ? { initiatorDomains: [scope.extensionId] } : { excludedInitiatorDomains: [scope.extensionId] }),
+    },
     action: {
       type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType,
       responseHeaders: ["x-frame-options", "content-security-policy"].map(header => ({ header, operation: "remove" as chrome.declarativeNetRequest.HeaderOperation })),

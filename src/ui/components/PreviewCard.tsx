@@ -7,7 +7,8 @@ import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
-import type { PreviewIdentity } from "../../domain/simulator/preview-identity";
+import { isWrappedDevice, type PreviewIdentities } from "../../domain/simulator/preview-identity";
+import { canWrapPreviews, PREVIEW_FRAME_PATH, PREVIEW_SANDBOX, previewFrameName, previewFrameUrl } from "../../app/preview-frame";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
@@ -105,8 +106,8 @@ interface PreviewCardProps {
   onPageReady?: (slotId: string) => void;
   /** A design laid over the device screen; its frame is in CSS pixels of that screen. */
   designOverlay?: DesignOverlayProps;
-  /** The browser this tab's preview requests identify as (null: the browser's own; absent: unchanged). */
-  identity?: PreviewIdentity | null;
+  /** The browsers this tab's preview frames identify as, by kind (null: the browser's own; absent: unchanged). */
+  identities?: PreviewIdentities | null;
   /** Bottom-aligns the device so every preview in a row shares a baseline. */
   align?: "bottom" | "center";
   showCaption?: boolean;
@@ -173,7 +174,7 @@ export const PreviewCard = memo(function PreviewCard({
   onFlowResult,
   onPageReady,
   designOverlay,
-  identity,
+  identities,
   align = "center",
   showCaption = false,
   revealToolbar = false,
@@ -246,24 +247,32 @@ export const PreviewCard = memo(function PreviewCard({
     setLoadIssue(null);
     return () => { healthRequest.current = null; clearTimeout(healthTimer.current); };
   }, [slot.id, slot.url, slot.reloadToken]);
-  const identityRef = useRef(identity);
-  identityRef.current = identity;
-  const identityKey = identity === undefined ? "" : JSON.stringify(identity);
+  const identitiesRef = useRef(identities);
+  identitiesRef.current = identities;
+  const identityKey = identities === undefined ? "" : JSON.stringify(identities);
   useEffect(() => {
     let active = true;
     setBlocked(false);
     // The frame loads only once the tab's rules fit it, so a reload after the
     // identity changed fetches the page that device gets.
     setPreparedUrl(null);
-    void preparePreview(slot.url, identityRef.current).then(() => { if (active) setPreparedUrl(slot.url); }).catch(() => {
+    void preparePreview(slot.url, identitiesRef.current).then(() => { if (active) setPreparedUrl(slot.url); }).catch(() => {
       if (active) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
     });
     return () => { active = false; };
   }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange, identityKey]);
   const [blocked, setBlocked] = useState(false);
+  // A phone's page loads inside the extension's wrapper frame, which starts
+  // the page request from the extension's origin (see preview-frame.ts). A
+  // website whose policy keeps the wrapper out gets the page frame directly.
+  const [wrapperBlocked, setWrapperBlocked] = useState(false);
+  const wrapped = isWrappedDevice(device) && !wrapperBlocked && canWrapPreviews();
+  const frameName = previewFrameName(slot.id, hidesPageScrollbars(device));
+  const frameSrc = (url: string) => wrapped ? previewFrameUrl(url, frameName) : url;
   useEffect(() => {
     const onPolicy = (event: SecurityPolicyViolationEvent) => {
       if (event.effectiveDirective !== "frame-src" && event.effectiveDirective !== "child-src") return;
+      if (typeof chrome !== "undefined" && chrome.runtime?.getURL && event.blockedURI.startsWith(chrome.runtime.getURL(PREVIEW_FRAME_PATH))) { setWrapperBlocked(true); return; }
       try {
         if (new URL(event.blockedURI).origin === new URL(slot.url).origin) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
       } catch { /* Non-URL policy reports cannot identify this preview. */ }
@@ -363,6 +372,27 @@ export const PreviewCard = memo(function PreviewCard({
     const next = { left: inner.left - outer.left, top: inner.top - outer.top, width: inner.width, height: inner.height };
     setScreenBox(current => current && (["left", "top", "width", "height"] as const).every(key => Math.abs(current[key] - next[key]) < 0.05) ? current : next);
   }, [hasDesignOverlay, scale, offset.x, offset.y, containerSize.width, containerSize.height, device.id, effectiveOrientation, slot.showFrame, freeView, keyboardHeight, align]);
+
+  function frameLoaded(frame: HTMLIFrameElement) {
+    if (frame.getAttribute("src") === "about:blank") return;
+    // Preparing the frame initially creates an empty document.
+    // Its load event must not release a website's queue slot.
+    try { if (frame.contentDocument?.URL === "about:blank") return; } catch { /* Cross-origin website. */ }
+    clearTimeout(healthTimer.current);
+    setLoadIssue(null);
+    if (typeof chrome === "undefined" || !chrome.runtime?.id) {
+      onLoadStateChange?.(slot.id, "loaded");
+      return;
+    }
+    const requestId = crypto.randomUUID();
+    healthRequest.current = requestId;
+    frame.contentWindow?.postMessage({ type: "MDV_PREVIEW_HEALTH_REQUEST", slotId: slot.id, requestId }, "*");
+    healthTimer.current = setTimeout(() => {
+      if (healthRequest.current !== requestId) return;
+      setLoadIssue("unverified");
+      onLoadStateChange?.(slot.id, "incomplete");
+    }, 5000);
+  }
 
   const syncScrollBridge = (iframe: HTMLIFrameElement | null) => {
     if (!iframe?.contentWindow) return;
@@ -535,6 +565,11 @@ export const PreviewCard = memo(function PreviewCard({
       if (event.source !== iframeRef.current?.contentWindow) return;
       const data = event.data;
       if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
+      if (data.type === "MDV_PREVIEW_FRAME_LOADED") {
+        // The wrapper's page frame loaded; the outer frame's own load was the wrapper's.
+        if (iframeRef.current) frameLoaded(iframeRef.current);
+        return;
+      }
       if (data.type === "MDV_PREVIEW_HEALTH") {
         const errors = readPreviewHealthReport(data, healthRequest.current);
         if (!errors) return;
@@ -755,7 +790,7 @@ export const PreviewCard = memo(function PreviewCard({
       pendingReplayStepRef.current = 0;
       setBridgeStatus("checking");
       const startUrl = flowReplay.startUrl;
-      void preparePreview(startUrl, identityRef.current).then(() => { if (iframeRef.current) iframeRef.current.src = startUrl; }).catch(() => setBlocked(true));
+      void preparePreview(startUrl, identitiesRef.current).then(() => { if (iframeRef.current) iframeRef.current.src = frameSrc(startUrl); }).catch(() => setBlocked(true));
       return;
     }
     sendFlowReplay(startIndex ?? 0);
@@ -988,41 +1023,18 @@ export const PreviewCard = memo(function PreviewCard({
             <iframe
               ref={iframeRef}
               key={`${slot.id}-${slot.reloadToken}`}
-              name={
-                hidesPageScrollbars(device)
-                  ? `mdv-mobile-preview-${slot.id}`
-                  : `mdv-preview-${slot.id}`
-              }
+              name={frameName}
               title={t("devicePreview", { name: device.name })}
-              src={preparedUrl === slot.url ? preparedUrl : "about:blank"}
+              src={preparedUrl === slot.url ? frameSrc(preparedUrl) : "about:blank"}
               loading="eager"
               className={`block size-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a] [color-scheme:dark]" : "bg-white [color-scheme:light]"} ${hidesPageScrollbars(device) ? "[scrollbar-width:none]" : ""}`}
               // Match the page at fractional raster edges, including the clear
               // gaps between Duo's floating glass groups.
               style={pageSurfaces?.top ? { backgroundColor: pageSurfaces.top } : undefined}
               scrolling="auto"
-              sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-storage-access-by-user-activation"
-              onLoad={event => {
-                const frame = event.currentTarget;
-                if (frame.getAttribute("src") === "about:blank") return;
-                // Preparing the frame initially creates an empty document.
-                // Its load event must not release a website's queue slot.
-                try { if (frame.contentDocument?.URL === "about:blank") return; } catch { /* Cross-origin website. */ }
-                clearTimeout(healthTimer.current);
-                setLoadIssue(null);
-                if (typeof chrome === "undefined" || !chrome.runtime?.id) {
-                  onLoadStateChange?.(slot.id, "loaded");
-                  return;
-                }
-                const requestId = crypto.randomUUID();
-                healthRequest.current = requestId;
-                frame.contentWindow?.postMessage({ type: "MDV_PREVIEW_HEALTH_REQUEST", slotId: slot.id, requestId }, "*");
-                healthTimer.current = setTimeout(() => {
-                  if (healthRequest.current !== requestId) return;
-                  setLoadIssue("unverified");
-                  onLoadStateChange?.(slot.id, "incomplete");
-                }, 5000);
-              }}
+              sandbox={PREVIEW_SANDBOX}
+              // A wrapper reports its page frame's load itself (MDV_PREVIEW_FRAME_LOADED).
+              onLoad={event => { if (!wrapped) frameLoaded(event.currentTarget); }}
               onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
             />
           )}

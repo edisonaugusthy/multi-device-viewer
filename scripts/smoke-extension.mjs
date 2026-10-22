@@ -12,14 +12,22 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 
 const extension = fileURLToPath(new URL("../.output/chrome-mv3", import.meta.url));
-const html = "<!doctype html><title>Smoke page</title><h1>Smoke page</h1><p>Mobile View extension smoke test.</p>";
-// The User-Agent of each request, by what it loaded: preview frames identify
-// as the workspace's iPhone while the page itself keeps the browser's own.
-const agents = { iframe: new Set(), document: new Set() };
+const pages = {
+  "/": "<!doctype html><title>Smoke page</title><h1>Smoke page</h1><p>Mobile View extension smoke test.</p><a href=\"/next\">Next page</a>",
+  "/next": "<!doctype html><title>Next page</title><h1>Next page</h1>",
+  "/self": "<!doctype html><title>Self page</title><h1>Self page</h1>",
+};
+// The User-Agent of each request, by what it loaded and which page: phone
+// previews identify as the workspace's iPhone, the MacBook preview as Safari
+// on a Mac, and the page itself keeps the browser's own.
+const agents = { iframe: new Map(), document: new Map() };
 const server = createServer((req, res) => {
-  agents[req.headers["sec-fetch-dest"]]?.add(req.headers["user-agent"] ?? "");
-  res.writeHead(200, { "content-type": "text/html" }); res.end(html);
+  const path = new URL(req.url, "http://localhost").pathname;
+  const seen = agents[req.headers["sec-fetch-dest"]];
+  if (seen) seen.set(path, [...seen.get(path) ?? [], req.headers["user-agent"] ?? ""]);
+  res.writeHead(200, { "content-type": "text/html" }); res.end(pages[path] ?? pages["/"]);
 });
+const IPHONE = /iPhone/, MAC_SAFARI = /Macintosh.*Version\/\d+\.0 Safari\/605/;
 await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const pageUrl = `http://127.0.0.1:${server.address().port}/`;
 const profile = await mkdtemp(join(tmpdir(), "mdv-smoke-"));
@@ -80,9 +88,34 @@ try {
   if (!previewCount) failures.push("no live preview loaded the page");
   if (headings.some((text) => text !== "Smoke page")) failures.push("a preview did not render the page");
   if (!frameCount) failures.push("no device frame image loaded");
-  if (![...agents.iframe].some((agent) => agent.includes("iPhone"))) failures.push(`preview frames did not identify as the workspace's iPhone: ${[...agents.iframe].join(" | ") || "no frame request"}`);
-  if ([...agents.document].some((agent) => agent.includes("iPhone"))) failures.push("the page itself was requested as an iPhone");
+  const frameAgents = agents.iframe.get("/") ?? [];
+  if (!frameAgents.some((agent) => IPHONE.test(agent))) failures.push(`no preview frame identified as the workspace's iPhone: ${frameAgents.join(" | ") || "no frame request"}`);
+  if (!frameAgents.some((agent) => MAC_SAFARI.test(agent))) failures.push(`no preview frame identified as the MacBook's Safari: ${frameAgents.join(" | ") || "no frame request"}`);
+  if ((agents.document.get("/") ?? []).some((agent) => IPHONE.test(agent) || MAC_SAFARI.test(agent))) failures.push("the page itself was requested as a device");
   console.log(`viewer opened in ${opened} ms; ${previewCount} live previews; ${frameCount} device frames`);
+
+  // A link followed inside a phone preview is fetched as a phone too: the
+  // wrapper frame navigates it, so the request starts from the extension.
+  const wrapped = previews().find((frame) => frame.parentFrame()?.url().startsWith(`${extensionOrigin}/preview-frame.html`));
+  if (!wrapped) failures.push("no phone preview was wrapped in the extension's frame");
+  else {
+    // A click dispatched in the page, as a pointer click on the scaled device would land anywhere.
+    await wrapped.evaluate(() => document.querySelector("a").dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 })));
+    for (let i = 0; i < 100 && !(agents.iframe.get("/next") ?? []).length; i++) await page.waitForTimeout(100);
+    const nextAgents = agents.iframe.get("/next") ?? [];
+    if (!nextAgents.length || !nextAgents.every((agent) => IPHONE.test(agent))) failures.push(`a link inside the phone preview was not fetched as an iPhone: ${nextAgents.join(" | ") || "no request"}`);
+    const next = page.frames().find((frame) => frame.url() === `${pageUrl}next`);
+    const landed = await next?.locator("h1").textContent({ timeout: 5000 }).catch(() => null);
+    if (landed !== "Next page") failures.push("the phone preview did not show the linked page");
+    // A page the script navigates itself starts from the website, so it
+    // arrives as desktop once and is fetched again as a phone.
+    await next?.evaluate(() => { location.href = "/self"; });
+    for (let i = 0; i < 100 && (agents.iframe.get("/self") ?? []).length < 2; i++) await page.waitForTimeout(100);
+    const selfAgents = agents.iframe.get("/self") ?? [];
+    if (selfAgents.length < 2 || !MAC_SAFARI.test(selfAgents[0]) || !IPHONE.test(selfAgents[selfAgents.length - 1])) failures.push(`a page navigated by its own script was not fetched as desktop, then again as an iPhone: ${selfAgents.join(" | ") || "no request"}`);
+    const self = await page.frames().find((frame) => frame.url() === `${pageUrl}self`)?.locator("h1").textContent({ timeout: 5000 }).catch(() => null);
+    if (self !== "Self page") failures.push("the phone preview did not show the page it navigated to itself");
+  }
 
   // A second click closes the viewer and restores the page.
   await worker.evaluate(async (url) => {

@@ -80,6 +80,40 @@ export function previewIdentity(devices: Device[], chrome: number): PreviewIdent
   return undefined;
 }
 
+/**
+ * The identities of a tab's two kinds of preview frame. "wrapped" frames are
+ * navigated by the extension's own page (phone previews in the in-page
+ * viewer, and every preview on the simulator page, which is the extension's
+ * own); "direct" frames are navigated by the website the viewer is on.
+ * Undefined keeps a kind's current identity; null returns it to the browser's own.
+ */
+export interface PreviewIdentities {
+  wrapped?: PreviewIdentity | null;
+  direct?: PreviewIdentity | null;
+}
+
+/** Phones get their own frame class, so the request rules can give them the phone identity alone. */
+export function isWrappedDevice(device: Device): boolean {
+  return device.type === "phone";
+}
+
+/** With `split`, phones speak for the wrapped frames and the other devices for the direct ones; without it, every frame is wrapped. */
+export function previewIdentities(devices: Device[], chrome: number, split: boolean): PreviewIdentities {
+  if (!split) return { wrapped: previewIdentity(devices, chrome) ?? null, direct: null };
+  return {
+    wrapped: previewIdentity(devices.filter(isWrappedDevice), chrome) ?? null,
+    direct: previewIdentity(devices.filter(device => !isWrappedDevice(device)), chrome) ?? null,
+  };
+}
+
+/** Identities received in a message; each kind is read as previewIdentityFrom does. */
+export function previewIdentitiesFrom(value: unknown): PreviewIdentities | null | undefined {
+  if (value === null) return null;
+  if (!value || typeof value !== "object") return undefined;
+  const { wrapped, direct } = value as Record<string, unknown>;
+  return { wrapped: previewIdentityFrom(wrapped), direct: previewIdentityFrom(direct) };
+}
+
 /** An identity received in a message: null asks for the browser's own, anything malformed is ignored. */
 export function previewIdentityFrom(value: unknown): PreviewIdentity | null | undefined {
   if (value === null) return null;

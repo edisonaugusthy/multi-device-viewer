@@ -1,5 +1,5 @@
 import { createPreviewSessions } from "../src/app/preview-sessions";
-import { previewIdentityFrom } from "../src/domain/simulator/preview-identity";
+import { previewIdentitiesFrom } from "../src/domain/simulator/preview-identity";
 import { VisualRegressionError } from "../src/domain/visual-regression/visual-regression.types";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
@@ -22,7 +22,7 @@ const originOf = (url?: string) => { try { return url ? new URL(url).origin : un
 
 export default defineBackground(() => {
   const launches = new Map<number, Promise<void>>();
-  const previews = createPreviewSessions();
+  const previews = createPreviewSessions(chrome.runtime.id);
   void previews.prune().catch(console.error);
   chrome.tabs.onRemoved.addListener(tabId => { void previews.close(tabId).catch(console.error); });
   const review = createReviewCoordinator({
@@ -301,7 +301,7 @@ export default defineBackground(() => {
       return true;
     }
     if ((message?.type === "MDV_PREVIEW_HOST" || message?.type === "MDV_PREVIEW_CLOSE") && typeof sender.tab?.id === "number" && sender.frameId === 0) {
-      const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url, previewIdentityFrom(message.identity));
+      const work = message.type === "MDV_PREVIEW_CLOSE" ? previews.close(sender.tab.id) : previews.prepare(sender.tab.id, message.url, previewIdentitiesFrom(message.identities));
       void work.then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
       return true;
     }

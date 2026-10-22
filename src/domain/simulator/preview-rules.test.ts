@@ -1,15 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { describeHeaders, identityHeaders, previewHost, previewRule } from "./preview-rules";
+import { describeHeaders, identityHeaders, previewHost, previewRule, previewRuleKind } from "./preview-rules";
 describe("temporary preview rules", () => {
   it("rejects non-web URLs and embedded credentials", () => {
     for (const url of ["file:///tmp/a", "chrome://settings", "https://user:secret@example.com", "bad"]) expect(() => previewHost(url)).toThrow();
   });
-  it("limits changes to selected hosts and subframes in one tab", () => {
+  it("limits changes to selected hosts and subframes of one kind in one tab", () => {
     expect(previewHost("https://example.com/path?token=private")).toBe("example.com");
-    const rule = previewRule(1000000, 7, ["example.com", "example.com"]);
-    expect(rule.condition).toEqual({ tabIds: [7], requestDomains: ["example.com"], resourceTypes: ["sub_frame"] });
+    const rule = previewRule(1000000, 7, ["example.com", "example.com"], { kind: "wrapped", extensionId: "ext" });
+    expect(rule.condition).toEqual({ tabIds: [7], requestDomains: ["example.com"], resourceTypes: ["sub_frame"], initiatorDomains: ["ext"] });
     expect(rule.action.responseHeaders?.some(header => /cookie/i.test(header.header))).toBe(false);
     expect(rule.action.requestHeaders).toBeUndefined();
+    expect(previewRuleKind(rule)).toBe("wrapped");
+    const direct = previewRule(1000001, 7, ["example.com"], { kind: "direct", extensionId: "ext" });
+    expect(direct.condition.excludedInitiatorDomains).toEqual(["ext"]);
+    expect(direct.condition.initiatorDomains).toBeUndefined();
+    expect(previewRuleKind(direct)).toBe("direct");
   });
   it("sends an iPhone as Safari with no client hints at all", () => {
     const headers = identityHeaders({ userAgent: "iPhone Safari" });
@@ -17,7 +22,7 @@ describe("temporary preview rules", () => {
     expect(headers.slice(1).every(header => header.operation === "remove" && header.header.startsWith("sec-ch-ua"))).toBe(true);
     expect(headers.map(header => header.header)).toContain("sec-ch-ua");
     expect(headers.map(header => header.header)).toContain("sec-ch-ua-mobile");
-    expect(previewRule(1000000, 7, ["example.com"], headers).action.requestHeaders).toBe(headers);
+    expect(previewRule(1000000, 7, ["example.com"], { kind: "direct", extensionId: "ext" }, headers).action.requestHeaders).toBe(headers);
   });
   it("sends an Android phone as the browser's own Chrome brands on a mobile Android platform", () => {
     const headers = identityHeaders({ userAgent: "Android Chrome", hints: { mobile: true, platform: "Android" } });

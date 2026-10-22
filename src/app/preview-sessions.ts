@@ -1,8 +1,10 @@
-import type { PreviewIdentity } from "../domain/simulator/preview-identity";
-import { describeHeaders, identityHeaders, PREVIEW_RULE_BASE, previewHost, previewRule } from "../domain/simulator/preview-rules";
+import type { PreviewIdentities } from "../domain/simulator/preview-identity";
+import { describeHeaders, identityHeaders, PREVIEW_RULE_BASE, previewHost, previewRule, previewRuleKind, type PreviewFrameKind } from "../domain/simulator/preview-rules";
+
+const KINDS: readonly PreviewFrameKind[] = ["wrapped", "direct"];
 
 /** Session rules survive worker suspension; the browser clears them on restart/update. */
-export function createPreviewSessions() {
+export function createPreviewSessions(extensionId: string) {
   let queue: Promise<unknown> = Promise.resolve();
   const serial = <T>(work: () => Promise<T>) => {
     const result = queue.then(work); queue = result.catch(() => undefined); return result;
@@ -10,25 +12,30 @@ export function createPreviewSessions() {
   const ownRules = async () => (await chrome.declarativeNetRequest.getSessionRules()).filter(rule => rule.id >= PREVIEW_RULE_BASE);
   return {
     /**
-     * Lets the tab frame a site, and makes its preview frames identify as the
-     * given device's browser. An absent identity keeps the tab's current one;
-     * null returns to the browser's own.
+     * Lets the tab frame a site, and makes each kind of preview frame in it
+     * identify as the given device's browser. Absent identities keep the
+     * tab's current ones; null returns a kind to the browser's own.
      */
-    prepare: (tabId: number, url: string, identity?: PreviewIdentity | null) => serial(async () => {
+    prepare: (tabId: number, url: string, identities?: PreviewIdentities | null) => serial(async () => {
       const domain = previewHost(url);
       const rules = await ownRules();
-      const existing = rules.find(rule => rule.condition.tabIds?.includes(tabId));
-      const domains = existing?.condition.requestDomains ?? [];
+      const own = rules.filter(rule => rule.condition.tabIds?.includes(tabId));
+      const domains = [...new Set(own.flatMap(rule => rule.condition.requestDomains ?? []))];
       const known = domains.includes(domain);
-      const requestHeaders = identity === undefined ? existing?.action.requestHeaders : identity ? identityHeaders(identity) : undefined;
-      if (known && describeHeaders(requestHeaders) === describeHeaders(existing?.action.requestHeaders)) return;
       if (!known && domains.length >= 32) throw new Error("Close and reopen Mobile View before previewing more sites.");
       const used = new Set(rules.map(rule => rule.id));
-      let id = existing?.id ?? PREVIEW_RULE_BASE;
-      if (!existing) while (used.has(id)) id++;
-      await chrome.declarativeNetRequest.updateSessionRules({
-        removeRuleIds: existing ? [id] : [], addRules: [previewRule(id, tabId, known ? domains : [...domains, domain], requestHeaders)],
-      });
+      const nextId = () => { let id = PREVIEW_RULE_BASE; while (used.has(id)) id++; used.add(id); return id; };
+      const removeRuleIds: number[] = [];
+      const addRules: chrome.declarativeNetRequest.Rule[] = [];
+      for (const kind of KINDS) {
+        const existing = own.find(rule => previewRuleKind(rule) === kind);
+        const identity = identities === null ? null : identities?.[kind];
+        const requestHeaders = identity === undefined ? existing?.action.requestHeaders : identity ? identityHeaders(identity) : undefined;
+        if (existing && known && describeHeaders(requestHeaders) === describeHeaders(existing.action.requestHeaders)) continue;
+        if (existing) removeRuleIds.push(existing.id);
+        addRules.push(previewRule(existing?.id ?? nextId(), tabId, known ? domains : [...domains, domain], { kind, extensionId }, requestHeaders));
+      }
+      if (addRules.length) await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds, addRules });
     }),
     close: (tabId: number) => serial(async () => {
       const removeRuleIds = (await ownRules()).filter(rule => rule.condition.tabIds?.includes(tabId)).map(rule => rule.id);

@@ -52,8 +52,9 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        // viewer.js and its shared chunks are loaded by the content script on demand.
-        resources: ["viewer.js", "chunks/*", "mockups/*", "icons/*", "fonts/*", `${UI_LOCALES_DIR}/*`],
+        // viewer.js and its shared chunks are loaded by the content script on
+        // demand; preview-frame.html wraps phone previews (src/app/preview-frame.ts).
+        resources: ["viewer.js", "chunks/*", "mockups/*", "icons/*", "fonts/*", "preview-frame.html", `${UI_LOCALES_DIR}/*`],
         matches: ["http://*/*", "https://*/*"]
       }
     ],

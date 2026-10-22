@@ -36,15 +36,15 @@ describe("shared preview preparation", () => {
     expect(sendMessage).toHaveBeenCalledTimes(3);
   });
 
-  it("passes the device identity along and shares setup only among frames asking for the same one", async () => {
+  it("passes the device identities along and shares setup only among frames asking for the same ones", async () => {
     const sendMessage = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal("chrome", { runtime: { sendMessage } });
-    const iphone = { userAgent: "iPhone Safari" };
-    await Promise.all([preparePreview("https://example.test", iphone), preparePreview("https://example.test", iphone), preparePreview("https://example.test", null), preparePreview("https://example.test")]);
+    const identities = { wrapped: { userAgent: "iPhone Safari" }, direct: null };
+    await Promise.all([preparePreview("https://example.test", identities), preparePreview("https://example.test", identities), preparePreview("https://example.test", null), preparePreview("https://example.test")]);
     expect(sendMessage.mock.calls.map(([message]) => message)).toEqual([
-      { type: "MDV_PREVIEW_HOST", url: "https://example.test", identity: iphone },
-      { type: "MDV_PREVIEW_HOST", url: "https://example.test", identity: null },
-      { type: "MDV_PREVIEW_HOST", url: "https://example.test", identity: undefined },
+      { type: "MDV_PREVIEW_HOST", url: "https://example.test", identities },
+      { type: "MDV_PREVIEW_HOST", url: "https://example.test", identities: null },
+      { type: "MDV_PREVIEW_HOST", url: "https://example.test", identities: undefined },
     ]);
   });
 

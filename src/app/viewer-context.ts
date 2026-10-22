@@ -1,4 +1,4 @@
-import type { PreviewIdentity } from "../domain/simulator/preview-identity";
+import type { PreviewIdentities } from "../domain/simulator/preview-identity";
 
 /** What a reopened viewer shows again after its page reloaded with it open. */
 export interface ViewerRestoreState {
@@ -27,19 +27,19 @@ export function extensionAsset(path: string): string {
 }
 
 /**
- * Lets the tab frame the site and, with an identity, makes preview frames in
- * the tab identify as that device's browser (null: the browser's own; absent:
- * unchanged). Resolves once the frame can load.
+ * Lets the tab frame the site and, with identities, makes each kind of
+ * preview frame in the tab identify as that device's browser (null: the
+ * browser's own; absent: unchanged). Resolves once the frame can load.
  */
-export async function preparePreview(url: string, identity?: PreviewIdentity | null): Promise<void> {
+export async function preparePreview(url: string, identities?: PreviewIdentities | null): Promise<void> {
   if (!context || typeof chrome === "undefined" || !chrome.runtime?.sendMessage) return;
   // Gallery frames share this setup, but still load independent documents.
   // Only coalesce in-flight work: a later reload rechecks the session rules.
-  const key = `${identity === undefined ? "" : JSON.stringify(identity)}\n${url}`;
+  const key = `${identities === undefined ? "" : JSON.stringify(identities)}\n${url}`;
   const pending = pendingPreviews.get(key);
   if (pending) return pending;
   const preparation = (async () => {
-    const result = await chrome.runtime.sendMessage({ type: "MDV_PREVIEW_HOST", url, identity });
+    const result = await chrome.runtime.sendMessage({ type: "MDV_PREVIEW_HOST", url, identities });
     if (!result?.ok) throw new Error(result?.error ?? "Could not prepare the preview.");
   })();
   pendingPreviews.set(key, preparation);

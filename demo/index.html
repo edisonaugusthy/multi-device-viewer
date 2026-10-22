@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Orbit: demo site for the Mobile View live preview</title>
+<style>
+*{box-sizing:border-box}html{color-scheme:light;scroll-behavior:auto}
+/* Laptops and desktops: scale the page up so it stays readable inside a small device frame. */
+@media(min-width:751px) and (max-width:1099px){body{zoom:1.15}}
+@media(min-width:1100px){body{zoom:1.3}}body{margin:0;background:#f4f5f0;color:#18362c;font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,a{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:2;min-height:76px;padding:var(--top,0px) 5% 0;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border-bottom:1px solid #dde3d9}
+.logo{font-size:24px;font-weight:800;letter-spacing:-1px;color:inherit;text-decoration:none;white-space:nowrap}.mark{display:inline-block;background:#c5eb73;border-radius:50%;width:21px;height:21px;vertical-align:-2px;margin-right:8px}
+nav{display:flex;gap:28px}nav a{color:#6e7c72;text-decoration:none;padding:6px 0}nav a[aria-current=page]{color:#18362c;font-weight:650;text-decoration:underline;text-underline-offset:7px}
+.profile{background:#f0f2ec;border-radius:30px;padding:8px 14px;font-size:12px;white-space:nowrap}
+.tabs{display:none}
+main{max-width:1240px;margin:auto;padding:48px 5%}
+.eyebrow{font-size:11px;font-weight:750;letter-spacing:2px;color:#57725f;text-transform:uppercase}
+h1{font-size:clamp(30px,3.8vw,54px);line-height:1.08;letter-spacing:-2px;margin:14px 0 18px;max-width:630px}
+.intro{color:#718073;max-width:540px;margin:0 0 28px}
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:34px;align-items:center}
+.cta{display:inline-block;background:#203e30;color:#fff;border:0;padding:13px 22px;border-radius:9px;font-weight:650;text-decoration:none}
+.art{height:236px;border-radius:25px;background:#dcedba;position:relative;overflow:hidden}.circle{position:absolute;width:235px;height:235px;border:48px solid #244d39;border-radius:50%;right:15%;top:40px}.orb{width:108px;height:108px;border-radius:50%;background:#f3b88a;position:absolute;right:8%;top:24px}.line{position:absolute;bottom:32px;left:27px;font-size:11px;font-weight:750;letter-spacing:2px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:35px 0 15px}h2{font-size:20px;margin:0;letter-spacing:-.5px}.subtle{font-size:12px;color:#7d8a7d}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.metric{padding:21px 23px;border:1px solid #dfe4d8;background:#fff;border-radius:13px}.metric b{font-size:29px;display:block;letter-spacing:-1px}.metric span{font-size:12px;color:#718073}.metric em{font-size:11px;color:#537d30;font-style:normal}
+.projects{display:grid;grid-template-columns:1fr 1fr;gap:16px}.project{background:#fff;border:1px solid #dfe4d8;border-radius:13px;padding:22px}.pill{font-size:10px;border-radius:15px;background:#edf5d6;padding:5px 9px;display:inline-block}.project h3{margin:12px 0 7px;font-size:17px}.progress{height:5px;background:#eef0e9;border-radius:5px;margin:20px 0 12px}.progress i{display:block;height:5px;background:#659446;border-radius:5px}.row{display:flex;justify-content:space-between;font-size:11px;color:#7c877b}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}.plan{background:#fff;border:1px solid #dfe4d8;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:8px}.plan.featured{background:#203e30;border-color:#203e30;color:#fff}.plan.featured .subtle{color:#c9dcc0}.price{font-size:34px;font-weight:800;letter-spacing:-1px}.plan ul{margin:8px 0 0;padding-left:18px;font-size:13px;color:inherit}
+.center{text-align:center}.center h1,.center .intro{margin-left:auto;margin-right:auto}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.person{display:flex;flex-direction:column;gap:4px;padding:20px;border:1px solid #dfe4d8;background:#fff;border-radius:13px}.avatar{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;font-size:13px;font-weight:750;margin-bottom:6px}
+.activity{list-style:none;margin:0;padding:0;background:#fff;border:1px solid #dfe4d8;border-radius:13px}.activity li{display:flex;align-items:center;gap:12px;padding:16px 20px;border-top:1px solid #eef0e9}.activity li:first-child{border-top:0}.activity li span:nth-child(2){flex:1}.activity .dot{width:9px;height:9px;border-radius:50%;background:#659446;flex:none}
+.band{margin-top:40px;padding:36px;border-radius:20px;background:#203e30;color:#fff}.band h2{font-size:26px}.band p{color:#c9dcc0;margin:8px 0 20px}.cta.light{background:#c5eb73;color:#18362c}
+.view[hidden]{display:none}
+footer{padding:20px 5% 28px;font-size:10px;color:#7d8a7d;text-align:center}
+@media(max-width:750px){header{min-height:62px}nav{display:none}.tabs{display:flex;gap:6px;padding:10px 5%;background:#fff;border-bottom:1px solid #dde3d9}.tabs a{flex:1;text-align:center;padding:7px 0;border-radius:8px;color:#6e7c72;text-decoration:none;font-size:13px}.tabs a[aria-current=page]{background:#edf5d6;color:#18362c;font-weight:650}main{padding-top:30px}.hero{grid-template-columns:1fr;gap:24px}.art{height:165px}.circle{width:190px;height:190px;border-width:36px;top:14px;right:21%}.orb{width:82px;height:82px;right:14%;top:14px}h1{letter-spacing:-1px;font-size:37px}.metrics{gap:8px}.metric{padding:13px 11px}.metric b{font-size:24px}.metric span{font-size:10px}.metric em{display:none}.projects,.plans{grid-template-columns:1fr}.team{grid-template-columns:1fr 1fr;gap:8px}.person{padding:14px}.band{padding:24px}.section-title{margin-top:27px}.intro{font-size:13px}}
+@media(max-width:240px){header{min-height:36px;padding:var(--top,0px) 10px 0;justify-content:center}.logo{font-size:16px;letter-spacing:-.5px}.mark{width:12px;height:12px;margin-right:5px}.profile,nav,.tabs,.eyebrow,.intro,.cta,.section-title,.projects,.team,.band p,footer,.plan ul{display:none}.activity li{padding:8px;gap:6px;font-size:11px}.activity .subtle{display:none}.band{margin-top:12px;padding:12px;border-radius:12px}.band h2{font-size:15px}main{padding:12px 10px}.hero{gap:12px}h1{font-size:22px;letter-spacing:-.7px;margin:0;line-height:1.08}.art{height:76px;border-radius:12px}.circle{width:85px;height:85px;border-width:17px;top:10px;right:19%}.orb{width:38px;height:38px;top:5px;right:9%}.line{display:none}.metrics,.plans{grid-template-columns:1fr;margin-top:12px;gap:8px}.metric,.plan{padding:9px}.metric b,.price{font-size:20px}}
+</style>
+<header>
+  <a class="logo" href="#overview"><span class="mark"></span>orbit</a>
+  <nav aria-label="Demo site"><a href="#overview">Overview</a><a href="#pricing">Pricing</a><a href="#overview" data-scroll="projects">Projects</a></nav>
+  <span class="profile">● Demo workspace</span>
+</header>
+<div class="tabs" role="navigation" aria-label="Demo site"><a href="#overview">Overview</a><a href="#pricing">Pricing</a></div>
+<main>
+  <div class="view" data-view="overview">
+    <div class="hero"><section><div class="eyebrow">A little space. A lot of possibility.</div><h1>Make room for<br>your best work.</h1><p class="intro">Bring your projects, people and next big ideas together. A calmer place to make things happen.</p><a class="cta" href="#pricing">See plans ↗</a></section><div class="art"><div class="circle"></div><div class="orb"></div><span class="line">GOOD THINGS TAKE SHAPE.</span></div></div>
+    <div class="section-title"><h2>Your week, at a glance</h2><span class="subtle">This week ↓</span></div>
+    <div class="metrics"><div class="metric"><span>Active projects</span><b>12</b><em>+2 this week</em></div><div class="metric"><span>Tasks completed</span><b>84</b><em>Looking good</em></div><div class="metric"><span>Team momentum</span><b>96%</b><em>+8% this month</em></div></div>
+    <div class="section-title" id="projects"><h2>Projects in motion</h2><span class="subtle">View all projects ↗</span></div>
+    <div class="projects"><article class="project"><span class="pill">DESIGN</span><h3>A fresh perspective</h3><span class="subtle">Brand system · Website refresh</span><div class="progress"><i style="width:72%"></i></div><div class="row"><span>18 of 25 tasks</span><span>72%</span></div></article><article class="project"><span class="pill" style="background:#fbe7d9">PRODUCT</span><h3>The next chapter</h3><span class="subtle">Product launch · Team collaboration</span><div class="progress"><i style="width:48%;background:#d99864"></i></div><div class="row"><span>12 of 25 tasks</span><span>48%</span></div></article></div>
+    <div class="section-title"><h2>Team this week</h2><span class="subtle">4 people</span></div>
+    <div class="team"><div class="person"><span class="avatar" style="background:#c5eb73">AM</span><b>Ava Moreno</b><span class="subtle">Design lead</span></div><div class="person"><span class="avatar" style="background:#f3b88a">JK</span><b>Jun Kim</b><span class="subtle">Engineering</span></div><div class="person"><span class="avatar" style="background:#bfd7f2">SR</span><b>Sara Ruiz</b><span class="subtle">Product</span></div><div class="person"><span class="avatar" style="background:#e6d3f5">LN</span><b>Leo Nash</b><span class="subtle">Research</span></div></div>
+    <div class="section-title"><h2>Recent activity</h2><span class="subtle">Today</span></div>
+    <ul class="activity"><li><span class="dot"></span><span><b>Ava</b> shared new homepage concepts</span><span class="subtle">9:40</span></li><li><span class="dot" style="background:#d99864"></span><span><b>Jun</b> shipped the mobile navigation</span><span class="subtle">11:05</span></li><li><span class="dot" style="background:#7aa6c9"></span><span><b>Sara</b> moved the launch to Friday</span><span class="subtle">13:20</span></li><li><span class="dot" style="background:#b48ad6"></span><span><b>Leo</b> posted interview notes</span><span class="subtle">15:45</span></li></ul>
+    <section class="band"><h2>Ready when your team is.</h2><p>Bring one project over and see how calm work can feel.</p><a class="cta light" href="#pricing">Compare plans ↗</a></section>
+  </div>
+  <div class="view center" data-view="pricing" hidden>
+    <div class="eyebrow">Pricing</div><h1>Simple plans that grow with you.</h1><p class="intro">Start free. Upgrade when your team does.</p>
+    <div class="plans">
+      <article class="plan"><h2>Starter</h2><span class="price">Free</span><span class="subtle">Three projects, five people.</span><ul><li>Shared boards</li><li>Weekly summary</li></ul></article>
+      <article class="plan featured"><h2>Team</h2><span class="price">$12</span><span class="subtle">Per person, per month.</span><ul><li>Unlimited projects</li><li>Guest access</li></ul></article>
+      <article class="plan"><h2>Business</h2><span class="price">$24</span><span class="subtle">Per person, per month.</span><ul><li>Admin controls</li><li>Single sign-on</li></ul></article>
+    </div>
+    <p style="margin-top:28px"><a class="cta" href="#overview">Back to overview</a></p>
+  </div>
+</main>
+<footer>Fictional demo website · All content is local · Shown in the Mobile View live preview</footer>
+<script>
+// ?top=NN reserves room for the device's status bar, island or camera.
+const top = Number(new URLSearchParams(location.search).get("top")) || 0;
+document.documentElement.style.setProperty("--top", top + "px");
+function route() {
+  const page = location.hash === "#pricing" ? "pricing" : "overview";
+  for (const view of document.querySelectorAll("[data-view]")) view.hidden = view.dataset.view !== page;
+  for (const link of document.querySelectorAll("nav a, .tabs a")) {
+    if (link.dataset.scroll) continue;
+    link.toggleAttribute("aria-current", link.getAttribute("href") === "#" + page);
+    if (link.hasAttribute("aria-current")) link.setAttribute("aria-current", "page");
+  }
+  scrollTo(0, 0);
+}
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("[data-scroll]");
+  if (!link) return;
+  event.preventDefault();
+  document.getElementById(link.dataset.scroll)?.scrollIntoView();
+});
+addEventListener("hashchange", route);
+route();
+</script>
+</html>

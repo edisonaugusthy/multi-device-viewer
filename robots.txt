@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# LLM-readable product summary
+# https://edisonaugusthy.github.io/multi-device-viewer/llms.txt
+
+Sitemap: https://edisonaugusthy.github.io/multi-device-viewer/sitemap.xml

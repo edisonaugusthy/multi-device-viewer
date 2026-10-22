@@ -1,0 +1,62 @@
+Mobile View Artwork License
+Copyright (c) 2026 Edison Augusthy. All rights reserved.
+Effective date: 11 October 2026
+
+1. Scope
+
+This license covers the project-owned device frame images, logo and brand
+icons, screenshots, promotional images, and their editable artwork sources
+(the "Artwork"). In this repository, the exported Artwork is located in:
+
+  - internal/artwork/mockups/ (private source exports);
+  - mockups/ in extension builds and frames/ in website builds;
+  - public/icons/;
+  - store-assets/webstore-upload/;
+  - website/public/icons/,
+    website/public/screenshots/, and website/public/og.png.
+
+Editable drawings, artwork specifications, logo masters, composition
+templates and raw captures are maintained separately in private storage.
+The Artwork is excluded from the MIT License for the application code.
+Application code, generated viewport geometry, general build and capture
+tools, documentation and listing text remain covered by that MIT License.
+
+2. Permitted use with Mobile View
+
+You may download, install and run the official Mobile View application,
+view its website, and display the Artwork as part of their normal operation.
+You may make a local development build for personal testing. You may create
+and share screenshots and recordings of your own work using Mobile View's
+capture features, including the frames incidentally shown in those captures.
+These permissions do not authorize extracting frames or other Artwork for
+use as standalone assets or as a reusable asset collection.
+
+3. Other reuse requires written permission
+
+Except for section 2, any copying, extraction for reuse, modification,
+adaptation, redistribution, sublicensing, sale, or use of the Artwork in
+another product, extension, website, service or promotional material
+requires prior written permission from Edison Augusthy. This applies to
+both commercial and noncommercial reuse. Redistributing a fork with this
+Artwork requires permission; a fork may instead supply its own assets.
+
+Request permission at:
+https://github.com/edisonaugusthy/multi-device-viewer/issues
+
+4. Other rights and earlier permissions
+
+This license grants only rights held by the copyright holder. It does not
+claim ownership of third-party devices, trademarks, websites shown in
+screenshots, fonts, dependencies, or other third-party material. Such
+material remains subject to its own rights and licenses. Device and brand
+names identify the simulated devices; no endorsement is implied.
+
+Nothing here restricts uses permitted by applicable law, limits the MIT
+License for the code, or revokes permissions already granted under an
+earlier license or separate written agreement.
+
+5. Disclaimer
+
+The Artwork is provided "as is", without warranties of any kind, to the
+extent permitted by applicable law. The copyright holder disclaims
+liability arising from its use to the extent permitted by applicable law.

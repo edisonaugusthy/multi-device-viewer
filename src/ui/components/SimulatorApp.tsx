@@ -711,14 +711,14 @@ export function SimulatorApp() {
 
   const onComparePageScroll = useCallback((scrollTop: number) => setDesignScrollTop(scrollTop), []);
 
-  // Phone previews identify as the workspace's most phone-like phone and the
-  // other previews as its most phone-like other device (see previewIdentities),
-  // or every preview as its own device with exact identities on. When that
-  // changes, every preview reloads so each page is the one its browser gets.
+  // The workspace's devices are split into two classes of preview frame with
+  // shared identities (see planPreviewFrames), or every preview is its own
+  // device with exact identities on. When that changes, every preview reloads
+  // so each page is the one its browser gets.
   const previewFrames = useMemo(() => slots.map((slot) => { const device = findDevice(slot.deviceId); return { name: previewFrameName(slot.id, hidesPageScrollbars(device)), device }; }), [findDevice, slots]);
   const exactMode = useExactIdentities(display.exactIdentities === true, previewFrames);
   const [exactDialog, setExactDialog] = useState(false);
-  const requestIdentityKey = JSON.stringify([exactMode.identities, exactMode.exact]);
+  const requestIdentityKey = exactMode.key;
   const lastRequestIdentity = useRef<string | null>(null);
   useEffect(() => {
     if (!ready || !exactMode.settled) return;
@@ -919,7 +919,7 @@ export function SimulatorApp() {
                     identities={exactMode.identities}
                     exact={exactMode.exact}
                     onExact={exactMode.report}
-                    wrapped={exactMode.active}
+                    wrapped={exactMode.isWrapped(previewFrames[index]?.name ?? "")}
                     onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}
                     designOverlay={comparing && overlayShown && compareImage ? {
                       image: compareImage,

@@ -4,7 +4,7 @@ import { createCustomDevice } from "../device/device-service";
 import type { Device } from "../device/device.types";
 import { getFrameProfile } from "../device/frame-profiles";
 import {
-  chromeMajor, deviceIdentity, exactIdentities, exactIdentitiesFrom, previewIdentities, previewIdentitiesFrom, previewIdentity, previewIdentityFrom,
+  chromeMajor, deviceIdentity, exactIdentities, exactIdentitiesFrom, planPreviewFrames, previewIdentitiesFrom, previewIdentity, previewIdentityFrom,
   type PreviewIdentity,
 } from "./preview-identity";
 
@@ -84,13 +84,26 @@ describe("the browser a preview identifies as", () => {
     expect(previewIdentity([], CHROME)).toBeUndefined();
   });
 
-  it("splits a tab's identities between its phone frames and the rest, or gives every frame one", () => {
-    const iphone = device("apple-iphone-18-pro-2026");
-    const mac = first("laptop", /macos/i), tablet = first("tablet", /android/i);
-    expect(previewIdentities([mac, tablet, iphone], CHROME, true)).toEqual({ wrapped: deviceIdentity(iphone, CHROME), direct: deviceIdentity(tablet, CHROME) });
-    expect(previewIdentities([mac], CHROME, true)).toEqual({ wrapped: null, direct: deviceIdentity(mac, CHROME) });
-    expect(previewIdentities([mac, iphone], CHROME, false)).toEqual({ wrapped: deviceIdentity(iphone, CHROME), direct: null });
-    expect(previewIdentitiesFrom({ wrapped: deviceIdentity(iphone, CHROME), direct: null })).toEqual({ wrapped: deviceIdentity(iphone, CHROME), direct: null });
+  it("splits the devices on screen into two classes: the most phone-like browser wrapped, the least phone-like direct", () => {
+    const iphone = device("apple-iphone-18-pro-2026"), pixel = first("phone", /android/i);
+    const mac = first("laptop", /macos/i), windows = first("laptop", /windows/i), chromebook = first("laptop", /chromeos/i);
+    const ipad = first("tablet", /ipados/i), tablet = first("tablet", /android/i), watch = first("watch", /watchos/i);
+    const frames = (...devices: Device[]) => devices.map((item, index) => ({ name: `mdv-preview-${index}`, device: item }));
+    const id = (item: Device) => deviceIdentity(item, CHROME);
+    // An iPhone beside a MacBook: each gets its own page; an Android tablet between them joins the desktop side.
+    expect(planPreviewFrames(frames(mac, tablet, iphone), CHROME, true)).toEqual({ wrapped: new Set(["mdv-preview-2"]), identities: { wrapped: id(iphone), direct: id(mac) } });
+    // Two phones of different kinds are both phones.
+    expect(planPreviewFrames(frames(iphone, pixel, mac), CHROME, true)).toEqual({ wrapped: new Set(["mdv-preview-0", "mdv-preview-1"]), identities: { wrapped: id(iphone), direct: id(mac) } });
+    // The tablets page: Android tablets wrapped, iPads direct, both exact.
+    expect(planPreviewFrames(frames(ipad, tablet), CHROME, true)).toEqual({ wrapped: new Set(["mdv-preview-1"]), identities: { wrapped: id(tablet), direct: id(ipad) } });
+    // The laptops page: Macs and Windows laptops get their own browsers; the Chromebook, also Chrome, joins Windows.
+    expect(planPreviewFrames(frames(mac, windows, chromebook), CHROME, true)).toEqual({ wrapped: new Set(["mdv-preview-0"]), identities: { wrapped: id(mac), direct: id(windows) } });
+    // One browser, or none, needs no wrapping at all.
+    expect(planPreviewFrames(frames(mac, mac), CHROME, true)).toEqual({ wrapped: new Set(), identities: { wrapped: null, direct: id(mac) } });
+    expect(planPreviewFrames(frames(watch), CHROME, true)).toEqual({ wrapped: new Set(), identities: { wrapped: null, direct: null } });
+    // The simulator page cannot wrap: every frame starts from the extension and the most phone-like device speaks for all.
+    expect(planPreviewFrames(frames(mac, iphone), CHROME, false)).toEqual({ wrapped: new Set(), identities: { wrapped: id(iphone), direct: null } });
+    expect(previewIdentitiesFrom({ wrapped: id(iphone), direct: null })).toEqual({ wrapped: id(iphone), direct: null });
     expect(previewIdentitiesFrom({ wrapped: "bad" })).toEqual({ wrapped: undefined, direct: undefined });
     expect(previewIdentitiesFrom(null)).toBeNull();
     expect(previewIdentitiesFrom("x")).toBeUndefined();

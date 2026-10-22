@@ -99,18 +99,35 @@ export interface PreviewIdentities {
   direct?: PreviewIdentity | null;
 }
 
-/** Phones get their own frame class, so the request rules can give them the phone identity alone. */
-export function isWrappedDevice(device: Device): boolean {
-  return device.type === "phone";
-}
-
-/** With `split`, phones speak for the wrapped frames and the other devices for the direct ones; without it, every frame is wrapped. */
-export function previewIdentities(devices: Device[], chrome: number, split: boolean): PreviewIdentities {
-  if (!split) return { wrapped: previewIdentity(devices, chrome) ?? null, direct: null };
-  return {
-    wrapped: previewIdentity(devices.filter(isWrappedDevice), chrome) ?? null,
-    direct: previewIdentity(devices.filter(device => !isWrappedDevice(device)), chrome) ?? null,
-  };
+/**
+ * Which previews load wrapped and what each kind of frame identifies as,
+ * decided from the devices on screen. Of the distinct browsers shown, the
+ * most phone-like one takes the wrapped class with every device of that
+ * rank (a Pixel beside an iPhone is still a phone), and the least phone-like
+ * one the direct class, so an iPhone and a MacBook, or an Android tablet and
+ * an iPad, or a MacBook and a Surface, each get their own page. A third
+ * browser shares the class nearer to it. Without `split` (the simulator
+ * page, whose frames all start from the extension), every frame is in the
+ * wrapped class and the most phone-like device speaks for all.
+ */
+export interface FramePlan { wrapped: Set<string>; identities: PreviewIdentities }
+export interface FrameSpec { name: string; device: Device }
+/** How phone-like a browser is: phones, then Android tablets, then computers, then TVs. */
+const rank = (identity: PreviewIdentity) => identity.mobile ? 0 : identity.platform === "Android" ? 1 : identity.platform === "Linux" ? 3 : 2;
+export function planPreviewFrames(frames: FrameSpec[], chrome: number, split: boolean): FramePlan {
+  if (!split) return { wrapped: new Set(), identities: { wrapped: previewIdentity(frames.map(frame => frame.device), chrome) ?? null, direct: null } };
+  const known = frames.map(frame => ({ frame, identity: deviceIdentity(frame.device, chrome) })).filter((entry): entry is { frame: FrameSpec; identity: PreviewIdentity } => Boolean(entry.identity));
+  const distinct: PreviewIdentity[] = [];
+  for (const { identity } of known) if (!distinct.some(seen => seen.userAgent === identity.userAgent)) distinct.push(identity);
+  distinct.sort((a, b) => rank(a) - rank(b));
+  if (distinct.length < 2) return { wrapped: new Set(), identities: { wrapped: null, direct: distinct[0] ?? null } };
+  const first = distinct[0];
+  const oneRank = distinct.every(identity => rank(identity) === rank(first));
+  const wrappedEntries = known.filter(({ identity }) => oneRank ? identity.userAgent === first.userAgent : rank(identity) === rank(first));
+  const rest = known.filter(entry => !wrappedEntries.includes(entry));
+  const farthest = Math.max(...rest.map(({ identity }) => rank(identity)));
+  const direct = rest.find(({ identity }) => rank(identity) === farthest)?.identity ?? null;
+  return { wrapped: new Set(wrappedEntries.map(({ frame }) => frame.name)), identities: { wrapped: first, direct } };
 }
 
 /**

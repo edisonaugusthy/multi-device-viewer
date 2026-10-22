@@ -203,8 +203,9 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const loadedCount = [...(currentLoads?.states.values() ?? [])].filter(status => status === "loaded").length;
   const incompleteIds = [...(currentLoads?.states.entries() ?? [])].filter(([, status]) => status === "incomplete" || status === "error").map(([id]) => id);
   const display = simulator.display;
-  // This category's phones speak for the page's phone previews and its other
-  // devices for the rest, or each card for its own device with exact identities.
+  // This category's devices are split into two classes of preview frame with
+  // shared identities (see planPreviewFrames), or each card is its own device
+  // with exact identities.
   const expandedDevice = devices.find(device => device.id === popup?.deviceId);
   const previewFrames = useMemo(() => [
     ...devices.map(device => ({ name: previewFrameName(`gallery-${device.id}`, hidesPageScrollbars(device)), device })),
@@ -213,7 +214,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const exactMode = useExactIdentities(display.exactIdentities === true, previewFrames);
   const [exactDialog, setExactDialog] = useState(false);
   const identity = exactMode.identities;
-  const frameProps = (device: Device) => ({ identities: identity, exact: exactMode.exact, onExact: exactMode.report, wrapped: exactMode.isWrapped(device) });
+  const frameProps = (name: string) => ({ identities: identity, exact: exactMode.exact, onExact: exactMode.report, wrapped: exactMode.isWrapped(name) });
   const selectedGroup = group.id;
 
   const updateSlot = useCallback((id: string, update: (slot: PreviewSlot) => PreviewSlot) => {
@@ -519,7 +520,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
             </div>}
             <div data-gallery-grid className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] items-end gap-x-6 gap-y-10">
               {exactMode.settled && group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef}
-                {...frameProps(device)} inactive={expandedDeviceId !== null}
+                {...frameProps(previewFrameName(`gallery-${device.id}`, hidesPageScrollbars(device)))} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}
                 onPreviewLoad={previewLoaded} onPreviewReady={previewReady} onReload={reloadSlot} onEnlarge={enlarge} onLiveChange={setSlotLive} onNearChange={setSlotNear}/>)}
@@ -528,7 +529,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
         </div>
         {popup && <>
           <div aria-hidden="true" data-gallery-backdrop onClick={closePopup} className="absolute inset-0 z-40 bg-black/45 backdrop-blur-[2px]"/>
-          <GalleryPopup device={devices[expandedIndex]} slot={popup} display={display} {...frameProps(devices[expandedIndex])} index={expandedIndex} count={count} stepFocus={stepFocus}
+          <GalleryPopup device={devices[expandedIndex]} slot={popup} display={display} {...frameProps(previewFrameName(POPUP_SLOT_ID, hidesPageScrollbars(devices[expandedIndex])))} index={expandedIndex} count={count} stepFocus={stepFocus}
             onStep={stepExpanded} onClose={closePopup} onReload={() => reloadSlot(POPUP_SLOT_ID)}
             onOpenTab={() => window.open(getSlotUrl(POPUP_SLOT_ID), "_blank", "noopener,noreferrer")}
             onOpen={() => onOpenDevice(popup.deviceId, getSlotUrl(POPUP_SLOT_ID))}

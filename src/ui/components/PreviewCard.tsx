@@ -7,7 +7,7 @@ import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
-import { isWrappedDevice, type ExactIdentities, type PreviewIdentities } from "../../domain/simulator/preview-identity";
+import type { ExactIdentities, PreviewIdentities } from "../../domain/simulator/preview-identity";
 import { canWrapPreviews, PREVIEW_FRAME_PATH, PREVIEW_SANDBOX, previewFrameName, previewFrameUrl } from "../../app/preview-frame";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
@@ -112,7 +112,7 @@ interface PreviewCardProps {
   exact?: ExactIdentities | null;
   /** Whether the tab has exact identities, as the preparation reported. */
   onExact?: (attached: boolean) => void;
-  /** Loads inside the extension's wrapper frame even for a device that is not a phone. */
+  /** Loads inside the extension's wrapper frame (see preview-frame.ts). */
   wrapped?: boolean;
   /** Bottom-aligns the device so every preview in a row shares a baseline. */
   align?: "bottom" | "center";
@@ -279,12 +279,11 @@ export const PreviewCard = memo(function PreviewCard({
     return () => { active = false; };
   }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange, identityKey]);
   const [blocked, setBlocked] = useState(false);
-  // A phone's page loads inside the extension's wrapper frame, which starts
-  // the page request from the extension's origin (see preview-frame.ts); with
-  // exact identities every page does. A website whose policy keeps the
-  // wrapper out gets the page frame directly.
+  // A wrapped page loads inside the extension's wrapper frame, which starts
+  // the page request from the extension's origin (see preview-frame.ts). A
+  // website whose policy keeps the wrapper out gets the page frame directly.
   const [wrapperBlocked, setWrapperBlocked] = useState(false);
-  const wrapped = (wrapRequested || isWrappedDevice(device)) && !wrapperBlocked && canWrapPreviews();
+  const wrapped = wrapRequested && !wrapperBlocked && canWrapPreviews();
   const frameName = previewFrameName(slot.id, hidesPageScrollbars(device));
   const frameSrc = (url: string) => wrapped ? previewFrameUrl(url, frameName) : url;
   useEffect(() => {

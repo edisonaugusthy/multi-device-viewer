@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fitDesign, isDefaultFit, moveDesign, nudgeDesign, placeDesign, resizeDesign, sizeDesign, snapTo } from "./design-frame";
+import { designFrameKey, fitDesign, isDefaultFit, moveDesign, nudgeDesign, placeDesign, resizeDesign, sizeDesign, snapTo } from "./design-frame";
 
 const screen = { width: 402, height: 874 };
 
@@ -17,6 +17,12 @@ describe("fitting a design to the screen", () => {
   it("stretches over the screen, and falls back to that for an image without a size", () => {
     expect(fitDesign({ width: 300, height: 300 }, screen, "stretch")).toEqual({ x: 0, y: 0, width: 402, height: 874 });
     expect(fitDesign({ width: 0, height: 0 }, screen, "width")).toEqual({ x: 0, y: 0, width: 402, height: 874 });
+  });
+
+  it("keeps adjustments apart per slot and screen size, so a turned device gets its own", () => {
+    expect(designFrameKey("slot-1", screen)).toBe("slot-1:402x874");
+    expect(designFrameKey("slot-1", { width: 874, height: 402 })).not.toBe(designFrameKey("slot-1", screen));
+    expect(designFrameKey("slot-2", screen)).not.toBe(designFrameKey("slot-1", screen));
   });
 
   it("recognises the default placement within half a pixel", () => {

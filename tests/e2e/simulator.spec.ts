@@ -1461,6 +1461,31 @@ test("overlays a design on the screen at its own proportions and lets it be move
   near(frameBox.x, screenBox.x + 40 * scale);
 });
 
+test("keeps a design's adjustment per screen size, so a turned device starts from the fit and turning back restores it", async ({ page }) => {
+  const compare = page.locator("[data-main-toolbar]").getByRole("button", { name: "Compare with design" });
+  await compare.click();
+  await page.locator('input[type="file"]').first().setInputFiles(await designPng(page, 402, 520));
+  await page.locator("[data-compare-toolbar]").getByRole("button", { name: "Overlay" }).click();
+  const panel = page.getByRole("group", { name: "Adjust design" });
+  const label = page.locator("[data-design-frame-size]");
+  await panel.getByLabel("Position Y").fill("354");
+  await expect(label).toHaveText(/402 × 520 · 0, 354/);
+
+  const rotate = async () => {
+    await page.locator("[data-compare-toolbar]").getByRole("button", { name: "Back to workspace" }).first().click();
+    await revealControls(page);
+    await page.locator("[data-preview-slot-id]").first().getByRole("button", { name: "Rotate", exact: true }).click();
+    await compare.click();
+  };
+  // Sideways, the 874 × 402 screen gets the default fit, not a frame measured for portrait.
+  await rotate();
+  await expect(label).toHaveText(/874 × 1131 · 0, 0/);
+  await expect(panel.getByRole("button", { name: "Reset" })).toBeDisabled();
+  await rotate();
+  await expect(label).toHaveText(/402 × 520 · 0, 354/);
+  await expect(panel.getByRole("button", { name: "Reset" })).toBeEnabled();
+});
+
 test("forgets a removed device's design instead of keeping it in the saved workspace", async ({ page }) => {
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Compare with design" }).click();
   await page.locator('input[type="file"]').first().setInputFiles(await designPng(page, 402, 520));

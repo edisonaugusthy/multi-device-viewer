@@ -44,6 +44,15 @@ export function fitDesign(image: DesignSize, screen: DesignSize, fit: DesignFit)
   return { x: round((screen.width - width) / 2), y: round((screen.height - height) / 2), width, height };
 }
 
+/**
+ * Adjustments are kept per device slot and screen size: a frame measured on
+ * a portrait screen means nothing on the same device turned sideways or on
+ * another device in that slot, which start from the default fit instead.
+ */
+export function designFrameKey(slotId: string, screen: DesignSize): string {
+  return `${slotId}:${screen.width}x${screen.height}`;
+}
+
 export function isDefaultFit(frame: DesignFrame, image: DesignSize, screen: DesignSize): boolean {
   const fitted = fitDesign(image, screen, "width");
   return (["x", "y", "width", "height"] as const).every(key => Math.abs(frame[key] - fitted[key]) < 0.5);

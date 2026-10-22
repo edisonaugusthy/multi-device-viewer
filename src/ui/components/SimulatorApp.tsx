@@ -43,7 +43,7 @@ import { GripIcon } from "../icons";
 import { AllDevicesView } from "./AllDevicesView";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CompareBar, CompareControls, CompareLabel, DesignAdjustPanel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
-import { fitDesign, type DesignFrame } from "../interactions/design-frame";
+import { designFrameKey, fitDesign, type DesignFrame } from "../interactions/design-frame";
 import { useImageSize } from "../hooks/useImageSize";
 import { DevicePicker, type PickerTarget } from "./DevicePicker";
 import { FirstRunGuide } from "./FirstRunGuide";
@@ -75,7 +75,7 @@ interface SavedWorkspaceView {
   designNames?: Record<string, string>;
   referenceMode?: CompareMode;
   referenceOpacity?: number;
-  /** Where each device's design sits, in CSS pixels of that device's screen. */
+  /** Where each device's design sits, by slot and screen size (designFrameKey), in CSS pixels of that screen. */
   designFrames?: Record<string, DesignFrame>;
   overlayBlend?: CompareBlend;
   designScrollLinked?: boolean;
@@ -679,11 +679,13 @@ export function SimulatorApp() {
   const compareScale = scales[compareSlotId] ?? 0;
   const comparePaneWidth = Math.max(160, Math.round(compareSize.width * compareScale));
   const comparePaneHeight = Math.max(160, Math.round(compareSize.height * compareScale));
-  // The design starts at the screen width from the top; adjustments are kept per device.
+  // The design starts at the screen width from the top; adjustments are kept
+  // per device and screen size, so turning the device starts from the fit again.
   const compareImageSize = useImageSize(compareImage);
-  const compareFrame = compareImage && compareImageSize ? designFrames[compareSlotId] ?? fitDesign(compareImageSize, compareSize, "width") : undefined;
-  const setCompareFrame = useCallback((frame: DesignFrame) => setDesignFrames((current) => ({ ...current, [compareSlotId]: frame })), [compareSlotId]);
-  const resetCompareFrame = () => setDesignFrames((current) => { const next = { ...current }; delete next[compareSlotId]; return next; });
+  const compareFrameKey = designFrameKey(compareSlotId, compareSize);
+  const compareFrame = compareImage && compareImageSize ? designFrames[compareFrameKey] ?? fitDesign(compareImageSize, compareSize, "width") : undefined;
+  const setCompareFrame = useCallback((frame: DesignFrame) => setDesignFrames((current) => ({ ...current, [compareFrameKey]: frame })), [compareFrameKey]);
+  const resetCompareFrame = () => setDesignFrames((current) => { const next = { ...current }; delete next[compareFrameKey]; return next; });
   const overlayShown = compare && !viewMode && compareMode === "overlay" && compareFrame !== undefined;
   // Adjusting starts whenever a design is overlaid (opening Overlay, adding a
   // design, or switching device) and ends when the overlay goes; Done or
@@ -717,18 +719,29 @@ export function SimulatorApp() {
   // Stable for the layout check, whose marks are re-sent only when its inputs change.
   const slotSizeStable = useCallback((slotId: string) => slotSize(slotId), [slots, findDevice]);
   // A design belongs to its device slot: when the slot goes, its picture, name
-  // and frame go too, so the saved workspace never keeps pictures nobody can reach.
+  // and frames go too, so the saved workspace never keeps pictures nobody can
+  // reach. Frames saved per slot alone (before screen sizes were part of the
+  // key) move to the slot's current screen.
   useEffect(() => {
     if (!ready || !workspaceHydrated) return;
     const live = new Set(slots.map((slot) => slot.id));
-    const prune = <T,>(current: Record<string, T>) => {
-      const next = Object.fromEntries(Object.entries(current).filter(([key]) => live.has(key)));
+    const prune = <T,>(current: Record<string, T>, keep: (key: string) => boolean) => {
+      const next = Object.fromEntries(Object.entries(current).filter(([key]) => keep(key)));
       return Object.keys(next).length === Object.keys(current).length ? current : next;
     };
-    setDesignReferences(prune);
-    setDesignNames(prune);
-    setDesignFrames(prune);
-  }, [ready, slots, workspaceHydrated]);
+    setDesignReferences((current) => prune(current, (key) => live.has(key)));
+    setDesignNames((current) => prune(current, (key) => live.has(key)));
+    setDesignFrames((current) => {
+      const legacy = Object.keys(current).filter((key) => !key.includes(":") && live.has(key));
+      const moved = legacy.length ? { ...current } : current;
+      for (const slotId of legacy) {
+        const key = designFrameKey(slotId, slotSizeStable(slotId));
+        moved[key] ??= moved[slotId];
+        delete moved[slotId];
+      }
+      return prune(moved, (key) => live.has(key.slice(0, key.indexOf(":"))));
+    });
+  }, [ready, slots, slotSizeStable, workspaceHydrated]);
   const layoutCheck = useLayoutCheck({ slots, findDevice, slotSize: slotSizeStable });
   const layoutCheckSlot = useStableCallback((slotId: string) => layoutCheck.run([slotId]));
   const showLayoutProblems = useStableCallback((slotId: string) => {
@@ -970,7 +983,7 @@ export function SimulatorApp() {
                 <DesignAdjustPanel
                   frame={compareFrame}
                   screen={compareSize}
-                  canReset={designFrames[compareSlotId] !== undefined}
+                  canReset={designFrames[compareFrameKey] !== undefined}
                   onFrameChange={setCompareFrame}
                   onFit={(fit) => setCompareFrame(fitDesign(compareImageSize, compareSize, fit))}
                   onReset={resetCompareFrame}

@@ -1,28 +1,42 @@
 {
-  "fetchedAt": "2026-10-10T17:55:30.242Z",
+  "fetchedAt": "2026-10-22T21:20:08.224Z",
   "source": "https://chromewebstore.google.com/detail/jfcnekmenjickfihkniaoaklehjmdhdb",
-  "rating": 4.7,
-  "ratingCount": 12,
-  "users": 2000,
-  "version": "0.2.11",
-  "updated": "2026-10-08",
+  "rating": 4.8,
+  "ratingCount": 17,
+  "users": 10000,
+  "version": "0.4.0",
+  "updated": "2026-10-18",
   "reviews": [
+    {
+      "author": "Tim Smith",
+      "rating": 5,
+      "date": "2026-10-18",
+      "text": "I am growing increasingly fond of this extension--lets me see my website in various displays. And I can easily add any that I might want to view if a user reports an issue with that particular platform. Well done, and very useful!",
+      "helpful": 0
+    },
+    {
+      "author": "ESLAM ELNGAR",
+      "rating": 5,
+      "date": "2026-10-16",
+      "text": "best extention ever",
+      "helpful": 0
+    },
     {
       "author": "Siam Al Rabbi",
       "rating": 5,
       "date": "2026-10-08",
       "text": "Such a great tool I've ever used for viewing responsive design across multiple device at the same time.",
-      "helpful": 1
+      "helpful": 0
     },
     {
       "author": "Victoria Finebone",
       "rating": 5,
       "date": "2026-10-08",
       "text": "Fantastic Extension!! God bless the day I found you! Thank you!",
-      "helpful": 1
+      "helpful": 0
     },
     {
-      "author": "Marc Lambert",
+      "author": "A Chrome Web Store user",
       "rating": 1,
       "date": "2026-10-07",
       "text": "Unfortunately it doesn't work properly....",
@@ -61,13 +75,6 @@
       "rating": 5,
       "date": "2026-05-18",
       "text": "Been looking for an extension like this, came across a reddit post, works great.",
-      "helpful": 0
-    },
-    {
-      "author": "Vaibhav Patil",
-      "rating": 5,
-      "date": "2026-05-18",
-      "text": "Super useful",
       "helpful": 0
     }
   ]

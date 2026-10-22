@@ -48,9 +48,12 @@ export function DesignOverlay({ image, opacity, blend, adjusting, frame, screen,
   const scale = screen.width > 0 ? screenBox.width / screen.width : 1;
   const snap = SNAP_PX / scale;
 
-  function startMove(event: ReactPointerEvent) {
+  function startMove(event: ReactPointerEvent<HTMLDivElement>) {
     if (!adjusting || event.button !== 0 || (event.target as Element).closest("[data-design-handle]")) return;
     event.stopPropagation();
+    // The drag cancels the default focus, so take it here: arrow keys nudge
+    // the design right after it was clicked or dragged.
+    event.currentTarget.focus({ preventScroll: true });
     const origin = latest.current;
     startDrag(event, (deltaX, deltaY) => onFrameChange(moveDesign(origin, deltaX / scale, deltaY / scale, screen, snap)));
   }

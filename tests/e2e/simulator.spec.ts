@@ -1435,6 +1435,11 @@ test("overlays a design on the screen at its own proportions and lets it be move
   near(frameBox.y, screenBox.y + 354 * scale);
   await expect(page.locator("[data-design-frame-size]")).toHaveText(/302 × 391 · 0, 354/);
 
+  // Clicking the design keeps the keyboard on it, so arrow keys nudge it straight away.
+  await frame.click({ position: { x: 40, y: 40 } });
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator("[data-design-frame-size]")).toHaveText(/302 × 391 · 1, 354/);
+
   // Stretch covers the whole screen; Fit screen shows the whole design inside it.
   await panel.getByRole("button", { name: "Stretch" }).click();
   frameBox = (await frame.boundingBox())!;

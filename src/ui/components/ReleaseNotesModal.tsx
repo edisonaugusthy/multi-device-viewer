@@ -87,7 +87,7 @@ export function ReleaseNotesModal({ release, onClose }: { release: VersionReleas
           <div className="min-w-0 flex-1">
             <span className="inline-flex rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold tracking-wide text-on-accent">{t("newLabel")}</span>
             <h3 className="mt-2 text-base font-semibold tracking-tight text-ink">{t(release.featured.title)}</h3>
-            <p className="mt-1 text-[12.5px] leading-5 text-ink-2">{t(release.featured.description)}</p>
+            {release.featured.description && <p className="mt-1 text-[12.5px] leading-5 text-ink-2">{t(release.featured.description)}</p>}
           </div>
           <span className="hidden sm:block">{(sketches[release.featured.icon] ?? LayoutSketch)()}</span>
         </section>
@@ -97,12 +97,17 @@ export function ReleaseNotesModal({ release, onClose }: { release: VersionReleas
             {/* One column reads best for a short release; long ones use two. */}
             <ul className={cx("grid gap-x-5 gap-y-3.5", noteCount > 6 && "sm:grid-cols-2")}>
               {section.notes.map(note => (
-                <li key={note.title} className="flex min-w-0 items-start gap-3">
+                <li key={note.title} className={cx("flex min-w-0 gap-3", note.description ? "items-start" : "items-center")}>
                   <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-accent-soft text-accent-strong">{icons[note.icon]}</span>
-                  <div className="min-w-0">
-                    <h4 className="text-[13.5px] font-semibold leading-5">{t(note.title)}</h4>
-                    <p className="mt-0.5 text-[12.5px] leading-[18px] text-ink-2">{t(note.description)}</p>
-                  </div>
+                  {note.description ? (
+                    <div className="min-w-0">
+                      <h4 className="text-[13.5px] font-semibold leading-5">{t(note.title)}</h4>
+                      <p className="mt-0.5 text-[12.5px] leading-[18px] text-ink-2">{t(note.description)}</p>
+                    </div>
+                  ) : (
+                    // A one-line note reads as a sentence, not a heading.
+                    <p className="min-w-0 text-[13.5px] leading-5 text-ink">{t(note.title)}</p>
+                  )}
                 </li>
               ))}
             </ul>

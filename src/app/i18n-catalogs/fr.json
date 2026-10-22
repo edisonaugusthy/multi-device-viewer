@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Cela utilise l'interface de débogage de Chrome, que Chrome n'accorde qu'avec votre autorisation. Tant que la visionneuse est ouverte, Chrome affiche une barre indiquant que Mobile View débogue ce navigateur ; son bouton Annuler désactive les identités exactes. Elles restent aussi désactivées tant que les DevTools de cet onglet sont ouverts. Rien d'autre ne change dans l'extension.",
   "exactIdentitiesAllow": "Autoriser et activer",
   "exactIdentitiesUnavailable": "Désactivées dans cet onglet : l'interface de débogage de Chrome est utilisée, par exemple par les DevTools. Les aperçus utilisent les identités partagées à la place.",
-  "permissionDebugger": "Seulement dans les builds qui proposent les identités d'appareil exactes, une autorisation que Chrome n'accepte pas comme facultative : donne à chaque cadre d'aperçu l'identité du navigateur de son propre appareil via l'interface de débogage de Chrome tant que la visionneuse est ouverte."
+  "permissionDebugger": "Seulement dans les builds qui proposent les identités d'appareil exactes, une autorisation que Chrome n'accepte pas comme facultative : donne à chaque cadre d'aperçu l'identité du navigateur de son propre appareil via l'interface de débogage de Chrome tant que la visionneuse est ouverte.",
+  "releaseRealPagesTitle": "Les aperçus chargent désormais la vraie page mobile ou ordinateur de chaque appareil.",
+  "releaseDuoSafariTitle": "L'iPhone Duo déplié affiche désormais la vraie barre supérieure de Safari.",
+  "releaseMacNotchTitle": "Les MacBook affichent désormais leur encoche, comme le vrai appareil.",
+  "releaseDesignPerScreenTitle": "Comparer avec la maquette retient la position de votre maquette pour chaque écran.",
+  "releaseGalleryScrollbarTitle": "Tous les appareils affiche de nouveau sa barre de défilement pour que vous sachiez où vous êtes.",
+  "releaseFixesTitle": "Corrections de bugs et petites améliorations pour une expérience plus fluide."
 }

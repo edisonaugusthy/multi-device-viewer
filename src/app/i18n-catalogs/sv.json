@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Detta använder Chromes felsökningsgränssnitt, som Chrome bara ger när du tillåter det. Så länge visaren är öppen visar Chrome en list som säger att Mobile View felsöker den här webbläsaren; dess Avbryt-knapp stänger av exakta identiteter. De förblir också avstängda så länge flikens DevTools är öppna. Inget annat i tillägget ändras.",
   "exactIdentitiesAllow": "Tillåt och slå på",
   "exactIdentitiesUnavailable": "Av på den här fliken: Chromes felsökningsgränssnitt används, till exempel av DevTools. Förhandsvisningarna använder de delade identiteterna i stället.",
-  "permissionDebugger": "Bara i byggen med exakta enhetsidentiteter; Chrome tillåter inte den här behörigheten som valfri: ger varje förhandsvisningsram sin egen enhets webbläsaridentitet via Chromes felsökningsgränssnitt så länge visaren är öppen."
+  "permissionDebugger": "Bara i byggen med exakta enhetsidentiteter; Chrome tillåter inte den här behörigheten som valfri: ger varje förhandsvisningsram sin egen enhets webbläsaridentitet via Chromes felsökningsgränssnitt så länge visaren är öppen.",
+  "releaseRealPagesTitle": "Förhandsvisningar laddar nu den riktiga mobil- eller datorsidan för varje enhet.",
+  "releaseDuoSafariTitle": "Den uppfällda iPhone Duo visar nu Safaris riktiga övre fält.",
+  "releaseMacNotchTitle": "MacBook visar nu sin notch, precis som den riktiga.",
+  "releaseDesignPerScreenTitle": "Jämför med design kommer ihåg designens position för varje skärm.",
+  "releaseGalleryScrollbarTitle": "Alla enheter visar sin rullningslist igen, så att du ser var du är.",
+  "releaseFixesTitle": "Buggfixar och små förbättringar för en smidigare upplevelse."
 }

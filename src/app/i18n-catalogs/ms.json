@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Ini menggunakan antara muka penyahpepijatan Chrome, yang hanya diberikan Chrome apabila anda membenarkannya. Semasa pemapar dibuka, Chrome memaparkan bar yang menyatakan Mobile View sedang menyahpepijat pelayar ini; butang Batal padanya mematikan identiti yang tepat. Ia juga kekal dimatikan semasa DevTools tab ini dibuka. Tiada perkara lain pada sambungan yang berubah.",
   "exactIdentitiesAllow": "Benarkan dan hidupkan",
   "exactIdentitiesUnavailable": "Dimatikan pada tab ini: antara muka penyahpepijatan Chrome sedang digunakan, contohnya oleh DevTools. Pratonton menggunakan identiti kongsi sebagai gantinya.",
-  "permissionDebugger": "Hanya dalam binaan yang menawarkan Identiti peranti yang tepat, kebenaran yang tidak dibenarkan Chrome sebagai pilihan: memberi setiap bingkai pratonton identiti pelayar perantinya sendiri melalui antara muka penyahpepijatan Chrome semasa pemapar dibuka."
+  "permissionDebugger": "Hanya dalam binaan yang menawarkan Identiti peranti yang tepat, kebenaran yang tidak dibenarkan Chrome sebagai pilihan: memberi setiap bingkai pratonton identiti pelayar perantinya sendiri melalui antara muka penyahpepijatan Chrome semasa pemapar dibuka.",
+  "releaseRealPagesTitle": "Pratonton kini memuatkan halaman mudah alih atau desktop sebenar untuk setiap peranti.",
+  "releaseDuoSafariTitle": "iPhone Duo yang dibuka kini memaparkan bar atas Safari yang sebenar.",
+  "releaseMacNotchTitle": "MacBook kini memaparkan notch-nya, sama seperti yang sebenar.",
+  "releaseDesignPerScreenTitle": "Bandingkan dengan reka bentuk mengingati kedudukan reka bentuk anda untuk setiap skrin.",
+  "releaseGalleryScrollbarTitle": "Semua peranti memaparkan bar tatalnya semula supaya anda tahu kedudukan anda.",
+  "releaseFixesTitle": "Pembetulan pepijat dan penambahbaikan kecil untuk pengalaman yang lebih lancar."
 }

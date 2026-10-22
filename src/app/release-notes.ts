@@ -9,7 +9,8 @@ export type ReleaseNoteIcon =
 
 export interface ReleaseNote {
   title: TranslationKey;
-  description: TranslationKey;
+  /** A second line; a one-line note leaves it out. */
+  description?: TranslationKey;
   icon: ReleaseNoteIcon;
 }
 
@@ -36,19 +37,26 @@ export const FEATURE_TOUR_REVISION = "0.4.0";
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
   version,
-  featured: { title: "releaseBeforeAfterTitle", description: "releaseBeforeAfterDescription", icon: "compare" },
+  featured: { title: "releaseRealPagesTitle", icon: "frames" },
   sections: [
     {
       title: "releaseSectionDevices",
       notes: [
-        { title: "releaseNewDevicesTitle", description: "releaseNewDevicesDescription", icon: "frames" },
-        { title: "releasePickerNewTitle", description: "releasePickerNewDescription", icon: "picker" },
+        { title: "releaseDuoSafariTitle", icon: "frames" },
+        { title: "releaseMacNotchTitle", icon: "workspace" },
       ],
     },
     {
       title: "releaseSectionReview",
       notes: [
-        { title: "releaseLayoutCheckTitle", description: "releaseLayoutCheckDescription", icon: "layout" },
+        { title: "releaseDesignPerScreenTitle", icon: "adjust" },
+      ],
+    },
+    {
+      title: "releaseSectionGeneral",
+      notes: [
+        { title: "releaseGalleryScrollbarTitle", icon: "scrollbars" },
+        { title: "releaseFixesTitle", icon: "headers" },
       ],
     },
   ],

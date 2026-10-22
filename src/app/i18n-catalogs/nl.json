@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Dit gebruikt de debuginterface van Chrome, die Chrome alleen geeft als u het toestaat. Zolang de viewer open is, toont Chrome een balk met de melding dat Mobile View deze browser debugt; de knop Annuleren daarin schakelt exacte identiteiten uit. Ze blijven ook uit zolang de DevTools van dit tabblad open zijn. Verder verandert er niets aan de extensie.",
   "exactIdentitiesAllow": "Toestaan en inschakelen",
   "exactIdentitiesUnavailable": "Uit op dit tabblad: de debuginterface van Chrome is in gebruik, bijvoorbeeld door DevTools. De voorvertoningen gebruiken in plaats daarvan de gedeelde identiteiten.",
-  "permissionDebugger": "Alleen in builds met exacte apparaatidentiteiten; Chrome staat deze machtiging niet als optioneel toe: geeft elk voorvertoningsframe de browseridentiteit van zijn eigen apparaat via de debuginterface van Chrome zolang de viewer open is."
+  "permissionDebugger": "Alleen in builds met exacte apparaatidentiteiten; Chrome staat deze machtiging niet als optioneel toe: geeft elk voorvertoningsframe de browseridentiteit van zijn eigen apparaat via de debuginterface van Chrome zolang de viewer open is.",
+  "releaseRealPagesTitle": "Voorvertoningen laden nu voor elk apparaat de echte mobiele of desktoppagina.",
+  "releaseDuoSafariTitle": "De opengevouwen iPhone Duo toont nu de echte bovenbalk van Safari.",
+  "releaseMacNotchTitle": "MacBooks tonen nu hun notch, net als het echte apparaat.",
+  "releaseDesignPerScreenTitle": "Vergelijken met ontwerp onthoudt de positie van je ontwerp per scherm.",
+  "releaseGalleryScrollbarTitle": "Alle apparaten toont weer de schuifbalk, zodat je ziet waar je bent.",
+  "releaseFixesTitle": "Bugfixes en kleine verbeteringen voor een soepelere ervaring."
 }

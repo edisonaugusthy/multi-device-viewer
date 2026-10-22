@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Usa l'interfaccia di debug di Chrome, che Chrome concede solo con il tuo permesso. Finché il visualizzatore è aperto, Chrome mostra una barra che dice che Mobile View sta eseguendo il debug di questo browser; il suo pulsante Annulla disattiva le identità esatte. Restano disattivate anche finché i DevTools di questa scheda sono aperti. Nient'altro cambia nell'estensione.",
   "exactIdentitiesAllow": "Consenti e attiva",
   "exactIdentitiesUnavailable": "Disattivate in questa scheda: l'interfaccia di debug di Chrome è in uso, ad esempio dai DevTools. Le anteprime usano le identità condivise.",
-  "permissionDebugger": "Solo nelle build che offrono le identità esatte dei dispositivi, un'autorizzazione che Chrome non ammette come facoltativa: dà a ogni frame di anteprima l'identità del browser del proprio dispositivo tramite l'interfaccia di debug di Chrome finché il visualizzatore è aperto."
+  "permissionDebugger": "Solo nelle build che offrono le identità esatte dei dispositivi, un'autorizzazione che Chrome non ammette come facoltativa: dà a ogni frame di anteprima l'identità del browser del proprio dispositivo tramite l'interfaccia di debug di Chrome finché il visualizzatore è aperto.",
+  "releaseRealPagesTitle": "Le anteprime ora caricano la vera pagina mobile o desktop di ogni dispositivo.",
+  "releaseDuoSafariTitle": "L'iPhone Duo aperto ora mostra la vera barra superiore di Safari.",
+  "releaseMacNotchTitle": "I MacBook ora mostrano il notch, proprio come quelli veri.",
+  "releaseDesignPerScreenTitle": "Confronta con il design ricorda la posizione del tuo design per ogni schermo.",
+  "releaseGalleryScrollbarTitle": "Tutti i dispositivi mostra di nuovo la barra di scorrimento, così sai dove ti trovi.",
+  "releaseFixesTitle": "Correzioni di bug e piccoli miglioramenti per un'esperienza più fluida."
 }

@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Używa to interfejsu debugowania Chrome, który Chrome udostępnia tylko za Twoją zgodą. Gdy przeglądarka widoków jest otwarta, Chrome pokazuje pasek z informacją, że Mobile View debuguje tę przeglądarkę; jego przycisk Anuluj wyłącza dokładne tożsamości. Pozostają też wyłączone, gdy otwarte są DevTools tej karty. Nic innego w rozszerzeniu się nie zmienia.",
   "exactIdentitiesAllow": "Zezwól i włącz",
   "exactIdentitiesUnavailable": "Wyłączone na tej karcie: interfejs debugowania Chrome jest używany, np. przez DevTools. Podglądy używają zamiast tego wspólnych tożsamości.",
-  "permissionDebugger": "Tylko w kompilacjach z dokładnymi tożsamościami urządzeń; Chrome nie pozwala, by to uprawnienie było opcjonalne: nadaje każdej ramce podglądu tożsamość przeglądarki własnego urządzenia przez interfejs debugowania Chrome, gdy przeglądarka widoków jest otwarta."
+  "permissionDebugger": "Tylko w kompilacjach z dokładnymi tożsamościami urządzeń; Chrome nie pozwala, by to uprawnienie było opcjonalne: nadaje każdej ramce podglądu tożsamość przeglądarki własnego urządzenia przez interfejs debugowania Chrome, gdy przeglądarka widoków jest otwarta.",
+  "releaseRealPagesTitle": "Podglądy wczytują teraz prawdziwą stronę mobilną lub desktopową dla każdego urządzenia.",
+  "releaseDuoSafariTitle": "Rozłożony iPhone Duo pokazuje teraz prawdziwy górny pasek Safari.",
+  "releaseMacNotchTitle": "MacBooki pokazują teraz swoje wcięcie, tak jak prawdziwe urządzenie.",
+  "releaseDesignPerScreenTitle": "Porównanie z projektem zapamiętuje położenie projektu dla każdego ekranu.",
+  "releaseGalleryScrollbarTitle": "Wszystkie urządzenia znów pokazuje pasek przewijania, więc wiesz, gdzie jesteś.",
+  "releaseFixesTitle": "Poprawki błędów i drobne ulepszenia dla płynniejszego działania."
 }

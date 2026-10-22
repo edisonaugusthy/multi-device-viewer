@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Gumagamit ito ng debugging interface ng Chrome, na ibinibigay lang ng Chrome kapag pinayagan mo. Habang bukas ang viewer, nagpapakita ang Chrome ng bar na nagsasabing dine-debug ng Mobile View ang browser na ito; pinapatay ng Cancel button nito ang eksaktong identity. Nananatili rin itong naka-off habang bukas ang DevTools ng tab na ito. Wala nang ibang nagbabago sa extension.",
   "exactIdentitiesAllow": "Payagan at i-on",
   "exactIdentitiesUnavailable": "Naka-off sa tab na ito: ginagamit ang debugging interface ng Chrome, halimbawa ng DevTools. Ginagamit ng mga preview ang mga shared identity sa halip.",
-  "permissionDebugger": "Sa mga build lang na nag-aalok ng Eksaktong identity ng device, na hindi pinapayagan ng Chrome bilang opsyonal na pahintulot: binibigyan ang bawat preview frame ng browser identity ng sarili nitong device sa pamamagitan ng debugging interface ng Chrome habang bukas ang viewer."
+  "permissionDebugger": "Sa mga build lang na nag-aalok ng Eksaktong identity ng device, na hindi pinapayagan ng Chrome bilang opsyonal na pahintulot: binibigyan ang bawat preview frame ng browser identity ng sarili nitong device sa pamamagitan ng debugging interface ng Chrome habang bukas ang viewer.",
+  "releaseRealPagesTitle": "Nilo-load na ngayon ng mga preview ang totoong mobile o desktop na page para sa bawat device.",
+  "releaseDuoSafariTitle": "Ipinapakita na ngayon ng nakabukas na iPhone Duo ang totoong top bar ng Safari.",
+  "releaseMacNotchTitle": "Ipinapakita na ngayon ng mga MacBook ang kanilang notch, gaya ng totoong device.",
+  "releaseDesignPerScreenTitle": "Naaalala ng Ihambing sa disenyo ang posisyon ng iyong disenyo para sa bawat screen.",
+  "releaseGalleryScrollbarTitle": "Ipinapakita muli ng Lahat ng device ang scrollbar nito para alam mo kung nasaan ka.",
+  "releaseFixesTitle": "Mga pag-aayos ng bug at maliliit na pagpapahusay para sa mas maayos na karanasan."
 }

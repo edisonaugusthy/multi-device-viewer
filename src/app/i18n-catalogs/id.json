@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Ini menggunakan antarmuka debugging Chrome, yang hanya diberikan Chrome jika Anda mengizinkannya. Selama penampil terbuka, Chrome menampilkan bilah yang menyatakan Mobile View sedang men-debug browser ini; tombol Batal-nya mematikan identitas yang tepat. Fitur ini juga tetap mati selama DevTools tab ini terbuka. Tidak ada hal lain pada ekstensi yang berubah.",
   "exactIdentitiesAllow": "Izinkan dan aktifkan",
   "exactIdentitiesUnavailable": "Nonaktif di tab ini: antarmuka debugging Chrome sedang digunakan, misalnya oleh DevTools. Pratinjau memakai identitas bersama sebagai gantinya.",
-  "permissionDebugger": "Hanya pada build yang menyediakan Identitas perangkat yang tepat, izin yang tidak diperbolehkan Chrome sebagai opsional: memberi setiap bingkai pratinjau identitas browser perangkatnya sendiri melalui antarmuka debugging Chrome selama penampil terbuka."
+  "permissionDebugger": "Hanya pada build yang menyediakan Identitas perangkat yang tepat, izin yang tidak diperbolehkan Chrome sebagai opsional: memberi setiap bingkai pratinjau identitas browser perangkatnya sendiri melalui antarmuka debugging Chrome selama penampil terbuka.",
+  "releaseRealPagesTitle": "Pratinjau kini memuat halaman seluler atau desktop yang asli untuk setiap perangkat.",
+  "releaseDuoSafariTitle": "iPhone Duo yang terbuka kini menampilkan bilah atas Safari yang asli.",
+  "releaseMacNotchTitle": "MacBook kini menampilkan notch-nya, persis seperti aslinya.",
+  "releaseDesignPerScreenTitle": "Bandingkan dengan desain mengingat posisi desain Anda untuk setiap layar.",
+  "releaseGalleryScrollbarTitle": "Semua perangkat kembali menampilkan bilah gulirnya agar Anda tahu posisi Anda.",
+  "releaseFixesTitle": "Perbaikan bug dan peningkatan kecil untuk pengalaman yang lebih lancar."
 }

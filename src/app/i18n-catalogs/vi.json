@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Tính năng này dùng giao diện gỡ lỗi của Chrome, mà Chrome chỉ cấp khi bạn cho phép. Khi trình xem đang mở, Chrome hiển thị một thanh cho biết Mobile View đang gỡ lỗi trình duyệt này; nút Hủy trên đó tắt danh tính chính xác. Tính năng cũng tắt khi DevTools của thẻ này đang mở. Không có gì khác trong tiện ích thay đổi.",
   "exactIdentitiesAllow": "Cho phép và bật",
   "exactIdentitiesUnavailable": "Tắt trên thẻ này: giao diện gỡ lỗi của Chrome đang được dùng, ví dụ bởi DevTools. Các bản xem trước dùng danh tính chung thay thế.",
-  "permissionDebugger": "Chỉ trong các bản dựng cung cấp Danh tính thiết bị chính xác, quyền mà Chrome không cho phép ở dạng tùy chọn: cấp cho mỗi khung xem trước danh tính trình duyệt của chính thiết bị đó qua giao diện gỡ lỗi của Chrome khi trình xem đang mở."
+  "permissionDebugger": "Chỉ trong các bản dựng cung cấp Danh tính thiết bị chính xác, quyền mà Chrome không cho phép ở dạng tùy chọn: cấp cho mỗi khung xem trước danh tính trình duyệt của chính thiết bị đó qua giao diện gỡ lỗi của Chrome khi trình xem đang mở.",
+  "releaseRealPagesTitle": "Bản xem trước giờ tải đúng trang di động hoặc máy tính thật cho từng thiết bị.",
+  "releaseDuoSafariTitle": "iPhone Duo khi mở giờ hiển thị thanh trên cùng thật của Safari.",
+  "releaseMacNotchTitle": "MacBook giờ hiển thị phần tai thỏ, giống hệt máy thật.",
+  "releaseDesignPerScreenTitle": "So sánh với thiết kế ghi nhớ vị trí thiết kế của bạn cho từng màn hình.",
+  "releaseGalleryScrollbarTitle": "Tất cả thiết bị lại hiển thị thanh cuộn để bạn biết mình đang ở đâu.",
+  "releaseFixesTitle": "Sửa lỗi và cải tiến nhỏ để trải nghiệm mượt mà hơn."
 }

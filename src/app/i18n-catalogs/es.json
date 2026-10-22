@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Esto usa la interfaz de depuración de Chrome, que Chrome solo concede cuando lo permites. Mientras el visor está abierto, Chrome muestra una barra que dice que Mobile View está depurando este navegador; su botón Cancelar desactiva las identidades exactas. También quedan desactivadas mientras las DevTools de esta pestaña estén abiertas. Nada más cambia en la extensión.",
   "exactIdentitiesAllow": "Permitir y activar",
   "exactIdentitiesUnavailable": "Desactivadas en esta pestaña: la interfaz de depuración de Chrome está en uso, por ejemplo por las DevTools. Las vistas previas usan las identidades compartidas.",
-  "permissionDebugger": "Solo en compilaciones que ofrecen Identidades exactas de dispositivo, un permiso que Chrome no admite como opcional: da a cada marco de vista previa la identidad del navegador de su propio dispositivo a través de la interfaz de depuración de Chrome mientras el visor está abierto."
+  "permissionDebugger": "Solo en compilaciones que ofrecen Identidades exactas de dispositivo, un permiso que Chrome no admite como opcional: da a cada marco de vista previa la identidad del navegador de su propio dispositivo a través de la interfaz de depuración de Chrome mientras el visor está abierto.",
+  "releaseRealPagesTitle": "Las vistas previas ahora cargan la página real para móvil o escritorio de cada dispositivo.",
+  "releaseDuoSafariTitle": "El iPhone Duo desplegado ahora muestra la barra superior real de Safari.",
+  "releaseMacNotchTitle": "Los MacBook ahora muestran su notch, igual que el dispositivo real.",
+  "releaseDesignPerScreenTitle": "Comparar con diseño recuerda la posición de tu diseño en cada pantalla.",
+  "releaseGalleryScrollbarTitle": "Todos los dispositivos vuelve a mostrar su barra de desplazamiento para que sepas dónde estás.",
+  "releaseFixesTitle": "Corrección de errores y pequeñas mejoras para una experiencia más fluida."
 }

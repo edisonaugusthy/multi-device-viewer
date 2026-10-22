@@ -38,14 +38,17 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with Before & after and groups the latest improvements", () => {
-    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("releaseBeforeAfterTitle");
+  it("leads with each device's real page and lists the rest as one-line notes", () => {
+    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("releaseRealPagesTitle");
     expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual([
       "releaseSectionDevices",
       "releaseSectionReview",
+      "releaseSectionGeneral",
     ]);
-    const titles = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes.map(note => note.title));
-    expect(titles).toHaveLength(3);
-    expect(new Set(titles).size).toBe(titles.length);
+    const notes = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes);
+    expect(notes.map(note => note.title)).toEqual([
+      "releaseDuoSafariTitle", "releaseMacNotchTitle", "releaseDesignPerScreenTitle", "releaseGalleryScrollbarTitle", "releaseFixesTitle",
+    ]);
+    expect([CURRENT_RELEASE_NOTES.featured, ...notes].every(note => note.description === undefined)).toBe(true);
   });
 });

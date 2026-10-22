@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "これは Chrome のデバッグインターフェースを使用し、Chrome はあなたが許可した場合にのみ提供します。ビューアーが開いている間、Chrome は「Mobile View がこのブラウザーをデバッグしています」というバーを表示し、そのキャンセルボタンで正確な識別はオフになります。このタブの DevTools が開いている間もオフのままです。拡張機能のそれ以外は変わりません。",
   "exactIdentitiesAllow": "許可してオンにする",
   "exactIdentitiesUnavailable": "このタブではオフ: Chrome のデバッグインターフェースが DevTools などで使用中です。プレビューは代わりに共有の識別情報を使用します。",
-  "permissionDebugger": "正確なデバイス識別を提供するビルドのみ。Chrome はこの権限を任意にできません。ビューアーが開いている間、Chrome のデバッグインターフェースを通じて各プレビューフレームに自身のデバイスのブラウザー識別情報を与えます。"
+  "permissionDebugger": "正確なデバイス識別を提供するビルドのみ。Chrome はこの権限を任意にできません。ビューアーが開いている間、Chrome のデバッグインターフェースを通じて各プレビューフレームに自身のデバイスのブラウザー識別情報を与えます。",
+  "releaseRealPagesTitle": "プレビューがデバイスごとに実際のモバイル版またはデスクトップ版のページを読み込むようになりました。",
+  "releaseDuoSafariTitle": "開いた iPhone Duo に、実際の Safari の上部バーが表示されるようになりました。",
+  "releaseMacNotchTitle": "MacBook に実機と同じノッチが表示されるようになりました。",
+  "releaseDesignPerScreenTitle": "デザインと比較で、画面ごとにデザインの位置が保存されるようになりました。",
+  "releaseGalleryScrollbarTitle": "すべてのデバイスにスクロールバーが再び表示され、現在位置がわかるようになりました。",
+  "releaseFixesTitle": "より快適に使えるよう、不具合の修正と細かな改善を行いました。"
 }

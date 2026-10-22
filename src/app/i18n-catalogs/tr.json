@@ -503,5 +503,11 @@
   "exactIdentitiesBar": "Bu, Chrome'un yalnızca siz izin verdiğinizde sunduğu hata ayıklama arabirimini kullanır. Görüntüleyici açıkken Chrome, Mobile View'in bu tarayıcıda hata ayıkladığını söyleyen bir çubuk gösterir; çubuktaki İptal düğmesi tam kimlikleri kapatır. Bu sekmenin DevTools'u açıkken de kapalı kalırlar. Uzantıda başka hiçbir şey değişmez.",
   "exactIdentitiesAllow": "İzin ver ve aç",
   "exactIdentitiesUnavailable": "Bu sekmede kapalı: Chrome'un hata ayıklama arabirimi kullanımda, örneğin DevTools tarafından. Önizlemeler bunun yerine paylaşılan kimlikleri kullanır.",
-  "permissionDebugger": "Yalnızca tam cihaz kimlikleri sunan derlemelerde; Chrome bu izne isteğe bağlı olarak izin vermez: görüntüleyici açıkken Chrome'un hata ayıklama arabirimi üzerinden her önizleme çerçevesine kendi cihazının tarayıcı kimliğini verir."
+  "permissionDebugger": "Yalnızca tam cihaz kimlikleri sunan derlemelerde; Chrome bu izne isteğe bağlı olarak izin vermez: görüntüleyici açıkken Chrome'un hata ayıklama arabirimi üzerinden her önizleme çerçevesine kendi cihazının tarayıcı kimliğini verir.",
+  "releaseRealPagesTitle": "Önizlemeler artık her cihaz için gerçek mobil veya masaüstü sayfayı yüklüyor.",
+  "releaseDuoSafariTitle": "Açık iPhone Duo artık Safari'nin gerçek üst çubuğunu gösteriyor.",
+  "releaseMacNotchTitle": "MacBook'lar artık tıpkı gerçeği gibi çentiklerini gösteriyor.",
+  "releaseDesignPerScreenTitle": "Tasarımla karşılaştır, her ekran için tasarımınızın konumunu hatırlıyor.",
+  "releaseGalleryScrollbarTitle": "Tüm cihazlar, nerede olduğunuzu görmeniz için kaydırma çubuğunu yeniden gösteriyor.",
+  "releaseFixesTitle": "Daha akıcı bir deneyim için hata düzeltmeleri ve küçük iyileştirmeler."
 }

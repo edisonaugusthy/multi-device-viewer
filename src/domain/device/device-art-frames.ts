@@ -1313,8 +1313,10 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "top": 56,
         "width": 1728,
         "height": 1085,
-        "paths": {
-          "landscape": "M19 0H1709A19 19 0 0 1 1728 19V1085H0V19A19 19 0 0 1 19 0Z"
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
         },
         "enableRotation": false
       },
@@ -1323,8 +1325,10 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "top": 56,
         "width": 1728,
         "height": 1085,
-        "paths": {
-          "portrait": "M19 0H1709A19 19 0 0 1 1728 19V1085H0V19A19 19 0 0 1 19 0Z"
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
         },
         "enableRotation": false
       }
@@ -3255,8 +3259,10 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "top": 57.35,
         "width": 1470,
         "height": 956,
-        "paths": {
-          "landscape": "M18 0H1452A18 18 0 0 1 1470 18V956H0V18A18 18 0 0 1 18 0Z"
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 18
         },
         "enableRotation": false
       },
@@ -3265,8 +3271,10 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "top": 57.35,
         "width": 1470,
         "height": 956,
-        "paths": {
-          "portrait": "M18 0H1452A18 18 0 0 1 1470 18V956H0V18A18 18 0 0 1 18 0Z"
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 18
         },
         "enableRotation": false
       }
@@ -4155,8 +4163,10 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "top": 54.99,
         "width": 1512,
         "height": 982,
-        "paths": {
-          "landscape": "M19 0H1493A19 19 0 0 1 1512 19V982H0V19A19 19 0 0 1 19 0Z"
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
         },
         "enableRotation": false
       },
@@ -4165,8 +4175,10 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "top": 54.99,
         "width": 1512,
         "height": 982,
-        "paths": {
-          "portrait": "M19 0H1493A19 19 0 0 1 1512 19V982H0V19A19 19 0 0 1 19 0Z"
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
         },
         "enableRotation": false
       }

@@ -280,6 +280,30 @@ export function DeviceFrame({
             }}
           />
         </div>
+        {viewportConfig?.menuBar && (
+          // The macOS menu bar beside the notch: lit display above the page,
+          // under the frame, which draws the notch over it.
+          <div
+            aria-hidden
+            data-mac-menu-bar={device.id}
+            className="pointer-events-none absolute overflow-hidden"
+            style={{
+              left: screenFit.left,
+              top: screenFit.top - viewportConfig.menuBar.height,
+              width: screenFit.width,
+              height: viewportConfig.menuBar.height,
+              zIndex: 1,
+            }}
+          >
+            <MacMenuBar
+              width={screenFit.width / screenFit.scaleX}
+              height={viewportConfig.menuBar.height / screenFit.scaleY}
+              scale={screenFit.scaleX}
+              browser={useSafariDesktopChrome ? "Safari" : "Chrome"}
+              dark={darkMode}
+            />
+          </div>
+        )}
         <div
           data-device-screen={device.id}
           className="absolute overflow-hidden"
@@ -891,6 +915,27 @@ function SafariDesktopBar({ hostname, dark }: { hostname: string; dark: boolean 
       <G.Share size={22} />
       <G.Plus size={22} />
       <G.Copy size={22} />
+    </div>
+  );
+}
+
+const MAC_MENUS = ["File", "Edit", "View", "History", "Bookmarks", "Window", "Help"];
+
+/** macOS's menu bar, drawn at the screen's CSS size: the app's menus on the left, status on the right; the notch sits between them. */
+function MacMenuBar({ width, height, scale, browser, dark }: { width: number; height: number; scale: number; browser: string; dark: boolean }) {
+  return (
+    <div
+      className={`flex items-center justify-between px-3.5 text-[13px] ${dark ? "bg-[#1f2023] text-[#f5f5f7]" : "bg-[#ececee] text-[#1d1d1f]"}`}
+      style={{ width, height, transform: `scale(${scale})`, transformOrigin: "top left" }}
+    >
+      <span className="flex items-center gap-[18px] whitespace-nowrap">
+        <span className="font-semibold">{browser}</span>
+        {MAC_MENUS.map((menu) => <span key={menu}>{menu}</span>)}
+      </span>
+      <span className="flex items-center gap-3 whitespace-nowrap">
+        <G.Wifi size={15} />
+        <span className="font-medium">Mon 9:41</span>
+      </span>
     </div>
   );
 }

@@ -153,6 +153,16 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   await expectScreenSize(phoneScreen, 402, 874);
   const duoScreen = slots.nth(1).locator('[data-device-screen="apple-iphone-duo-folded-2026"]');
   await expectScreenSize(duoScreen, 466, 678);
+  // The MacBook's notch hangs into a lit macOS menu bar directly above the page, as on the real Mac.
+  const menuBar = slots.nth(2).locator('[data-mac-menu-bar="apple-macbook-pro-14-m5-2025"]');
+  await expect(menuBar).toBeVisible();
+  await expect(menuBar).toContainText("Safari");
+  const barBox = (await menuBar.boundingBox())!;
+  const macScreen = (await slots.nth(2).locator('[data-device-screen="apple-macbook-pro-14-m5-2025"]').boundingBox())!;
+  expect(Math.abs(barBox.y + barBox.height - macScreen.y)).toBeLessThan(1);
+  expect(Math.abs(barBox.width - macScreen.width)).toBeLessThan(1);
+  expect(barBox.height).toBeGreaterThan(0);
+  await expect(slots.nth(0).locator("[data-mac-menu-bar]")).toHaveCount(0);
 
   // A user's saved rotation must survive reopening the simulator.
   await revealControls(page, 1);

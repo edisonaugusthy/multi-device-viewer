@@ -15,6 +15,12 @@ export interface MockupViewportConfig {
   cornerRadius?: number;
   paths?: Partial<Record<Orientation, string>>;
   occlusions?: MockupViewportOcclusion[];
+  /**
+   * A notched Mac's menu bar strip, open in the frame directly above the page
+   * (same units as `top`), with the display's rounded corners at its top. The
+   * frame keeps the notch drawn over it.
+   */
+  menuBar?: { height: number; cornerRadius?: number };
   /** False for devices shown in one posture only; rotation is the default. */
   enableRotation?: false;
 }

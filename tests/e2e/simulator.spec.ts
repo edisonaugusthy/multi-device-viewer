@@ -754,9 +754,39 @@ test("keeps native-landscape foldables and their hardware inside the preview can
   expect(frameBox!.y + frameBox!.height).toBeLessThanOrEqual(canvasBox!.y + canvasBox!.height + 1);
 });
 
+test("runs Safari on the unfolded Duo with one top bar in either orientation, as on an iPad", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  await switchDevice(page, "iPhone Duo", 'button[title="Apple iPhone Duo (unfolded)"]');
+  for (let rotation = 0; rotation < 2; rotation++) {
+    if (rotation) {
+      await revealControls(page);
+      await slot.getByRole("button", { name: "Rotate", exact: true }).click();
+    }
+    const bar = slot.locator('[data-safari-style="duo-top"] [data-browser-control="top-address"]');
+    await expect(bar).toBeVisible();
+    await expect(slot.locator('[data-browser-control="side-toolbar"], [data-browser-control="bottom-address"], [data-browser-control="compact-address"], [data-duo-side-surface]')).toHaveCount(0);
+    for (const group of ["back", "bookmarks", "address", "tabs"]) await expect(bar.locator(`[data-duo-glass-group="${group}"]`)).toBeVisible();
+    await expect(bar.locator('[data-browser-control="duo-status"]')).toBeVisible();
+    // The page keeps the whole width under the bar and does not move when the page scrolls.
+    const iframe = slot.locator("iframe");
+    const pageBox = (await iframe.boundingBox())!;
+    const barBox = (await bar.boundingBox())!;
+    const screenBox = (await slot.locator("[data-device-logical-screen]").boundingBox())!;
+    expect(pageBox.y).toBeGreaterThanOrEqual(barBox.y + barBox.height - 1);
+    expect(Math.abs(pageBox.width - screenBox.width)).toBeLessThan(2);
+    const embedded = await (await iframe.elementHandle())!.contentFrame();
+    await embedded!.evaluate(() => {
+      parent.postMessage({ type: "MDV_BROWSER_SCROLL", slotId: window.name.replace(/^mdv-(?:mobile-)?preview-/, ""), scrollTop: 800, deltaTop: 40 }, "*");
+    });
+    await page.waitForTimeout(300);
+    expect(await bar.boundingBox()).toEqual(barBox);
+    expect(await iframe.boundingBox()).toEqual(pageBox);
+  }
+});
+
 test("resizes Duo side controls with the address bar without moving their anchors or covering the page", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
-  for (const posture of ["folded", "unfolded"]) {
+  for (const posture of ["folded"]) {
     await switchDevice(page, "iPhone Duo", `button[title="Apple iPhone Duo (${posture})"]`);
     for (let rotation = 0; rotation < 2; rotation++) {
       if (rotation) {

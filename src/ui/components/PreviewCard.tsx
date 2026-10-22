@@ -433,7 +433,7 @@ export const PreviewCard = memo(function PreviewCard({
     iframe?.contentWindow?.postMessage({
       type: "MDV_PREVIEW_ACTIVITY", slotId: slot.id,
       active: syncSettingsRef.current.visuals,
-      sampleRightSurface: device.id.startsWith("apple-iphone-duo-"),
+      sampleRightSurface: device.id === "apple-iphone-duo-folded-2026",
     }, "*");
   };
   useEffect(() => { syncVisualBridge(iframeRef.current); }, [sampleVisuals, slot.id, device.id]);
@@ -548,7 +548,7 @@ export const PreviewCard = memo(function PreviewCard({
           type: "MDV_PREVIEW_REGISTER",
           slotId: slot.id,
           hideScrollbars: hidesPageScrollbars(device),
-          sampleRightSurface: device.id.startsWith("apple-iphone-duo-"),
+          sampleRightSurface: device.id === "apple-iphone-duo-folded-2026",
           visualsActive: syncSettingsRef.current.visuals,
         },
         "*",

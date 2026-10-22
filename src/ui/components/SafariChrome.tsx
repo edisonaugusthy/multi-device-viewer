@@ -12,8 +12,53 @@ export function SafariChrome({ geometry: g, hostname, dark, keyboard, topColor, 
   const topInk = topDark ? "#f3f4f6" : "#263142";
   const topGlass = `color-mix(in srgb, ${topColor} 15%, ${topDark ? "#23262b" : "#f6f7fa"})`;
   const bottomGlass = `color-mix(in srgb, ${bottomColor} 15%, ${glass})`;
+  if (g.duoControls === "top") {
+    // iPhone Duo's inner display: Safari's one bar across the top, as on an
+    // iPad, with the status at its end. The page runs under the home indicator.
+    const portrait = g.content.height > g.content.width;
+    const buttonSize = 36;
+    const barGlass: CSSProperties = {
+      background: `color-mix(in srgb, ${topColor} 30%, ${topDark ? "rgba(35,38,43,.28)" : "rgba(255,255,255,.26)"})`,
+      color: topInk, backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+      boxShadow: "inset 0 1px 1px #ffffff70, inset 0 -1px 1px #ffffff20, 0 2px 8px #00000010",
+    };
+    const circle: CSSProperties = { ...barGlass, width: buttonSize, height: buttonSize, borderRadius: "50%", display: "grid", placeItems: "center", flexShrink: 0 };
+    const buttonStyle: CSSProperties = { width: buttonSize, height: buttonSize, flexShrink: 0, display: "grid", placeItems: "center" };
+    return <div aria-hidden data-safari-style="duo-top" data-browser-collapsed="false" className="pointer-events-none absolute inset-0 z-20" style={{ color: topInk }}>
+      {g.top > 0 && <div data-browser-control="top-address" data-duo-control-group="toolbar" className="absolute inset-x-0 top-0 flex items-center gap-2 px-3" style={{ height: g.top, background: topColor }}>
+        {g.address > 0 && <>
+          <span data-duo-glass-group="back" style={circle}><G.ChevronLeft size={16}/></span>
+          <span data-duo-glass-group="bookmarks" style={circle}><G.Book size={16}/></span>
+        </>}
+        <div className="flex min-w-0 flex-1 justify-center">
+          {g.address > 0 && <div data-duo-glass-group="address" className="flex min-w-0 items-center gap-2 px-4" style={{
+            ...barGlass, width: portrait ? "52%" : "40%", maxWidth: 640, height: g.address, borderRadius: 999, fontSize: 13,
+          }}>
+            <G.PageMenu size={17} className="shrink-0"/>
+            <span className="min-w-0 flex-1 truncate text-center">{hostname}</span>
+            <G.Reload size={14} className="shrink-0"/>
+          </div>}
+        </div>
+        {g.address > 0 && <div data-duo-glass-group="tabs" className="flex items-center" style={{ ...barGlass, height: buttonSize, borderRadius: 999 }}>
+          <span data-browser-control="new-tab" style={buttonStyle}><G.Plus size={16}/></span>
+          <span data-browser-control="tab-switcher" style={buttonStyle}><G.Copy size={16}/></span>
+        </div>}
+        {g.status > 0 && <div data-duo-control-group="status" data-browser-control="duo-status" className="flex shrink-0 items-center gap-2 ps-2" style={{ filter: `drop-shadow(0 0 .6px ${topDark ? "#000000" : "#ffffff"})` }}>
+          <span style={{ fontSize: 12, lineHeight: "16px", fontWeight: 600, whiteSpace: "nowrap" }}>9:41</span>
+          <div style={{ position: "relative", width: 32, height: 32, display: "grid", placeItems: "center", flexShrink: 0 }}>
+            {showBattery && <svg viewBox="0 0 32 32" className="absolute inset-0" width="32" height="32"><path d="M 6 25 A 13 13 0 1 1 26 25" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>}
+            <G.Wifi size={15} style={{ marginTop: -3 }}/>
+            <span className="absolute flex gap-1" style={{ bottom: 0 }}>{[0, 1, 2, 3].map(i => <span key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: "currentColor" }}/>)}</span>
+          </div>
+        </div>}
+      </div>}
+      {!keyboard && g.homeIndicator && <div data-browser-control="home-indicator" className="absolute rounded-full" style={{
+        bottom: 4, left: "42%", width: "16%", height: 4, background: ink, opacity: .5,
+      }}/>}
+    </div>;
+  }
   if (g.duoControls) {
-    const side = g.duoControls === "side";
+    const side = true;
     const edge = g.duoControlsEdge ?? "right";
     const gutter = edge === "left" ? g.left : g.right;
     const minimized = g.collapse > 0.5;

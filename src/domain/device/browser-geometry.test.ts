@@ -69,33 +69,30 @@ describe("browser content boundaries", () => {
     expect(keyboard.content.height).toBeLessThan(normal.content.height);
     expect(keyboard.bottom).toBe(400);
   });
-  it.each(["apple-iphone-duo-folded-2026", "apple-iphone-duo-unfolded-2026"])("uses posture-specific orientation rules for controls on %s", id => {
-    const duo = devices.find(d => d.id === id)!;
-    const folded = id.includes("-folded-");
+  it("keeps the folded Duo's controls in a column beside the camera, with the address bar at the foot of the page", () => {
+    const duo = devices.find(d => d.id === "apple-iphone-duo-folded-2026")!;
     const portrait = getBrowserGeometry(duo, { width: 466, height: 678 });
     const landscape = getBrowserGeometry(duo, { width: 678, height: 466 });
-    expect(portrait.duoControls).toBe(folded ? "side" : "bottom");
-    expect(portrait.duoFullWidthBottom).toBe(folded);
-    expect(portrait.top).toBe(folded ? 0 : 40);
+    expect(portrait.duoControls).toBe("side");
+    expect(portrait.duoFullWidthBottom).toBe(true);
+    expect(portrait.top).toBe(0);
     expect(portrait.left).toBe(0);
-    expect(portrait.right).toBe(folded ? Math.ceil(portrait.duoIconCenterRight! + 24) : 0);
+    expect(portrait.right).toBe(Math.ceil(portrait.duoIconCenterRight! + 24));
     expect(portrait.content.width).toBe(466 - portrait.right);
-    if (folded) {
-      const aperture = duo.mockupAssets[0].viewport!.portrait!;
-      const camera = aperture.occlusions![0];
-      expect(portrait.duoStatusTop).toBeGreaterThan((camera.top + camera.height) * 678 / aperture.height);
-    } else expect(portrait.duoStatusTop).toBe(4);
-    expect(portrait.bottom).toBe(portrait.address + (folded ? 0 : portrait.toolbar) + 12);
+    const aperture = duo.mockupAssets[0].viewport!.portrait!;
+    const camera = aperture.occlusions![0];
+    expect(portrait.duoStatusTop).toBeGreaterThan((camera.top + camera.height) * 678 / aperture.height);
+    expect(portrait.bottom).toBe(portrait.address + 12);
     expect(landscape.duoControls).toBe("side");
-    expect(landscape.duoFullWidthBottom).toBe(!folded);
+    expect(landscape.duoFullWidthBottom).toBe(false);
     expect(landscape.left).toBe(0);
-    expect(landscape.right).toBe(folded ? Math.ceil(landscape.duoIconCenterRight! + 24) : 56);
+    expect(landscape.right).toBe(Math.ceil(landscape.duoIconCenterRight! + 24));
     expect(landscape.content.width).toBe(678 - landscape.right);
     expect(landscape.bottom).toBe(landscape.address + 12);
     expect(getBrowserGeometry(duo, { width: 678, height: 466 }, {}, { viewportFit: "cover" })).toEqual(landscape);
     for (const screen of [{ width: 466, height: 678 }, { width: 678, height: 466 }]) {
       const bare = getBrowserGeometry(duo, screen, {}, { showStatusBar: false, showUrlBar: false });
-      expect(bare.right).toBe(folded ? Math.ceil(bare.duoIconCenterRight! + 24) : 0);
+      expect(bare.right).toBe(Math.ceil(bare.duoIconCenterRight! + 24));
       expect(bare.top).toBe(0);
       expect(bare.bottom).toBe(12);
       const normal = getBrowserGeometry(duo, screen);
@@ -106,7 +103,7 @@ describe("browser content boundaries", () => {
       expect(scrolled.duoStatusTop).toBe(normal.duoStatusTop);
       expect(scrolled.address).toBe(24);
       expect(scrolled.bottom).toBe(36);
-      expect(scrolled.toolbar).toBe(scrolled.duoControls === "side" ? normal.toolbar : 0);
+      expect(scrolled.toolbar).toBe(normal.toolbar);
       expect(scrolled.content.height - normal.content.height).toBe(normal.bottom - scrolled.bottom);
       expect(scrolled.content.height).toBeGreaterThan(normal.content.height);
       const keyboard = getBrowserGeometry(duo, screen, {}, { keyboardHeight: 260 });
@@ -114,6 +111,29 @@ describe("browser content boundaries", () => {
       expect(keyboard.bottom).toBe(260);
       expect(keyboard.content.height + keyboard.top + keyboard.bottom).toBe(screen.height);
       expect(getBrowserGeometry(duo, screen, {}, { keyboardHeight: 260, collapsed: 1 }).content).toEqual(keyboard.content);
+    }
+  });
+  it("runs Safari on the unfolded Duo like an iPad: one top bar in either orientation, the page under the home indicator", () => {
+    const duo = devices.find(d => d.id === "apple-iphone-duo-unfolded-2026")!;
+    for (const screen of [{ width: 890, height: 626 }, { width: 626, height: 890 }]) {
+      const normal = getBrowserGeometry(duo, screen);
+      expect(normal.duoControls).toBe("top");
+      expect(normal.layout).toBe("top");
+      expect([normal.top, normal.status, normal.address, normal.toolbar]).toEqual([60, 60, 40, 0]);
+      expect([normal.left, normal.right, normal.bottom]).toEqual([0, 0, 0]);
+      expect(normal.content).toEqual({ width: screen.width, height: screen.height - 60 });
+      expect(normal.duoStatusTop).toBeUndefined();
+      // Only the status, or only the address bar, still needs the bar; neither needs none.
+      expect(getBrowserGeometry(duo, screen, {}, { showStatusBar: false }).top).toBe(60);
+      expect(getBrowserGeometry(duo, screen, {}, { showStatusBar: false }).status).toBe(0);
+      expect(getBrowserGeometry(duo, screen, {}, { showUrlBar: false }).address).toBe(0);
+      const bare = getBrowserGeometry(duo, screen, {}, { showStatusBar: false, showUrlBar: false });
+      expect([bare.top, bare.content.height]).toEqual([0, screen.height]);
+      // Scrolling minimizes nothing; the keyboard takes the bottom.
+      expect(getBrowserGeometry(duo, screen, {}, { collapsed: 1 })).toEqual({ ...normal, collapse: 1 });
+      const keyboard = getBrowserGeometry(duo, screen, {}, { keyboardHeight: 260 });
+      expect(keyboard.bottom).toBe(260);
+      expect(keyboard.content.height).toBe(screen.height - 60 - 260);
     }
   });
   it.each(["apple-iphone-18-pro-2026", "apple-iphone-18-pro-max-2026"])("keeps %s cover pages outside the landscape camera", id => {

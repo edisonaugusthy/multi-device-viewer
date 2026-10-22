@@ -21,7 +21,8 @@ export interface BrowserGeometry {
   content: Size;
   collapse: number;
   homeIndicator: boolean;
-  duoControls?: "bottom" | "side";
+  /** iPhone Duo: the outer display's side column, or the inner display's iPad-like top bar. */
+  duoControls?: "side" | "top";
   duoControlsEdge?: "left" | "right";
   duoStatusTop?: number;
   duoIconCenterRight?: number;
@@ -57,40 +58,51 @@ export function getBrowserGeometry(device: Device, screen: Size, preferences: Br
   const cameraBottomInset = camera && frameViewport && camera.top > frameViewport.height * 0.75
     ? Math.ceil((frameViewport.height - camera.top) * screen.height / frameViewport.height) + 8 : 0;
   if (device.id.startsWith("apple-iphone-duo-")) {
-    // The outer display keeps floating right controls; unfolded uses them horizontally.
-    // The opposite orientation uses one floating address bar. Dimensions
-    // are preview layout constants, not published native Safari metrics.
-    const folded = device.id === "apple-iphone-duo-folded-2026";
-    const side = folded || landscape;
+    // Drawn from Apple's and reviewers' screenshots of Safari on iPhone Duo.
+    // Dimensions are preview layout constants, not published native metrics.
     const controls = options.showUrlBar !== false;
-    const status = options.showStatusBar === false ? 0 : 56;
+    const statusShown = options.showStatusBar !== false;
     const collapse = Math.max(0, Math.min(1, options.collapsed ?? 0));
+    if (device.id !== "apple-iphone-duo-folded-2026") {
+      // The inner display runs Safari like an iPad, in either orientation: one
+      // bar across the top with back and bookmarks, the address, new tab and
+      // tabs, and the status at its end. The page keeps the whole width and
+      // runs under the home indicator; nothing minimizes on scroll.
+      const bar = controls || statusShown ? 60 : 0;
+      const bottom = options.keyboardHeight ?? 0;
+      return { family, variant, layout: "top", duoControls: "top", neutralChrome, statusInsetRight: 0,
+        status: statusShown ? bar : 0, address: controls ? 40 : 0, toolbar: 0, tabStrip: 0, pillHeight: 0, pillBottom: 0,
+        top: bar, bottom, left: 0, right: 0,
+        content: { width: screen.width, height: Math.max(1, screen.height - bar - bottom) },
+        collapse, homeIndicator: true };
+    }
+    // The outer display keeps a column of floating controls beside the camera:
+    // status under the camera, then back and bookmarks, with new tab and tabs
+    // at the bottom, and the address bar floating at the foot of the page.
+    const status = statusShown ? 56 : 0;
     const minimized = collapse > 0.5;
     const address = controls ? minimized ? 24 : 48 : 0;
-    // Side controls keep their camera axis; portrait has no second bottom row.
-    const toolbar = controls && side ? 80 : 0;
-    // Keep the page clear of floating controls and the folded camera.
+    const toolbar = controls ? 80 : 0;
+    // Keep the page clear of floating controls and the camera.
     const cameraCenterRight = camera && frameViewport
       ? (frameViewport.width - camera.left - camera.width / 2) * screen.width / frameViewport.width
       : landscape ? screen.width * 83 / 1060 : screen.width * 74 / 724;
-    const duoControlsEdge = folded && cameraCenterRight > screen.width / 2 ? "left" : "right";
+    const duoControlsEdge = cameraCenterRight > screen.width / 2 ? "left" : "right";
     const cameraCenterOffset = duoControlsEdge === "left" ? screen.width - cameraCenterRight : cameraCenterRight;
-    const duoIconCenterRight = folded ? cameraCenterOffset : 28;
-    const gutter = folded ? Math.ceil(cameraCenterOffset + 24) : side && (controls || status) ? 56 : 0;
+    const gutter = Math.ceil(cameraCenterOffset + 24);
     const right = duoControlsEdge === "right" ? gutter : 0;
     const left = duoControlsEdge === "left" ? gutter : 0;
-    const top = !side && status ? 40 : 0;
     const bottom = Math.max(12 + address, options.keyboardHeight ?? 0);
-    return { family, variant, layout: side ? "side" : "bottom", duoControls: side ? "side" : "bottom",
-      duoIconCenterRight, duoControlsEdge,
-      duoFullWidthBottom: side && !(folded && (landscape || cameraBottomInset > 0)),
-      duoStatusTop: folded && camera && frameViewport && camera.top < frameViewport.height * 0.25
-        ? camera && frameViewport ? Math.ceil((camera.top + camera.height) * screen.height / frameViewport.height) + 14 : 80
-        : side ? 24 : 4,
-      statusInsetRight: side ? 0 : right + 20, neutralChrome,
+    return { family, variant, layout: "side", duoControls: "side",
+      duoIconCenterRight: cameraCenterOffset, duoControlsEdge,
+      duoFullWidthBottom: !(landscape || cameraBottomInset > 0),
+      duoStatusTop: camera && frameViewport && camera.top < frameViewport.height * 0.25
+        ? Math.ceil((camera.top + camera.height) * screen.height / frameViewport.height) + 14
+        : 24,
+      statusInsetRight: 0, neutralChrome,
       status, address, toolbar, tabStrip: 0, pillHeight: 0, pillBottom: 0,
-      top, bottom, left, right,
-      content: { width: Math.max(1, screen.width - left - right), height: Math.max(1, screen.height - top - bottom) },
+      top: 0, bottom, left, right,
+      content: { width: Math.max(1, screen.width - left - right), height: Math.max(1, screen.height - bottom) },
       collapse, homeIndicator: true };
   }
 

@@ -1,20 +1,16 @@
 import { useCallback, useRef, type ReactNode, type RefObject } from "react";
 import { SUPPORTED_LOCALES, useI18n, type AppLocale } from "../../app/i18n";
 import { CloseIcon, HelpIcon, LockIcon, MoonIcon, SunIcon, TourIcon, WhatsNewIcon } from "../icons";
-import { cx, focusRing, positionStyle, popoverPanel, Segmented, Switch, useAnchoredPosition, useDismiss } from "./ui";
+import { cx, focusRing, positionStyle, popoverPanel, Segmented, useAnchoredPosition, useDismiss } from "./ui";
 
 export type BrowserBarPosition = "bottom" | "top";
-/** The opt-in exact device identities (see exact-identities.ts); absent outside the extension. */
-export interface ExactSetting { enabled: boolean; unavailable: boolean; onChange: (enabled: boolean) => void }
-
 export function SettingsPopover({
-  open, anchorRef, dark, browserBar, exact, onClose, onThemeChange, onBrowserBarChange, onHelp, onTour, onWhatsNew, onPermissions,
+  open, anchorRef, dark, browserBar, onClose, onThemeChange, onBrowserBarChange, onHelp, onTour, onWhatsNew, onPermissions,
 }: {
   open: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   dark: boolean;
   browserBar: BrowserBarPosition;
-  exact?: ExactSetting;
   onClose: () => void;
   onThemeChange: (dark: boolean) => void;
   onBrowserBarChange: (position: BrowserBarPosition) => void;
@@ -63,17 +59,6 @@ export function SettingsPopover({
             ]}
           />
         </SettingRow>
-        {exact && (
-          <div className="border-b border-line-soft py-2.5">
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-[13px] font-medium">{t("exactIdentities")}</span>
-              <Switch size="sm" checked={exact.enabled} onChange={exact.onChange} label={t("exactIdentities")} />
-            </div>
-            <p data-exact-identities-hint className={cx("mt-1 text-[11.5px] leading-snug", exact.unavailable ? "text-warn" : "text-muted")}>
-              {exact.unavailable ? t("exactIdentitiesUnavailable") : t("exactIdentitiesHint")}
-            </p>
-          </div>
-        )}
         <SettingRow label={<label htmlFor="mdv-language">{t("language")}</label>} last>
           <select
             id="mdv-language"

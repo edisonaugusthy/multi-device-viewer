@@ -1,3 +1,4 @@
+import { previewRequestFilter } from "./preview-request";
 import type { PreviewIdentity } from "./preview-identity";
 
 export const PREVIEW_RULE_BASE = 1_000_000;
@@ -33,28 +34,26 @@ export function describeHeaders(changes: HeaderChange[] | undefined): string {
   return (changes ?? []).map(change => `${change.header}:${change.operation}:${change.value ?? ""}`).join("\n");
 }
 
-/** Which frames a rule covers: those the extension's own pages navigate, or those the website's do. */
-export type PreviewFrameKind = "wrapped" | "direct";
-
-export function previewRuleKind(rule: chrome.declarativeNetRequest.Rule): PreviewFrameKind {
-  return rule.condition.initiatorDomains ? "wrapped" : "direct";
-}
-
-/**
- * Only active preview hosts in one tab, and only the frames of one kind.
- * Never changes cookies or top-level responses.
- */
-export function previewRule(id: number, tabId: number, domains: string[], scope: { kind: PreviewFrameKind; extensionId: string }, requestHeaders?: HeaderChange[]): chrome.declarativeNetRequest.Rule {
+/** Embedding exceptions stay limited to the active preview hosts and iframe responses. */
+export function previewRule(id: number, tabId: number, domains: string[]): chrome.declarativeNetRequest.Rule {
   return {
     id, priority: 1,
-    condition: {
-      tabIds: [tabId], requestDomains: [...new Set(domains)].sort(), resourceTypes: ["sub_frame" as chrome.declarativeNetRequest.ResourceType],
-      ...(scope.kind === "wrapped" ? { initiatorDomains: [scope.extensionId] } : { excludedInitiatorDomains: [scope.extensionId] }),
-    },
+    condition: { tabIds: [tabId], requestDomains: [...new Set(domains)].sort(), resourceTypes: ["sub_frame" as chrome.declarativeNetRequest.ResourceType] },
     action: {
       type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType,
-      responseHeaders: ["x-frame-options", "content-security-policy"].map(header => ({ header, operation: "remove" as chrome.declarativeNetRequest.HeaderOperation })),
-      ...(requestHeaders?.length ? { requestHeaders } : {}),
+      responseHeaders: ["x-frame-options", "content-security-policy"].map(remove),
     },
+  };
+}
+
+/** Only tagged document and fetch/XHR requests in this tab get this device's headers.
+ * API hosts may differ from the document host. Untagged assets are deliberately untouched.
+ */
+export function previewHeaderRule(id: number, tabId: number, name: string, identity: PreviewIdentity): chrome.declarativeNetRequest.Rule {
+  return {
+    id, priority: 2,
+    condition: { tabIds: [tabId], urlFilter: previewRequestFilter(name), isUrlFilterCaseSensitive: true,
+      resourceTypes: ["sub_frame", "xmlhttprequest"] as chrome.declarativeNetRequest.ResourceType[] },
+    action: { type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType, requestHeaders: identityHeaders(identity) },
   };
 }

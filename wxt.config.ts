@@ -33,11 +33,6 @@ export default defineConfig({
       "storage",
       "offscreen",
       "tabCapture",
-      // Exact device identities (src/app/exact-identities.ts) need the
-      // debugger, which Chrome does not allow as an optional permission. A
-      // build with MDV_DEBUGGER_REQUIRED=1 holds it, for the extension smoke
-      // test and for trying the feature; the Store build does not.
-      ...(process.env.MDV_DEBUGGER_REQUIRED === "1" ? ["debugger"] : []),
     ],
     host_permissions: ["http://*/*", "https://*/*"],
     icons: {
@@ -58,8 +53,8 @@ export default defineConfig({
     web_accessible_resources: [
       {
         // viewer.js and its shared chunks are loaded by the content script on
-        // demand; preview-frame.html wraps phone previews (src/app/preview-frame.ts).
-        resources: ["viewer.js", "chunks/*", "mockups/*", "icons/*", "fonts/*", "preview-frame.html", `${UI_LOCALES_DIR}/*`],
+        // demand; direct page frames preserve the website’s session context.
+        resources: ["viewer.js", "chunks/*", "mockups/*", "icons/*", "fonts/*", `${UI_LOCALES_DIR}/*`],
         matches: ["http://*/*", "https://*/*"]
       }
     ],

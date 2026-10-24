@@ -1,4 +1,5 @@
 import type { Device } from "../device/device.types";
+import { PREVIEW_FRAME_NAME } from "./preview-request";
 import { getFrameProfile } from "../device/frame-profiles";
 
 /**
@@ -21,9 +22,6 @@ const FALLBACK_CHROME_MAJOR = 140;
 /** Safari's version follows the OS: iOS, iPadOS and macOS 26 ship Safari 26. */
 const CURRENT_SAFARI_MAJOR = 26;
 const MAX_USER_AGENT = 400;
-/** Which device types speak for a tab, most phone-like first. */
-const TAB_PRIORITY: readonly Device["type"][] = ["phone", "tablet", "laptop", "desktop", "tv", "custom", "watch"];
-
 /** The major version of the Chrome running the viewer, so a Chrome identity matches its brands. */
 export function chromeMajor(userAgent: string): number {
   const match = /Chrome\/(\d+)/.exec(userAgent);
@@ -70,89 +68,8 @@ export function deviceIdentity(device: Device, chrome: number): PreviewIdentity 
   return undefined;
 }
 
-/**
- * One identity per kind of frame: request rules apply to every preview frame
- * of a site in the tab, so the most phone-like device speaks for all of them.
- * Phones come first, then tablets, laptops, desktops and TVs; among equals,
- * the first in the workspace.
- */
-export function previewIdentity(devices: Device[], chrome: number): PreviewIdentity | undefined {
-  for (const type of TAB_PRIORITY) {
-    for (const device of devices) {
-      if (device.type !== type) continue;
-      const identity = deviceIdentity(device, chrome);
-      if (identity) return identity;
-    }
-  }
-  return undefined;
-}
-
-/**
- * The identities of a tab's two kinds of preview frame. "wrapped" frames are
- * navigated by the extension's own page (phone previews in the in-page
- * viewer, and every preview on the simulator page, which is the extension's
- * own); "direct" frames are navigated by the website the viewer is on.
- * Undefined keeps a kind's current identity; null returns it to the browser's own.
- */
-export interface PreviewIdentities {
-  wrapped?: PreviewIdentity | null;
-  direct?: PreviewIdentity | null;
-}
-
-/**
- * Which previews load wrapped and what each kind of frame identifies as,
- * decided from the devices on screen. Of the distinct browsers shown, the
- * most phone-like one takes the wrapped class with every device of that
- * rank (a Pixel beside an iPhone is still a phone), and the least phone-like
- * one the direct class, so an iPhone and a MacBook, or an Android tablet and
- * an iPad, or a MacBook and a Surface, each get their own page. A third
- * browser shares the class nearer to it. Without `split` (the simulator
- * page, whose frames all start from the extension), every frame is in the
- * wrapped class and the most phone-like device speaks for all.
- */
-export interface FramePlan { wrapped: Set<string>; identities: PreviewIdentities }
-export interface FrameSpec { name: string; device: Device }
-/** How phone-like a browser is: phones, then Android tablets, then computers, then TVs. */
-const rank = (identity: PreviewIdentity) => identity.mobile ? 0 : identity.platform === "Android" ? 1 : identity.platform === "Linux" ? 3 : 2;
-export function planPreviewFrames(frames: FrameSpec[], chrome: number, split: boolean): FramePlan {
-  if (!split) return { wrapped: new Set(), identities: { wrapped: previewIdentity(frames.map(frame => frame.device), chrome) ?? null, direct: null } };
-  const known = frames.map(frame => ({ frame, identity: deviceIdentity(frame.device, chrome) })).filter((entry): entry is { frame: FrameSpec; identity: PreviewIdentity } => Boolean(entry.identity));
-  const distinct: PreviewIdentity[] = [];
-  for (const { identity } of known) if (!distinct.some(seen => seen.userAgent === identity.userAgent)) distinct.push(identity);
-  distinct.sort((a, b) => rank(a) - rank(b));
-  if (distinct.length < 2) return { wrapped: new Set(), identities: { wrapped: null, direct: distinct[0] ?? null } };
-  const first = distinct[0];
-  const oneRank = distinct.every(identity => rank(identity) === rank(first));
-  const wrappedEntries = known.filter(({ identity }) => oneRank ? identity.userAgent === first.userAgent : rank(identity) === rank(first));
-  const rest = known.filter(entry => !wrappedEntries.includes(entry));
-  const farthest = Math.max(...rest.map(({ identity }) => rank(identity)));
-  const direct = rest.find(({ identity }) => rank(identity) === farthest)?.identity ?? null;
-  return { wrapped: new Set(wrappedEntries.map(({ frame }) => frame.name)), identities: { wrapped: first, direct } };
-}
-
-/**
- * With exact identities, every preview frame gets its own device's browser
- * through the debugger, keyed by the frame's name; the request rules then
- * leave identities alone (see exact-identities.ts).
- */
-export const EXACT_RULE_IDENTITIES: PreviewIdentities = { wrapped: null, direct: null };
-export type ExactIdentities = Record<string, PreviewIdentity>;
-export function exactIdentities(frames: Array<{ name: string; device: Device }>, chrome: number): ExactIdentities {
-  const result: ExactIdentities = {};
-  for (const frame of frames) {
-    const identity = deviceIdentity(frame.device, chrome);
-    if (identity) result[frame.name] = identity;
-  }
-  return result;
-}
-
-/** Identities received in a message; each kind is read as previewIdentityFrom does. */
-export function previewIdentitiesFrom(value: unknown): PreviewIdentities | null | undefined {
-  if (value === null) return null;
-  if (!value || typeof value !== "object") return undefined;
-  const { wrapped, direct } = value as Record<string, unknown>;
-  return { wrapped: previewIdentityFrom(wrapped), direct: previewIdentityFrom(direct) };
-}
+/** Each direct preview has its own request identity; null removes its rule. */
+export type PreviewIdentities = Record<string, PreviewIdentity | null>;
 
 /** An identity received in a message: null asks for the browser's own, anything malformed is ignored. */
 export function previewIdentityFrom(value: unknown): PreviewIdentity | null | undefined {
@@ -164,17 +81,18 @@ export function previewIdentityFrom(value: unknown): PreviewIdentity | null | un
   return { userAgent, platform: platform as IdentityPlatform, mobile, hints };
 }
 
-const MAX_EXACT_FRAMES = 300;
-const FRAME_NAME = /^mdv-(?:mobile-)?preview-[\w-]+$/;
-/** Exact identities received in a message, by frame name: null turns them off, anything malformed is ignored. */
-export function exactIdentitiesFrom(value: unknown): ExactIdentities | null | undefined {
-  if (value === null) return null;
-  if (!value || typeof value !== "object") return undefined;
-  const entries = Object.entries(value as Record<string, unknown>).slice(0, MAX_EXACT_FRAMES);
-  const result: ExactIdentities = {};
+const MAX_PREVIEW_FRAMES = 300;
+/** Validate the bounded per-frame map received from the viewer. */
+export function previewIdentitiesFrom(value: unknown): PreviewIdentities | undefined {
+  if (value === undefined) return undefined;
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Invalid preview identities.");
+  const entries = Object.entries(value);
+  if (entries.length > MAX_PREVIEW_FRAMES) throw new Error("Too many preview identities.");
+  const result: PreviewIdentities = {};
   for (const [name, identity] of entries) {
-    const read = FRAME_NAME.test(name) ? previewIdentityFrom(identity) : undefined;
-    if (read) result[name] = read;
+    const read = previewIdentityFrom(identity);
+    if (!PREVIEW_FRAME_NAME.test(name) || read === undefined) throw new Error("Invalid preview identity.");
+    result[name] = read;
   }
   return result;
 }

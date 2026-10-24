@@ -1,192 +1,268 @@
-// Loads the built extension (.output/chrome-mv3) in Chromium, opens the viewer
-// on a local page the same way the toolbar button does, and checks that it
-// mounts, renders device frames and loads the page into live previews.
-//
-//   npm run build && npm run test:extension
-//
-// Exact device identities are covered only against a build that holds the
-// debugger permission from the start (MDV_DEBUGGER_REQUIRED=1 npm run build),
-// since Chrome grants the optional permission only at the user's click.
-
+// npm run build && npm run test:extension
+// Real Chrome extension test: one existing login, three direct frames, per-device
+// document/API headers and an honest partial-coverage disclosure. CDP below is
+// only test automation for the viewer's closed shadow root, never extension code.
+import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 
 const extension = fileURLToPath(new URL("../.output/chrome-mv3", import.meta.url));
-const pages = {
-  "/": "<!doctype html><title>Smoke page</title><h1>Smoke page</h1><p>Mobile View extension smoke test.</p><a href=\"/next\">Next page</a>",
-  "/next": "<!doctype html><title>Next page</title><h1>Next page</h1>",
-  "/self": "<!doctype html><title>Self page</title><h1>Self page</h1>",
-  "/exact": "<!doctype html><title>Exact page</title><h1>Exact page</h1>",
-};
-// The User-Agent of each request, by what it loaded and which page: phone
-// previews identify as the workspace's iPhone, the MacBook preview as Safari
-// on a Mac, and the page itself keeps the browser's own.
-const agents = { iframe: new Map(), document: new Map() };
-const server = createServer((req, res) => {
+const manifest = JSON.parse(await readFile(join(extension, "manifest.json"), "utf8"));
+assert(![...manifest.permissions ?? [], ...manifest.optional_permissions ?? []].includes("debugger"));
+const requests = [];
+let apiOrigin;
+const handler = async (req, res) => {
+  const body = await Array.fromAsync(req).then(chunks => Buffer.concat(chunks).toString());
   const path = new URL(req.url, "http://localhost").pathname;
-  const seen = agents[req.headers["sec-fetch-dest"]];
-  if (seen) seen.set(path, [...seen.get(path) ?? [], req.headers["user-agent"] ?? ""]);
-  res.writeHead(200, { "content-type": "text/html" }); res.end(pages[path] ?? pages["/"]);
-});
-const IPHONE = /iPhone/, MAC_SAFARI = /Macintosh.*Version\/\d+\.0 Safari\/605/;
-await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-const pageUrl = `http://127.0.0.1:${server.address().port}/`;
+  const seen = { url: req.url, method: req.method, body, contentType: req.headers["content-type"], ua: req.headers["user-agent"], cookie: req.headers.cookie ?? "", dest: req.headers["sec-fetch-dest"], custom: req.headers["x-probe"], mobile: req.headers["sec-ch-ua-mobile"], platform: req.headers["sec-ch-ua-platform"] };
+  requests.push(seen);
+  const headers = { "cache-control": "no-store" };
+  if (req.headers.origin) Object.assign(headers, { "access-control-allow-origin": req.headers.origin, "access-control-allow-credentials": "true", "access-control-allow-headers": "x-probe,content-type", "access-control-allow-methods": "GET,POST,OPTIONS" });
+  if (req.method === "OPTIONS") { res.writeHead(204, headers); res.end(); return; }
+  if (path.startsWith("/api")) { res.writeHead(200, { ...headers, "content-type": "application/json" }); res.end(JSON.stringify(seen)); return; }
+  if (path === "/redirect" || path === "/redirect-hash") { res.writeHead(302, { ...headers, location: path === "/redirect" ? "/landed" : "/landed#/server-route" }); res.end(); return; }
+  if (path === "/asset.svg") { res.writeHead(200, { ...headers, "content-type": "image/svg+xml" }); res.end('<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"/>'); return; }
+  if (path === "/worker.js") { res.writeHead(200, { ...headers, "content-type": "text/javascript" }); res.end('fetch("/api-worker").then(r=>r.json()).then(r=>postMessage(r));'); return; }
+  if (path === "/seed") headers["set-cookie"] = ["mdvStrict=logged-in; HttpOnly; SameSite=Strict; Path=/", "mdvLax=logged-in; HttpOnly; SameSite=Lax; Path=/", "mdvNone=logged-in; HttpOnly; SameSite=None; Secure; Path=/", "mdvPartitioned=logged-in; HttpOnly; SameSite=None; Secure; Partitioned; Path=/"];
+  res.writeHead(200, { ...headers, "content-type": "text/html" });
+  res.end(`<!doctype html><title>Shared session fixture</title><h1>Shared session fixture</h1>
+    <a href="/linked#/route">Link</a><a id="redirect" href="/redirect">Redirect</a><a id="redirect-hash" href="/redirect-hash">Redirect replacing hash</a>
+    <form action="/form-get" method="get"><input name="query" value="hello world"><button>Search</button></form>
+    <form id="post" action="/form-post" method="post"><input name="payload" value="keep me"><button name="save" value="yes">Save</button></form>
+    <img src="/asset.svg"><script>
+    ${path === "/seed" ? 'localStorage.setItem("mdv-probe","logged-in");sessionStorage.setItem("mdv-probe","logged-in");' : ''}
+    window.documentProbe=${JSON.stringify(seen)};
+    window.storageProbe={local:localStorage.getItem("mdv-probe"),session:sessionStorage.getItem("mdv-probe"),hash:location.hash};
+    fetch("/api-fetch").then(r=>r.json()).then(r=>window.fetchProbe=r);
+    const xhr=new XMLHttpRequest();xhr.open("GET","/api-xhr");xhr.onload=()=>window.xhrProbe=JSON.parse(xhr.responseText);xhr.send();
+    window.crossProbe=fetch(${JSON.stringify(apiOrigin + "/api-cross")},{credentials:"include"}).then(r=>r.json());
+    </script>`);
+};
+const server = createServer(handler), apiServer = createServer(handler);
+await Promise.all([new Promise(resolve => server.listen(0, "127.0.0.1", resolve)), new Promise(resolve => apiServer.listen(0, "127.0.0.1", resolve))]);
+const origin = `http://127.0.0.1:${server.address().port}`;
+apiOrigin = `http://127.0.0.1:${apiServer.address().port}`;
+const pageUrl = origin + "/seed";
 const profile = await mkdtemp(join(tmpdir(), "mdv-smoke-"));
-const failures = [];
-
-const context = await chromium.launchPersistentContext(profile, {
-  channel: "chromium",
-  headless: true,
-  viewport: { width: 1440, height: 900 },
-  args: [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`],
-});
+let context;
 try {
+  context = await chromium.launchPersistentContext(profile, {
+    channel: "chromium", headless: true, viewport: { width: 1440, height: 1000 },
+    args: [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`],
+  });
   const worker = context.serviceWorkers()[0] ?? await context.waitForEvent("serviceworker");
   const extensionOrigin = worker.url().split("/").slice(0, 3).join("/");
   const errors = [];
   const page = await context.newPage();
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("requestfailed", (request) => { if (request.url().startsWith(extensionOrigin)) errors.push(`failed ${request.url()}`); });
+  page.on("pageerror", error => errors.push(error.message));
   await page.goto(pageUrl);
-
-  // What the toolbar button does: inject the viewer and ask it to open.
-  const started = Date.now();
-  await worker.evaluate(async (url) => {
+  await page.waitForFunction(() => window.fetchProbe && window.xhrProbe);
+  const browserAgent = await page.evaluate(() => navigator.userAgent);
+  const devices = [["phone", "apple-iphone-18-pro-2026", /iPhone/], ["pixel", "google-pixel-8", /Android.*Mobile/], ["mac", "apple-macbook-pro-14-m5-2025", /Macintosh.*Version\/.*Safari/]];
+  await worker.evaluate(async ({ url, devices }) => {
+    const slot = ([id, deviceId]) => ({ id, deviceId, url, orientation: "portrait", zoom: 0.58, zoomMode: "fit", reloadToken: 0, showFrame: true });
+    await chrome.storage.local.set({ mdvLastSeenTour: "0.4.0", mdvLastSeenReleaseVersion: chrome.runtime.getManifest().version, mdvSimulatorSession: { slots: devices.map(slot), activeSlotId: "phone", display: { scrollSync: false, navigationSync: false, darkMode: false, previewStyle: "device" } } });
     const [tab] = await chrome.tabs.query({ url });
     await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content-scripts/content.js"] });
     const reply = await chrome.tabs.sendMessage(tab.id, { type: "OPEN_SIMULATOR", url, sourceTabId: tab.id });
     if (!reply?.ok) throw new Error(`Viewer did not open: ${reply?.error ?? "no reply"}`);
-  }, pageUrl);
+  }, { url: pageUrl, devices: devices.map(([id, device]) => [id, device]) });
+  await page.locator("#multi-device-viewer-overlay").waitFor({ state: "attached" });
+  const previews = () => page.frames().filter(frame => frame !== page.mainFrame() && /mdv-(?:mobile-)?preview-/.test(frame.name()));
+  await page.waitForFunction(() => document.querySelector("#multi-device-viewer-overlay") != null);
+  for (let i = 0; i < 100 && previews().filter(frame => frame.url().startsWith(origin)).length < 3; i++) await page.waitForTimeout(100);
+  assert.equal(previews().length, 3, "three side-by-side frames");
+  assert.equal(context.pages().length, 2, "no device tabs (only browser's initial blank tab and source tab)");
+  const checkLogin = result => { for (const name of ["mdvStrict", "mdvLax", "mdvNone", "mdvPartitioned"]) assert(result.cookie.includes(`${name}=logged-in`), `${name} missing on ${result.url}`); };
+  const frameFor = id => previews().find(frame => frame.name().endsWith(`-${id}`));
+  for (const [id, , pattern] of devices) {
+    const frame = frameFor(id);
+    assert.equal(frame.parentFrame(), page.mainFrame(), "direct frame shares top-level site context");
+    await frame.waitForFunction(() => window.fetchProbe && window.xhrProbe);
+    const result = await frame.evaluate(async () => ({ document: window.documentProbe, fetch: window.fetchProbe, xhr: window.xhrProbe, cross: await window.crossProbe, storage: window.storageProbe, ua: navigator.userAgent }));
+    for (const kind of ["document", "fetch", "xhr", "cross"]) { assert.match(result[kind].ua, pattern, `${id} ${kind} UA`); checkLogin(result[kind]); }
+    assert.deepEqual(result.storage, { local: "logged-in", session: "logged-in", hash: "" });
+    assert.equal(result.ua, browserAgent, "JS identity remains honest Chrome");
+    if (id === "pixel") { assert.equal(result.fetch.mobile, "?1"); assert.equal(result.fetch.platform, '"Android"'); }
+    else { assert.equal(result.fetch.mobile, undefined); assert.equal(result.fetch.platform, undefined); }
+    const post = await frame.evaluate(async () => {
+      return await (await fetch("/api-post", { method: "POST", body: "preserve body", headers: { "x-probe": "retained" }, credentials: "include" })).json();
+    });
+    assert.match(post.ua, pattern); checkLogin(post); assert.equal(post.method, "POST"); assert.equal(post.body, "preserve body"); assert.equal(post.custom, "retained");
+    const requestBodies = await frame.evaluate(async () => {
+      const text = new Request("/api-request-body", { method: "POST", body: "original bytes", credentials: "include", headers: { "x-probe": "kept" }, keepalive: true });
+      const clone = text.clone();
+      const publicUrls = [text.url, clone.url];
+      const original = await (await fetch(text)).json();
+      const copied = await (await fetch(clone, { headers: { "x-probe": "override" } })).json();
+      const form = new FormData(); form.append("field", "one"); form.append("field", "two"); form.append("file", new File(["file bytes"], "probe.txt", { type: "text/plain" }));
+      const formRequest = new Request("/api-request-form", { method: "POST", body: form });
+      const multipart = await (await fetch(new Request(formRequest))).json();
+      const omitted = await (await fetch(new Request("/api-request-omit", { method: "POST", body: new Blob(["blob bytes"]), credentials: "omit" }))).json();
+      return { original, copied, multipart, omitted, publicUrls, used: text.bodyUsed && clone.bodyUsed && formRequest.bodyUsed, instance: text instanceof Request && text.constructor === Request };
+    });
+    for (const result of [requestBodies.original, requestBodies.copied, requestBodies.multipart, requestBodies.omitted]) assert.match(result.ua, pattern);
+    checkLogin(requestBodies.original); checkLogin(requestBodies.multipart);
+    assert.equal(requestBodies.original.body, "original bytes"); assert.equal(requestBodies.original.custom, "kept");
+    assert.equal(requestBodies.copied.body, "original bytes"); assert.equal(requestBodies.copied.custom, "override");
+    assert(requestBodies.used && requestBodies.instance);
+    assert(requestBodies.publicUrls.every(url => url === origin + "/api-request-body"), "Request URLs hide transport markers, including clones");
+    const boundary = requestBodies.multipart.contentType.split("boundary=")[1];
+    assert(requestBodies.multipart.body.includes(`--${boundary}`) && requestBodies.multipart.body.includes("file bytes") && requestBodies.multipart.body.includes('name="field"'));
+    assert.equal(requestBodies.omitted.body, "blob bytes"); assert.equal(requestBodies.omitted.cookie, "");
 
-  await page.locator("#multi-device-viewer-overlay").waitFor({ state: "attached", timeout: 15000 });
-  const previews = () => page.frames().filter((frame) => frame !== page.mainFrame() && frame.url() === pageUrl);
-  // The viewer lives in a closed shadow root; the DevTools protocol can pierce it.
-  const cdp = await context.newCDPSession(page);
-  const frameImages = async () => {
-    const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
-    const images = [];
-    const walk = (node) => {
-      const src = node.attributes?.[node.attributes.indexOf("src") + 1];
-      if (node.nodeName === "IMG" && node.attributes.includes("src") && src.startsWith(`${extensionOrigin}/mockups/`)) images.push(node.backendNodeId);
-      for (const child of [...(node.children ?? []), ...(node.shadowRoots ?? [])]) walk(child);
-    };
-    walk(root);
-    let loaded = 0;
-    for (const backendNodeId of images) {
-      const { object } = await cdp.send("DOM.resolveNode", { backendNodeId });
-      const { result } = await cdp.send("Runtime.callFunctionOn", { objectId: object.objectId, functionDeclaration: "function () { return this.complete && this.naturalWidth > 0; }", returnByValue: true });
-      if (result.value) loaded++;
-    }
-    return loaded;
-  };
-  for (let i = 0; i < 100 && (previews().length === 0 || await frameImages() === 0); i++) await page.waitForTimeout(150);
-  const opened = Date.now() - started;
-  const frameCount = await frameImages();
-  const previewCount = previews().length;
-  const headings = await Promise.all(previews().map((frame) => frame.locator("h1").textContent({ timeout: 5000 }).catch(() => null)));
-
-  if (!previewCount) failures.push("no live preview loaded the page");
-  if (headings.some((text) => text !== "Smoke page")) failures.push("a preview did not render the page");
-  if (!frameCount) failures.push("no device frame image loaded");
-  const frameAgents = agents.iframe.get("/") ?? [];
-  if (!frameAgents.some((agent) => IPHONE.test(agent))) failures.push(`no preview frame identified as the workspace's iPhone: ${frameAgents.join(" | ") || "no frame request"}`);
-  if (!frameAgents.some((agent) => MAC_SAFARI.test(agent))) failures.push(`no preview frame identified as the MacBook's Safari: ${frameAgents.join(" | ") || "no frame request"}`);
-  if ((agents.document.get("/") ?? []).some((agent) => IPHONE.test(agent) || MAC_SAFARI.test(agent))) failures.push("the page itself was requested as a device");
-  console.log(`viewer opened in ${opened} ms; ${previewCount} live previews; ${frameCount} device frames`);
-
-  // A link followed inside a phone preview is fetched as a phone too: the
-  // wrapper frame navigates it, so the request starts from the extension.
-  const wrapped = previews().find((frame) => frame.parentFrame()?.url().startsWith(`${extensionOrigin}/preview-frame.html`));
-  if (!wrapped) failures.push("no phone preview was wrapped in the extension's frame");
-  else {
-    // A click dispatched in the page, as a pointer click on the scaled device would land anywhere.
-    await wrapped.evaluate(() => document.querySelector("a").dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 })));
-    for (let i = 0; i < 100 && !(agents.iframe.get("/next") ?? []).length; i++) await page.waitForTimeout(100);
-    const nextAgents = agents.iframe.get("/next") ?? [];
-    if (!nextAgents.length || !nextAgents.every((agent) => IPHONE.test(agent))) failures.push(`a link inside the phone preview was not fetched as an iPhone: ${nextAgents.join(" | ") || "no request"}`);
-    const next = page.frames().find((frame) => frame.url() === `${pageUrl}next`);
-    const landed = await next?.locator("h1").textContent({ timeout: 5000 }).catch(() => null);
-    if (landed !== "Next page") failures.push("the phone preview did not show the linked page");
-    // A page the script navigates itself starts from the website, so it
-    // arrives as desktop once and is fetched again as a phone.
-    await next?.evaluate(() => { location.href = "/self"; });
-    for (let i = 0; i < 100 && (agents.iframe.get("/self") ?? []).length < 2; i++) await page.waitForTimeout(100);
-    const selfAgents = agents.iframe.get("/self") ?? [];
-    if (selfAgents.length < 2 || !MAC_SAFARI.test(selfAgents[0]) || !IPHONE.test(selfAgents[selfAgents.length - 1])) failures.push(`a page navigated by its own script was not fetched as desktop, then again as an iPhone: ${selfAgents.join(" | ") || "no request"}`);
-    const self = await page.frames().find((frame) => frame.url() === `${pageUrl}self`)?.locator("h1").textContent({ timeout: 5000 }).catch(() => null);
-    if (self !== "Self page") failures.push("the phone preview did not show the page it navigated to itself");
   }
+  assert.equal((await page.evaluate(() => window.fetchProbe)).ua, browserAgent, "top-level API identity unchanged");
 
-  // A second click closes the viewer and restores the page.
-  await worker.evaluate(async (url) => {
-    const [tab] = await chrome.tabs.query({ url });
-    await chrome.tabs.sendMessage(tab.id, { type: "OPEN_SIMULATOR", url, sourceTabId: tab.id });
-  }, pageUrl);
-  await page.locator("#multi-device-viewer-overlay").waitFor({ state: "detached", timeout: 5000 }).catch(() => failures.push("viewer did not close"));
-
-  // Exact device identities need the debugger, which Chrome grants only at the
-  // user's click; a build with MDV_DEBUGGER_REQUIRED=1 has it from the start,
-  // so this part runs only against such a build.
-  const manifest = JSON.parse(await readFile(join(extension, "manifest.json"), "utf8"));
-  if (manifest.permissions?.includes("debugger")) {
-    const exactUrl = `${pageUrl}exact`;
-    await worker.evaluate(async (url) => {
-      const slot = (id, deviceId) => ({ id, deviceId, url, orientation: "portrait", zoom: 0.58, zoomMode: "fit", reloadToken: 0, showFrame: true });
-      await chrome.storage.local.set({ mdvSimulatorSession: {
-        slots: [slot("exact-iphone", "apple-iphone-18-pro-2026"), slot("exact-pixel", "google-pixel-8"), slot("exact-mac", "apple-macbook-pro-14-m5-2025")],
-        activeSlotId: "exact-iphone",
-        display: { scrollSync: false, navigationSync: false, darkMode: false, previewStyle: "device", exactIdentities: true },
-      } });
-    }, exactUrl);
-    const exactPage = await context.newPage();
-    exactPage.on("pageerror", (error) => errors.push(`exact: ${error.message}`));
-    await exactPage.goto(exactUrl);
-    await worker.evaluate(async (url) => {
-      const [tab] = await chrome.tabs.query({ url });
-      await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content-scripts/content.js"] });
-      const reply = await chrome.tabs.sendMessage(tab.id, { type: "OPEN_SIMULATOR", url, sourceTabId: tab.id });
-      if (!reply?.ok) throw new Error(`Viewer did not open: ${reply?.error ?? "no reply"}`);
-    }, exactUrl);
-    const exactPreviews = () => exactPage.frames().filter((frame) => frame !== exactPage.mainFrame() && frame.url() === exactUrl);
-    for (let i = 0; i < 100 && exactPreviews().length < 3; i++) await exactPage.waitForTimeout(150);
-    const exactAgents = agents.iframe.get("/exact") ?? [];
-    const ANDROID = /Linux; Android 10; K.*Mobile Safari/;
-    for (const [name, pattern] of [["iPhone", IPHONE], ["Android", ANDROID], ["Mac Safari", MAC_SAFARI]]) {
-      if (!exactAgents.some((agent) => pattern.test(agent))) failures.push(`exact identities: no preview requested the page as ${name}: ${exactAgents.join(" | ") || "no request"}`);
+  // Real disclosure in the closed shadow root; every device must expose it.
+  const cdp = await context.newCDPSession(page);
+  const disclosures = async (open = false) => {
+    const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
+    const nodes = [];
+    const walk = node => { if (node.attributes?.includes("data-header-coverage")) nodes.push(node.backendNodeId); for (const child of [...node.children ?? [], ...node.shadowRoots ?? []]) walk(child); };
+    walk(root);
+    const result = [];
+    for (const backendNodeId of nodes) {
+      const { object } = await cdp.send("DOM.resolveNode", { backendNodeId });
+      const { result: value } = await cdp.send("Runtime.callFunctionOn", { objectId: object.objectId, functionDeclaration: `function () { if (${open}) this.open = true; return this.textContent; }`, returnByValue: true });
+      result.push(value.value);
     }
-    if (!exactPreviews().every((frame) => frame.parentFrame()?.url().startsWith(`${extensionOrigin}/preview-frame.html`))) failures.push("exact identities: a preview was not wrapped");
-    // The page's scripts see the device's browser too.
-    const scriptAgents = await Promise.all(exactPreviews().map((frame) => frame.evaluate(() => navigator.userAgent).catch(() => "")));
-    for (const [name, pattern] of [["iPhone", IPHONE], ["Android", ANDROID], ["Mac Safari", MAC_SAFARI]]) {
-      if (!scriptAgents.some((agent) => pattern.test(agent))) failures.push(`exact identities: no preview's navigator.userAgent is ${name}: ${scriptAgents.join(" | ")}`);
-    }
-    console.log(`exact identities: ${exactPreviews().length} previews, ${new Set(exactAgents).size} distinct agents on one page`);
-    await exactPage.close();
-  } else console.log("exact identities: skipped (build without MDV_DEBUGGER_REQUIRED=1)");
+    return result;
+  };
+  for (let i = 0; i < 50 && !(await disclosures()).every(text => text.includes("hooks active")); i++) await page.waitForTimeout(100);
+  const texts = await disclosures();
+  assert.equal(texts.length, 3);
+  for (const text of texts) { assert(text.includes("Device headers: partial")); assert(text.includes("marker present")); assert(text.includes("hooks active")); assert(text.includes("workers")); assert(text.includes("Script navigation: Location and Navigation API hooks active")); }
+  const clickViewerReload = async () => {
+    const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
+    let button;
+    const walk = (node, phone = false) => {
+      const attrs = node.attributes ?? [];
+      const here = phone || (attrs.includes("data-preview-slot-id") && attrs[attrs.indexOf("data-preview-slot-id") + 1] === "phone");
+      if (here && node.nodeName === "BUTTON" && attrs.includes("aria-label") && attrs[attrs.indexOf("aria-label") + 1] === "Reload preview") button = node.backendNodeId;
+      for (const child of [...node.children ?? [], ...node.shadowRoots ?? []]) walk(child, here);
+    };
+    walk(root); assert(button, "viewer reload button");
+    const { object } = await cdp.send("DOM.resolveNode", { backendNodeId: button });
+    await cdp.send("Runtime.callFunctionOn", { objectId: object.objectId, functionDeclaration: "function () { this.click(); }" });
+  };
+  let phone = frameFor("phone");
+  const visit = async action => { await Promise.all([phone.waitForNavigation(), action()]); await phone.waitForFunction(() => window.fetchProbe && window.xhrProbe); };
+  const checkPhone = async (documentTagged = true) => {
+    const result = await phone.evaluate(() => ({ document: window.documentProbe, fetch: window.fetchProbe, xhr: window.xhrProbe, hash: location.hash }));
+    checkLogin(result.document); checkLogin(result.fetch);
+    assert.match(result.fetch.ua, /iPhone/); assert.match(result.xhr.ua, /iPhone/);
+    assert(documentTagged ? /iPhone/.test(result.document.ua) : result.document.ua === browserAgent, "document header coverage");
+    return result;
+  };
+  await visit(() => phone.evaluate(() => document.querySelector("a").click()));
+  assert.equal((await checkPhone()).hash, "#/route", "hash routes are preserved");
+  await visit(() => phone.evaluate(() => location.reload())); await checkPhone();
+  await visit(() => phone.evaluate(() => document.querySelector("form").requestSubmit()));
+  assert.equal((await checkPhone()).document.url, "/form-get?query=hello+world");
+  await visit(() => phone.evaluate(() => document.querySelector("#post").requestSubmit(document.querySelector("#post button"))));
+  const formPost = (await checkPhone()).document;
+  assert.equal(formPost.method, "POST"); assert.equal(formPost.body, "payload=keep+me&save=yes");
+  assert.equal(requests.filter(r => r.url === "/form-post").length, 1, "POST never replayed");
+  await visit(() => phone.evaluate(() => document.querySelector("#redirect").click())); await checkPhone();
+  await visit(() => phone.evaluate(() => document.querySelector("#redirect-hash").click())); await checkPhone(false);
+  await visit(() => phone.evaluate(() => { location.href = "/script-navigation"; })); await checkPhone();
+  assert.equal(requests.filter(r => r.url === "/script-navigation").length, 1, "script navigation never replayed");
+  await visit(() => phone.evaluate(() => location.assign("/script-assign#/route"))); assert.equal((await checkPhone()).hash, "#/route");
+  const historyBefore = await phone.evaluate(() => history.length);
+  await visit(() => phone.evaluate(() => location.replace("/script-replace"))); await checkPhone();
+  assert.equal(await phone.evaluate(() => history.length), historyBefore, "replace navigation does not add history");
+  await visit(() => phone.evaluate(() => { location.assign("/superseded"); location.assign("/winner"); })); await checkPhone();
+  assert(!requests.some(r => r.url === "/superseded"), "only the last queued navigation runs");
+  await visit(() => phone.evaluate(() => { navigation.navigate("/navigation-document", { state: { retained: 42 }, history: "replace" }); })); await checkPhone();
+  // Native Navigation API state is intentionally ignored for cross-document navigation.
+  assert.equal(await phone.evaluate(() => navigation.currentEntry.getState()), undefined);
+  const spa = await phone.evaluate(async () => {
+    const seen = [];
+    const router = event => {
+      if (!new URL(event.destination.url).pathname.startsWith("/spa-")) return;
+      seen.push({ url: event.destination.url, info: event.info });
+      event.intercept({ handler: async () => {} });
+    };
+    navigation.addEventListener("navigate", router);
+    const result = navigation.navigate("/spa-api#/dashboard", { state: { retained: 42 }, info: "kept" });
+    await Promise.all([result.committed, result.finished]);
+    const state = navigation.currentEntry.getState();
+    const locationNavigation = new Promise(resolve => navigation.addEventListener("navigatesuccess", resolve, { once: true }));
+    location.assign("/spa-location#/settings");
+    await locationNavigation;
+    navigation.removeEventListener("navigate", router);
+    const current = location.href;
+    navigation.onnavigate = event => { if (event.destination.url.endsWith("/cancelled")) event.preventDefault(); };
+    location.assign("/cancelled");
+    await Promise.resolve();
+    navigation.onnavigate = null;
+    const unchanged = location.href === current;
+    let invalid;
+    try { const failed = navigation.navigate("https://["); await Promise.all([failed.committed, failed.finished]); } catch (error) { invalid = error.name; }
+    return { seen, state, current, unchanged, invalid };
+  });
+  assert.equal(spa.state.retained, 42); assert.equal(spa.seen[0].info, "kept");
+  assert.equal(spa.seen[0].url, origin + "/spa-api#/dashboard");
+  assert.equal(spa.current, origin + "/spa-location#/settings"); assert(spa.unchanged); assert.equal(spa.invalid, "SyntaxError");
+  assert(!requests.some(r => ["/spa-api", "/spa-location", "/cancelled"].includes(r.url)), "SPA routing and cancelled navigation never become document requests");
 
-  // The simulator page (used where the viewer cannot be injected) shares the same code.
+  await visit(() => phone.evaluate(url => location.assign(url + "/cross-document"), apiOrigin)); await checkPhone();
+  await visit(() => phone.evaluate(url => location.replace(url + "/returned"), origin)); await checkPhone();
+  const requestPost = await phone.evaluate(async () => await (await fetch(new Request("/api-request-post", { method: "POST", body: "native Request body" }))).json());
+  assert.match(requestPost.ua, /iPhone/); assert.equal(requestPost.body, "native Request body");
+  const foreignPost = await phone.evaluate(async () => await (await fetch(new parent.Request(new URL("/api-foreign", location.href), { method: "POST", body: "foreign body" }))).json());
+  assert.equal(foreignPost.ua, browserAgent); assert.equal(foreignPost.body, "foreign body");
+  assert((await disclosures()).some(text => text.includes("was sent unchanged")), "foreign Request body fallback is visible");
+  const abort = await phone.evaluate(async () => { const controller = new AbortController(); controller.abort(); try { await fetch("/api-aborted", { signal: controller.signal }); return "sent"; } catch (error) { return error.name; } });
+  assert.equal(abort, "AbortError"); assert(!requests.some(r => r.url === "/api-aborted"));
+  const changedHistory = await phone.evaluate(() => {
+    history.pushState({ push: true }, "", "/history-push#/spa");
+    const push = { href: location.href, state: history.state };
+    history.replaceState({ probe: true }, "", "/history-route#/spa");
+    return { push, href: location.href, state: history.state };
+  });
+  assert.equal(changedHistory.push.href, origin + "/history-push#/spa"); assert(changedHistory.push.state.push);
+  assert.equal(changedHistory.href, origin + "/history-route#/spa"); assert(changedHistory.state.probe);
+  await visit(() => phone.evaluate(() => location.reload())); await checkPhone();
+  const beforeReload = requests.length;
+  await clickViewerReload();
+  for (let i = 0; i < 100 && !requests.slice(beforeReload).some(r => r.dest === "iframe"); i++) await page.waitForTimeout(100);
+  phone = frameFor("phone");
+  await phone.waitForFunction(() => window.fetchProbe && window.xhrProbe);
+  await checkPhone();
+  assert.equal(requests.slice(beforeReload).filter(r => r.dest === "iframe").length, 1, "viewer reload waits for header rules and fetches once");
+  const getRequest = await phone.evaluate(async () => await (await fetch(new Request("/api-request-get"))).json());
+  assert.match(getRequest.ua, /iPhone/);
+  const xhrPost = await phone.evaluate(() => new Promise(resolve => { const xhr = new XMLHttpRequest(); xhr.open("POST", "/api-xhr-post"); xhr.onload = () => resolve(JSON.parse(xhr.responseText)); xhr.send("xhr body"); }));
+  assert.match(xhrPost.ua, /iPhone/); assert.equal(xhrPost.body, "xhr body");
+  await phone.evaluate(() => localStorage.setItem("mdv-shared-update", "fresh"));
+  assert.equal(await frameFor("pixel").evaluate(() => localStorage.getItem("mdv-shared-update")), "fresh");
+  const workerResult = await phone.evaluate(() => new Promise(resolve => { const worker = new Worker("/worker.js"); worker.onmessage = event => { resolve(event.data); worker.terminate(); }; }));
+  assert.equal(workerResult.ua, browserAgent, "worker traffic is explicitly uncovered");
+  assert(requests.filter(r => r.url === "/asset.svg").every(r => r.ua === browserAgent), "native assets remain uncovered");
+  await phone.evaluate(async () => await fetch(new Request("/api-request-post", { method: "POST", body: "native fallback" })));
+  await disclosures(true);
+  await mkdir("output/playwright", { recursive: true });
+  await page.screenshot({ path: "output/playwright/shared-session-headers.png" });
+
+  await worker.evaluate(async url => { const [tab] = await chrome.tabs.query({ url }); await chrome.tabs.sendMessage(tab.id, { type: "OPEN_SIMULATOR", url, sourceTabId: tab.id }); }, pageUrl);
+  await page.locator("#multi-device-viewer-overlay").waitFor({ state: "detached" });
+  const remaining = await worker.evaluate(async url => { const [tab] = await chrome.tabs.query({ url }); return (await chrome.declarativeNetRequest.getSessionRules()).filter(rule => rule.condition.tabIds?.includes(tab.id)); }, pageUrl);
+  assert.deepEqual(remaining, [], "closing viewer removes its rules");
+  // Standalone simulator is still usable, but cannot promise the website tab's session.
   const simulator = await context.newPage();
-  simulator.on("pageerror", (error) => errors.push(`simulator: ${error.message}`));
   await simulator.goto(`${extensionOrigin}/simulator.html?url=${encodeURIComponent(pageUrl)}`);
-  const simulatorPreviews = () => simulator.frames().filter((frame) => frame.url() === pageUrl).length;
-  for (let i = 0; i < 100 && simulatorPreviews() === 0; i++) await simulator.waitForTimeout(150);
-  if (!simulatorPreviews()) failures.push("simulator page did not load a preview");
-  if (!await simulator.locator(`img[src*="/mockups/"]`).count()) failures.push("simulator page shows no device frames");
-  console.log(`simulator page: ${simulatorPreviews()} live previews`);
-  for (const error of errors) failures.push(`console: ${error}`);
+  await simulator.locator("[data-header-coverage]").first().waitFor();
+  assert((await simulator.locator("[data-header-coverage]").first().textContent()).includes("Browser headers"));
+  assert.deepEqual(errors, []);
+  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers, Request bodies/clones/multipart/credentials, script navigation, SPA/cancellation, links, forms, history/reloads, redirects, uncovered foreign Requests/assets/workers, coverage UI, cleanup, standalone fallback; no debugger permission.");
 } finally {
-  await context.close();
-  server.close();
+  await context?.close();
+  await Promise.all([new Promise(resolve => server.close(resolve)), new Promise(resolve => apiServer.close(resolve))]);
   await rm(profile, { recursive: true, force: true });
 }
-
-if (failures.length) {
-  console.error(failures.join("\n"));
-  process.exit(1);
-}
-console.log("Extension smoke test passed");

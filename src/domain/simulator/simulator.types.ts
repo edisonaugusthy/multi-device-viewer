@@ -20,8 +20,6 @@ export interface DisplaySettings {
   navigationSync: boolean;
   darkMode: boolean;
   previewStyle?: "device" | "free";
-  /** Each preview sends its own device's browser identity through the debugger (opt-in; see exact-identities.ts). */
-  exactIdentities?: boolean;
 }
 
 export interface SimulatorState {

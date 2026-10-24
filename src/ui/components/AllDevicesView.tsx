@@ -10,11 +10,6 @@ import { getDefaultOrientation, nextOrientation, supportsOrientation, toLandscap
 import { getBrowserGeometry, type BrowserPreferences } from "../../domain/device/browser-geometry";
 import { getFrameProfile } from "../../domain/device/frame-profiles";
 import type { Device } from "../../domain/device/device.types";
-import type { ExactIdentities, PreviewIdentities } from "../../domain/simulator/preview-identity";
-import { previewFrameName } from "../../app/preview-frame";
-import { hidesPageScrollbars } from "../../domain/device/device-service";
-import { useExactIdentities } from "../hooks/useExactIdentities";
-import { ExactIdentitiesDialog } from "./ExactIdentitiesDialog";
 import { nextZoom } from "../../domain/simulator/simulator-service";
 import type { DisplaySettings, PreviewSlot } from "../../domain/simulator/simulator.types";
 import {
@@ -203,18 +198,6 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const loadedCount = [...(currentLoads?.states.values() ?? [])].filter(status => status === "loaded").length;
   const incompleteIds = [...(currentLoads?.states.entries() ?? [])].filter(([, status]) => status === "incomplete" || status === "error").map(([id]) => id);
   const display = simulator.display;
-  // This category's devices are split into two classes of preview frame with
-  // shared identities (see planPreviewFrames), or each card is its own device
-  // with exact identities.
-  const expandedDevice = devices.find(device => device.id === popup?.deviceId);
-  const previewFrames = useMemo(() => [
-    ...devices.map(device => ({ name: previewFrameName(`gallery-${device.id}`, hidesPageScrollbars(device)), device })),
-    ...(expandedDevice ? [{ name: previewFrameName(POPUP_SLOT_ID, hidesPageScrollbars(expandedDevice)), device: expandedDevice }] : []),
-  ], [devices, expandedDevice]);
-  const exactMode = useExactIdentities(display.exactIdentities === true, previewFrames);
-  const [exactDialog, setExactDialog] = useState(false);
-  const identity = exactMode.identities;
-  const frameProps = (name: string) => ({ identities: identity, exact: exactMode.exact, onExact: exactMode.report, wrapped: exactMode.isWrapped(name) });
   const selectedGroup = group.id;
 
   const updateSlot = useCallback((id: string, update: (slot: PreviewSlot) => PreviewSlot) => {
@@ -519,8 +502,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
               <span className="font-mono text-xs text-muted">{t("galleryWidthRange", { range: widthRange })}</span>
             </div>}
             <div data-gallery-grid className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] items-end gap-x-6 gap-y-10">
-              {exactMode.settled && group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef}
-                {...frameProps(previewFrameName(`gallery-${device.id}`, hidesPageScrollbars(device)))} inactive={expandedDeviceId !== null}
+              {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}
                 onPreviewLoad={previewLoaded} onPreviewReady={previewReady} onReload={reloadSlot} onEnlarge={enlarge} onLiveChange={setSlotLive} onNearChange={setSlotNear}/>)}
@@ -529,7 +511,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
         </div>
         {popup && <>
           <div aria-hidden="true" data-gallery-backdrop onClick={closePopup} className="absolute inset-0 z-40 bg-black/45 backdrop-blur-[2px]"/>
-          <GalleryPopup device={devices[expandedIndex]} slot={popup} display={display} {...frameProps(previewFrameName(POPUP_SLOT_ID, hidesPageScrollbars(devices[expandedIndex])))} index={expandedIndex} count={count} stepFocus={stepFocus}
+          <GalleryPopup device={devices[expandedIndex]} slot={popup} display={display} index={expandedIndex} count={count} stepFocus={stepFocus}
             onStep={stepExpanded} onClose={closePopup} onReload={() => reloadSlot(POPUP_SLOT_ID)}
             onOpenTab={() => window.open(getSlotUrl(POPUP_SLOT_ID), "_blank", "noopener,noreferrer")}
             onOpen={() => onOpenDevice(popup.deviceId, getSlotUrl(POPUP_SLOT_ID))}
@@ -544,18 +526,12 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
           browserBar={settings.browserBar}
           onClose={() => setSettingsOpen(false)}
           onThemeChange={dark => simulator.updateDisplay(current => ({ ...current, darkMode: dark }))}
-          exact={exactMode.permitted ? {
-            enabled: display.exactIdentities === true,
-            unavailable: exactMode.unavailable,
-            onChange: enabled => { if (enabled) setExactDialog(true); else simulator.updateDisplay(current => ({ ...current, exactIdentities: false })); },
-          } : undefined}
           onBrowserBarChange={settings.onBrowserBarChange}
           onHelp={settings.onHelp}
           onTour={settings.onTour}
           onWhatsNew={settings.onWhatsNew}
           onPermissions={settings.onPermissions}
         />
-        {exactDialog && <ExactIdentitiesDialog onClose={() => setExactDialog(false)} onGranted={() => simulator.updateDisplay(current => ({ ...current, exactIdentities: true }))} />}
       </div>
     </SimulatorScopeProvider>
   );
@@ -572,9 +548,8 @@ function SyncToggle({ label, description, pressed, onClick, children }: { label:
   );
 }
 
-interface FrameIdentityProps { identities: PreviewIdentities; exact: ExactIdentities | null; onExact: (attached: boolean) => void; wrapped: boolean }
 
-const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, identities, exact, onExact, wrapped, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange, onNearChange }: FrameIdentityProps & {
+const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange, onNearChange }: {
   device: Device; slot: PreviewSlot; display: DisplaySettings; scrollRef: RefObject<HTMLDivElement | null>;
   /** True while the enlarged popup is open: the card stays in place but goes quiet. */
   inactive: boolean; captions: boolean;
@@ -670,7 +645,7 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
 
       <div className="relative min-h-0 flex-1">
         {loadRequest !== undefined
-          ? <PreviewCard slot={slot} device={device} display={previewDisplay} identities={identities} exact={exact} onExact={onExact} wrapped={wrapped} visualsActive={live} onLoadStateChange={loaded} onPageReady={ready} onScaleChange={setScale}
+          ? <PreviewCard slot={slot} device={device} display={previewDisplay} visualsActive={live} onLoadStateChange={loaded} onPageReady={ready} onScaleChange={setScale}
               showToolbar={captions} onExpand={enlarge} expandLabel={t("enlargePreview")}
               align="bottom" removable={false} focused={false} first last/>
           : <div className="flex h-full flex-col items-center justify-end gap-2 pb-8 text-muted">
@@ -697,7 +672,7 @@ type StepDirection = "previous" | "next";
 
 // One enlarged device at a time, always the same size whatever the device or
 // its orientation; the device scales to fit inside it.
-function GalleryPopup({ device, slot, display, identities, exact, onExact, wrapped, index, count, stepFocus, onStep, onClose, onOpenTab, onOpen, onAdd, onReload, onCapture }: FrameIdentityProps & {
+function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, onClose, onOpenTab, onOpen, onAdd, onReload, onCapture }: {
   device: Device; slot: PreviewSlot; display: DisplaySettings;
   index: number; count: number; stepFocus: RefObject<StepDirection | null>;
   onStep: (direction: StepDirection) => void; onClose: () => void;
@@ -808,7 +783,7 @@ function GalleryPopup({ device, slot, display, identities, exact, onExact, wrapp
       <div className="relative min-h-0 flex-1 p-6">
         {/* A fresh document per device: the popup keeps its own page, while
             the gallery card behind it keeps its own. */}
-        <PreviewCard key={device.id} slot={slot} device={device} display={display} identities={identities} exact={exact} onExact={onExact} wrapped={wrapped} onScaleChange={setScale}
+        <PreviewCard key={device.id} slot={slot} device={device} display={display} onScaleChange={setScale}
           capturePending={capturing} showToolbar={false} align="center" removable={false} focused={false} first last/>
       </div>
       <span tabIndex={0} aria-hidden="true" className="sr-only" onFocus={() => cycleFocus(false)}/>

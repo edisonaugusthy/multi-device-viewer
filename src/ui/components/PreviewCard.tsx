@@ -7,8 +7,10 @@ import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
-import type { ExactIdentities, PreviewIdentities } from "../../domain/simulator/preview-identity";
-import { canWrapPreviews, PREVIEW_FRAME_PATH, PREVIEW_SANDBOX, previewFrameName, previewFrameUrl } from "../../app/preview-frame";
+import { chromeMajor, deviceIdentity } from "../../domain/simulator/preview-identity";
+import { PREVIEW_SANDBOX, previewFrameName } from "../../app/preview-frame";
+import { tagPreviewRequest } from "../../domain/simulator/preview-request";
+import { HeaderCoverage } from "./HeaderCoverage";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
@@ -106,14 +108,6 @@ interface PreviewCardProps {
   onPageReady?: (slotId: string) => void;
   /** A design laid over the device screen; its frame is in CSS pixels of that screen. */
   designOverlay?: DesignOverlayProps;
-  /** The browsers this tab's preview frames identify as, by kind (null: the browser's own; absent: unchanged). */
-  identities?: PreviewIdentities | null;
-  /** Each named frame's own identity through the debugger (null: off); the preview then loads wrapped. */
-  exact?: ExactIdentities | null;
-  /** Whether the tab has exact identities, as the preparation reported. */
-  onExact?: (attached: boolean) => void;
-  /** Loads inside the extension's wrapper frame (see preview-frame.ts). */
-  wrapped?: boolean;
   /** Bottom-aligns the device so every preview in a row shares a baseline. */
   align?: "bottom" | "center";
   showCaption?: boolean;
@@ -180,10 +174,6 @@ export const PreviewCard = memo(function PreviewCard({
   onFlowResult,
   onPageReady,
   designOverlay,
-  identities,
-  exact,
-  onExact,
-  wrapped: wrapRequested = false,
   align = "center",
   showCaption = false,
   revealToolbar = false,
@@ -248,7 +238,7 @@ export const PreviewCard = memo(function PreviewCard({
     width: 0,
     height: 0,
   });
-  const [preparedUrl, setPreparedUrl] = useState<string | null>(null);
+  const [preparedKey, setPreparedKey] = useState<string | null>(null);
   const [loadIssue, setLoadIssue] = useState<"resources" | "unverified" | null>(null);
   const healthRequest = useRef<string | null>(null);
   const healthTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -256,40 +246,36 @@ export const PreviewCard = memo(function PreviewCard({
     setLoadIssue(null);
     return () => { healthRequest.current = null; clearTimeout(healthTimer.current); };
   }, [slot.id, slot.url, slot.reloadToken]);
-  const identitiesRef = useRef(identities);
-  identitiesRef.current = identities;
-  const exactRef = useRef(exact);
-  exactRef.current = exact;
-  const onExactRef = useRef(onExact);
-  onExactRef.current = onExact;
-  const identityKey = `${identities === undefined ? "" : JSON.stringify(identities)}\n${exact === undefined ? "" : JSON.stringify(exact)}`;
+  const frameName = previewFrameName(slot.id, hidesPageScrollbars(device));
+  const identity = deviceIdentity(device, chromeMajor(navigator.userAgent));
+  const identityKey = JSON.stringify([frameName, identity]);
+  const preparationKey = JSON.stringify([slot.url, slot.reloadToken, identityKey]);
+  const identitiesRef = useRef({ [frameName]: identity ?? null });
+  identitiesRef.current = { [frameName]: identity ?? null };
+  const [headersReady, setHeadersReady] = useState(false);
+  const [headerCoverage, setHeaderCoverage] = useState<{ document: boolean; api: boolean; scriptNavigation: boolean; requestBodyPassthrough: boolean } | null>(null);
   useEffect(() => {
     let active = true;
     setBlocked(false);
     // The frame loads only once the tab's rules fit it, so a reload after the
     // identity changed fetches the page that device gets.
-    setPreparedUrl(null);
-    void preparePreview(slot.url, identitiesRef.current, exactRef.current).then(({ exact: attached }) => {
+    setPreparedKey(null);
+    setHeaderCoverage(null);
+    setHeadersReady(false);
+    void preparePreview(slot.url, identitiesRef.current).then(({ headers }) => {
       if (!active) return;
-      setPreparedUrl(slot.url);
-      if (exactRef.current) onExactRef.current?.(attached);
+      setPreparedKey(preparationKey);
+      setHeadersReady(headers && Boolean(identity) && "fragmentDirective" in document);
     }).catch(() => {
       if (active) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
     });
     return () => { active = false; };
   }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange, identityKey]);
   const [blocked, setBlocked] = useState(false);
-  // A wrapped page loads inside the extension's wrapper frame, which starts
-  // the page request from the extension's origin (see preview-frame.ts). A
-  // website whose policy keeps the wrapper out gets the page frame directly.
-  const [wrapperBlocked, setWrapperBlocked] = useState(false);
-  const wrapped = wrapRequested && !wrapperBlocked && canWrapPreviews();
-  const frameName = previewFrameName(slot.id, hidesPageScrollbars(device));
-  const frameSrc = (url: string) => wrapped ? previewFrameUrl(url, frameName) : url;
+  const frameSrc = (url: string) => headersReady ? tagPreviewRequest(url, frameName) : url;
   useEffect(() => {
     const onPolicy = (event: SecurityPolicyViolationEvent) => {
       if (event.effectiveDirective !== "frame-src" && event.effectiveDirective !== "child-src") return;
-      if (typeof chrome !== "undefined" && chrome.runtime?.getURL && event.blockedURI.startsWith(chrome.runtime.getURL(PREVIEW_FRAME_PATH))) { setWrapperBlocked(true); return; }
       try {
         if (new URL(event.blockedURI).origin === new URL(slot.url).origin) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
       } catch { /* Non-URL policy reports cannot identify this preview. */ }
@@ -580,13 +566,12 @@ export const PreviewCard = memo(function PreviewCard({
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (event.source !== iframeRef.current?.contentWindow) return;
-      const data = event.data;
-      if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
-      if (data.type === "MDV_PREVIEW_FRAME_LOADED") {
-        // The wrapper's page frame loaded; the outer frame's own load was the wrapper's.
-        if (iframeRef.current) frameLoaded(iframeRef.current);
+      if (event.data?.type === "MDV_HEADER_COVERAGE" && event.data.slotId === slot.id) {
+        setHeaderCoverage({ document: event.data.document === true, api: event.data.api === true, scriptNavigation: event.data.scriptNavigation === true, requestBodyPassthrough: event.data.requestBodyPassthrough === true });
         return;
       }
+      const data = event.data;
+      if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
       if (data.type === "MDV_PREVIEW_HEALTH") {
         const errors = readPreviewHealthReport(data, healthRequest.current);
         if (!errors) return;
@@ -991,6 +976,7 @@ export const PreviewCard = memo(function PreviewCard({
         </div>
       )}
 
+      <HeaderCoverage enabled={headersReady} identity={Boolean(identity)} report={headerCoverage} />
       {showCaption && (
         <div className="flex h-11 shrink-0 items-center justify-center px-2">
           <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
@@ -1042,7 +1028,7 @@ export const PreviewCard = memo(function PreviewCard({
               key={`${slot.id}-${slot.reloadToken}`}
               name={frameName}
               title={t("devicePreview", { name: device.name })}
-              src={preparedUrl === slot.url ? frameSrc(preparedUrl) : "about:blank"}
+              src={preparedKey === preparationKey ? frameSrc(slot.url) : "about:blank"}
               loading="eager"
               className={`block size-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a] [color-scheme:dark]" : "bg-white [color-scheme:light]"} ${hidesPageScrollbars(device) ? "[scrollbar-width:none]" : ""}`}
               // Match the page at fractional raster edges, including the clear
@@ -1050,8 +1036,7 @@ export const PreviewCard = memo(function PreviewCard({
               style={pageSurfaces?.top ? { backgroundColor: pageSurfaces.top } : undefined}
               scrolling="auto"
               sandbox={PREVIEW_SANDBOX}
-              // A wrapper reports its page frame's load itself (MDV_PREVIEW_FRAME_LOADED).
-              onLoad={event => { if (!wrapped) frameLoaded(event.currentTarget); }}
+              onLoad={event => { setHeaderCoverage(null); frameLoaded(event.currentTarget); event.currentTarget.contentWindow?.postMessage({ type: "MDV_GET_HEADER_COVERAGE", slotId: slot.id }, "*"); }}
               onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
             />
           )}

@@ -1,22 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPreviewSessions } from "./preview-sessions";
-import { identityHeaders, previewRuleKind } from "../domain/simulator/preview-rules";
+import { identityHeaders } from "../domain/simulator/preview-rules";
+import { previewRequestFilter } from "../domain/simulator/preview-request";
 import type { PreviewIdentity } from "../domain/simulator/preview-identity";
 
-const EXTENSION = "abcdefghijklmnopabcdefghijklmnop";
-
-/** The browser's session rule store, as far as the sessions use it. */
 function fakeChrome(tabIds: number[] = [7]) {
   let rules: chrome.declarativeNetRequest.Rule[] = [];
   const updateSessionRules = vi.fn(async ({ removeRuleIds = [], addRules = [] }: chrome.declarativeNetRequest.UpdateRuleOptions) => {
-    rules = [...rules.filter(rule => !removeRuleIds.includes(rule.id)), ...JSON.parse(JSON.stringify(addRules))];
+    rules = [...rules.filter(rule => !removeRuleIds.includes(rule.id)), ...structuredClone(addRules)];
   });
   vi.stubGlobal("chrome", {
-    declarativeNetRequest: { getSessionRules: async () => JSON.parse(JSON.stringify(rules)), updateSessionRules },
+    declarativeNetRequest: { getSessionRules: async () => structuredClone(rules), updateSessionRules },
     tabs: { query: async () => tabIds.map(id => ({ id })) },
   });
   const ofTab = (tabId: number) => rules.filter(rule => rule.condition.tabIds?.includes(tabId));
-  const headers = (tabId: number) => Object.fromEntries(ofTab(tabId).map(rule => [previewRuleKind(rule), rule.action.requestHeaders]));
+  const headers = (tabId: number, name: string) => ofTab(tabId).find(rule => rule.condition.urlFilter === previewRequestFilter(name))?.action.requestHeaders;
   return { updateSessionRules, rules: () => rules, ofTab, headers };
 }
 const iphone: PreviewIdentity = { userAgent: "iPhone Safari", platform: "iOS", mobile: true, hints: false };
@@ -27,63 +25,48 @@ describe("preview session rules", () => {
   let browser: ReturnType<typeof fakeChrome>;
   beforeEach(() => { browser = fakeChrome(); });
   afterEach(() => vi.unstubAllGlobals());
-
-  it("keeps one rule per tab and frame kind, adding hosts to both and leaving a known host alone", async () => {
-    const sessions = createPreviewSessions(EXTENSION);
-    await sessions.prepare(7, "https://example.com/a");
-    await sessions.prepare(7, "https://example.com/b");
-    await sessions.prepare(7, "https://other.com/");
+  it("accumulates embedding hosts without changing top-level requests", async () => {
+    const sessions = createPreviewSessions();
+    for (const url of ["https://example.com/a", "https://example.com/b", "https://other.com/"]) await sessions.prepare(7, url);
     await sessions.prepare(8, "https://example.com/");
     expect(browser.updateSessionRules).toHaveBeenCalledTimes(3);
-    expect(browser.ofTab(7).map(rule => [previewRuleKind(rule), rule.condition.requestDomains])).toEqual([["wrapped", ["example.com", "other.com"]], ["direct", ["example.com", "other.com"]]]);
-    expect(browser.ofTab(8).map(rule => previewRuleKind(rule))).toEqual(["wrapped", "direct"]);
-    expect(new Set(browser.rules().map(rule => rule.id)).size).toBe(4);
-    expect(browser.rules().every(rule => rule.action.requestHeaders === undefined)).toBe(true);
+    expect(browser.ofTab(7)).toHaveLength(1);
+    expect(browser.ofTab(7)[0].condition.requestDomains).toEqual(["example.com", "other.com"]);
+    expect(new Set(browser.rules().map(rule => rule.id)).size).toBe(2);
   });
-
-  it("tells the frames the extension's page navigates from the website's own", async () => {
-    const sessions = createPreviewSessions(EXTENSION);
-    await sessions.prepare(7, "https://example.com/", { wrapped: iphone, direct: mac });
-    const [wrapped, direct] = browser.ofTab(7);
-    expect(wrapped.condition.initiatorDomains).toEqual([EXTENSION]);
-    expect(wrapped.condition.excludedInitiatorDomains).toBeUndefined();
-    expect(direct.condition.excludedInitiatorDomains).toEqual([EXTENSION]);
-    expect(direct.condition.initiatorDomains).toBeUndefined();
-    expect(browser.headers(7)).toEqual({ wrapped: identityHeaders(iphone), direct: identityHeaders(mac) });
+  it("serializes simultaneous device preparation without losing peers, including after worker restart", async () => {
+    const sessions = createPreviewSessions();
+    await Promise.all([sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone }), sessions.prepare(7, "https://example.com", { "mdv-preview-b": mac }), sessions.prepare(7, "https://example.com", { "mdv-preview-c": android })]);
+    expect(browser.ofTab(7)).toHaveLength(4);
+    await createPreviewSessions().prepare(7, "https://other.com", { "mdv-preview-b": android });
+    expect(browser.headers(7, "mdv-preview-a")).toEqual(identityHeaders(iphone));
+    expect(browser.headers(7, "mdv-preview-b")).toEqual(identityHeaders(android));
+    expect(browser.headers(7, "mdv-preview-c")).toEqual(identityHeaders(android));
   });
-
-  it("rewrites only the kind whose identity changed", async () => {
-    const sessions = createPreviewSessions(EXTENSION);
-    await sessions.prepare(7, "https://example.com/", { wrapped: iphone, direct: mac });
-    await sessions.prepare(7, "https://example.com/", { wrapped: iphone, direct: mac });
-    await sessions.prepare(7, "https://example.com/");
+  it("retains peer rules on reload and removes only the frame changed to a browser identity", async () => {
+    const sessions = createPreviewSessions();
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone, "mdv-preview-b": mac });
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone });
     expect(browser.updateSessionRules).toHaveBeenCalledTimes(1);
-    await sessions.prepare(7, "https://example.com/", { wrapped: android, direct: mac });
-    expect(browser.updateSessionRules).toHaveBeenCalledTimes(2);
-    expect(browser.updateSessionRules.mock.calls[1][0].removeRuleIds).toHaveLength(1);
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": null });
+    expect(browser.headers(7, "mdv-preview-a")).toBeUndefined();
+    expect(browser.headers(7, "mdv-preview-b")).toEqual(identityHeaders(mac));
     expect(browser.ofTab(7)).toHaveLength(2);
-    expect(browser.headers(7)).toEqual({ wrapped: identityHeaders(android), direct: identityHeaders(mac) });
   });
-
-  it("keeps identities when a host is added without any, and drops a kind's for null", async () => {
-    const sessions = createPreviewSessions(EXTENSION);
-    await sessions.prepare(7, "https://example.com/", { wrapped: iphone, direct: mac });
-    await sessions.prepare(7, "https://other.com/");
-    expect(browser.ofTab(7).every(rule => rule.condition.requestDomains?.join() === "example.com,other.com")).toBe(true);
-    expect(browser.headers(7)).toEqual({ wrapped: identityHeaders(iphone), direct: identityHeaders(mac) });
-    await sessions.prepare(7, "https://example.com/", { direct: null });
-    expect(browser.headers(7)).toEqual({ wrapped: identityHeaders(iphone), direct: undefined });
-    await sessions.prepare(7, "https://example.com/", null);
-    expect(browser.headers(7)).toEqual({ wrapped: undefined, direct: undefined });
-    expect(browser.ofTab(7).every(rule => rule.action.responseHeaders?.map(header => header.header).join() === "x-frame-options,content-security-policy")).toBe(true);
+  it("surfaces rule installation failure and allows a later retry", async () => {
+    browser.updateSessionRules.mockRejectedValueOnce(new Error("quota"));
+    const sessions = createPreviewSessions();
+    await expect(sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone })).rejects.toThrow("quota");
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone });
+    expect(browser.headers(7, "mdv-preview-a")).toEqual(identityHeaders(iphone));
   });
-
-  it("removes a tab's rules when it closes and prunes rules of tabs that are gone", async () => {
-    const sessions = createPreviewSessions(EXTENSION);
-    await sessions.prepare(7, "https://example.com/", { wrapped: iphone });
-    await sessions.prepare(9, "https://example.com/");
+  it("cleans up only the closing tab and prunes missing tabs", async () => {
+    const sessions = createPreviewSessions();
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone });
+    await sessions.prepare(9, "https://example.com", { "mdv-preview-a": mac });
     await sessions.close(7);
-    expect(browser.rules().map(rule => rule.condition.tabIds)).toEqual([[9], [9]]);
+    expect(browser.rules()).toHaveLength(2);
+    expect(browser.rules().every(rule => rule.condition.tabIds?.[0] === 9)).toBe(true);
     await sessions.prune();
     expect(browser.rules()).toEqual([]);
   });

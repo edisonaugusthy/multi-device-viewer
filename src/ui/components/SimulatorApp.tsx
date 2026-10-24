@@ -44,10 +44,6 @@ import { AllDevicesView } from "./AllDevicesView";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CompareBar, CompareControls, CompareLabel, DesignAdjustPanel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
 import { designFrameKey, fitDesign, type DesignFrame } from "../interactions/design-frame";
-import { previewFrameName } from "../../app/preview-frame";
-import { hidesPageScrollbars } from "../../domain/device/device-service";
-import { useExactIdentities } from "../hooks/useExactIdentities";
-import { ExactIdentitiesDialog } from "./ExactIdentitiesDialog";
 import { useImageSize } from "../hooks/useImageSize";
 import { DevicePicker, type PickerTarget } from "./DevicePicker";
 import { FirstRunGuide } from "./FirstRunGuide";
@@ -711,21 +707,6 @@ export function SimulatorApp() {
 
   const onComparePageScroll = useCallback((scrollTop: number) => setDesignScrollTop(scrollTop), []);
 
-  // The workspace's devices are split into two classes of preview frame with
-  // shared identities (see planPreviewFrames), or every preview is its own
-  // device with exact identities on. When that changes, every preview reloads
-  // so each page is the one its browser gets.
-  const previewFrames = useMemo(() => slots.map((slot) => { const device = findDevice(slot.deviceId); return { name: previewFrameName(slot.id, hidesPageScrollbars(device)), device }; }), [findDevice, slots]);
-  const exactMode = useExactIdentities(display.exactIdentities === true, previewFrames);
-  const [exactDialog, setExactDialog] = useState(false);
-  const requestIdentityKey = exactMode.key;
-  const lastRequestIdentity = useRef<string | null>(null);
-  useEffect(() => {
-    if (!ready || !exactMode.settled) return;
-    if (lastRequestIdentity.current !== null && lastRequestIdentity.current !== requestIdentityKey) reloadAllSlots();
-    lastRequestIdentity.current = requestIdentityKey;
-  }, [exactMode.settled, ready, reloadAllSlots, requestIdentityKey]);
-
   // Cards are memoized, so every prop they share stays stable while the
   // workspace re-renders for column resizing, popovers or another card's scale.
   const workspaceDisplay = useMemo(() => allDevicesUrl !== null ? { ...display, scrollSync: false, navigationSync: false } : display, [allDevicesUrl, display]);
@@ -866,7 +847,7 @@ export function SimulatorApp() {
               viewMode ? "px-6 pb-[100px] pt-6" : compare ? "gap-16 px-6 pb-[88px] pt-3" : "px-3 pb-1 pt-1",
             )}
           >
-            {ready && exactMode.settled && slots.map((slot, index) => {
+            {ready && slots.map((slot, index) => {
               const shown = singleSlotId === null || singleSlotId === slot.id;
               const comparing = compare && !viewMode && slot.id === compareSlotId;
               return (
@@ -916,10 +897,6 @@ export function SimulatorApp() {
                     onPageReady={FEATURES.layoutCheck ? layoutCheck.onPageReady : undefined}
                     focusNavigation={focusNavigation}
                     onScaleChange={updateScale}
-                    identities={exactMode.identities}
-                    exact={exactMode.exact}
-                    onExact={exactMode.report}
-                    wrapped={exactMode.isWrapped(previewFrames[index]?.name ?? "")}
                     onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}
                     designOverlay={comparing && overlayShown && compareImage ? {
                       image: compareImage,
@@ -1057,11 +1034,6 @@ export function SimulatorApp() {
         onClose={closePopover}
         onThemeChange={(nextDark) => updateDisplay((current) => ({ ...current, darkMode: nextDark }))}
         onBrowserBarChange={changeBrowserBar}
-        exact={exactMode.permitted ? {
-          enabled: display.exactIdentities === true,
-          unavailable: exactMode.unavailable,
-          onChange: (enabled) => { if (enabled) setExactDialog(true); else updateDisplay((current) => ({ ...current, exactIdentities: false })); },
-        } : undefined}
         onHelp={() => setShowHelp(true)}
         onTour={() => { setTourSince(null); setShowFirstRun(true); }}
         onWhatsNew={() => setReleaseNotes(CURRENT_RELEASE_NOTES)}
@@ -1141,7 +1113,6 @@ export function SimulatorApp() {
         </div>
       )}
       {showPermissions && <PermissionsInfoModal onClose={() => setShowPermissions(false)} />}
-      {exactDialog && <ExactIdentitiesDialog onClose={() => setExactDialog(false)} onGranted={() => updateDisplay((current) => ({ ...current, exactIdentities: true }))} />}
       {showHelp && <HelpModal review={reviewPrompt} onClose={() => setShowHelp(false)} />}
       {showFirstRun && <FirstRunGuide onClose={finishFirstRun} seenTour={tourSince} />}
       {releaseNotes && <ReleaseNotesModal release={releaseNotes} onClose={closeReleaseNotes} />}

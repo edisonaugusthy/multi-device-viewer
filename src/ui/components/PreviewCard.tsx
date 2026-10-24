@@ -10,7 +10,6 @@ import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
 import { chromeMajor, deviceIdentity } from "../../domain/simulator/preview-identity";
 import { PREVIEW_SANDBOX, previewFrameName } from "../../app/preview-frame";
 import { tagPreviewRequest } from "../../domain/simulator/preview-request";
-import { HeaderCoverage } from "./HeaderCoverage";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
@@ -253,14 +252,12 @@ export const PreviewCard = memo(function PreviewCard({
   const identitiesRef = useRef({ [frameName]: identity ?? null });
   identitiesRef.current = { [frameName]: identity ?? null };
   const [headersReady, setHeadersReady] = useState(false);
-  const [headerCoverage, setHeaderCoverage] = useState<{ document: boolean; api: boolean; scriptNavigation: boolean; requestBodyPassthrough: boolean } | null>(null);
   useEffect(() => {
     let active = true;
     setBlocked(false);
     // The frame loads only once the tab's rules fit it, so a reload after the
     // identity changed fetches the page that device gets.
     setPreparedKey(null);
-    setHeaderCoverage(null);
     setHeadersReady(false);
     void preparePreview(slot.url, identitiesRef.current).then(({ headers }) => {
       if (!active) return;
@@ -566,10 +563,6 @@ export const PreviewCard = memo(function PreviewCard({
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (event.source !== iframeRef.current?.contentWindow) return;
-      if (event.data?.type === "MDV_HEADER_COVERAGE" && event.data.slotId === slot.id) {
-        setHeaderCoverage({ document: event.data.document === true, api: event.data.api === true, scriptNavigation: event.data.scriptNavigation === true, requestBodyPassthrough: event.data.requestBodyPassthrough === true });
-        return;
-      }
       const data = event.data;
       if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
       if (data.type === "MDV_PREVIEW_HEALTH") {
@@ -976,7 +969,6 @@ export const PreviewCard = memo(function PreviewCard({
         </div>
       )}
 
-      <HeaderCoverage enabled={headersReady} identity={Boolean(identity)} report={headerCoverage} />
       {showCaption && (
         <div className="flex h-11 shrink-0 items-center justify-center px-2">
           <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
@@ -1036,7 +1028,7 @@ export const PreviewCard = memo(function PreviewCard({
               style={pageSurfaces?.top ? { backgroundColor: pageSurfaces.top } : undefined}
               scrolling="auto"
               sandbox={PREVIEW_SANDBOX}
-              onLoad={event => { setHeaderCoverage(null); frameLoaded(event.currentTarget); event.currentTarget.contentWindow?.postMessage({ type: "MDV_GET_HEADER_COVERAGE", slotId: slot.id }, "*"); }}
+              onLoad={event => frameLoaded(event.currentTarget)}
               onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
             />
           )}

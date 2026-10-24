@@ -502,18 +502,5 @@
   "releaseMacNotchTitle": "MacBook ឥឡូវបង្ហាញស្នាមឆ្លាក់ (notch) ដូចឧបករណ៍ពិត។",
   "releaseDesignPerScreenTitle": "ការប្រៀបធៀបជាមួយការរចនាចងចាំទីតាំងការរចនារបស់អ្នកសម្រាប់អេក្រង់នីមួយៗ។",
   "releaseGalleryScrollbarTitle": "ឧបករណ៍ទាំងអស់បង្ហាញរបាររំកិលម្តងទៀត ដើម្បីឱ្យអ្នកដឹងថាអ្នកនៅទីណា។",
-  "releaseFixesTitle": "ការកែកំហុស និងការកែលម្អតូចៗ ដើម្បីបទពិសោធន៍រលូនជាងមុន។",
-  "headersPartial": "Device headers: partial",
-  "headersBrowser": "Browser headers",
-  "headersSession": "Same-origin previews use this tab’s existing cookies and storage. Other sites follow Chrome’s cookie and storage rules.",
-  "headersNoIdentity": "This device uses the browser’s default identity.",
-  "headersUnavailable": "Device header rules are unavailable in this preview.",
-  "headersDocumentTagged": "Document: device header marker present.",
-  "headersDocumentUnverified": "Document: device headers unverified. Reload from the viewer to apply them.",
-  "headersApiTagged": "Fetch / XHR: device header hooks active.",
-  "headersApiUnverified": "Fetch / XHR: device header hooks unverified.",
-  "headersLimitations": "Foreign Request bodies, images, styles, scripts, nested frames, workers and service-worker or cached responses may use browser headers. Same-URL document navigation, uncancellable navigation and redirects that replace fragments can lose document headers. JavaScript browser identity and the rendering engine remain Chrome.",
-  "headersRequestBody": "A body-bearing Request created outside this preview’s hooks was sent unchanged; its device headers are not guaranteed.",
-  "headersNavigationTagged": "Script navigation: Location and Navigation API hooks active.",
-  "headersNavigationUnverified": "Script navigation: hooks unverified."
+  "releaseFixesTitle": "ការកែកំហុស និងការកែលម្អតូចៗ ដើម្បីបទពិសោធន៍រលូនជាងមុន។"
 }

@@ -502,18 +502,5 @@
   "releaseMacNotchTitle": "이제 MacBook에 실제 기기처럼 노치가 표시됩니다.",
   "releaseDesignPerScreenTitle": "디자인과 비교가 화면마다 디자인 위치를 기억합니다.",
   "releaseGalleryScrollbarTitle": "모든 기기에 스크롤 막대가 다시 표시되어 현재 위치를 알 수 있습니다.",
-  "releaseFixesTitle": "더 매끄러운 사용을 위한 버그 수정과 작은 개선 사항.",
-  "headersPartial": "Device headers: partial",
-  "headersBrowser": "Browser headers",
-  "headersSession": "Same-origin previews use this tab’s existing cookies and storage. Other sites follow Chrome’s cookie and storage rules.",
-  "headersNoIdentity": "This device uses the browser’s default identity.",
-  "headersUnavailable": "Device header rules are unavailable in this preview.",
-  "headersDocumentTagged": "Document: device header marker present.",
-  "headersDocumentUnverified": "Document: device headers unverified. Reload from the viewer to apply them.",
-  "headersApiTagged": "Fetch / XHR: device header hooks active.",
-  "headersApiUnverified": "Fetch / XHR: device header hooks unverified.",
-  "headersLimitations": "Foreign Request bodies, images, styles, scripts, nested frames, workers and service-worker or cached responses may use browser headers. Same-URL document navigation, uncancellable navigation and redirects that replace fragments can lose document headers. JavaScript browser identity and the rendering engine remain Chrome.",
-  "headersRequestBody": "A body-bearing Request created outside this preview’s hooks was sent unchanged; its device headers are not guaranteed.",
-  "headersNavigationTagged": "Script navigation: Location and Navigation API hooks active.",
-  "headersNavigationUnverified": "Script navigation: hooks unverified."
+  "releaseFixesTitle": "더 매끄러운 사용을 위한 버그 수정과 작은 개선 사항."
 }

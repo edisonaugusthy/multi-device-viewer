@@ -118,25 +118,16 @@ try {
   }
   assert.equal((await page.evaluate(() => window.fetchProbe)).ua, browserAgent, "top-level API identity unchanged");
 
-  // Real disclosure in the closed shadow root; every device must expose it.
+  // Device previews no longer render the extra header-coverage disclosure.
   const cdp = await context.newCDPSession(page);
-  const disclosures = async (open = false) => {
+  const assertNoCoverageLabels = async () => {
     const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
     const nodes = [];
     const walk = node => { if (node.attributes?.includes("data-header-coverage")) nodes.push(node.backendNodeId); for (const child of [...node.children ?? [], ...node.shadowRoots ?? []]) walk(child); };
     walk(root);
-    const result = [];
-    for (const backendNodeId of nodes) {
-      const { object } = await cdp.send("DOM.resolveNode", { backendNodeId });
-      const { result: value } = await cdp.send("Runtime.callFunctionOn", { objectId: object.objectId, functionDeclaration: `function () { if (${open}) this.open = true; return this.textContent; }`, returnByValue: true });
-      result.push(value.value);
-    }
-    return result;
+    assert.equal(nodes.length, 0, "no extra header-coverage labels on device previews");
   };
-  for (let i = 0; i < 50 && !(await disclosures()).every(text => text.includes("hooks active")); i++) await page.waitForTimeout(100);
-  const texts = await disclosures();
-  assert.equal(texts.length, 3);
-  for (const text of texts) { assert(text.includes("Device headers: partial")); assert(text.includes("marker present")); assert(text.includes("hooks active")); assert(text.includes("workers")); assert(text.includes("Script navigation: Location and Navigation API hooks active")); }
+  await assertNoCoverageLabels();
   const clickViewerReload = async () => {
     const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
     let button;
@@ -217,7 +208,7 @@ try {
   assert.match(requestPost.ua, /iPhone/); assert.equal(requestPost.body, "native Request body");
   const foreignPost = await phone.evaluate(async () => await (await fetch(new parent.Request(new URL("/api-foreign", location.href), { method: "POST", body: "foreign body" }))).json());
   assert.equal(foreignPost.ua, browserAgent); assert.equal(foreignPost.body, "foreign body");
-  assert((await disclosures()).some(text => text.includes("was sent unchanged")), "foreign Request body fallback is visible");
+  await assertNoCoverageLabels();
   const abort = await phone.evaluate(async () => { const controller = new AbortController(); controller.abort(); try { await fetch("/api-aborted", { signal: controller.signal }); return "sent"; } catch (error) { return error.name; } });
   assert.equal(abort, "AbortError"); assert(!requests.some(r => r.url === "/api-aborted"));
   const changedHistory = await phone.evaluate(() => {
@@ -246,7 +237,7 @@ try {
   assert.equal(workerResult.ua, browserAgent, "worker traffic is explicitly uncovered");
   assert(requests.filter(r => r.url === "/asset.svg").every(r => r.ua === browserAgent), "native assets remain uncovered");
   await phone.evaluate(async () => await fetch(new Request("/api-request-post", { method: "POST", body: "native fallback" })));
-  await disclosures(true);
+  await assertNoCoverageLabels();
   await mkdir("output/playwright", { recursive: true });
   await page.screenshot({ path: "output/playwright/shared-session-headers.png" });
 
@@ -257,10 +248,10 @@ try {
   // Standalone simulator is still usable, but cannot promise the website tab's session.
   const simulator = await context.newPage();
   await simulator.goto(`${extensionOrigin}/simulator.html?url=${encodeURIComponent(pageUrl)}`);
-  await simulator.locator("[data-header-coverage]").first().waitFor();
-  assert((await simulator.locator("[data-header-coverage]").first().textContent()).includes("Browser headers"));
+  await simulator.locator("[data-preview-slot-id]").first().waitFor();
+  assert.equal(await simulator.locator("[data-header-coverage]").count(), 0);
   assert.deepEqual(errors, []);
-  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers, Request bodies/clones/multipart/credentials, script navigation, SPA/cancellation, links, forms, history/reloads, redirects, uncovered foreign Requests/assets/workers, coverage UI, cleanup, standalone fallback; no debugger permission.");
+  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers, Request bodies/clones/multipart/credentials, script navigation, SPA/cancellation, links, forms, history/reloads, redirects, uncovered foreign Requests/assets/workers, no coverage labels, cleanup, standalone fallback; no debugger permission.");
 } finally {
   await context?.close();
   await Promise.all([new Promise(resolve => server.close(resolve)), new Promise(resolve => apiServer.close(resolve))]);

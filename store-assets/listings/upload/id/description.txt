@@ -1,8 +1,16 @@
 Mobile View adalah alat gratis dan sumber terbuka untuk menguji situs web responsif di Chrome. Bandingkan hingga empat tampilan berdampingan, termasuk pratinjau seluler, untuk memeriksa menu, teks, dan jarak. Pilih perangkat realistis, ubah orientasi dan zoom, sinkronkan gulir dan navigasi, ambil tangkapan layar, lalu bandingkan dengan desain lokal. Semua berjalan secara lokal di browser tanpa akun, langganan, analitik, telemetri, atau server.
 
+Periksa tata letak ponsel, tablet, dan komputer tanpa terus mengubah ukuran browser. Temukan teks terpotong, jarak yang salah, dan menu bermasalah.
+
 - Buka semua perangkat dengan satu klik. Pratinjau dikelompokkan berdasarkan jenis perangkat dan diurutkan dari layar kecil ke besar.
 - Untuk mengulangi pengujian tata letak responsif, buat ukuran viewport sendiri, simpan set dan perangkat favorit, atau fokus pada satu tampilan. Sinkronkan interaksi yang didukung antartampilan yang sesuai.
 - Tangkap satu tampilan atau seluruh ruang kerja. Tambahkan panah, kotak, gambar, dan teks atau potong tangkapan layar. Tampilkan desain lokal di samping halaman atau sebagai overlay.
 - Salin instruksi perbaikan terstruktur berisi URL, perangkat, ukuran viewport, dan catatan masalah ke alat coding Anda.
 
 Ini adalah pratinjau viewport responsif di Chrome, bukan perangkat fisik atau mesin Safari. Aturan masuk dan penyematan situs tetap berlaku. Halaman asli tetap utuh; pratinjau baru tidak menyalin perubahan yang belum disimpan.
+
+- Pilih lebih dari 110 ukuran untuk ponsel, tablet, komputer, jam, dan TV. Uji situs dan server pengembangan lokal.
+- Pemeriksaan tata letak menemukan elemen yang keluar dari layar dan menyebabkan gulir horizontal.
+- Simpan gambar sebelum perubahan, edit halaman, lalu bandingkan perbedaan yang ditandai atau gunakan penggeser sebelum/sesudah. Gambar tetap di browser.
+- Rekam tab sumber saat video lebih jelas menjelaskan interaksi.
+- Atur lebar kolom, muat ulang satu atau semua pratinjau, dan gunakan mode fokus untuk presentasi.

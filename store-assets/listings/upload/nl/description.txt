@@ -1,5 +1,7 @@
 Mobile View is een gratis opensource hulpmiddel om responsieve websites in Chrome te testen. Vergelijk maximaal vier weergaven naast elkaar, waaronder een mobiele preview, om menu’s, tekst en witruimte te controleren.
 
+Controleer telefoon-, tablet- en computerlayouts zonder steeds het browservenster te verkleinen. Vind afgesneden tekst, verkeerde afstanden en kapotte menu’s.
+
 - Open alle apparaten met één klik. De voorbeelden zijn gegroepeerd op apparaattype en gesorteerd van kleine naar grote schermen.
 - Kies realistische apparaten, wijzig oriëntatie en zoom, laad één voorbeeld opnieuw of maak aangepaste viewportformaten.
 - Synchroniseer scrollen, ondersteunde interacties en navigatie tussen overeenkomende voorbeelden.
@@ -11,3 +13,9 @@ Mobile View is een gratis opensource hulpmiddel om responsieve websites in Chrom
 Alles draait lokaal in de browser. Geen account, abonnement, analyse, telemetrie of applicatiebackend nodig. URL’s, screenshots, opnamen, ontwerpen, aantekeningen en instellingen worden niet naar een backend gestuurd.
 
 Dit zijn responsive previews in Chrome, geen fysieke apparaten of Safari-engine. De aanmeld- en insluitregels van websites blijven gelden. De oorspronkelijke pagina blijft intact; nieuwe previews kopiëren geen onopgeslagen wijzigingen.
+
+- Kies uit meer dan 110 schermformaten voor telefoons, tablets, computers, horloges en tv’s. Test websites en lokale ontwikkelservers.
+- De lay-outcontrole vindt elementen die buiten het scherm vallen en horizontaal scrollen veroorzaken.
+- Bewaar een voor-afbeelding, wijzig de pagina en vergelijk gemarkeerde verschillen of gebruik de voor/na-schuifregelaar. Afbeeldingen blijven in de browser.
+- Neem het brontabblad op wanneer een video een interactie duidelijker uitlegt.
+- Pas kolombreedtes aan, herlaad één of alle voorbeelden en gebruik de focusmodus voor presentaties.

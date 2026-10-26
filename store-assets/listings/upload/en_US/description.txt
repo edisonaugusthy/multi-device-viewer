@@ -1,11 +1,18 @@
 Mobile View is a free, open-source tool for responsive website testing in Chrome. Compare up to four views side by side, including a mobile preview, to check menus, text, spacing and layout changes.
 
+Check phone, tablet, laptop and desktop layouts without repeatedly resizing your browser. Spot clipped text, awkward spacing, broken menus and layout differences across screen sizes.
+
 - Open All devices in one click to browse previews grouped by device type and ordered from smaller to larger screens.
+- Choose from 110+ built-in device presets, covering phones, tablets, laptops, desktops, watches and TVs. Preview your website or local development server in Chrome.
 - Compare device presets or custom viewport sizes. Switch between portrait and landscape on supported devices, adjust zoom and focus on a single view. Changing devices restores each device’s default orientation.
 - Synchronize scrolling and supported interactions and navigation across matching previews. Review the same part of a page at different screen sizes.
 - Save device sets and favorites for repeat responsive testing.
 - Capture a viewport or the full workspace. Add arrows, boxes, text and other annotations to explain layout issues.
 - Compare the live website with a local design reference, side by side or as an overlay.
+- Check layout to find elements that extend beyond the screen and make the page scroll sideways. Review the affected devices and elements, then check again after your changes.
+- Save a before picture, edit your page and compare the result to see what changed. Review highlighted differences or use the slider to compare before and after. Pictures stay in your browser.
+- Record the source tab when a short video explains an interaction or layout issue better than a screenshot.
+- Resize device columns, reload one preview or all previews, and use focus mode for a clear review or demonstration.
 - Copy a fix prompt with the page URL, selected devices, viewport sizes and your issue notes to your coding tool.
 
 Open a website, select Mobile View from the Chrome toolbar and choose your device views. Compare, inspect and capture the layout in one workspace.

@@ -38,17 +38,16 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with each device's real page and lists the rest as one-line notes", () => {
-    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("releaseRealPagesTitle");
+  it("explains the future permission without claiming to request it today", () => {
+    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("permissionUpdateTitle");
+    expect(CURRENT_RELEASE_NOTES.featured.description).toBe("permissionUpdateSummary");
     expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual([
-      "releaseSectionDevices",
-      "releaseSectionReview",
       "releaseSectionGeneral",
     ]);
     const notes = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes);
     expect(notes.map(note => note.title)).toEqual([
-      "releaseDuoSafariTitle", "releaseMacNotchTitle", "releaseDesignPerScreenTitle", "releaseGalleryScrollbarTitle", "releaseFixesTitle",
+      "permissionUpdateWhyTitle", "permissionUpdateEnableTitle",
     ]);
-    expect([CURRENT_RELEASE_NOTES.featured, ...notes].every(note => note.description === undefined)).toBe(true);
+    expect(notes[1].description).toBe("permissionUpdateNoAction");
   });
 });

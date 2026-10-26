@@ -1,7 +1,15 @@
 Mobile View er et gratis verktøy med åpen kildekode for å teste responsive nettsteder i Chrome. Sammenlign opptil fire visninger side om side, inkludert en mobil forhåndsvisning, for å kontrollere menyer, tekst og avstander. Velg realistiske enheter, endre retning og zoom, synkroniser rulling og navigasjon, ta skjermbilder og sammenlign med et lokalt design. Alt kjører lokalt i nettleseren uten konto, abonnement, analyse, telemetri eller server.
 
+Kontroller oppsett på telefon, nettbrett og datamaskin uten stadig å endre nettleserstørrelsen. Finn avkuttet tekst, feil avstander og ødelagte menyer.
+
 Åpne alle enheter med ett klikk. Forhåndsvisningene er gruppert etter enhetstype og sortert fra mindre til større skjermer.
 
 For gjentatte tester av responsive oppsett lagre enhetssett og favoritter, eller lag egne skjermstørrelser. Ta bilde av en visning eller hele arbeidsområdet, og legg til piler, rammer og tekst. Sammenlign et lokalt design ved siden av eller over nettstedet, og kopier et forslag til retting med URL, enheter, skjermstørrelser og notater til kodeverktøyet.
 
 Dette er responsive forhåndsvisninger i Chrome, ikke fysiske enheter eller Safari-motoren. Nettstedenes regler for innlogging og innbygging gjelder fortsatt. Originalsiden bevares; nye forhåndsvisninger kopierer ikke ulagrede endringer.
+
+- Velg blant over 110 formater for telefoner, nettbrett, datamaskiner, klokker og TV-er. Test nettsteder og lokale utviklingsservere.
+- Oppsettskontrollen finner elementer som går utenfor skjermen og fører til vannrett rulling.
+- Lagre et før-bilde, endre siden og sammenlign markerte forskjeller eller bruk før/etter-glidebryteren. Bildene blir i nettleseren.
+- Ta opp kildefanen når en video forklarer en interaksjon bedre.
+- Juster kolonnebredder, last inn én eller alle forhåndsvisninger på nytt, og bruk fokusmodus ved presentasjoner.

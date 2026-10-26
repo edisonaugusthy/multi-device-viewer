@@ -37,26 +37,13 @@ export const FEATURE_TOUR_REVISION = "0.4.0";
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
   version,
-  featured: { title: "releaseRealPagesTitle", icon: "frames" },
+  featured: { title: "permissionUpdateTitle", description: "permissionUpdateSummary", icon: "headers" },
   sections: [
-    {
-      title: "releaseSectionDevices",
-      notes: [
-        { title: "releaseDuoSafariTitle", icon: "frames" },
-        { title: "releaseMacNotchTitle", icon: "workspace" },
-      ],
-    },
-    {
-      title: "releaseSectionReview",
-      notes: [
-        { title: "releaseDesignPerScreenTitle", icon: "adjust" },
-      ],
-    },
     {
       title: "releaseSectionGeneral",
       notes: [
-        { title: "releaseGalleryScrollbarTitle", icon: "scrollbars" },
-        { title: "releaseFixesTitle", icon: "headers" },
+        { title: "permissionUpdateWhyTitle", description: "permissionUpdateWhy", icon: "headers" },
+        { title: "permissionUpdateEnableTitle", description: "permissionUpdateNoAction", icon: "reload" },
       ],
     },
   ],

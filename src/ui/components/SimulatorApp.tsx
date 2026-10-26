@@ -52,6 +52,7 @@ import { LayoutCheckPanel } from "./LayoutCheckPanel";
 import { useLayoutCheck } from "../hooks/useLayoutCheck";
 import { HelpModal } from "./HelpModal";
 import { PermissionsInfoModal } from "./PermissionsInfoModal";
+import { PermissionUpdateModal, PermissionUpdateNotice } from "./PermissionUpdateNotice";
 import { PreviewCard, shortName } from "./PreviewCard";
 import { RecordingBar, RecordMenu, type FlowStatus } from "./RecordMenu";
 import type { Device } from "../../domain/device/device.types";
@@ -139,6 +140,7 @@ export function SimulatorApp() {
   const [fixDeviceIds, setFixDeviceIds] = useState<string[] | undefined>();
   const [fixPrefill, setFixPrefill] = useState<FixPromptPrefill | undefined>();
   const [showPermissions, setShowPermissions] = useState(false);
+  const [showPermissionUpdate, setShowPermissionUpdate] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [compare, setCompare] = useState(false);
   const [compareSlotId, setCompareSlotId] = useState(() => slots[0]?.id ?? "");
@@ -187,6 +189,7 @@ export function SimulatorApp() {
       !annotationOpen &&
       popover === null &&
       !showPermissions &&
+      !showPermissionUpdate &&
       !showHelp &&
       !showFirstRun &&
       !releaseNotes &&
@@ -836,6 +839,10 @@ export function SimulatorApp() {
           />
         )}
 
+        <PermissionUpdateNotice
+          hidden={!ready || viewMode || compare || annotationOpen || capturing || recording || flowRecording || showFirstRun || Boolean(releaseNotes)}
+          onDetails={() => { setPopover(null); setShowPermissionUpdate(true); }}
+        />
         <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="flex min-h-0 flex-1">
           <div
@@ -1113,6 +1120,7 @@ export function SimulatorApp() {
         </div>
       )}
       {showPermissions && <PermissionsInfoModal onClose={() => setShowPermissions(false)} />}
+      {showPermissionUpdate && <PermissionUpdateModal onClose={() => setShowPermissionUpdate(false)} />}
       {showHelp && <HelpModal review={reviewPrompt} onClose={() => setShowHelp(false)} />}
       {showFirstRun && <FirstRunGuide onClose={finishFirstRun} seenTour={tourSince} />}
       {releaseNotes && <ReleaseNotesModal release={releaseNotes} onClose={closeReleaseNotes} />}

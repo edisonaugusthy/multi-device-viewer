@@ -48,6 +48,22 @@ export type TranslationValues = Record<string, string | number>;
 const UI_LOCALE_KEY = "mdvUiLocale";
 
 const en = {
+  permissionUpdateTitle: "A heads-up about the next update",
+  permissionUpdateSummary: "The next release will request Chrome’s debugger permission for more reliable device previews. Chrome may turn off the extension until you review and approve the new permission.",
+  permissionUpdateDetails: "Why this permission? What should I do?",
+  permissionUpdateDismiss: "Dismiss upcoming permission notice",
+  permissionUpdateIntro: "An upcoming permission change, explained before it arrives.",
+  permissionUpdateWhyTitle: "Why we plan to use it",
+  permissionUpdateWhy: "We plan to use the debugger permission to send device-specific request headers more reliably, so websites can respond appropriately to the phone, tablet, or desktop you select. It gives us more direct control over preview requests than the current approach.",
+  permissionUpdateWarningTitle: "Why Chrome shows a broad warning",
+  permissionUpdateWarning: "The debugger permission can inspect and change website data through Chrome’s debugging tools. Chrome shows a broad warning because of those capabilities. Our planned use is to improve device previews; review the permission before deciding whether to approve it.",
+  permissionUpdateEnableTitle: "If the extension is turned off after the update",
+  permissionUpdateEnableIntro: "Chrome may disable the extension until you accept the new permission. To keep using it:",
+  permissionUpdateStepOne: "Open a new Chrome tab and enter",
+  permissionUpdateStepTwo: "Find this extension and choose the option to review its new permissions or turn it back on.",
+  permissionUpdateStepThree: "Review Chrome’s permission prompt. If you agree, accept it to re-enable the extension, then reopen the viewer.",
+  permissionUpdateNoAction: "There is nothing to approve today. This notice does not request the debugger permission. If you decline the permission after the update, the extension will remain disabled.",
+  permissionUpdateGotIt: "Got it",
   visualChecks: "Before & after",
   saveBaseline: "Save “before” picture",
   replaceBaseline: "Retake “before” picture",

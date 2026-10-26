@@ -1,5 +1,7 @@
 Mobile View es una herramienta gratuita y de código abierto para probar sitios web adaptables en Chrome. Compara hasta cuatro vistas en paralelo, incluida una vista previa móvil, para revisar menús, texto y espaciado.
 
+Revisa diseños de móvil, tableta, portátil y escritorio sin cambiar constantemente el tamaño del navegador. Detecta texto cortado, espacios incorrectos y menús rotos.
+
 - Abre todos los dispositivos con un clic. Las vistas previas se agrupan por tipo de dispositivo y se ordenan de pantallas pequeñas a grandes.
 - Elige dispositivos realistas, cambia orientación y zoom, recarga cada vista o crea tamaños personalizados.
 - Sincroniza el desplazamiento, las interacciones compatibles y la navegación entre vistas coincidentes.
@@ -11,3 +13,9 @@ Mobile View es una herramienta gratuita y de código abierto para probar sitios 
 Todo funciona localmente en el navegador. No requiere cuenta, suscripción, analítica, telemetría ni backend. Las URL, capturas, grabaciones, diseños, anotaciones y ajustes no se envían a ningún servidor.
 
 Son vistas responsive en Chrome, no dispositivos físicos ni el motor de Safari. Siguen vigentes las reglas de acceso e integración de cada sitio. La página original se conserva; las nuevas vistas no copian cambios sin guardar.
+
+- Elige entre más de 110 tamaños para teléfonos, tabletas, ordenadores, relojes y televisores. Prueba sitios y servidores de desarrollo locales.
+- La comprobación de diseño encuentra elementos que sobresalen de la pantalla y provocan desplazamiento horizontal.
+- Guarda una imagen del antes, modifica la página y compara las diferencias resaltadas o utiliza el deslizador antes/después. Las imágenes quedan en el navegador.
+- Graba la pestaña de origen cuando un vídeo explique mejor una interacción.
+- Ajusta las columnas, recarga una o todas las vistas y utiliza el modo de enfoque para presentaciones.

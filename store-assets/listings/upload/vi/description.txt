@@ -1,5 +1,7 @@
 Mobile View là công cụ miễn phí, mã nguồn mở để kiểm thử website có bố cục thích ứng trong Chrome. So sánh tối đa bốn chế độ xem cạnh nhau, gồm bản xem trước trên di động, để kiểm tra menu, văn bản và khoảng cách.
 
+Kiểm tra bố cục điện thoại, máy tính bảng và máy tính mà không phải liên tục đổi kích thước trình duyệt. Tìm chữ bị cắt, khoảng cách sai và menu lỗi.
+
 - Mở tất cả thiết bị chỉ với một cú nhấp. Các bản xem trước được nhóm theo loại thiết bị và sắp xếp từ màn hình nhỏ đến lớn.
 - Chọn thiết bị thực tế, đổi hướng và mức thu phóng, tải lại từng bản xem trước hoặc tạo kích thước viewport riêng.
 - Đồng bộ cuộn, tương tác được hỗ trợ và điều hướng giữa các bản xem trước phù hợp.
@@ -11,3 +13,9 @@ Mobile View là công cụ miễn phí, mã nguồn mở để kiểm thử webs
 Mọi thứ chạy cục bộ trong trình duyệt. Không cần tài khoản, thuê bao, phân tích, đo từ xa hay backend ứng dụng. URL, ảnh chụp, bản ghi, thiết kế, chú thích và cài đặt không được gửi đến backend.
 
 Đây là bản xem trước viewport responsive bằng Chrome, không phải thiết bị thật hay bộ máy Safari. Quy tắc đăng nhập và nhúng của trang web vẫn áp dụng. Trang gốc được giữ nguyên; bản xem trước mới không sao chép thay đổi chưa lưu.
+
+- Chọn hơn 110 kích thước cho điện thoại, máy tính bảng, máy tính, đồng hồ và TV. Kiểm tra trang web và máy chủ phát triển cục bộ.
+- Kiểm tra bố cục tìm các phần tử vượt ra ngoài màn hình gây cuộn ngang.
+- Lưu ảnh trước khi sửa, thay đổi trang và so sánh các khác biệt được đánh dấu hoặc dùng thanh trượt trước/sau. Ảnh được giữ trong trình duyệt.
+- Ghi lại thẻ gốc khi video giải thích tương tác rõ hơn.
+- Điều chỉnh độ rộng cột, tải lại một hoặc mọi bản xem trước và dùng chế độ tập trung khi trình bày.

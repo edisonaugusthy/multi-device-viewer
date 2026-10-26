@@ -1,5 +1,7 @@
 Ang Mobile View ay libre at open-source na tool para sa pagsusuri ng responsive na website sa Chrome. Ihambing ang hanggang apat na view nang magkatabi, kasama ang mobile preview, para suriin ang mga menu, teksto, at pagitan.
 
+Suriin ang layout sa telepono, tablet at computer nang hindi paulit-ulit na binabago ang laki ng browser. Hanapin ang putol na teksto, maling pagitan at sirang menu.
+
 - Buksan ang lahat ng device sa isang click. Nakapangkat ang mga preview ayon sa uri ng device at nakaayos mula sa mas maliit hanggang sa mas malaking screen.
 - Pumili ng makatotohanang device, baguhin ang orientation at zoom, i-reload ang isang preview, o gumawa ng custom viewport.
 - I-sync ang pag-scroll, suportadong interaction, at navigation sa magkatugmang preview.
@@ -11,3 +13,9 @@ Ang Mobile View ay libre at open-source na tool para sa pagsusuri ng responsive 
 Lahat ay lokal na tumatakbo sa browser. Walang account, subscription, analytics, telemetry, o application backend. Hindi ipinapadala sa backend ang URL, screenshot, recording, design, annotation, o setting.
 
 Mga responsive viewport preview ito sa Chrome, hindi totoong device o Safari engine. Nalalapat pa rin ang mga tuntunin ng site sa pag-sign in at pag-embed. Mananatili ang orihinal na pahina; hindi kinokopya ng bagong preview ang hindi na-save na pagbabago.
+
+- Pumili sa mahigit 110 laki para sa telepono, tablet, computer, relo at TV. Subukan ang mga website at lokal na development server.
+- Hinahanap ng pagsusuri ng layout ang mga elementong lumalampas sa screen at nagdudulot ng pahalang na pag-scroll.
+- Mag-save ng larawan bago magbago, i-edit ang pahina at ihambing ang mga markadong pagkakaiba o gamitin ang before/after slider. Nananatili sa browser ang mga larawan.
+- I-record ang pinagmulang tab kung mas malinaw na naipapaliwanag ng video ang isang interaksiyon.
+- Ayusin ang lapad ng mga column, i-reload ang isa o lahat ng preview at gamitin ang focus mode sa presentasyon.

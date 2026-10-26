@@ -1,8 +1,16 @@
 Mobile View ialah alat percuma dan sumber terbuka untuk menguji laman web responsif dalam Chrome. Bandingkan sehingga empat paparan bersebelahan, termasuk pratonton mudah alih, untuk memeriksa menu, teks dan jarak. Pilih peranti realistik, ubah orientasi dan zum, segerakkan tatal dan navigasi, ambil tangkapan skrin dan bandingkan dengan reka bentuk tempatan. Semuanya berjalan secara setempat dalam pelayar tanpa akaun, langganan, analitik, telemetri atau pelayan.
 
+Semak susun atur telefon, tablet dan komputer tanpa sentiasa mengubah saiz pelayar. Cari teks terpotong, jarak yang salah dan menu bermasalah.
+
 - Buka semua peranti dengan satu klik. Pratonton dikumpulkan mengikut jenis peranti dan disusun daripada skrin yang lebih kecil kepada yang lebih besar.
 - Untuk mengulangi ujian susun atur responsif, cipta saiz viewport sendiri, simpan set dan peranti kegemaran atau fokus pada satu paparan. Segerakkan interaksi yang disokong antara paparan sepadan.
 - Tangkap satu paparan atau seluruh ruang kerja. Tambah anak panah, kotak, lukisan dan teks atau pangkas imej. Paparkan reka bentuk setempat di sebelah halaman atau sebagai tindanan.
 - Salin arahan pembaikan berstruktur dengan URL, peranti, saiz viewport dan nota masalah ke alat pengekodan anda.
 
 Ini pratonton viewport responsif dalam Chrome, bukan peranti fizikal atau enjin Safari. Peraturan log masuk dan pembenaman laman masih terpakai. Halaman asal kekal; pratonton baharu tidak menyalin perubahan yang belum disimpan.
+
+- Pilih lebih 110 saiz untuk telefon, tablet, komputer, jam dan TV. Uji laman web dan pelayan pembangunan setempat.
+- Semakan susun atur menemui elemen yang melepasi skrin dan menyebabkan tatal mendatar.
+- Simpan gambar sebelum perubahan, ubah halaman dan bandingkan perbezaan yang ditandakan atau gunakan peluncur sebelum/selepas. Gambar kekal dalam pelayar.
+- Rakam tab sumber apabila video menerangkan interaksi dengan lebih jelas.
+- Laraskan lebar lajur, muat semula satu atau semua pratonton dan gunakan mod fokus untuk pembentangan.

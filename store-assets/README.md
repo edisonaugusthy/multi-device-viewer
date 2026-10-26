@@ -2,6 +2,13 @@
 
 Promotional images, screenshots and listing copy for the Chrome Web Store. Screenshots are captured from the real simulator UI with a fictional local demo site (`source/demo.html`); they contain no customer data or remote content.
 
+Store descriptions should explain workflows rather than enumerate device names,
+brands, or categories. The 0.4.2 submission was rejected under Yellow Argon for
+the German list “Smartphones, Tablets, Laptops, Desktops, Uhren und Fernseher”.
+Equivalent lists were removed from all 55 descriptions. Keep new feature copy
+focused on what users can do, without repeating the overview or adding search
+phrase lists.
+
 The final images are covered by the [Artwork License](../ARTWORK-LICENSE.txt), which requires prior written permission for reuse except for the normal application uses specified there. Application code and listing text remain under the [MIT License](../LICENSE). The tools, layouts and raw captures used to produce these assets are private and are not part of this repository.
 
 | Path | Contents |

@@ -1,7 +1,5 @@
 Mobile View ni zana ya bure na ya programu huria ya kupima tovuti zinazobadilika kulingana na ukubwa wa skrini katika Chrome. Linganisha hadi mionekano minne kando kwa kando, ikiwemo hakikisho la simu, ili kukagua menyu, maandishi na nafasi. Chagua vifaa halisi, badili mwelekeo na ukuzaji, sawazisha kusogeza na urambazaji, piga picha za skrini na ulinganishe na muundo wa ndani. Kila kitu hufanya kazi ndani ya kivinjari bila akaunti, usajili, uchanganuzi, telemetria au seva.
 
-Kagua mipangilio ya simu, kompyuta kibao na kompyuta bila kubadili ukubwa wa kivinjari kila mara. Tafuta maandishi yaliyokatwa, nafasi zisizo sahihi na menyu zisizofanya kazi.
-
 - Fungua vifaa vyote kwa mbofyo mmoja. Muonekano wa awali umepangwa kwa aina ya kifaa na kuanzia skrini ndogo hadi kubwa.
 - Ili kurudia vipimo vya mipangilio inayobadilika kulingana na skrini, unda vipimo maalumu vya mwonekano, hifadhi seti na vifaa unavyovipenda au lenga mwonekano mmoja. Sawazisha miingiliano inayotumika kati ya mionekano inayolingana.
 - Piga picha ya mwonekano mmoja au eneo lote la kazi. Ongeza mishale, visanduku, michoro na maandishi au punguza picha. Onyesha muundo wa ndani kando ya ukurasa au kama tabaka juu yake.
@@ -9,7 +7,6 @@ Kagua mipangilio ya simu, kompyuta kibao na kompyuta bila kubadili ukubwa wa kiv
 
 Haya ni maonyesho ya mwitikio katika Chrome, si vifaa halisi au injini ya Safari. Kanuni za kuingia na kupachika za tovuti bado zinatumika. Ukurasa wa asili huhifadhiwa; maonyesho mapya hayanukuu mabadiliko ambayo hayajahifadhiwa.
 
-- Chagua zaidi ya vipimo 110 vya simu, kompyuta kibao, kompyuta, saa na TV. Jaribu tovuti na seva za maendeleo za ndani.
 - Ukaguzi wa mpangilio hutafuta vipengele vinavyopita nje ya skrini na kusababisha kusogeza mlalo.
 - Hifadhi picha kabla ya mabadiliko, hariri ukurasa na linganisha tofauti zilizoangaziwa au tumia kitelezi cha kabla/baada. Picha hubaki kwenye kivinjari.
 - Rekodi kichupo cha chanzo wakati video inaeleza mwingiliano vizuri zaidi.

@@ -1,7 +1,5 @@
 Mobile View è uno strumento gratuito e open source per testare siti web responsive in Chrome. Confronta fino a quattro viste affiancate, inclusa un’anteprima mobile, per controllare menu, testo e spaziatura.
 
-Controlla layout per telefono, tablet e computer senza ridimensionare continuamente il browser. Individua testo tagliato, spazi errati e menu difettosi.
-
 - Apri tutti i dispositivi con un clic. Le anteprime sono raggruppate per tipo di dispositivo e ordinate dagli schermi più piccoli ai più grandi.
 - Scegli dispositivi realistici, modifica orientamento e zoom, ricarica una singola anteprima o crea viewport personalizzate.
 - Sincronizza scorrimento, interazioni supportate e navigazione tra anteprime corrispondenti.
@@ -14,7 +12,6 @@ Tutto viene eseguito localmente nel browser. Non servono account, abbonamento, a
 
 Sono anteprime responsive in Chrome, non dispositivi fisici né il motore Safari. Restano valide le regole di accesso e incorporamento dei siti. La pagina originale è preservata; le nuove anteprime non copiano modifiche non salvate.
 
-- Scegli tra oltre 110 formati per telefoni, tablet, computer, orologi e TV. Prova siti e server di sviluppo locali.
 - Il controllo del layout trova gli elementi che superano il bordo dello schermo e causano scorrimento orizzontale.
 - Salva un’immagine prima delle modifiche, poi confronta le differenze evidenziate o usa il cursore prima/dopo. Le immagini restano nel browser.
 - Registra la scheda di origine quando un video spiega meglio un’interazione.

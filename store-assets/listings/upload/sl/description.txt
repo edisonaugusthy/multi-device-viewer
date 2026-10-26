@@ -1,7 +1,5 @@
 Mobile View je brezplačno odprtokodno orodje za testiranje odzivnih spletnih mest v Chromu. Primerjajte do štiri poglede drug ob drugem, vključno z mobilnim predogledom, da preverite menije, besedilo in razmike. Izberite realistične naprave, spremenite usmerjenost in povečavo, sinhronizirajte pomikanje in navigacijo, zajemite zaslon ter primerjajte z lokalnim dizajnom. Vse deluje lokalno brez računa, naročnine, analitike, telemetrije ali strežnika.
 
-Preverjajte postavitve telefona, tablice in računalnika brez stalnega spreminjanja velikosti brskalnika. Poiščite odrezano besedilo, napačne razmike in nedelujoče menije.
-
 - Odprite vse naprave z enim klikom. Predogledi so združeni po vrsti naprave in razvrščeni od manjših zaslonov do večjih.
 - Za ponavljajoče se testiranje odzivnih postavitev ustvarite lastne velikosti prikaza, shranite nabore in priljubljene naprave ali se osredotočite na en pogled. Uskladite podprte interakcije med ustreznimi pogledi.
 - Zajemite en pogled ali celotno delovno površino. Dodajte puščice, okvirje, risbe in besedilo ali obrežite sliko. Prikažite lokalni dizajn ob strani ali kot prekrivanje.
@@ -9,7 +7,6 @@ Preverjajte postavitve telefona, tablice in računalnika brez stalnega spreminja
 
 To so odzivni predogledi v Chromu, ne fizične naprave ali pogon Safari. Pravila prijave in vdelave spletnih mest še vedno veljajo. Izvirna stran se ohrani; novi predogledi ne kopirajo neshranjenih sprememb.
 
-- Izbirajte med več kot 110 formati telefonov, tablic, računalnikov, ur in televizorjev. Preizkusite spletna mesta in lokalne razvojne strežnike.
 - Preverjanje postavitve odkrije elemente, ki segajo iz zaslona in povzročajo vodoravno drsenje.
 - Shranite sliko pred spremembo, uredite stran in primerjajte označene razlike ali uporabite drsnik prej/potem. Slike ostanejo v brskalniku.
 - Posnemite izvorni zavihek, ko video bolje pojasni interakcijo.

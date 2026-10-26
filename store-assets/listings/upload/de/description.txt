@@ -1,7 +1,5 @@
 Mobile View ist ein kostenloses Open-Source-Tool zum Testen responsiver Websites in Chrome. Vergleiche bis zu vier Ansichten nebeneinander, darunter eine mobile Vorschau, um Menüs, Text und Abstände zu prüfen.
 
-Prüfe Layouts auf Smartphone, Tablet, Laptop und Desktop, ohne ständig die Browsergröße zu ändern. Erkenne abgeschnittenen Text, Abstandsprobleme und fehlerhafte Menüs.
-
 - Öffne alle Geräte mit einem Klick. Die Vorschauen sind nach Gerätetyp gruppiert und von kleinen zu großen Bildschirmen sortiert.
 - Wähle realistische Geräte, ändere Ausrichtung und Zoom, lade einzelne Vorschauen neu oder erstelle eigene Viewport-Größen.
 - Synchronisiere Scrollen, unterstützte Interaktionen und Navigation zwischen passenden Vorschauen.
@@ -14,7 +12,6 @@ Alles läuft lokal im Browser. Kein Konto, Abonnement, Analyse-, Telemetrie- ode
 
 Dies sind responsive Ansichten in Chrome, keine echten Geräte oder Safari-Emulation. Anmelde- und Einbettungsregeln der Websites gelten weiter. Die Originalseite bleibt erhalten; neue Vorschauen übernehmen keine ungespeicherten Änderungen.
 
-- Wähle aus über 110 Gerätevorgaben für Smartphones, Tablets, Laptops, Desktops, Uhren und Fernseher. Prüfe Websites und lokale Entwicklungsserver.
 - Die Layoutprüfung findet Elemente, die über den Bildschirmrand hinausragen und horizontales Scrollen verursachen.
 - Speichere ein Vorher-Bild, ändere die Seite und vergleiche markierte Unterschiede oder nutze den Vergleichsregler. Die Bilder bleiben im Browser.
 - Nimm den Ursprungstab als Video auf, wenn sich eine Interaktion damit besser erklären lässt.

@@ -1060,7 +1060,7 @@ export function SimulatorApp() {
         onAdd={(deviceId) => addSlot(deviceId)}
         onRemove={removeSlot}
         onReplace={(slotId, deviceId) => setSlotDevice(slotId, deviceId)}
-        onApplySet={(deviceIds) => { applyDevicePreset(deviceIds); setFocusedSlotId(null); }}
+        onApplySet={(deviceIds) => { applyDevicePreset(deviceIds); setFocusedSlotId(null); closePopover(); }}
         onDeleteCustom={deleteCustomViewport}
       />
       <SettingsPopover

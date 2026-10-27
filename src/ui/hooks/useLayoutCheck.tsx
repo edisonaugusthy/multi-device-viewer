@@ -78,7 +78,8 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
   const [states, setStates] = useState<Record<string, SlotState>>({});
   const [checkedAt, setCheckedAt] = useState<number | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
-  const [afterReload, setAfterReloadState] = useState(true);
+  // Off until switched on; the choice is remembered.
+  const [afterReload, setAfterReloadState] = useState(false);
   const statesRef = useRef(states); statesRef.current = states;
   const afterReloadRef = useRef(afterReload); afterReloadRef.current = afterReload;
   const slotsRef = useRef(slots); slotsRef.current = slots;

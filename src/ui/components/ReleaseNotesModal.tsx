@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { ReleaseNoteIcon, VersionReleaseNotes } from "../../app/release-notes";
 import { useI18n } from "../../app/i18n";
 import {
-  AdjustIcon, BugIcon, CameraIcon, ChevronRightIcon, CustomSizeIcon, ExpandIcon, EyeIcon, FixPromptIcon, GridIcon, GripIcon,
+  AdjustIcon, BugIcon, CameraIcon, ChevronRightIcon, CustomSizeIcon, ExpandIcon, EyeIcon, FixPromptIcon, GlobeIcon, GridIcon, GripIcon,
   LayoutCheckIcon, ListIcon, NavigationSyncIcon, PlayIcon, PointerIcon, RecordIcon, ReloadIcon, ScrollSyncIcon, SearchIcon, SideBySideIcon,
   TextToolIcon, WhatsNewIcon, WorkspaceIcon,
 } from "../icons";
@@ -33,6 +33,7 @@ const icons: Record<ReleaseNoteIcon, ReactNode> = {
   reload: <ReloadIcon size={15} />,
   menus: <ListIcon size={15} />,
   layout: <LayoutCheckIcon size={15} />,
+  globe: <GlobeIcon size={15} />,
 };
 
 // A small sketch of the new layout: devices of different sizes on one baseline.

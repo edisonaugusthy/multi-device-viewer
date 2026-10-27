@@ -5,7 +5,7 @@ import type { TranslationKey } from "./i18n";
 export type ReleaseNoteIcon =
   | "workspace" | "drag" | "frames" | "step" | "picker" | "focus" | "expand" | "gallery" | "camera"
   | "compare" | "fixPrompt" | "flow" | "record" | "languages" | "speed" | "headers"
-  | "homeview" | "scrollbars" | "hover" | "adjust" | "reload" | "menus" | "layout";
+  | "homeview" | "scrollbars" | "hover" | "adjust" | "reload" | "menus" | "layout" | "globe";
 
 export interface ReleaseNote {
   title: TranslationKey;
@@ -37,13 +37,28 @@ export const FEATURE_TOUR_REVISION = "0.4.0";
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
   version,
-  featured: { title: "permissionUpdateTitle", description: "permissionUpdateSummary", icon: "headers" },
+  featured: { title: "releaseTrackChangesTitle", description: "releaseTrackChangesDescription", icon: "compare" },
   sections: [
+    {
+      title: "releaseSectionReview",
+      notes: [
+        { title: "releaseProblemsTitle", description: "releaseProblemsDescription", icon: "headers" },
+        { title: "releaseLayoutCauseTitle", description: "releaseLayoutCauseDescription", icon: "layout" },
+      ],
+    },
+    {
+      title: "releaseSectionDevices",
+      notes: [
+        { title: "releaseDeviceLanguageTitle", description: "releaseDeviceLanguageDescription", icon: "globe" },
+        { title: "releaseDeviceIdentityTitle", description: "releaseDeviceIdentityDescription", icon: "frames" },
+      ],
+    },
     {
       title: "releaseSectionGeneral",
       notes: [
-        { title: "permissionUpdateWhyTitle", description: "permissionUpdateWhy", icon: "headers" },
-        { title: "permissionUpdateEnableTitle", description: "permissionUpdateNoAction", icon: "reload" },
+        { title: "releaseCameraMenuTitle", icon: "camera" },
+        { title: "releasePresetsCloseTitle", icon: "picker" },
+        { title: "releaseRecheckOffTitle", icon: "reload" },
       ],
     },
   ],

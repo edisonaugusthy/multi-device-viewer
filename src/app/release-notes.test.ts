@@ -38,16 +38,14 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("explains the future permission without claiming to request it today", () => {
-    expect(CURRENT_RELEASE_NOTES.featured.title).toBe("permissionUpdateTitle");
-    expect(CURRENT_RELEASE_NOTES.featured.description).toBe("permissionUpdateSummary");
-    expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual([
-      "releaseSectionGeneral",
-    ]);
+  it("leads with Track changes, then review tools, devices and smaller changes, and no longer mentions a permission", () => {
+    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseTrackChangesTitle", description: "releaseTrackChangesDescription", icon: "compare" });
+    expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual(["releaseSectionReview", "releaseSectionDevices", "releaseSectionGeneral"]);
     const notes = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes);
     expect(notes.map(note => note.title)).toEqual([
-      "permissionUpdateWhyTitle", "permissionUpdateEnableTitle",
+      "releaseProblemsTitle", "releaseLayoutCauseTitle", "releaseDeviceLanguageTitle", "releaseDeviceIdentityTitle",
+      "releaseCameraMenuTitle", "releasePresetsCloseTitle", "releaseRecheckOffTitle",
     ]);
-    expect(notes[1].description).toBe("permissionUpdateNoAction");
+    expect(JSON.stringify(CURRENT_RELEASE_NOTES)).not.toMatch(/permission/i);
   });
 });

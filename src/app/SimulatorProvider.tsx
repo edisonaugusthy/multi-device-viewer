@@ -1,5 +1,6 @@
 import { getViewerContext } from "./viewer-context";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { colorSchemeEmulated } from "./debugger-client";
 import { currentDeviceId, defaultDeviceIds } from "../domain/device/device-catalog";
 import { useDeviceCatalog } from "./DeviceCatalogProvider";
 import { getDefaultOrientation, nextOrientation, normalizeOrientation, supportsOrientation } from "../domain/device/device-service";
@@ -143,6 +144,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined" || !window.matchMedia) return;
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const syncColorScheme = (event: MediaQueryListEvent) => {
+      // A color scheme from Conditions changes the previews, not the viewer.
+      if (colorSchemeEmulated()) return;
       setDisplay((current) => ({ ...current, darkMode: event.matches }));
     };
     media.addEventListener("change", syncColorScheme);

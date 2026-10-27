@@ -308,6 +308,8 @@ try {
   for (let i = 0; i < 30; i++) { conditionsSeen = await seen(); if (conditionsSeen.dark && conditionsSeen.zone === "Asia/Tokyo") break; await page.waitForTimeout(100); }
   assert.deepEqual(conditionsSeen, { dark: true, zone: "Asia/Tokyo" }, "preview sees the conditions");
   assert.equal(attr(await one("data-conditions-toggle"), "data-conditions-on"), "", "the header icon shows conditions are on");
+  const viewerTheme = async () => { const [shell] = await viewerNodes(n => (attr(n, "class") ?? "").includes("bg-stage")); return (attr(shell, "class") ?? "").split(" ").includes("dark") ? "dark" : "light"; };
+  assert.equal(await viewerTheme(), "light", "the Dark condition darkens the previews, not the viewer");
   // Turn all off sits at the top of the open menu.
   await mkdir("output/playwright", { recursive: true });
   await page.screenshot({ path: "output/playwright/conditions-on.png" });

@@ -38,9 +38,21 @@ export const diagnosticsStore = {
   get: () => diagnostics,
 };
 
+// A color scheme set in Conditions applies to the whole tab, the viewer included.
+// The viewer keeps its own theme: scheme changes while one is set, and just
+// after it is set or cleared, are not the system's.
+let emulatedScheme: Conditions["scheme"] = "system";
+let schemeQuietUntil = 0;
+const SCHEME_SETTLE_MS = 1500;
+export const colorSchemeEmulated = () => emulatedScheme !== "system" || Date.now() < schemeQuietUntil;
+
 /** Apply conditions to the tab. False when the debugger is not attached. */
 export async function applyConditions(conditions: Conditions): Promise<boolean> {
   if (!canAsk()) return false;
+  if (conditions.scheme !== emulatedScheme) {
+    emulatedScheme = conditions.scheme;
+    schemeQuietUntil = Date.now() + SCHEME_SETTLE_MS;
+  }
   const result = await chrome.runtime.sendMessage({ type: "MDV_CONDITIONS", conditions }).catch(() => undefined);
   return result?.ok === true && result.applied === true;
 }

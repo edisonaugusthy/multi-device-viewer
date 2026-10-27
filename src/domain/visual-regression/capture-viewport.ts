@@ -19,6 +19,5 @@ export function measureViewport(frame: HTMLIFrameElement): CaptureFrame {
   return {
     rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
     viewport: { width: innerWidth, height: innerHeight },
-    scroll: { x: scrollX, y: scrollY },
   };
 }

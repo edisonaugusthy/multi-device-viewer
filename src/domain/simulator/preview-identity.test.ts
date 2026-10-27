@@ -115,3 +115,17 @@ describe("the browser a preview identifies as", () => {
     }
   });
 });
+
+describe("the identity carried to a preview's scripts", () => {
+  it("survives the trip through the URL, without the screen width, and rejects anything else", async () => {
+    const { identityFromToken, identityToken } = await import("./preview-identity");
+    const identity = { userAgent: "Mozilla/5.0 (Linux; Android 10; K)", platform: "Android" as const, mobile: true, hints: true, touchPoints: 5, language: "pt-BR",
+      density: { dpr: 2.625, width: 412 }, details: { model: "Pixel 8", platformVersion: "16.0.0", formFactor: "Mobile" as const, architecture: "", bitness: "" } };
+    const token = identityToken(identity);
+    expect(token).toMatch(/^[\w-]+$/);
+    const { density: _density, ...rest } = identity;
+    expect(identityFromToken(token)).toEqual(rest);
+    expect(identityFromToken("not+base64")).toBeUndefined();
+    expect(identityFromToken(identityToken({ ...identity, userAgent: "" }))).toBeUndefined();
+  });
+});

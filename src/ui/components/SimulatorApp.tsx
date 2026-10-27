@@ -1,5 +1,5 @@
 import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
-import { deviceIdentitiesActive, getViewerContext, getViewerEventTarget, getViewerRoot, onDeviceIdentitiesChange } from "../../app/viewer-context";
+import { getViewerContext, getViewerEventTarget, getViewerRoot } from "../../app/viewer-context";
 import { reportViewerState } from "../../app/viewer-state";
 import {
   useCallback,
@@ -8,7 +8,6 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
 } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useI18n } from "../../app/i18n";
@@ -53,8 +52,6 @@ import { LayoutCheckPanel } from "./LayoutCheckPanel";
 import { useLayoutCheck } from "../hooks/useLayoutCheck";
 import { HelpModal } from "./HelpModal";
 import { PermissionsInfoModal } from "./PermissionsInfoModal";
-import { PermissionUpdateModal, PermissionUpdateNotice } from "./PermissionUpdateNotice";
-import { DeviceIdentitiesNotice } from "./DeviceIdentitiesNotice";
 import { PreviewCard, shortName } from "./PreviewCard";
 import { RecordingBar, RecordMenu, type FlowStatus } from "./RecordMenu";
 import type { Device } from "../../domain/device/device.types";
@@ -68,14 +65,12 @@ import { ViewModeBar } from "./ViewModeBar";
 import { WorkspaceHeader } from "./WorkspaceHeader";
 import { ProblemsPanel } from "./ProblemsPanel";
 import { useProblems } from "../hooks/useProblems";
-import { useConditions } from "../hooks/useConditions";
-import { ConditionsMenu, useConditionsSummary } from "./ConditionsMenu";
-import { CaptureMenu, CaptureStatus, useCaptures, type CaptureTarget } from "./CaptureMenu";
+import { CaptureMenu } from "./CaptureMenu";
 import { setTracking, useTracking } from "../hooks/useTrackChanges";
 import { IdentityDialog } from "./IdentityDialog";
 import { chromeMajor, slotIdentity } from "../../domain/simulator/preview-identity";
 
-type Popover = "picker" | "settings" | "fix" | "record" | "conditions" | "capture" | null;
+type Popover = "picker" | "settings" | "fix" | "record" | "capture" | null;
 
 interface SavedWorkspaceView {
   widths?: number[];
@@ -150,7 +145,6 @@ export function SimulatorApp() {
   const [fixDeviceIds, setFixDeviceIds] = useState<string[] | undefined>();
   const [fixPrefill, setFixPrefill] = useState<FixPromptPrefill | undefined>();
   const [showPermissions, setShowPermissions] = useState(false);
-  const [showPermissionUpdate, setShowPermissionUpdate] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [compare, setCompare] = useState(false);
   const [compareSlotId, setCompareSlotId] = useState(() => slots[0]?.id ?? "");
@@ -181,7 +175,6 @@ export function SimulatorApp() {
   // The add picker opens under whichever toolbar control was used.
   const [pickerAnchor, setPickerAnchor] = useState<"add" | "workspace">("add");
   const fixRef = useRef<HTMLButtonElement>(null);
-  const conditionsRef = useRef<HTMLButtonElement>(null);
   const captureRef = useRef<HTMLButtonElement>(null);
   const recordRef = useRef<HTMLButtonElement>(null);
   const settingsRef = useRef<HTMLButtonElement>(null);
@@ -201,7 +194,6 @@ export function SimulatorApp() {
       !annotationOpen &&
       popover === null &&
       !showPermissions &&
-      !showPermissionUpdate &&
       !showHelp &&
       !showFirstRun &&
       !releaseNotes &&
@@ -758,22 +750,15 @@ export function SimulatorApp() {
     });
   }, [ready, slots, slotSizeStable, workspaceHydrated]);
   const layoutCheck = useLayoutCheck({ slots, findDevice, slotSize: slotSizeStable });
-  const debuggerActive = useSyncExternalStore(onDeviceIdentitiesChange, deviceIdentitiesActive);
+  // Device headers and languages are set by the extension for the viewer inside a website tab.
+  const inViewer = Boolean(getViewerContext());
   const deviceNameOf = useCallback((slot: PreviewSlot) => findDevice(slot.deviceId).name, [findDevice]);
   const problems = useProblems({ slots, deviceName: deviceNameOf });
   // One docked panel at a time.
   const toggleProblems = useStableCallback(() => { if (problems.open) problems.close(); else { layoutCheck.close(); problems.show(); } });
   const showSlotProblems = useStableCallback((slotId: string) => { layoutCheck.close(); problems.show(slotId); });
   const problemsShown = problems.open && !viewMode && !compare;
-  const conditions = useConditions(debuggerActive);
-  const trackingOn = useTracking();
-  const tracking = trackingOn && debuggerActive;
-  const captures = useCaptures();
-  const captureTargets: CaptureTarget[] = slots.map(slot => {
-    const device = findDevice(slot.deviceId);
-    return { slotId: slot.id, name: device.name, dpr: device.pixelRatio };
-  });
-  const conditionsSummary = useConditionsSummary(conditions.conditions);
+  const tracking = useTracking();
   const [identitiesOpen, setIdentitiesOpen] = useState(false);
   const openIdentities = useCallback(() => setIdentitiesOpen(true), []);
   const layoutCheckSlot = useStableCallback((slotId: string) => layoutCheck.run([slotId]));
@@ -830,7 +815,7 @@ export function SimulatorApp() {
             navigationSync={display.navigationSync}
             freeView={display.previewStyle === "free"}
             compare={compare}
-            capturing={capturing || captures.busy}
+            capturing={capturing}
             recordRef={recordRef}
             recordOpen={popover === "record"}
             recordingActive={recording || flowRecording}
@@ -840,10 +825,6 @@ export function SimulatorApp() {
             layoutChecking={layoutCheck.view.checking}
             layoutCount={layoutCheck.view.totals.problems}
             onLayoutCheck={() => { if (layoutCheck.view.open) layoutCheck.close(); else { problems.close(); layoutCheck.run(); } }}
-            conditionsRef={conditionsRef}
-            conditionsOpen={popover === "conditions"}
-            conditionsSummary={conditions.anyOn ? conditionsSummary : ""}
-            onConditions={() => togglePopover("conditions")}
             problemsOpen={problemsShown}
             problemsCount={problems.total}
             onProblems={toggleProblems}
@@ -860,7 +841,7 @@ export function SimulatorApp() {
             onFreeViewChange={(free) => updateDisplay((current) => ({ ...current, previewStyle: free ? "free" : "device" }))}
             onReloadAll={reloadAllSlots}
             onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
-            onCapture={() => debuggerActive ? togglePopover("capture") : void takeScopedScreenshot()}
+            onCapture={() => togglePopover("capture")}
             onFixPrompt={() => popover === "fix" ? setPopover(null) : openFixPrompt()}
             onRecord={() => togglePopover("record")}
             onViewMode={enterViewMode}
@@ -879,11 +860,6 @@ export function SimulatorApp() {
           />
         )}
 
-        <PermissionUpdateNotice
-          hidden={!ready || viewMode || compare || annotationOpen || capturing || recording || flowRecording || showFirstRun || Boolean(releaseNotes)}
-          onDetails={() => { setPopover(null); setShowPermissionUpdate(true); }}
-        />
-        <DeviceIdentitiesNotice hidden={!ready || viewMode || compare || annotationOpen || capturing || recording || flowRecording} />
         <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="flex min-h-0 flex-1">
           <div
@@ -945,7 +921,7 @@ export function SimulatorApp() {
                     onPageReady={FEATURES.layoutCheck ? layoutCheck.onPageReady : undefined}
                     problemCount={problems.countFor(slot.id)}
                     onProblems={showSlotProblems}
-                    onCompareIdentities={debuggerActive ? openIdentities : undefined}
+                    onCompareIdentities={inViewer ? openIdentities : undefined}
                     tracking={tracking}
                     focusNavigation={focusNavigation}
                     onScaleChange={updateScale}
@@ -1000,7 +976,7 @@ export function SimulatorApp() {
           </div>
           {problemsShown && (
             <ProblemsPanel
-              view={{ ...problems, available: debuggerActive }}
+              view={problems}
               onClose={problems.close}
               onFix={(group) => { const { deviceIds, prefill } = problems.fixPromptFor([group]); openFixPrompt(deviceIds, prefill); }}
               onFixAll={() => { const { deviceIds, prefill } = problems.fixPromptFor(problems.groups); openFixPrompt(deviceIds, prefill); }}
@@ -1115,23 +1091,11 @@ export function SimulatorApp() {
         open={popover === "capture"}
         anchorRef={captureRef}
         onClose={closePopover}
-        active={captureTargets.find(target => target.slotId === activeSlotId) ?? captureTargets[0]}
-        targets={captureTargets}
-        captures={captures}
+        deviceName={findDevice((slots.find(slot => slot.id === activeSlotId) ?? slots[0]).deviceId).name}
+        onDevice={() => void takeScopedScreenshot(activeSlotId)}
         onWorkspace={() => void takeScopedScreenshot()}
         tracking={tracking}
         onTracking={setTracking}
-      />
-      <CaptureStatus captures={captures} />
-      <ConditionsMenu
-        open={popover === "conditions"}
-        anchorRef={conditionsRef}
-        conditions={conditions.conditions}
-        summary={conditions.anyOn ? conditionsSummary : ""}
-        available={debuggerActive}
-        onChange={conditions.update}
-        onReset={conditions.reset}
-        onClose={closePopover}
       />
       <FixPromptPopover
         open={popover === "fix"}
@@ -1207,7 +1171,6 @@ export function SimulatorApp() {
         </div>
       )}
       {showPermissions && <PermissionsInfoModal onClose={() => setShowPermissions(false)} />}
-      {showPermissionUpdate && <PermissionUpdateModal onClose={() => setShowPermissionUpdate(false)} />}
       {showHelp && <HelpModal review={reviewPrompt} onClose={() => setShowHelp(false)} />}
       {showFirstRun && <FirstRunGuide onClose={finishFirstRun} seenTour={tourSince} />}
       {releaseNotes && <ReleaseNotesModal release={releaseNotes} onClose={closeReleaseNotes} />}

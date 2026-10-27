@@ -1,7 +1,7 @@
 /**
  * The CSS rule that makes an element wider than the screen, picked from the
- * styles Chrome's debugger matched to it: the most specific author rule that
- * sets a property able to force a width, with its file and line.
+ * styles that apply to it: the most specific author rule that sets a property
+ * able to force a width, with its file (and line, when known).
  */
 export interface LayoutCause {
   /** The rule's selector, or "style attribute" for inline styles. */
@@ -12,9 +12,9 @@ export interface LayoutCause {
   source: string;
 }
 
-interface CssProperty { name: string; value: string; disabled?: boolean; parsedOk?: boolean; implicit?: boolean }
+export interface CssProperty { name: string; value: string; disabled?: boolean; parsedOk?: boolean; implicit?: boolean }
 interface CssStyle { cssProperties?: CssProperty[]; range?: { startLine: number } }
-interface CssRule { selectorList?: { text?: string }; style?: CssStyle; styleSheetId?: string; origin?: string }
+export interface CssRule { selectorList?: { text?: string }; style?: CssStyle; styleSheetId?: string; origin?: string }
 export interface MatchedStyles { inlineStyle?: CssStyle; matchedCSSRules?: Array<{ rule: CssRule }> }
 export interface StyleSheetInfo { sourceURL?: string; startLine?: number; isInline?: boolean }
 
@@ -70,3 +70,58 @@ export function pickLayoutCause(matched: MatchedStyles, sheets: (styleSheetId: s
 
 /** The rule as one line, the way it would read in the stylesheet. */
 export const formatCause = (cause: LayoutCause) => `${cause.selector} { ${cause.declarations}; }`;
+
+/** A selector's specificity as one comparable number: ids, then classes, attributes and pseudo-classes, then types. */
+export function specificity(selector: string): number {
+  const plain = selector.replace(/:(?:where)\([^)]*\)/g, "").replace(/\[[^\]]*\]/g, " [a] ").replace(/"[^"]*"|'[^']*'/g, "");
+  const ids = (plain.match(/#[\w-]+/g) ?? []).length;
+  const classes = (plain.match(/\.[\w-]+|\[a\]|:(?!:)[\w-]+/g) ?? []).length;
+  const types = (plain.match(/(?:^|[\s>+~(])[a-zA-Z][\w-]*|::[\w-]+/g) ?? []).length;
+  return ids * 10000 + classes * 100 + types;
+}
+
+/**
+ * The styles a page's own stylesheets give an element, in the shape
+ * pickLayoutCause reads, ordered as the cascade applies them. Stylesheets
+ * from another site cannot be read from the page and are skipped, and the
+ * page's stylesheets carry no line numbers.
+ */
+export function pageMatchedStyles(element: Element): { matched: MatchedStyles; sheets: (id: string) => StyleSheetInfo | undefined } {
+  const doc = element.ownerDocument;
+  const view = doc.defaultView;
+  const infos = new Map<string, StyleSheetInfo>();
+  const found: Array<{ rule: CssRule; weight: number; order: number }> = [];
+  const properties = (style: CSSStyleDeclaration): CssProperty[] => Array.from({ length: style.length }, (_, i) => style[i]).map(name => ({ name, value: style.getPropertyValue(name) }));
+  const walk = (rules: CSSRuleList, id: string) => {
+    for (const rule of Array.from(rules)) {
+      if ("selectorText" in rule && "style" in rule) {
+        const styleRule = rule as CSSStyleRule;
+        let weight = -1;
+        for (const part of styleRule.selectorText.split(/,(?![^(]*\))/)) {
+          try { if (element.matches(part)) weight = Math.max(weight, specificity(part)); } catch { /* a selector this Chrome cannot match */ }
+        }
+        if (weight >= 0) found.push({ weight, order: found.length, rule: { selectorList: { text: styleRule.selectorText }, origin: "regular", styleSheetId: id, style: { cssProperties: properties(styleRule.style) } } });
+      } else if ("media" in rule && "cssRules" in rule) {
+        const media = (rule as CSSMediaRule).media.mediaText;
+        if (!media || view?.matchMedia(media).matches) walk((rule as CSSMediaRule).cssRules, id);
+      } else if ("conditionText" in rule && "cssRules" in rule) {
+        if (CSS.supports((rule as CSSSupportsRule).conditionText)) walk((rule as CSSSupportsRule).cssRules, id);
+      } else if ("cssRules" in rule) {
+        walk((rule as CSSGroupingRule).cssRules, id);
+      }
+    }
+  };
+  Array.from(doc.styleSheets).forEach((sheet, index) => {
+    let rules: CSSRuleList;
+    try { rules = sheet.cssRules; } catch { return; }
+    const id = String(index);
+    infos.set(id, { sourceURL: sheet.href ?? doc.URL, isInline: !sheet.href });
+    walk(rules, id);
+  });
+  found.sort((a, b) => a.weight - b.weight || a.order - b.order);
+  const inline = (element as HTMLElement).style;
+  return {
+    matched: { inlineStyle: inline ? { cssProperties: properties(inline) } : undefined, matchedCSSRules: found.map(({ rule }) => ({ rule })) },
+    sheets: id => infos.get(id),
+  };
+}

@@ -9,7 +9,7 @@ import {
 } from "./visual-regression.types";
 
 /** What the extension background provides: the visible tab that sent the command, as PNG. */
-export interface VisualRegressionHost { captureTab(frame?: CaptureFrame): Promise<Blob> }
+export interface VisualRegressionHost { captureTab(): Promise<Blob> }
 
 // Everything below runs in the extension service worker (or the development
 // worker). The page only sends rectangles and receives stats, regions, a bit
@@ -80,7 +80,7 @@ function validFrame(frame: CaptureFrame) {
 async function capture(identity: BaselineIdentity, deviceName: unknown, frame: CaptureFrame, host: VisualRegressionHost) {
   baselineKey(identity);
   const { rect, viewport } = validFrame(frame);
-  const shot = await host.captureTab(frame);
+  const shot = await host.captureTab();
   const size = await pngSize(shot);
   const sx = size.width / viewport.width, sy = size.height / viewport.height;
   const left = Math.ceil(rect.left * sx), top = Math.ceil(rect.top * sy);

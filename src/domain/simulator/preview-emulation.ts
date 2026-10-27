@@ -62,7 +62,7 @@ const NAVIGATOR_PLATFORM: Record<IdentityPlatform, string> = {
 };
 
 /** What a preview's scripts read from navigator. A browser without client hints has no userAgentData. */
-interface ScriptIdentity {
+export interface ScriptIdentity {
   userAgent: string;
   appVersion: string;
   platform: string;
@@ -92,13 +92,13 @@ export function scriptIdentity(identity: PreviewIdentity, browser: BrowserBrands
 }
 
 /**
- * Runs in every frame of a debugged tab before the page's own scripts. A
+ * Runs in a preview frame before the page's own scripts (and, as source text, in tests). A
  * preview frame, one directly under the page and named by the viewer, and
  * same-origin frames inside it read the device from navigator; the page
  * itself and every other frame keep the browser's own. Kept free of imports
  * and outer names, since it travels as source text.
  */
-function installPreviewIdentity(identities: Record<string, ScriptIdentity>) {
+export function installPreviewIdentity(identities: Record<string, ScriptIdentity>) {
   if (window === window.top) return;
   let name: string;
   try {

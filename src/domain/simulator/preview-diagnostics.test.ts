@@ -1,57 +1,41 @@
 import { describe, expect, it } from "vitest";
-import {
-  addDownload, addProblem, consoleProblem, downloadType, emptyDiagnostics, exceptionProblem, fileName, requestProblem, requestTitle, stackLine,
-} from "./preview-diagnostics";
+import { addProblem, consoleProblem, emptyDiagnostics, errorProblem, fileName, requestProblem, stackLines } from "./preview-diagnostics";
 
-describe("preview problems", () => {
+describe("problems in a preview", () => {
   it("names a thrown error by its message and where it was thrown, with the top of its stack", () => {
-    const problem = exceptionProblem({
-      text: "Uncaught",
-      exception: { description: "TypeError: Cannot read properties of undefined (reading 'map')\n    at ProjectList (http://localhost:5173/src/components/ProjectList.jsx:48:22)" },
-      stackTrace: { callFrames: [
-        { functionName: "ProjectList", url: "http://localhost:5173/src/components/ProjectList.jsx", lineNumber: 47, columnNumber: 21 },
-        { functionName: "renderWithHooks", url: "http://localhost:5173/node_modules/react-dom.js", lineNumber: 15485, columnNumber: 17 },
-        { functionName: "a", url: "http://localhost:5173/a.js", lineNumber: 0, columnNumber: 0 },
-        { functionName: "b", url: "http://localhost:5173/b.js", lineNumber: 0, columnNumber: 0 },
-      ] },
+    const stack = "TypeError: boom\n    at render (https://shop.test/assets/app.js:42:7)\n    at https://shop.test/assets/vendor.js:9:1\n    at a (b.js:1:1)\n    at c (d.js:2:2)";
+    expect(errorProblem("TypeError: boom", "https://shop.test/assets/app.js", 42, stack)).toEqual({
+      key: "error|TypeError: boom|app.js:42", kind: "error", title: "TypeError: boom", where: "app.js:42",
+      stack: ["at render (assets/app.js:42:7)", "at assets/vendor.js:9:1", "at a (b.js:1:1)"],
     });
-    expect(problem).toMatchObject({ kind: "error", title: "TypeError: Cannot read properties of undefined (reading 'map')", where: "ProjectList.jsx:48" });
-    expect(problem.stack).toEqual(["at ProjectList (src/components/ProjectList.jsx:48:22)", "at renderWithHooks (node_modules/react-dom.js:15486:18)", "at a (a.js:1:1)"]);
-    expect(exceptionProblem({ text: "Uncaught", exception: { value: "plain string thrown" } }).title).toBe("plain string thrown");
-    expect(stackLine({ url: "https://example.com/app.js", lineNumber: 1, columnNumber: 2 })).toBe("at app.js:2:3");
+    expect(errorProblem("  ").title).toBe("Script error");
+    expect(stackLines(undefined)).toEqual([]);
+  });
+
+  it("joins console arguments the way the console shows them and finds the caller", () => {
+    const stack = "Error\n    at console.error (https://shop.test/inject.js:1:1)\n    at load (https://shop.test/assets/cart.js:17:3)";
+    expect(consoleProblem("error", ["Cart failed", { id: 3 }, new RangeError("bad")], stack)).toEqual({
+      key: "error|Cart failed {\"id\":3} RangeError: bad|cart.js:17", kind: "error", title: "Cart failed {\"id\":3} RangeError: bad", where: "cart.js:17",
+    });
+    expect(consoleProblem("warning", []).title).toBe("console.warn");
   });
 
   it("counts the same problem again instead of listing it twice, and caps the list", () => {
     const diagnostics = emptyDiagnostics();
-    const problem = requestProblem("GET", "http://localhost:5173/api/projects?layout=compact", "http://localhost:5173/projects", { status: 500, statusText: "Internal Server Error" });
+    const problem = errorProblem("Boom", "https://a.test/app.js", 1);
     addProblem(diagnostics, problem, 1);
     addProblem(diagnostics, problem, 2);
     expect(diagnostics.problems).toHaveLength(1);
-    expect(diagnostics.problems[0]).toMatchObject({ title: "GET /api/projects?layout=compact", where: "500 Internal Server Error", status: 500, count: 2, firstAt: 1 });
-    for (let n = 0; n < 200; n++) addProblem(diagnostics, consoleProblem("warning", [{ value: `warning ${n}` }]));
+    expect(diagnostics.problems[0]).toMatchObject({ count: 2, firstAt: 1 });
+    for (let i = 0; i < 150; i++) addProblem(diagnostics, errorProblem(`Boom ${i}`));
     expect(diagnostics.problems).toHaveLength(100);
   });
 
-  it("names requests by path on the page's own host and by host elsewhere, and network failures by Chrome's reason", () => {
-    expect(requestTitle("POST", "https://api.example.com/v1/items", "https://example.com/")).toBe("POST api.example.com/v1/items");
-    expect(requestProblem("GET", "https://cdn.example.com/font.woff2", "https://example.com/", { errorText: "mixed-content" })).toMatchObject({ where: "mixed-content", status: undefined });
-    expect(consoleProblem("error", [{ value: "Failed:" }, { type: "object", description: "Error: boom" }], { url: "https://example.com/js/app.js", lineNumber: 9 }))
-      .toMatchObject({ kind: "error", title: "Failed: Error: boom", where: "app.js:10" });
-  });
-});
-
-describe("download size", () => {
-  it("adds up bytes by kind of file and keeps the largest files by name", () => {
-    const diagnostics = emptyDiagnostics();
-    addDownload(diagnostics, "https://example.com/img/hero.avif", "Image", 420_000);
-    addDownload(diagnostics, "https://example.com/js/vendor.js?v=3", "Script", 390_000);
-    addDownload(diagnostics, "https://example.com/css/app.css", "Stylesheet", 20_000);
-    addDownload(diagnostics, "https://example.com/fonts/inter.woff2", "Font", 118_000);
-    addDownload(diagnostics, "https://example.com/api", "Fetch", 2_000);
-    addDownload(diagnostics, "https://example.com/cached.png", "Image", 0);
-    expect(diagnostics.download).toMatchObject({ bytes: 950_000, requests: 6, byType: { image: 420_000, script: 390_000, style: 20_000, font: 118_000, other: 2_000 } });
-    expect(diagnostics.download.largest.map(file => file.url)).toEqual(["hero.avif", "vendor.js", "inter.woff2", "app.css", "api"]);
-    expect(downloadType("Media")).toBe("image");
-    expect(fileName("https://example.com/")).toBe("example.com");
+  it("names requests by path on the page's own host and by host elsewhere, with status or failure and the response", () => {
+    expect(requestProblem("GET", "https://shop.test/api/cart?x=1", "https://shop.test/", { status: 404, statusText: "Not Found", response: "{\"error\":1}" })).toEqual({
+      key: "request|GET /api/cart?x=1|404 Not Found", kind: "request", title: "GET /api/cart?x=1", where: "404 Not Found", status: 404, response: "{\"error\":1}",
+    });
+    expect(requestProblem("POST", "https://cdn.test/x.js", "https://shop.test/", { errorText: "Failed to fetch" })).toMatchObject({ title: "POST cdn.test/x.js", where: "Failed to fetch" });
+    expect(fileName("https://shop.test/assets/logo%20big.png")).toBe("logo big.png");
   });
 });

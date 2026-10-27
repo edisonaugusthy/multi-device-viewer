@@ -1,9 +1,9 @@
 // npm run build && npm run test:extension
-// Real Chrome extension test: one existing login, three direct frames, each its
-// own device through the extension's debugger: headers on documents, APIs,
-// assets, workers, nested and cross-site frames, and navigator in the page's
-// scripts, while the website's pages run unmodified. CDP below is test
-// automation for the viewer's closed shadow root, never extension code.
+// Real Chrome extension test, without the debugger permission: one existing
+// login, three direct frames, each its own device on documents and API
+// requests (through a hidden URL marker and Chrome's request rules) and in the
+// page's scripts; problems, language, layout cause and Track changes. CDP below
+// is test automation for the viewer's closed shadow root, never extension code.
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { mkdtemp, readFile, rm, mkdir } from "node:fs/promises";
@@ -14,7 +14,7 @@ import { chromium } from "@playwright/test";
 
 const extension = fileURLToPath(new URL("../.output/chrome-mv3", import.meta.url));
 const manifest = JSON.parse(await readFile(join(extension, "manifest.json"), "utf8"));
-assert(manifest.permissions.includes("debugger") && !manifest.optional_permissions?.includes("debugger"), "debugger is a required permission");
+assert(![...manifest.permissions ?? [], ...manifest.optional_permissions ?? []].includes("debugger"), "no debugger permission");
 const requests = [];
 let apiOrigin;
 let tracked = 0;
@@ -59,7 +59,7 @@ const profile = await mkdtemp(join(tmpdir(), "mdv-smoke-"));
 let context;
 try {
   context = await chromium.launchPersistentContext(profile, {
-    // A 2× window, like most laptops: captures must still come out at each device's own pixel ratio.
+    // A 2× window, like most laptops.
     channel: "chromium", headless: true, viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 2,
     args: [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`],
   });
@@ -164,11 +164,14 @@ try {
   };
   let phone = frameFor("phone");
   const visit = async action => { await Promise.all([phone.waitForNavigation(), action()]); await phone.waitForFunction(() => window.fetchProbe && window.xhrProbe); };
-  const checkPhone = async (documentTagged = true) => {
+  // After a server redirect the document keeps its headers, but its scripts no longer see the marker.
+  const checkPhone = async (documentTagged = true, scriptsTagged = documentTagged) => {
     const result = await phone.evaluate(() => ({ document: window.documentProbe, fetch: window.fetchProbe, xhr: window.xhrProbe, hash: location.hash }));
     checkLogin(result.document); checkLogin(result.fetch);
-    assert.match(result.fetch.ua, /iPhone/); assert.match(result.xhr.ua, /iPhone/); assert.match(await phone.evaluate(() => navigator.userAgent), /iPhone/);
+    assert.match(result.fetch.ua, /iPhone/); assert.match(result.xhr.ua, /iPhone/);
     assert(documentTagged ? /iPhone/.test(result.document.ua) : result.document.ua === browserAgent, "document header coverage");
+    // The marker on the document also carries the device for its scripts.
+    assert.equal(/iPhone/.test(await phone.evaluate(() => navigator.userAgent)), scriptsTagged, "page scripts follow the document's identity");
     return result;
   };
   await visit(() => phone.evaluate(() => document.querySelector("a").click()));
@@ -181,7 +184,9 @@ try {
   assert.equal(formPost.method, "POST"); assert.equal(formPost.body, "payload=keep+me&save=yes");
   assert.equal(requests.filter(r => r.url === "/form-post").length, 1, "POST never replayed");
   await visit(() => phone.evaluate(() => document.querySelector("#redirect").click())); await checkPhone();
-  await visit(() => phone.evaluate(() => document.querySelector("#redirect-hash").click())); await checkPhone();
+  await visit(() => phone.evaluate(() => document.querySelector("#redirect-hash").click()));
+  await checkPhone(false);
+  // That page asked the viewer for the device again, so the next page has it for its scripts too.
   await visit(() => phone.evaluate(() => { location.href = "/script-navigation"; })); await checkPhone();
   assert.equal(requests.filter(r => r.url === "/script-navigation").length, 1, "script navigation never replayed");
   await visit(() => phone.evaluate(() => location.assign("/script-assign#/route"))); assert.equal((await checkPhone()).hash, "#/route");
@@ -228,7 +233,7 @@ try {
   const requestPost = await phone.evaluate(async () => await (await fetch(new Request("/api-request-post", { method: "POST", body: "native Request body" }))).json());
   assert.match(requestPost.ua, /iPhone/); assert.equal(requestPost.body, "native Request body");
   const foreignPost = await phone.evaluate(async () => await (await fetch(new parent.Request(new URL("/api-foreign", location.href), { method: "POST", body: "foreign body" }))).json());
-  assert.match(foreignPost.ua, /iPhone/, "foreign Requests get device headers"); assert.equal(foreignPost.body, "foreign body");
+  assert.equal(foreignPost.ua, browserAgent, "a Request built in another window is not tagged"); assert.equal(foreignPost.body, "foreign body");
   await assertNoCoverageLabels();
   const abort = await phone.evaluate(async () => { const controller = new AbortController(); controller.abort(); try { await fetch("/api-aborted", { signal: controller.signal }); return "sent"; } catch (error) { return error.name; } });
   assert.equal(abort, "AbortError"); assert(!requests.some(r => r.url === "/api-aborted"));
@@ -255,19 +260,11 @@ try {
   await phone.evaluate(() => localStorage.setItem("mdv-shared-update", "fresh"));
   assert.equal(await frameFor("pixel").evaluate(() => localStorage.getItem("mdv-shared-update")), "fresh");
   const workerResult = await phone.evaluate(() => new Promise(resolve => { const worker = new Worker("/worker.js"); worker.onmessage = event => { resolve(event.data); worker.terminate(); }; }));
-  assert.match(workerResult.ua, /iPhone/, "dedicated worker traffic gets device headers");
-  assert.equal(await phone.evaluate(() => window.fetch.toString().includes("[native code]") && XMLHttpRequest.prototype.open.toString().includes("[native code]") && window.Request.toString().includes("[native code]") && history.pushState.toString().includes("[native code]")), true, "the website's fetch, XHR, Request and history stay native");
-  const assets = requests.filter(r => r.url === "/asset.svg");
-  assert.equal(assets[0].ua, browserAgent, "the page's own assets keep the browser's identity");
-  for (const [id, , pattern] of devices) assert(assets.some(r => pattern.test(r.ua)), `${id} assets get device headers`);
-  const nestedFrom = requests.length;
-  await phone.evaluate(() => new Promise(resolve => { const frame = document.createElement("iframe"); frame.src = "/nested"; frame.onload = resolve; document.body.append(frame); }));
-  for (let i = 0; i < 50 && !requests.slice(nestedFrom).some(r => r.url === "/asset.svg?nested"); i++) await page.waitForTimeout(100);
-  const nested = requests.slice(nestedFrom).filter(r => r.url === "/nested" || r.url === "/asset.svg?nested");
-  assert.equal(nested.length, 2); for (const r of nested) { assert.match(r.ua, /iPhone/, `nested frame ${r.url}`); checkLogin(r); }
+  assert.equal(workerResult.ua, browserAgent, "worker traffic keeps the browser's identity");
+  assert(requests.filter(r => r.url === "/asset.svg").every(r => r.ua === browserAgent), "images and other files keep the browser's identity");
   await phone.evaluate(async () => await fetch(new Request("/api-request-post", { method: "POST", body: "native fallback" })));
   await assertNoCoverageLabels();
-  // Problems: the debugger reports this preview's script error and failed request to the viewer.
+  // Problems: a script in the preview reports its script error and failed request to the viewer.
   const viewerNodes = async (predicate) => {
     const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
     const found = [];
@@ -296,29 +293,7 @@ try {
   await visit(() => phone.evaluate(() => location.assign("/")));
   for (let i = 0; i < 30 && (await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length; i++) await page.waitForTimeout(100);
   assert.equal((await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length, 0, "a new page starts without problems");
-  // Conditions: the page inside a preview sees the emulated color scheme and time zone; the header's × turns them off.
   const one = async (name, value) => { const [node] = await viewerNodes(n => attr(n, name) !== undefined && (value === undefined || attr(n, name) === value)); assert(node, `${name} ${value ?? ""}`); return node; };
-  await clickNode(await one("data-conditions-toggle"));
-  await clickNode(await one("data-preset", "dark"));
-  const zone = await one("data-timezone");
-  await cdp.send("Runtime.callFunctionOn", { objectId: (await cdp.send("DOM.resolveNode", { backendNodeId: zone.backendNodeId })).object.objectId,
-    functionDeclaration: "function () { Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(this, 'Asia/Tokyo'); this.dispatchEvent(new Event('change', { bubbles: true })); }" });
-  const seen = () => phone.evaluate(() => ({ dark: matchMedia("(prefers-color-scheme: dark)").matches, zone: Intl.DateTimeFormat().resolvedOptions().timeZone }));
-  let conditionsSeen;
-  for (let i = 0; i < 30; i++) { conditionsSeen = await seen(); if (conditionsSeen.dark && conditionsSeen.zone === "Asia/Tokyo") break; await page.waitForTimeout(100); }
-  assert.deepEqual(conditionsSeen, { dark: true, zone: "Asia/Tokyo" }, "preview sees the conditions");
-  assert.equal(attr(await one("data-conditions-toggle"), "data-conditions-on"), "", "the header icon shows conditions are on");
-  const viewerTheme = async () => { const [shell] = await viewerNodes(n => (attr(n, "class") ?? "").includes("bg-stage")); return (attr(shell, "class") ?? "").split(" ").includes("dark") ? "dark" : "light"; };
-  assert.equal(await viewerTheme(), "light", "the Dark condition darkens the previews, not the viewer");
-  // Turn all off sits at the top of the open menu.
-  await mkdir("output/playwright", { recursive: true });
-  await page.screenshot({ path: "output/playwright/conditions-on.png" });
-  await clickNode(await one("data-conditions-off"));
-  for (let i = 0; i < 30; i++) { conditionsSeen = await seen(); if (!conditionsSeen.dark && conditionsSeen.zone !== "Asia/Tokyo") break; await page.waitForTimeout(100); }
-  assert.equal(conditionsSeen.dark, false, "× turns the color scheme off");
-  assert.notEqual(conditionsSeen.zone, "Asia/Tokyo", "× turns the time zone off");
-  assert.equal(attr(await one("data-conditions-toggle"), "data-conditions-on"), undefined, "the header icon is plain again");
-  await page.keyboard.press("Escape");
   // Language: one device asks for German and states its screen density; its scripts read the language too.
   const inSlot = async (slotId, name, text) => {
     const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
@@ -356,15 +331,6 @@ try {
   await Promise.all([phone.waitForNavigation(), clickNode(await radio("Browser"))]);
   await phone.waitForFunction(() => window.fetchProbe && window.xhrProbe);
   assert.notEqual((await phone.evaluate(() => window.documentProbe)).language, "de-DE,de;q=0.9", "back to the browser's language");
-  // Download size: each preview's downloaded bytes and request count.
-  await clickNode(await one("data-problems-toggle"));
-  const [sizeTab] = await Promise.all([(async () => { for (const node of await viewerNodes(n => attr(n, "role") === "tab")) if ((await textOf(node)).includes("Download size")) return node; })()]);
-  assert(sizeTab, "Download size tab");
-  await clickNode(sizeTab);
-  let sizeText = "";
-  for (let i = 0; i < 20 && !/downloaded/.test(sizeText); i++) { await page.waitForTimeout(100); const [panel] = await viewerNodes(node => attr(node, "data-problems-panel") !== undefined); sizeText = panel ? await textOf(panel) : ""; }
-  assert.match(sizeText, /[\d.,]+\s?(B|KB|MB) downloaded · \d+ requests?/, "download size per device");
-  await clickNode(await one("data-problems-toggle"));
   // Layout check: the CSS rule behind the overflow, with its file and line, goes into the fix prompt.
   await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/wide"))]);
   await clickNode(await one("data-layout-check-toggle"));
@@ -383,34 +349,13 @@ try {
   assert.match(promptText, /Caused by \.wide \{ width: 900px; \}/, "fix prompt names the rule");
   await page.keyboard.press("Escape");
   await clickNode(await one("data-layout-check-toggle"));
-  // Captures: drawn at the device's pixel ratio through the debugger, the whole page stitched, every device zipped.
-  await worker.evaluate(() => { globalThis.smokeDownloads = []; chrome.downloads.download = async options => { globalThis.smokeDownloads.push(options); return 1; }; });
-  const nextDownload = async () => {
-    for (let i = 0; i < 150; i++) { const [item] = await worker.evaluate(() => globalThis.smokeDownloads.splice(0)); if (item) return item; await page.waitForTimeout(100); }
-    throw new Error("no download");
-  };
-  const pngSize = url => { const bytes = Buffer.from(url.split(",")[1], "base64"); return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) }; };
-  const phoneSize = await phone.evaluate(() => ({ width: innerWidth, height: innerHeight, page: document.documentElement.scrollHeight }));
+  // Camera menu: the active device or the workspace, for annotating, and the Track changes switch.
   await clickNode(await one("data-capture-toggle"));
   await page.waitForTimeout(150);
+  assert.match(await textOf(await one("data-capture-device")), /iPhone 18 Pro/);
+  await one("data-capture-workspace");
   await page.screenshot({ path: "output/playwright/capture-menu.png" });
-  await clickNode(await one("data-capture-visible"));
-  const visible = await nextDownload();
-  assert.match(visible.url, /^data:image\/png;base64,/); assert.match(visible.filename, /\.png$/);
-  const visibleSize = pngSize(visible.url);
-  assert(Math.abs(visibleSize.width - phoneSize.width * 3) <= 3 && Math.abs(visibleSize.height - phoneSize.height * 3) <= 3, `visible part at 3×: ${JSON.stringify(visibleSize)} for ${JSON.stringify(phoneSize)}`);
   await clickNode(await one("data-capture-toggle"));
-  await clickNode(await one("data-capture-page"));
-  const whole = pngSize((await nextDownload()).url);
-  assert(Math.abs(whole.width - phoneSize.width * 3) <= 3 && Math.abs(whole.height - phoneSize.page * 3) <= 3, `whole page at 3×: ${JSON.stringify(whole)} for ${JSON.stringify(phoneSize)}`);
-  assert.equal(await phone.evaluate(() => scrollY), 0, "the page is scrolled back after a whole-page capture");
-  await clickNode(await one("data-capture-toggle"));
-  await clickNode(await one("data-capture-all"));
-  const zip = await nextDownload();
-  assert.match(zip.url, /^data:application\/zip;base64,/); assert.match(zip.filename, /\.zip$/);
-  const zipBytes = Buffer.from(zip.url.split(",")[1], "base64");
-  const zipNames = []; for (let at = zipBytes.readUInt32LE(zipBytes.length - 22 + 16); zipBytes.readUInt32LE(at) === 0x02014b50; at += 46 + zipBytes.readUInt16LE(at + 28) + zipBytes.readUInt16LE(at + 30) + zipBytes.readUInt16LE(at + 32)) zipNames.push(zipBytes.toString("utf8", at + 46, at + 46 + zipBytes.readUInt16LE(at + 28)));
-  assert.equal(zipBytes.readUInt16LE(zipBytes.length - 22 + 10), 3, `one picture per device in the zip: ${zipNames.join(", ")}`);
   // Track changes: the first load is watched, a reload that changes the page lists the change in CSS terms.
   await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/tracked"))]);
   // The switch lives in the camera menu; while it is on, the camera shows a dot.
@@ -431,28 +376,19 @@ try {
   await flipTracking("output/playwright/track-switch.png");
   assert.equal((await viewerNodes(n => attr(n, "data-track-dot") !== undefined)).length, 1, "the camera shows Track changes is on");
   const trackChip = async (want) => { for (let i = 0; i < 100; i++) { const node = await inSlot("phone", "data-track-chip"); if (node && want(attr(node, "data-track-chip"))) return node; await page.waitForTimeout(100); } throw new Error("track chip"); };
-  await trackChip(value => value === "0");
-  await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.reload())]);
-  const changed = await trackChip(value => Number(value) > 0);
-  assert.match(await textOf(changed), /changes?/);
-  await page.screenshot({ path: "output/playwright/track-chips.png" });
-  await clickNode(changed);
-  let changesText = "";
-  for (let i = 0; i < 20 && !changesText; i++) { await page.waitForTimeout(100); const [list] = await viewerNodes(node => attr(node, "data-track-changes") !== undefined); changesText = list ? await textOf(list) : ""; }
-  assert.match(changesText, /h1\.hero/); assert.match(changesText, /Font size 44 → 36 px/, "the change in CSS terms");
-  await page.screenshot({ path: "output/playwright/what-changed.png" });
-  await clickNode(await one("data-track-pin"));
-  await page.keyboard.press("Escape");
+  // Opened from code, the viewer has no click that lets Chrome capture the tab, so Track changes says it is paused and why.
+  const paused = await trackChip(value => value === "paused");
+  assert.match(await textOf(paused), /Paused/);
+  assert.match(attr(paused, "title") ?? "", /capture/i);
   await flipTracking();
   assert.equal((await viewerNodes(n => attr(n, "data-track-dot") !== undefined)).length, 0, "the dot goes away when Track changes is off");
-  // Another site runs in its own process; the extension reaches it through a child session.
+  // Another site: the marker carries the device there too, for the document, its API requests and its scripts.
   const crossSite = apiOrigin.replace("127.0.0.1", "localhost");
   const crossFrom = requests.length;
   await phone.evaluate(url => location.assign(url + "/cross-site"), crossSite);
-  for (let i = 0; i < 100 && !(["/asset.svg", "/api-xhr"].every(url => requests.slice(crossFrom).some(r => r.url === url))); i++) await page.waitForTimeout(100);
-  assert((await cdp.send("Target.getTargets")).targetInfos.some(t => t.type === "iframe" && t.url.startsWith(crossSite)), "cross-site preview runs in its own process");
-  const crossRequests = requests.slice(crossFrom).filter(r => ["/cross-site", "/asset.svg", "/api-fetch", "/api-xhr"].includes(r.url));
-  assert.equal(crossRequests.length, 4, "cross-site preview loaded");
+  for (let i = 0; i < 100 && !(["/api-fetch", "/api-xhr"].every(url => requests.slice(crossFrom).some(r => r.url === url))); i++) await page.waitForTimeout(100);
+  const crossRequests = requests.slice(crossFrom).filter(r => ["/cross-site", "/api-fetch", "/api-xhr"].includes(r.url));
+  assert.equal(crossRequests.length, 3, "cross-site preview loaded");
   for (const r of crossRequests) assert.match(r.ua, /iPhone/, `cross-site ${r.url}`);
   const crossFrame = previews().find(frame => frame.url().startsWith(crossSite));
   assert.match(await crossFrame.evaluate(() => navigator.userAgent), /iPhone/, "cross-site scripts see the device");
@@ -469,7 +405,7 @@ try {
   await simulator.locator("[data-preview-slot-id]").first().waitFor();
   assert.equal(await simulator.locator("[data-header-coverage]").count(), 0);
   assert.deepEqual(errors.filter(message => message !== "smoke boom"), [], "no page errors besides the one thrown on purpose");
-  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers, Request bodies/clones/multipart/credentials, script navigation, SPA/cancellation, links, forms, history/reloads, redirects, foreign Requests, assets, workers, nested and cross-site frames, full client hints and navigator per device through the debugger, problems, download size, conditions, per-device language, layout cause, captures at device pixel ratio (visible, whole page, .zip), track changes, native page APIs, no coverage labels, cleanup, standalone fallback.");
+  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers with full client hints, the device in page scripts (kept through links, forms, history, script navigation and redirects), Request bodies/clones/multipart/credentials, SPA/cancellation, uncovered foreign Requests/assets/workers, cross-site previews, problems, per-device language, identity table, layout cause, camera menu, Track changes paused without a click, no coverage labels, cleanup, standalone fallback; no debugger permission.");
 } finally {
   await context?.close();
   await Promise.all([new Promise(resolve => server.close(resolve)), new Promise(resolve => apiServer.close(resolve))]);

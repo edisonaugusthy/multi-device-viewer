@@ -14,7 +14,7 @@ import {
 import { CheckIcon, CopyIcon, ListIcon, PinIcon, ReloadIcon, SideBySideIcon, SnapshotIcon, TrashIcon } from "../icons";
 import { ComparisonPanel, ManageBaselines, PageGlyph, UnchangedPanel, useFormatters, visualButton, VisualDialog, visualPrimaryButton } from "../components/VisualChecks";
 import { cx, Segmented } from "../components/ui";
-import { snapshotPreview } from "../../app/preview-capture";
+import { snapshotPreview } from "../../app/preview-reports";
 import { describeChanges, type LayoutChange, type LayoutSnapshot } from "../../domain/capture/layout-snapshot";
 import { pinnedAt, setPinned, usePinnedVersion } from "./useTrackChanges";
 
@@ -52,7 +52,11 @@ const PREPARE_TIMEOUT_MS = 400;
 const TRACK_SETTLE_MS = 900;
 
 /** What Track changes found at the last reload. */
-interface Tracked { count: number; result?: VisualComparison; changes: LayoutChange[]; comparedAt: number; since: number }
+interface Tracked {
+  count: number; result?: VisualComparison; changes: LayoutChange[]; comparedAt: number; since: number;
+  /** Why the last load could not be pictured (the device is off screen, or Chrome did not allow a capture). */
+  paused?: TranslationKey;
+}
 /** Track changes keeps its own pictures, apart from the "before" pictures people save. */
 const trackIdentity = (identity: BaselineIdentity): BaselineIdentity => ({ ...identity, deviceId: `${identity.deviceId}#track` });
 
@@ -292,7 +296,7 @@ export function useVisualRegression(options: Options) {
       if (!before) {
         await requestVisualRegression({ action: "save", captureId });
         snapshots.current = { last: snapshot, latest: snapshot };
-        if (mounted.current) setTracked({ count: 0, changes: [], comparedAt: Date.now(), since: Date.now() });
+        if (mounted.current) setTracked({ count: 0, changes: [], comparedAt: Date.now(), since: Date.now(), paused: undefined });
         return;
       }
       const result = await requestVisualRegression({ action: "compare", captureId, threshold });
@@ -304,8 +308,12 @@ export function useVisualRegression(options: Options) {
       if (!pinned) snapshots.current.last = snapshot;
       snapshots.current.latest = snapshot;
       if (mounted.current) setTracked({ count, result, changes, comparedAt: Date.now(), since: result.baseline.savedAt });
-    } catch {
-      // Off screen, a page that cannot be captured, or a busy capture: keep watching.
+    } catch (error) {
+      // Off screen, or Chrome did not allow a capture: say why; anything else, keep watching.
+      if (mounted.current && error instanceof VisualRegressionError && (error.code === "capture" || error.code === "clipped")) {
+        const paused = messageFor(error);
+        setTracked(open => ({ ...(open ?? { count: 0, changes: [], comparedAt: Date.now(), since: Date.now() }), paused }));
+      }
     } finally {
       pending.current = false;
     }

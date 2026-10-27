@@ -8,7 +8,8 @@ import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
-import { chromeMajor, slotIdentity } from "../../domain/simulator/preview-identity";
+import { chromeMajor, identityToken, slotIdentity } from "../../domain/simulator/preview-identity";
+import { tagPreviewRequest } from "../../domain/simulator/preview-request";
 import { PREVIEW_SANDBOX, previewFrameName } from "../../app/preview-frame";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
@@ -129,7 +130,7 @@ interface PreviewCardProps {
   layoutStatus?: LayoutSlotStatus;
   onLayoutCheck?: (slotId: string) => void;
   onLayoutProblems?: (slotId: string) => void;
-  /** Errors and failed requests the debugger saw in this preview; the chip opens them. */
+  /** Errors and failed requests seen in this preview; the chip opens them. */
   problemCount?: number;
   onProblems?: (slotId: string) => void;
   /** Opens "What each device sends" for the whole workspace. */
@@ -268,26 +269,34 @@ export const PreviewCard = memo(function PreviewCard({
   const preparationKey = JSON.stringify([slot.url, slot.reloadToken, identityKey]);
   const identitiesRef = useRef({ [frameName]: identity ?? null });
   identitiesRef.current = { [frameName]: identity ?? null };
+  const identityRef = useRef(identity);
+  identityRef.current = identity;
   const reportedWidth = identity?.density?.width;
   const firstWidth = useRef(true);
   useEffect(() => {
     if (firstWidth.current) { firstWidth.current = false; return; }
     void preparePreview(slot.url, identitiesRef.current).catch(() => undefined);
   }, [reportedWidth]);
+  const [headersReady, setHeadersReady] = useState(false);
   useEffect(() => {
     let active = true;
     setBlocked(false);
-    // The frame loads only once the tab knows its identity, so a reload after
-    // the identity changed fetches the page that device gets.
+    // The frame loads only once the tab's rules fit it, so a reload after the
+    // identity changed fetches the page that device gets.
     setPreparedKey(null);
-    void preparePreview(slot.url, identitiesRef.current).then(() => {
-      if (active) setPreparedKey(preparationKey);
+    setHeadersReady(false);
+    void preparePreview(slot.url, identitiesRef.current).then(({ headers }) => {
+      if (!active) return;
+      setPreparedKey(preparationKey);
+      setHeadersReady(headers && Boolean(identity) && "fragmentDirective" in document);
     }).catch(() => {
       if (active) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
     });
     return () => { active = false; };
   }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange, identityKey]);
   const [blocked, setBlocked] = useState(false);
+  // The hidden marker gives the frame's requests this device's headers, and its scripts this device's identity.
+  const frameSrc = (url: string) => headersReady && identity ? tagPreviewRequest(url, frameName, undefined, identityToken(identity)) : url;
   useEffect(() => {
     const onPolicy = (event: SecurityPolicyViolationEvent) => {
       if (event.effectiveDirective !== "frame-src" && event.effectiveDirective !== "child-src") return;
@@ -583,6 +592,13 @@ export const PreviewCard = memo(function PreviewCard({
       if (event.source !== iframeRef.current?.contentWindow) return;
       const data = event.data;
       if (!data || typeof data !== "object" || data.slotId !== slot.id) return;
+      // A page that lost the marker (a redirect replaced its URL's hash) asks
+      // again, so the pages it opens next carry the device for their scripts.
+      if (data.type === "MDV_IDENTITY_TOKEN_REQUEST") {
+        const current = identityRef.current;
+        if (current) iframeRef.current?.contentWindow?.postMessage({ type: "MDV_IDENTITY_TOKEN", slotId: slot.id, token: identityToken(current) }, "*");
+        return;
+      }
       if (data.type === "MDV_PREVIEW_HEALTH") {
         const errors = readPreviewHealthReport(data, healthRequest.current);
         if (!errors) return;
@@ -803,7 +819,7 @@ export const PreviewCard = memo(function PreviewCard({
       pendingReplayStepRef.current = 0;
       setBridgeStatus("checking");
       const startUrl = flowReplay.startUrl;
-      void preparePreview(startUrl, identitiesRef.current).then(() => { if (iframeRef.current) iframeRef.current.src = startUrl; }).catch(() => setBlocked(true));
+      void preparePreview(startUrl, identitiesRef.current).then(() => { if (iframeRef.current) iframeRef.current.src = frameSrc(startUrl); }).catch(() => setBlocked(true));
       return;
     }
     sendFlowReplay(startIndex ?? 0);
@@ -1020,10 +1036,11 @@ export const PreviewCard = memo(function PreviewCard({
             </button>
           )}
           {tracking && visualChecks.tracked && (
-            <button type="button" data-track-chip={visualChecks.tracked.count} onClick={visualChecks.showTracked} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
-              className={`inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full pe-2 ps-1.5 text-[11px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent ${visualChecks.tracked.count ? "bg-amber-500/15 text-warn hover:bg-amber-500/20" : "bg-sunken text-muted hover:text-ink-2"}`}>
-              <span aria-hidden="true" className={`size-1.5 rounded-full ${visualChecks.tracked.count ? "bg-amber-500" : "bg-accent"}`} />
-              {visualChecks.tracked.count === 0 ? t("trackWatching") : visualChecks.tracked.count === 1 ? t("trackChangesOne") : t("trackChangesMany", { count: visualChecks.tracked.count })}
+            <button type="button" data-track-chip={visualChecks.tracked.paused ? "paused" : visualChecks.tracked.count} title={visualChecks.tracked.paused ? t(visualChecks.tracked.paused) : undefined}
+              onClick={visualChecks.tracked.paused ? undefined : visualChecks.showTracked} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
+              className={`inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full pe-2 ps-1.5 text-[11px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent ${visualChecks.tracked.count && !visualChecks.tracked.paused ? "bg-amber-500/15 text-warn hover:bg-amber-500/20" : "bg-sunken text-muted hover:text-ink-2"}`}>
+              <span aria-hidden="true" className={`size-1.5 rounded-full ${visualChecks.tracked.paused ? "bg-faint" : visualChecks.tracked.count ? "bg-amber-500" : "bg-accent"}`} />
+              {visualChecks.tracked.paused ? t("trackPaused") : visualChecks.tracked.count === 0 ? t("trackWatching") : visualChecks.tracked.count === 1 ? t("trackChangesOne") : t("trackChangesMany", { count: visualChecks.tracked.count })}
             </button>
           )}
           {problemCount > 0 && onProblems && (
@@ -1074,7 +1091,7 @@ export const PreviewCard = memo(function PreviewCard({
               key={`${slot.id}-${slot.reloadToken}`}
               name={frameName}
               title={t("devicePreview", { name: device.name })}
-              src={preparedKey === preparationKey ? slot.url : "about:blank"}
+              src={preparedKey === preparationKey ? frameSrc(slot.url) : "about:blank"}
               loading="eager"
               className={`block size-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a] [color-scheme:dark]" : "bg-white [color-scheme:light]"} ${hidesPageScrollbars(device) ? "[scrollbar-width:none]" : ""}`}
               // Match the page at fractional raster edges, including the clear

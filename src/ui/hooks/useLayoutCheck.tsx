@@ -9,7 +9,7 @@ import type { LayoutCheckReport, LayoutMark, LayoutProblem } from "../../domain/
 import type { Device, Size } from "../../domain/device/device.types";
 import type { PreviewSlot } from "../../domain/simulator/simulator.types";
 import type { FixPromptPrefill } from "../components/FixPrompt";
-import { findLayoutCause } from "../../app/debugger-client";
+import { findLayoutCause } from "../../app/preview-reports";
 import { formatCause, type LayoutCause } from "../../domain/layout-check/layout-cause";
 
 export interface LayoutSlotStatus {
@@ -37,7 +37,7 @@ export interface LayoutCheckView {
   totals: { problems: number; affected: number; total: number };
   /** Some device hit the limit, so its list is incomplete. */
   truncated: boolean;
-  /** The CSS rule behind each problem, by group key, once the debugger has found it. */
+  /** The CSS rule behind each problem, by group key, once the preview has found it. */
   causes: Record<string, LayoutCause | null>;
 }
 
@@ -184,7 +184,7 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
   }, [numberOf, open, selected, slotIds, states]);
   useEffect(() => () => { for (const slot of slotsRef.current) post(slot.id, { type: "MDV_LAYOUT_MARKS", marks: [] }); }, []);
 
-  // The CSS rule behind each problem, asked of the debugger once per check.
+  // The CSS rule behind each problem, asked of the preview once per check.
   const [causes, setCauses] = useState<Record<string, LayoutCause | null>>({});
   const causesRef = useRef<Record<string, LayoutCause | null>>({});
   useEffect(() => { causesRef.current = {}; setCauses({}); }, [checkedAt]);
@@ -195,9 +195,9 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
       for (const group of groups) {
         if (cancelled) return;
         if (group.key in causesRef.current) continue;
-        const name = frameFor(group.devices[0]?.slotId ?? "")?.name;
-        if (!name) continue;
-        const cause = await findLayoutCause(name, group.selector).catch(() => null);
+        const slotId = group.devices[0]?.slotId;
+        if (!slotId) continue;
+        const cause = await findLayoutCause(slotId, group.selector).catch(() => null);
         if (cancelled) return;
         causesRef.current = { ...causesRef.current, [group.key]: cause };
         setCauses(causesRef.current);

@@ -1,11 +1,9 @@
 /**
- * What went wrong in a preview, and what it downloaded, as Chrome's debugger
- * reports it: script errors, console errors and warnings, failed requests, and
- * the bytes each kind of file took. One record per preview frame, started
- * again whenever that preview loads a new page.
+ * What went wrong in a preview, as a script inside it sees it: script errors,
+ * console errors and warnings, and failed requests. One record per preview,
+ * started again whenever that preview loads a new page.
  */
 export type ProblemKind = "error" | "warning" | "request";
-export type DownloadType = "image" | "script" | "style" | "font" | "other";
 
 export interface PreviewProblem {
   /** The same problem seen again only counts up. */
@@ -22,25 +20,16 @@ export interface PreviewProblem {
   firstAt: number;
 }
 
-export interface DownloadSize {
-  bytes: number;
-  requests: number;
-  byType: Record<DownloadType, number>;
-  largest: Array<{ url: string; bytes: number }>;
-}
-
 export interface PreviewDiagnostics {
   problems: PreviewProblem[];
-  download: DownloadSize;
 }
 
 const MAX_PROBLEMS = 100;
-const MAX_LARGEST = 5;
 const MAX_TEXT = 300;
 const MAX_STACK = 3;
 
 export function emptyDiagnostics(): PreviewDiagnostics {
-  return { problems: [], download: { bytes: 0, requests: 0, byType: { image: 0, script: 0, style: 0, font: 0, other: 0 }, largest: [] } };
+  return { problems: [] };
 }
 
 const clip = (text: string, max = MAX_TEXT) => text.length > max ? `${text.slice(0, max - 1)}…` : text;
@@ -50,29 +39,6 @@ export function addProblem(diagnostics: PreviewDiagnostics, problem: Omit<Previe
   if (seen) { seen.count++; return; }
   if (diagnostics.problems.length >= MAX_PROBLEMS) return;
   diagnostics.problems.push({ ...problem, title: clip(problem.title), response: problem.response && clip(problem.response), count: 1, firstAt: now });
-}
-
-/** Chrome's resource types, folded into the kinds the panel shows. */
-export function downloadType(resourceType: string | undefined): DownloadType {
-  switch (resourceType) {
-    case "Image": case "Media": return "image";
-    case "Script": return "script";
-    case "Stylesheet": return "style";
-    case "Font": return "font";
-    default: return "other";
-  }
-}
-
-export function addDownload(diagnostics: PreviewDiagnostics, url: string, resourceType: string | undefined, bytes: number) {
-  if (!Number.isFinite(bytes) || bytes < 0) return;
-  const download = diagnostics.download;
-  download.bytes += bytes;
-  download.requests++;
-  download.byType[downloadType(resourceType)] += bytes;
-  if (bytes === 0) return;
-  download.largest.push({ url: fileName(url), bytes });
-  download.largest.sort((a, b) => b.bytes - a.bytes);
-  download.largest.length = Math.min(download.largest.length, MAX_LARGEST);
 }
 
 /** The last part of a URL's path, which is how people know their files. */
@@ -94,48 +60,41 @@ export function requestTitle(method: string, url: string, pageUrl?: string): str
   } catch { return `${method} ${url}`; }
 }
 
-interface CallFrame { functionName?: string; url?: string; lineNumber?: number; columnNumber?: number }
-const path = (url: string | undefined) => {
-  if (!url) return "";
+const path = (url: string) => {
   try { const parsed = new URL(url); return parsed.pathname.replace(/^\//, "") || parsed.host; } catch { return url; }
 };
 
-/** One stack line, in the shape browsers print it. */
-export function stackLine(frame: CallFrame): string {
-  const where = `${path(frame.url)}:${(frame.lineNumber ?? 0) + 1}:${(frame.columnNumber ?? 0) + 1}`;
-  return frame.functionName ? `at ${frame.functionName} (${where})` : `at ${where}`;
-}
-
-export interface ExceptionDetails {
-  text?: string;
-  url?: string;
-  lineNumber?: number;
-  exception?: { description?: string; value?: unknown };
-  stackTrace?: { callFrames?: CallFrame[] };
+/** The top lines of a script's stack, with each file's address shortened to its path. */
+export function stackLines(stack: string | undefined): string[] {
+  return (stack ?? "").split("\n").map(line => line.trim()).filter(line => line.startsWith("at "))
+    .slice(0, MAX_STACK).map(line => line.replace(/\(?(https?:\/\/[^\s)]+?)(:\d+:\d+)\)?$/, (match, url: string, position: string) => match.startsWith("(") ? `(${path(url)}${position})` : `${path(url)}${position}`));
 }
 
 /** A thrown error as a problem: its message, where it was thrown, and the top of its stack. */
-export function exceptionProblem(details: ExceptionDetails): Omit<PreviewProblem, "count" | "firstAt"> {
-  const frames = details.stackTrace?.callFrames ?? [];
-  const described = details.exception?.description?.split("\n")[0];
-  const value = typeof details.exception?.value === "string" ? details.exception.value : undefined;
-  const title = described || value || details.text || "Script error";
-  const top = frames[0] ?? { url: details.url, lineNumber: details.lineNumber };
-  const where = top.url ? `${fileName(top.url)}:${(top.lineNumber ?? 0) + 1}` : "";
-  return { key: `error|${title}|${where}`, kind: "error", title, where, stack: frames.slice(0, MAX_STACK).map(stackLine) };
+export function errorProblem(message: string, file?: string, line?: number, stack?: string): Omit<PreviewProblem, "count" | "firstAt"> {
+  const title = message.trim() || "Script error";
+  const where = file ? `${fileName(file)}${line ? `:${line}` : ""}` : "";
+  return { key: `error|${title}|${where}`, kind: "error", title, where, stack: stackLines(stack) };
 }
 
-interface RemoteObject { type?: string; value?: unknown; description?: string }
-/** console.error and console.warn, with their arguments joined the way the console shows them. */
-export function consoleProblem(level: "error" | "warning", args: RemoteObject[], frame?: CallFrame): Omit<PreviewProblem, "count" | "firstAt"> {
-  const title = args.map(arg => typeof arg.value === "string" ? arg.value : arg.description ?? String(arg.value ?? "")).join(" ").trim() || (level === "error" ? "console.error" : "console.warn");
-  const where = frame?.url ? `${fileName(frame.url)}:${(frame.lineNumber ?? 0) + 1}` : "";
+/** A console argument the way the console shows it. */
+export function consoleText(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (value instanceof Error) return `${value.name}: ${value.message}`;
+  try { return typeof value === "object" && value !== null ? JSON.stringify(value) ?? String(value) : String(value); } catch { return String(value); }
+}
+
+/** console.error and console.warn, with their arguments joined and the caller's file and line. */
+export function consoleProblem(level: "error" | "warning", args: unknown[], stack?: string): Omit<PreviewProblem, "count" | "firstAt"> {
+  const title = args.map(consoleText).join(" ").trim() || (level === "error" ? "console.error" : "console.warn");
+  const caller = /\(?(https?:\/\/[^\s)]+?):(\d+):\d+\)?$/m.exec((stack ?? "").split("\n").slice(2).join("\n"));
+  const where = caller ? `${fileName(caller[1])}:${caller[2]}` : "";
   return { key: `${level}|${title}|${where}`, kind: level, title, where };
 }
 
 /** A request that failed, by its status or by the network error Chrome gave it. */
-export function requestProblem(method: string, url: string, pageUrl: string | undefined, failure: { status?: number; statusText?: string; errorText?: string }): Omit<PreviewProblem, "count" | "firstAt"> {
+export function requestProblem(method: string, url: string, pageUrl: string | undefined, failure: { status?: number; statusText?: string; errorText?: string; response?: string }): Omit<PreviewProblem, "count" | "firstAt"> {
   const title = requestTitle(method, url, pageUrl);
   const where = failure.status ? `${failure.status}${failure.statusText ? ` ${failure.statusText}` : ""}` : failure.errorText ?? "Failed";
-  return { key: `request|${title}|${where}`, kind: "request", title, where, status: failure.status };
+  return { key: `request|${title}|${where}`, kind: "request", title, where, status: failure.status, ...(failure.response ? { response: failure.response } : {}) };
 }

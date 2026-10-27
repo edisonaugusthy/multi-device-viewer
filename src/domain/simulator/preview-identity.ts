@@ -177,3 +177,24 @@ export function previewIdentitiesFrom(value: unknown): PreviewIdentities | undef
   }
   return result;
 }
+
+/**
+ * The identity a preview's scripts read, carried in the hidden marker on the
+ * preview's document URL, so the page's first script already sees the device.
+ * URL-safe base64 of the identity without its screen width, which changes on rotation.
+ */
+export function identityToken(identity: PreviewIdentity): string {
+  const { density: _density, ...rest } = identity;
+  const bytes = new TextEncoder().encode(JSON.stringify(rest));
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+export function identityFromToken(token: string): PreviewIdentity | undefined {
+  if (!/^[\w-]{1,2000}$/.test(token)) return undefined;
+  try {
+    const binary = atob(token.replace(/-/g, "+").replace(/_/g, "/"));
+    const read = previewIdentityFrom(JSON.parse(new TextDecoder().decode(Uint8Array.from(binary, char => char.charCodeAt(0)))));
+    return read ?? undefined;
+  } catch { return undefined; }
+}

@@ -6,7 +6,6 @@ import {
   CameraIcon,
   CloseIcon,
   CompareIcon,
-  GaugeIcon,
   EyeIcon,
   FixPromptIcon,
   GridIcon,
@@ -44,11 +43,6 @@ export interface WorkspaceHeaderProps {
   layoutOpen: boolean;
   layoutChecking: boolean;
   layoutCount: number;
-  conditionsRef: RefObject<HTMLButtonElement | null>;
-  conditionsOpen: boolean;
-  /** What is on, such as "Slow 4G · Dark"; empty when nothing is. */
-  conditionsSummary: string;
-  onConditions: () => void;
   problemsOpen: boolean;
   problemsCount: number;
   onProblems: () => void;
@@ -172,17 +166,6 @@ export function WorkspaceHeader(props: WorkspaceHeaderProps) {
       </Tooltip>
 
       <div className="min-w-2 flex-1" />
-
-      {/* Conditions change every preview: amber with a dot while any is on. */}
-      <span className="relative shrink-0">
-        <IconButton ref={props.conditionsRef} data-conditions-toggle data-conditions-on={props.conditionsSummary ? "" : undefined}
-          label={props.conditionsSummary ? `${t("conditionsTitle")}: ${props.conditionsSummary}` : t("conditionsTitle")}
-          tooltip={t("conditionsTip")} pressed={props.conditionsOpen} aria-haspopup="dialog" aria-expanded={props.conditionsOpen}
-          onClick={props.onConditions} className={props.conditionsSummary && !props.conditionsOpen ? "border-warn/40 bg-warn-soft text-warn hover:bg-warn-soft" : undefined}>
-          <GaugeIcon size={16} />
-        </IconButton>
-        {props.conditionsSummary && <span aria-hidden="true" className="pointer-events-none absolute end-[5px] top-[5px] size-2 rounded-full bg-amber-500 ring-2 ring-surface" />}
-      </span>
 
       <div role="group" data-tour="sync" aria-label={t("syncBetweenDevices")}
         className="flex h-[34px] shrink-0 items-center gap-0.5 rounded-[9px] border border-line pe-1 ps-2.5">

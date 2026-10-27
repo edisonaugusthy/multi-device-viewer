@@ -101,7 +101,7 @@ function Item({ icon, label, detail, onClick, attr }: { icon: ReactNode; label: 
   );
 }
 
-export function CaptureMenu({ open, anchorRef, onClose, active, targets, captures, onWorkspace }: {
+export function CaptureMenu({ open, anchorRef, onClose, active, targets, captures, onWorkspace, tracking, onTracking }: {
   open: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   onClose: () => void;
@@ -109,6 +109,9 @@ export function CaptureMenu({ open, anchorRef, onClose, active, targets, capture
   targets: CaptureTarget[];
   captures: ReturnType<typeof useCaptures>;
   onWorkspace: () => void;
+  /** Track changes: each reload compared with the one before. */
+  tracking: boolean;
+  onTracking: (on: boolean) => void;
 }) {
   const { t } = useI18n();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -136,6 +139,13 @@ export function CaptureMenu({ open, anchorRef, onClose, active, targets, capture
         {t("captureDeviceFrame")}
         <Switch size="sm" checked={captures.withFrame} onChange={captures.setWithFrame} label={t("captureDeviceFrame")} />
       </label>
+      <div data-track-toggle={tracking ? "on" : "off"} className="mt-1 flex items-center justify-between gap-2.5 border-t border-line-soft px-2 pb-1 pt-2">
+        <span className="grid gap-px">
+          <span className="text-[13px] font-medium">{t("trackChanges")}</span>
+          <span className="text-[11.5px] text-muted">{t("trackTip")}</span>
+        </span>
+        <Switch size="sm" checked={tracking} onChange={onTracking} label={t("trackChanges")} />
+      </div>
     </div>
   );
 }

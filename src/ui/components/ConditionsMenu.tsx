@@ -44,12 +44,15 @@ export function useConditionsSummary(conditions: Conditions): string {
   return parts.join(" · ");
 }
 
-export function ConditionsMenu({ open, anchorRef, conditions, available, onChange, onClose }: {
+export function ConditionsMenu({ open, anchorRef, conditions, summary, available, onChange, onReset, onClose }: {
   open: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   conditions: Conditions;
+  /** What is on, such as "Slow 4G · Dark"; empty when nothing is. */
+  summary: string;
   available: boolean;
   onChange: (change: Partial<Conditions>) => void;
+  onReset: () => void;
   onClose: () => void;
 }) {
   const { t } = useI18n();
@@ -70,6 +73,16 @@ export function ConditionsMenu({ open, anchorRef, conditions, available, onChang
       </div>
       <div className="grid min-h-0 flex-1 gap-3.5 overflow-y-auto px-3.5 pb-3.5">
         {!available && <p role="status" className="rounded-lg bg-warn-soft px-3 py-2 text-xs leading-snug text-warn">{t("conditionsUnavailable")}</p>}
+        {summary && (
+          <div className="flex min-h-10 items-center gap-2.5 rounded-[10px] border border-warn/40 bg-warn-soft py-1 pe-1 ps-3 text-warn">
+            <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-amber-500" />
+            <span role="status" className="min-w-0 flex-1 truncate text-[12.5px] font-semibold">{summary}</span>
+            <button type="button" data-conditions-off onClick={onReset}
+              className={cx("h-[30px] shrink-0 rounded-[7px] bg-surface px-2.5 text-xs font-semibold ring-1 ring-warn/40 hover:bg-white/70", focusRing)}>
+              {t("conditionsTurnOff")}
+            </button>
+          </div>
+        )}
         <div role="group" aria-label={t("conditionsPresets")} className="grid grid-cols-4 gap-1.5">
           {PRESETS.map(preset => {
             const on = Object.entries(preset.set).every(([key, value]) => conditions[key as keyof Conditions] === value);

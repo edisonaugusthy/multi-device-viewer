@@ -307,10 +307,16 @@ try {
   let conditionsSeen;
   for (let i = 0; i < 30; i++) { conditionsSeen = await seen(); if (conditionsSeen.dark && conditionsSeen.zone === "Asia/Tokyo") break; await page.waitForTimeout(100); }
   assert.deepEqual(conditionsSeen, { dark: true, zone: "Asia/Tokyo" }, "preview sees the conditions");
+  assert.equal(attr(await one("data-conditions-toggle"), "data-conditions-on"), "", "the header icon shows conditions are on");
+  // Turn all off sits at the top of the open menu.
+  await mkdir("output/playwright", { recursive: true });
+  await page.screenshot({ path: "output/playwright/conditions-on.png" });
   await clickNode(await one("data-conditions-off"));
   for (let i = 0; i < 30; i++) { conditionsSeen = await seen(); if (!conditionsSeen.dark && conditionsSeen.zone !== "Asia/Tokyo") break; await page.waitForTimeout(100); }
   assert.equal(conditionsSeen.dark, false, "× turns the color scheme off");
   assert.notEqual(conditionsSeen.zone, "Asia/Tokyo", "× turns the time zone off");
+  assert.equal(attr(await one("data-conditions-toggle"), "data-conditions-on"), undefined, "the header icon is plain again");
+  await page.keyboard.press("Escape");
   // Language: one device asks for German and states its screen density; its scripts read the language too.
   const inSlot = async (slotId, name, text) => {
     const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
@@ -405,7 +411,23 @@ try {
   assert.equal(zipBytes.readUInt16LE(zipBytes.length - 22 + 10), 3, `one picture per device in the zip: ${zipNames.join(", ")}`);
   // Track changes: the first load is watched, a reload that changes the page lists the change in CSS terms.
   await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/tracked"))]);
-  await clickNode(await one("data-track-toggle"));
+  // The switch lives in the camera menu; while it is on, the camera shows a dot.
+  const captureMenuOpen = async () => (await viewerNodes(n => attr(n, "data-capture-menu") !== undefined)).length > 0;
+  const flipTracking = async (shot) => {
+    if (!await captureMenuOpen()) await clickNode(await one("data-capture-toggle"));
+    let toggle;
+    for (let i = 0; i < 20 && !toggle; i++) { [toggle] = await viewerNodes(n => attr(n, "role") === "switch" && attr(n, "aria-label") === "Track changes"); if (!toggle) await page.waitForTimeout(100); }
+    assert(toggle, "Track changes switch in the capture menu");
+    await clickNode(toggle);
+    await page.waitForTimeout(100);
+    if (shot) await page.screenshot({ path: shot });
+    // Keys go to the focused preview, so close the menu with its own button.
+    await clickNode(await one("data-capture-toggle"));
+    for (let i = 0; i < 20 && await captureMenuOpen(); i++) await page.waitForTimeout(50);
+  };
+
+  await flipTracking("output/playwright/track-switch.png");
+  assert.equal((await viewerNodes(n => attr(n, "data-track-dot") !== undefined)).length, 1, "the camera shows Track changes is on");
   const trackChip = async (want) => { for (let i = 0; i < 100; i++) { const node = await inSlot("phone", "data-track-chip"); if (node && want(attr(node, "data-track-chip"))) return node; await page.waitForTimeout(100); } throw new Error("track chip"); };
   await trackChip(value => value === "0");
   await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.reload())]);
@@ -419,7 +441,8 @@ try {
   await page.screenshot({ path: "output/playwright/what-changed.png" });
   await clickNode(await one("data-track-pin"));
   await page.keyboard.press("Escape");
-  await clickNode(await one("data-track-toggle"));
+  await flipTracking();
+  assert.equal((await viewerNodes(n => attr(n, "data-track-dot") !== undefined)).length, 0, "the dot goes away when Track changes is off");
   // Another site runs in its own process; the extension reaches it through a child session.
   const crossSite = apiOrigin.replace("127.0.0.1", "localhost");
   const crossFrom = requests.length;

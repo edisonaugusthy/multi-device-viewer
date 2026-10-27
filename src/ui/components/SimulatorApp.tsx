@@ -844,13 +844,10 @@ export function SimulatorApp() {
             conditionsOpen={popover === "conditions"}
             conditionsSummary={conditions.anyOn ? conditionsSummary : ""}
             onConditions={() => togglePopover("conditions")}
-            onConditionsOff={conditions.reset}
             problemsOpen={problemsShown}
             problemsCount={problems.total}
             onProblems={toggleProblems}
-            trackAvailable={debuggerActive}
             tracking={tracking}
-            onTracking={() => setTracking(!trackingOn)}
             captureRef={captureRef}
             captureOpen={popover === "capture"}
             settingsRef={settingsRef}
@@ -1122,14 +1119,18 @@ export function SimulatorApp() {
         targets={captureTargets}
         captures={captures}
         onWorkspace={() => void takeScopedScreenshot()}
+        tracking={tracking}
+        onTracking={setTracking}
       />
       <CaptureStatus captures={captures} />
       <ConditionsMenu
         open={popover === "conditions"}
         anchorRef={conditionsRef}
         conditions={conditions.conditions}
+        summary={conditions.anyOn ? conditionsSummary : ""}
         available={debuggerActive}
         onChange={conditions.update}
+        onReset={conditions.reset}
         onClose={closePopover}
       />
       <FixPromptPopover

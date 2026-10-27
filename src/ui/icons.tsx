@@ -72,6 +72,9 @@ export const MoonIcon = icon(<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.
 export const HelpIcon = icon(<><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7" /><path d="M12 17h.01" /></>);
 export const TourIcon = icon(<><circle cx="12" cy="12" r="9" /><path d="m15.5 8.5-2 5-5 2 2-5z" /></>);
 export const BugIcon = icon(<><path d="M8 9a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0Z" /><path d="M12 9v10M4 13h4M16 13h4M5 7l3 2M19 7l-3 2M5 19l3-2M19 19l-3-2M10 5 9 3M14 5l1-2" /></>);
+export const GaugeIcon = icon(<><path d="M4 18a8 8 0 1 1 16 0" /><path d="m12 18 4-6" /></>);
+export const GlobeIcon = icon(<><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></>);
+export const PinIcon = icon(<path d="M12 17v5M8 3h8l-1 6 3 4H6l3-4z" />, { strokeWidth: 2.2 });
 export const ShieldIcon = icon(<><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6Z" /><path d="m9 12 2 2 4-4" /></>);
 export const PointerIcon = icon(<><path d="m9 9 10 4-4 1.5L13.5 19Z" /><path d="M7 3v3M3 7h3M4.5 4.5l2 2M11 4l-1 2" /></>);
 // A sparkle, not rays: rays read as a loading spinner.

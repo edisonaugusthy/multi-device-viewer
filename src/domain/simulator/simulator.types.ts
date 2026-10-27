@@ -13,6 +13,10 @@ export interface PreviewSlot {
   reloadToken: number;
   showFrame: boolean;
   browserPreferences?: BrowserPreferences;
+  /** The language this device asks for; the browser's own when left out. */
+  language?: string;
+  /** Whether this device tells sites its screen density (on unless turned off). */
+  sendDensity?: boolean;
 }
 
 export interface DisplaySettings {

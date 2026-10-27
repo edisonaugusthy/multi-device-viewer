@@ -47,6 +47,8 @@ export interface VisualComparison {
 export interface CaptureFrame {
   rect: { left: number; top: number; width: number; height: number };
   viewport: { width: number; height: number };
+  /** How far the window is scrolled, for a capture taken in document coordinates. */
+  scroll?: { x: number; y: number };
 }
 export type VisualRegressionCommand =
   | { action: "read"; identity: BaselineIdentity }

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { preparePreview, setViewerContext } from "./viewer-context";
+import { deviceIdentitiesActive, onDeviceIdentitiesChange, preparePreview, setViewerContext } from "./viewer-context";
 
 describe("shared preview preparation", () => {
   const context = () => ({ root: {} as HTMLElement, url: "https://example.test", close: () => {} });
@@ -21,7 +21,7 @@ describe("shared preview preparation", () => {
     const results = await Promise.allSettled([preparePreview("https://example.test"), preparePreview("https://example.test")]);
     expect(results.map(result => result.status)).toEqual(["rejected", "rejected"]);
     expect(sendMessage).toHaveBeenCalledTimes(1);
-    await expect(preparePreview("https://example.test")).resolves.toEqual({ headers: false });
+    await expect(preparePreview("https://example.test")).resolves.toEqual({ identities: false });
     expect(sendMessage).toHaveBeenCalledTimes(2);
   });
 
@@ -48,10 +48,17 @@ describe("shared preview preparation", () => {
     ]);
   });
 
-  it("only reports headers ready after the background confirms preparation", async () => {
-    vi.stubGlobal("chrome", { runtime: { sendMessage: vi.fn().mockResolvedValueOnce({ ok: true, headers: true }).mockResolvedValueOnce({ ok: true }) } });
-    expect(await preparePreview("https://example.test")).toEqual({ headers: true });
-    expect(await preparePreview("https://example.test")).toEqual({ headers: false });
+  it("reports device identities on only while the background holds the debugger, and resets for a reopened viewer", async () => {
+    vi.stubGlobal("chrome", { runtime: { sendMessage: vi.fn().mockResolvedValueOnce({ ok: true, identities: true }).mockResolvedValueOnce({ ok: true }) } });
+    const changes: boolean[] = [];
+    const stop = onDeviceIdentitiesChange(active => changes.push(active));
+    expect(await preparePreview("https://example.test")).toEqual({ identities: true });
+    expect(await preparePreview("https://example.test")).toEqual({ identities: false });
+    expect(deviceIdentitiesActive()).toBe(false);
+    setViewerContext(context());
+    expect(deviceIdentitiesActive()).toBe(true);
+    stop();
+    expect(changes).toEqual([false, true]);
   });
 
   it("does not ask the extension for setup outside an embedded viewer", async () => {

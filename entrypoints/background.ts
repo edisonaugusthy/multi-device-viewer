@@ -1,6 +1,10 @@
 import { createPreviewSessions } from "../src/app/preview-sessions";
+import { chromeDebuggerApi, createPreviewDebugger } from "../src/app/preview-debugger";
+import { readBrowserBrands } from "../src/domain/simulator/preview-emulation";
+import { conditionsFrom } from "../src/domain/simulator/preview-conditions";
+import { PREVIEW_FRAME_NAME } from "../src/domain/simulator/preview-identity";
 import { previewIdentitiesFrom } from "../src/domain/simulator/preview-identity";
-import { VisualRegressionError } from "../src/domain/visual-regression/visual-regression.types";
+import { VisualRegressionError, type CaptureFrame } from "../src/domain/visual-regression/visual-regression.types";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
 import type { ViewerRestoreState } from "../src/app/viewer-context";
@@ -24,7 +28,17 @@ export default defineBackground(() => {
   const launches = new Map<number, Promise<void>>();
   const previews = createPreviewSessions();
   void previews.prune().catch(console.error);
-  const closePreviews = (tabId: number) => previews.close(tabId);
+  // Each preview is its own device, in its requests and its scripts, while the
+  // viewer is open; a tab whose debugger goes away is told so it can say why,
+  // and the viewer hears of each preview's problems and download size.
+  const toViewer = (tabId: number, message: Record<string, unknown>) =>
+    void chrome.tabs.sendMessage(tabId, message, { frameId: 0 }).catch(() => undefined);
+  const debuggerPreviews = createPreviewDebugger(chromeDebuggerApi(), readBrowserBrands(navigator as Parameters<typeof readBrowserBrands>[0]), {
+    onLost: tabId => toViewer(tabId, { type: "MDV_DEVICE_IDENTITIES", active: false }),
+    onDiagnostics: (tabId, previews) => toViewer(tabId, { type: "MDV_DIAGNOSTICS", previews }),
+  });
+  void debuggerPreviews.prune().catch(console.error);
+  const closePreviews = (tabId: number) => Promise.all([previews.close(tabId), debuggerPreviews.close(tabId)]);
   chrome.tabs.onRemoved.addListener(tabId => { void closePreviews(tabId).catch(console.error); });
   const review = createReviewCoordinator({
     read: async () => {
@@ -254,7 +268,12 @@ export default defineBackground(() => {
 
   // Chrome allows two captureVisibleTab calls per second per extension.
   let lastVisualCapture = 0;
-  async function captureSenderTab(tabId?: number): Promise<Blob> {
+  async function captureSenderTab(tabId?: number, frame?: CaptureFrame): Promise<Blob> {
+    // With the debugger: the window as drawn, whether or not the tab is in front, without the rate limit.
+    if (typeof tabId === "number" && frame && debuggerPreviews.attached(tabId)) {
+      const dataUrl = await debuggerPreviews.capture(tabId, { x: frame.scroll?.x ?? 0, y: frame.scroll?.y ?? 0, width: frame.viewport.width, height: frame.viewport.height, scale: 1 }, false, false).catch(() => null);
+      if (dataUrl) return (await fetch(dataUrl)).blob();
+    }
     const tab = typeof tabId === "number" ? await chrome.tabs.get(tabId).catch(() => undefined) : undefined;
     if (!tab?.active || typeof tab.windowId !== "number") throw new VisualRegressionError("capture");
     const wait = lastVisualCapture + 550 - Date.now();
@@ -295,7 +314,7 @@ export default defineBackground(() => {
     if (message?.type === "MDV_VISUAL_REGRESSION") {
       if (sender.id !== chrome.runtime.id || (sender.frameId ?? 0) !== 0) return;
       // Capture the tab showing the viewer, never a tab the page names.
-      const host = { captureTab: () => captureSenderTab(sender.tab?.id) };
+      const host = { captureTab: (frame?: CaptureFrame) => captureSenderTab(sender.tab?.id, frame) };
       void import("../src/domain/visual-regression/visual-regression-service").then(module => module.handleVisualRegression(message.command, host))
         .then(result => sendResponse({ ok: true, result }))
         .catch(error => sendResponse({ ok: false, code: error instanceof VisualRegressionError ? error.code : "engine" }));
@@ -305,12 +324,41 @@ export default defineBackground(() => {
       const tabId = sender.tab.id;
       const work = (async () => {
         if (message.type === "MDV_PREVIEW_CLOSE") return closePreviews(tabId);
-        await previews.prepare(tabId, message.url, previewIdentitiesFrom(message.identities));
+        const identities = previewIdentitiesFrom(message.identities);
+        await previews.prepare(tabId, message.url);
+        return isPreviewableUrl(sender.tab?.url) && await debuggerPreviews.prepare(tabId, identities);
       })();
-      void work.then(() => sendResponse({ ok: true, headers: message.type === "MDV_PREVIEW_HOST" })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      void work.then(identities => sendResponse({ ok: true, identities: identities === true })).catch(error => sendResponse({ ok: false, error: String(error) }));
       return true;
     }
-    if (message?.type === "MDV_DOWNLOAD" && typeof message.dataUrl === "string" && /^data:image\/(png|jpeg);base64,/.test(message.dataUrl)) {
+    // The viewer's debugger features, answered only for the viewer in the tab's own page.
+    const fromViewer = sender.id === chrome.runtime.id && typeof sender.tab?.id === "number" && sender.frameId === 0;
+    if (fromViewer && message?.type === "MDV_CONDITIONS") {
+      void debuggerPreviews.setConditions(sender.tab!.id!, conditionsFrom(message.conditions))
+        .then(applied => sendResponse({ ok: true, applied })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (fromViewer && message?.type === "MDV_DIAGNOSTICS_GET") {
+      sendResponse({ ok: true, previews: debuggerPreviews.diagnostics(sender.tab!.id!) ?? {} });
+      return false;
+    }
+    if (fromViewer && message?.type === "MDV_CAPTURE_FRAME") {
+      const clip = message.clip as Record<string, unknown> | undefined;
+      const valid = clip && ["x", "y", "width", "height", "scale"].every(key => typeof clip[key] === "number" && Number.isFinite(clip[key] as number))
+        && (clip.width as number) > 0 && (clip.height as number) > 0 && (clip.scale as number) > 0 && (clip.scale as number) <= 16
+        && (clip.width as number) * (clip.height as number) * (clip.scale as number) ** 2 <= 40_000_000;
+      if (!valid) { sendResponse({ ok: false, error: "Invalid capture area." }); return false; }
+      void debuggerPreviews.capture(sender.tab!.id!, clip as { x: number; y: number; width: number; height: number; scale: number }, message.still === true, message.beyond === true)
+        .then(dataUrl => sendResponse({ ok: true, dataUrl })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (fromViewer && message?.type === "MDV_LAYOUT_CAUSE" && typeof message.frameName === "string" && PREVIEW_FRAME_NAME.test(message.frameName)
+      && typeof message.selector === "string" && message.selector.length <= 1000) {
+      void debuggerPreviews.layoutCause(sender.tab!.id!, message.frameName, message.selector)
+        .then(cause => sendResponse({ ok: true, cause })).catch(() => sendResponse({ ok: true, cause: null }));
+      return true;
+    }
+    if (message?.type === "MDV_DOWNLOAD" && typeof message.dataUrl === "string" && /^data:(image\/(png|jpeg)|application\/zip);base64,/.test(message.dataUrl)) {
       const filename = String(message.filename ?? "mobile-view.png").replace(/[^a-zA-Z0-9_.-]/g, "-").slice(0,160);
       void chrome.downloads.download({ url: message.dataUrl, filename, saveAs: true }).then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
       return true;

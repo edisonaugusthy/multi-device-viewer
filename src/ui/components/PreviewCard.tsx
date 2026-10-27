@@ -1,5 +1,6 @@
 import { usePointerDrag } from "../hooks/usePointerDrag";
 import { useVisualRegression } from "../hooks/useVisualRegression";
+import { LanguagePicker, languageName } from "./LanguagePicker";
 import { useStableCallback } from "../hooks/useStableCallback";
 import { DesignOverlay, type DesignOverlayProps, type ScreenBox } from "./DesignOverlay";
 import { readPreviewHealthReport } from "../../domain/device/preview-health";
@@ -7,13 +8,12 @@ import type { GalleryLoadResult } from "../../domain/device/gallery-load-queue";
 import { PreviewSurface } from "./PreviewSurface";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
-import { chromeMajor, deviceIdentity } from "../../domain/simulator/preview-identity";
+import { chromeMajor, slotIdentity } from "../../domain/simulator/preview-identity";
 import { PREVIEW_SANDBOX, previewFrameName } from "../../app/preview-frame";
-import { tagPreviewRequest } from "../../domain/simulator/preview-request";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
-import { AlertIcon, CameraIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
+import { AlertIcon, CameraIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, GlobeIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
 import type { LayoutSlotStatus } from "../hooks/useLayoutCheck";
 import { PreviewToolbar, type FocusNavigation } from "./PreviewToolbar";
 import { memo, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
@@ -129,6 +129,13 @@ interface PreviewCardProps {
   layoutStatus?: LayoutSlotStatus;
   onLayoutCheck?: (slotId: string) => void;
   onLayoutProblems?: (slotId: string) => void;
+  /** Errors and failed requests the debugger saw in this preview; the chip opens them. */
+  problemCount?: number;
+  onProblems?: (slotId: string) => void;
+  /** Opens "What each device sends" for the whole workspace. */
+  onCompareIdentities?: () => void;
+  /** Track changes is on: each reload is compared with the one before. */
+  tracking?: boolean;
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -189,12 +196,17 @@ export const PreviewCard = memo(function PreviewCard({
   layoutStatus,
   onLayoutCheck,
   onLayoutProblems,
+  problemCount = 0,
+  onProblems,
+  onCompareIdentities,
+  tracking = false,
 }: PreviewCardProps) {
   const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
   const [controlsOpen, setControlsOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
   // The toolbar shows while the pointer is on the device itself (or its caption
   // or the toolbar), not anywhere in the column. It lingers briefly after the
   // pointer leaves so it can be reached across the gap above the device.
@@ -227,7 +239,10 @@ export const PreviewCard = memo(function PreviewCard({
       setCaptureScale(factor === null ? null : layoutScaleRef.current * factor);
       requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
     }),
+    tracking,
   });
+  // Track changes starts with the page as it is now.
+  useEffect(() => { if (tracking && bridgeStatusRef.current === "ready") visualChecks.scheduleTrack(); }, [tracking]);
   const sentFlowRunRef = useRef<string | null>(null);
   const pendingReplayStepRef = useRef<number | null>(null);
   // The step a replay continues from when one of its steps opens another page.
@@ -246,30 +261,33 @@ export const PreviewCard = memo(function PreviewCard({
     return () => { healthRequest.current = null; clearTimeout(healthTimer.current); };
   }, [slot.id, slot.url, slot.reloadToken]);
   const frameName = previewFrameName(slot.id, hidesPageScrollbars(device));
-  const identity = deviceIdentity(device, chromeMajor(navigator.userAgent));
-  const identityKey = JSON.stringify([frameName, identity]);
+  const identityWidth = (supportsOrientation(device) ? toLandscapeAwareSize(device.cssViewport, slot.orientation) : device.cssViewport).width;
+  const identity = slotIdentity(device, chromeMajor(navigator.userAgent), { language: slot.language, sendDensity: slot.sendDensity, width: identityWidth });
+  // Rotating changes only the width the device reports; that updates without reloading the page.
+  const identityKey = JSON.stringify([frameName, identity && { ...identity, density: identity.density && { dpr: identity.density.dpr } }]);
   const preparationKey = JSON.stringify([slot.url, slot.reloadToken, identityKey]);
   const identitiesRef = useRef({ [frameName]: identity ?? null });
   identitiesRef.current = { [frameName]: identity ?? null };
-  const [headersReady, setHeadersReady] = useState(false);
+  const reportedWidth = identity?.density?.width;
+  const firstWidth = useRef(true);
+  useEffect(() => {
+    if (firstWidth.current) { firstWidth.current = false; return; }
+    void preparePreview(slot.url, identitiesRef.current).catch(() => undefined);
+  }, [reportedWidth]);
   useEffect(() => {
     let active = true;
     setBlocked(false);
-    // The frame loads only once the tab's rules fit it, so a reload after the
-    // identity changed fetches the page that device gets.
+    // The frame loads only once the tab knows its identity, so a reload after
+    // the identity changed fetches the page that device gets.
     setPreparedKey(null);
-    setHeadersReady(false);
-    void preparePreview(slot.url, identitiesRef.current).then(({ headers }) => {
-      if (!active) return;
-      setPreparedKey(preparationKey);
-      setHeadersReady(headers && Boolean(identity) && "fragmentDirective" in document);
+    void preparePreview(slot.url, identitiesRef.current).then(() => {
+      if (active) setPreparedKey(preparationKey);
     }).catch(() => {
       if (active) { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }
     });
     return () => { active = false; };
   }, [slot.url, slot.reloadToken, slot.id, onLoadStateChange, identityKey]);
   const [blocked, setBlocked] = useState(false);
-  const frameSrc = (url: string) => headersReady ? tagPreviewRequest(url, frameName) : url;
   useEffect(() => {
     const onPolicy = (event: SecurityPolicyViolationEvent) => {
       if (event.effectiveDirective !== "frame-src" && event.effectiveDirective !== "child-src") return;
@@ -588,7 +606,7 @@ export const PreviewCard = memo(function PreviewCard({
         if (!navigation) return;
         const newDocument = typeof data.documentId === "string" && data.documentId !== bridgeDocumentRef.current;
         bridgeDocumentRef.current = data.documentId;
-        if (newDocument) onPageReady?.(slot.id);
+        if (newDocument) { onPageReady?.(slot.id); visualChecks.scheduleTrack(); }
         // READY also covers a bridge injected after the iframe's load event.
         syncScrollBridge(iframeRef.current);
         syncFlowRecordingBridge(iframeRef.current);
@@ -785,7 +803,7 @@ export const PreviewCard = memo(function PreviewCard({
       pendingReplayStepRef.current = 0;
       setBridgeStatus("checking");
       const startUrl = flowReplay.startUrl;
-      void preparePreview(startUrl, identitiesRef.current).then(() => { if (iframeRef.current) iframeRef.current.src = frameSrc(startUrl); }).catch(() => setBlocked(true));
+      void preparePreview(startUrl, identitiesRef.current).then(() => { if (iframeRef.current) iframeRef.current.src = startUrl; }).catch(() => setBlocked(true));
       return;
     }
     sendFlowReplay(startIndex ?? 0);
@@ -938,7 +956,23 @@ export const PreviewCard = memo(function PreviewCard({
             compareBeforeLabel={t("visualCompareButton")}
             onLayoutProblems={onLayoutProblems && layoutStatus?.status === "done" && layoutStatus.count > 0 ? () => onLayoutProblems(slot.id) : undefined}
             layoutProblemCount={layoutStatus?.count}
-            onMenu={() => setControlsOpen(value => !value)}
+            onMenu={() => { setLanguageOpen(false); setControlsOpen(value => !value); }}
+            onLanguage={identity && onCompareIdentities ? () => { setControlsOpen(false); setLanguageOpen(value => !value); } : undefined}
+            languageCode={slot.language?.split("-")[0].toUpperCase()}
+            languageLabel={t("languageButton", { language: slot.language ? languageName(slot.language) : t("languageBrowserDefault") })}
+            languageOpen={languageOpen}
+            languagePicker={
+              <LanguagePicker
+                deviceName={shortName(device.name)}
+                language={slot.language}
+                sendDensity={slot.sendDensity !== false}
+                density={identity?.density?.dpr ?? (device.pixelRatio >= 0.5 && device.pixelRatio <= 5 ? Math.round(device.pixelRatio * 1000) / 1000 : undefined)}
+                onLanguage={language => { simulator.current.setSlotLocale(slot.id, { language }); setLanguageOpen(false); }}
+                onDensity={sendDensity => simulator.current.setSlotLocale(slot.id, { sendDensity })}
+                onCompare={() => { setLanguageOpen(false); onCompareIdentities?.(); }}
+                onClose={() => setLanguageOpen(false)}
+              />
+            }
             onRemove={() => simulator.current.removeSlot(slot.id)}
             menu={
               <div data-viewport-actions
@@ -978,6 +1012,26 @@ export const PreviewCard = memo(function PreviewCard({
             <span dir="ltr" className="shrink-0 font-mono text-xs font-medium text-muted">{viewportLabel}</span>
             {layoutStatus && <LayoutChip status={layoutStatus} />}
           </button>
+          {slot.language && identity && onCompareIdentities && (
+            <button type="button" data-language-chip onClick={() => { setControlsOpen(false); setLanguageOpen(true); }} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
+              aria-label={t("languageButton", { language: languageName(slot.language) })}
+              className="inline-flex h-[22px] max-w-[45%] shrink items-center gap-1 whitespace-nowrap rounded-full bg-accent-soft pe-2 ps-1.5 text-[11px] font-semibold text-accent-strong outline-none focus-visible:ring-2 focus-visible:ring-accent">
+              <GlobeIcon size={11} /><span lang={slot.language} className="truncate">{languageName(slot.language)}</span>
+            </button>
+          )}
+          {tracking && visualChecks.tracked && (
+            <button type="button" data-track-chip={visualChecks.tracked.count} onClick={visualChecks.showTracked} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
+              className={`inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full pe-2 ps-1.5 text-[11px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent ${visualChecks.tracked.count ? "bg-amber-500/15 text-warn hover:bg-amber-500/20" : "bg-sunken text-muted hover:text-ink-2"}`}>
+              <span aria-hidden="true" className={`size-1.5 rounded-full ${visualChecks.tracked.count ? "bg-amber-500" : "bg-accent"}`} />
+              {visualChecks.tracked.count === 0 ? t("trackWatching") : visualChecks.tracked.count === 1 ? t("trackChangesOne") : t("trackChangesMany", { count: visualChecks.tracked.count })}
+            </button>
+          )}
+          {problemCount > 0 && onProblems && (
+            <button type="button" data-problems-chip onClick={() => onProblems(slot.id)} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
+              className="inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-red-500/10 pe-2 ps-1.5 text-[11px] font-semibold text-danger outline-none hover:bg-red-500/15 focus-visible:ring-2 focus-visible:ring-accent">
+              <AlertIcon size={10} strokeWidth={3} />{problemCount === 1 ? t("problemsOne") : t("problemsMany", { count: problemCount })}
+            </button>
+          )}
         </div>
       )}
       {visualChecks.dialog}
@@ -1020,7 +1074,7 @@ export const PreviewCard = memo(function PreviewCard({
               key={`${slot.id}-${slot.reloadToken}`}
               name={frameName}
               title={t("devicePreview", { name: device.name })}
-              src={preparedKey === preparationKey ? frameSrc(slot.url) : "about:blank"}
+              src={preparedKey === preparationKey ? slot.url : "about:blank"}
               loading="eager"
               className={`block size-full overflow-auto border-0 ${display.darkMode ? "bg-[#0f172a] [color-scheme:dark]" : "bg-white [color-scheme:light]"} ${hidesPageScrollbars(device) ? "[scrollbar-width:none]" : ""}`}
               // Match the page at fractional raster edges, including the clear

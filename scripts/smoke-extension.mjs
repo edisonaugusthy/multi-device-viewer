@@ -1,7 +1,9 @@
 // npm run build && npm run test:extension
-// Real Chrome extension test: one existing login, three direct frames, per-device
-// document/API headers and an honest partial-coverage disclosure. CDP below is
-// only test automation for the viewer's closed shadow root, never extension code.
+// Real Chrome extension test: one existing login, three direct frames, each its
+// own device through the extension's debugger: headers on documents, APIs,
+// assets, workers, nested and cross-site frames, and navigator in the page's
+// scripts, while the website's pages run unmodified. CDP below is test
+// automation for the viewer's closed shadow root, never extension code.
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { mkdtemp, readFile, rm, mkdir } from "node:fs/promises";
@@ -12,19 +14,25 @@ import { chromium } from "@playwright/test";
 
 const extension = fileURLToPath(new URL("../.output/chrome-mv3", import.meta.url));
 const manifest = JSON.parse(await readFile(join(extension, "manifest.json"), "utf8"));
-assert(![...manifest.permissions ?? [], ...manifest.optional_permissions ?? []].includes("debugger"));
+assert(manifest.permissions.includes("debugger") && !manifest.optional_permissions?.includes("debugger"), "debugger is a required permission");
 const requests = [];
 let apiOrigin;
+let tracked = 0;
 const handler = async (req, res) => {
   const body = await Array.fromAsync(req).then(chunks => Buffer.concat(chunks).toString());
   const path = new URL(req.url, "http://localhost").pathname;
-  const seen = { url: req.url, method: req.method, body, contentType: req.headers["content-type"], ua: req.headers["user-agent"], cookie: req.headers.cookie ?? "", dest: req.headers["sec-fetch-dest"], custom: req.headers["x-probe"], mobile: req.headers["sec-ch-ua-mobile"], platform: req.headers["sec-ch-ua-platform"] };
+  const seen = { url: req.url, method: req.method, body, contentType: req.headers["content-type"], ua: req.headers["user-agent"], cookie: req.headers.cookie ?? "", dest: req.headers["sec-fetch-dest"], custom: req.headers["x-probe"], mobile: req.headers["sec-ch-ua-mobile"], platform: req.headers["sec-ch-ua-platform"], model: req.headers["sec-ch-ua-model"], formFactors: req.headers["sec-ch-ua-form-factors"], language: req.headers["accept-language"], dpr: req.headers["sec-ch-dpr"] };
   requests.push(seen);
   const headers = { "cache-control": "no-store" };
   if (req.headers.origin) Object.assign(headers, { "access-control-allow-origin": req.headers.origin, "access-control-allow-credentials": "true", "access-control-allow-headers": "x-probe,content-type", "access-control-allow-methods": "GET,POST,OPTIONS" });
   if (req.method === "OPTIONS") { res.writeHead(204, headers); res.end(); return; }
   if (path.startsWith("/api")) { res.writeHead(200, { ...headers, "content-type": "application/json" }); res.end(JSON.stringify(seen)); return; }
   if (path === "/redirect" || path === "/redirect-hash") { res.writeHead(302, { ...headers, location: path === "/redirect" ? "/landed" : "/landed#/server-route" }); res.end(); return; }
+  if (path === "/missing-api") { res.writeHead(404, { ...headers, "content-type": "application/json" }); res.end('{"error":"not here"}'); return; }
+  if (path === "/problems") { res.writeHead(200, { ...headers, "content-type": "text/html" }); res.end('<!doctype html><title>Problems</title><h1>Problems</h1><script>fetch("/missing-api");setTimeout(()=>{throw new TypeError("smoke boom")},50);</script>'); return; }
+  if (path === "/wide") { res.writeHead(200, { ...headers, "content-type": "text/html" }); res.end('<!doctype html><title>Wide</title><style>body{margin:0}.wide{width:900px;height:40px;background:#c33}.tall{height:2400px}</style><div class="wide"></div><div class="tall"></div>'); return; }
+  if (path === "/tracked") { tracked++; res.writeHead(200, { ...headers, "content-type": "text/html" }); res.end(`<!doctype html><title>Tracked</title><style>body{margin:0;font-family:sans-serif}h1{font-size:${tracked % 2 ? 44 : 36}px;margin:20px}</style><h1 class="hero">Tracked page</h1><p>Body text</p>`); return; }
+  if (path === "/nested") { res.writeHead(200, { ...headers, "content-type": "text/html" }); res.end('<!doctype html><title>Nested</title><img src="/asset.svg?nested">'); return; }
   if (path === "/asset.svg") { res.writeHead(200, { ...headers, "content-type": "image/svg+xml" }); res.end('<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"/>'); return; }
   if (path === "/worker.js") { res.writeHead(200, { ...headers, "content-type": "text/javascript" }); res.end('fetch("/api-worker").then(r=>r.json()).then(r=>postMessage(r));'); return; }
   if (path === "/seed") headers["set-cookie"] = ["mdvStrict=logged-in; HttpOnly; SameSite=Strict; Path=/", "mdvLax=logged-in; HttpOnly; SameSite=Lax; Path=/", "mdvNone=logged-in; HttpOnly; SameSite=None; Secure; Path=/", "mdvPartitioned=logged-in; HttpOnly; SameSite=None; Secure; Partitioned; Path=/"];
@@ -51,7 +59,8 @@ const profile = await mkdtemp(join(tmpdir(), "mdv-smoke-"));
 let context;
 try {
   context = await chromium.launchPersistentContext(profile, {
-    channel: "chromium", headless: true, viewport: { width: 1440, height: 1000 },
+    // A 2× window, like most laptops: captures must still come out at each device's own pixel ratio.
+    channel: "chromium", headless: true, viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 2,
     args: [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`],
   });
   const worker = context.serviceWorkers()[0] ?? await context.waitForEvent("serviceworker");
@@ -83,12 +92,23 @@ try {
     const frame = frameFor(id);
     assert.equal(frame.parentFrame(), page.mainFrame(), "direct frame shares top-level site context");
     await frame.waitForFunction(() => window.fetchProbe && window.xhrProbe);
-    const result = await frame.evaluate(async () => ({ document: window.documentProbe, fetch: window.fetchProbe, xhr: window.xhrProbe, cross: await window.crossProbe, storage: window.storageProbe, ua: navigator.userAgent }));
+    const result = await frame.evaluate(async () => ({
+      document: window.documentProbe, fetch: window.fetchProbe, xhr: window.xhrProbe, cross: await window.crossProbe, storage: window.storageProbe,
+      ua: navigator.userAgent, platform: navigator.platform, touch: navigator.maxTouchPoints, hasUaData: "userAgentData" in navigator,
+      uaData: navigator.userAgentData && { mobile: navigator.userAgentData.mobile, platform: navigator.userAgentData.platform, ...await navigator.userAgentData.getHighEntropyValues(["model", "formFactors"]) },
+    }));
     for (const kind of ["document", "fetch", "xhr", "cross"]) { assert.match(result[kind].ua, pattern, `${id} ${kind} UA`); checkLogin(result[kind]); }
     assert.deepEqual(result.storage, { local: "logged-in", session: "logged-in", hash: "" });
-    assert.equal(result.ua, browserAgent, "JS identity remains honest Chrome");
-    if (id === "pixel") { assert.equal(result.fetch.mobile, "?1"); assert.equal(result.fetch.platform, '"Android"'); }
-    else { assert.equal(result.fetch.mobile, undefined); assert.equal(result.fetch.platform, undefined); }
+    assert.match(result.ua, pattern, `${id} scripts see the device`);
+    if (id === "pixel") {
+      for (const kind of ["document", "fetch"]) { assert.equal(result[kind].mobile, "?1"); assert.equal(result[kind].platform, '"Android"'); assert.equal(result[kind].model, '"Pixel 8"'); assert.equal(result[kind].formFactors, '"Mobile"'); }
+      assert.deepEqual(result.uaData, { mobile: true, platform: "Android", brands: result.uaData.brands, model: "Pixel 8", formFactors: ["Mobile"] });
+      assert.equal(result.platform, "Linux armv81"); assert.equal(result.touch, 5);
+    } else {
+      assert.equal(result.fetch.mobile, undefined); assert.equal(result.fetch.platform, undefined); assert.equal(result.fetch.model, undefined);
+      assert.equal(result.hasUaData, false, `${id} is Safari, without userAgentData`);
+      assert.deepEqual([result.platform, result.touch], id === "phone" ? ["iPhone", 5] : ["MacIntel", 0]);
+    }
     const post = await frame.evaluate(async () => {
       return await (await fetch("/api-post", { method: "POST", body: "preserve body", headers: { "x-probe": "retained" }, credentials: "include" })).json();
     });
@@ -117,6 +137,7 @@ try {
 
   }
   assert.equal((await page.evaluate(() => window.fetchProbe)).ua, browserAgent, "top-level API identity unchanged");
+  assert.equal(await page.evaluate(() => navigator.userAgent), browserAgent, "the page's own scripts keep the browser's identity");
 
   // Device previews no longer render the extra header-coverage disclosure.
   const cdp = await context.newCDPSession(page);
@@ -146,7 +167,7 @@ try {
   const checkPhone = async (documentTagged = true) => {
     const result = await phone.evaluate(() => ({ document: window.documentProbe, fetch: window.fetchProbe, xhr: window.xhrProbe, hash: location.hash }));
     checkLogin(result.document); checkLogin(result.fetch);
-    assert.match(result.fetch.ua, /iPhone/); assert.match(result.xhr.ua, /iPhone/);
+    assert.match(result.fetch.ua, /iPhone/); assert.match(result.xhr.ua, /iPhone/); assert.match(await phone.evaluate(() => navigator.userAgent), /iPhone/);
     assert(documentTagged ? /iPhone/.test(result.document.ua) : result.document.ua === browserAgent, "document header coverage");
     return result;
   };
@@ -160,7 +181,7 @@ try {
   assert.equal(formPost.method, "POST"); assert.equal(formPost.body, "payload=keep+me&save=yes");
   assert.equal(requests.filter(r => r.url === "/form-post").length, 1, "POST never replayed");
   await visit(() => phone.evaluate(() => document.querySelector("#redirect").click())); await checkPhone();
-  await visit(() => phone.evaluate(() => document.querySelector("#redirect-hash").click())); await checkPhone(false);
+  await visit(() => phone.evaluate(() => document.querySelector("#redirect-hash").click())); await checkPhone();
   await visit(() => phone.evaluate(() => { location.href = "/script-navigation"; })); await checkPhone();
   assert.equal(requests.filter(r => r.url === "/script-navigation").length, 1, "script navigation never replayed");
   await visit(() => phone.evaluate(() => location.assign("/script-assign#/route"))); assert.equal((await checkPhone()).hash, "#/route");
@@ -207,7 +228,7 @@ try {
   const requestPost = await phone.evaluate(async () => await (await fetch(new Request("/api-request-post", { method: "POST", body: "native Request body" }))).json());
   assert.match(requestPost.ua, /iPhone/); assert.equal(requestPost.body, "native Request body");
   const foreignPost = await phone.evaluate(async () => await (await fetch(new parent.Request(new URL("/api-foreign", location.href), { method: "POST", body: "foreign body" }))).json());
-  assert.equal(foreignPost.ua, browserAgent); assert.equal(foreignPost.body, "foreign body");
+  assert.match(foreignPost.ua, /iPhone/, "foreign Requests get device headers"); assert.equal(foreignPost.body, "foreign body");
   await assertNoCoverageLabels();
   const abort = await phone.evaluate(async () => { const controller = new AbortController(); controller.abort(); try { await fetch("/api-aborted", { signal: controller.signal }); return "sent"; } catch (error) { return error.name; } });
   assert.equal(abort, "AbortError"); assert(!requests.some(r => r.url === "/api-aborted"));
@@ -234,10 +255,182 @@ try {
   await phone.evaluate(() => localStorage.setItem("mdv-shared-update", "fresh"));
   assert.equal(await frameFor("pixel").evaluate(() => localStorage.getItem("mdv-shared-update")), "fresh");
   const workerResult = await phone.evaluate(() => new Promise(resolve => { const worker = new Worker("/worker.js"); worker.onmessage = event => { resolve(event.data); worker.terminate(); }; }));
-  assert.equal(workerResult.ua, browserAgent, "worker traffic is explicitly uncovered");
-  assert(requests.filter(r => r.url === "/asset.svg").every(r => r.ua === browserAgent), "native assets remain uncovered");
+  assert.match(workerResult.ua, /iPhone/, "dedicated worker traffic gets device headers");
+  assert.equal(await phone.evaluate(() => window.fetch.toString().includes("[native code]") && XMLHttpRequest.prototype.open.toString().includes("[native code]") && window.Request.toString().includes("[native code]") && history.pushState.toString().includes("[native code]")), true, "the website's fetch, XHR, Request and history stay native");
+  const assets = requests.filter(r => r.url === "/asset.svg");
+  assert.equal(assets[0].ua, browserAgent, "the page's own assets keep the browser's identity");
+  for (const [id, , pattern] of devices) assert(assets.some(r => pattern.test(r.ua)), `${id} assets get device headers`);
+  const nestedFrom = requests.length;
+  await phone.evaluate(() => new Promise(resolve => { const frame = document.createElement("iframe"); frame.src = "/nested"; frame.onload = resolve; document.body.append(frame); }));
+  for (let i = 0; i < 50 && !requests.slice(nestedFrom).some(r => r.url === "/asset.svg?nested"); i++) await page.waitForTimeout(100);
+  const nested = requests.slice(nestedFrom).filter(r => r.url === "/nested" || r.url === "/asset.svg?nested");
+  assert.equal(nested.length, 2); for (const r of nested) { assert.match(r.ua, /iPhone/, `nested frame ${r.url}`); checkLogin(r); }
   await phone.evaluate(async () => await fetch(new Request("/api-request-post", { method: "POST", body: "native fallback" })));
   await assertNoCoverageLabels();
+  // Problems: the debugger reports this preview's script error and failed request to the viewer.
+  const viewerNodes = async (predicate) => {
+    const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
+    const found = [];
+    const walk = node => { if (predicate(node)) found.push(node); for (const child of [...node.children ?? [], ...node.shadowRoots ?? [], ...(node.contentDocument ? [node.contentDocument] : [])]) walk(child); };
+    walk(root);
+    return found;
+  };
+  const attr = (node, name) => { const a = node.attributes ?? []; const i = a.indexOf(name); return i >= 0 ? a[i + 1] : undefined; };
+  const textOf = async node => (await cdp.send("Runtime.callFunctionOn", { objectId: (await cdp.send("DOM.resolveNode", { backendNodeId: node.backendNodeId })).object.objectId, functionDeclaration: "function () { return this.textContent; }", returnByValue: true })).result.value;
+  const clickNode = async node => cdp.send("Runtime.callFunctionOn", { objectId: (await cdp.send("DOM.resolveNode", { backendNodeId: node.backendNodeId })).object.objectId, functionDeclaration: "function () { this.click(); }" });
+  await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/problems"))]);
+  let chips = [];
+  for (let i = 0; i < 50 && chips.length === 0; i++) { await page.waitForTimeout(100); chips = await viewerNodes(node => attr(node, "data-problems-chip") !== undefined); }
+  assert.equal(chips.length, 1, "only the phone shows a problems chip");
+  // The error and the failed request can arrive one after the other.
+  for (let i = 0; i < 30 && !/2 problems/.test(await textOf(chips[0])); i++) await page.waitForTimeout(100);
+  assert.match(await textOf(chips[0]), /2 problems/);
+  await clickNode(chips[0]);
+  let panelText = "";
+  for (let i = 0; i < 30 && !panelText.includes("smoke boom"); i++) { await page.waitForTimeout(100); const [panel] = await viewerNodes(node => attr(node, "data-problems-panel") !== undefined); panelText = panel ? await textOf(panel) : ""; }
+  assert.match(panelText, /TypeError: smoke boom/, "script error listed");
+  assert.match(panelText, /GET \/missing-api/, "failed request listed");
+  assert.match(panelText, /404/);
+  const [toggle] = await viewerNodes(node => attr(node, "data-problems-toggle") !== undefined);
+  await clickNode(toggle);
+  await visit(() => phone.evaluate(() => location.assign("/")));
+  for (let i = 0; i < 30 && (await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length; i++) await page.waitForTimeout(100);
+  assert.equal((await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length, 0, "a new page starts without problems");
+  // Conditions: the page inside a preview sees the emulated color scheme and time zone; the header's × turns them off.
+  const one = async (name, value) => { const [node] = await viewerNodes(n => attr(n, name) !== undefined && (value === undefined || attr(n, name) === value)); assert(node, `${name} ${value ?? ""}`); return node; };
+  await clickNode(await one("data-conditions-toggle"));
+  await clickNode(await one("data-preset", "dark"));
+  const zone = await one("data-timezone");
+  await cdp.send("Runtime.callFunctionOn", { objectId: (await cdp.send("DOM.resolveNode", { backendNodeId: zone.backendNodeId })).object.objectId,
+    functionDeclaration: "function () { Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(this, 'Asia/Tokyo'); this.dispatchEvent(new Event('change', { bubbles: true })); }" });
+  const seen = () => phone.evaluate(() => ({ dark: matchMedia("(prefers-color-scheme: dark)").matches, zone: Intl.DateTimeFormat().resolvedOptions().timeZone }));
+  let conditionsSeen;
+  for (let i = 0; i < 30; i++) { conditionsSeen = await seen(); if (conditionsSeen.dark && conditionsSeen.zone === "Asia/Tokyo") break; await page.waitForTimeout(100); }
+  assert.deepEqual(conditionsSeen, { dark: true, zone: "Asia/Tokyo" }, "preview sees the conditions");
+  await clickNode(await one("data-conditions-off"));
+  for (let i = 0; i < 30; i++) { conditionsSeen = await seen(); if (!conditionsSeen.dark && conditionsSeen.zone !== "Asia/Tokyo") break; await page.waitForTimeout(100); }
+  assert.equal(conditionsSeen.dark, false, "× turns the color scheme off");
+  assert.notEqual(conditionsSeen.zone, "Asia/Tokyo", "× turns the time zone off");
+  // Language: one device asks for German and states its screen density; its scripts read the language too.
+  const inSlot = async (slotId, name, text) => {
+    const { root } = await cdp.send("DOM.getDocument", { depth: -1, pierce: true });
+    const found = [];
+    const walk = (node, inside) => {
+      const here = inside || attr(node, "data-preview-slot-id") === slotId;
+      if (here && attr(node, name) !== undefined) found.push(node);
+      for (const child of [...node.children ?? [], ...node.shadowRoots ?? []]) walk(child, here);
+    };
+    walk(root, false);
+    if (text === undefined) return found[0];
+    for (const node of found) if ((await textOf(node)).includes(text)) return node;
+    return undefined;
+  };
+  const radio = async (text) => {
+    const nodes = await viewerNodes(node => node.nodeName === "BUTTON" && attr(node, "role") === "radio");
+    for (const node of nodes) if ((await textOf(node)).includes(text)) return node;
+  };
+  await clickNode(await inSlot("phone", "data-language-toggle"));
+  await Promise.all([phone.waitForNavigation(), clickNode(await radio("Deutsch"))]);
+  await phone.waitForFunction(() => window.fetchProbe && window.xhrProbe);
+  const german = await phone.evaluate(() => ({ document: window.documentProbe, fetch: window.fetchProbe, language: navigator.language, languages: navigator.languages }));
+  assert.equal(german.document.language, "de-DE,de;q=0.9", "document asks for German");
+  assert.equal(german.fetch.language, "de-DE,de;q=0.9", "fetch asks for German");
+  assert.equal(german.document.dpr, "3", "screen density sent");
+  assert.deepEqual([german.language, german.languages], ["de-DE", ["de-DE", "de"]]);
+  assert.notEqual((await frameFor("pixel").evaluate(() => window.fetchProbe)).language, "de-DE,de;q=0.9", "other devices keep their language");
+  await clickNode(await inSlot("phone", "data-language-chip"));
+  await clickNode(await one("data-compare-identities"));
+  let identityText = "";
+  for (let i = 0; i < 20 && !identityText; i++) { await page.waitForTimeout(100); const [table] = await viewerNodes(node => attr(node, "data-identity-table") !== undefined); identityText = table ? await textOf(table) : ""; }
+  assert.match(identityText, /Safari \d+/); assert.match(identityText, /de-DE/); assert.match(identityText, /Pixel 8/);
+  await page.keyboard.press("Escape");
+  await clickNode(await inSlot("phone", "data-language-toggle"));
+  await Promise.all([phone.waitForNavigation(), clickNode(await radio("Browser"))]);
+  await phone.waitForFunction(() => window.fetchProbe && window.xhrProbe);
+  assert.notEqual((await phone.evaluate(() => window.documentProbe)).language, "de-DE,de;q=0.9", "back to the browser's language");
+  // Download size: each preview's downloaded bytes and request count.
+  await clickNode(await one("data-problems-toggle"));
+  const [sizeTab] = await Promise.all([(async () => { for (const node of await viewerNodes(n => attr(n, "role") === "tab")) if ((await textOf(node)).includes("Download size")) return node; })()]);
+  assert(sizeTab, "Download size tab");
+  await clickNode(sizeTab);
+  let sizeText = "";
+  for (let i = 0; i < 20 && !/downloaded/.test(sizeText); i++) { await page.waitForTimeout(100); const [panel] = await viewerNodes(node => attr(node, "data-problems-panel") !== undefined); sizeText = panel ? await textOf(panel) : ""; }
+  assert.match(sizeText, /[\d.,]+\s?(B|KB|MB) downloaded · \d+ requests?/, "download size per device");
+  await clickNode(await one("data-problems-toggle"));
+  // Layout check: the CSS rule behind the overflow, with its file and line, goes into the fix prompt.
+  await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/wide"))]);
+  await clickNode(await one("data-layout-check-toggle"));
+  let causeText = "";
+  for (let i = 0; i < 80 && !causeText; i++) { await page.waitForTimeout(100); const [cause] = await viewerNodes(node => attr(node, "data-layout-cause") !== undefined); causeText = cause ? await textOf(cause) : ""; }
+  assert.match(causeText, /Caused by/); assert.match(causeText, /\.wide \{ width: 900px; \}/, "the rule that sets the width");
+  await mkdir("output/playwright", { recursive: true });
+  await page.screenshot({ path: "output/playwright/layout-cause.png" });
+  await clickNode(await one("data-layout-fix"));
+  let previewButton;
+  for (let i = 0; i < 20 && !previewButton; i++) { await page.waitForTimeout(100); for (const node of await viewerNodes(n => n.nodeName === "BUTTON" && attr(n, "aria-expanded") === "false")) if ((await textOf(node)).trim() === "Preview") previewButton = node; }
+  assert(previewButton, "fix prompt preview");
+  await clickNode(previewButton);
+  let promptText = "";
+  for (let i = 0; i < 20 && !promptText.includes("Caused by"); i++) { await page.waitForTimeout(100); const [pre] = await viewerNodes(node => node.nodeName === "PRE"); promptText = pre ? await textOf(pre) : ""; }
+  assert.match(promptText, /Caused by \.wide \{ width: 900px; \}/, "fix prompt names the rule");
+  await page.keyboard.press("Escape");
+  await clickNode(await one("data-layout-check-toggle"));
+  // Captures: drawn at the device's pixel ratio through the debugger, the whole page stitched, every device zipped.
+  await worker.evaluate(() => { globalThis.smokeDownloads = []; chrome.downloads.download = async options => { globalThis.smokeDownloads.push(options); return 1; }; });
+  const nextDownload = async () => {
+    for (let i = 0; i < 150; i++) { const [item] = await worker.evaluate(() => globalThis.smokeDownloads.splice(0)); if (item) return item; await page.waitForTimeout(100); }
+    throw new Error("no download");
+  };
+  const pngSize = url => { const bytes = Buffer.from(url.split(",")[1], "base64"); return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) }; };
+  const phoneSize = await phone.evaluate(() => ({ width: innerWidth, height: innerHeight, page: document.documentElement.scrollHeight }));
+  await clickNode(await one("data-capture-toggle"));
+  await page.waitForTimeout(150);
+  await page.screenshot({ path: "output/playwright/capture-menu.png" });
+  await clickNode(await one("data-capture-visible"));
+  const visible = await nextDownload();
+  assert.match(visible.url, /^data:image\/png;base64,/); assert.match(visible.filename, /\.png$/);
+  const visibleSize = pngSize(visible.url);
+  assert(Math.abs(visibleSize.width - phoneSize.width * 3) <= 3 && Math.abs(visibleSize.height - phoneSize.height * 3) <= 3, `visible part at 3×: ${JSON.stringify(visibleSize)} for ${JSON.stringify(phoneSize)}`);
+  await clickNode(await one("data-capture-toggle"));
+  await clickNode(await one("data-capture-page"));
+  const whole = pngSize((await nextDownload()).url);
+  assert(Math.abs(whole.width - phoneSize.width * 3) <= 3 && Math.abs(whole.height - phoneSize.page * 3) <= 3, `whole page at 3×: ${JSON.stringify(whole)} for ${JSON.stringify(phoneSize)}`);
+  assert.equal(await phone.evaluate(() => scrollY), 0, "the page is scrolled back after a whole-page capture");
+  await clickNode(await one("data-capture-toggle"));
+  await clickNode(await one("data-capture-all"));
+  const zip = await nextDownload();
+  assert.match(zip.url, /^data:application\/zip;base64,/); assert.match(zip.filename, /\.zip$/);
+  const zipBytes = Buffer.from(zip.url.split(",")[1], "base64");
+  const zipNames = []; for (let at = zipBytes.readUInt32LE(zipBytes.length - 22 + 16); zipBytes.readUInt32LE(at) === 0x02014b50; at += 46 + zipBytes.readUInt16LE(at + 28) + zipBytes.readUInt16LE(at + 30) + zipBytes.readUInt16LE(at + 32)) zipNames.push(zipBytes.toString("utf8", at + 46, at + 46 + zipBytes.readUInt16LE(at + 28)));
+  assert.equal(zipBytes.readUInt16LE(zipBytes.length - 22 + 10), 3, `one picture per device in the zip: ${zipNames.join(", ")}`);
+  // Track changes: the first load is watched, a reload that changes the page lists the change in CSS terms.
+  await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/tracked"))]);
+  await clickNode(await one("data-track-toggle"));
+  const trackChip = async (want) => { for (let i = 0; i < 100; i++) { const node = await inSlot("phone", "data-track-chip"); if (node && want(attr(node, "data-track-chip"))) return node; await page.waitForTimeout(100); } throw new Error("track chip"); };
+  await trackChip(value => value === "0");
+  await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.reload())]);
+  const changed = await trackChip(value => Number(value) > 0);
+  assert.match(await textOf(changed), /changes?/);
+  await page.screenshot({ path: "output/playwright/track-chips.png" });
+  await clickNode(changed);
+  let changesText = "";
+  for (let i = 0; i < 20 && !changesText; i++) { await page.waitForTimeout(100); const [list] = await viewerNodes(node => attr(node, "data-track-changes") !== undefined); changesText = list ? await textOf(list) : ""; }
+  assert.match(changesText, /h1\.hero/); assert.match(changesText, /Font size 44 → 36 px/, "the change in CSS terms");
+  await page.screenshot({ path: "output/playwright/what-changed.png" });
+  await clickNode(await one("data-track-pin"));
+  await page.keyboard.press("Escape");
+  await clickNode(await one("data-track-toggle"));
+  // Another site runs in its own process; the extension reaches it through a child session.
+  const crossSite = apiOrigin.replace("127.0.0.1", "localhost");
+  const crossFrom = requests.length;
+  await phone.evaluate(url => location.assign(url + "/cross-site"), crossSite);
+  for (let i = 0; i < 100 && !(["/asset.svg", "/api-xhr"].every(url => requests.slice(crossFrom).some(r => r.url === url))); i++) await page.waitForTimeout(100);
+  assert((await cdp.send("Target.getTargets")).targetInfos.some(t => t.type === "iframe" && t.url.startsWith(crossSite)), "cross-site preview runs in its own process");
+  const crossRequests = requests.slice(crossFrom).filter(r => ["/cross-site", "/asset.svg", "/api-fetch", "/api-xhr"].includes(r.url));
+  assert.equal(crossRequests.length, 4, "cross-site preview loaded");
+  for (const r of crossRequests) assert.match(r.ua, /iPhone/, `cross-site ${r.url}`);
+  const crossFrame = previews().find(frame => frame.url().startsWith(crossSite));
+  assert.match(await crossFrame.evaluate(() => navigator.userAgent), /iPhone/, "cross-site scripts see the device");
   await mkdir("output/playwright", { recursive: true });
   await page.screenshot({ path: "output/playwright/shared-session-headers.png" });
 
@@ -250,8 +443,8 @@ try {
   await simulator.goto(`${extensionOrigin}/simulator.html?url=${encodeURIComponent(pageUrl)}`);
   await simulator.locator("[data-preview-slot-id]").first().waitFor();
   assert.equal(await simulator.locator("[data-header-coverage]").count(), 0);
-  assert.deepEqual(errors, []);
-  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers, Request bodies/clones/multipart/credentials, script navigation, SPA/cancellation, links, forms, history/reloads, redirects, uncovered foreign Requests/assets/workers, no coverage labels, cleanup, standalone fallback; no debugger permission.");
+  assert.deepEqual(errors.filter(message => message !== "smoke boom"), [], "no page errors besides the one thrown on purpose");
+  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers, Request bodies/clones/multipart/credentials, script navigation, SPA/cancellation, links, forms, history/reloads, redirects, foreign Requests, assets, workers, nested and cross-site frames, full client hints and navigator per device through the debugger, problems, download size, conditions, per-device language, layout cause, captures at device pixel ratio (visible, whole page, .zip), track changes, native page APIs, no coverage labels, cleanup, standalone fallback.");
 } finally {
   await context?.close();
   await Promise.all([new Promise(resolve => server.close(resolve)), new Promise(resolve => apiServer.close(resolve))]);

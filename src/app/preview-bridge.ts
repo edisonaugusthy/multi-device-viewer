@@ -1,3 +1,4 @@
+import { snapshotLayout } from "../domain/capture/layout-snapshot";
 import { hasVerificationChallenge } from "../domain/flow/challenge-detection";
 import { getKeyboardScrollDelta, shouldKeepKeyboardSessionOnBlur } from "../domain/device/mobile-keyboard";
 import { samplePageSurfaces } from "../domain/device/page-surfaces";
@@ -6,6 +7,25 @@ import { clearLayoutMarks, measureLayout, renderLayoutMarks, scrollToLayoutMark,
 import type { LayoutMark } from "../domain/layout-check/layout-check.types";
 
 export function setupPreviewBridge() {
+  // Bars and buttons fixed to the screen would repeat in every tile of a whole-page capture.
+  const hiddenFixed = new Map<HTMLElement, string>();
+  const setFixedHidden = (hidden: boolean) => {
+    if (!hidden) {
+      for (const [element, previous] of hiddenFixed) element.style.visibility = previous;
+      hiddenFixed.clear();
+      return;
+    }
+    const all = document.body?.querySelectorAll<HTMLElement>("*") ?? [];
+    for (let i = 0; i < all.length && i < 8000; i++) {
+      const element = all[i];
+      const position = getComputedStyle(element).position;
+      if ((position === "fixed" || position === "sticky") && !hiddenFixed.has(element)) {
+        hiddenFixed.set(element, element.style.visibility);
+        element.style.visibility = "hidden";
+      }
+    }
+  };
+
   if (window.parent === window) return;
   const bridgeWindow = window as Window & { __MDV_PREVIEW_BRIDGE_READY?: boolean };
   if (bridgeWindow.__MDV_PREVIEW_BRIDGE_READY) return;
@@ -20,6 +40,7 @@ export function setupPreviewBridge() {
   const scrollPositions = new WeakMap<Element, { left: number; top: number }>();
   const remotePositions = new WeakMap<Element, { left: number; top: number; actualLeft: number; actualTop: number }>();
   let scrollSyncEnabled = false;
+  let captureScrollQuietUntil = 0;
   let scrollActivity = new WeakSet<Element>();
   let flowRecordingEnabled = false;
   let applyingRemoteInteraction = false;
@@ -678,6 +699,8 @@ export function setupPreviewBridge() {
   function emitScrollSync(target = root(), snapshot = false, targetSlotId?: string) {
     const payload = scrollPayload(target, snapshot);
     rememberScroll(target);
+    // A whole-page capture scrolls this preview only.
+    if (Date.now() < captureScrollQuietUntil) return;
     // The parent owns the toggle. Reporting movement even while disabled
     // avoids losing the first scroll before its enable message reaches us.
     if (!slotId) return;
@@ -949,6 +972,33 @@ export function setupPreviewBridge() {
       requestAnimationFrame(() => requestAnimationFrame(() => {
         window.parent.postMessage({ type: "MDV_CAPTURE_PREPARED", slotId, requestId }, "*");
       }));
+      return;
+    }
+
+    // Whole-page captures: scroll the page and report its size, hide bars that stay
+    // on screen after the first tile, and the layout snapshot for change descriptions.
+    if (data.type === "MDV_PAGE_SCROLL" && data.slotId === slotId) {
+      const requestId = typeof data.requestId === "string" ? data.requestId : "";
+      if (typeof data.y === "number" && Number.isFinite(data.y)) captureScrollQuietUntil = Date.now() + 600;
+      if (typeof data.y === "number" && Number.isFinite(data.y)) window.scrollTo({ left: 0, top: data.y, behavior: "instant" as ScrollBehavior });
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const page = document.scrollingElement ?? document.documentElement;
+        window.parent.postMessage({ type: "MDV_PAGE_SCROLLED", slotId, requestId, scrollY: window.scrollY,
+          scrollHeight: Math.max(page.scrollHeight, document.body?.scrollHeight ?? 0), innerHeight: window.innerHeight, innerWidth: window.innerWidth }, "*");
+      }));
+      return;
+    }
+    if (data.type === "MDV_FIXED_HIDE" && data.slotId === slotId) {
+      setFixedHidden(data.hidden === true);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        window.parent.postMessage({ type: "MDV_FIXED_HIDDEN", slotId, requestId: typeof data.requestId === "string" ? data.requestId : "" }, "*");
+      }));
+      return;
+    }
+    if (data.type === "MDV_LAYOUT_SNAPSHOT" && data.slotId === slotId) {
+      let elements: unknown[] = [];
+      try { elements = snapshotLayout(document); } catch { /* an unusual document: no descriptions */ }
+      window.parent.postMessage({ type: "MDV_LAYOUT_SNAPSHOT_RESULT", slotId, requestId: typeof data.requestId === "string" ? data.requestId : "", elements }, "*");
       return;
     }
 

@@ -27,7 +27,7 @@ describe("the browser a preview identifies as", () => {
   it("makes an iPhone Safari of its iOS version, a mobile browser without client hints", () => {
     expect(deviceIdentity(device("apple-iphone-18-pro-2026"), CHROME)).toEqual({
       userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 27_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Mobile/15E148 Safari/604.1",
-      platform: "iOS", mobile: true, hints: false,
+      platform: "iOS", mobile: true, hints: false, touchPoints: 5,
     });
     expect(deviceIdentity(first("phone", /^iOS$/), CHROME)?.userAgent).toContain("CPU iPhone OS 26_0");
   });
@@ -35,22 +35,35 @@ describe("the browser a preview identifies as", () => {
   it("makes iPads and Macs desktop Safari, as an iPad asks for desktop pages", () => {
     // The iPad mini (6th generation) and MacBook Pro 16-inch (2021) carry older OS versions for their chrome.
     expect(getFrameProfile(device("apple-ipad-mini-6")).osMajor).toBeLessThan(26);
-    expect(deviceIdentity(device("apple-ipad-mini-6"), CHROME)).toEqual(MAC_SAFARI());
-    expect(deviceIdentity(device("apple-ipad-pro-13-m4-2024"), CHROME)).toEqual(MAC_SAFARI());
+    // Only its touch points tell an iPad from a Mac, as in Safari.
+    expect(deviceIdentity(device("apple-ipad-mini-6"), CHROME)).toEqual({ ...MAC_SAFARI(), touchPoints: 5 });
+    expect(deviceIdentity(device("apple-ipad-pro-13-m4-2024"), CHROME)).toEqual({ ...MAC_SAFARI(), touchPoints: 5 });
     expect(deviceIdentity(device("macbook-pro-16-2021"), CHROME)).toEqual(MAC_SAFARI());
     expect(deviceIdentity(first("desktop", /macos/i), CHROME)).toEqual(MAC_SAFARI());
   });
 
-  it("makes Android phones and tablets the viewer's Chrome in its reduced form, hinting the form factor", () => {
-    expect(deviceIdentity(first("phone", /android/i), CHROME)).toEqual({ userAgent: CHROME_UA("Linux; Android 10; K", true), platform: "Android", mobile: true, hints: true });
-    expect(deviceIdentity(first("tablet", /android/i), CHROME)).toEqual({ userAgent: CHROME_UA("Linux; Android 10; K"), platform: "Android", mobile: false, hints: true });
-    expect(deviceIdentity(createCustomDevice({ name: "Shop tablet", width: 800, height: 1280, pixelRatio: 2, type: "tablet" }), CHROME)).toMatchObject({ platform: "Android", mobile: false, hints: true });
+  it("makes Android phones and tablets the viewer's Chrome in its reduced form, with the model, version and form factor in its hints", () => {
+    expect(deviceIdentity(device("google-pixel-8"), CHROME)).toEqual({
+      userAgent: CHROME_UA("Linux; Android 10; K", true), platform: "Android", mobile: true, hints: true, touchPoints: 5,
+      details: { model: "Pixel 8", platformVersion: "16.0.0", formFactor: "Mobile", architecture: "", bitness: "" },
+    });
+    // A catalog name's posture is not part of the model, and a device without an Android version gets today's.
+    expect(deviceIdentity(device("samsung-galaxy-z-fold8-folded-2026"), CHROME)?.details).toMatchObject({ model: "Galaxy Z Fold8", platformVersion: "16.0.0" });
+    expect(deviceIdentity(first("tablet", /android/i), CHROME)).toMatchObject({ userAgent: CHROME_UA("Linux; Android 10; K"), platform: "Android", mobile: false, hints: true, details: { formFactor: "Tablet" } });
+    expect(deviceIdentity(createCustomDevice({ name: "Shop tablet", width: 800, height: 1280, pixelRatio: 2, type: "tablet" }), CHROME)).toMatchObject({ platform: "Android", mobile: false, hints: true, details: { model: "" } });
+  });
+
+  it("tells two Android phones apart by model", () => {
+    const models = devices.filter(item => item.type === "phone" && /android/i.test(item.os) && item.brand !== "Custom").map(item => deviceIdentity(item, CHROME)?.details?.model);
+    expect(models.every(model => model && model.length <= 64 && /^[\x20-\x7e]+$/.test(model) && !/["\\]/.test(model))).toBe(true);
+    expect(deviceIdentity(device("google-pixel-8"), CHROME)).not.toEqual(deviceIdentity(device("samsung-galaxy-s24"), CHROME));
   });
 
   it("makes Windows and ChromeOS computers the viewer's Chrome on that platform", () => {
-    expect(deviceIdentity(first("laptop", /windows/i), CHROME)).toEqual({ userAgent: CHROME_UA("Windows NT 10.0; Win64; x64"), platform: "Windows", mobile: false, hints: true });
-    expect(deviceIdentity(first("desktop", /windows/i), CHROME)).toEqual({ userAgent: CHROME_UA("Windows NT 10.0; Win64; x64"), platform: "Windows", mobile: false, hints: true });
-    expect(deviceIdentity(first("laptop", /chromeos/i), CHROME)).toEqual({ userAgent: CHROME_UA("X11; CrOS x86_64 14541.0.0"), platform: "Chrome OS", mobile: false, hints: true });
+    const desktop = (platformVersion: string) => ({ model: "", platformVersion, formFactor: "Desktop", architecture: "x86", bitness: "64" });
+    expect(deviceIdentity(first("laptop", /windows/i), CHROME)).toEqual({ userAgent: CHROME_UA("Windows NT 10.0; Win64; x64"), platform: "Windows", mobile: false, hints: true, details: desktop("19.0.0") });
+    expect(deviceIdentity(first("desktop", /windows/i), CHROME)).toEqual({ userAgent: CHROME_UA("Windows NT 10.0; Win64; x64"), platform: "Windows", mobile: false, hints: true, details: desktop("19.0.0") });
+    expect(deviceIdentity(first("laptop", /chromeos/i), CHROME)).toEqual({ userAgent: CHROME_UA("X11; CrOS x86_64 14541.0.0"), platform: "Chrome OS", mobile: false, hints: true, details: desktop("14541.0.0") });
   });
 
   it("gives a Tizen TV its own browser and leaves watches and kiosks as the viewer itself", () => {
@@ -86,8 +99,18 @@ describe("the browser a preview identifies as", () => {
     expect(previewIdentityFrom(null)).toBeNull();
     const good: PreviewIdentity = { userAgent: "Agent", platform: "Android", mobile: true, hints: true };
     expect(previewIdentityFrom(good)).toEqual(good);
+    const pixel = deviceIdentity(device("google-pixel-8"), CHROME)!;
+    expect(previewIdentityFrom(pixel)).toEqual(pixel);
+    const localized = { ...pixel, language: "zh-Hant-TW", density: { dpr: 2.625, width: 412 } };
+    expect(previewIdentityFrom(localized)).toEqual(localized);
+    for (const bad of [{ ...pixel, language: "german" }, { ...pixel, language: "de_DE" }, { ...pixel, density: { dpr: 9, width: 412 } }, { ...pixel, density: { dpr: 2, width: 1.5 } }]) {
+      expect(previewIdentityFrom(bad), JSON.stringify(bad)).toBeUndefined();
+    }
+    const details = pixel.details!;
     for (const bad of [undefined, "Agent", 7, {}, { ...good, userAgent: "" }, { ...good, userAgent: "Agent\r\nX-Injected: 1" }, { ...good, userAgent: "A".repeat(401) },
-      { ...good, platform: "Amiga" }, { ...good, mobile: "yes" }, { ...good, hints: undefined }]) {
+      { ...good, platform: "Amiga" }, { ...good, mobile: "yes" }, { ...good, hints: undefined }, { ...good, touchPoints: 11 }, { ...good, touchPoints: 1.5 },
+      { ...pixel, hints: false }, { ...pixel, details: { ...details, model: 'Pixel"8' } }, { ...pixel, details: { ...details, model: "Pixel\\8" } },
+      { ...pixel, details: { ...details, model: "P".repeat(65) } }, { ...pixel, details: { ...details, formFactor: "Watch" } }, { ...pixel, details: { ...details, bitness: 64 } }]) {
       expect(previewIdentityFrom(bad), JSON.stringify(bad)).toBeUndefined();
     }
   });

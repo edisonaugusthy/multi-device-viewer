@@ -9,6 +9,8 @@ import type { LayoutCheckReport, LayoutMark, LayoutProblem } from "../../domain/
 import type { Device, Size } from "../../domain/device/device.types";
 import type { PreviewSlot } from "../../domain/simulator/simulator.types";
 import type { FixPromptPrefill } from "../components/FixPrompt";
+import { findLayoutCause } from "../../app/debugger-client";
+import { formatCause, type LayoutCause } from "../../domain/layout-check/layout-cause";
 
 export interface LayoutSlotStatus {
   status: "checking" | "done" | "failed";
@@ -35,6 +37,8 @@ export interface LayoutCheckView {
   totals: { problems: number; affected: number; total: number };
   /** Some device hit the limit, so its list is incomplete. */
   truncated: boolean;
+  /** The CSS rule behind each problem, by group key, once the debugger has found it. */
+  causes: Record<string, LayoutCause | null>;
 }
 
 type SlotState =
@@ -56,6 +60,7 @@ function post(slotId: string, message: Record<string, unknown>) {
   frameFor(slotId)?.contentWindow?.postMessage({ ...message, slotId }, "*");
 }
 
+const causeLine = (cause: LayoutCause) => `Caused by ${formatCause(cause)}${cause.source ? ` (${cause.source})` : ""}`;
 const joinNames = (names: string[]) => names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 
 const isProblem = (problem: unknown): problem is LayoutProblem => typeof problem === "object" && problem !== null
@@ -179,6 +184,28 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
   }, [numberOf, open, selected, slotIds, states]);
   useEffect(() => () => { for (const slot of slotsRef.current) post(slot.id, { type: "MDV_LAYOUT_MARKS", marks: [] }); }, []);
 
+  // The CSS rule behind each problem, asked of the debugger once per check.
+  const [causes, setCauses] = useState<Record<string, LayoutCause | null>>({});
+  const causesRef = useRef<Record<string, LayoutCause | null>>({});
+  useEffect(() => { causesRef.current = {}; setCauses({}); }, [checkedAt]);
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    void (async () => {
+      for (const group of groups) {
+        if (cancelled) return;
+        if (group.key in causesRef.current) continue;
+        const name = frameFor(group.devices[0]?.slotId ?? "")?.name;
+        if (!name) continue;
+        const cause = await findLayoutCause(name, group.selector).catch(() => null);
+        if (cancelled) return;
+        causesRef.current = { ...causesRef.current, [group.key]: cause };
+        setCauses(causesRef.current);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [groups, open]);
+
   const select = useCallback((key: string | null) => {
     setSelected(key);
     const group = key ? groups.find(item => item.key === key) : undefined;
@@ -231,8 +258,9 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
       open, checking: devices.some(device => device.status === "checking"), groups, selected, checkedAt, afterReload, devices,
       totals: { problems: groups.length, affected: checked.filter(device => device.count > 0).length, total: devices.length },
       truncated: Object.values(states).some(state => state.status === "done" && state.report.truncated),
+      causes,
     };
-  }, [afterReload, checkedAt, findDevice, groups, open, selected, slotSize, slots, states]);
+  }, [afterReload, causes, checkedAt, findDevice, groups, open, selected, slotSize, slots, states]);
 
   /** The fix prompt's fields for one culprit, in the prompt's own language. */
   const fixPromptFor = useCallback((group: LayoutProblemGroup): { deviceIds: string[]; prefill: FixPromptPrefill } => {
@@ -245,11 +273,31 @@ export function useLayoutCheck({ slots, findDevice, slotSize }: {
         wrong: `${group.selector} (${size}) crosses the ${side} edge of the viewport by ${joinNames(group.devices.map(device => `${Math.round(device.overflow)} px on ${device.deviceName}`))}, so the page scrolls sideways.`,
         expected: "Nothing wider than the viewport. No sideways scrolling at any phone width.",
         selector: group.selector,
-        findings: group.devices.map(device => `${device.deviceName} (${sizeOf(device.slotId)}): ${group.selector} is ${Math.round(device.width)} px wide, ${Math.round(device.overflow)} px past the ${side} edge`),
+        findings: [
+          ...group.devices.map(device => `${device.deviceName} (${sizeOf(device.slotId)}): ${group.selector} is ${Math.round(device.width)} px wide, ${Math.round(device.overflow)} px past the ${side} edge`),
+          ...(causes[group.key] ? [causeLine(causes[group.key]!)] : []),
+        ],
         source: { index: group.number, count: groups.length },
       },
     };
-  }, [groups.length, slotSize]);
+  }, [causes, groups.length, slotSize]);
 
-  return { view, statusBySlot, run, close, select, step, onPageReady, setAfterReload, fixPromptFor };
+  /** One prompt for every problem in the list. */
+  const fixPromptForAll = useCallback((): { deviceIds: string[]; prefill: FixPromptPrefill } => {
+    const deviceIds = [...new Set(groups.flatMap(group => group.devices.map(device => device.slotId)))];
+    return {
+      deviceIds,
+      prefill: {
+        wrong: `${groups.length} elements cross the edge of the viewport, so the page scrolls sideways.`,
+        expected: "Nothing wider than the viewport. No sideways scrolling at any phone width.",
+        findings: groups.map(group => {
+          const cause = causes[group.key];
+          const where = joinNames(group.devices.map(device => `${Math.round(device.overflow)} px on ${device.deviceName}`));
+          return `${group.number}. ${group.selector} (${Math.round(group.width)}×${Math.round(group.height)}) crosses the ${group.overflowLeft ? "left" : "right"} edge by ${where}${cause ? `. ${causeLine(cause)}` : ""}`;
+        }),
+      },
+    };
+  }, [causes, groups]);
+
+  return { view, statusBySlot, run, close, select, step, onPageReady, setAfterReload, fixPromptFor, fixPromptForAll };
 }

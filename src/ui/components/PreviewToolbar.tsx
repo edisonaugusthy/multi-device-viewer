@@ -8,6 +8,7 @@ import {
   CollapseIcon,
   ExpandIcon,
   FixPromptIcon,
+  GlobeIcon,
   GripIcon,
   LayoutCheckIcon,
   MinusIcon,
@@ -59,6 +60,12 @@ export interface PreviewToolbarProps {
   onLayoutProblems?: () => void;
   layoutProblemCount?: number;
   onMenu: () => void;
+  /** The device's language button: its short code when one is set, and the picker it opens. */
+  onLanguage?: () => void;
+  languageCode?: string;
+  languageLabel?: string;
+  languageOpen?: boolean;
+  languagePicker?: ReactNode;
   onRemove: () => void;
   onMoveStart?: (event: React.PointerEvent) => void;
   expandLabel?: string;
@@ -71,7 +78,7 @@ export interface PreviewToolbarProps {
 export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(function PreviewToolbar(props, ref) {
   const { t } = useI18n();
   const focus = props.focusNavigation;
-  const visible = props.revealed || props.menuOpen;
+  const visible = props.revealed || props.menuOpen || Boolean(props.languageOpen);
   return (
     <div
       ref={ref}
@@ -146,6 +153,16 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
               {props.layoutProblemCount ? <span aria-hidden="true" className="absolute -end-2 -top-2 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-red-500 px-[3px] font-mono text-[9px] font-bold text-white">{props.layoutProblemCount}</span> : null}
             </span>
           </ToolButton>
+        )}
+        {props.onLanguage && (
+          <div className="relative">
+            <button type="button" data-language-toggle onClick={props.onLanguage} aria-expanded={props.languageOpen} aria-haspopup="dialog"
+              title={props.languageLabel} aria-label={props.languageLabel}
+              className={cx("flex h-7 items-center gap-1 rounded-[7px] px-1.5 font-mono text-[11px] font-bold", props.languageCode ? "text-accent-strong" : "text-ink", props.languageOpen ? "bg-sunken" : "hover:bg-sunken", focusRing)}>
+              <GlobeIcon size={15} />{props.languageCode}
+            </button>
+            {props.languageOpen && props.languagePicker}
+          </div>
         )}
         <div className="relative">
           <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu} menuToggle><MoreIcon size={16} /></ToolButton>

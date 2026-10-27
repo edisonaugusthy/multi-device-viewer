@@ -2,9 +2,12 @@ import { useLayoutEffect, useRef, useState, type ReactNode, type RefObject } fro
 import { useI18n } from "../../app/i18n";
 import { FEATURES } from "../../app/feature-flags";
 import {
+  BugIcon,
   CameraIcon,
   CloseIcon,
   CompareIcon,
+  GaugeIcon,
+  ChevronDownIcon,
   EyeIcon,
   FixPromptIcon,
   GridIcon,
@@ -42,6 +45,21 @@ export interface WorkspaceHeaderProps {
   layoutOpen: boolean;
   layoutChecking: boolean;
   layoutCount: number;
+  conditionsRef: RefObject<HTMLButtonElement | null>;
+  conditionsOpen: boolean;
+  /** What is on, such as "Slow 4G · Dark"; empty when nothing is. */
+  conditionsSummary: string;
+  onConditions: () => void;
+  onConditionsOff: () => void;
+  problemsOpen: boolean;
+  problemsCount: number;
+  onProblems: () => void;
+  /** Shown only while the debugger is attached. */
+  trackAvailable: boolean;
+  tracking: boolean;
+  onTracking: () => void;
+  captureRef: RefObject<HTMLButtonElement | null>;
+  captureOpen: boolean;
   settingsRef: RefObject<HTMLButtonElement | null>;
   settingsOpen: boolean;
   onAllDevices: () => void;
@@ -159,6 +177,25 @@ export function WorkspaceHeader(props: WorkspaceHeaderProps) {
 
       <div className="min-w-2 flex-1" />
 
+      <div className={cx("flex h-[34px] min-w-0 shrink items-center rounded-[9px] border",
+        props.conditionsSummary ? "border-warn/40 bg-warn-soft text-warn" : props.conditionsOpen ? "border-ink bg-sunken text-ink" : "border-line bg-surface text-ink")}>
+        <Tooltip title={t("conditionsTitle")} description={t("conditionsTip")}>
+          <button ref={props.conditionsRef} type="button" data-conditions-toggle aria-haspopup="dialog" aria-expanded={props.conditionsOpen}
+            aria-label={props.conditionsSummary ? `${t("conditionsTitle")}: ${props.conditionsSummary}` : t("conditionsTitle")} onClick={props.onConditions}
+            className={cx("flex h-8 min-w-0 items-center gap-1.5 rounded-[8px] px-2.5 text-[12.5px] font-semibold", focusRing)}>
+            <GaugeIcon size={15} className="shrink-0" />
+            {(level < 1 || props.conditionsSummary) && <span className="truncate">{props.conditionsSummary || t("conditionsTitle")}</span>}
+            <ChevronDownIcon size={12} className="shrink-0" />
+          </button>
+        </Tooltip>
+        {props.conditionsSummary && (
+          <button type="button" data-conditions-off onClick={props.onConditionsOff} aria-label={t("conditionsTurnOff")} title={t("conditionsTurnOff")}
+            className={cx("me-0.5 grid size-7 shrink-0 place-items-center rounded-[7px] hover:bg-black/5", focusRing)}>
+            <CloseIcon size={13} strokeWidth={2.6} />
+          </button>
+        )}
+      </div>
+
       <div role="group" data-tour="sync" aria-label={t("syncBetweenDevices")}
         className="flex h-[34px] shrink-0 items-center gap-0.5 rounded-[9px] border border-line pe-1 ps-2.5">
         <Tooltip title={t("syncBetweenDevices")} description={t("syncBetweenDevicesHint")}>
@@ -170,6 +207,18 @@ export function WorkspaceHeader(props: WorkspaceHeaderProps) {
         <SyncCheckbox label={t("scroll")} icon={level >= 3 ? <ScrollSyncIcon size={15} /> : undefined} title={t("scrollSync")} description={t("scrollSyncHint")} checked={props.scrollSync} onChange={props.onScrollSyncChange} />
         <SyncCheckbox label={t("navigation")} icon={level >= 3 ? <NavigationSyncIcon size={15} /> : undefined} title={t("navigationSync")} description={t("navigationSyncHint")} checked={props.navigationSync} onChange={props.onNavigationSyncChange} />
       </div>
+
+      {props.trackAvailable && (
+        <Tooltip title={t("trackChanges")} description={t("trackTip")}>
+          <button type="button" data-track-toggle aria-pressed={props.tracking} onClick={props.onTracking}
+            aria-label={t("trackChanges")}
+            className={cx("flex h-[34px] shrink-0 items-center gap-1.5 rounded-[9px] border px-2.5 text-[12.5px] font-semibold",
+              props.tracking ? "border-accent-line bg-accent-soft text-accent-strong" : "border-line bg-surface text-ink hover:bg-sunken", focusRing)}>
+            <span aria-hidden="true" className={cx("size-2 rounded-full", props.tracking ? "bg-accent" : "border-[1.5px] border-ink-2")} />
+            {level < 2 && <span>{props.tracking ? t("trackingChanges") : t("trackChanges")}</span>}
+          </button>
+        </Tooltip>
+      )}
 
       <Segmented
         label={t("previewStyle")}
@@ -192,7 +241,7 @@ export function WorkspaceHeader(props: WorkspaceHeaderProps) {
       >
         <CompareIcon size={16} />
       </IconButton>
-      <IconButton data-tour="screenshot" label={t("captureAndAnnotate")} tooltip={t("tipScreenshot")} onClick={props.onCapture} disabled={props.capturing}><CameraIcon size={16} /></IconButton>
+      <IconButton ref={props.captureRef} data-tour="screenshot" data-capture-toggle label={t("captureAndAnnotate")} tooltip={t("tipScreenshot")} pressed={props.captureOpen} aria-expanded={props.captureOpen} onClick={props.onCapture} disabled={props.capturing}><CameraIcon size={16} /></IconButton>
       <IconButton ref={props.fixRef} data-tour="fix-prompt" label={t("fixPrompt")} tooltip={t("tipFixPrompt")} pressed={props.fixOpen} aria-expanded={props.fixOpen} onClick={props.onFixPrompt}><FixPromptIcon size={16} /></IconButton>
       {FEATURES.layoutCheck && <span className="relative shrink-0">
         <IconButton data-tour="layout-check" data-layout-check-toggle label={props.layoutCount > 0 ? `${t("checkLayout")} · ${props.layoutCount}` : t("checkLayout")} tooltip={t("tipCheckLayout")} pressed={props.layoutOpen} aria-expanded={props.layoutOpen} onClick={props.onLayoutCheck}>
@@ -204,6 +253,14 @@ export function WorkspaceHeader(props: WorkspaceHeaderProps) {
           <span aria-hidden="true" className="pointer-events-none absolute -end-1.5 -top-1.5 grid h-[17px] min-w-[17px] place-items-center rounded-full border-2 border-surface bg-red-500 px-1 font-mono text-[10px] font-bold text-white">{props.layoutCount}</span>
         )}
       </span>}
+      <span className="relative shrink-0">
+        <IconButton data-problems-toggle label={props.problemsCount > 0 ? `${t("problemsTitle")} · ${props.problemsCount}` : t("problemsTitle")} tooltip={t("problemsTip")} pressed={props.problemsOpen} aria-expanded={props.problemsOpen} onClick={props.onProblems}>
+          <BugIcon size={16} />
+        </IconButton>
+        {props.problemsCount > 0 && (
+          <span aria-hidden="true" className="pointer-events-none absolute -end-1.5 -top-1.5 grid h-[17px] min-w-[17px] place-items-center rounded-full border-2 border-surface bg-red-500 px-1 font-mono text-[10px] font-bold text-white">{props.problemsCount}</span>
+        )}
+      </span>
       <IconButton ref={props.recordRef} data-tour="record" label={t("record")} tooltip={t("tipRecord")} tooltipAlign="end" pressed={props.recordOpen} aria-expanded={props.recordOpen} onClick={props.onRecord}>
         <RecordIcon size={16} active={props.recordingActive} />
       </IconButton>

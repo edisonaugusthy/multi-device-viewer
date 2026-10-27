@@ -18,6 +18,8 @@ interface SimulatorContextValue extends SimulatorState {
   setActiveSlot: (slotId: string) => void;
   setSlotDevice: (slotId: string, deviceId: string) => void;
   setSlotBrowserPreferences: (slotId: string, preferences: BrowserPreferences) => void;
+  /** A device's language (null for the browser's own) and whether it sends its screen density. */
+  setSlotLocale: (slotId: string, change: { language?: string | null; sendDensity?: boolean }) => void;
   setSlotUrl: (slotId: string, url: string) => void;
   observeSlotUrl: (slotId: string, url: string) => void;
   getSlotUrl: (slotId: string) => string;
@@ -174,6 +176,14 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   const setSlotBrowserPreferences = useCallback((slotId: string, preferences: BrowserPreferences) => {
     updateSlot(slotId, slot => ({ ...slot, browserPreferences: { ...slot.browserPreferences, ...preferences } }));
   }, [updateSlot]);
+  const setSlotLocale = useCallback((slotId: string, change: { language?: string | null; sendDensity?: boolean }) => {
+    updateSlot(slotId, slot => {
+      const next = { ...slot };
+      if (change.language !== undefined) { if (change.language) next.language = change.language; else delete next.language; }
+      if (change.sendDensity !== undefined) next.sendDensity = change.sendDensity;
+      return next;
+    });
+  }, [updateSlot]);
 
   const setSlotDevice = useCallback((slotId: string, deviceId: string) => {
     updateSlot(slotId, (slot) => {
@@ -285,6 +295,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setActiveSlot,
       setSlotDevice,
       setSlotBrowserPreferences,
+      setSlotLocale,
       setSlotUrl,
       observeSlotUrl,
       getSlotUrl,
@@ -313,6 +324,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setActiveSlot,
       setSlotDevice,
       setSlotBrowserPreferences,
+      setSlotLocale,
       setSlotUrl,
       observeSlotUrl,
       getSlotUrl,

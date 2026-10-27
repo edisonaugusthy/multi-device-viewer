@@ -8,6 +8,7 @@ const PERMISSIONS: PermissionExplanation[] = [
   { name: "activeTab", description: "permissionActiveTab" },
   { name: "http://*/*, https://*/*", description: "permissionWebsiteAccess" },
   { name: "declarativeNetRequestWithHostAccess", description: "permissionFrameHeaders" },
+  { name: "debugger", description: "permissionDebugger" },
   { name: "scripting", description: "permissionScripting" },
   { name: "storage", description: "permissionStorage" },
   { name: "downloads", description: "permissionDownloads" },

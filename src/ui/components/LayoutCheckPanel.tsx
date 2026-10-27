@@ -3,6 +3,7 @@ import { useI18n } from "../../app/i18n";
 import { formatOverflow, type LayoutProblemGroup } from "../../domain/layout-check/layout-check";
 import { MAX_PROBLEMS } from "../../domain/layout-check/layout-check.types";
 import type { LayoutCheckView } from "../hooks/useLayoutCheck";
+import { formatCause } from "../../domain/layout-check/layout-cause";
 import { AlertIcon, CheckIcon, CloseIcon, CopyIcon, FixPromptIcon, ReloadIcon } from "../icons";
 import { shortName } from "./PreviewCard";
 import { cx, focusRing, Switch } from "./ui";
@@ -11,12 +12,13 @@ import { useFormatters } from "./VisualChecks";
 const button = cx("inline-flex h-7 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-2.5 text-xs font-semibold text-ink hover:bg-sunken", focusRing);
 
 /** The docked list of elements that make the page scroll sideways, one culprit per row with the devices it fails on. */
-export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixPrompt, onAfterReloadChange }: {
+export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixPrompt, onFixAll, onAfterReloadChange }: {
   view: LayoutCheckView;
   onClose: () => void;
   onCheckAgain: () => void;
   onSelect: (key: string | null) => void;
   onFixPrompt: (group: LayoutProblemGroup) => void;
+  onFixAll: () => void;
   onAfterReloadChange: (on: boolean) => void;
 }) {
   const { t } = useI18n();
@@ -47,9 +49,15 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
           <h2 className="text-sm font-semibold">{t("layoutCheck")}</h2>
           <p role="status" className="text-xs text-muted">{subtitle}</p>
         </div>
+        {!checking && groups.length > 1 && (
+          <button type="button" data-layout-fix-all onClick={onFixAll}
+            className={cx("inline-flex h-7 items-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-2.5 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
+            <FixPromptIcon size={13} />{t("problemsFixAll", { count: groups.length })}
+          </button>
+        )}
         {!checking && (
-          <button type="button" onClick={onCheckAgain} className={button}>
-            <ReloadIcon size={13} strokeWidth={2.2} />{t("layoutCheckAgain")}
+          <button type="button" onClick={onCheckAgain} aria-label={t("layoutCheckAgain")} title={t("layoutCheckAgain")} className={cx(button, groups.length > 1 && "w-7 px-0")}>
+            <ReloadIcon size={13} strokeWidth={2.2} />{groups.length <= 1 && t("layoutCheckAgain")}
           </button>
         )}
         <button type="button" onClick={onClose} aria-label={t("closeLayoutCheck")} title={t("closeLayoutCheck")}
@@ -81,8 +89,13 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
           <ol className="grid gap-0.5 p-2">
             {groups.map(group => {
               const on = view.selected === group.key;
+              const cause = view.causes[group.key];
               return (
-                <li key={group.key}>
+                <li key={group.key} className="relative">
+                  <button type="button" data-layout-fix onClick={() => onFixPrompt(group)} aria-label={t("problemsFixFor", { title: group.selector })}
+                    className={cx("absolute end-2 top-2 z-[1] inline-flex h-[26px] items-center gap-1 rounded-[7px] border border-line bg-surface px-2 text-xs font-semibold text-ink hover:bg-sunken", focusRing)}>
+                    <FixPromptIcon size={12} />{t("problemsFix")}
+                  </button>
                   <div
                     role="button"
                     tabIndex={0}
@@ -93,7 +106,7 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
                   >
                     <span className="mt-px grid size-5 place-items-center rounded-full bg-red-500 font-mono text-[10.5px] font-bold text-white">{group.number}</span>
                     <span className="grid min-w-0 gap-1.5">
-                      <span className="flex items-baseline gap-2">
+                      <span className="flex min-w-0 items-baseline gap-2 pe-16">
                         <span dir="ltr" className="truncate font-mono text-[12.5px] font-semibold">{group.selector}</span>
                         <span dir="ltr" className="shrink-0 text-[11px] text-faint">{Math.round(group.width)}×{Math.round(group.height)}</span>
                       </span>
@@ -106,12 +119,17 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
                           </span>
                         ))}
                       </span>
+                      {cause && (
+                        <span data-layout-cause className="grid min-w-0 gap-0.5 overflow-hidden rounded-lg bg-sunken px-2 py-1.5">
+                          <span className="flex min-w-0 items-baseline gap-2 text-[11px] text-muted">
+                            <span className="shrink-0">{t("layoutCausedBy")}</span>
+                            {cause.source && <span dir="ltr" title={cause.source} className="ms-auto min-w-0 truncate font-mono">{cause.source}</span>}
+                          </span>
+                          <code dir="ltr" className="break-all font-mono text-[11.5px] text-ink">{formatCause(cause)}</code>
+                        </span>
+                      )}
                       {on && (
                         <span className="mt-0.5 flex flex-wrap gap-1.5">
-                          <button type="button" onClick={event => { event.stopPropagation(); onFixPrompt(group); }}
-                            className={cx("inline-flex h-7 items-center gap-1.5 rounded-lg bg-accent px-2.5 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
-                            <FixPromptIcon size={13} />{t("fixPrompt")}
-                          </button>
                           <button type="button" className={button}
                             onClick={event => { event.stopPropagation(); void navigator.clipboard.writeText(group.selector).then(() => setCopied(group.key)).catch(() => undefined); }}>
                             {copied === group.key ? <CheckIcon size={13} /> : <CopyIcon size={13} />}{copied === group.key ? t("copied") : t("layoutCopySelector")}

@@ -11,9 +11,12 @@ import { requestVisualRegression } from "../../infrastructure/visual-regression/
 import {
   baselineIndexVersion, clearBaselineIndex, hasBaseline, loadBaselineIndex, markBaseline, subscribeBaselineIndex,
 } from "../../infrastructure/visual-regression/baseline-index";
-import { CheckIcon, ListIcon, ReloadIcon, SideBySideIcon, SnapshotIcon, TrashIcon } from "../icons";
+import { CheckIcon, CopyIcon, ListIcon, PinIcon, ReloadIcon, SideBySideIcon, SnapshotIcon, TrashIcon } from "../icons";
 import { ComparisonPanel, ManageBaselines, PageGlyph, UnchangedPanel, useFormatters, visualButton, VisualDialog, visualPrimaryButton } from "../components/VisualChecks";
-import { cx } from "../components/ui";
+import { cx, Segmented } from "../components/ui";
+import { snapshotPreview } from "../../app/preview-capture";
+import { describeChanges, type LayoutChange, type LayoutSnapshot } from "../../domain/capture/layout-snapshot";
+import { pinnedAt, setPinned, usePinnedVersion } from "./useTrackChanges";
 
 interface Options {
   slotId: string;
@@ -26,11 +29,14 @@ interface Options {
   dismissMenu: () => void;
   /** Scales the device by `factor` for a capture (null restores it), resolving once laid out. */
   scaleForCapture?: (factor: number | null) => Promise<void>;
+  /** Track changes is on: each reload is compared with the one before. */
+  tracking?: boolean;
 }
 type Dialog =
   | { kind: "comparison"; result: VisualComparison; updating?: boolean; accepted?: boolean; error?: TranslationKey }
   | { kind: "unchanged"; result: VisualComparison }
   | { kind: "manage" }
+  | { kind: "tracked" }
   | { kind: "error"; error: TranslationKey };
 const errors: Record<VisualRegressionErrorCode, TranslationKey> = {
   missing: "visualMissing", dimensions: "visualDimensions", storage: "visualStorageError", image: "visualImageError",
@@ -42,6 +48,13 @@ const DEFAULT_SENSITIVITY = 10;
 const TOAST_MS = 6000;
 // A page without the bridge never answers; capture it as it is.
 const PREPARE_TIMEOUT_MS = 400;
+/** Fonts and images settle after the page reports it is ready. */
+const TRACK_SETTLE_MS = 900;
+
+/** What Track changes found at the last reload. */
+interface Tracked { count: number; result?: VisualComparison; changes: LayoutChange[]; comparedAt: number; since: number }
+/** Track changes keeps its own pictures, apart from the "before" pictures people save. */
+const trackIdentity = (identity: BaselineIdentity): BaselineIdentity => ({ ...identity, deviceId: `${identity.deviceId}#track` });
 
 /** Asks the preview to hide what the viewer draws inside the page (Layout check marks). */
 function preparePage(frame: HTMLIFrameElement, slotId: string, hidden: boolean): Promise<void> {
@@ -86,10 +99,22 @@ export function useVisualRegression(options: Options) {
   const [baseline, setBaseline] = useState<BaselineMeta | null | undefined>(undefined);
   const [dialog, setDialog] = useState<Dialog | null>(null);
   const [threshold, setThreshold] = useState(DEFAULT_SENSITIVITY);
+  const [tracked, setTracked] = useState<Tracked | null>(null);
+  const [copied, setCopied] = useState(false);
+  const snapshots = useRef<{ last?: LayoutSnapshot; pinned?: LayoutSnapshot; latest?: LayoutSnapshot }>({});
+  const trackTimer = useRef<number | undefined>(undefined);
+  usePinnedVersion();
   const closeRef = useRef<HTMLButtonElement>(null);
   useSyncExternalStore(subscribeBaselineIndex, baselineIndexVersion);
   useEffect(() => { mounted.current = true; loadBaselineIndex(); return () => { mounted.current = false; }; }, []);
-  useEffect(() => { setDialog(null); setBaseline(undefined); }, [options.deviceId, options.orientation]);
+  useEffect(() => { setDialog(null); setBaseline(undefined); setTracked(null); snapshots.current = {}; }, [options.deviceId, options.orientation]);
+  useEffect(() => {
+    if (options.tracking) return;
+    window.clearTimeout(trackTimer.current);
+    setTracked(null);
+    setDialog(open => open?.kind === "tracked" ? null : open);
+  }, [options.tracking]);
+  useEffect(() => () => window.clearTimeout(trackTimer.current), []);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(false), TOAST_MS);
@@ -234,6 +259,92 @@ export function useVisualRegression(options: Options) {
       if (mounted.current) updateComparison(comparisonId, open => ({ ...open, error: messageFor(error) }));
     }
   }
+  /**
+   * Track changes, after each page load: capture the screen and the layout
+   * without hiding the viewer's controls, compare with the reload before (or
+   * the pinned version), and keep this load as the next one's "before".
+   */
+  function scheduleTrack() {
+    window.clearTimeout(trackTimer.current);
+    if (current.current.tracking) trackTimer.current = window.setTimeout(() => void track(), TRACK_SETTLE_MS);
+  }
+  async function track() {
+    if (pending.current || !current.current.tracking) return;
+    const frame = current.current.getFrame();
+    if (!frame) return;
+    pending.current = true;
+    const { slotId } = current.current;
+    try {
+      const target = trackIdentity(identity());
+      const key = baselineKey(target);
+      const pinned = pinnedAt(key) !== undefined;
+      await preparePage(frame, slotId, true);
+      let captureId: string;
+      try {
+        ({ captureId } = await requestVisualRegression({ action: "capture", identity: target, deviceName: current.current.deviceName, frame: measureViewport(frame) }));
+      } finally { void preparePage(frame, slotId, false); }
+      const snapshot = await snapshotPreview(slotId) ?? undefined;
+      if (!mounted.current || !current.current.tracking || baselineKey(trackIdentity(identity())) !== key) {
+        void requestVisualRegression({ action: "discard", captureId }).catch(() => {});
+        return;
+      }
+      const before = await requestVisualRegression({ action: "read", identity: target });
+      if (!before) {
+        await requestVisualRegression({ action: "save", captureId });
+        snapshots.current = { last: snapshot, latest: snapshot };
+        if (mounted.current) setTracked({ count: 0, changes: [], comparedAt: Date.now(), since: Date.now() });
+        return;
+      }
+      const result = await requestVisualRegression({ action: "compare", captureId, threshold });
+      const previous = pinned ? snapshots.current.pinned : snapshots.current.last;
+      const changes = result.changedPixels && previous && snapshot ? describeChanges(previous, snapshot) : [];
+      const count = result.changedPixels ? changes.length || result.regionCount || 1 : 0;
+      // Without a pin, this load is what the next reload is compared with.
+      if (!pinned && result.changedPixels) await requestVisualRegression({ action: "accept", comparisonId: result.comparisonId });
+      if (!pinned) snapshots.current.last = snapshot;
+      snapshots.current.latest = snapshot;
+      if (mounted.current) setTracked({ count, result, changes, comparedAt: Date.now(), since: result.baseline.savedAt });
+    } catch {
+      // Off screen, a page that cannot be captured, or a busy capture: keep watching.
+    } finally {
+      pending.current = false;
+    }
+  }
+  /** Keep the latest load as the version every reload is compared with. */
+  async function pinLatest() {
+    const target = trackIdentity(identity());
+    const key = baselineKey(target);
+    const result = tracked?.result;
+    if (result?.changedPixels && pinnedAt(key) !== undefined) {
+      try {
+        await requestVisualRegression({ action: "accept", comparisonId: result.comparisonId });
+      } catch {
+        // The comparison expired: picture the page as it is now.
+        const frame = current.current.getFrame();
+        if (!frame) return;
+        const { captureId } = await requestVisualRegression({ action: "capture", identity: target, deviceName: current.current.deviceName, frame: measureViewport(frame) });
+        await requestVisualRegression({ action: "save", captureId });
+      }
+    }
+    snapshots.current.pinned = snapshots.current.latest;
+    setPinned(key, true);
+    if (mounted.current) setTracked(open => open && { ...open, count: 0, result: undefined, changes: [], since: Date.now() });
+  }
+  async function compareWith(base: "last" | "pinned") {
+    const key = baselineKey(trackIdentity(identity()));
+    if (base === "pinned") { if (pinnedAt(key) === undefined) await pinLatest(); return; }
+    setPinned(key, false);
+    // From now on the latest load is the "before".
+    const result = tracked?.result;
+    if (result?.changedPixels) await requestVisualRegression({ action: "accept", comparisonId: result.comparisonId }).catch(() => {});
+    snapshots.current.last = snapshots.current.latest;
+  }
+  function trackPrompt() {
+    if (!tracked) return "";
+    return [t("trackPromptTitle", { device: current.current.deviceName }), current.current.getUrl(),
+      ...tracked.changes.map(change => `- ${change.label}: ${change.what}`)].join("\n");
+  }
+
   /** Whether this device's current page has a "before" picture (from the shared index). */
   function hasBefore() {
     try { return hasBaseline(identity()); } catch { return false; }
@@ -285,6 +396,37 @@ export function useVisualRegression(options: Options) {
       subtitle={<span title={format.date(result.baseline.savedAt)}>{t("visualComparedAt", { when: format.ago(result.baseline.savedAt) })}</span>}>
       <UnchangedPanel/>
     </VisualDialog>;
+  } else if (dialog?.kind === "tracked" && tracked) {
+    let key = "";
+    try { key = baselineKey(trackIdentity(identity())); } catch { /* frame gone */ }
+    const pinned = pinnedAt(key);
+    const { result, changes } = tracked;
+    content = <VisualDialog size="wide" closeRef={closeRef} onClose={close}
+      title={`${t("trackWhatChanged")} · ${name}`}
+      subtitle={<span data-track-since>{pinned !== undefined ? t("trackSincePinned", { when: format.ago(pinned) }) : t("trackSinceLast", { when: format.ago(tracked.since) })}</span>}
+      footer={<>
+        <Segmented size="sm" label={t("trackCompareWith")} value={pinned !== undefined ? "pinned" : "last"} onChange={value => void compareWith(value)}
+          options={[{ value: "last", label: t("trackLastReload") }, { value: "pinned", label: t("trackPinned") }]}/>
+        <div className="flex flex-wrap items-center gap-2">
+          {changes.length > 0 && <button type="button" data-track-prompt className={visualButton} onClick={() => {
+            void navigator.clipboard.writeText(trackPrompt()).then(() => { setCopied(true); window.setTimeout(() => setCopied(false), 1500); }).catch(() => {});
+          }}>{copied ? <><CheckIcon size={13}/> {t("copied")}</> : <><CopyIcon size={13}/> {t("fixPrompt")}</>}</button>}
+          <button type="button" data-track-pin disabled={pinned !== undefined && !result?.changedPixels} onClick={() => void pinLatest()} className={visualPrimaryButton}>
+            <PinIcon size={13}/> {pinned !== undefined && !result?.changedPixels ? t("trackPinned") : t("trackPinVersion")}
+          </button>
+        </div>
+      </>}>
+      {changes.length > 0 && <ol data-track-changes className="grid gap-px border-b border-line-soft px-4 py-2.5">
+        {changes.map((change, index) => <li key={`${change.label}-${index}`} className="flex min-w-0 items-baseline gap-2.5 py-1 text-[13px]">
+          <span className="grid size-[18px] shrink-0 place-items-center rounded-full bg-amber-500/15 font-mono text-[10.5px] font-bold text-warn">{index + 1}</span>
+          <code className="shrink-0 font-mono text-xs text-ink">{change.label}</code>
+          <span className="min-w-0 truncate text-ink-2">{change.what}</span>
+        </li>)}
+      </ol>}
+      {result?.changedPixels
+        ? <ComparisonPanel result={result} threshold={threshold} onThreshold={() => {}} updating={false} accepted error={undefined}/>
+        : <UnchangedPanel/>}
+    </VisualDialog>;
   } else if (dialog?.kind === "manage") {
     content = <VisualDialog closeRef={closeRef} onClose={close} title={t("visualManageTitle")} subtitle={t("visualStoredLocally")}>
       <ManageBaselines onDeleted={deleted => {
@@ -310,5 +452,8 @@ export function useVisualRegression(options: Options) {
     </div>;
   }
   const portal = content && createPortal(content, (getViewerContext()?.root ?? document).querySelector("[data-interface-layout]") ?? document.body);
-  return { capturing, busy, menuItems, dialog: portal, hasBefore, compare: () => void run("compare") };
+  return {
+    capturing, busy, menuItems, dialog: portal, hasBefore, compare: () => void run("compare"),
+    tracked, scheduleTrack, showTracked: () => { if (tracked) setDialog({ kind: "tracked" }); },
+  };
 }

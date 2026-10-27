@@ -27,6 +27,7 @@ export default defineConfig({
     permissions: [
       "activeTab",
       "contextMenus",
+      "debugger",
       "declarativeNetRequestWithHostAccess",
       "downloads",
       "scripting",

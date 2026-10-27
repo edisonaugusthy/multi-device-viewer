@@ -15,6 +15,8 @@ export interface FixPromptPrefill {
   expected?: string;
   selector?: string;
   findings?: string[];
+  /** The heading over the findings in the prompt; the Layout check's when left out. */
+  findingsTitle?: string;
   /** Shown as "Filled in from Layout check · problem {index} of {count}". */
   source?: { index: number; count: number };
 }
@@ -57,8 +59,9 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, initialIssue
     selector,
     notes,
     findings: initialIssue?.findings,
+    findingsTitle: initialIssue?.findingsTitle,
     devices: devices.filter(device => selected.has(device.id)),
-  }), [devices, expected, initialIssue?.findings, notes, pageUrl, selected, selector, steps, wrong]);
+  }), [devices, expected, initialIssue?.findings, initialIssue?.findingsTitle, notes, pageUrl, selected, selector, steps, wrong]);
 
   async function copy() {
     await navigator.clipboard.writeText(prompt);

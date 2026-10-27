@@ -1,5 +1,5 @@
 import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
-import { getViewerContext, getViewerEventTarget, getViewerRoot } from "../../app/viewer-context";
+import { deviceIdentitiesActive, getViewerContext, getViewerEventTarget, getViewerRoot, onDeviceIdentitiesChange } from "../../app/viewer-context";
 import { reportViewerState } from "../../app/viewer-state";
 import {
   useCallback,
@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useI18n } from "../../app/i18n";
@@ -53,6 +54,7 @@ import { useLayoutCheck } from "../hooks/useLayoutCheck";
 import { HelpModal } from "./HelpModal";
 import { PermissionsInfoModal } from "./PermissionsInfoModal";
 import { PermissionUpdateModal, PermissionUpdateNotice } from "./PermissionUpdateNotice";
+import { DeviceIdentitiesNotice } from "./DeviceIdentitiesNotice";
 import { PreviewCard, shortName } from "./PreviewCard";
 import { RecordingBar, RecordMenu, type FlowStatus } from "./RecordMenu";
 import type { Device } from "../../domain/device/device.types";
@@ -64,8 +66,16 @@ import { cx } from "./ui";
 import { useStableCallback } from "../hooks/useStableCallback";
 import { ViewModeBar } from "./ViewModeBar";
 import { WorkspaceHeader } from "./WorkspaceHeader";
+import { ProblemsPanel } from "./ProblemsPanel";
+import { useProblems } from "../hooks/useProblems";
+import { useConditions } from "../hooks/useConditions";
+import { ConditionsMenu, useConditionsSummary } from "./ConditionsMenu";
+import { CaptureMenu, CaptureStatus, useCaptures, type CaptureTarget } from "./CaptureMenu";
+import { setTracking, useTracking } from "../hooks/useTrackChanges";
+import { IdentityDialog } from "./IdentityDialog";
+import { chromeMajor, slotIdentity } from "../../domain/simulator/preview-identity";
 
-type Popover = "picker" | "settings" | "fix" | "record" | null;
+type Popover = "picker" | "settings" | "fix" | "record" | "conditions" | "capture" | null;
 
 interface SavedWorkspaceView {
   widths?: number[];
@@ -171,6 +181,8 @@ export function SimulatorApp() {
   // The add picker opens under whichever toolbar control was used.
   const [pickerAnchor, setPickerAnchor] = useState<"add" | "workspace">("add");
   const fixRef = useRef<HTMLButtonElement>(null);
+  const conditionsRef = useRef<HTMLButtonElement>(null);
+  const captureRef = useRef<HTMLButtonElement>(null);
   const recordRef = useRef<HTMLButtonElement>(null);
   const settingsRef = useRef<HTMLButtonElement>(null);
   const overlayFileInput = useRef<HTMLInputElement>(null);
@@ -746,6 +758,24 @@ export function SimulatorApp() {
     });
   }, [ready, slots, slotSizeStable, workspaceHydrated]);
   const layoutCheck = useLayoutCheck({ slots, findDevice, slotSize: slotSizeStable });
+  const debuggerActive = useSyncExternalStore(onDeviceIdentitiesChange, deviceIdentitiesActive);
+  const deviceNameOf = useCallback((slot: PreviewSlot) => findDevice(slot.deviceId).name, [findDevice]);
+  const problems = useProblems({ slots, deviceName: deviceNameOf });
+  // One docked panel at a time.
+  const toggleProblems = useStableCallback(() => { if (problems.open) problems.close(); else { layoutCheck.close(); problems.show(); } });
+  const showSlotProblems = useStableCallback((slotId: string) => { layoutCheck.close(); problems.show(slotId); });
+  const problemsShown = problems.open && !viewMode && !compare;
+  const conditions = useConditions(debuggerActive);
+  const trackingOn = useTracking();
+  const tracking = trackingOn && debuggerActive;
+  const captures = useCaptures();
+  const captureTargets: CaptureTarget[] = slots.map(slot => {
+    const device = findDevice(slot.deviceId);
+    return { slotId: slot.id, name: device.name, dpr: device.pixelRatio };
+  });
+  const conditionsSummary = useConditionsSummary(conditions.conditions);
+  const [identitiesOpen, setIdentitiesOpen] = useState(false);
+  const openIdentities = useCallback(() => setIdentitiesOpen(true), []);
   const layoutCheckSlot = useStableCallback((slotId: string) => layoutCheck.run([slotId]));
   const showLayoutProblems = useStableCallback((slotId: string) => {
     const group = layoutCheck.view.groups.find((item) => item.devices.some((device) => device.slotId === slotId));
@@ -800,7 +830,7 @@ export function SimulatorApp() {
             navigationSync={display.navigationSync}
             freeView={display.previewStyle === "free"}
             compare={compare}
-            capturing={capturing}
+            capturing={capturing || captures.busy}
             recordRef={recordRef}
             recordOpen={popover === "record"}
             recordingActive={recording || flowRecording}
@@ -809,7 +839,20 @@ export function SimulatorApp() {
             layoutOpen={layoutCheck.view.open}
             layoutChecking={layoutCheck.view.checking}
             layoutCount={layoutCheck.view.totals.problems}
-            onLayoutCheck={() => layoutCheck.view.open ? layoutCheck.close() : layoutCheck.run()}
+            onLayoutCheck={() => { if (layoutCheck.view.open) layoutCheck.close(); else { problems.close(); layoutCheck.run(); } }}
+            conditionsRef={conditionsRef}
+            conditionsOpen={popover === "conditions"}
+            conditionsSummary={conditions.anyOn ? conditionsSummary : ""}
+            onConditions={() => togglePopover("conditions")}
+            onConditionsOff={conditions.reset}
+            problemsOpen={problemsShown}
+            problemsCount={problems.total}
+            onProblems={toggleProblems}
+            trackAvailable={debuggerActive}
+            tracking={tracking}
+            onTracking={() => setTracking(!trackingOn)}
+            captureRef={captureRef}
+            captureOpen={popover === "capture"}
             settingsRef={settingsRef}
             settingsOpen={popover === "settings"}
             onAllDevices={openAllDevices}
@@ -820,7 +863,7 @@ export function SimulatorApp() {
             onFreeViewChange={(free) => updateDisplay((current) => ({ ...current, previewStyle: free ? "free" : "device" }))}
             onReloadAll={reloadAllSlots}
             onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
-            onCapture={() => void takeScopedScreenshot()}
+            onCapture={() => debuggerActive ? togglePopover("capture") : void takeScopedScreenshot()}
             onFixPrompt={() => popover === "fix" ? setPopover(null) : openFixPrompt()}
             onRecord={() => togglePopover("record")}
             onViewMode={enterViewMode}
@@ -843,6 +886,7 @@ export function SimulatorApp() {
           hidden={!ready || viewMode || compare || annotationOpen || capturing || recording || flowRecording || showFirstRun || Boolean(releaseNotes)}
           onDetails={() => { setPopover(null); setShowPermissionUpdate(true); }}
         />
+        <DeviceIdentitiesNotice hidden={!ready || viewMode || compare || annotationOpen || capturing || recording || flowRecording} />
         <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="flex min-h-0 flex-1">
           <div
@@ -902,6 +946,10 @@ export function SimulatorApp() {
                     onLayoutCheck={FEATURES.layoutCheck ? layoutCheckSlot : undefined}
                     onLayoutProblems={FEATURES.layoutCheck ? showLayoutProblems : undefined}
                     onPageReady={FEATURES.layoutCheck ? layoutCheck.onPageReady : undefined}
+                    problemCount={problems.countFor(slot.id)}
+                    onProblems={showSlotProblems}
+                    onCompareIdentities={debuggerActive ? openIdentities : undefined}
+                    tracking={tracking}
                     focusNavigation={focusNavigation}
                     onScaleChange={updateScale}
                     onPageScroll={comparing && compareMode === "side-by-side" && designScrollLinked ? onComparePageScroll : undefined}
@@ -953,6 +1001,14 @@ export function SimulatorApp() {
               </div>
             )}
           </div>
+          {problemsShown && (
+            <ProblemsPanel
+              view={{ ...problems, available: debuggerActive }}
+              onClose={problems.close}
+              onFix={(group) => { const { deviceIds, prefill } = problems.fixPromptFor([group]); openFixPrompt(deviceIds, prefill); }}
+              onFixAll={() => { const { deviceIds, prefill } = problems.fixPromptFor(problems.groups); openFixPrompt(deviceIds, prefill); }}
+            />
+          )}
           {layoutPanelShown && (
             <LayoutCheckPanel
               view={layoutCheck.view}
@@ -960,6 +1016,7 @@ export function SimulatorApp() {
               onCheckAgain={() => layoutCheck.run()}
               onSelect={layoutCheck.select}
               onFixPrompt={(group) => { const { deviceIds, prefill } = layoutCheck.fixPromptFor(group); openFixPrompt(deviceIds, prefill); }}
+              onFixAll={() => { const { deviceIds, prefill } = layoutCheck.fixPromptForAll(); openFixPrompt(deviceIds, prefill); }}
               onAfterReloadChange={layoutCheck.setAfterReload}
             />
           )}
@@ -1045,6 +1102,35 @@ export function SimulatorApp() {
         onTour={() => { setTourSince(null); setShowFirstRun(true); }}
         onWhatsNew={() => setReleaseNotes(CURRENT_RELEASE_NOTES)}
         onPermissions={() => setShowPermissions(true)}
+      />
+      {identitiesOpen && (
+        <IdentityDialog
+          onClose={() => setIdentitiesOpen(false)}
+          columns={slots.map((slot) => {
+            const device = findDevice(slot.deviceId);
+            const size = slotSize(slot.id);
+            return { slotId: slot.id, name: shortName(device.name), size: `${size.width}×${size.height}`,
+              identity: slotIdentity(device, chromeMajor(navigator.userAgent), { language: slot.language, sendDensity: slot.sendDensity, width: size.width }) };
+          })}
+        />
+      )}
+      <CaptureMenu
+        open={popover === "capture"}
+        anchorRef={captureRef}
+        onClose={closePopover}
+        active={captureTargets.find(target => target.slotId === activeSlotId) ?? captureTargets[0]}
+        targets={captureTargets}
+        captures={captures}
+        onWorkspace={() => void takeScopedScreenshot()}
+      />
+      <CaptureStatus captures={captures} />
+      <ConditionsMenu
+        open={popover === "conditions"}
+        anchorRef={conditionsRef}
+        conditions={conditions.conditions}
+        available={debuggerActive}
+        onChange={conditions.update}
+        onClose={closePopover}
       />
       <FixPromptPopover
         open={popover === "fix"}

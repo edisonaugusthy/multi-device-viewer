@@ -1,6 +1,4 @@
-import type { PreviewIdentities } from "../domain/simulator/preview-identity";
-import { describeHeaders, identityHeaders, PREVIEW_RULE_BASE, previewHost, previewRule, previewHeaderRule } from "../domain/simulator/preview-rules";
-import { previewRequestFilter } from "../domain/simulator/preview-request";
+import { PREVIEW_RULE_BASE, previewHost, previewRule } from "../domain/simulator/preview-rules";
 
 /** Session rules survive worker suspension; the browser clears them on restart/update. */
 export function createPreviewSessions() {
@@ -10,35 +8,26 @@ export function createPreviewSessions() {
   };
   const ownRules = async () => (await chrome.declarativeNetRequest.getSessionRules()).filter(rule => rule.id >= PREVIEW_RULE_BASE);
   return {
-    /** Merge this card's identity without disturbing other live workspace/gallery cards.
+    /** Let this card's host be framed, without disturbing other live workspace/gallery cards.
      * Read rules from Chrome on every change so worker suspension loses no state.
      */
-    prepare: (tabId: number, url: string, identities?: PreviewIdentities) => serial(async () => {
+    prepare: (tabId: number, url: string) => serial(async () => {
       const domain = previewHost(url);
       const rules = await ownRules();
       const own = rules.filter(rule => rule.condition.tabIds?.includes(tabId));
-      const domains = [...new Set(own.flatMap(rule => rule.condition.requestDomains ?? []))];
-      const known = domains.includes(domain);
-      if (!known && domains.length >= 32) throw new Error("Close and reopen Mobile View before previewing more sites.");
-      const used = new Set(rules.map(rule => rule.id));
-      const nextId = () => { let id = PREVIEW_RULE_BASE; while (used.has(id)) id++; used.add(id); return id; };
-      const removeRuleIds: number[] = [];
-      const addRules: chrome.declarativeNetRequest.Rule[] = [];
       const embedding = own.filter(rule => !rule.condition.urlFilter);
-      const existingEmbedding = embedding[0];
-      // Also replaces legacy split rules when an already-open viewer upgrades.
-      if (!known || embedding.length !== 1 || existingEmbedding?.action.requestHeaders?.length) {
-        removeRuleIds.push(...embedding.map(rule => rule.id));
-        addRules.push(previewRule(existingEmbedding?.id ?? nextId(), tabId, [...domains, domain]));
-      }
-      for (const [name, identity] of Object.entries(identities ?? {})) {
-        const existing = own.find(rule => rule.condition.urlFilter === previewRequestFilter(name));
-        if (existing && identity && describeHeaders(identityHeaders(identity)) === describeHeaders(existing.action.requestHeaders)) continue;
-        if (existing) removeRuleIds.push(existing.id);
-        if (identity) addRules.push(previewHeaderRule(existing?.id ?? nextId(), tabId, name, identity));
-      }
-      if (own.length - removeRuleIds.length + addRules.length > 301) throw new Error("Close and reopen Mobile View before adding more preview identities.");
-      if (addRules.length || removeRuleIds.length) await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds, addRules });
+      const domains = [...new Set(embedding.flatMap(rule => rule.condition.requestDomains ?? []))];
+      // Device headers now come from the debugger; an open viewer from an older version drops its per-device rules.
+      const legacy = own.filter(rule => rule.condition.urlFilter).map(rule => rule.id);
+      if (domains.includes(domain) && embedding.length === 1 && !legacy.length) return;
+      if (!domains.includes(domain) && domains.length >= 32) throw new Error("Close and reopen Mobile View before previewing more sites.");
+      let id = embedding[0]?.id ?? PREVIEW_RULE_BASE;
+      const used = new Set(rules.map(rule => rule.id));
+      if (!embedding.length) while (used.has(id)) id++;
+      await chrome.declarativeNetRequest.updateSessionRules({
+        removeRuleIds: [...embedding.map(rule => rule.id), ...legacy],
+        addRules: [previewRule(id, tabId, [...domains, domain])],
+      });
     }),
     close: (tabId: number) => serial(async () => {
       const removeRuleIds = (await ownRules()).filter(rule => rule.condition.tabIds?.includes(tabId)).map(rule => rule.id);

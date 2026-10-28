@@ -20,7 +20,7 @@ export default defineConfig({
     name: "__MSG_extensionName__",
     short_name: "__MSG_extensionShortName__",
     description: "__MSG_extensionDescription__",
-    version: "0.4.2",
+    version: "0.5.0",
     content_security_policy: {
       extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
     },

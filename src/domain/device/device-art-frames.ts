@@ -4202,7 +4202,7 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "cornerRadius": 0,
         "menuBar": {
           "height": 32,
-          "cornerRadius": 19
+          "cornerRadius": 30
         },
         "enableRotation": false
       },
@@ -4214,7 +4214,7 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "cornerRadius": 0,
         "menuBar": {
           "height": 32,
-          "cornerRadius": 19
+          "cornerRadius": 30
         },
         "enableRotation": false
       }
@@ -4238,7 +4238,7 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "cornerRadius": 0,
         "menuBar": {
           "height": 32,
-          "cornerRadius": 19
+          "cornerRadius": 30
         },
         "enableRotation": false
       },
@@ -4250,7 +4250,7 @@ export const deviceArtFrames: LocalMockupAsset[] = [
         "cornerRadius": 0,
         "menuBar": {
           "height": 32,
-          "cornerRadius": 19
+          "cornerRadius": 30
         },
         "enableRotation": false
       }

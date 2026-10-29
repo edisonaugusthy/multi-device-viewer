@@ -601,6 +601,8 @@ const en = {
   languageSendDensity: "Send screen density · {density}×",
   languageSendDensityPlain: "Send screen density",
   languageCompareDevices: "Compare all devices",
+  languageHintLead: "Works on sites that follow the browser’s language.",
+  languageHint: "Sites that pick it from their address or a cookie won’t change.",
   identitiesTitle: "What each device sends",
   identitiesDifferent: "Different from this browser · {browser}",
   identitiesCopyJson: "Copy all as JSON",

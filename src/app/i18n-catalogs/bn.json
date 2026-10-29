@@ -552,6 +552,8 @@
   "languageSendDensity": "স্ক্রিন ডেনসিটি পাঠান · {density}×",
   "languageSendDensityPlain": "স্ক্রিন ডেনসিটি পাঠান",
   "languageCompareDevices": "সব ডিভাইস তুলনা করুন",
+  "languageHintLead": "যে সাইটগুলো ব্রাউজারের ভাষা মেনে চলে সেগুলোতে কাজ করে।",
+  "languageHint": "যে সাইটগুলো ঠিকানা বা কুকি থেকে ভাষা ঠিক করে সেগুলো বদলাবে না।",
   "identitiesTitle": "প্রতিটি ডিভাইস কী পাঠায়",
   "identitiesDifferent": "এই ব্রাউজার থেকে আলাদা · {browser}",
   "identitiesCopyJson": "সব JSON হিসেবে কপি করুন",

@@ -552,6 +552,8 @@
   "languageSendDensity": "තිර ඝනත්වය යවන්න · {density}×",
   "languageSendDensityPlain": "තිර ඝනත්වය යවන්න",
   "languageCompareDevices": "සියලු උපාංග සසඳන්න",
+  "languageHintLead": "බ්‍රවුසරයේ භාෂාව අනුගමනය කරන අඩවිවල ක්‍රියා කරයි.",
+  "languageHint": "ලිපිනයෙන් හෝ කුකියකින් භාෂාව තීරණය කරන අඩවි වෙනස් නොවේ.",
   "identitiesTitle": "සෑම උපාංගයක්ම යවන දේ",
   "identitiesDifferent": "මෙම බ්‍රවුසරයට වඩා වෙනස් · {browser}",
   "identitiesCopyJson": "සියල්ල JSON ලෙස පිටපත් කරන්න",

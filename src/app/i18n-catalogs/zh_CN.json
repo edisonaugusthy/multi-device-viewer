@@ -552,6 +552,8 @@
   "languageSendDensity": "发送屏幕密度 · {density}×",
   "languageSendDensityPlain": "发送屏幕密度",
   "languageCompareDevices": "比较所有设备",
+  "languageHintLead": "适用于遵循浏览器语言的网站。",
+  "languageHint": "通过网址或 Cookie 决定语言的网站不会变。",
   "identitiesTitle": "每台设备发送的内容",
   "identitiesDifferent": "与此浏览器不同 · {browser}",
   "identitiesCopyJson": "全部复制为 JSON",

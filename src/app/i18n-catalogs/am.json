@@ -552,6 +552,8 @@
   "languageSendDensity": "የማያ ገጽ ጥግግት ላክ · {density}×",
   "languageSendDensityPlain": "የማያ ገጽ ጥግግት ላክ",
   "languageCompareDevices": "ሁሉንም መሣሪያዎች አወዳድር",
+  "languageHintLead": "የአሳሹን ቋንቋ በሚከተሉ ጣቢያዎች ላይ ይሠራል።",
+  "languageHint": "ቋንቋውን ከአድራሻቸው ወይም ከኩኪ የሚወስኑ ጣቢያዎች አይቀየሩም።",
   "identitiesTitle": "እያንዳንዱ መሣሪያ የሚልከው",
   "identitiesDifferent": "ከዚህ አሳሽ የተለየ · {browser}",
   "identitiesCopyJson": "ሁሉንም እንደ JSON ቅዳ",

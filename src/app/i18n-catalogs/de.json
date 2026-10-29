@@ -552,6 +552,8 @@
   "languageSendDensity": "Bildschirmdichte senden · {density}×",
   "languageSendDensityPlain": "Bildschirmdichte senden",
   "languageCompareDevices": "Alle Geräte vergleichen",
+  "languageHintLead": "Wirkt auf Websites, die der Sprache des Browsers folgen.",
+  "languageHint": "Websites, die sie über ihre Adresse oder ein Cookie festlegen, ändern sich nicht.",
   "identitiesTitle": "Was jedes Gerät sendet",
   "identitiesDifferent": "Anders als dieser Browser · {browser}",
   "identitiesCopyJson": "Alles als JSON kopieren",

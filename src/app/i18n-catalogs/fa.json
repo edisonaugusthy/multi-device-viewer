@@ -552,6 +552,8 @@
   "languageSendDensity": "ارسال تراکم صفحه · {density}×",
   "languageSendDensityPlain": "ارسال تراکم صفحه",
   "languageCompareDevices": "مقایسه همه دستگاه‌ها",
+  "languageHintLead": "روی سایت‌هایی کار می‌کند که از زبان مرورگر پیروی می‌کنند.",
+  "languageHint": "سایت‌هایی که زبان را از نشانی خود یا یک کوکی تعیین می‌کنند تغییر نمی‌کنند.",
   "identitiesTitle": "آنچه هر دستگاه می‌فرستد",
   "identitiesDifferent": "متفاوت با این مرورگر · {browser}",
   "identitiesCopyJson": "کپی همه به‌صورت JSON",

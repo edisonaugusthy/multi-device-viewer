@@ -552,6 +552,8 @@
   "languageSendDensity": "画面密度を送信 · {density}×",
   "languageSendDensityPlain": "画面密度を送信",
   "languageCompareDevices": "すべてのデバイスを比較",
+  "languageHintLead": "ブラウザーの言語に従うサイトで有効です。",
+  "languageHint": "URL や Cookie で言語を決めるサイトは変わりません。",
   "identitiesTitle": "各デバイスが送信する情報",
   "identitiesDifferent": "このブラウザーと異なる · {browser}",
   "identitiesCopyJson": "すべて JSON としてコピー",

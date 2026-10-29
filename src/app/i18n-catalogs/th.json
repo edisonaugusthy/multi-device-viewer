@@ -552,6 +552,8 @@
   "languageSendDensity": "ส่งความหนาแน่นหน้าจอ · {density}×",
   "languageSendDensityPlain": "ส่งความหนาแน่นหน้าจอ",
   "languageCompareDevices": "เปรียบเทียบอุปกรณ์ทั้งหมด",
+  "languageHintLead": "ใช้ได้กับเว็บไซต์ที่ใช้ภาษาตามเบราว์เซอร์",
+  "languageHint": "เว็บไซต์ที่กำหนดภาษาจากที่อยู่หรือคุกกี้จะไม่เปลี่ยน",
   "identitiesTitle": "สิ่งที่แต่ละอุปกรณ์ส่ง",
   "identitiesDifferent": "ต่างจากเบราว์เซอร์นี้ · {browser}",
   "identitiesCopyJson": "คัดลอกทั้งหมดเป็น JSON",

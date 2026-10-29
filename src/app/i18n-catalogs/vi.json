@@ -552,6 +552,8 @@
   "languageSendDensity": "Gửi mật độ màn hình · {density}×",
   "languageSendDensityPlain": "Gửi mật độ màn hình",
   "languageCompareDevices": "So sánh tất cả thiết bị",
+  "languageHintLead": "Có tác dụng với những trang theo ngôn ngữ của trình duyệt.",
+  "languageHint": "Trang đặt ngôn ngữ theo địa chỉ hoặc cookie sẽ không thay đổi.",
   "identitiesTitle": "Thông tin mỗi thiết bị gửi đi",
   "identitiesDifferent": "Khác với trình duyệt này · {browser}",
   "identitiesCopyJson": "Sao chép tất cả dạng JSON",

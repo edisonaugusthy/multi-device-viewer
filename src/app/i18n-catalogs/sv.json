@@ -552,6 +552,8 @@
   "languageSendDensity": "Skicka skärmtäthet · {density}×",
   "languageSendDensityPlain": "Skicka skärmtäthet",
   "languageCompareDevices": "Jämför alla enheter",
+  "languageHintLead": "Fungerar på webbplatser som följer webbläsarens språk.",
+  "languageHint": "Webbplatser som väljer det via adressen eller en cookie ändras inte.",
   "identitiesTitle": "Vad varje enhet skickar",
   "identitiesDifferent": "Skiljer sig från den här webbläsaren · {browser}",
   "identitiesCopyJson": "Kopiera allt som JSON",

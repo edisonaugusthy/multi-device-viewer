@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "../../app/i18n";
-import { CheckIcon, ChevronRightIcon, CloseIcon, SearchIcon } from "../icons";
+import { CheckIcon, ChevronRightIcon, CloseIcon, GlobeIcon, SearchIcon } from "../icons";
 import { cx, focusRing, Switch } from "./ui";
 
 /** Languages people most often test, by the tag browsers send, with each one's own name. */
@@ -47,9 +47,17 @@ export function LanguagePicker({ deviceName, language, sendDensity, density, onL
     <div role="dialog" aria-label={t("languageFor", { name: deviceName })} data-language-picker
       onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); onClose(); } }}
       className="absolute start-1/2 top-full z-[60] mt-2 flex w-[320px] -translate-x-1/2 flex-col whitespace-normal rounded-xl border border-line bg-surface text-ink shadow-popover rtl:translate-x-1/2">
-      <div className="flex items-center py-2.5 pe-2 ps-3.5">
-        <span className="flex-1 truncate text-sm font-semibold">{t("languageFor", { name: deviceName })}</span>
+      <div className="flex items-center py-2 pe-2 ps-3.5">
+        <span className="flex-1 truncate text-sm font-semibold">{t("language")}</span>
         <button type="button" onClick={onClose} aria-label={t("close")} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}><CloseIcon size={15} strokeWidth={2.2} /></button>
+      </div>
+      {/* The device only asks for the language; a site that ignores the header looks the same. */}
+      <div data-language-hint className="mx-3 mb-2.5 flex gap-2 rounded-[9px] border border-accent-line bg-accent-soft/45 px-2.5 py-2 text-accent-strong">
+        <GlobeIcon size={14} className="mt-px shrink-0" />
+        <p className="text-xs leading-[1.45]">
+          <span className="block font-semibold">{t("languageHintLead")}</span>
+          <span className="text-ink-2">{t("languageHint")}</span>
+        </p>
       </div>
       <label className="mx-3 mb-2 flex h-[34px] items-center gap-2 rounded-[9px] border border-line px-2.5 text-muted">
         <SearchIcon size={14} />

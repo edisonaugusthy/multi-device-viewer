@@ -552,6 +552,8 @@
   "languageSendDensity": "Ekran yoğunluğunu gönder · {density}×",
   "languageSendDensityPlain": "Ekran yoğunluğunu gönder",
   "languageCompareDevices": "Tüm cihazları karşılaştır",
+  "languageHintLead": "Tarayıcının dilini izleyen sitelerde çalışır.",
+  "languageHint": "Dili adresinden ya da bir çerezden belirleyen siteler değişmez.",
   "identitiesTitle": "Her cihazın gönderdikleri",
   "identitiesDifferent": "Bu tarayıcıdan farklı · {browser}",
   "identitiesCopyJson": "Tümünü JSON olarak kopyala",

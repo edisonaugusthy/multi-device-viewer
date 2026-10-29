@@ -552,6 +552,8 @@
   "languageSendDensity": "Передавати щільність екрана · {density}×",
   "languageSendDensityPlain": "Передавати щільність екрана",
   "languageCompareDevices": "Порівняти всі пристрої",
+  "languageHintLead": "Працює на сайтах, які йдуть за мовою браузера.",
+  "languageHint": "Сайти, що беруть її з адреси чи cookie, не зміняться.",
   "identitiesTitle": "Що передає кожен пристрій",
   "identitiesDifferent": "Відрізняється від цього браузера · {browser}",
   "identitiesCopyJson": "Копіювати все як JSON",

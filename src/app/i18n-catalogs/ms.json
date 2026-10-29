@@ -552,6 +552,8 @@
   "languageSendDensity": "Hantar ketumpatan skrin · {density}×",
   "languageSendDensityPlain": "Hantar ketumpatan skrin",
   "languageCompareDevices": "Bandingkan semua peranti",
+  "languageHintLead": "Berfungsi pada laman yang mengikut bahasa pelayar.",
+  "languageHint": "Laman yang menetapkannya melalui alamat atau kuki tidak akan berubah.",
   "identitiesTitle": "Apa yang dihantar setiap peranti",
   "identitiesDifferent": "Berbeza daripada penyemak imbas ini · {browser}",
   "identitiesCopyJson": "Salin semua sebagai JSON",

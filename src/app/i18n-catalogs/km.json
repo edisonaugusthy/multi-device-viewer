@@ -552,6 +552,8 @@
   "languageSendDensity": "ផ្ញើដង់ស៊ីតេអេក្រង់ · {density}×",
   "languageSendDensityPlain": "ផ្ញើដង់ស៊ីតេអេក្រង់",
   "languageCompareDevices": "ប្រៀបធៀបឧបករណ៍ទាំងអស់",
+  "languageHintLead": "ដំណើរការលើគេហទំព័រដែលធ្វើតាមភាសារបស់កម្មវិធីរុករក។",
+  "languageHint": "គេហទំព័រដែលកំណត់ភាសាពីអាសយដ្ឋាន ឬខូគីរបស់វានឹងមិនប្ដូរទេ។",
   "identitiesTitle": "អ្វីដែលឧបករណ៍នីមួយៗផ្ញើ",
   "identitiesDifferent": "ខុសពីកម្មវិធីរុករកនេះ · {browser}",
   "identitiesCopyJson": "ចម្លងទាំងអស់ជា JSON",

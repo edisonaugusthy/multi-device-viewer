@@ -552,6 +552,8 @@
   "languageSendDensity": "Kirim kepadatan layar · {density}×",
   "languageSendDensityPlain": "Kirim kepadatan layar",
   "languageCompareDevices": "Bandingkan semua perangkat",
+  "languageHintLead": "Berlaku di situs yang mengikuti bahasa browser.",
+  "languageHint": "Situs yang menentukannya dari alamat atau cookie tidak akan berubah.",
   "identitiesTitle": "Yang dikirim setiap perangkat",
   "identitiesDifferent": "Berbeda dari browser ini · {browser}",
   "identitiesCopyJson": "Salin semua sebagai JSON",

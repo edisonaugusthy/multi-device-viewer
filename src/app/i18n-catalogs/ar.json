@@ -552,6 +552,8 @@
   "languageSendDensity": "إرسال كثافة الشاشة · {density}×",
   "languageSendDensityPlain": "إرسال كثافة الشاشة",
   "languageCompareDevices": "مقارنة جميع الأجهزة",
+  "languageHintLead": "يعمل على المواقع التي تتبع لغة المتصفح.",
+  "languageHint": "لن تتغير المواقع التي تحدد اللغة من عنوانها أو من ملف تعريف ارتباط.",
   "identitiesTitle": "ما يرسله كل جهاز",
   "identitiesDifferent": "مختلف عن هذا المتصفح · {browser}",
   "identitiesCopyJson": "نسخ الكل بتنسيق JSON",

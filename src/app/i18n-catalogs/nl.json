@@ -552,6 +552,8 @@
   "languageSendDensity": "Schermdichtheid meesturen · {density}×",
   "languageSendDensityPlain": "Schermdichtheid meesturen",
   "languageCompareDevices": "Alle apparaten vergelijken",
+  "languageHintLead": "Werkt op sites die de taal van de browser volgen.",
+  "languageHint": "Sites die die via hun adres of een cookie instellen veranderen niet.",
   "identitiesTitle": "Wat elk apparaat verstuurt",
   "identitiesDifferent": "Anders dan deze browser · {browser}",
   "identitiesCopyJson": "Alles als JSON kopiëren",

@@ -552,6 +552,8 @@
   "languageSendDensity": "傳送螢幕密度 · {density}×",
   "languageSendDensityPlain": "傳送螢幕密度",
   "languageCompareDevices": "比較所有裝置",
+  "languageHintLead": "適用於依循瀏覽器語言的網站。",
+  "languageHint": "透過網址或 Cookie 決定語言的網站不會變。",
   "identitiesTitle": "每部裝置傳送的內容",
   "identitiesDifferent": "與此瀏覽器不同 · {browser}",
   "identitiesCopyJson": "全部複製為 JSON",

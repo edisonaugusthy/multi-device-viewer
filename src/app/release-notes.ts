@@ -58,8 +58,6 @@ export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
       title: "releaseSectionGeneral",
       notes: [
         { title: "releaseCameraMenuTitle", icon: "camera" },
-        { title: "releasePresetsCloseTitle", icon: "picker" },
-        { title: "releaseRecheckOffTitle", icon: "reload" },
       ],
     },
   ],

@@ -44,7 +44,7 @@ describe("decideStartupNotice", () => {
     const notes = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes);
     expect(notes.map(note => note.title)).toEqual([
       "releaseProblemsTitle", "releaseLayoutCauseTitle", "releaseNewMacsTitle", "releaseDeviceLanguageTitle", "releaseDeviceIdentityTitle",
-      "releaseCameraMenuTitle", "releasePresetsCloseTitle", "releaseRecheckOffTitle",
+      "releaseCameraMenuTitle",
     ]);
     expect(JSON.stringify(CURRENT_RELEASE_NOTES)).not.toMatch(/permission/i);
   });

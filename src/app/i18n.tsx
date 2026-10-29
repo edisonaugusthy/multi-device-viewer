@@ -335,8 +335,6 @@ const en = {
   releaseNewMacsTitle: "The new MacBook Pro",
   releaseNewMacsDescription: "The 14″ and 16″ MacBook Pro with PROLED XDR Display, with the camera pill in the menu bar just like the real thing.",
   releaseCameraMenuTitle: "The camera opens a short menu: screenshot this device or the whole workspace.",
-  releasePresetsCloseTitle: "Choosing a preset now closes the device picker.",
-  releaseRecheckOffTitle: "Layout check checks again after each reload only when you turn that on.",
   releaseRealPagesTitle: "Previews now load the real mobile or desktop page for each device.",
   releaseDuoSafariTitle: "iPhone Duo unfolded now shows Safari's real top bar.",
   releaseMacNotchTitle: "MacBooks now show their notch, just like the real thing.",

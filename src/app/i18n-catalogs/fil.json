@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Sinasabi na ng Pagsusuri ng layout ang sanhi",
   "releaseLayoutCauseDescription": "Ipinapakita ng bawat problema ang CSS rule sa likod nito, at inilalagay ng \"Ayusin lahat\" ang bawat problema sa iisang prompt.",
   "releaseDeviceLanguageTitle": "Wika para sa bawat device",
-  "releaseDeviceLanguageDescription": "Piliin ang wikang hinihingi ng device sa mga website, at ikumpara sa iisang table ang ipinapadala ng bawat device.",
+  "releaseDeviceLanguageDescription": "Piliin ang wikang hinihingi ng device sa mga website. Nagbabago lang ang mga site na sumusunod sa wika ng browser, hindi ang mga nagtatakda nito mula sa kanilang address o isang cookie.",
   "releaseDeviceIdentityTitle": "Mukhang totoo ang mga device sa script ng page",
   "releaseDeviceIdentityDescription": "Nakikita na rin ng sariling script ng page ang device, at ipinapadala ng mga Android, Windows at ChromeOS device ang buong detalye, gaya ng modelo ng phone.",
   "releaseNewMacsTitle": "Ang bagong MacBook Pro",

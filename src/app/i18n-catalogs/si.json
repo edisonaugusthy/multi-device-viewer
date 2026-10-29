@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "පිරිසැලසුම් පරීක්ෂාව හේතුව පවසයි",
   "releaseLayoutCauseDescription": "සෑම ගැටලුවක්ම එයට හේතු වූ CSS නීතිය පෙන්වයි, සහ \"සියල්ල නිවැරදි කරන්න\" සියලු ගැටලු එක් ප්‍රොම්ප්ටයකට දමයි.",
   "releaseDeviceLanguageTitle": "සෑම උපාංගයකටම භාෂාවක්",
-  "releaseDeviceLanguageDescription": "උපාංගයක් වෙබ් අඩවිවලින් ඉල්ලන භාෂාව තෝරන්න, සහ සෑම උපාංගයක්ම යවන දේ එක් වගුවක සසඳන්න.",
+  "releaseDeviceLanguageDescription": "උපාංගයක් වෙබ් අඩවිවලින් ඉල්ලන භාෂාව තෝරන්න. බ්‍රවුසරයේ භාෂාව අනුගමනය කරන අඩවි පමණක් වෙනස් වේ, ලිපිනයෙන් හෝ කුකියකින් භාෂාව තීරණය කරන ඒවා නොවේ.",
   "releaseDeviceIdentityTitle": "පිටු ස්ක්‍රිප්ට්වලට උපාංග සැබෑ ලෙස පෙනේ",
   "releaseDeviceIdentityDescription": "දැන් පිටුවේම ස්ක්‍රිප්ට්වලටද උපාංගය පෙනේ, සහ Android, Windows සහ ChromeOS උපාංග දුරකථන මාදිලිය වැනි සම්පූර්ණ විස්තර යවයි.",
   "releaseNewMacsTitle": "නව MacBook Pro",

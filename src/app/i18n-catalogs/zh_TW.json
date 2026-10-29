@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "版面檢查指出原因",
   "releaseLayoutCauseDescription": "每個問題都會顯示背後的 CSS 規則，「全部修復」會將所有問題放進一則提示詞。",
   "releaseDeviceLanguageTitle": "為每部裝置設定語言",
-  "releaseDeviceLanguageDescription": "選擇裝置向網站要求的語言，並在一張表格中比較每部裝置傳送的內容。",
+  "releaseDeviceLanguageDescription": "選擇裝置向網站要求的語言。只有依循瀏覽器語言的網站會跟著改變，透過網址或 Cookie 決定語言的網站不會變。",
   "releaseDeviceIdentityTitle": "頁面指令碼也會將裝置視為真機",
   "releaseDeviceIdentityDescription": "頁面本身的指令碼現在也能辨識裝置，Android、Windows 和 ChromeOS 裝置會傳送完整資訊，例如手機型號。",
   "releaseNewMacsTitle": "全新 MacBook Pro",

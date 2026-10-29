@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Проверка макета называет причину",
   "releaseLayoutCauseDescription": "Для каждой проблемы видно CSS-правило, а «Исправить все» собирает все проблемы в один промпт.",
   "releaseDeviceLanguageTitle": "Свой язык для каждого устройства",
-  "releaseDeviceLanguageDescription": "Выберите язык, который устройство запрашивает у сайтов, и сравните в одной таблице, что отправляет каждое.",
+  "releaseDeviceLanguageDescription": "Выберите язык, который устройство запрашивает у сайтов. Меняются только сайты, которые следуют языку браузера, а не те, что берут его из адреса или cookie.",
   "releaseDeviceIdentityTitle": "Устройства выглядят настоящими для скриптов",
   "releaseDeviceIdentityDescription": "Собственные скрипты страницы теперь тоже видят устройство, а устройства Android, Windows и ChromeOS передают все данные, например модель телефона.",
   "releaseNewMacsTitle": "Новый MacBook Pro",

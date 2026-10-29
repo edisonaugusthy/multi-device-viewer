@@ -329,7 +329,7 @@ const en = {
   releaseLayoutCauseTitle: "Layout check names the cause",
   releaseLayoutCauseDescription: "Each problem shows the CSS rule behind it, and Fix all puts every problem in one prompt.",
   releaseDeviceLanguageTitle: "A language for each device",
-  releaseDeviceLanguageDescription: "Choose the language a device asks websites for, and compare what every device sends in one table.",
+  releaseDeviceLanguageDescription: "Choose the language a device asks websites for. It changes only sites that follow the browser’s language, not those that set it from their address or a cookie.",
   releaseDeviceIdentityTitle: "Devices look real to page scripts",
   releaseDeviceIdentityDescription: "A page’s own scripts now see the device too, and Android, Windows and ChromeOS devices send their full details, such as the phone model.",
   releaseNewMacsTitle: "The new MacBook Pro",

@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Lay-outcontrole noemt de oorzaak",
   "releaseLayoutCauseDescription": "Elk probleem toont de CSS-regel erachter, en Alles oplossen zet alle problemen in één prompt.",
   "releaseDeviceLanguageTitle": "Een taal per apparaat",
-  "releaseDeviceLanguageDescription": "Kies welke taal een apparaat aan websites vraagt en vergelijk in één tabel wat elk apparaat verstuurt.",
+  "releaseDeviceLanguageDescription": "Kies welke taal een apparaat aan websites vraagt. Alleen sites die de taal van de browser volgen veranderen, niet sites die die via hun adres of een cookie instellen.",
   "releaseDeviceIdentityTitle": "Apparaten lijken echt voor paginascripts",
   "releaseDeviceIdentityDescription": "Ook de eigen scripts van een pagina zien nu het apparaat, en Android-, Windows- en ChromeOS-apparaten sturen al hun gegevens mee, zoals het telefoonmodel.",
   "releaseNewMacsTitle": "De nieuwe MacBook Pro",

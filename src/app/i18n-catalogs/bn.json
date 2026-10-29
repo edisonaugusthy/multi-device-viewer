@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "লেআউট পরীক্ষা এখন কারণ জানায়",
   "releaseLayoutCauseDescription": "প্রতিটি সমস্যা তার পেছনের CSS নিয়ম দেখায়, আর \"সব ঠিক করুন\" সব সমস্যা একটি প্রম্পটে রাখে।",
   "releaseDeviceLanguageTitle": "প্রতিটি ডিভাইসের জন্য আলাদা ভাষা",
-  "releaseDeviceLanguageDescription": "ডিভাইস ওয়েবসাইটের কাছে কোন ভাষা চাইবে তা বেছে নিন, আর প্রতিটি ডিভাইস কী পাঠায় তা একটি টেবিলে তুলনা করুন।",
+  "releaseDeviceLanguageDescription": "ডিভাইস ওয়েবসাইটের কাছে কোন ভাষা চাইবে তা বেছে নিন। এটি শুধু সেই সাইটগুলো বদলায় যেগুলো ব্রাউজারের ভাষা মেনে চলে, যেগুলো ঠিকানা বা কুকি থেকে ভাষা ঠিক করে সেগুলো নয়।",
   "releaseDeviceIdentityTitle": "পেজের স্ক্রিপ্টের কাছে ডিভাইস আসল মনে হয়",
   "releaseDeviceIdentityDescription": "এখন পেজের নিজস্ব স্ক্রিপ্টও ডিভাইসটি দেখে, আর Android, Windows ও ChromeOS ডিভাইস ফোনের মডেলের মতো পূর্ণ তথ্য পাঠায়।",
   "releaseNewMacsTitle": "নতুন MacBook Pro",

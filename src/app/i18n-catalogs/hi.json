@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "लेआउट जाँच अब कारण बताती है",
   "releaseLayoutCauseDescription": "हर समस्या अपने पीछे का CSS नियम दिखाती है, और \"सभी ठीक करें\" सभी समस्याओं को एक प्रॉम्प्ट में रख देता है।",
   "releaseDeviceLanguageTitle": "हर डिवाइस के लिए अलग भाषा",
-  "releaseDeviceLanguageDescription": "चुनें कि डिवाइस वेबसाइटों से कौन-सी भाषा माँगे, और एक ही तालिका में देखें कि हर डिवाइस क्या भेजता है।",
+  "releaseDeviceLanguageDescription": "चुनें कि डिवाइस वेबसाइटों से कौन-सी भाषा माँगे। इससे सिर्फ़ वे साइटें बदलती हैं जो ब्राउज़र की भाषा मानती हैं, वे नहीं जो भाषा अपने पते या कुकी से तय करती हैं।",
   "releaseDeviceIdentityTitle": "पेज की स्क्रिप्ट को डिवाइस असली लगते हैं",
   "releaseDeviceIdentityDescription": "अब पेज की अपनी स्क्रिप्ट भी डिवाइस को देखती हैं, और Android, Windows और ChromeOS डिवाइस अपनी पूरी जानकारी भेजते हैं, जैसे फ़ोन का मॉडल।",
   "releaseNewMacsTitle": "नया MacBook Pro",

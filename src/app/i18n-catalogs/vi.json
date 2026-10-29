@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Kiểm tra bố cục chỉ ra nguyên nhân",
   "releaseLayoutCauseDescription": "Mỗi sự cố hiện quy tắc CSS gây ra nó, và Sửa tất cả gộp mọi sự cố vào một prompt.",
   "releaseDeviceLanguageTitle": "Ngôn ngữ riêng cho từng thiết bị",
-  "releaseDeviceLanguageDescription": "Chọn ngôn ngữ mà thiết bị yêu cầu từ trang web, và so sánh những gì mỗi thiết bị gửi trong một bảng.",
+  "releaseDeviceLanguageDescription": "Chọn ngôn ngữ mà thiết bị yêu cầu từ trang web. Chỉ những trang theo ngôn ngữ của trình duyệt mới thay đổi, không phải trang đặt ngôn ngữ theo địa chỉ hoặc cookie.",
   "releaseDeviceIdentityTitle": "Thiết bị trông như thật với script trang",
   "releaseDeviceIdentityDescription": "Script của chính trang giờ cũng thấy thiết bị, và các thiết bị Android, Windows và ChromeOS gửi đầy đủ thông tin, như mẫu điện thoại.",
   "releaseNewMacsTitle": "MacBook Pro mới",

@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "የአቀማመጥ ፍተሻ ምክንያቱን ይጠቁማል",
   "releaseLayoutCauseDescription": "እያንዳንዱ ችግር ከጀርባው ያለውን የCSS ደንብ ያሳያል፤ «ሁሉንም አስተካክል» ደግሞ ሁሉንም ችግሮች በአንድ መመሪያ ውስጥ ያስቀምጣል።",
   "releaseDeviceLanguageTitle": "ለእያንዳንዱ መሣሪያ ቋንቋ",
-  "releaseDeviceLanguageDescription": "አንድ መሣሪያ ከድር ጣቢያዎች የሚጠይቀውን ቋንቋ ይምረጡ፣ እያንዳንዱ መሣሪያ የሚልከውንም በአንድ ሰንጠረዥ ያወዳድሩ።",
+  "releaseDeviceLanguageDescription": "አንድ መሣሪያ ከድር ጣቢያዎች የሚጠይቀውን ቋንቋ ይምረጡ። የአሳሹን ቋንቋ የሚከተሉ ጣቢያዎችን ብቻ ይቀይራል፤ ቋንቋውን ከአድራሻቸው ወይም ከኩኪ የሚወስኑትን አይቀይርም።",
   "releaseDeviceIdentityTitle": "መሣሪያዎች ለገጽ ስክሪፕቶች እውነተኛ ይመስላሉ",
   "releaseDeviceIdentityDescription": "አሁን የገጹ የራሱ ስክሪፕቶችም መሣሪያውን ያያሉ፤ የAndroid፣ Windows እና ChromeOS መሣሪያዎችም እንደ ስልክ ሞዴል ያሉ ሙሉ ዝርዝሮቻቸውን ይልካሉ።",
   "releaseNewMacsTitle": "አዲሱ MacBook Pro",

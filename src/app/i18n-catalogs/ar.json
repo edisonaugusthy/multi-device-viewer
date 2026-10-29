@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "فحص التخطيط يحدد السبب",
   "releaseLayoutCauseDescription": "تعرض كل مشكلة قاعدة CSS المسببة لها، ويجمع «إصلاح الكل» كل المشكلات في موجّه واحد.",
   "releaseDeviceLanguageTitle": "لغة لكل جهاز",
-  "releaseDeviceLanguageDescription": "اختر اللغة التي يطلبها الجهاز من المواقع، وقارن ما يرسله كل جهاز في جدول واحد.",
+  "releaseDeviceLanguageDescription": "اختر اللغة التي يطلبها الجهاز من المواقع. لا يتغير إلا الموقع الذي يتبع لغة المتصفح، لا الذي يحددها من عنوانه أو من ملف تعريف ارتباط.",
   "releaseDeviceIdentityTitle": "الأجهزة تبدو حقيقية لبرامج الصفحة النصية",
   "releaseDeviceIdentityDescription": "أصبحت البرامج النصية للصفحة نفسها ترى الجهاز أيضًا، وترسل أجهزة Android وWindows وChromeOS تفاصيلها الكاملة، مثل طراز الهاتف.",
   "releaseNewMacsTitle": "MacBook Pro الجديد",

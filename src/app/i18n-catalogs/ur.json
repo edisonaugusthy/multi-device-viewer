@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "لے آؤٹ کی جانچ وجہ بتاتی ہے",
   "releaseLayoutCauseDescription": "ہر مسئلہ اپنے پیچھے موجود CSS اصول دکھاتا ہے، اور \"سب ٹھیک کریں\" تمام مسائل کو ایک پرامپٹ میں ڈال دیتا ہے۔",
   "releaseDeviceLanguageTitle": "ہر ڈیوائس کے لیے ایک زبان",
-  "releaseDeviceLanguageDescription": "وہ زبان منتخب کریں جو ڈیوائس ویب سائٹس سے مانگتی ہے، اور ایک ہی جدول میں دیکھیں کہ ہر ڈیوائس کیا بھیجتی ہے۔",
+  "releaseDeviceLanguageDescription": "وہ زبان منتخب کریں جو ڈیوائس ویب سائٹس سے مانگتی ہے۔ صرف وہ سائٹس بدلتی ہیں جو براؤزر کی زبان پر چلتی ہیں، وہ نہیں جو زبان اپنے پتے یا کوکی سے طے کرتی ہیں۔",
   "releaseDeviceIdentityTitle": "صفحے کے اسکرپٹس کو ڈیوائسز اصلی لگتی ہیں",
   "releaseDeviceIdentityDescription": "اب صفحے کے اپنے اسکرپٹس بھی ڈیوائس دیکھتے ہیں، اور Android، Windows اور ChromeOS ڈیوائسز اپنی پوری تفصیلات بھیجتی ہیں، جیسے فون کا ماڈل۔",
   "releaseNewMacsTitle": "نیا MacBook Pro",

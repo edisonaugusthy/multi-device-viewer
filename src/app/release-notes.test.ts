@@ -38,14 +38,9 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with Track changes, then review tools, the new MacBook Pro and other devices, and smaller changes, and no longer mentions a permission", () => {
-    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseTrackChangesTitle", description: "releaseTrackChangesDescription", icon: "compare" });
-    expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual(["releaseSectionReview", "releaseSectionDevices", "releaseSectionGeneral"]);
-    const notes = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes);
-    expect(notes.map(note => note.title)).toEqual([
-      "releaseProblemsTitle", "releaseLayoutCauseTitle", "releaseNewMacsTitle", "releaseDeviceLanguageTitle", "releaseDeviceIdentityTitle",
-      "releaseCameraMenuTitle",
-    ]);
-    expect(JSON.stringify(CURRENT_RELEASE_NOTES)).not.toMatch(/permission/i);
+  it("leads with the new MacBook Pro and adds only the language for each device", () => {
+    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseNewMacsTitle", description: "releaseNewMacsDescription", icon: "frames" });
+    expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual(["releaseSectionDevices"]);
+    expect(CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes).map(note => note.title)).toEqual(["releaseDeviceLanguageTitle"]);
   });
 });

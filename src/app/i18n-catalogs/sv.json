@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Layoutkontroll anger orsaken",
   "releaseLayoutCauseDescription": "Varje problem visar CSS-regeln bakom det, och Åtgärda alla samlar alla problem i en prompt.",
   "releaseDeviceLanguageTitle": "Ett språk för varje enhet",
-  "releaseDeviceLanguageDescription": "Välj vilket språk en enhet ber webbplatser om och jämför vad varje enhet skickar i en tabell.",
+  "releaseDeviceLanguageDescription": "Välj vilket språk en enhet ber webbplatser om. Det ändrar bara webbplatser som följer webbläsarens språk, inte sådana som väljer det via adressen eller en cookie.",
   "releaseDeviceIdentityTitle": "Enheter ser äkta ut för sidskript",
   "releaseDeviceIdentityDescription": "Sidans egna skript ser nu också enheten, och Android-, Windows- och ChromeOS-enheter skickar alla detaljer, som telefonmodellen.",
   "releaseNewMacsTitle": "Nya MacBook Pro",

@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Semakan susun atur menamakan puncanya",
   "releaseLayoutCauseDescription": "Setiap masalah menunjukkan peraturan CSS di sebaliknya, dan Baiki semua meletakkan semua masalah dalam satu gesaan.",
   "releaseDeviceLanguageTitle": "Bahasa untuk setiap peranti",
-  "releaseDeviceLanguageDescription": "Pilih bahasa yang diminta peranti daripada laman web, dan bandingkan apa yang dihantar setiap peranti dalam satu jadual.",
+  "releaseDeviceLanguageDescription": "Pilih bahasa yang diminta peranti daripada laman web. Hanya laman yang mengikut bahasa pelayar akan berubah, bukan laman yang menetapkannya melalui alamat atau kuki.",
   "releaseDeviceIdentityTitle": "Peranti kelihatan sebenar bagi skrip halaman",
   "releaseDeviceIdentityDescription": "Skrip halaman itu sendiri kini turut melihat peranti, dan peranti Android, Windows dan ChromeOS menghantar butiran penuh, seperti model telefon.",
   "releaseNewMacsTitle": "MacBook Pro baharu",

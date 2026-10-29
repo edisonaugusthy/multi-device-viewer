@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Il controllo del layout indica la causa",
   "releaseLayoutCauseDescription": "Ogni problema mostra la regola CSS che lo causa, e Correggi tutto mette tutti i problemi in un unico prompt.",
   "releaseDeviceLanguageTitle": "Una lingua per ogni dispositivo",
-  "releaseDeviceLanguageDescription": "Scegli la lingua che un dispositivo chiede ai siti e confronta in una tabella cosa invia ogni dispositivo.",
+  "releaseDeviceLanguageDescription": "Scegli la lingua che un dispositivo chiede ai siti. Cambiano solo i siti che seguono la lingua del browser, non quelli che la fissano dall’indirizzo o da un cookie.",
   "releaseDeviceIdentityTitle": "Dispositivi realistici per gli script",
   "releaseDeviceIdentityDescription": "Ora anche gli script della pagina vedono il dispositivo, e i dispositivi Android, Windows e ChromeOS inviano tutti i dettagli, come il modello del telefono.",
   "releaseNewMacsTitle": "Il nuovo MacBook Pro",

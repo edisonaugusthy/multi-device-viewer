@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "La vérification de la mise en page nomme la cause",
   "releaseLayoutCauseDescription": "Chaque problème indique la règle CSS en cause, et Tout corriger réunit tous les problèmes dans un prompt.",
   "releaseDeviceLanguageTitle": "Une langue par appareil",
-  "releaseDeviceLanguageDescription": "Choisissez la langue qu’un appareil demande aux sites, et comparez dans un tableau ce qu’envoie chaque appareil.",
+  "releaseDeviceLanguageDescription": "Choisissez la langue qu’un appareil demande aux sites. Seuls les sites qui suivent la langue du navigateur changent, pas ceux qui la fixent par leur adresse ou un cookie.",
   "releaseDeviceIdentityTitle": "Des appareils crédibles pour les scripts",
   "releaseDeviceIdentityDescription": "Les scripts de la page voient désormais aussi l’appareil, et les appareils Android, Windows et ChromeOS envoient tous leurs détails, comme le modèle du téléphone.",
   "releaseNewMacsTitle": "Le nouveau MacBook Pro",

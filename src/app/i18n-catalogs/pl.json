@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Sprawdzanie układu wskazuje przyczynę",
   "releaseLayoutCauseDescription": "Każdy problem pokazuje stojącą za nim regułę CSS, a Napraw wszystko łączy wszystkie problemy w jeden prompt.",
   "releaseDeviceLanguageTitle": "Osobny język dla każdego urządzenia",
-  "releaseDeviceLanguageDescription": "Wybierz język, o który urządzenie prosi strony, i porównaj w jednej tabeli, co wysyła każde urządzenie.",
+  "releaseDeviceLanguageDescription": "Wybierz język, o który urządzenie prosi strony. Zmieniają się tylko strony, które kierują się językiem przeglądarki, a nie te, które ustalają go z adresu lub pliku cookie.",
   "releaseDeviceIdentityTitle": "Urządzenia wyglądają realnie dla skryptów",
   "releaseDeviceIdentityDescription": "Własne skrypty strony też widzą teraz urządzenie, a urządzenia Android, Windows i ChromeOS wysyłają pełne dane, np. model telefonu.",
   "releaseNewMacsTitle": "Nowy MacBook Pro",

@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "レイアウトチェックが原因を表示",
   "releaseLayoutCauseDescription": "各問題の原因となる CSS ルールを表示。「すべて修正」で、すべての問題を 1 つのプロンプトにまとめます。",
   "releaseDeviceLanguageTitle": "デバイスごとに言語を設定",
-  "releaseDeviceLanguageDescription": "デバイスがウェブサイトに求める言語を選び、各デバイスが送信する情報を 1 つの表で比較できます。",
+  "releaseDeviceLanguageDescription": "デバイスがウェブサイトに求める言語を選べます。変わるのはブラウザーの言語に従うサイトだけで、URL や Cookie で言語を決めるサイトは変わりません。",
   "releaseDeviceIdentityTitle": "ページのスクリプトにも本物のデバイスに",
   "releaseDeviceIdentityDescription": "ページ自身のスクリプトにもデバイスが反映され、Android、Windows、ChromeOS のデバイスはスマートフォンの機種などの詳細をすべて送信します。",
   "releaseNewMacsTitle": "新しい MacBook Pro",

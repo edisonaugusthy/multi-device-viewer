@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Pemeriksaan tata letak menyebut penyebabnya",
   "releaseLayoutCauseDescription": "Setiap masalah menampilkan aturan CSS penyebabnya, dan Perbaiki semua memasukkan semua masalah ke satu prompt.",
   "releaseDeviceLanguageTitle": "Bahasa untuk setiap perangkat",
-  "releaseDeviceLanguageDescription": "Pilih bahasa yang diminta perangkat dari situs web, dan bandingkan apa yang dikirim setiap perangkat dalam satu tabel.",
+  "releaseDeviceLanguageDescription": "Pilih bahasa yang diminta perangkat dari situs web. Hanya situs yang mengikuti bahasa browser yang berubah, bukan situs yang menentukannya dari alamat atau cookie.",
   "releaseDeviceIdentityTitle": "Perangkat terlihat nyata bagi skrip halaman",
   "releaseDeviceIdentityDescription": "Skrip milik halaman kini juga melihat perangkatnya, dan perangkat Android, Windows, dan ChromeOS mengirim detail lengkap, seperti model ponsel.",
   "releaseNewMacsTitle": "MacBook Pro baru",

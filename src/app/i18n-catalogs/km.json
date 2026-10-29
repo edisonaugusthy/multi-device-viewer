@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "ការត្រួតពិនិត្យប្លង់ប្រាប់ពីមូលហេតុ",
   "releaseLayoutCauseDescription": "បញ្ហានីមួយៗបង្ហាញច្បាប់ CSS ដែលបង្កវា ហើយ «ជួសជុលទាំងអស់» ដាក់បញ្ហាទាំងអស់ក្នុងប្រូមត៍តែមួយ។",
   "releaseDeviceLanguageTitle": "ភាសាសម្រាប់ឧបករណ៍នីមួយៗ",
-  "releaseDeviceLanguageDescription": "ជ្រើសរើសភាសាដែលឧបករណ៍ស្នើពីគេហទំព័រ ហើយប្រៀបធៀបអ្វីដែលឧបករណ៍នីមួយៗផ្ញើក្នុងតារាងតែមួយ។",
+  "releaseDeviceLanguageDescription": "ជ្រើសរើសភាសាដែលឧបករណ៍ស្នើពីគេហទំព័រ។ វាប្ដូរតែគេហទំព័រដែលធ្វើតាមភាសារបស់កម្មវិធីរុករកប៉ុណ្ណោះ មិនមែនគេហទំព័រដែលកំណត់ភាសាពីអាសយដ្ឋាន ឬខូគីរបស់វាទេ។",
   "releaseDeviceIdentityTitle": "ឧបករណ៍មើលទៅដូចពិតចំពោះស្គ្រីបទំព័រ",
   "releaseDeviceIdentityDescription": "ឥឡូវស្គ្រីបរបស់ទំព័រផ្ទាល់ក៏ឃើញឧបករណ៍ដែរ ហើយឧបករណ៍ Android, Windows និង ChromeOS ផ្ញើព័ត៌មានលម្អិតពេញលេញ ដូចជាម៉ូដែលទូរសព្ទ។",
   "releaseNewMacsTitle": "MacBook Pro ថ្មី",

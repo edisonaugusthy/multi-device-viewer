@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Yerleşim denetimi nedeni söylüyor",
   "releaseLayoutCauseDescription": "Her sorun arkasındaki CSS kuralını gösterir ve Tümünü düzelt tüm sorunları tek bir isteme koyar.",
   "releaseDeviceLanguageTitle": "Her cihaza bir dil",
-  "releaseDeviceLanguageDescription": "Bir cihazın sitelerden istediği dili seçin ve her cihazın ne gönderdiğini tek tabloda karşılaştırın.",
+  "releaseDeviceLanguageDescription": "Bir cihazın sitelerden istediği dili seçin. Yalnızca tarayıcının dilini izleyen siteler değişir; dili adresinden ya da bir çerezden belirleyenler değişmez.",
   "releaseDeviceIdentityTitle": "Cihazlar sayfa betiklerine gerçek görünür",
   "releaseDeviceIdentityDescription": "Sayfanın kendi betikleri artık cihazı da görür; Android, Windows ve ChromeOS cihazları telefon modeli gibi tüm ayrıntıları gönderir.",
   "releaseNewMacsTitle": "Yeni MacBook Pro",

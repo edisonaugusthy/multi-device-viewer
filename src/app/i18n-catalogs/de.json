@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "Die Layout-Prüfung nennt die Ursache",
   "releaseLayoutCauseDescription": "Jedes Problem zeigt die CSS-Regel dahinter, und „Alle beheben“ packt alle Probleme in einen Prompt.",
   "releaseDeviceLanguageTitle": "Eine Sprache pro Gerät",
-  "releaseDeviceLanguageDescription": "Wähle, welche Sprache ein Gerät von Websites anfordert, und vergleiche in einer Tabelle, was jedes Gerät sendet.",
+  "releaseDeviceLanguageDescription": "Wähle, welche Sprache ein Gerät von Websites anfordert. Das ändert nur Websites, die der Sprache des Browsers folgen, nicht solche, die sie über ihre Adresse oder ein Cookie festlegen.",
   "releaseDeviceIdentityTitle": "Geräte wirken für Seitenskripte echt",
   "releaseDeviceIdentityDescription": "Auch die eigenen Skripte einer Seite sehen jetzt das Gerät, und Android-, Windows- und ChromeOS-Geräte senden alle Details, etwa das Handymodell.",
   "releaseNewMacsTitle": "Das neue MacBook Pro",

@@ -280,7 +280,7 @@
   "releaseLayoutCauseTitle": "ตรวจสอบเลย์เอาต์บอกสาเหตุได้แล้ว",
   "releaseLayoutCauseDescription": "แต่ละปัญหาแสดงกฎ CSS ที่เป็นต้นเหตุ และ \"แก้ไขทั้งหมด\" จะรวมทุกปัญหาไว้ในพรอมต์เดียว",
   "releaseDeviceLanguageTitle": "ภาษาสำหรับแต่ละอุปกรณ์",
-  "releaseDeviceLanguageDescription": "เลือกภาษาที่อุปกรณ์ขอจากเว็บไซต์ และเปรียบเทียบสิ่งที่แต่ละอุปกรณ์ส่งในตารางเดียว",
+  "releaseDeviceLanguageDescription": "เลือกภาษาที่อุปกรณ์ขอจากเว็บไซต์ จะเปลี่ยนเฉพาะเว็บไซต์ที่ใช้ภาษาตามเบราว์เซอร์ ไม่ใช่เว็บไซต์ที่กำหนดภาษาจากที่อยู่หรือคุกกี้",
   "releaseDeviceIdentityTitle": "สคริปต์ของหน้าเว็บเห็นอุปกรณ์เหมือนของจริง",
   "releaseDeviceIdentityDescription": "ตอนนี้สคริปต์ของหน้าเว็บเองก็เห็นอุปกรณ์ด้วย และอุปกรณ์ Android, Windows และ ChromeOS จะส่งรายละเอียดครบถ้วน เช่น รุ่นโทรศัพท์",
   "releaseNewMacsTitle": "MacBook Pro ใหม่",

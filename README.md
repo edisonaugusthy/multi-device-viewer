@@ -14,14 +14,14 @@ Open the current website or local development server in up to four live device v
 
 ## Devices
 
-117 built-in devices, each with its CSS viewport, pixel ratio and an original device frame:
+119 built-in devices, each with its CSS viewport, pixel ratio and an original device frame:
 
 | Category | Presets | Examples |
 |---|---:|---|
 | iOS phones | 38 | iPhone 5 to iPhone 18 Pro Max, iPhone SE (3rd generation), iPhone Air, iPhone Duo (folded and unfolded) |
 | Android phones | 49 | Galaxy S, A, Z Flip and Z Fold series, Pixel 5 to Pixel 11 Pro Fold, Motorola, Xiaomi, OnePlus, Zebra |
 | Tablets | 10 | iPad mini, iPad Air, iPad Pro, Galaxy Tab, Surface Duo, Toughbook |
-| Laptops | 10 | MacBook Air (M4), MacBook Pro, MacBook Neo, Surface Laptop, Dell Latitude, Lenovo IdeaPad at 125% scaling, Acer Chromebook 314 |
+| Laptops | 12 | MacBook Air (M4), MacBook Pro (14″ and 16″ PROLED XDR with the camera pill), MacBook Neo, Surface Laptop, Dell Latitude, Lenovo IdeaPad at 125% scaling, Acer Chromebook 314 |
 | Desktops | 3 | iMac 24, Studio Display, Dell 24-inch Full HD monitor |
 | TVs | 1 | 55-inch 4K smart TV |
 | Custom | 3 | Self-service kiosk, wall panel, Apple HomeView smart display |

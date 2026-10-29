@@ -4185,6 +4185,78 @@ export const deviceArtFrames: LocalMockupAsset[] = [
     }
   },
   {
+    "id": "apple-macbook-pro-14-proled-2026",
+    "width": 1600,
+    "height": 1052,
+    "renderScale": 1.084128,
+    "cssViewport": {
+      "width": 1512,
+      "height": 961
+    },
+    "viewport": {
+      "landscape": {
+        "left": 111.26,
+        "top": 51.55,
+        "width": 1512,
+        "height": 961,
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
+        },
+        "enableRotation": false
+      },
+      "portrait": {
+        "left": 111.26,
+        "top": 51.55,
+        "width": 1512,
+        "height": 961,
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
+        },
+        "enableRotation": false
+      }
+    }
+  },
+  {
+    "id": "apple-macbook-pro-16-proled-2026",
+    "width": 1601,
+    "height": 1037,
+    "renderScale": 1.238697,
+    "cssViewport": {
+      "width": 1736,
+      "height": 1101
+    },
+    "viewport": {
+      "landscape": {
+        "left": 122.98,
+        "top": 51.52,
+        "width": 1736,
+        "height": 1101,
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
+        },
+        "enableRotation": false
+      },
+      "portrait": {
+        "left": 122.98,
+        "top": 51.52,
+        "width": 1736,
+        "height": 1101,
+        "cornerRadius": 0,
+        "menuBar": {
+          "height": 32,
+          "cornerRadius": 19
+        },
+        "enableRotation": false
+      }
+    }
+  },
+  {
     "id": "samsung-galaxy-s26-plus-2026",
     "width": 776,
     "height": 1601,

@@ -1484,6 +1484,34 @@
     "rotate": false
   },
   {
+    "id": "apple-macbook-pro-14-proled-2026",
+    "name": "Apple MacBook Pro 14-inch (PROLED XDR)",
+    "cssViewport": {
+      "width": 1512,
+      "height": 961
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 3024,
+      "height": 1986
+    },
+    "rotate": false
+  },
+  {
+    "id": "apple-macbook-pro-16-proled-2026",
+    "name": "Apple MacBook Pro 16-inch (PROLED XDR)",
+    "cssViewport": {
+      "width": 1736,
+      "height": 1101
+    },
+    "pixelRatio": 2,
+    "manufacturerResolution": {
+      "width": 3472,
+      "height": 2266
+    },
+    "rotate": false
+  },
+  {
     "id": "samsung-galaxy-s26-plus-2026",
     "name": "Samsung Galaxy S26+",
     "cssViewport": {

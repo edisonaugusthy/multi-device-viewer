@@ -706,6 +706,20 @@ const deviceDisplaySpecs: Record<string, DeviceDisplaySpec> = {
     pixelRatio: 1,
     manufacturerResolution: { width: 1920, height: 1080 },
   },
+  // PROLED XDR (tandem OLED, 2026): the camera sits in a pill cut into the menu bar,
+  // not a notch. 14.2″ 3024 × 1986, so "looks like 1512 × 993"; the page gets
+  // what the 32 px menu bar leaves.
+  "apple-macbook-pro-14-proled-2026": {
+    cssViewport: { width: 1512, height: 961 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 3024, height: 1986 },
+  },
+  // 16.3″ 3472 × 2266, so "looks like 1736 × 1133", less the menu bar.
+  "apple-macbook-pro-16-proled-2026": {
+    cssViewport: { width: 1736, height: 1101 },
+    pixelRatio: 2,
+    manufacturerResolution: { width: 3472, height: 2266 },
+  },
 };
 
 export const devices: Device[] = dedupeDevices([
@@ -930,7 +944,9 @@ function tagsFromId(id: string, type: Device["type"], os: string) {
     "apple-macbook-air-13-m4-2025",
     "lenovo-ideapad-slim-3-15-2024",
     "acer-chromebook-314-2023",
-    "dell-p2425h-24-2024"
+    "dell-p2425h-24-2024",
+    "apple-macbook-pro-14-proled-2026",
+    "apple-macbook-pro-16-proled-2026",
 ]);
   return [
     type,
@@ -975,6 +991,8 @@ function nameFromId(id: string) {
     "lenovo-ideapad-slim-3-15-2024": "Lenovo IdeaPad Slim 3 15-inch",
     "acer-chromebook-314-2023": "Acer Chromebook 314",
     "dell-p2425h-24-2024": "Dell P2425H 24-inch Monitor",
+    "apple-macbook-pro-14-proled-2026": "Apple MacBook Pro 14-inch (PROLED XDR)",
+    "apple-macbook-pro-16-proled-2026": "Apple MacBook Pro 16-inch (PROLED XDR)",
   };
   if (normalizedNames[id]) return normalizedNames[id];
 

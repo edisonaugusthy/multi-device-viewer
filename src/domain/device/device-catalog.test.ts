@@ -119,6 +119,8 @@ describe("device catalog imports", () => {
       "acer-chromebook-314-2023",
       "apple-iphone-se-2022",
       "apple-macbook-air-13-m4-2025",
+      "apple-macbook-pro-14-proled-2026",
+      "apple-macbook-pro-16-proled-2026",
       "dell-p2425h-24-2024",
       "lenovo-ideapad-slim-3-15-2024",
     ]);
@@ -165,6 +167,8 @@ describe("device catalog imports", () => {
     ["lenovo-ideapad-slim-3-15-2024", "Lenovo IdeaPad Slim 3 15-inch", "Lenovo", "Laptop", "laptop", "Windows", 1536, 864, 1.25],
     ["acer-chromebook-314-2023", "Acer Chromebook 314", "Acer", "Chromebook", "laptop", "ChromeOS", 1366, 768, 1],
     ["dell-p2425h-24-2024", "Dell P2425H 24-inch Monitor", "Dell", "Monitor", "desktop", "Windows", 1920, 1080, 1],
+    ["apple-macbook-pro-14-proled-2026", "Apple MacBook Pro 14-inch (PROLED XDR)", "Apple", "MacBook", "laptop", "macOS", 1512, 961, 2],
+    ["apple-macbook-pro-16-proled-2026", "Apple MacBook Pro 16-inch (PROLED XDR)", "Apple", "MacBook", "laptop", "macOS", 1736, 1101, 2],
   ] as const)("adds %s as a new device at the common size it stands for", (id, name, brand, family, type, os, width, height, pixelRatio) => {
     const device = devices.find((candidate) => candidate.id === id)!;
     expect(device).toMatchObject({ name, brand, family, type, os, cssViewport: { width, height }, pixelRatio });
@@ -529,6 +533,8 @@ describe("device catalog imports", () => {
     "lenovo-ideapad-slim-3-15-2024",
     "acer-chromebook-314-2023",
     "dell-p2425h-24-2024",
+    "apple-macbook-pro-14-proled-2026",
+    "apple-macbook-pro-16-proled-2026",
   ])("keeps the calibrated screen for %s inside its rendered frame", (id) => {
     const device = devices.find((candidate) => candidate.id === id)!;
     const asset = device.mockupAssets[0];
@@ -571,6 +577,8 @@ describe("device catalog imports", () => {
     "lenovo-ideapad-slim-3-15-2024",
     "acer-chromebook-314-2023",
     "dell-p2425h-24-2024",
+    "apple-macbook-pro-14-proled-2026",
+    "apple-macbook-pro-16-proled-2026",
   ])("keeps the generated screen inside its frame for %s", (id) => {
     const asset = devices.find((candidate) => candidate.id === id)!.mockupAssets[0];
     const frameWidth = asset.width! * asset.renderScale!;

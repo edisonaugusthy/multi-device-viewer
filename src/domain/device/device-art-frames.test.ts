@@ -23,8 +23,9 @@ describe("replacement frame migration", () => {
     }
   });
 
-  it("opens a menu bar strip above the page of every notched Mac, and only those", () => {
-    const notched = ["apple-macbook-pro-16-2021", "apple-macbook-pro-14-m5-2025", "apple-macbook-air-13-m4-2025"];
+  it("opens a menu bar strip above the page of every Mac with a notch or camera pill, and only those", () => {
+    const notched = ["apple-macbook-pro-16-2021", "apple-macbook-pro-14-m5-2025", "apple-macbook-air-13-m4-2025",
+      "apple-macbook-pro-14-proled-2026", "apple-macbook-pro-16-proled-2026"];
     for (const device of devices) {
       const frame = device.mockupAssets[0];
       const screen = frame.viewport?.landscape;

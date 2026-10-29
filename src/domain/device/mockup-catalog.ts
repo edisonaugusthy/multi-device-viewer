@@ -176,6 +176,8 @@ const deviceChromeMeta: Record<string, DeviceChromeMeta> = {
   "zebra-tc58-2022": { osVersion: "13.0", devicePixelRatio: 2.625, safeAreaInsetTop: 28 },
   "panasonic-toughbook-s1-2021": { osVersion: "11.0", devicePixelRatio: 1.5, safeAreaInsetTop: 28 },
   "apple-macbook-neo-13-2026": { osVersion: "26.0", devicePixelRatio: 2 },
+  "apple-macbook-pro-14-proled-2026": { osVersion: "27.0", devicePixelRatio: 2 },
+  "apple-macbook-pro-16-proled-2026": { osVersion: "27.0", devicePixelRatio: 2 },
   "microsoft-surface-laptop-8-13-8-2026": { osVersion: "11.0", devicePixelRatio: 2 },
   "apple-studio-display-xdr-27-2026": { osVersion: "26.0", devicePixelRatio: 2 },
   "apple-homeview-2026": { osVersion: "27.2", devicePixelRatio: 2 },

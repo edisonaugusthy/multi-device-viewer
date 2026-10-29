@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "زبانی را که دستگاه از وب‌سایت‌ها درخواست می‌کند انتخاب کنید و آنچه هر دستگاه می‌فرستد را در یک جدول مقایسه کنید.",
   "releaseDeviceIdentityTitle": "دستگاه‌ها برای اسکریپت‌های صفحه واقعی به نظر می‌رسند",
   "releaseDeviceIdentityDescription": "اکنون اسکریپت‌های خود صفحه هم دستگاه را می‌بینند و دستگاه‌های Android، Windows و ChromeOS جزئیات کامل خود، مثل مدل گوشی، را می‌فرستند.",
+  "releaseNewMacsTitle": "MacBook Pro جدید",
+  "releaseNewMacsDescription": "MacBook Pro ‏14″ و 16″ با PROLED XDR Display، با قرص دوربین در نوار منو درست مثل دستگاه واقعی.",
   "releaseCameraMenuTitle": "دوربین منوی کوتاهی باز می‌کند: نماگرفت از این دستگاه یا کل فضای کار.",
   "releasePresetsCloseTitle": "انتخاب یک پیش‌تنظیم اکنون انتخابگر دستگاه را می‌بندد.",
   "releaseRecheckOffTitle": "گزینه «پس از هر بارگذاری مجدد دوباره بررسی شود» در بررسی چیدمان فقط وقتی کار می‌کند که آن را روشن کنید.",

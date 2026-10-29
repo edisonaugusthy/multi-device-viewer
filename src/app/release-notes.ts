@@ -49,6 +49,7 @@ export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
     {
       title: "releaseSectionDevices",
       notes: [
+        { title: "releaseNewMacsTitle", description: "releaseNewMacsDescription", icon: "frames" },
         { title: "releaseDeviceLanguageTitle", description: "releaseDeviceLanguageDescription", icon: "globe" },
         { title: "releaseDeviceIdentityTitle", description: "releaseDeviceIdentityDescription", icon: "frames" },
       ],

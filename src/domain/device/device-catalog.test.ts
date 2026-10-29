@@ -116,13 +116,8 @@ describe("device catalog imports", () => {
         .map((device) => device.id)
         .sort(),
     ).toEqual([
-      "acer-chromebook-314-2023",
-      "apple-iphone-se-2022",
-      "apple-macbook-air-13-m4-2025",
       "apple-macbook-pro-14-proled-2026",
       "apple-macbook-pro-16-proled-2026",
-      "dell-p2425h-24-2024",
-      "lenovo-ideapad-slim-3-15-2024",
     ]);
   });
 
@@ -169,10 +164,12 @@ describe("device catalog imports", () => {
     ["dell-p2425h-24-2024", "Dell P2425H 24-inch Monitor", "Dell", "Monitor", "desktop", "Windows", 1920, 1080, 1],
     ["apple-macbook-pro-14-proled-2026", "Apple MacBook Pro 14-inch (PROLED XDR)", "Apple", "MacBook", "laptop", "macOS", 1512, 961, 2],
     ["apple-macbook-pro-16-proled-2026", "Apple MacBook Pro 16-inch (PROLED XDR)", "Apple", "MacBook", "laptop", "macOS", 1736, 1101, 2],
-  ] as const)("adds %s as a new device at the common size it stands for", (id, name, brand, family, type, os, width, height, pixelRatio) => {
+  ] as const)("adds %s at the common size it stands for", (id, name, brand, family, type, os, width, height, pixelRatio) => {
     const device = devices.find((candidate) => candidate.id === id)!;
     expect(device).toMatchObject({ name, brand, family, type, os, cssViewport: { width, height }, pixelRatio });
-    expect(device.tags).toEqual(expect.arrayContaining(["new", type]));
+    expect(device.tags).toContain(type);
+    // Only the PROLED MacBook Pros, the latest batch, keep the NEW badge.
+    expect(device.tags.includes("new")).toBe(id.includes("proled"));
     expect(device.mockupAssets[0]).toMatchObject({ localPath: `/mockups/${id}.webp` });
   });
 

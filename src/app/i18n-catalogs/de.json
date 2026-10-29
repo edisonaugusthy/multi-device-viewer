@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "Wähle, welche Sprache ein Gerät von Websites anfordert, und vergleiche in einer Tabelle, was jedes Gerät sendet.",
   "releaseDeviceIdentityTitle": "Geräte wirken für Seitenskripte echt",
   "releaseDeviceIdentityDescription": "Auch die eigenen Skripte einer Seite sehen jetzt das Gerät, und Android-, Windows- und ChromeOS-Geräte senden alle Details, etwa das Handymodell.",
+  "releaseNewMacsTitle": "Das neue MacBook Pro",
+  "releaseNewMacsDescription": "Das 14″ und 16″ MacBook Pro mit PROLED XDR Display, mit der Kamera-Pille in der Menüleiste wie beim echten Gerät.",
   "releaseCameraMenuTitle": "Die Kamera öffnet ein kurzes Menü: Screenshot dieses Geräts oder des ganzen Arbeitsbereichs.",
   "releasePresetsCloseTitle": "Eine Vorlage zu wählen schließt jetzt die Geräteauswahl.",
   "releaseRecheckOffTitle": "Die Layout-Prüfung prüft nur nach jedem Neuladen erneut, wenn du das einschaltest.",

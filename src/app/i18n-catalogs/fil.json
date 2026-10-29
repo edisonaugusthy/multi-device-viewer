@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "Piliin ang wikang hinihingi ng device sa mga website, at ikumpara sa iisang table ang ipinapadala ng bawat device.",
   "releaseDeviceIdentityTitle": "Mukhang totoo ang mga device sa script ng page",
   "releaseDeviceIdentityDescription": "Nakikita na rin ng sariling script ng page ang device, at ipinapadala ng mga Android, Windows at ChromeOS device ang buong detalye, gaya ng modelo ng phone.",
+  "releaseNewMacsTitle": "Ang bagong MacBook Pro",
+  "releaseNewMacsDescription": "Ang 14″ at 16″ MacBook Pro na may PROLED XDR Display, may camera pill sa menu bar gaya ng totoong device.",
   "releaseCameraMenuTitle": "Nagbubukas ang camera ng maikling menu: i-screenshot ang device na ito o ang buong workspace.",
   "releasePresetsCloseTitle": "Isinasara na ng pagpili ng preset ang pagpili ng device.",
   "releaseRecheckOffTitle": "Gumagana lang ang \"Suriin ulit pagkatapos ng bawat reload\" ng Pagsusuri ng layout kapag in-on mo ito.",

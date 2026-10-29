@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "ডিভাইস ওয়েবসাইটের কাছে কোন ভাষা চাইবে তা বেছে নিন, আর প্রতিটি ডিভাইস কী পাঠায় তা একটি টেবিলে তুলনা করুন।",
   "releaseDeviceIdentityTitle": "পেজের স্ক্রিপ্টের কাছে ডিভাইস আসল মনে হয়",
   "releaseDeviceIdentityDescription": "এখন পেজের নিজস্ব স্ক্রিপ্টও ডিভাইসটি দেখে, আর Android, Windows ও ChromeOS ডিভাইস ফোনের মডেলের মতো পূর্ণ তথ্য পাঠায়।",
+  "releaseNewMacsTitle": "নতুন MacBook Pro",
+  "releaseNewMacsDescription": "PROLED XDR Display সহ 14″ ও 16″ MacBook Pro, আসল ডিভাইসের মতোই মেনু বারে ক্যামেরার পিল সহ।",
   "releaseCameraMenuTitle": "ক্যামেরা একটি ছোট মেনু খোলে: এই ডিভাইস বা পুরো ওয়ার্কস্পেসের স্ক্রিনশট নিন।",
   "releasePresetsCloseTitle": "এখন প্রিসেট বেছে নিলে ডিভাইস পিকার বন্ধ হয়ে যায়।",
   "releaseRecheckOffTitle": "লেআউট পরীক্ষায় \"প্রতিবার রিলোডের পরে আবার পরীক্ষা করুন\" কেবল আপনি চালু করলেই কাজ করে।",

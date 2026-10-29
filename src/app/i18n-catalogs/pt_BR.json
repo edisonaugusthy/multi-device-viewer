@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "Escolha o idioma que um dispositivo pede aos sites e compare numa tabela o que cada dispositivo envia.",
   "releaseDeviceIdentityTitle": "Dispositivos parecem reais para os scripts",
   "releaseDeviceIdentityDescription": "Os scripts da própria página agora também veem o dispositivo, e dispositivos Android, Windows e ChromeOS enviam todos os detalhes, como o modelo do celular.",
+  "releaseNewMacsTitle": "O novo MacBook Pro",
+  "releaseNewMacsDescription": "O MacBook Pro de 14″ e 16″ com PROLED XDR Display, com a pílula da câmera na barra de menus, igual ao de verdade.",
   "releaseCameraMenuTitle": "A câmera abre um menu curto: captura deste dispositivo ou do espaço de trabalho inteiro.",
   "releasePresetsCloseTitle": "Escolher uma predefinição agora fecha o seletor de dispositivos.",
   "releaseRecheckOffTitle": "A verificação de layout só verifica de novo após cada recarga se você ativar isso.",

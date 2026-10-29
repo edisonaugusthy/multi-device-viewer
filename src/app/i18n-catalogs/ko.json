@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "기기가 웹사이트에 요청할 언어를 선택하고, 각 기기가 보내는 정보를 하나의 표에서 비교하세요.",
   "releaseDeviceIdentityTitle": "페이지 스크립트에도 실제 기기처럼 보입니다",
   "releaseDeviceIdentityDescription": "이제 페이지 자체 스크립트도 기기를 인식하며, Android, Windows, ChromeOS 기기는 휴대폰 모델 등 전체 정보를 보냅니다.",
+  "releaseNewMacsTitle": "새로운 MacBook Pro",
+  "releaseNewMacsDescription": "PROLED XDR Display를 탑재한 14″ 및 16″ MacBook Pro. 실제 기기처럼 메뉴 막대에 캡슐 모양 카메라가 있습니다.",
   "releaseCameraMenuTitle": "카메라를 누르면 짧은 메뉴가 열립니다. 이 기기나 전체 작업 공간의 스크린샷을 찍으세요.",
   "releasePresetsCloseTitle": "이제 프리셋을 선택하면 기기 선택 창이 닫힙니다.",
   "releaseRecheckOffTitle": "레이아웃 검사의 '다시 로드할 때마다 다시 검사'는 직접 켠 경우에만 작동합니다.",

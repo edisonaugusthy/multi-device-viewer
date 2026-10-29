@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "選擇裝置向網站要求的語言，並在一張表格中比較每部裝置傳送的內容。",
   "releaseDeviceIdentityTitle": "頁面指令碼也會將裝置視為真機",
   "releaseDeviceIdentityDescription": "頁面本身的指令碼現在也能辨識裝置，Android、Windows 和 ChromeOS 裝置會傳送完整資訊，例如手機型號。",
+  "releaseNewMacsTitle": "全新 MacBook Pro",
+  "releaseNewMacsDescription": "配備 PROLED XDR Display 的 14″ 與 16″ MacBook Pro，選單列中有膠囊形相機開孔，與真機一樣。",
   "releaseCameraMenuTitle": "相機按鈕會開啟簡短選單：截圖此裝置或整個工作區。",
   "releasePresetsCloseTitle": "選擇預設組合後，裝置選擇器現在會自動關閉。",
   "releaseRecheckOffTitle": "版面檢查的「每次重新載入後重新檢查」僅在你開啟後才會生效。",

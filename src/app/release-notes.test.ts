@@ -38,12 +38,12 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with Track changes, then review tools, devices and smaller changes, and no longer mentions a permission", () => {
+  it("leads with Track changes, then review tools, the new MacBook Pro and other devices, and smaller changes, and no longer mentions a permission", () => {
     expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseTrackChangesTitle", description: "releaseTrackChangesDescription", icon: "compare" });
     expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual(["releaseSectionReview", "releaseSectionDevices", "releaseSectionGeneral"]);
     const notes = CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes);
     expect(notes.map(note => note.title)).toEqual([
-      "releaseProblemsTitle", "releaseLayoutCauseTitle", "releaseDeviceLanguageTitle", "releaseDeviceIdentityTitle",
+      "releaseProblemsTitle", "releaseLayoutCauseTitle", "releaseNewMacsTitle", "releaseDeviceLanguageTitle", "releaseDeviceIdentityTitle",
       "releaseCameraMenuTitle", "releasePresetsCloseTitle", "releaseRecheckOffTitle",
     ]);
     expect(JSON.stringify(CURRENT_RELEASE_NOTES)).not.toMatch(/permission/i);

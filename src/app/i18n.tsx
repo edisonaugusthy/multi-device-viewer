@@ -332,6 +332,8 @@ const en = {
   releaseDeviceLanguageDescription: "Choose the language a device asks websites for, and compare what every device sends in one table.",
   releaseDeviceIdentityTitle: "Devices look real to page scripts",
   releaseDeviceIdentityDescription: "A page’s own scripts now see the device too, and Android, Windows and ChromeOS devices send their full details, such as the phone model.",
+  releaseNewMacsTitle: "The new MacBook Pro",
+  releaseNewMacsDescription: "The 14″ and 16″ MacBook Pro with PROLED XDR Display, with the camera pill in the menu bar just like the real thing.",
   releaseCameraMenuTitle: "The camera opens a short menu: screenshot this device or the whole workspace.",
   releasePresetsCloseTitle: "Choosing a preset now closes the device picker.",
   releaseRecheckOffTitle: "Layout check checks again after each reload only when you turn that on.",

@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "Pilih bahasa yang diminta perangkat dari situs web, dan bandingkan apa yang dikirim setiap perangkat dalam satu tabel.",
   "releaseDeviceIdentityTitle": "Perangkat terlihat nyata bagi skrip halaman",
   "releaseDeviceIdentityDescription": "Skrip milik halaman kini juga melihat perangkatnya, dan perangkat Android, Windows, dan ChromeOS mengirim detail lengkap, seperti model ponsel.",
+  "releaseNewMacsTitle": "MacBook Pro baru",
+  "releaseNewMacsDescription": "MacBook Pro 14″ dan 16″ dengan PROLED XDR Display, dengan pil kamera di bar menu persis seperti aslinya.",
   "releaseCameraMenuTitle": "Kamera membuka menu singkat: screenshot perangkat ini atau seluruh ruang kerja.",
   "releasePresetsCloseTitle": "Memilih preset kini menutup pemilih perangkat.",
   "releaseRecheckOffTitle": "Pemeriksaan tata letak memeriksa lagi setelah setiap muat ulang hanya jika Anda mengaktifkannya.",

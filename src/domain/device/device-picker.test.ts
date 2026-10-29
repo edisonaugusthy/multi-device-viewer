@@ -91,10 +91,11 @@ describe("device picker sections", () => {
     expect(availablePickerTabs(devices)).toEqual(["all", "ios", "android", "tablet", "computer", "other", "new"]);
   });
 
-  it("lists every device tagged new, of any type, in the New tab", () => {
+  it("lists every device tagged new in the New tab", () => {
     const listed = buildPickerSections({ devices, favorites: [], tab: "new" }).flatMap(section => ids(section.devices));
     expect(listed.sort()).toEqual(devices.filter(device => device.tags.includes("new")).map(device => device.id).sort());
-    expect(new Set(listed.map(id => byId(id).type))).toEqual(new Set(["phone", "laptop", "desktop"]));
+    // The latest batch is the two PROLED MacBook Pros.
+    expect(new Set(listed.map(id => byId(id).type))).toEqual(new Set(["laptop"]));
     // With nothing new, the tab is not offered.
     expect(availablePickerTabs(devices.filter(device => !device.tags.includes("new")))).not.toContain("new");
   });

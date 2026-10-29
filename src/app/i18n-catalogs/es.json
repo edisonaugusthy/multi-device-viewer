@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "Elige el idioma que un dispositivo pide a los sitios web y compara en una tabla lo que envía cada uno.",
   "releaseDeviceIdentityTitle": "Los dispositivos parecen reales para los scripts",
   "releaseDeviceIdentityDescription": "Los scripts de la propia página ahora también ven el dispositivo, y los dispositivos Android, Windows y ChromeOS envían todos sus datos, como el modelo del teléfono.",
+  "releaseNewMacsTitle": "El nuevo MacBook Pro",
+  "releaseNewMacsDescription": "El MacBook Pro de 14″ y 16″ con PROLED XDR Display, con la cápsula de la cámara en la barra de menús, igual que el real.",
   "releaseCameraMenuTitle": "La cámara abre un menú breve: captura de este dispositivo o de todo el espacio de trabajo.",
   "releasePresetsCloseTitle": "Elegir un preajuste ahora cierra el selector de dispositivos.",
   "releaseRecheckOffTitle": "La comprobación de diseño solo vuelve a comprobar tras cada recarga si lo activas.",

@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "Выберите язык, который устройство запрашивает у сайтов, и сравните в одной таблице, что отправляет каждое.",
   "releaseDeviceIdentityTitle": "Устройства выглядят настоящими для скриптов",
   "releaseDeviceIdentityDescription": "Собственные скрипты страницы теперь тоже видят устройство, а устройства Android, Windows и ChromeOS передают все данные, например модель телефона.",
+  "releaseNewMacsTitle": "Новый MacBook Pro",
+  "releaseNewMacsDescription": "MacBook Pro 14″ и 16″ с дисплеем PROLED XDR Display и «таблеткой» камеры в строке меню, как у настоящего.",
   "releaseCameraMenuTitle": "Камера открывает короткое меню: снимок этого устройства или всей рабочей области.",
   "releasePresetsCloseTitle": "Выбор пресета теперь закрывает выбор устройств.",
   "releaseRecheckOffTitle": "Проверка макета проверяет снова после каждой перезагрузки, только если вы это включите.",

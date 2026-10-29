@@ -940,11 +940,6 @@ function yearFromId(id: string) {
 function tagsFromId(id: string, type: Device["type"], os: string) {
   // Only the newest batch carries the NEW badge and fills the picker's New tab.
   const latestCatalogIds = new Set([
-    "apple-iphone-se-2022",
-    "apple-macbook-air-13-m4-2025",
-    "lenovo-ideapad-slim-3-15-2024",
-    "acer-chromebook-314-2023",
-    "dell-p2425h-24-2024",
     "apple-macbook-pro-14-proled-2026",
     "apple-macbook-pro-16-proled-2026",
 ]);

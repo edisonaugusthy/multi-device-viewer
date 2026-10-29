@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "चुनें कि डिवाइस वेबसाइटों से कौन-सी भाषा माँगे, और एक ही तालिका में देखें कि हर डिवाइस क्या भेजता है।",
   "releaseDeviceIdentityTitle": "पेज की स्क्रिप्ट को डिवाइस असली लगते हैं",
   "releaseDeviceIdentityDescription": "अब पेज की अपनी स्क्रिप्ट भी डिवाइस को देखती हैं, और Android, Windows और ChromeOS डिवाइस अपनी पूरी जानकारी भेजते हैं, जैसे फ़ोन का मॉडल।",
+  "releaseNewMacsTitle": "नया MacBook Pro",
+  "releaseNewMacsDescription": "PROLED XDR Display वाले 14″ और 16″ MacBook Pro, असली डिवाइस की तरह मेन्यू बार में कैमरा पिल के साथ।",
   "releaseCameraMenuTitle": "कैमरा एक छोटा मेन्यू खोलता है: इस डिवाइस या पूरे वर्कस्पेस का स्क्रीनशॉट लें।",
   "releasePresetsCloseTitle": "अब प्रीसेट चुनने पर डिवाइस पिकर बंद हो जाता है।",
   "releaseRecheckOffTitle": "लेआउट जाँच में \"हर रीलोड के बाद फिर से जाँचें\" तभी काम करता है जब आप उसे चालू करें।",

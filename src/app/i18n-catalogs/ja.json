@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "デバイスがウェブサイトに求める言語を選び、各デバイスが送信する情報を 1 つの表で比較できます。",
   "releaseDeviceIdentityTitle": "ページのスクリプトにも本物のデバイスに",
   "releaseDeviceIdentityDescription": "ページ自身のスクリプトにもデバイスが反映され、Android、Windows、ChromeOS のデバイスはスマートフォンの機種などの詳細をすべて送信します。",
+  "releaseNewMacsTitle": "新しい MacBook Pro",
+  "releaseNewMacsDescription": "PROLED XDR Display を搭載した 14″ と 16″ の MacBook Pro。実機と同じく、メニューバーにカプセル形のカメラがあります。",
   "releaseCameraMenuTitle": "カメラボタンで短いメニューが開き、このデバイスまたはワークスペース全体のスクリーンショットを撮れます。",
   "releasePresetsCloseTitle": "プリセットを選ぶと、デバイス選択が閉じるようになりました。",
   "releaseRecheckOffTitle": "レイアウトチェックの「再読み込みのたびに再チェック」は、オンにしたときだけ動作します。",

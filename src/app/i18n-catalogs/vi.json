@@ -283,6 +283,8 @@
   "releaseDeviceLanguageDescription": "Chọn ngôn ngữ mà thiết bị yêu cầu từ trang web, và so sánh những gì mỗi thiết bị gửi trong một bảng.",
   "releaseDeviceIdentityTitle": "Thiết bị trông như thật với script trang",
   "releaseDeviceIdentityDescription": "Script của chính trang giờ cũng thấy thiết bị, và các thiết bị Android, Windows và ChromeOS gửi đầy đủ thông tin, như mẫu điện thoại.",
+  "releaseNewMacsTitle": "MacBook Pro mới",
+  "releaseNewMacsDescription": "MacBook Pro 14″ và 16″ với PROLED XDR Display, có viên camera trên thanh menu giống như máy thật.",
   "releaseCameraMenuTitle": "Máy ảnh mở một menu ngắn: chụp màn hình thiết bị này hoặc toàn bộ không gian làm việc.",
   "releasePresetsCloseTitle": "Chọn một bộ cài sẵn giờ sẽ đóng bộ chọn thiết bị.",
   "releaseRecheckOffTitle": "Kiểm tra bố cục chỉ kiểm tra lại sau mỗi lần tải lại khi bạn bật tùy chọn đó.",

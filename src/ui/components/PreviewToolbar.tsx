@@ -15,7 +15,6 @@ import {
   LayoutCheckIcon,
   MinusIcon,
   MoreIcon,
-  OpenInTabIcon,
   PlusIcon,
   ReloadIcon,
   RotateIcon,
@@ -103,13 +102,6 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
     >
       <div role="toolbar" aria-label={t("deviceControls", { name: props.deviceName })} data-tour={props.tourTarget}
         className="flex h-[46px] items-center gap-1.5 whitespace-nowrap rounded-[14px] border-[1.5px] border-ink bg-surface px-1.5 shadow-[0_14px_34px_rgb(20_23_26/0.16)]">
-        {focus && (
-          <Group>
-            <ToolButton label={t("previousDevice")} onClick={focus.onPrevious} disabled={!focus.canStep}><ChevronLeftIcon size={15} /></ToolButton>
-            <span className="min-w-10 text-center font-mono text-xs text-ink-2">{focus.position}</span>
-            <ToolButton label={t("nextDevice")} onClick={focus.onNext} disabled={!focus.canStep}><ChevronRightIcon size={15} /></ToolButton>
-          </Group>
-        )}
         {(props.onMoveStart || props.onChangeDevice) && (
           <Group tinted>
             {props.onMoveStart && (
@@ -127,7 +119,8 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
               {props.deviceLabel ? (
                 <button type="button" data-testid="device-switcher-button" onClick={props.onChangeDevice}
                   title={t("changeDevice")} aria-label={`${t("changeDevice")} · ${props.deviceLabel}`}
-                  className={cx("flex h-[30px] max-w-[12rem] items-center gap-1.5 rounded-lg pe-1.5 ps-2 text-[13px] font-semibold text-ink hover:bg-surface", focusRing)}>
+                  className={cx("flex h-[30px] w-44 items-center justify-between gap-1.5 rounded-lg pe-1.5 ps-2 text-[13px] font-semibold text-ink hover:bg-surface", focusRing)}>
+                  {/* One width for every device, so the bar never changes size. */}
                   <span className="truncate">{props.deviceLabel}</span>
                   <ChevronDownIcon size={12} className="shrink-0 text-muted" />
                 </button>
@@ -170,8 +163,10 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
               {props.languageOpen && props.languagePicker}
             </div>
           )}
-          {focus && <ToolButton label={t("openInTab")} onClick={props.onOpenInTab}><OpenInTabIcon size={15} /></ToolButton>}
-          {!focus && props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
+          {/* Showing one device, the same button goes back to all of them. */}
+          {focus
+            ? <ToolButton label={t("showAllDevices")} onClick={focus.onExit}><CollapseIcon size={15} /></ToolButton>
+            : props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
           {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
           {props.onCompareBefore && (
             <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>
@@ -196,14 +191,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
             <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu} menuToggle><MoreIcon size={16} /></ToolButton>
             {props.menuOpen && props.menu}
           </div>
-          {focus ? (
-            <button type="button" onClick={focus.onExit} title={t("showAllDevices")}
-              className={cx("ms-1 flex h-[30px] items-center gap-1.5 rounded-lg bg-primary px-2.5 text-[12.5px] font-semibold text-on-primary", focusRing)}>
-              <CollapseIcon size={14} />{t("showAll")}
-            </button>
-          ) : props.removable && (
-            <ToolButton label={t("removeDevice")} danger onClick={props.onRemove} dataRemove><CloseIcon size={15} strokeWidth={2.2} /></ToolButton>
-          )}
+          {props.removable && <ToolButton label={t("removeDevice")} danger onClick={props.onRemove} dataRemove><CloseIcon size={15} strokeWidth={2.2} /></ToolButton>}
         </Group>
       </div>
       {/* Points down at the device this bar belongs to. */}

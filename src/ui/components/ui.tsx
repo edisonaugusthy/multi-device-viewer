@@ -27,12 +27,14 @@ export type TooltipSide = "top" | "bottom";
 // A short explanation under (or, for controls near the bottom edge, above) a
 // control. It appears after a pause on hover or at once on keyboard focus,
 // never takes pointer events, hides when the control is pressed, and stays
-// hidden while the control's own popover is open.
-export function Tooltip({ title, description, align = "center", side = "bottom", children }: {
+// hidden while the control's own popover is open, or while `quiet` (another
+// menu is open nearby and a tooltip would land on it).
+export function Tooltip({ title, description, align = "center", side = "bottom", quiet = false, children }: {
   title: string;
   description?: string;
   align?: TooltipAlign;
   side?: TooltipSide;
+  quiet?: boolean;
   children: ReactElement<{ "aria-describedby"?: string }>;
 }) {
   const [open, setOpen] = useState(false);
@@ -41,11 +43,14 @@ export function Tooltip({ title, description, align = "center", side = "bottom",
   const pressed = useRef(false);
   const descriptionId = useId();
   useEffect(() => () => window.clearTimeout(timer.current), []);
+  useEffect(() => { if (quiet) { window.clearTimeout(timer.current); setOpen(false); } }, [quiet]);
 
+  const blocked = () => quiet || pressed.current || Boolean(wrapperRef.current?.querySelector('[aria-expanded="true"], :disabled'));
   const show = (delay: number) => {
     window.clearTimeout(timer.current);
-    if (pressed.current || wrapperRef.current?.querySelector('[aria-expanded="true"], :disabled')) return;
-    timer.current = window.setTimeout(() => setOpen(true), delay);
+    if (blocked()) return;
+    // Checked again when the pause ends: a menu may have opened meanwhile.
+    timer.current = window.setTimeout(() => { if (!blocked()) setOpen(true); }, delay);
   };
   const hide = () => {
     window.clearTimeout(timer.current);

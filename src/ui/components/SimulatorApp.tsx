@@ -900,6 +900,11 @@ export function SimulatorApp() {
             onViewMode={enterViewMode}
             onSettings={() => clickDockMenu("settings", () => togglePopover("settings"))}
             onMenuHover={hoverDockMenu}
+            menuOpen={popover !== null}
+            focusPosition={focusNavigation?.position}
+            canStepFocus={focusNavigation?.canStep}
+            onFocusPrevious={focusPrevious}
+            onFocusNext={focusNext}
             end={
               <button type="button" aria-label={t("closeViewer")} title={t("closeViewer")} onClick={closeViewer}
                 className="absolute end-3 top-4 grid size-11 place-items-center rounded-full bg-surface text-ink-2 shadow-[0_0_0_1px_var(--color-line-soft),0_10px_28px_rgb(20_23_26/0.08)] outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent">

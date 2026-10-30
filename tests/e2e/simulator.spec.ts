@@ -139,10 +139,10 @@ test("shows the simplified navigation controls", async ({ page }) => {
   const toolbar = page.locator("[data-main-toolbar]");
   // Scroll and Navigation show while the pointer rests on Sync in the dock.
   await toolbar.getByRole("button", { name: "Sync between devices" }).hover();
-  await expect(toolbar.getByRole("checkbox", { name: "Scroll", exact: true })).toBeVisible();
-  await expect(toolbar.getByRole("checkbox", { name: "Navigation", exact: true })).toBeVisible();
-  await toolbar.getByRole("checkbox", { name: "Navigation", exact: true }).check();
-  await expect(toolbar.getByRole("checkbox", { name: "Navigation", exact: true })).toBeChecked();
+  await expect(toolbar.getByRole("switch", { name: "Scroll", exact: true })).toBeVisible();
+  await expect(toolbar.getByRole("switch", { name: "Navigation", exact: true })).toBeVisible();
+  await toolbar.getByRole("switch", { name: "Navigation", exact: true }).check();
+  await expect(toolbar.getByRole("switch", { name: "Navigation", exact: true })).toBeChecked();
   await expect(page.getByLabel("Page direction")).toHaveCount(0);
   await expect(page.getByLabel("Page color scheme")).toHaveCount(0);
   await expect(page.getByText("Responsive review", { exact: true })).toHaveCount(0);
@@ -963,7 +963,7 @@ test("does not report standalone previews as blocked when no extension bridge is
     });
   });
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Sync between devices" }).hover();
-  await page.locator("[data-main-toolbar]").getByRole("checkbox", { name: "Scroll", exact: true }).check();
+  await page.locator("[data-main-toolbar]").getByRole("switch", { name: "Scroll", exact: true }).check();
   const slot = page.locator("[data-preview-slot-id]").first();
   const original = await (await slot.locator("iframe").elementHandle())!.contentFrame();
   await original!.evaluate(() => window.parent.postMessage({
@@ -1159,6 +1159,25 @@ test("puts the workspace bar above the devices and points each device bar at its
   await expect(slot.locator("[data-device-caption]")).not.toContainText("×");
 });
 
+test("keeps the top bar and the device bar the same size when showing one device", async ({ page }) => {
+  const nav = page.locator("[data-main-toolbar]");
+  const bar = (index: number) => page.locator("[data-preview-slot-id]").nth(index).locator("[role=toolbar]");
+  const before = (await nav.boundingBox())!;
+  await revealControls(page, 0);
+  const deviceBar = (await bar(0).boundingBox())!;
+  await nav.getByRole("button", { name: "Expand this device", exact: true }).click();
+  // The One button turns into stepping through the set without changing size.
+  const position = nav.locator("[data-focus-position]");
+  await expect(position).toHaveText("1 / 3");
+  expect(await nav.boundingBox()).toEqual(before);
+  await page.locator("[data-preview-slot-id]:visible [data-device-caption]").hover();
+  await expect(bar(0)).toBeVisible();
+  expect((await bar(0).boundingBox())!.width).toBe(deviceBar.width);
+  await nav.getByRole("button", { name: "Next device", exact: true }).click();
+  await expect(position).toHaveText("2 / 3");
+  expect(await nav.boundingBox()).toEqual(before);
+});
+
 test("shows one device toolbar at a time, always above its device", async ({ page }) => {
   const slots = page.locator("[data-preview-slot-id]");
   const toolbar = (index: number) => slots.nth(index).locator("[data-device-toolbar]");
@@ -1247,15 +1266,21 @@ test("steps through devices of the same type from the device toolbar", async ({ 
 
 test("explains header controls in tooltips without getting in the way", async ({ page }) => {
   const header = page.locator("[data-main-toolbar]");
-  const tooltip = page.getByRole("tooltip").filter({ hasText: "Theme, browser bar position" });
-  const settings = header.getByRole("button", { name: "Settings", exact: true });
-
-  await settings.hover();
+  const tooltip = page.getByRole("tooltip").filter({ hasText: "Hide the controls" });
+  const focus = header.getByRole("button", { name: "Focus mode", exact: true });
+  await focus.hover();
   await expect(tooltip).toBeVisible();
-  await expect(settings).toHaveAccessibleDescription("Theme, browser bar position, language, help and the feature tour.");
-  await settings.click();
-  await expect(tooltip).toBeHidden();
+  await expect(focus).toHaveAccessibleDescription("Hide the controls and show only the devices. Press Esc to exit.");
+
+  // A control whose menu opens on hover has no tooltip: the menu names it.
+  const settings = header.getByRole("button", { name: "Settings", exact: true });
+  await settings.hover();
   await expect(page.getByRole("dialog", { name: "Settings" })).toBeVisible();
+  await expect(page.getByRole("tooltip").filter({ hasText: "Theme, browser bar position" })).toHaveCount(0);
+  // While a menu is open, no other tooltip lands on it.
+  await header.getByRole("button", { name: "Reload all", exact: true }).hover();
+  await page.waitForTimeout(600);
+  await expect(page.getByRole("tooltip").filter({ hasText: "Reload every device" })).toBeHidden();
 });
 
 test("keeps the All devices grid scrollbar for mouse users", async ({ page }) => {

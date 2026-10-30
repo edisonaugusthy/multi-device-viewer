@@ -31,32 +31,28 @@ export function RecordControls({
   const { t } = useI18n();
   return (
     <>
-      <SectionLabel className="px-2 pb-1 pt-1.5">{t("recordSourceTab")}</SectionLabel>
+      <SectionLabel className="px-2.5 pb-0.5 pt-1.5">{t("recordHeading")}</SectionLabel>
       <MenuRow
         icon={tabRecording ? <StopIcon size={14} className="text-record" /> : <RecordIcon size={15} />}
         label={tabRecording ? t("stopAndSaveVideo") : t("recordTabVideo")}
+        hint={tabRecording ? undefined : t("recordTabHint")}
         detail={tabRecording ? tabRecordingTime : undefined}
         active={tabRecording}
         disabled={!canRecordTab}
         onClick={onToggleTabRecording}
       />
-      <div className="mx-2 my-1.5 h-px bg-line-soft" />
-      <SectionLabel className="px-2 pb-1">{t("flowRecorder")}</SectionLabel>
       <div data-tour="record-user-flow">
         <MenuRow
           icon={flowRecording ? <StopIcon size={14} className="text-record" /> : <NavigationSyncIcon size={15} />}
           label={flowRecording ? t("stopAndSaveFlow", { count: flowStepCount }) : t("recordAFlow")}
+          hint={flowRecording ? undefined : t("recordFlowHint")}
           active={flowRecording}
           onClick={onToggleFlowRecording}
         />
       </div>
-      {!flowRecording && (
-        <MenuRow
-          icon={<PlayIcon size={14} />}
-          label={flowStepCount ? t("reloadAndRerunFlow", { count: flowStepCount }) : t("recordFlowToRerun")}
-          disabled={!flowStepCount}
-          onClick={onReplayFlow}
-        />
+      {/* Replaying shows up once there is a flow to replay. */}
+      {!flowRecording && flowStepCount > 0 && (
+        <MenuRow icon={<PlayIcon size={14} />} label={t("reloadAndRerunFlow", { count: flowStepCount })} onClick={onReplayFlow} />
       )}
       {canResumeFlow && <MenuRow icon={<PlayIcon size={14} />} label={t("resumeFlowAfterVerification")} onClick={onResumeFlow} />}
       {!flowRecording && flowStepCount > 0 && <MenuRow icon={<TrashIcon size={15} />} label={t("clearSavedFlow")} onClick={onClearFlow} />}
@@ -112,8 +108,8 @@ function RecordingPill({ label, detail, action, onStop }: { label: string; detai
   );
 }
 
-function MenuRow({ icon, label, detail, active = false, disabled = false, onClick }: {
-  icon: ReactNode; label: string; detail?: string; active?: boolean; disabled?: boolean; onClick: () => void;
+function MenuRow({ icon, label, hint, detail, active = false, disabled = false, onClick }: {
+  icon: ReactNode; label: string; hint?: string; detail?: string; active?: boolean; disabled?: boolean; onClick: () => void;
 }) {
   return (
     <button
@@ -122,13 +118,17 @@ function MenuRow({ icon, label, detail, active = false, disabled = false, onClic
       aria-pressed={active || undefined}
       onClick={onClick}
       className={cx(
-        "flex h-9 w-full items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium disabled:cursor-not-allowed disabled:opacity-40",
+        "flex w-full gap-2.5 rounded-[9px] px-2.5 text-start text-[13px] disabled:cursor-not-allowed disabled:opacity-40",
+        hint ? "items-start py-2" : "h-9 items-center",
         active ? "bg-record/10 text-record" : "text-ink hover:bg-sunken",
         focusRing,
       )}
     >
-      <span className="grid w-4 shrink-0 place-items-center">{icon}</span>
-      <span className="min-w-0 flex-1 truncate">{label}</span>
+      <span className={cx("grid w-4 shrink-0 place-items-center", hint && "mt-px")}>{icon}</span>
+      <span className="grid min-w-0 flex-1 gap-px">
+        <span className="truncate font-semibold">{label}</span>
+        {hint && <span className="text-[11.5px] leading-snug text-muted">{hint}</span>}
+      </span>
       {detail && <span className="shrink-0 font-mono text-xs">{detail}</span>}
     </button>
   );

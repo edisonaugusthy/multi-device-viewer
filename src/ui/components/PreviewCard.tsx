@@ -1131,18 +1131,26 @@ export const PreviewCard = memo(function PreviewCard({
                   </div>
                 ) : <>
                   <MenuItem label={t("openInTab")} hint={t("openInTabHint")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
-                  {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} hint={t("tipFixPrompt")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
+                  {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} hint={t("fixPromptDeviceHint")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
                   {FEATURES.visualChecks && visualChecks.menuItems}
-                  {onLayoutCheck && (
-                    <div className="mb-1 grid gap-px border-b border-line-soft pb-1.5" role="group" aria-label={t("layoutCheck")}>
-                      <span className="px-2 pb-0.5 text-[11px] font-semibold text-muted">{t("layoutCheck")}</span>
-                      <MenuItem label={t("checkLayoutOnDevice")} onClick={() => { setControlsOpen(false); onLayoutCheck(slot.id); }}><LayoutCheckIcon size={15}/></MenuItem>
-                      <p className="px-2 pt-1 text-[11.5px] leading-snug text-muted">{t("layoutCheckMenuHelp")}</p>
+                  {onLayoutCheck && <MenuItem label={t("checkLayoutOnDevice")} hint={t("checkLayoutDeviceHint")} onClick={() => { setControlsOpen(false); onLayoutCheck(slot.id); }}><LayoutCheckIcon size={15}/></MenuItem>}
+                  {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} hint={t("browserAppearanceHint")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
+                  {!focused && (!first || !last) && (
+                    // The order devices take in One view and in screenshots.
+                    <div role="group" aria-label={t("moveOrderHint")} className="mt-1 grid gap-1 border-t border-line-soft px-1 pb-0.5 pt-2">
+                      <div className="flex gap-1">
+                        <button type="button" disabled={first} onClick={event => { event.stopPropagation(); setControlsOpen(false); simulator.current.moveSlot(slot.id, "left"); }}
+                          className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg bg-sunken text-[12.5px] font-semibold text-ink hover:bg-line-soft disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent">
+                          <ChevronLeftIcon size={14} className="rtl:rotate-180"/>{t("moveEarlier")}
+                        </button>
+                        <button type="button" disabled={last} onClick={event => { event.stopPropagation(); setControlsOpen(false); simulator.current.moveSlot(slot.id, "right"); }}
+                          className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg bg-sunken text-[12.5px] font-semibold text-ink hover:bg-line-soft disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent">
+                          {t("moveLater")}<ChevronRightIcon size={14} className="rtl:rotate-180"/>
+                        </button>
+                      </div>
+                      <p className="px-1 text-[11.5px] leading-snug text-muted">{t("moveOrderHint")}</p>
                     </div>
                   )}
-                  {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} hint={t("browserAppearanceHint")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
-                  {!focused && !first && <MenuItem label={t("moveViewportLeft")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "left"); }}><ChevronLeftIcon size={15}/></MenuItem>}
-                  {!focused && !last && <MenuItem label={t("moveViewportRight")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "right"); }}><ChevronRightIcon size={15}/></MenuItem>}
                 </>}
               </div>
             }

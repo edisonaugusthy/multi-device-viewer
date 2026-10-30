@@ -13,7 +13,7 @@ import {
 } from "../../infrastructure/visual-regression/baseline-index";
 import { CheckIcon, CopyIcon, ListIcon, PinIcon, ReloadIcon, SideBySideIcon, SnapshotIcon, TrashIcon } from "../icons";
 import { ComparisonPanel, ManageBaselines, PageGlyph, UnchangedPanel, useFormatters, visualButton, VisualDialog, visualPrimaryButton } from "../components/VisualChecks";
-import { cx, Segmented } from "../components/ui";
+import { cx, SectionLabel, Segmented } from "../components/ui";
 import { snapshotPreview } from "../../app/preview-reports";
 import { describeChanges, type LayoutChange, type LayoutSnapshot } from "../../domain/capture/layout-snapshot";
 import { pinnedAt, setPinned, usePinnedVersion } from "./useTrackChanges";
@@ -76,15 +76,21 @@ function preparePage(frame: HTMLIFrameElement, slotId: string, hidden: boolean):
   });
 }
 
-function MenuButton({ icon, label, onClick, disabled = false, danger = false, strong = false }: {
-  icon: ReactNode; label: string; onClick: () => void; disabled?: boolean; danger?: boolean; strong?: boolean;
+function MenuButton({ icon, label, hint, onClick, disabled = false, danger = false, strong = false }: {
+  icon: ReactNode; label: string; hint?: string; onClick: () => void; disabled?: boolean; danger?: boolean; strong?: boolean;
 }) {
   return (
     <button type="button" disabled={disabled} onClick={event => { event.stopPropagation(); onClick(); }}
-      className={cx("flex h-9 w-full items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40",
-        danger ? "text-danger" : "text-ink", strong ? "bg-sunken font-[650]" : "font-medium")}>
-      <span className={cx("grid w-4 shrink-0 place-items-center", danger ? "text-danger" : strong ? "text-accent" : "text-ink-2")}>{icon}</span>
-      <span className="min-w-0 truncate">{label}</span>
+      className={cx("flex w-full gap-2.5 rounded-[9px] px-2.5 text-start text-[13px] hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40",
+        hint ? "items-start py-2" : "h-9 items-center",
+        danger ? "text-danger" : "text-ink", strong || hint ? "font-semibold" : "font-medium")}>
+      <span className={cx("grid w-4 shrink-0 place-items-center", hint && "mt-px", danger ? "text-danger" : strong ? "text-accent" : "text-ink-2")}>{icon}</span>
+      {hint ? (
+        <span className="grid min-w-0 gap-px">
+          <span>{label}</span>
+          <span className="text-[11.5px] font-normal leading-snug text-muted">{hint}</span>
+        </span>
+      ) : <span className="min-w-0 truncate">{label}</span>}
     </button>
   );
 }
@@ -360,12 +366,12 @@ export function useVisualRegression(options: Options) {
 
   const busy = capturing || progress !== null;
   const menuItems = <div className="my-1 grid gap-px border-y border-line-soft py-1.5" role="group" aria-label={t("visualChecks")}>
-    <span className="px-2 pb-0.5 text-[11px] font-semibold text-muted">{t("visualChecks")}</span>
+    <SectionLabel className="px-2.5 pb-0.5 pt-0.5">{t("visualChecks")}</SectionLabel>
     {baseline ? <>
       <MenuButton strong icon={<SideBySideIcon size={15}/>} label={t("compareLatest")} disabled={busy} onClick={() => void run("compare")}/>
       <MenuButton icon={<ReloadIcon size={15}/>} label={t("replaceBaseline")} disabled={busy} onClick={() => void run("save")}/>
       <MenuButton icon={<TrashIcon size={15}/>} label={t("deleteBaseline")} disabled={busy} danger onClick={() => void remove()}/>
-    </> : <MenuButton strong icon={<SnapshotIcon size={15}/>} label={t("saveBaseline")} disabled={busy || baseline === undefined} onClick={() => void run("save")}/>}
+    </> : <MenuButton icon={<SnapshotIcon size={15}/>} label={t("saveBaseline")} hint={t("visualSavedHint")} disabled={busy || baseline === undefined} onClick={() => void run("save")}/>}
     <MenuButton icon={<ListIcon size={15}/>} label={t("manageBaselines")} onClick={() => { current.current.dismissMenu(); setDialog({ kind: "manage" }); }}/>
     {/* Help sits after the actions it explains. */}
     {baseline ? (
@@ -376,7 +382,7 @@ export function useVisualRegression(options: Options) {
           <span className="text-[11.5px] text-ink-2">{t("visualSavedHint")}</span>
         </p>
       </div>
-    ) : baseline === null && <p className="mx-2 my-1 text-[11.5px] leading-normal text-muted">{t("visualSaveHint")}</p>}
+    ) : null}
   </div>;
 
   const name = options.deviceName;

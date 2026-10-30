@@ -1377,10 +1377,14 @@ test("opens the Add device picker from the Workspace button as well as Add devic
   await expect(workspace).toHaveAttribute("aria-expanded", "false");
 });
 
-test("keeps the device picker the same size on every tab", async ({ page }) => {
+test("keeps the dock's device picker one size on every tab, with its tabs next to the dock", async ({ page }) => {
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
   const panel = page.getByTestId("device-switcher-panel");
   const first = (await panel.boundingBox())!;
+  // Opened upward, the search and tabs sit below the list, nearest the dock.
+  const [tabs, list, search] = await Promise.all([panel.getByRole("tablist").boundingBox(), panel.locator("[data-device-pick]").first().boundingBox(), panel.getByRole("textbox").boundingBox()]);
+  expect(tabs!.y).toBeGreaterThan(list!.y);
+  expect(search!.y).toBeGreaterThan(tabs!.y);
   for (const tab of await panel.getByRole("tab").all()) {
     await tab.hover();
     await expect(tab).toHaveAttribute("aria-selected", "true");

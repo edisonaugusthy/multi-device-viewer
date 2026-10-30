@@ -60,9 +60,13 @@ export function DevicePicker({
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
-  // One line per device, two columns when changing one device and three when
-  // adding, so a whole type fits without much scrolling.
-  const position = useAnchoredPosition(anchorRef, open, target.kind === "add" ? 720 : 500, "start", 560);
+  // Two columns, wide enough for most names on one line.
+  const position = useAnchoredPosition(anchorRef, open, target.kind === "add" ? 600 : 520, "start", 560);
+  // Opened upward from the dock, the picker is mirrored so its search, tabs and
+  // presets sit next to the dock where the pointer comes from, and keeps one
+  // height so hovering across the tabs never moves them. Opened downward, the
+  // tabs are already next to the pointer and the picker fits its list.
+  const upward = position.bottom !== undefined;
   const dismiss = useCallback(() => onClose(), [onClose]);
   useDismiss(open, [panelRef, anchorRef], dismiss);
 
@@ -175,10 +179,8 @@ export function DevicePicker({
       role="dialog"
       aria-label={title}
       data-testid="device-switcher-panel"
-      className={cx(popoverPanel, "fixed")}
-      // One height for every tab and page: a picker that grew or shrank with its
-      // list would move the tabs out from under the pointer.
-      style={{ ...positionStyle(position), height: position.maxHeight }}
+      className={cx(popoverPanel, "fixed", upward && view === "devices" && "flex-col-reverse")}
+      style={{ ...positionStyle(position), height: upward ? position.maxHeight : undefined }}
     >
       {view === "devices" && <>
         {/* Typing filters straight away; the line stays quiet until then. */}
@@ -246,7 +248,7 @@ export function DevicePicker({
 
         {!replacing && sets.allSets.length > 0 && (
           // Presets apply in one click; the footer opens them for saving and editing.
-          <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto border-b border-line-soft px-3.5 py-2 [scrollbar-width:none]">
+          <div className={cx("flex shrink-0 items-center gap-1.5 overflow-x-auto border-line-soft px-3.5 py-2 [scrollbar-width:none]", upward ? "border-t" : "border-b")}>
             <SectionLabel className="me-1 shrink-0">{t("sets")}</SectionLabel>
             {sets.allSets.map(set => {
               const same = set.deviceIds.join() === slots.map(slot => slot.deviceId).join();
@@ -295,7 +297,7 @@ export function DevicePicker({
                     {section.key === "onScreen" && <span dir="ltr" className="font-mono text-[11px] text-faint">{slots.length}/{maxSlots}</span>}
                   </div>
                 )}
-                <div className={cx("grid gap-0.5", replaceSlot ? "grid-cols-2" : "grid-cols-3")}>
+                <div className="grid grid-cols-2 gap-0.5">
                   {section.devices.map(device => (
                     <DeviceRow
                       key={device.id}
@@ -314,7 +316,7 @@ export function DevicePicker({
           {sections.length === 0 && <p className="px-4 py-6 text-center text-[12.5px] text-muted">{t("noDevicesMatch", { query })}</p>}
         </div>
 
-        <div className="flex shrink-0 items-center gap-0.5 border-t border-line-soft bg-surface-2 px-1.5 py-1">
+        <div className={cx("flex shrink-0 items-center gap-0.5 border-line-soft bg-surface-2 px-1.5 py-1", upward ? "border-b" : "border-t")}>
           <FooterLink icon={<SetsIcon size={15} />} label={t("sets")} onClick={() => setView("sets")} />
           <span className="flex-1" />
           <FooterLink icon={<CustomSizeIcon size={15} />} label={t("customSize")} onClick={() => setView("custom")} />
@@ -459,7 +461,7 @@ function rowButton(state: RowState, replacing: boolean) {
   );
 }
 
-// One line per device: an outline of the device, its name and CSS width (the
+// One row per device: an outline of the device, its name and CSS width (the
 // full name and size in its tooltip). A device on screen (while changing one
 // device, only that device) is tinted and ticked. The star takes the width's
 // place on hover, and stays beside it once the device is starred.
@@ -492,7 +494,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         disabled={state.disabled}
         onClick={onPick}
         className={cx(
-          "flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg ps-2.5 text-start text-[13px] font-medium",
+          "flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg py-1 ps-2.5 text-start text-[13px] font-medium",
           favorite ? "pe-9" : "pe-2.5",
           state.disabled && !ticked ? "cursor-default text-faint" : "text-ink",
           focusRing,
@@ -501,7 +503,8 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         <span aria-hidden="true" className={cx("grid w-5 shrink-0 place-items-center", ticked ? "text-design" : state.disabled ? "text-faint" : "text-ink-2")}>
           <DeviceGlyph kind={glyphKindFor(device)} />
         </span>
-        <span className="min-w-0 truncate">{shortName(device.name)}</span>
+        {/* A long name wraps onto a second line instead of being cut off. */}
+        <span className="line-clamp-2 min-w-0 break-words leading-tight">{shortName(device.name)}</span>
         {device.tags.includes("new") && <span className="shrink-0 rounded-full bg-design-tint px-1.5 py-px text-[9.5px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
         <span className="flex-1" />
         {ticked && <CheckIcon size={14} strokeWidth={2.6} className="shrink-0 text-design" />}

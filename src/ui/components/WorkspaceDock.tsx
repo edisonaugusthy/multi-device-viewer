@@ -69,10 +69,9 @@ export interface WorkspaceDockProps {
 }
 
 // Labels drop in stages until the dock fits, so long translations and narrow
-// windows never push controls off screen: 1 shows the tools as icons, 2 drops
-// the view names (their counts stay), 3 the Add label. Every control keeps its
-// accessible name and tooltip.
-const MAX_COMPACT = 3;
+// windows never push controls off screen: 1 drops the view names (their counts
+// stay), 2 the Add label. Every control keeps its accessible name and tooltip.
+const MAX_COMPACT = 2;
 
 function useDockCompaction(locale: string) {
   const ref = useRef<HTMLElement>(null);
@@ -117,7 +116,6 @@ function useDockCompaction(locale: string) {
 export function WorkspaceDock(props: WorkspaceDockProps) {
   const { t, locale } = useI18n();
   const { ref, level } = useDockCompaction(locale);
-  const iconsOnly = level >= 1;
   const hover = (menu: DockMenu) => ({
     onPointerEnter: (event: React.PointerEvent) => { if (event.pointerType === "mouse") props.onMenuHover(menu); },
     onPointerLeave: (event: React.PointerEvent) => { if (event.pointerType === "mouse") props.onMenuHover(null); },
@@ -130,7 +128,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
         data-main-toolbar
         data-compact={level || undefined}
         aria-label={PRODUCT_SHORT_NAME}
-        className="flex h-[60px] max-w-full items-center gap-1 rounded-[20px] bg-[#1a1c20] px-2 text-[#e6e8eb] shadow-[0_16px_40px_rgb(20_23_26/0.26),inset_0_0_0_1px_rgb(255_255_255/0.06)] dark:bg-[#20242b] dark:shadow-[0_16px_40px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.1)]"
+        className="flex h-[52px] max-w-full items-center gap-0.5 rounded-[18px] bg-[#1a1c20] px-1.5 text-[#e6e8eb] shadow-[0_16px_40px_rgb(20_23_26/0.26),inset_0_0_0_1px_rgb(255_255_255/0.06)] dark:bg-[#20242b] dark:shadow-[0_16px_40px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.1)]"
       >
         <IconOnly label={t("reloadAll")} tooltip={t("tipReloadAll")} onClick={props.onReloadAll} align="start">
           <ReloadIcon size={17} />
@@ -138,7 +136,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
 
         <DockDivider />
 
-        <div role="group" aria-label={t("views")} className="flex h-11 shrink-0 items-center gap-0.5 rounded-[14px] bg-white/[0.08] p-1">
+        <div role="group" aria-label={t("views")} className="flex h-10 shrink-0 items-center gap-0.5 rounded-xl bg-white/[0.08] p-1">
           {/* The current view; clicking it again opens the Add device picker here too. */}
           <Tooltip title={t("workspace")} description={t("tipAddDevice")} align="start" side="top">
             <button
@@ -152,7 +150,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
               onClick={props.onWorkspace}
               className={cx(viewButton, !props.showingOne ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-[#8e7de0]")}
             >
-              {level < 2 && <span>{t("workspace")}</span>}
+              {level < 1 && <span>{t("workspace")}</span>}
               <span className={cx("font-mono text-[11.5px] font-medium", !props.showingOne ? "text-[#575e66]" : "text-[#a3a9b1]")}>{props.slotCount}</span>
             </button>
           </Tooltip>
@@ -165,7 +163,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
           <Tooltip title={t("allDevices")} description={t("tipAllDevices")} align="center" side="top">
             <button type="button" data-all-devices-toggle onClick={props.onAllDevices} disabled={props.capturing} aria-label={t("allDevices")}
               className={cx(viewButton, viewOff, "disabled:opacity-40")}>
-              {level < 2 && <span>{t("viewAll")}</span>}
+              {level < 1 && <span>{t("viewAll")}</span>}
               <span className="font-mono text-[11.5px] font-medium text-[#a3a9b1]">{props.catalogCount}</span>
             </button>
           </Tooltip>
@@ -181,19 +179,18 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
             onClick={props.onAdd}
             {...hover("add")}
             className={cx(
-              "mx-0.5 flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[14px] bg-white px-3.5 text-[13px] font-semibold text-[#14171a] outline-none hover:bg-[#f1f2f4] focus-visible:ring-2 focus-visible:ring-accent",
+              "mx-1 flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3 text-[13px] font-semibold text-[#14171a] outline-none hover:bg-[#f1f2f4] focus-visible:ring-2 focus-visible:ring-accent",
               props.addOpen && "ring-[3px] ring-[#8e7de0]/60",
             )}
           >
             <PlusIcon size={16} strokeWidth={2.5} />
-            {level < 3 && <span>{t("addDevice")}</span>}
+            {level < 2 && <span>{t("addDevice")}</span>}
           </button>
         </Tooltip>
 
         <DockDivider />
 
         <SyncControl
-          iconsOnly={iconsOnly}
           scrollSync={props.scrollSync}
           navigationSync={props.navigationSync}
           onScrollSyncChange={props.onScrollSyncChange}
@@ -206,7 +203,6 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
           label={t("captureMenu")}
           ariaLabel={props.tracking ? `${t("captureMenu")} · ${t("trackChanges")}` : t("captureAndAnnotate")}
           tooltip={props.tracking ? t("trackTip") : `${t("tipScreenshot")} ${t("tipRecord")}`}
-          iconsOnly={iconsOnly}
           active={props.captureOpen}
           expanded={props.captureOpen}
           disabled={props.capturing}
@@ -216,11 +212,11 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
         >
           <CameraIcon size={18} />
         </DockButton>
-        <DockButton label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")} iconsOnly={iconsOnly}
+        <DockButton label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")}
           active={props.compare} pressed={props.compare} onClick={props.onCompare}>
           <CompareIcon size={18} />
         </DockButton>
-        <IssuesControl {...props} iconsOnly={iconsOnly} />
+        <IssuesControl {...props} />
 
         <DockDivider />
 
@@ -236,20 +232,19 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
   );
 }
 
-const viewButton = "flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[10px] px-3 text-[13px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
+const viewButton = "flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 text-[13px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
 const viewOn = "bg-white text-[#14171a]";
 const viewOff = "text-[#e6e8eb] hover:bg-white/10";
-// Every item shares one height and one line: icon and label side by side.
-const dockItem = "relative flex shrink-0 items-center justify-center gap-1.5 rounded-[14px] text-[13px] font-semibold leading-none outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40";
+// The tools are icons, named in their tooltips; only the views and Add device carry text.
+const dockItem = "relative grid shrink-0 place-items-center rounded-xl outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40";
 
 type DataAttributes = { [key: `data-${string}`]: string | boolean | undefined };
 type HoverHandlers = { onPointerEnter: (event: React.PointerEvent) => void; onPointerLeave: (event: React.PointerEvent) => void };
 
-function DockButton({ label, ariaLabel, tooltip, iconsOnly, active, pressed, expanded, disabled, badge, dot, align = "center", buttonRef, hoverHandlers, onClick, children, ...data }: {
+function DockButton({ label, ariaLabel, tooltip, active, pressed, expanded, disabled, badge, dot, align = "center", buttonRef, hoverHandlers, onClick, children, ...data }: {
   label: string;
   ariaLabel?: string;
   tooltip?: string;
-  iconsOnly: boolean;
   active?: boolean;
   pressed?: boolean;
   expanded?: boolean;
@@ -274,13 +269,12 @@ function DockButton({ label, ariaLabel, tooltip, iconsOnly, active, pressed, exp
         onClick={onClick}
         {...hoverHandlers}
         {...data}
-        className={cx(dockItem, "text-[#f3f4f6]", iconsOnly ? "size-11" : "h-11 px-2.5", active && "bg-white/[0.14]")}
+        className={cx(dockItem, "size-10 text-[#f3f4f6]", active && "bg-white/[0.14]")}
       >
         <span className="relative grid place-items-center">
           {children}
           <Marks badge={badge} dot={dot} />
         </span>
-        {!iconsOnly && <span className="whitespace-nowrap">{label}</span>}
       </button>
     </Tooltip>
   );
@@ -301,7 +295,7 @@ function IconOnly({ label, tooltip, active, expanded, align = "center", buttonRe
   return (
     <Tooltip title={label} description={tooltip} align={align} side="top">
       <button ref={buttonRef} type="button" aria-label={label} aria-expanded={expanded} onClick={onClick} {...hoverHandlers} {...data}
-        className={cx(dockItem, "size-11 text-[#c3c8cf] hover:text-white", active && "bg-white/[0.14] text-white")}>
+        className={cx(dockItem, "size-10 text-[#c3c8cf] hover:text-white", active && "bg-white/[0.14] text-white")}>
         {children}
       </button>
     </Tooltip>
@@ -346,8 +340,7 @@ function DockMenuPanel({ label, width, children }: { label: string; width: strin
 
 // Sync: one click turns it on or off for everything; resting on it (or
 // tabbing into it) shows Scroll and Navigation separately.
-function SyncControl({ iconsOnly, scrollSync, navigationSync, onScrollSyncChange, onNavigationSyncChange }: {
-  iconsOnly: boolean;
+function SyncControl({ scrollSync, navigationSync, onScrollSyncChange, onNavigationSyncChange }: {
   scrollSync: boolean;
   navigationSync: boolean;
   onScrollSyncChange: (enabled: boolean) => void;
@@ -364,14 +357,13 @@ function SyncControl({ iconsOnly, scrollSync, navigationSync, onScrollSyncChange
         aria-pressed={on}
         title={t("syncBetweenDevicesHint")}
         onClick={() => { onScrollSyncChange(!on); onNavigationSyncChange(!on); }}
-        className={cx(dockItem, "text-[#f3f4f6]", iconsOnly ? "size-11" : "h-11 px-2.5", menu.open && "bg-white/[0.14]")}
+        className={cx(dockItem, "size-10 text-[#f3f4f6]", menu.open && "bg-white/[0.14]")}
       >
         {/* Off reads as an ordinary control; on adds a green light. */}
         <span className="relative grid place-items-center">
           <LinkIcon size={18} />
           {on && <span aria-hidden="true" data-sync-on className="pointer-events-none absolute -end-1 -top-1 size-[7px] rounded-full bg-[#7bd88f] ring-2 ring-[#1a1c20]" />}
         </span>
-        {!iconsOnly && <span className="whitespace-nowrap">{t("sync")}</span>}
       </button>
       {menu.open && (
         <DockMenuPanel label={t("syncBetweenDevices")} width="w-60">
@@ -396,7 +388,7 @@ function SyncRow({ label, hint, checked, onChange }: { label: string; hint: stri
 // Issues: what went wrong on the devices, in one place. Resting on it lists
 // the problems (script errors and failed requests), the layout check and the
 // fix prompt, each one click away; its badge counts both kinds of problem.
-function IssuesControl(props: WorkspaceDockProps & { iconsOnly: boolean }) {
+function IssuesControl(props: WorkspaceDockProps) {
   const { t } = useI18n();
   const menu = useRestingMenu();
   const total = props.problemsCount + (FEATURES.layoutCheck ? props.layoutCount : 0);
@@ -413,7 +405,7 @@ function IssuesControl(props: WorkspaceDockProps & { iconsOnly: boolean }) {
           aria-label={total > 0 ? `${t("issues")} · ${total}` : t("issues")}
           aria-expanded={menu.open}
           onClick={() => menu.setOpen(open => !open)}
-          className={cx(dockItem, "text-[#f3f4f6]", props.iconsOnly ? "size-11" : "h-11 px-2.5", active && "bg-white/[0.14]")}
+          className={cx(dockItem, "size-10 text-[#f3f4f6]", active && "bg-white/[0.14]")}
         >
           <span className="relative grid place-items-center">
             {props.layoutChecking
@@ -421,7 +413,6 @@ function IssuesControl(props: WorkspaceDockProps & { iconsOnly: boolean }) {
               : <AlertIcon size={18} />}
             <Marks badge={total} />
           </span>
-          {!props.iconsOnly && <span className="whitespace-nowrap">{t("issues")}</span>}
         </button>
       </Tooltip>
       {menu.open && (
@@ -464,5 +455,5 @@ function IssueRow({ icon, label, hint, count, pressed, busy, onClick, ...data }:
 }
 
 function DockDivider() {
-  return <span aria-hidden="true" className="mx-1.5 h-7 w-px shrink-0 bg-white/[0.12]" />;
+  return <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-white/[0.12]" />;
 }

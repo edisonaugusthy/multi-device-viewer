@@ -1377,6 +1377,17 @@ test("opens the Add device picker from the Workspace button as well as Add devic
   await expect(workspace).toHaveAttribute("aria-expanded", "false");
 });
 
+test("applies a preset from the Add device picker in one click", async ({ page }) => {
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
+  const chip = page.getByTestId("device-switcher-panel").locator("[data-preset-chip]").first();
+  const count = (await chip.getAttribute("title"))!.split(" · ").length;
+  await chip.click();
+  await expect(page.locator("[data-preview-slot-id]")).toHaveCount(count);
+  // Opened again, the picker shows that preset as the one in use.
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
+  await expect(chip).toHaveAttribute("aria-pressed", "true");
+});
+
 test("keeps the browser appearance panel inside its menu", async ({ page }) => {
   await switchDevice(page, "iPad Pro 13", 'button[title="Apple iPad Pro 13-inch (M4)"]');
   const slot = page.locator("[data-preview-slot-id]").first();

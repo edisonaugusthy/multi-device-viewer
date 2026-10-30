@@ -60,8 +60,9 @@ export function DevicePicker({
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
-  // Two columns of devices, so a whole type fits without much scrolling.
-  const position = useAnchoredPosition(anchorRef, open, 540, "start", 560);
+  // One line per device, two columns when changing one device and three when
+  // adding, so a whole type fits without much scrolling.
+  const position = useAnchoredPosition(anchorRef, open, target.kind === "add" ? 720 : 500, "start", 560);
   const dismiss = useCallback(() => onClose(), [onClose]);
   useDismiss(open, [panelRef, anchorRef], dismiss);
 
@@ -178,9 +179,10 @@ export function DevicePicker({
       style={positionStyle(position)}
     >
       {view === "devices" && <>
-        <div className="flex shrink-0 items-center gap-1.5 p-2">
-          <label className="flex h-[34px] min-w-0 flex-1 items-center gap-1.5 rounded-lg bg-field px-2 focus-within:ring-2 focus-within:ring-accent">
-            <SearchIcon size={15} className="shrink-0 text-muted" />
+        {/* Typing filters straight away; the line stays quiet until then. */}
+        <div className="flex shrink-0 items-center px-3.5">
+          <label className="flex h-11 min-w-0 flex-1 items-center gap-2">
+            <SearchIcon size={15} className="shrink-0 text-faint" />
             <span className="sr-only">{t("searchDevice")}</span>
             <input
               ref={searchRef}
@@ -195,7 +197,7 @@ export function DevicePicker({
                 // Enter adds the best match; it never removes a device already on screen.
                 if (event.key === "Enter") { event.preventDefault(); listRef.current?.querySelector<HTMLButtonElement>("[data-device-pick]:not(:disabled):not([data-added])")?.click(); }
               }}
-              className="h-[30px] min-w-0 flex-1 bg-transparent text-[13.5px] font-medium text-ink outline-none placeholder:text-faint"
+              className="h-8 min-w-0 flex-1 bg-transparent text-[13.5px] font-medium text-ink outline-none placeholder:font-normal placeholder:text-faint"
             />
           </label>
         </div>
@@ -203,7 +205,7 @@ export function DevicePicker({
         <div
           role="tablist"
           aria-label={t("deviceType")}
-          className="flex shrink-0 gap-0.5 overflow-x-auto border-b border-line-soft px-2 [scrollbar-width:none]"
+          className="flex shrink-0 gap-0.5 overflow-x-auto border-y border-line-soft px-2 [scrollbar-width:none]"
           onKeyDown={event => {
             if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
             event.preventDefault();
@@ -240,6 +242,28 @@ export function DevicePicker({
           })}
         </div>
 
+        {!replacing && sets.allSets.length > 0 && (
+          // Presets apply in one click; the footer opens them for saving and editing.
+          <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto border-b border-line-soft px-3.5 py-2 [scrollbar-width:none]">
+            <SectionLabel className="me-1 shrink-0">{t("sets")}</SectionLabel>
+            {sets.allSets.map(set => {
+              const same = set.deviceIds.join() === slots.map(slot => slot.deviceId).join();
+              return (
+                <button key={set.id} type="button" data-preset-chip={set.id} aria-pressed={same}
+                  title={set.deviceIds.map(id => findDevice(id).name).join(" · ")}
+                  onClick={() => onApplySet(set.deviceIds)}
+                  className={cx("flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 text-xs font-semibold",
+                    same ? "border-design-line bg-design-soft text-design-ink" : "border-line bg-surface text-ink hover:bg-sunken", focusRing)}>
+                  <span aria-hidden="true" className="flex h-3.5 items-end gap-px opacity-70">
+                    {set.deviceIds.map((id, index) => <DeviceGlyph key={`${id}-${index}`} kind={glyphKindFor(findDevice(id))} small />)}
+                  </span>
+                  {set.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {(swapping || (!replacing && full)) && (
           <p role="status" className={cx("mx-2 mt-1.5 shrink-0 rounded-lg px-2.5 py-1 text-xs font-medium", swapping ? "bg-accent-soft text-accent-strong" : "bg-warn-soft text-warn")}>
             {swapping ? t("replacingNamed", { name: swapping.name }) : t("maxDevicesReached", { count: maxSlots })}
@@ -248,7 +272,7 @@ export function DevicePicker({
 
         <div
           ref={listRef}
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 pb-1.5 pt-1"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1.5 pb-2 pt-0.5"
           onKeyDown={event => {
             if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
             const rows = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>("[data-device-pick]:not(:disabled)") ?? []);
@@ -264,12 +288,12 @@ export function DevicePicker({
             return (
               <section key={section.key} aria-label={title ?? tabLabel(tab)}>
                 {title && (
-                  <div className="flex items-baseline gap-1.5 px-2.5 pb-1 pt-2.5">
+                  <div className="flex items-baseline gap-1.5 px-2.5 pb-1 pt-3">
                     <SectionLabel>{title}</SectionLabel>
                     {section.key === "onScreen" && <span dir="ltr" className="font-mono text-[11px] text-faint">{slots.length}/{maxSlots}</span>}
                   </div>
                 )}
-                <div className="grid grid-cols-2 gap-0.5 px-1">
+                <div className={cx("grid gap-0.5", replaceSlot ? "grid-cols-2" : "grid-cols-3")}>
                   {section.devices.map(device => (
                     <DeviceRow
                       key={device.id}
@@ -288,7 +312,7 @@ export function DevicePicker({
           {sections.length === 0 && <p className="px-4 py-6 text-center text-[12.5px] text-muted">{t("noDevicesMatch", { query })}</p>}
         </div>
 
-        <div className="flex shrink-0 items-center gap-0.5 border-t border-line-soft p-1">
+        <div className="flex shrink-0 items-center gap-0.5 border-t border-line-soft bg-surface-2 px-1.5 py-1">
           <FooterLink icon={<SetsIcon size={15} />} label={t("sets")} onClick={() => setView("sets")} />
           <span className="flex-1" />
           <FooterLink icon={<CustomSizeIcon size={15} />} label={t("customSize")} onClick={() => setView("custom")} />
@@ -411,7 +435,7 @@ export function DevicePicker({
 }
 
 // A device on screen is ticked; while changing one device, only that device is.
-// Saved custom sizes keep a bordered row with the same states.
+// Saved custom sizes use the same tint as device rows.
 type RowState = { added: boolean; current: boolean; disabled: boolean };
 const isSelected = (state: RowState, replacing: boolean) => replacing ? state.current : state.added;
 
@@ -419,9 +443,7 @@ function rowFrame(state: RowState, replacing: boolean) {
   const selected = isSelected(state, replacing);
   return cx(
     "my-px flex items-center rounded-lg border transition-colors",
-    selected ? "border-accent-line bg-accent-soft/45 hover:border-accent"
-      : replacing && state.added ? "border-line"
-      : "border-transparent",
+    selected ? "border-transparent bg-design-soft" : "border-transparent",
   );
 }
 
@@ -435,9 +457,10 @@ function rowButton(state: RowState, replacing: boolean) {
   );
 }
 
-// One tile per device, two to a row: an outline of the device, its name and
-// CSS size. A device on screen (while changing one device, only that device)
-// is tinted and ticked. The star shows on hover unless the device is starred.
+// One line per device: an outline of the device, its name and CSS width (the
+// full name and size in its tooltip). A device on screen (while changing one
+// device, only that device) is tinted and ticked. The star takes the width's
+// place on hover, and stays beside it once the device is starred.
 function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorite }: {
   device: Device;
   state: RowState & { hint: string };
@@ -449,10 +472,11 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
   const { t } = useI18n();
   const ticked = isSelected(state, replacing);
   const favoriteLabel = favorite ? t("removeFavorite", { name: device.name }) : t("addFavorite", { name: device.name });
+  const size = `${device.cssViewport.width}×${device.cssViewport.height}`;
   return (
     <div className={cx(
-      "group flex min-w-0 items-center rounded-lg border transition-colors",
-      ticked ? "border-accent-line bg-accent-soft" : replacing && state.added ? "border-line" : "border-transparent",
+      "group relative flex min-w-0 items-center rounded-lg transition-colors",
+      ticked && "bg-design-soft",
       !ticked && !state.disabled && "hover:bg-sunken",
     )}>
       <button
@@ -460,29 +484,26 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         data-device-pick={device.id}
         data-added={state.added || undefined}
         title={device.name}
-        aria-label={`${device.name} · ${state.hint}`}
+        aria-label={`${device.name} · ${size} · ${state.hint}`}
         aria-current={state.current || undefined}
         aria-pressed={replacing ? undefined : state.added}
         disabled={state.disabled}
         onClick={onPick}
         className={cx(
-          "flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg py-1 pe-1 ps-2 text-start text-[13px] font-medium",
+          "flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg ps-2.5 text-start text-[13px] font-medium",
+          favorite ? "pe-9" : "pe-2.5",
           state.disabled && !ticked ? "cursor-default text-faint" : "text-ink",
           focusRing,
         )}
       >
-        <span aria-hidden="true" className={cx("grid w-5 shrink-0 place-items-center", ticked ? "text-accent-strong" : "text-ink-2")}>
+        <span aria-hidden="true" className={cx("grid w-5 shrink-0 place-items-center", ticked ? "text-design" : state.disabled ? "text-faint" : "text-ink-2")}>
           <DeviceGlyph kind={glyphKindFor(device)} />
         </span>
-        <span className="grid min-w-0 flex-1 gap-px">
-          {/* Full names wrap instead of being cut off. */}
-          <span className="min-w-0 break-words leading-tight">
-            {shortName(device.name)}
-            {device.tags.includes("new") && <span className="ms-1.5 inline-block rounded-full bg-design-tint px-1.5 py-px align-[1px] text-[10px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
-          </span>
-          <span dir="ltr" className="font-mono text-[11px] text-faint">{device.cssViewport.width}×{device.cssViewport.height}</span>
-        </span>
-        {ticked && <CheckIcon size={13} strokeWidth={3} className="shrink-0 text-accent" />}
+        <span className="min-w-0 truncate">{shortName(device.name)}</span>
+        {device.tags.includes("new") && <span className="shrink-0 rounded-full bg-design-tint px-1.5 py-px text-[9.5px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
+        <span className="flex-1" />
+        {ticked && <CheckIcon size={14} strokeWidth={2.6} className="shrink-0 text-design" />}
+        <span dir="ltr" aria-hidden="true" className={cx("shrink-0 font-mono text-[11.5px] font-medium text-muted", !favorite && "group-hover:opacity-0")}>{device.cssViewport.width}</span>
       </button>
       <button
         type="button"
@@ -492,7 +513,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         title={favoriteLabel}
         onClick={onToggleFavorite}
         className={cx(
-          "me-0.5 grid size-7 shrink-0 place-items-center rounded-md focus-visible:opacity-100",
+          "absolute end-1 grid size-7 place-items-center rounded-md focus-visible:opacity-100",
           favorite ? "text-star" : "text-faint opacity-0 hover:text-ink-2 group-hover:opacity-100",
           focusRing,
         )}

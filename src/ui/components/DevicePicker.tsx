@@ -176,7 +176,9 @@ export function DevicePicker({
       aria-label={title}
       data-testid="device-switcher-panel"
       className={cx(popoverPanel, "fixed")}
-      style={positionStyle(position)}
+      // One height for every tab and page: a picker that grew or shrank with its
+      // list would move the tabs out from under the pointer.
+      style={{ ...positionStyle(position), height: position.maxHeight }}
     >
       {view === "devices" && <>
         {/* Typing filters straight away; the line stays quiet until then. */}

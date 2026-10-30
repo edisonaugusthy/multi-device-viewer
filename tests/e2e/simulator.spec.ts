@@ -1377,6 +1377,17 @@ test("opens the Add device picker from the Workspace button as well as Add devic
   await expect(workspace).toHaveAttribute("aria-expanded", "false");
 });
 
+test("keeps the device picker the same size on every tab", async ({ page }) => {
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
+  const panel = page.getByTestId("device-switcher-panel");
+  const first = (await panel.boundingBox())!;
+  for (const tab of await panel.getByRole("tab").all()) {
+    await tab.hover();
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    expect(await panel.boundingBox()).toEqual(first);
+  }
+});
+
 test("applies a preset from the Add device picker in one click", async ({ page }) => {
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
   const chip = page.getByTestId("device-switcher-panel").locator("[data-preset-chip]").first();

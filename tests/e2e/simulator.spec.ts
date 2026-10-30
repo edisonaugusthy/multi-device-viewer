@@ -43,8 +43,9 @@ async function toggleTheme(page: Page) {
   await expect(settings).toHaveCount(0);
 }
 
+// Recording lives in the Capture menu in the dock.
 async function openRecordMenu(page: Page) {
-  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Record", exact: true }).click();
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Screenshot and annotate" }).click();
 }
 
 test.beforeEach(async ({ page }) => {
@@ -400,10 +401,10 @@ test("discovers expanded current and rugged device families", async ({ page }) =
   expect(new Set(tabBoxes.map(top => Math.round(top))).size).toBe(1);
   await expect(tabs.first()).toHaveAttribute("aria-selected", "true");
 
-  // One device per line.
+  // Two devices to a row.
   await chooseType("Android");
   const rowLefts = await page.locator("[data-device-pick]").evaluateAll(elements => elements.slice(0, 4).map(element => Math.round(element.getBoundingClientRect().left)));
-  expect(new Set(rowLefts).size).toBe(1);
+  expect(new Set(rowLefts).size).toBe(2);
 
   // Arrow keys move between types.
   await tabs.filter({ hasText: "Android" }).first().focus();
@@ -1015,6 +1016,8 @@ test("uses focus mode as a clean canvas without reloading previews", async ({ pa
 });
 
 test("builds an actionable AI fix prompt with optional context", async ({ page }) => {
+  // The fix prompt is one of the Issues in the dock.
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: /^Issues/ }).hover();
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Fix prompt", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Fix prompt" });
   await expect(dialog.getByRole("heading", { name: "Fix prompt" })).toBeVisible();
@@ -1062,7 +1065,7 @@ test("shows a persistent source-tab recording indicator", async ({ page }) => {
   await openRecordMenu(page);
   await page.getByRole("button", { name: "Record this tab" }).click();
   // The menu closes and a bar under the toolbar shows the time and how to stop.
-  await expect(page.getByRole("dialog", { name: "Record" })).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "Capture" })).toHaveCount(0);
   const bar = page.getByRole("group", { name: "Recording this tab" });
   await expect(bar).toContainText("00:0");
   await bar.getByRole("button", { name: "Stop and save video" }).click();
@@ -1072,7 +1075,7 @@ test("shows a persistent source-tab recording indicator", async ({ page }) => {
 test("shows that a user flow is recording and how to stop it", async ({ page }) => {
   await openRecordMenu(page);
   await page.getByRole("button", { name: "Record user flow" }).click();
-  await expect(page.getByRole("dialog", { name: "Record" })).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "Capture" })).toHaveCount(0);
   // Until the first step, any device can be used.
   const bar = page.getByRole("group", { name: /^Recording clicks and typing/ });
   await expect(bar).toContainText("use any device");
@@ -1118,6 +1121,49 @@ test("returns a moved preview to the recorded flow start page", async ({ page })
   await openRecordMenu(page);
   await page.getByRole("button", { name: "Rerun · 1 steps", exact: true }).click();
   await expect(preview).toHaveAttribute("src", "https://example.org");
+});
+
+test("moves a device over another and draws the one moved on top", async ({ page }) => {
+  const slots = page.locator("[data-preview-slot-id]");
+  const layer = (index: number) => slots.nth(index).evaluate(slot => Number(slot.closest("[data-canvas-layer]")?.getAttribute("data-canvas-layer")));
+  await revealControls(page, 0);
+  const grip = slots.nth(0).locator("[data-move-handle]");
+  const box = (await grip.boundingBox())!;
+  const before = (await slots.nth(0).locator("[data-device-capture]").boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 260, box.y + 30, { steps: 8 });
+  await page.mouse.up();
+  // The device crossed into its neighbour's space and is drawn above it.
+  const after = (await slots.nth(0).locator("[data-device-capture]").boundingBox())!;
+  expect(after.x - before.x).toBeGreaterThan(200);
+  expect(await layer(0)).toBeGreaterThan(await layer(1));
+  // Touching the other device brings that one forward instead.
+  await slots.nth(1).locator("[data-device-caption]").click();
+  expect(await layer(1)).toBeGreaterThan(await layer(0));
+});
+
+test("resizes a device by dragging its corner", async ({ page }) => {
+  const slot = page.locator("[data-preview-slot-id]").first();
+  const device = slot.locator("[data-device-capture]");
+  await revealControls(page, 0);
+  const zoom = slot.getByRole("button", { name: /^Reset fit/ });
+  const zoomBefore = await zoom.textContent();
+  const handle = slot.locator("[data-resize-handle]");
+  const before = (await device.boundingBox())!;
+  const corner = (await handle.boundingBox())!;
+  await page.mouse.move(corner.x + corner.width / 2, corner.y + corner.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(corner.x - 60, corner.y - 120, { steps: 8 });
+  await page.mouse.up();
+  const after = (await device.boundingBox())!;
+  expect(after.height).toBeLessThan(before.height - 60);
+  // The top-left corner stays put while the device shrinks.
+  expect(Math.abs(after.x - before.x)).toBeLessThan(3);
+  expect(Math.abs(after.y - before.y)).toBeLessThan(3);
+  // The new size is kept as the device's zoom.
+  await revealControls(page, 0);
+  await expect(zoom).not.toHaveText(zoomBefore!);
 });
 
 test("steps through devices of the same type from the device toolbar", async ({ page }) => {

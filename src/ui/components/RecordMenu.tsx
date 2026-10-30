@@ -1,21 +1,14 @@
-import { useCallback, useRef, type ReactNode, type RefObject } from "react";
+import type { ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import { NavigationSyncIcon, PlayIcon, RecordIcon, StopIcon, TrashIcon } from "../icons";
-import { cx, focusRing, positionStyle, popoverPanel, SectionLabel, useAnchoredPosition, useDismiss } from "./ui";
+import { cx, focusRing, SectionLabel } from "./ui";
 
 export interface FlowStatus {
   text: string;
   tone: "neutral" | "success" | "warning" | "error";
 }
 
-export function RecordMenu({
-  open, anchorRef, onClose,
-  tabRecording, tabRecordingTime, canRecordTab, onToggleTabRecording,
-  flowRecording, flowStepCount, onToggleFlowRecording, onReplayFlow, onClearFlow, flowStatus, canResumeFlow, onResumeFlow,
-}: {
-  open: boolean;
-  anchorRef: RefObject<HTMLElement | null>;
-  onClose: () => void;
+export interface RecordControlsProps {
   tabRecording: boolean;
   tabRecordingTime: string;
   canRecordTab: boolean;
@@ -28,16 +21,16 @@ export function RecordMenu({
   flowStatus?: FlowStatus;
   canResumeFlow: boolean;
   onResumeFlow: () => void;
-}) {
-  const { t } = useI18n();
-  const panelRef = useRef<HTMLDivElement>(null);
-  const position = useAnchoredPosition(anchorRef, open, 300, "end");
-  const dismiss = useCallback(() => onClose(), [onClose]);
-  useDismiss(open, [panelRef, anchorRef], dismiss);
-  if (!open) return null;
+}
 
+/** Recording this tab as a video, and recording, rerunning or clearing a user flow; shown in the Capture menu. */
+export function RecordControls({
+  tabRecording, tabRecordingTime, canRecordTab, onToggleTabRecording,
+  flowRecording, flowStepCount, onToggleFlowRecording, onReplayFlow, onClearFlow, flowStatus, canResumeFlow, onResumeFlow,
+}: RecordControlsProps) {
+  const { t } = useI18n();
   return (
-    <div ref={panelRef} role="dialog" aria-label={t("record")} className={cx(popoverPanel, "fixed p-1.5")} style={positionStyle(position)}>
+    <>
       <SectionLabel className="px-2 pb-1 pt-1.5">{t("recordSourceTab")}</SectionLabel>
       <MenuRow
         icon={tabRecording ? <StopIcon size={14} className="text-record" /> : <RecordIcon size={15} />}
@@ -76,11 +69,11 @@ export function RecordMenu({
           flowStatus.tone === "neutral" && "text-muted",
         )}>{flowStatus.text}</p>
       )}
-    </div>
+    </>
   );
 }
 
-// Shown under the toolbar for as long as a recording runs, so it is always
+// Shown at the top of the workspace for as long as a recording runs, so it is always
 // clear what is being recorded and how to stop it.
 export function RecordingBar({ tabRecording, tabRecordingTime, onStopTab, flowRecording, flowDevice, flowStepCount, onStopFlow }: {
   tabRecording: boolean;
@@ -95,7 +88,7 @@ export function RecordingBar({ tabRecording, tabRecordingTime, onStopTab, flowRe
   const { t } = useI18n();
   if (!tabRecording && !flowRecording) return null;
   return (
-    <div data-recording-bar className="pointer-events-none fixed inset-x-0 top-[60px] z-[90] flex flex-col items-center gap-1.5 px-4">
+    <div data-recording-bar className="pointer-events-none fixed inset-x-0 top-4 z-[90] flex flex-col items-center gap-1.5 px-4">
       {tabRecording && (
         <RecordingPill label={t("recordingTabNow")} detail={tabRecordingTime} action={t("stopAndSaveVideo")} onStop={onStopTab} />
       )}

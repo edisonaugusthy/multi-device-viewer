@@ -10,11 +10,12 @@ import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
 import { chromeMajor, identityToken, slotIdentity } from "../../domain/simulator/preview-identity";
 import { tagPreviewRequest } from "../../domain/simulator/preview-request";
+import { clampZoom } from "../../domain/simulator/simulator-service";
 import { PREVIEW_SANDBOX, previewFrameName } from "../../app/preview-frame";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
-import { AlertIcon, CameraIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, GlobeIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
+import { AlertIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, FixPromptIcon, GlobeIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
 import type { LayoutSlotStatus } from "../hooks/useLayoutCheck";
 import { PreviewToolbar, type FocusNavigation } from "./PreviewToolbar";
 import { memo, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
@@ -122,6 +123,13 @@ interface PreviewCardProps {
   onSwitchDevice?: (slotId: string, deviceId: string) => void;
   /** Changing this returns a dragged device to its default position. */
   positionKey?: string;
+  /**
+   * Devices float on one free canvas: a device and its name can be dragged
+   * across the other devices' space, and its corner resizes it. Only the
+   * device, its name and its toolbar take the pointer, so a device moved over
+   * another's empty space stays reachable.
+   */
+  canvas?: boolean;
   onExpand?: (slotId: string) => void;
   onFixPrompt?: (slotId: string) => void;
   onPageScroll?: (scrollTop: number) => void;
@@ -190,6 +198,7 @@ export const PreviewCard = memo(function PreviewCard({
   nextDevice,
   onSwitchDevice,
   positionKey,
+  canvas = false,
   onExpand,
   onFixPrompt,
   onPageScroll,
@@ -353,12 +362,16 @@ export const PreviewCard = memo(function PreviewCard({
     availH / frameSize.height,
   );
   const fitScale = rawFitScale;
+  // While its corner is dragged a device follows the pointer; the zoom is saved when it is let go.
+  const [liveZoom, setLiveZoom] = useState<number | null>(null);
   const layoutScale =
-    slot.zoomMode === "actual"
-      ? 1
-      : slot.zoomMode === "fit"
-        ? fitScale
-        : fitScale * (slot.zoom / 0.58);
+    liveZoom !== null
+      ? fitScale * (liveZoom / 0.58)
+      : slot.zoomMode === "actual"
+        ? 1
+        : slot.zoomMode === "fit"
+          ? fitScale
+          : fitScale * (slot.zoom / 0.58);
   layoutScaleRef.current = layoutScale;
   const scale = captureScale ?? layoutScale;
 
@@ -377,6 +390,31 @@ export const PreviewCard = memo(function PreviewCard({
     const origin = offset;
     event.stopPropagation();
     startDrag(event, (deltaX, deltaY) => setOffset({ x: origin.x + deltaX, y: origin.y + deltaY }));
+  }
+
+  // Dragging the corner resizes the device while its top-left corner stays
+  // put: the device sits bottom-aligned and centred, so the drag offset makes up
+  // for the growth.
+  function startResize(event: React.PointerEvent) {
+    if (event.button !== 0) return;
+    event.stopPropagation();
+    const origin = offset;
+    const startScale = scale;
+    const width = frameSize.width * startScale;
+    const height = frameSize.height * startScale;
+    let zoom = slot.zoomMode === "custom" ? slot.zoom : startScale / fitScale * 0.58;
+    startDrag(event, (deltaX, deltaY) => {
+      const factor = Math.max((width + deltaX) / width, (height + deltaY) / height);
+      zoom = clampZoom(startScale * factor / fitScale * 0.58);
+      const nextScale = fitScale * (zoom / 0.58);
+      const grownWidth = frameSize.width * nextScale - width;
+      const grownHeight = frameSize.height * nextScale - height;
+      setLiveZoom(zoom);
+      setOffset({ x: origin.x + grownWidth / 2, y: origin.y + (align === "bottom" ? grownHeight : grownHeight / 2) });
+    }, () => {
+      simulator.current.setSlotZoom(slot.id, zoom);
+      setLiveZoom(null);
+    });
   }
 
   function resetView() {
@@ -881,14 +919,14 @@ export const PreviewCard = memo(function PreviewCard({
     <section
       data-preview-slot-id={slot.id}
       data-active-slot={isActive || undefined}
-      className="group/device @container/viewport relative flex h-full min-h-0 min-w-0 flex-col"
+      className={`group/device @container/viewport relative flex h-full min-h-0 min-w-0 flex-col ${canvas ? "pointer-events-none" : ""}`}
       onClick={() => simulator.current.setActiveSlot(slot.id)}
       onFocus={() => { simulator.current.setActiveSlot(slot.id); placeToolbar(); }}
       onPointerEnter={placeToolbar}
     >
       {/* Clip enlarged previews here. The toolbar sits outside this clip box,
           over its top inset, so a narrow column never cuts it off. */}
-      <div className={`relative min-h-0 flex-1 overflow-hidden ${showToolbar ? "pt-14" : ""}`}>
+      <div className={`relative min-h-0 flex-1 ${canvas ? "overflow-visible" : "overflow-hidden"} ${showToolbar ? "pt-14" : ""}`}>
         <div
           ref={containerRef}
           data-design-overlay-surface
@@ -899,7 +937,7 @@ export const PreviewCard = memo(function PreviewCard({
               // A device screenshot briefly paints known backdrops behind the
               // device, spread well past its edges even at small zoom, to cut it
               // out of the workspace (see captureDeviceCutout).
-              className={`shrink-0 origin-center cursor-grab touch-none active:cursor-grabbing data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
+              className={`pointer-events-auto shrink-0 origin-center cursor-grab touch-none active:cursor-grabbing data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
               data-device-capture
               data-free-device-view={freeView ? "" : undefined}
               onPointerEnter={holdToolbar}
@@ -922,6 +960,25 @@ export const PreviewCard = memo(function PreviewCard({
             >
               {renderFrame()}
             </div>
+          )}
+          {canvas && showToolbar && containerSize.width > 0 && !capturePending && (
+            <button
+              type="button"
+              data-resize-handle
+              aria-label={t("resizeDevice")}
+              title={t("resizeDevice")}
+              onPointerDown={startResize}
+              onPointerEnter={holdToolbar}
+              onPointerLeave={releaseToolbar}
+              onDoubleClick={resetView}
+              className="pointer-events-auto absolute z-10 grid size-6 cursor-nwse-resize place-items-center rounded-full border border-line bg-surface text-muted opacity-0 shadow-float transition-opacity hover:text-ink focus-visible:opacity-100 group-hover/device:opacity-100 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              style={{
+                left: (containerSize.width - frameSize.width * scale) / 2 + offset.x + frameSize.width * scale - 12,
+                top: deviceTop + offset.y + scaledHeight - 12,
+              }}
+            >
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M9 3 3 9M9 6.5 6.5 9" /></svg>
+            </button>
           )}
           {designOverlay && screenBox && <DesignOverlay {...designOverlay} screen={viewportSize} screenBox={screenBox} />}
         </div>
@@ -968,7 +1025,8 @@ export const PreviewCard = memo(function PreviewCard({
             onReload={() => simulator.current.reloadSlot(slot.id)}
             onOpenInTab={openInTab}
             onExpand={onExpand && (() => onExpand(slot.id))}
-            onFixPrompt={onFixPrompt && (() => onFixPrompt(slot.id))}
+            onScreenshot={onCapture && (() => onCapture(slot.id))}
+            screenshotPending={capturePending}
             onCompareBefore={FEATURES.visualChecks && visualChecks.hasBefore() ? visualChecks.compare : undefined}
             compareBeforeLabel={t("visualCompareButton")}
             onLayoutProblems={onLayoutProblems && layoutStatus?.status === "done" && layoutStatus.count > 0 ? () => onLayoutProblems(slot.id) : undefined}
@@ -1001,7 +1059,7 @@ export const PreviewCard = memo(function PreviewCard({
                   </div>
                 ) : <>
                   <MenuItem label={t("openInTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
-                  {onCapture && <MenuItem label={t("captureAndAnnotate")} disabled={capturePending} onClick={() => { setControlsOpen(false); onCapture(slot.id); }}><CameraIcon size={15}/></MenuItem>}
+                  {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
                   {FEATURES.visualChecks && visualChecks.menuItems}
                   {onLayoutCheck && (
                     <div className="mb-1 grid gap-px border-b border-line-soft pb-1.5" role="group" aria-label={t("layoutCheck")}>
@@ -1021,7 +1079,8 @@ export const PreviewCard = memo(function PreviewCard({
       )}
 
       {showCaption && (
-        <div className="flex h-11 shrink-0 items-center justify-center px-2">
+        <div className={`flex h-11 shrink-0 items-center justify-center px-2 ${canvas ? "pointer-events-none [&>*]:pointer-events-auto" : ""}`}
+          style={canvas ? { transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined}>
           <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
             onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
             className={`flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent ${isActive ? "font-semibold text-ink" : "font-medium text-ink-2"}`}>
@@ -1052,7 +1111,7 @@ export const PreviewCard = memo(function PreviewCard({
           )}
         </div>
       )}
-      {visualChecks.dialog}
+      <div className="pointer-events-auto contents">{visualChecks.dialog}</div>
     </section>
   );
 

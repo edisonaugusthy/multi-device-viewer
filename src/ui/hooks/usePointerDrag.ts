@@ -5,7 +5,7 @@ export function usePointerDrag() {
   const cleanup = useRef<(() => void) | undefined>(undefined);
   useEffect(() => () => cleanup.current?.(), []);
 
-  return useCallback((event: ReactPointerEvent, onMove: (deltaX: number, deltaY: number, move: PointerEvent) => void) => {
+  return useCallback((event: ReactPointerEvent, onMove: (deltaX: number, deltaY: number, move: PointerEvent) => void, onEnd?: () => void) => {
     if (event.button !== 0) return;
     cleanup.current?.();
     event.preventDefault();
@@ -23,6 +23,7 @@ export function usePointerDrag() {
       view?.removeEventListener("blur", finish);
       if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId);
       cleanup.current = undefined;
+      onEnd?.();
     };
     const move = (next: PointerEvent) => {
       if (next.pointerId !== pointerId) return;

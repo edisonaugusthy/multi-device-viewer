@@ -15,9 +15,10 @@ function Item({ icon, label, onClick, attr }: { icon: ReactNode; label: string; 
 
 /**
  * The camera's menu: a screenshot of the active device or of the whole
- * workspace, either opening the annotation editor, and the Track changes switch.
+ * workspace, either opening the annotation editor, the Track changes switch,
+ * and (as `children`) the recording controls.
  */
-export function CaptureMenu({ open, anchorRef, onClose, deviceName, onDevice, onWorkspace, tracking, onTracking }: {
+export function CaptureMenu({ open, anchorRef, onClose, deviceName, onDevice, onWorkspace, tracking, onTracking, children }: {
   open: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   onClose: () => void;
@@ -28,16 +29,17 @@ export function CaptureMenu({ open, anchorRef, onClose, deviceName, onDevice, on
   /** Track changes: each reload compared with the one before. */
   tracking: boolean;
   onTracking: (on: boolean) => void;
+  children?: ReactNode;
 }) {
   const { t } = useI18n();
   const panelRef = useRef<HTMLDivElement>(null);
-  const position = useAnchoredPosition(anchorRef, open, 260, "end");
+  const position = useAnchoredPosition(anchorRef, open, children ? 300 : 260, "end");
   const dismiss = useCallback(() => onClose(), [onClose]);
   useDismiss(open, [panelRef, anchorRef], dismiss);
   if (!open) return null;
   const run = (action: () => void) => { onClose(); action(); };
   return (
-    <div ref={panelRef} role="dialog" aria-label={t("captureMenu")} data-capture-menu className={cx(popoverPanel, "fixed p-1.5")} style={positionStyle(position)}>
+    <div ref={panelRef} role="dialog" aria-label={t("captureMenu")} data-capture-menu className={cx(popoverPanel, "fixed overflow-y-auto p-1.5")} style={positionStyle(position)}>
       <p className="px-2 pb-0.5 pt-1 text-[11px] font-semibold text-muted">{t("captureAndAnnotate")}</p>
       {deviceName && <Item attr="data-capture-device" icon={<CameraIcon size={15} />} label={deviceName} onClick={() => run(onDevice)} />}
       <Item attr="data-capture-workspace" icon={<GridIcon size={15} />} label={t("captureWorkspace")} onClick={() => run(onWorkspace)} />
@@ -48,6 +50,7 @@ export function CaptureMenu({ open, anchorRef, onClose, deviceName, onDevice, on
         </span>
         <Switch size="sm" checked={tracking} onChange={onTracking} label={t("trackChanges")} />
       </div>
+      {children && <div className="mt-1 border-t border-line-soft pt-0.5">{children}</div>}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import type { BrowserPreferences } from "../domain/device/browser-geometry";
 import {
   createPreviewSlot,
   maxPreviewSlots,
+  clampZoom,
   nextZoom,
   normalizeUrl,
 } from "../domain/simulator/simulator-service";
@@ -26,6 +27,8 @@ interface SimulatorContextValue extends SimulatorState {
   rotateSlot: (slotId: string) => void;
   zoomSlot: (slotId: string, direction: "in" | "out") => void;
   setSlotZoomMode: (slotId: string, zoomMode: PreviewSlot["zoomMode"]) => void;
+  /** Sets a device's custom zoom directly, as when its corner is dragged. */
+  setSlotZoom: (slotId: string, zoom: number) => void;
   reloadSlot: (slotId: string) => void;
   reloadAllSlots: () => void;
   addSlot: (deviceId?: string, orientation?: PreviewSlot["orientation"]) => void;
@@ -217,6 +220,10 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     updateSlot(slotId, (slot) => ({ ...slot, zoom: nextZoom(slot.zoom, direction), zoomMode: "custom" }));
   }, [updateSlot]);
 
+  const setSlotZoom = useCallback((slotId: string, zoom: number) => {
+    updateSlot(slotId, (slot) => ({ ...slot, zoom: clampZoom(zoom), zoomMode: "custom" }));
+  }, [updateSlot]);
+
   const setSlotZoomMode = useCallback((slotId: string, zoomMode: PreviewSlot["zoomMode"]) => {
     updateSlot(slotId, (slot) => ({
       ...slot,
@@ -302,6 +309,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       rotateSlot,
       zoomSlot,
       setSlotZoomMode,
+      setSlotZoom,
       reloadSlot,
       reloadAllSlots,
       addSlot,
@@ -329,6 +337,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       observeSlotUrl,
       getSlotUrl,
       setSlotZoomMode,
+      setSlotZoom,
       slots,
       sourceTabId,
       updateDisplay,

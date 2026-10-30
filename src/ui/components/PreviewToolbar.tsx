@@ -1,6 +1,7 @@
 import { forwardRef, type ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import {
+  CameraIcon,
   ChangeDeviceIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -55,6 +56,9 @@ export interface PreviewToolbarProps {
   onReload: () => void;
   onOpenInTab: () => void;
   onExpand?: () => void;
+  /** A screenshot of this device, opened in the annotation editor. */
+  onScreenshot?: () => void;
+  screenshotPending?: boolean;
   onFixPrompt?: () => void;
   /** Shown once this page has a "before" picture. */
   onCompareBefore?: () => void;
@@ -95,7 +99,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
       )}
     >
       <div role="toolbar" aria-label={t("deviceControls", { name: props.deviceName })} data-tour={props.tourTarget}
-        className={cx("flex items-center gap-px whitespace-nowrap rounded-[10px] border border-line bg-surface px-1 shadow-float", focus ? "h-10" : "h-9")}>
+        className={cx("flex items-center gap-0.5 whitespace-nowrap rounded-xl border border-line bg-surface px-1.5 shadow-[0_10px_28px_rgb(20_23_26/0.12)]", focus ? "h-11" : "h-10")}>
         {focus && <>
           <ToolButton label={t("previousDevice")} onClick={focus.onPrevious} disabled={!focus.canStep}><ChevronLeftIcon size={15} /></ToolButton>
           <span className="min-w-10 text-center font-mono text-xs text-ink-2">{focus.position}</span>
@@ -104,7 +108,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
         </>}
         {props.onMoveStart && (
           <button type="button" data-move-handle aria-label={t("moveDevice")} title={t("moveDevice")} onPointerDown={props.onMoveStart}
-            className={cx("grid h-7 w-5 cursor-grab touch-none place-items-center rounded-[7px] text-faint hover:bg-sunken hover:text-ink active:cursor-grabbing", focusRing)}>
+            className={cx("grid h-8 w-5 cursor-grab touch-none place-items-center rounded-lg text-faint hover:bg-sunken hover:text-ink active:cursor-grabbing", focusRing)}>
             <GripIcon />
           </button>
         )}
@@ -117,7 +121,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
           {props.deviceLabel ? (
             <button type="button" data-testid="device-switcher-button" onClick={props.onChangeDevice}
               title={t("changeDevice")} aria-label={`${t("changeDevice")} · ${props.deviceLabel}`}
-              className={cx("flex h-7 max-w-[11rem] items-center gap-1 rounded-[7px] pe-1 ps-2 text-[12.5px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+              className={cx("flex h-8 max-w-[12rem] items-center gap-1 rounded-lg pe-1.5 ps-2.5 text-[13px] font-semibold text-ink hover:bg-sunken", focusRing)}>
               <span className="truncate">{props.deviceLabel}</span>
               <ChevronDownIcon size={13} className="shrink-0 text-muted" />
             </button>
@@ -136,11 +140,11 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
             never shifts the buttons under the pointer. */}
         {props.canRotate
           ? <ToolButton label={t("rotate")} onClick={props.onRotate}><RotateIcon size={16} /></ToolButton>
-          : <span aria-hidden="true" className="size-7 shrink-0" />}
+          : <span aria-hidden="true" className="size-8 shrink-0" />}
         <Separator />
         <ToolButton label={t("zoomOut")} onClick={props.onZoomOut}><MinusIcon size={14} /></ToolButton>
         <button type="button" title={t("resetFit")} aria-label={`${t("resetFit")} · ${props.zoomLabel}`} onClick={props.onResetZoom}
-          className={cx("h-[26px] min-w-11 rounded-md bg-sunken px-1 font-mono text-[11.5px] font-medium text-ink", focusRing)}>
+          className={cx("h-7 min-w-12 rounded-lg bg-sunken px-1.5 font-mono text-[11.5px] font-medium text-ink hover:bg-line-soft", focusRing)}>
           {props.zoomLabel}
         </button>
         <ToolButton label={t("zoomIn")} onClick={props.onZoomIn}><PlusIcon size={14} strokeWidth={2.4} /></ToolButton>
@@ -148,6 +152,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
         <ToolButton label={t("reloadPreview")} onClick={props.onReload}><ReloadIcon size={15} className={props.reloading ? "animate-spin" : undefined} /></ToolButton>
         {focus && <ToolButton label={t("openInTab")} onClick={props.onOpenInTab}><OpenInTabIcon size={15} /></ToolButton>}
         {!focus && props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
+        {props.onScreenshot && <ToolButton label={t("captureAndAnnotate")} disabled={props.screenshotPending} onClick={props.onScreenshot}><CameraIcon size={16} /></ToolButton>}
         {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
         {props.onCompareBefore && (
           <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>
@@ -170,7 +175,7 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
           <div className="relative">
             <button type="button" data-language-toggle onClick={props.onLanguage} aria-expanded={props.languageOpen} aria-haspopup="dialog"
               title={props.languageLabel} aria-label={props.languageLabel}
-              className={cx("flex h-7 items-center gap-1 rounded-[7px] px-1.5 font-mono text-[11px] font-bold", props.languageCode ? "text-accent-strong" : "text-ink", props.languageOpen ? "bg-sunken" : "hover:bg-sunken", focusRing)}>
+              className={cx("flex h-8 items-center gap-1 rounded-lg px-1.5 font-mono text-[11px] font-bold", props.languageCode ? "text-accent-strong" : "text-ink", props.languageOpen ? "bg-sunken" : "hover:bg-sunken", focusRing)}>
               <GlobeIcon size={15} />{props.languageCode}
             </button>
             {props.languageOpen && props.languagePicker}
@@ -217,7 +222,7 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
       data-device-menu-toggle={menuToggle || undefined}
       onClick={onClick}
       className={cx(
-        "grid size-7 place-items-center rounded-[7px] disabled:opacity-30",
+        "grid size-8 place-items-center rounded-lg disabled:opacity-30",
         danger ? "text-danger hover:bg-danger/10" : accent ? "bg-accent-soft text-accent hover:bg-accent-soft/70" : "text-ink hover:bg-sunken",
         expanded && "bg-sunken",
         focusRing,
@@ -229,5 +234,5 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
 }
 
 function Separator() {
-  return <span aria-hidden="true" className="mx-0.5 h-[18px] w-px bg-line" />;
+  return <span aria-hidden="true" className="mx-1 h-5 w-px bg-line-soft" />;
 }

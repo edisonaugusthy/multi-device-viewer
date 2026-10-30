@@ -3,23 +3,22 @@ import { useI18n } from "../../app/i18n";
 import { FEATURES } from "../../app/feature-flags";
 import { PRODUCT_SHORT_NAME } from "../../app/product";
 import {
+  AlertIcon,
   BugIcon,
   CameraIcon,
-  CloseIcon,
   CompareIcon,
   EyeIcon,
   FixPromptIcon,
   LayoutCheckIcon,
   LinkIcon,
   PlusIcon,
-  RecordIcon,
   ReloadIcon,
   SettingsIcon,
 } from "../icons";
 import { cx, Tooltip } from "./ui";
 
 /** Dock items whose menu opens while the pointer rests on them. */
-export type DockMenu = "add" | "capture" | "record" | "fix" | "settings";
+export type DockMenu = "add" | "capture" | "settings";
 
 export interface WorkspaceDockProps {
   slotCount: number;
@@ -35,9 +34,13 @@ export interface WorkspaceDockProps {
   navigationSync: boolean;
   compare: boolean;
   capturing: boolean;
-  recordRef: RefObject<HTMLButtonElement | null>;
-  recordOpen: boolean;
+  /** A tab video or a user flow is recording: a red dot on Capture, whose menu holds the controls. */
   recordingActive: boolean;
+  /** Track changes is on: a dot on Capture, whose menu holds the switch. */
+  tracking: boolean;
+  captureRef: RefObject<HTMLButtonElement | null>;
+  captureOpen: boolean;
+  /** The fix prompt opens over the Issues item. */
   fixRef: RefObject<HTMLButtonElement | null>;
   fixOpen: boolean;
   layoutOpen: boolean;
@@ -45,28 +48,22 @@ export interface WorkspaceDockProps {
   layoutCount: number;
   problemsOpen: boolean;
   problemsCount: number;
-  /** Track changes is on: a dot on the camera, whose menu holds the switch. */
-  tracking: boolean;
-  captureRef: RefObject<HTMLButtonElement | null>;
-  captureOpen: boolean;
   settingsRef: RefObject<HTMLButtonElement | null>;
   settingsOpen: boolean;
-  onProblems: () => void;
-  onAllDevices: () => void;
-  onAdd: () => void;
+  onReloadAll: () => void;
   onWorkspace: () => void;
   onShowOne: () => void;
+  onAllDevices: () => void;
+  onAdd: () => void;
   onScrollSyncChange: (enabled: boolean) => void;
   onNavigationSyncChange: (enabled: boolean) => void;
-  onReloadAll: () => void;
-  onCompare: () => void;
   onCapture: () => void;
-  onFixPrompt: () => void;
+  onCompare: () => void;
+  onProblems: () => void;
   onLayoutCheck: () => void;
-  onRecord: () => void;
+  onFixPrompt: () => void;
   onViewMode: () => void;
   onSettings: () => void;
-  onClose: () => void;
   /** The pointer rested on a dock item with a menu, or left it (`null`). */
   onMenuHover: (menu: DockMenu | null) => void;
 }
@@ -93,16 +90,30 @@ function useDockCompaction(locale: string) {
     observer.observe(dock);
     return () => observer.disconnect();
   }, []);
+  // Measures only the dock's own items: an open menu hangs above the dock and
+  // must not count as overflow.
   useLayoutEffect(() => {
     const nav = ref.current;
-    if (nav && level < MAX_COMPACT && nav.scrollWidth > nav.clientWidth + 1) setLevel(level + 1);
+    if (!nav || level >= MAX_COMPACT) return;
+    const style = getComputedStyle(nav);
+    const items = Array.from(nav.children) as HTMLElement[];
+    const gap = Number.parseFloat(style.columnGap) || 0;
+    const used = items.reduce((sum, item) => {
+      const margins = getComputedStyle(item);
+      return sum + item.getBoundingClientRect().width + (Number.parseFloat(margins.marginLeft) || 0) + (Number.parseFloat(margins.marginRight) || 0);
+    }, 0) + gap * Math.max(0, items.length - 1)
+      + (Number.parseFloat(style.paddingLeft) || 0) + (Number.parseFloat(style.paddingRight) || 0);
+    if (used > nav.clientWidth + 1) setLevel(level + 1);
   });
   return { ref, level };
 }
 
-// The one control surface of the workspace: a dark dock under the devices.
-// Menus open while the pointer rests on an item and act on one click; a click
-// also opens them, so the keyboard and touch work the same way.
+// The one control surface of the workspace: a compact dark dock under the
+// devices. Its groups read left to right as where (reload), what you see (the
+// views, Add device), what you do with it (sync, capture, compare, issues) and
+// the viewer itself (focus mode, settings). Menus open while the pointer rests
+// on an item and act on one click; a click also opens them, so the keyboard and
+// touch work the same way.
 export function WorkspaceDock(props: WorkspaceDockProps) {
   const { t, locale } = useI18n();
   const { ref, level } = useDockCompaction(locale);
@@ -119,15 +130,15 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
         data-main-toolbar
         data-compact={level || undefined}
         aria-label={PRODUCT_SHORT_NAME}
-        className="flex h-[62px] max-w-full items-center gap-1 rounded-[20px] bg-[#1a1c20] px-[7px] text-[#e6e8eb] shadow-[0_18px_44px_rgb(20_23_26/0.28),inset_0_0_0_1px_rgb(255_255_255/0.06)] dark:bg-[#20242b] dark:shadow-[0_18px_44px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.1)]"
+        className="flex h-14 max-w-full items-center gap-0.5 rounded-[18px] bg-[#1a1c20] px-1.5 text-[#e6e8eb] shadow-[0_16px_40px_rgb(20_23_26/0.26),inset_0_0_0_1px_rgb(255_255_255/0.06)] dark:bg-[#20242b] dark:shadow-[0_16px_40px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.1)]"
       >
-        <DockButton label={t("reloadAll")} tooltip={t("tipReloadAll")} iconsOnly={iconsOnly} onClick={props.onReloadAll} align="start">
-          <ReloadIcon size={18} />
-        </DockButton>
+        <IconOnly label={t("reloadAll")} tooltip={t("tipReloadAll")} onClick={props.onReloadAll} align="start">
+          <ReloadIcon size={17} />
+        </IconOnly>
 
         <DockDivider />
 
-        <div role="group" aria-label={t("views")} className="flex h-12 shrink-0 items-center gap-0.5 rounded-[14px] bg-white/[0.08] p-1">
+        <div role="group" aria-label={t("views")} className="flex h-11 shrink-0 items-center gap-0.5 rounded-[13px] bg-white/[0.08] p-1">
           {/* The current view; clicking it again opens the Add device picker here too. */}
           <Tooltip title={t("workspace")} description={t("tipAddDevice")} align="start" side="top">
             <button
@@ -160,8 +171,6 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
           </Tooltip>
         </div>
 
-        <DockDivider />
-
         <Tooltip title={t("addDevice")} description={props.canAdd ? t("tipAddDevice") : t("slotsFull", { count: 4 })} align="center" side="top">
           <button
             ref={props.addRef}
@@ -172,7 +181,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
             onClick={props.onAdd}
             {...hover("add")}
             className={cx(
-              "me-1 flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3.5 text-[13px] font-semibold text-[#14171a] outline-none hover:bg-[#f1f2f4] focus-visible:ring-2 focus-visible:ring-accent",
+              "mx-1 flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3 text-[13px] font-semibold text-[#14171a] outline-none hover:bg-[#f1f2f4] focus-visible:ring-2 focus-visible:ring-accent",
               props.addOpen && "ring-[3px] ring-[#8e7de0]/60",
             )}
           >
@@ -181,6 +190,8 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
           </button>
         </Tooltip>
 
+        <DockDivider />
+
         <SyncControl
           iconsOnly={iconsOnly}
           scrollSync={props.scrollSync}
@@ -188,78 +199,50 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
           onScrollSyncChange={props.onScrollSyncChange}
           onNavigationSyncChange={props.onNavigationSyncChange}
         />
-
         <DockButton
           buttonRef={props.captureRef}
           data-tour="screenshot"
           data-capture-toggle
           label={t("captureMenu")}
           ariaLabel={props.tracking ? `${t("captureMenu")} · ${t("trackChanges")}` : t("captureAndAnnotate")}
-          tooltip={props.tracking ? t("trackTip") : t("tipScreenshot")}
+          tooltip={props.tracking ? t("trackTip") : `${t("tipScreenshot")} ${t("tipRecord")}`}
           iconsOnly={iconsOnly}
           active={props.captureOpen}
           expanded={props.captureOpen}
           disabled={props.capturing}
           onClick={props.onCapture}
-          dot={props.tracking ? "#8e7de0" : undefined}
+          dot={props.recordingActive ? "var(--color-record)" : props.tracking ? "#8e7de0" : undefined}
           hoverHandlers={hover("capture")}
         >
           <CameraIcon size={18} />
-        </DockButton>
-        <DockButton buttonRef={props.recordRef} data-tour="record" label={t("record")} tooltip={t("tipRecord")} iconsOnly={iconsOnly}
-          active={props.recordOpen} expanded={props.recordOpen} onClick={props.onRecord} hoverHandlers={hover("record")}>
-          <RecordIcon size={18} active={props.recordingActive} />
         </DockButton>
         <DockButton label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")} iconsOnly={iconsOnly}
           active={props.compare} pressed={props.compare} onClick={props.onCompare}>
           <CompareIcon size={18} />
         </DockButton>
-        <DockButton buttonRef={props.fixRef} data-tour="fix-prompt" label={t("fixPrompt")} tooltip={t("tipFixPrompt")} iconsOnly={iconsOnly}
-          active={props.fixOpen} expanded={props.fixOpen} onClick={props.onFixPrompt} hoverHandlers={hover("fix")}>
-          <FixPromptIcon size={18} />
-        </DockButton>
-        {FEATURES.layoutCheck && (
-          <DockButton data-tour="layout-check" data-layout-check-toggle label={t("checkLayout")}
-            ariaLabel={props.layoutCount > 0 ? `${t("checkLayout")} · ${props.layoutCount}` : t("checkLayout")}
-            tooltip={t("tipCheckLayout")} iconsOnly={iconsOnly} active={props.layoutOpen} expanded={props.layoutOpen}
-            onClick={props.onLayoutCheck} badge={props.layoutCount}>
-            {props.layoutChecking
-              ? <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none" />
-              : <LayoutCheckIcon size={18} />}
-          </DockButton>
-        )}
-        <DockButton data-problems-toggle label={t("problemsTitle")}
-          ariaLabel={props.problemsCount > 0 ? `${t("problemsTitle")} · ${props.problemsCount}` : t("problemsTitle")}
-          tooltip={t("problemsTip")} iconsOnly={iconsOnly} active={props.problemsOpen} expanded={props.problemsOpen}
-          onClick={props.onProblems} badge={props.problemsCount}>
-          <BugIcon size={18} />
-        </DockButton>
+        <IssuesControl {...props} iconsOnly={iconsOnly} />
 
         <DockDivider />
 
-        <DockButton data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} iconsOnly={iconsOnly} onClick={props.onViewMode} align="end">
-          <EyeIcon size={18} />
-        </DockButton>
-        <DockButton buttonRef={props.settingsRef} label={t("settings")} tooltip={t("tipSettings")} iconsOnly={iconsOnly}
-          active={props.settingsOpen} expanded={props.settingsOpen} onClick={props.onSettings} hoverHandlers={hover("settings")} align="end">
-          <SettingsIcon size={18} />
-        </DockButton>
-        <Tooltip title={t("closeViewer")} description={t("tipCloseViewer")} align="end" side="top">
-          <button type="button" aria-label={t("closeViewer")} onClick={props.onClose}
-            className="grid size-10 shrink-0 place-items-center rounded-xl text-[#a3a9b1] outline-none hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-accent">
-            <CloseIcon size={17} />
-          </button>
-        </Tooltip>
+        <IconOnly data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} onClick={props.onViewMode} align="end">
+          <EyeIcon size={17} />
+        </IconOnly>
+        <IconOnly buttonRef={props.settingsRef} label={t("settings")} tooltip={t("tipSettings")} active={props.settingsOpen} expanded={props.settingsOpen}
+          onClick={props.onSettings} hoverHandlers={hover("settings")} align="end">
+          <SettingsIcon size={17} />
+        </IconOnly>
       </nav>
     </div>
   );
 }
 
-const viewButton = "flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[10px] px-3 text-[13px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
+const viewButton = "flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[9px] px-2.5 text-[13px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
 const viewOn = "bg-white text-[#14171a]";
 const viewOff = "text-[#e6e8eb] hover:bg-white/10";
+const dockItem = "relative flex shrink-0 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-semibold leading-none outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40";
 
 type DataAttributes = { [key: `data-${string}`]: string | boolean | undefined };
+type HoverHandlers = { onPointerEnter: (event: React.PointerEvent) => void; onPointerLeave: (event: React.PointerEvent) => void };
 
 function DockButton({ label, ariaLabel, tooltip, iconsOnly, active, pressed, expanded, disabled, badge, dot, align = "center", buttonRef, hoverHandlers, onClick, children, ...data }: {
   label: string;
@@ -274,7 +257,7 @@ function DockButton({ label, ariaLabel, tooltip, iconsOnly, active, pressed, exp
   dot?: string;
   align?: "start" | "center" | "end";
   buttonRef?: RefObject<HTMLButtonElement | null>;
-  hoverHandlers?: { onPointerEnter: (event: React.PointerEvent) => void; onPointerLeave: (event: React.PointerEvent) => void };
+  hoverHandlers?: HoverHandlers;
   onClick: () => void;
   children: ReactNode;
 } & DataAttributes) {
@@ -290,20 +273,71 @@ function DockButton({ label, ariaLabel, tooltip, iconsOnly, active, pressed, exp
         onClick={onClick}
         {...hoverHandlers}
         {...data}
-        className={cx(
-          "relative flex shrink-0 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-semibold leading-none text-[#f3f4f6] outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40",
-          iconsOnly ? "size-11" : "h-[50px] min-w-[58px] px-1.5",
-          active && "bg-white/[0.14]",
-        )}
+        className={cx(dockItem, "text-[#f3f4f6]", iconsOnly ? "size-10" : "h-11 min-w-[54px] px-1.5", active && "bg-white/[0.14]")}
       >
         {children}
         {!iconsOnly && <span className="whitespace-nowrap">{label}</span>}
-        {badge ? (
-          <span aria-hidden="true" className="pointer-events-none absolute end-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 font-mono text-[10px] font-bold text-white ring-2 ring-[#1a1c20]">{badge}</span>
-        ) : null}
-        {dot && <span aria-hidden="true" data-track-dot className="pointer-events-none absolute end-3 top-1.5 size-[7px] rounded-full ring-2 ring-[#1a1c20]" style={{ background: dot }} />}
+        <Marks badge={badge} dot={dot} />
       </button>
     </Tooltip>
+  );
+}
+
+/** The viewer's own controls: icons only, named in their tooltip. */
+function IconOnly({ label, tooltip, active, expanded, align = "center", buttonRef, hoverHandlers, onClick, children, ...data }: {
+  label: string;
+  tooltip?: string;
+  active?: boolean;
+  expanded?: boolean;
+  align?: "start" | "center" | "end";
+  buttonRef?: RefObject<HTMLButtonElement | null>;
+  hoverHandlers?: HoverHandlers;
+  onClick: () => void;
+  children: ReactNode;
+} & DataAttributes) {
+  return (
+    <Tooltip title={label} description={tooltip} align={align} side="top">
+      <button ref={buttonRef} type="button" aria-label={label} aria-expanded={expanded} onClick={onClick} {...hoverHandlers} {...data}
+        className={cx(dockItem, "size-10 text-[#c3c8cf] hover:text-white", active && "bg-white/[0.14] text-white")}>
+        {children}
+      </button>
+    </Tooltip>
+  );
+}
+
+function Marks({ badge, dot }: { badge?: number; dot?: string }) {
+  return <>
+    {badge ? (
+      <span aria-hidden="true" className="pointer-events-none absolute end-1 top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 font-mono text-[10px] font-bold text-white ring-2 ring-[#1a1c20]">{badge}</span>
+    ) : null}
+    {dot && <span aria-hidden="true" data-track-dot className="pointer-events-none absolute end-3 top-1.5 size-[7px] rounded-full ring-2 ring-[#1a1c20]" style={{ background: dot }} />}
+  </>;
+}
+
+// A small menu that opens while the pointer rests on its item, or while focus
+// is inside it, and stays open while the pointer is over it.
+function useRestingMenu() {
+  const [open, setOpen] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+  const show = () => { window.clearTimeout(timer.current); setOpen(true); };
+  const hide = (delay: number) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setOpen(false), delay); };
+  const handlers = {
+    onPointerEnter: (event: React.PointerEvent) => { if (event.pointerType === "mouse") show(); },
+    onPointerLeave: (event: React.PointerEvent) => { if (event.pointerType === "mouse") hide(250); },
+    onFocus: show,
+    onBlur: (event: React.FocusEvent) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) hide(0); },
+    onKeyDown: (event: React.KeyboardEvent) => { if (event.key === "Escape" && open) { event.stopPropagation(); hide(0); } },
+  };
+  return { open, setOpen, hide, handlers };
+}
+
+function DockMenuPanel({ label, width, children }: { label: string; width: string; children: ReactNode }) {
+  return (
+    <div className="absolute bottom-full left-1/2 z-[60] -translate-x-1/2 pb-3">
+      <div role="group" aria-label={label} className={cx("flex flex-col gap-0.5 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover", width)}>
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -317,46 +351,28 @@ function SyncControl({ iconsOnly, scrollSync, navigationSync, onScrollSyncChange
   onNavigationSyncChange: (enabled: boolean) => void;
 }) {
   const { t } = useI18n();
-  const [open, setOpen] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
+  const menu = useRestingMenu();
   const on = scrollSync || navigationSync;
-  const show = () => { window.clearTimeout(timer.current); setOpen(true); };
-  const hide = (delay: number) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setOpen(false), delay); };
   return (
-    <div
-      data-tour="sync"
-      className="relative shrink-0"
-      onPointerEnter={event => { if (event.pointerType === "mouse") show(); }}
-      onPointerLeave={event => { if (event.pointerType === "mouse") hide(250); }}
-      onFocus={show}
-      onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) hide(0); }}
-      onKeyDown={event => { if (event.key === "Escape" && open) { event.stopPropagation(); hide(0); } }}
-    >
+    <div data-tour="sync" className="relative shrink-0" {...menu.handlers}>
       <button
         type="button"
         aria-label={t("syncBetweenDevices")}
         aria-pressed={on}
         title={t("syncBetweenDevicesHint")}
         onClick={() => { onScrollSyncChange(!on); onNavigationSyncChange(!on); }}
-        className={cx(
-          "relative flex flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-semibold leading-none outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent",
-          on ? "text-[#f3f4f6]" : "text-[#a3a9b1]",
-          iconsOnly ? "size-11" : "h-[50px] min-w-[58px] px-1.5",
-          open && "bg-white/[0.14]",
-        )}
+        className={cx(dockItem, on ? "text-[#f3f4f6]" : "text-[#a3a9b1]", iconsOnly ? "size-10" : "h-11 min-w-[54px] px-1.5", menu.open && "bg-white/[0.14]")}
       >
         <LinkIcon size={18} />
         {!iconsOnly && <span className="whitespace-nowrap">{t("sync")}</span>}
         <span aria-hidden="true" className={cx("pointer-events-none absolute end-3 top-1.5 size-[7px] rounded-full ring-2 ring-[#1a1c20]", on ? "bg-[#7bd88f]" : "bg-[#6b7178]")} />
       </button>
-      {open && (
-        <div className="absolute bottom-full left-1/2 z-[60] -translate-x-1/2 pb-3">
-          <div role="group" aria-label={t("syncBetweenDevices")} className="flex w-60 flex-col gap-0.5 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
-            <p className="px-2 pb-1 pt-1 text-xs text-muted">{t("syncBetweenDevicesHint")}</p>
-            <SyncRow label={t("scroll")} hint={t("scrollSyncHint")} checked={scrollSync} onChange={onScrollSyncChange} />
-            <SyncRow label={t("navigation")} hint={t("navigationSyncHint")} checked={navigationSync} onChange={onNavigationSyncChange} />
-          </div>
-        </div>
+      {menu.open && (
+        <DockMenuPanel label={t("syncBetweenDevices")} width="w-60">
+          <p className="px-2 pb-1 pt-1 text-xs text-muted">{t("syncBetweenDevicesHint")}</p>
+          <SyncRow label={t("scroll")} hint={t("scrollSyncHint")} checked={scrollSync} onChange={onScrollSyncChange} />
+          <SyncRow label={t("navigation")} hint={t("navigationSyncHint")} checked={navigationSync} onChange={onNavigationSyncChange} />
+        </DockMenuPanel>
       )}
     </div>
   );
@@ -371,6 +387,74 @@ function SyncRow({ label, hint, checked, onChange }: { label: string; hint: stri
   );
 }
 
+// Issues: what went wrong on the devices, in one place. Resting on it lists
+// the problems (script errors and failed requests), the layout check and the
+// fix prompt, each one click away; its badge counts both kinds of problem.
+function IssuesControl(props: WorkspaceDockProps & { iconsOnly: boolean }) {
+  const { t } = useI18n();
+  const menu = useRestingMenu();
+  const total = props.problemsCount + (FEATURES.layoutCheck ? props.layoutCount : 0);
+  const run = (action: () => void) => () => { menu.hide(0); action(); };
+  const active = menu.open || props.problemsOpen || props.layoutOpen || props.fixOpen;
+  return (
+    <div data-tour="layout-check" className="relative shrink-0" {...menu.handlers}>
+      <Tooltip title={t("issues")} side="top" align="center">
+        <button
+          ref={props.fixRef}
+          type="button"
+          data-tour="fix-prompt"
+          data-issues-toggle
+          aria-label={total > 0 ? `${t("issues")} · ${total}` : t("issues")}
+          aria-expanded={menu.open}
+          onClick={() => menu.setOpen(open => !open)}
+          className={cx(dockItem, "text-[#f3f4f6]", props.iconsOnly ? "size-10" : "h-11 min-w-[54px] px-1.5", active && "bg-white/[0.14]")}
+        >
+          {props.layoutChecking
+            ? <span aria-hidden="true" className="size-[18px] animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none" />
+            : <AlertIcon size={18} />}
+          {!props.iconsOnly && <span className="whitespace-nowrap">{t("issues")}</span>}
+          <Marks badge={total} />
+        </button>
+      </Tooltip>
+      {menu.open && (
+        <DockMenuPanel label={t("issues")} width="w-72">
+          <IssueRow data-problems-toggle icon={<BugIcon size={15} />} label={t("problemsTitle")} hint={t("problemsTip")} count={props.problemsCount}
+            pressed={props.problemsOpen} onClick={run(props.onProblems)} />
+          {FEATURES.layoutCheck && (
+            <IssueRow data-layout-check-toggle icon={<LayoutCheckIcon size={15} />} label={t("checkLayout")} hint={t("tipCheckLayout")} count={props.layoutCount}
+              pressed={props.layoutOpen} busy={props.layoutChecking} onClick={run(props.onLayoutCheck)} />
+          )}
+          <IssueRow icon={<FixPromptIcon size={15} />} label={t("fixPrompt")} hint={t("tipFixPrompt")} pressed={props.fixOpen} onClick={run(props.onFixPrompt)} />
+        </DockMenuPanel>
+      )}
+    </div>
+  );
+}
+
+function IssueRow({ icon, label, hint, count, pressed, busy, onClick, ...data }: {
+  icon: ReactNode;
+  label: string;
+  hint: string;
+  count?: number;
+  pressed?: boolean;
+  busy?: boolean;
+  onClick: () => void;
+} & DataAttributes) {
+  return (
+    <button type="button" aria-pressed={pressed} aria-label={count ? `${label} · ${count}` : label} title={hint} onClick={onClick} {...data}
+      className={cx("flex w-full items-start gap-2.5 rounded-lg px-2 py-2 text-start outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-accent", pressed && "bg-sunken")}>
+      <span className="mt-px grid w-4 shrink-0 place-items-center text-ink-2">{icon}</span>
+      <span className="grid min-w-0 flex-1 gap-0.5">
+        <span className="text-[13px] font-semibold">{label}</span>
+        <span className="text-xs leading-snug text-muted">{hint}</span>
+      </span>
+      {busy
+        ? <span aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 animate-spin rounded-full border-2 border-accent-line border-t-accent motion-reduce:animate-none" />
+        : count ? <span className="mt-px grid h-5 min-w-5 shrink-0 place-items-center rounded-full bg-red-500/10 px-1.5 font-mono text-[11px] font-bold text-danger">{count}</span> : null}
+    </button>
+  );
+}
+
 function DockDivider() {
-  return <span aria-hidden="true" className="mx-1 h-7 w-px shrink-0 bg-white/[0.12]" />;
+  return <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-white/[0.12]" />;
 }

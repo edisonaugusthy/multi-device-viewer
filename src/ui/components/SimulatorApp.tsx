@@ -39,7 +39,7 @@ import { adjacentPickerDevices } from "../../domain/device/device-picker";
 import { appendRecordedStep } from "../../domain/flow/flow-service";
 import type { FlowReplayRequest, FlowReplayResult, FlowStep } from "../../domain/flow/flow.types";
 import { readStore, writeStore } from "../../infrastructure/storage/local-store";
-import { GripIcon } from "../icons";
+import { CloseIcon } from "../icons";
 import { AllDevicesView } from "./AllDevicesView";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CompareBar, CompareControls, CompareLabel, DesignAdjustPanel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
@@ -53,7 +53,7 @@ import { useLayoutCheck } from "../hooks/useLayoutCheck";
 import { HelpModal } from "./HelpModal";
 import { PermissionsInfoModal } from "./PermissionsInfoModal";
 import { PreviewCard, shortName } from "./PreviewCard";
-import { RecordingBar, RecordMenu, type FlowStatus } from "./RecordMenu";
+import { RecordControls, RecordingBar, type FlowStatus } from "./RecordMenu";
 import type { Device } from "../../domain/device/device.types";
 import type { PreviewSlot } from "../../domain/simulator/simulator.types";
 import { ReleaseNotesModal } from "./ReleaseNotesModal";
@@ -70,7 +70,7 @@ import { setTracking, useTracking } from "../hooks/useTrackChanges";
 import { IdentityDialog } from "./IdentityDialog";
 import { chromeMajor, slotIdentity } from "../../domain/simulator/preview-identity";
 
-type Popover = "picker" | "settings" | "fix" | "record" | "capture" | null;
+type Popover = "picker" | "settings" | "fix" | "capture" | null;
 
 interface SavedWorkspaceView {
   widths?: number[];
@@ -164,10 +164,13 @@ export function SimulatorApp() {
   const [tourAfterRelease, setTourAfterRelease] = useState(false);
   // The tour revision seen before this update: an update tour shows only newer steps.
   const [tourSince, setTourSince] = useState<string | null>(null);
-  const [widths, setWidths] = useState<number[]>(() => slots.map(() => 100 / slots.length));
+  // Devices share one free canvas; the last one touched is drawn on top.
+  const [stack, setStack] = useState<string[]>([]);
+  const bringToFront = useCallback((slotId: string) => {
+    setStack((current) => current[current.length - 1] === slotId ? current : [...current.filter((id) => id !== slotId), slotId]);
+  }, []);
   const [focusedSlotId, setFocusedSlotId] = useState<string | null>(null);
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
-  const previousSlotCount = useRef(slots.length);
   const lastSuccessfulFlowRun = useRef<string | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const addRef = useRef<HTMLButtonElement>(null);
@@ -176,7 +179,6 @@ export function SimulatorApp() {
   const [pickerAnchor, setPickerAnchor] = useState<"add" | "workspace">("add");
   const fixRef = useRef<HTMLButtonElement>(null);
   const captureRef = useRef<HTMLButtonElement>(null);
-  const recordRef = useRef<HTMLButtonElement>(null);
   const settingsRef = useRef<HTMLButtonElement>(null);
   const overlayFileInput = useRef<HTMLInputElement>(null);
   const dark = display.darkMode;
@@ -216,7 +218,6 @@ export function SimulatorApp() {
 
   useEffect(() => {
     void readStore<SavedWorkspaceView | null>("mdvWorkspaceView", null).then((saved) => {
-      if (saved?.widths?.length === slots.length) setWidths(saved.widths);
       if (saved?.focusedSlotId && slots.some((slot) => slot.id === saved.focusedSlotId)) setFocusedSlotId(saved.focusedSlotId);
       if (saved?.showDesignReference) setCompare(true);
       if (saved?.referenceViewportId) setCompareSlotId(saved.referenceViewportId);
@@ -240,7 +241,6 @@ export function SimulatorApp() {
   useEffect(() => {
     if (!workspaceHydrated) return;
     pendingWorkspaceView.current = {
-      widths,
       focusedSlotId,
       showDesignReference: compare,
       referenceViewportId: compareSlotId,
@@ -258,7 +258,7 @@ export function SimulatorApp() {
       if (view) void writeStore<SavedWorkspaceView>("mdvWorkspaceView", view);
     }, 250);
     return () => clearTimeout(timer);
-  }, [compare, compareMode, compareSlotId, designFrames, designNames, designReferences, designScrollLinked, focusedSlotId, overlayBlend, overlayOpacity, widths, workspaceHydrated]);
+  }, [compare, compareMode, compareSlotId, designFrames, designNames, designReferences, designScrollLinked, focusedSlotId, overlayBlend, overlayOpacity, workspaceHydrated]);
 
   useEffect(() => {
     if (!recording) {
@@ -361,35 +361,6 @@ export function SimulatorApp() {
     chrome.runtime.onMessage.addListener(listener);
     return () => chrome.runtime.onMessage.removeListener(listener);
   }, []);
-
-  if (slots.length !== previousSlotCount.current) {
-    previousSlotCount.current = slots.length;
-    setWidths(slots.map(() => 100 / slots.length));
-  }
-
-  const startResize = useCallback((event: React.MouseEvent, index: number) => {
-    event.preventDefault();
-    const board = boardRef.current;
-    if (!board) return;
-    const startX = event.clientX;
-    const totalWidth = board.getBoundingClientRect().width;
-    const left = widths[index];
-    const right = widths[index + 1];
-    const combined = left + right;
-    const onMove = (moveEvent: MouseEvent) => {
-      const delta = ((moveEvent.clientX - startX) / totalWidth) * 100;
-      const minimum = (120 / totalWidth) * 100;
-      const nextLeft = Math.min(combined - minimum, Math.max(minimum, left + delta));
-      setWidths((current) => current.map((value, itemIndex) =>
-        itemIndex === index ? nextLeft : itemIndex === index + 1 ? combined - nextLeft : value));
-    };
-    const onUp = () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", onUp);
-    };
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
-  }, [widths]);
 
   // Shared by the workspace and the All devices popup: capture, then open the
   // annotation editor, or show why the capture failed.
@@ -632,7 +603,6 @@ export function SimulatorApp() {
     if (popover !== null && !state.opened) return;
     state.opened = next;
     if (menu === "add") { setPickerAnchor("add"); openPicker({ kind: "add" }); }
-    else if (menu === "fix") openFixPrompt();
     else setPopover(next);
   }
   /**
@@ -713,6 +683,8 @@ export function SimulatorApp() {
   const activeIndex = Math.max(0, slots.findIndex((slot) => slot.id === activeSlotId));
   const singleSlotId = compare && !viewMode ? compareSlotId : focusMode ? focusedSlotId : viewOneMode ? slots[activeIndex]?.id : null;
   const showChrome = !viewMode && !compare;
+  // Several devices side by side float on one canvas; one device or compare keeps its own layout.
+  const canvas = singleSlotId === null && !compare;
 
   function stepFocus(direction: 1 | -1) {
     if (!slots.length) return;
@@ -866,6 +838,12 @@ export function SimulatorApp() {
         )}
 
         <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
+          {showChrome && (
+            <button type="button" aria-label={t("closeViewer")} title={t("closeViewer")} onClick={closeViewer}
+              className="absolute end-3 top-3 z-[45] grid size-9 place-items-center rounded-full border border-line bg-surface text-ink-2 shadow-float outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent">
+              <CloseIcon size={16} />
+            </button>
+          )}
           <div className="flex min-h-0 flex-1">
           <div
             ref={boardRef}
@@ -879,11 +857,18 @@ export function SimulatorApp() {
             {ready && slots.map((slot, index) => {
               const shown = singleSlotId === null || singleSlotId === slot.id;
               const comparing = compare && !viewMode && slot.id === compareSlotId;
+              const layer = stack.indexOf(slot.id) + 1;
               return (
                 <div
                   key={slot.id}
-                  className={cx("relative flex h-full min-w-0 shrink-0 flex-col hover:z-30 focus-within:z-30", !shown && "hidden", singleSlotId !== null && "flex-1")}
-                  style={singleSlotId === null ? (narrowLayout ? { height: `${100 / slots.length}%`, width: "100%" } : { width: `${widths[index] ?? 100 / slots.length}%` }) : undefined}
+                  data-canvas-layer={canvas ? layer : undefined}
+                  onPointerDownCapture={canvas ? () => bringToFront(slot.id) : undefined}
+                  // A click inside a preview's page never reaches this document, but its frame takes focus.
+                  onFocusCapture={canvas ? () => bringToFront(slot.id) : undefined}
+                  className={cx("relative flex h-full min-w-0 shrink-0 flex-col", canvas ? "pointer-events-none" : "hover:z-30 focus-within:z-30", !shown && "hidden", singleSlotId !== null && "flex-1")}
+                  style={singleSlotId === null
+                    ? { ...(narrowLayout ? { height: `${100 / slots.length}%`, width: "100%" } : { width: `${100 / slots.length}%` }), zIndex: canvas ? 10 + layer : undefined }
+                    : undefined}
                 >
                   {comparing && (compareMode === "side-by-side"
                     ? <CompareLabel tone="live" title={t("livePage")} detail={slot.url} />
@@ -918,6 +903,7 @@ export function SimulatorApp() {
                     nextDevice={neighbours.get(slot.id)?.next}
                     onSwitchDevice={switchSlotDevice}
                     positionKey={singleSlotId === null ? "all" : "one"}
+                    canvas={canvas}
                     onExpand={focusSlot}
                     onFixPrompt={fixPromptForSlot}
                     layoutStatus={FEATURES.layoutCheck ? layoutCheck.statusBySlot.get(slot.id) : undefined}
@@ -940,21 +926,6 @@ export function SimulatorApp() {
                       onFrameChange: setCompareFrame,
                     } : undefined}
                   />
-                  {showChrome && !focusMode && index < slots.length - 1 && !narrowLayout && (
-                    <div
-                      role="separator"
-                      aria-label={t("resizeAdjacentViewports")}
-                      aria-orientation="vertical"
-                      title={t("resizeAdjacentViewports")}
-                      onMouseDown={(event) => startResize(event, index)}
-                      onDoubleClick={() => setWidths(slots.map(() => 100 / slots.length))}
-                      className="group/grip absolute end-0 top-0 z-20 flex h-full w-7 translate-x-1/2 cursor-col-resize items-center justify-center pb-11 rtl:-translate-x-1/2"
-                    >
-                      <span className="grid h-9 w-4 place-items-center rounded-lg border border-line bg-surface text-faint shadow-lift transition-colors group-hover/grip:border-accent group-hover/grip:text-accent">
-                        <GripIcon />
-                      </span>
-                    </div>
-                  )}
                 </div>
               );
             })}
@@ -1067,8 +1038,6 @@ export function SimulatorApp() {
             navigationSync={display.navigationSync}
             compare={compare}
             capturing={capturing}
-            recordRef={recordRef}
-            recordOpen={popover === "record"}
             recordingActive={recording || flowRecording}
             fixRef={fixRef}
             fixOpen={popover === "fix"}
@@ -1096,11 +1065,9 @@ export function SimulatorApp() {
             onReloadAll={reloadAllSlots}
             onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
             onCapture={() => clickDockMenu("capture", () => togglePopover("capture"))}
-            onFixPrompt={() => clickDockMenu("fix", () => popover === "fix" ? setPopover(null) : openFixPrompt())}
-            onRecord={() => clickDockMenu("record", () => togglePopover("record"))}
+            onFixPrompt={() => popover === "fix" ? setPopover(null) : openFixPrompt()}
             onViewMode={enterViewMode}
             onSettings={() => clickDockMenu("settings", () => togglePopover("settings"))}
-            onClose={closeViewer}
             onMenuHover={hoverDockMenu}
           />
         )}
@@ -1156,7 +1123,22 @@ export function SimulatorApp() {
         onWorkspace={() => void takeScopedScreenshot()}
         tracking={tracking}
         onTracking={setTracking}
-      />
+      >
+        <RecordControls
+          tabRecording={recording}
+          tabRecordingTime={formatDuration(recordingSeconds)}
+          canRecordTab={Boolean(sourceTabId)}
+          onToggleTabRecording={() => void toggleRecording()}
+          flowRecording={flowRecording}
+          flowStepCount={recordedFlow.length}
+          onToggleFlowRecording={toggleFlowRecording}
+          onReplayFlow={replayRecordedFlow}
+          onClearFlow={clearRecordedFlow}
+          flowStatus={flowStatus}
+          canResumeFlow={Object.values(flowResults).some((result) => result.status === "paused")}
+          onResumeFlow={resumePausedFlow}
+        />
+      </CaptureMenu>
       <FixPromptPopover
         open={popover === "fix"}
         anchorRef={fixRef}
@@ -1165,23 +1147,6 @@ export function SimulatorApp() {
         devices={reviewDevices}
         initialDeviceIds={fixDeviceIds}
         initialIssue={fixPrefill}
-      />
-      <RecordMenu
-        open={popover === "record"}
-        anchorRef={recordRef}
-        onClose={closePopover}
-        tabRecording={recording}
-        tabRecordingTime={formatDuration(recordingSeconds)}
-        canRecordTab={Boolean(sourceTabId)}
-        onToggleTabRecording={() => void toggleRecording()}
-        flowRecording={flowRecording}
-        flowStepCount={recordedFlow.length}
-        onToggleFlowRecording={toggleFlowRecording}
-        onReplayFlow={replayRecordedFlow}
-        onClearFlow={clearRecordedFlow}
-        flowStatus={flowStatus}
-        canResumeFlow={Object.values(flowResults).some((result) => result.status === "paused")}
-        onResumeFlow={resumePausedFlow}
       />
       </HoverZone>
 

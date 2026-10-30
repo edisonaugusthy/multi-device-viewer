@@ -60,7 +60,8 @@ export function DevicePicker({
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
-  const position = useAnchoredPosition(anchorRef, open, 420, "start", 540);
+  // Two columns of devices, so a whole type fits without much scrolling.
+  const position = useAnchoredPosition(anchorRef, open, 540, "start", 560);
   const dismiss = useCallback(() => onClose(), [onClose]);
   useDismiss(open, [panelRef, anchorRef], dismiss);
 
@@ -225,8 +226,10 @@ export function DevicePicker({
                 aria-selected={selected}
                 tabIndex={selected ? 0 : -1}
                 onClick={() => chooseTab(id)}
+                // Resting on a tab shows its devices, so a type is one hover away.
+                onPointerEnter={event => { if (event.pointerType === "mouse" && id !== tab) chooseTab(id); }}
                 className={cx(
-                  "-mb-px h-9 shrink-0 whitespace-nowrap border-b-2 px-2 text-[13px] transition-colors",
+                  "-mb-px h-9 shrink-0 whitespace-nowrap border-b-2 px-2.5 text-[13px] transition-colors",
                   selected ? "border-ink font-semibold text-ink" : "border-transparent font-medium text-muted hover:text-ink",
                   focusRing,
                 )}
@@ -266,17 +269,19 @@ export function DevicePicker({
                     {section.key === "onScreen" && <span dir="ltr" className="font-mono text-[11px] text-faint">{slots.length}/{maxSlots}</span>}
                   </div>
                 )}
-                {section.devices.map(device => (
-                  <DeviceRow
-                    key={device.id}
-                    device={device}
-                    state={rowState(device)}
-                    replacing={Boolean(replaceSlot)}
-                    favorite={favorites.includes(device.id)}
-                    onPick={() => pick(device)}
-                    onToggleFavorite={() => toggleFavorite(device.id)}
-                  />
-                ))}
+                <div className="grid grid-cols-2 gap-0.5 px-1">
+                  {section.devices.map(device => (
+                    <DeviceRow
+                      key={device.id}
+                      device={device}
+                      state={rowState(device)}
+                      replacing={Boolean(replaceSlot)}
+                      favorite={favorites.includes(device.id)}
+                      onPick={() => pick(device)}
+                      onToggleFavorite={() => toggleFavorite(device.id)}
+                    />
+                  ))}
+                </div>
               </section>
             );
           })}
@@ -430,8 +435,9 @@ function rowButton(state: RowState, replacing: boolean) {
   );
 }
 
-// One line per device: a checkbox (a radio while changing one device), the
-// name and the CSS size. The star shows on hover unless the device is starred.
+// One tile per device, two to a row: an outline of the device, its name and
+// CSS size. A device on screen (while changing one device, only that device)
+// is tinted and ticked. The star shows on hover unless the device is starred.
 function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorite }: {
   device: Device;
   state: RowState & { hint: string };
@@ -444,7 +450,11 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
   const ticked = isSelected(state, replacing);
   const favoriteLabel = favorite ? t("removeFavorite", { name: device.name }) : t("addFavorite", { name: device.name });
   return (
-    <div className={cx("group flex items-center rounded-[7px]", state.current ? "bg-accent-soft" : !state.disabled && "hover:bg-sunken")}>
+    <div className={cx(
+      "group flex min-w-0 items-center rounded-lg border transition-colors",
+      ticked ? "border-accent-line bg-accent-soft" : replacing && state.added ? "border-line" : "border-transparent",
+      !ticked && !state.disabled && "hover:bg-sunken",
+    )}>
       <button
         type="button"
         data-device-pick={device.id}
@@ -456,23 +466,23 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         disabled={state.disabled}
         onClick={onPick}
         className={cx(
-          "flex min-h-[34px] min-w-0 flex-1 items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium",
+          "flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg py-1 pe-1 ps-2 text-start text-[13px] font-medium",
           state.disabled && !ticked ? "cursor-default text-faint" : "text-ink",
           focusRing,
         )}
       >
-        <span aria-hidden="true" className={cx(
-          "grid size-4 shrink-0 place-items-center border-[1.5px]",
-          replacing ? "rounded-full" : "rounded-[4px]",
-          ticked ? "border-accent bg-accent text-on-accent" : state.disabled ? "border-line" : "border-faint bg-surface",
-        )}>
-          {ticked && <CheckIcon size={10} strokeWidth={3.6} />}
+        <span aria-hidden="true" className={cx("grid w-5 shrink-0 place-items-center", ticked ? "text-accent-strong" : "text-ink-2")}>
+          <DeviceGlyph kind={glyphKindFor(device)} />
         </span>
-        {/* Full names wrap instead of being cut off. */}
-        <span className="min-w-0 break-words py-0.5 leading-tight">{shortName(device.name)}</span>
-        {device.tags.includes("new") && <span className="shrink-0 rounded-full bg-design-tint px-1.5 py-px text-[10px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
-        <span className="flex-1" />
-        <span dir="ltr" className="shrink-0 font-mono text-[11.5px] text-faint">{device.cssViewport.width}×{device.cssViewport.height}</span>
+        <span className="grid min-w-0 flex-1 gap-px">
+          {/* Full names wrap instead of being cut off. */}
+          <span className="min-w-0 break-words leading-tight">
+            {shortName(device.name)}
+            {device.tags.includes("new") && <span className="ms-1.5 inline-block rounded-full bg-design-tint px-1.5 py-px align-[1px] text-[10px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
+          </span>
+          <span dir="ltr" className="font-mono text-[11px] text-faint">{device.cssViewport.width}×{device.cssViewport.height}</span>
+        </span>
+        {ticked && <CheckIcon size={13} strokeWidth={3} className="shrink-0 text-accent" />}
       </button>
       <button
         type="button"
@@ -482,7 +492,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         title={favoriteLabel}
         onClick={onToggleFavorite}
         className={cx(
-          "grid size-7 shrink-0 place-items-center rounded-md focus-visible:opacity-100",
+          "me-0.5 grid size-7 shrink-0 place-items-center rounded-md focus-visible:opacity-100",
           favorite ? "text-star" : "text-faint opacity-0 hover:text-ink-2 group-hover:opacity-100",
           focusRing,
         )}

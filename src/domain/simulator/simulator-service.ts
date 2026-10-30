@@ -28,5 +28,10 @@ export function createPreviewSlot(deviceId: string, url: string, index: number):
 
 export function nextZoom(current: number, direction: "in" | "out"): number {
   const delta = direction === "in" ? 0.1 : -0.1;
-  return Math.min(1.6, Math.max(0.2, Number((current + delta).toFixed(2))));
+  return clampZoom(Number((current + delta).toFixed(2)));
+}
+
+/** A device's custom zoom, kept to the same range the zoom buttons step through. */
+export function clampZoom(zoom: number): number {
+  return Math.min(1.6, Math.max(0.2, Number(zoom.toFixed(3))));
 }

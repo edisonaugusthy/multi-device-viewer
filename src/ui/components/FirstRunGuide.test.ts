@@ -18,7 +18,7 @@ describe("first-run feature tour", () => {
       '[data-tour="layout-check"]',
       '[data-tour="device-controls"] [data-device-menu-toggle]',
       '[data-tour="screenshot"]',
-      '[data-tour="record"]',
+      '[data-tour="screenshot"]',
     ]);
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.title)).toEqual([
       "Add device",

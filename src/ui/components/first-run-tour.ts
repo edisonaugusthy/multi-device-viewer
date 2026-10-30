@@ -27,7 +27,7 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
   { title: "Check layout", text: "Find what makes the page scroll sideways.", target: '[data-tour="layout-check"]', since: "0.4.0" },
   { title: "Before & after", text: "Save a “before” picture in the device menu, then see what changed.", target: '[data-tour="device-controls"] [data-device-menu-toggle]', since: "0.4.0" },
   { title: "Screenshot and annotate", text: "Capture your devices and mark them up.", target: '[data-tour="screenshot"]' },
-  { title: "Record", text: "Record a video, or a user flow to replay on every device.", target: '[data-tour="record"]' },
+  { title: "Record", text: "Record a video, or a user flow to replay on every device.", target: '[data-tour="screenshot"]' },
 ];
 
 const versionParts = (version: string) => version.split(".").map(part => Number.parseInt(part, 10) || 0);

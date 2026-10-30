@@ -1143,6 +1143,32 @@ test("moves a device over another and draws the one moved on top", async ({ page
   expect(await layer(1)).toBeGreaterThan(await layer(0));
 });
 
+test("keeps a moved device where it was left after a reload", async ({ page }) => {
+  const slot = () => page.locator("[data-preview-slot-id]").first();
+  await revealControls(page, 0);
+  const grip = (await slot().locator("[data-move-handle]").boundingBox())!;
+  await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(grip.x + 180, grip.y + 40, { steps: 8 });
+  await page.mouse.up();
+  const moved = (await slot().locator("[data-device-capture]").boundingBox())!;
+
+  await page.waitForTimeout(400);
+  await page.reload();
+  await dismissFirstRunGuide(page);
+  const restored = (await slot().locator("[data-device-capture]").boundingBox())!;
+  expect(Math.abs(restored.x - moved.x)).toBeLessThan(3);
+  expect(Math.abs(restored.y - moved.y)).toBeLessThan(3);
+  // It is still drawn in front of the device it was moved over.
+  const layer = (index: number) => page.locator("[data-preview-slot-id]").nth(index).evaluate(element => Number(element.closest("[data-canvas-layer]")?.getAttribute("data-canvas-layer")));
+  expect(await layer(0)).toBeGreaterThan(await layer(1));
+
+  // Double-clicking the device's frame returns it to its default spot, and that is kept too.
+  await slot().locator("[data-device-capture]").dblclick({ position: { x: 2, y: 2 } });
+  const home = (await slot().locator("[data-device-capture]").boundingBox())!;
+  expect(home.x).toBeLessThan(moved.x - 100);
+});
+
 test("resizes a device by dragging its corner", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
   const device = slot.locator("[data-device-capture]");

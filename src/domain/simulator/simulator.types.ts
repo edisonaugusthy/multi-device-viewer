@@ -17,6 +17,8 @@ export interface PreviewSlot {
   language?: string;
   /** Whether this device tells sites its screen density (on unless turned off). */
   sendDensity?: boolean;
+  /** Where the device was dragged on the workspace canvas, in CSS pixels from its default spot. */
+  canvasPosition?: { x: number; y: number };
 }
 
 export interface DisplaySettings {

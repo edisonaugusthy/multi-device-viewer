@@ -379,17 +379,38 @@ export const PreviewCard = memo(function PreviewCard({
 
   const startDrag = usePointerDrag();
   // Devices can be dragged anywhere inside their space; resetting zoom recentres them.
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  // Switching to another device keeps where it was dragged; rotating, Free view
-  // or a new layout (such as showing one device) starts from the default spot.
-  useEffect(() => { setOffset({ x: 0, y: 0 }); }, [effectiveOrientation, freeView, positionKey]);
+  // On the canvas the spot is remembered, so a device is where it was left after a reload.
+  const savedPosition = canvas ? slot.canvasPosition : undefined;
+  const [offset, setOffset] = useState(() => savedPosition ?? { x: 0, y: 0 });
+  const savePosition = (position: { x: number; y: number }) => {
+    if (canvas) simulator.current.setSlotCanvasPosition(slot.id, position.x || position.y ? position : null);
+  };
+  // Switching to another device keeps where it was dragged. Rotating or Free
+  // view starts from the default spot; another layout (such as showing one
+  // device) starts from its default and the canvas returns to the saved spot.
+  const placement = useRef({ effectiveOrientation, freeView, positionKey });
+  useEffect(() => {
+    const previous = placement.current;
+    placement.current = { effectiveOrientation, freeView, positionKey };
+    if (previous.effectiveOrientation !== effectiveOrientation || previous.freeView !== freeView) {
+      setOffset({ x: 0, y: 0 });
+      savePosition({ x: 0, y: 0 });
+    } else if (previous.positionKey !== positionKey) {
+      setOffset(savedPosition ?? { x: 0, y: 0 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectiveOrientation, freeView, positionKey]);
 
   function startMove(event: React.PointerEvent) {
     if (event.button !== 0) return;
     if ((event.target as Element).closest("button, a, input, textarea, select, [data-mobile-keyboard]") && event.currentTarget !== event.target && !(event.currentTarget as Element).matches("[data-move-handle]")) return;
     const origin = offset;
+    let moved = origin;
     event.stopPropagation();
-    startDrag(event, (deltaX, deltaY) => setOffset({ x: origin.x + deltaX, y: origin.y + deltaY }));
+    startDrag(event, (deltaX, deltaY) => {
+      moved = { x: origin.x + deltaX, y: origin.y + deltaY };
+      setOffset(moved);
+    }, () => { if (moved !== origin) savePosition(moved); });
   }
 
   // Dragging the corner resizes the device while its top-left corner stays
@@ -403,6 +424,7 @@ export const PreviewCard = memo(function PreviewCard({
     const width = frameSize.width * startScale;
     const height = frameSize.height * startScale;
     let zoom = slot.zoomMode === "custom" ? slot.zoom : startScale / fitScale * 0.58;
+    let moved = origin;
     startDrag(event, (deltaX, deltaY) => {
       const factor = Math.max((width + deltaX) / width, (height + deltaY) / height);
       zoom = clampZoom(startScale * factor / fitScale * 0.58);
@@ -410,15 +432,18 @@ export const PreviewCard = memo(function PreviewCard({
       const grownWidth = frameSize.width * nextScale - width;
       const grownHeight = frameSize.height * nextScale - height;
       setLiveZoom(zoom);
-      setOffset({ x: origin.x + grownWidth / 2, y: origin.y + (align === "bottom" ? grownHeight : grownHeight / 2) });
+      moved = { x: origin.x + grownWidth / 2, y: origin.y + (align === "bottom" ? grownHeight : grownHeight / 2) };
+      setOffset(moved);
     }, () => {
       simulator.current.setSlotZoom(slot.id, zoom);
+      savePosition(moved);
       setLiveZoom(null);
     });
   }
 
   function resetView() {
     setOffset({ x: 0, y: 0 });
+    savePosition({ x: 0, y: 0 });
     simulator.current.setSlotZoomMode(slot.id, "fit");
   }
 
@@ -943,7 +968,7 @@ export const PreviewCard = memo(function PreviewCard({
               onPointerEnter={holdToolbar}
               onPointerLeave={releaseToolbar}
               onPointerDown={startMove}
-              onDoubleClick={event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) setOffset({ x: 0, y: 0 }); }}
+              onDoubleClick={event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) { setOffset({ x: 0, y: 0 }); savePosition({ x: 0, y: 0 }); } }}
               style={{
                 width: frameSize.width,
                 height: frameSize.height,

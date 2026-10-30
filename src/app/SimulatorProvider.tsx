@@ -29,6 +29,8 @@ interface SimulatorContextValue extends SimulatorState {
   setSlotZoomMode: (slotId: string, zoomMode: PreviewSlot["zoomMode"]) => void;
   /** Sets a device's custom zoom directly, as when its corner is dragged. */
   setSlotZoom: (slotId: string, zoom: number) => void;
+  /** Remembers where a device was dragged on the canvas; null returns it to its default spot. */
+  setSlotCanvasPosition: (slotId: string, position: { x: number; y: number } | null) => void;
   reloadSlot: (slotId: string) => void;
   reloadAllSlots: () => void;
   addSlot: (deviceId?: string, orientation?: PreviewSlot["orientation"]) => void;
@@ -116,8 +118,11 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       if (session) {
         const restoredSlots = (session.slots.length > 0 ? session.slots : slots).map(slot => {
           const deviceId = currentDeviceId(slot.deviceId);
+          const { canvasPosition, ...rest } = slot;
+          const validPosition = canvasPosition && Number.isFinite(canvasPosition.x) && Number.isFinite(canvasPosition.y);
           return {
-            ...slot,
+            ...rest,
+            ...(validPosition ? { canvasPosition: { x: canvasPosition.x, y: canvasPosition.y } } : {}),
             deviceId,
             orientation: normalizeOrientation(slot.orientation, devices.find(device => device.id === deviceId)),
           };
@@ -224,6 +229,13 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     updateSlot(slotId, (slot) => ({ ...slot, zoom: clampZoom(zoom), zoomMode: "custom" }));
   }, [updateSlot]);
 
+  const setSlotCanvasPosition = useCallback((slotId: string, position: { x: number; y: number } | null) => {
+    updateSlot(slotId, (slot) => {
+      const { canvasPosition: _previous, ...rest } = slot;
+      return position ? { ...rest, canvasPosition: { x: Math.round(position.x), y: Math.round(position.y) } } : rest;
+    });
+  }, [updateSlot]);
+
   const setSlotZoomMode = useCallback((slotId: string, zoomMode: PreviewSlot["zoomMode"]) => {
     updateSlot(slotId, (slot) => ({
       ...slot,
@@ -310,6 +322,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       zoomSlot,
       setSlotZoomMode,
       setSlotZoom,
+      setSlotCanvasPosition,
       reloadSlot,
       reloadAllSlots,
       addSlot,
@@ -338,6 +351,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       getSlotUrl,
       setSlotZoomMode,
       setSlotZoom,
+      setSlotCanvasPosition,
       slots,
       sourceTabId,
       updateDisplay,

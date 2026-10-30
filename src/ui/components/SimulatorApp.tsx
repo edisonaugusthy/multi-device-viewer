@@ -74,6 +74,8 @@ type Popover = "picker" | "settings" | "fix" | "capture" | null;
 
 interface SavedWorkspaceView {
   widths?: number[];
+  /** Devices back to front on the canvas. */
+  stack?: string[];
   focusedSlotId?: string | null;
   showDesignReference?: boolean;
   referenceViewportId?: string;
@@ -219,6 +221,8 @@ export function SimulatorApp() {
   useEffect(() => {
     void readStore<SavedWorkspaceView | null>("mdvWorkspaceView", null).then((saved) => {
       if (saved?.focusedSlotId && slots.some((slot) => slot.id === saved.focusedSlotId)) setFocusedSlotId(saved.focusedSlotId);
+      // Read before the saved devices are back, so ids are kept as saved; one no longer on screen just has no layer.
+      if (Array.isArray(saved?.stack)) setStack(saved.stack.filter((id): id is string => typeof id === "string"));
       if (saved?.showDesignReference) setCompare(true);
       if (saved?.referenceViewportId) setCompareSlotId(saved.referenceViewportId);
       if (saved?.designReferences) setDesignReferences(saved.designReferences);
@@ -241,6 +245,7 @@ export function SimulatorApp() {
   useEffect(() => {
     if (!workspaceHydrated) return;
     pendingWorkspaceView.current = {
+      stack: stack.filter((id) => slots.some((slot) => slot.id === id)),
       focusedSlotId,
       showDesignReference: compare,
       referenceViewportId: compareSlotId,
@@ -258,7 +263,7 @@ export function SimulatorApp() {
       if (view) void writeStore<SavedWorkspaceView>("mdvWorkspaceView", view);
     }, 250);
     return () => clearTimeout(timer);
-  }, [compare, compareMode, compareSlotId, designFrames, designNames, designReferences, designScrollLinked, focusedSlotId, overlayBlend, overlayOpacity, workspaceHydrated]);
+  }, [compare, compareMode, compareSlotId, designFrames, designNames, designReferences, designScrollLinked, focusedSlotId, overlayBlend, overlayOpacity, slots, stack, workspaceHydrated]);
 
   useEffect(() => {
     if (!recording) {

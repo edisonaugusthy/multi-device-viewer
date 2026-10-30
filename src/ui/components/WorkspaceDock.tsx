@@ -70,12 +70,23 @@ export interface WorkspaceDockProps {
   onMenuHover: (menu: DockMenu | null) => void;
   /** A menu from the bar is open, so tooltips stay out of its way. */
   menuOpen: boolean;
+  /**
+   * Sync or Issues is about to open its menu: close a menu the pointer opened
+   * elsewhere in the bar (or any, when `force`, for a click). Returns whether
+   * nothing else is left open.
+   */
+  onInnerMenuOpen: (force: boolean) => boolean;
   /** Showing one device: its place in the set, and stepping through it. */
   focusPosition?: string;
   canStepFocus?: boolean;
   onFocusPrevious?: () => void;
   onFocusNext?: () => void;
 }
+
+type InnerMenu = "sync" | "issues";
+// How long the pointer rests on an item before its menu opens.
+const MENU_PAUSE = 140;
+type InnerMenuControl = { open: boolean; toggle: () => void; close: () => void; handlers: Record<string, (event: never) => void> };
 
 // Labels drop in stages until the dock fits, so long translations and narrow
 // windows never push controls off screen: 1 drops the view names (their counts
@@ -124,11 +135,53 @@ function useDockCompaction(locale: string) {
 export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
   const { t, locale } = useI18n();
   const { ref, level } = useDockCompaction(locale);
-  const [innerMenu, setInnerMenu] = useState<"sync" | "issues" | null>(null);
-  const quiet = props.menuOpen || innerMenu !== null;
+  // One menu from the bar at a time. Resting on an item for a moment opens its
+  // menu, so passing over the bar opens nothing, and opening one closes the
+  // other in the same step, so two never show together.
+  const latest = useRef(props);
+  latest.current = props;
+  const [inner, setInner] = useState<InnerMenu | null>(null);
+  const openTimer = useRef<number | undefined>(undefined);
+  const closeTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => { window.clearTimeout(openTimer.current); window.clearTimeout(closeTimer.current); }, []);
+  const quiet = props.menuOpen || inner !== null;
+  const openInner = (menu: InnerMenu, force = false) => {
+    window.clearTimeout(closeTimer.current);
+    if (latest.current.onInnerMenuOpen(force)) setInner(menu);
+  };
+  const closeInner = (menu: InnerMenu) => setInner(current => current === menu ? null : current);
+  const innerMenu = (menu: InnerMenu) => ({
+    open: inner === menu,
+    toggle: () => { window.clearTimeout(openTimer.current); if (inner === menu) setInner(null); else openInner(menu, true); },
+    close: () => closeInner(menu),
+    handlers: {
+      onPointerEnter: (event: React.PointerEvent) => {
+        if (event.pointerType !== "mouse") return;
+        window.clearTimeout(closeTimer.current);
+        window.clearTimeout(openTimer.current);
+        if (inner !== menu) openTimer.current = window.setTimeout(() => openInner(menu), MENU_PAUSE);
+      },
+      onPointerLeave: (event: React.PointerEvent) => {
+        if (event.pointerType !== "mouse") return;
+        window.clearTimeout(openTimer.current);
+        closeTimer.current = window.setTimeout(() => closeInner(menu), 250);
+      },
+      onFocus: (event: React.FocusEvent) => { if ((event.target as HTMLElement).matches(":focus-visible")) openInner(menu); },
+      onBlur: (event: React.FocusEvent) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) closeInner(menu); },
+      onKeyDown: (event: React.KeyboardEvent) => { if (event.key === "Escape" && inner === menu) { event.stopPropagation(); setInner(null); } },
+    },
+  });
   const hover = (menu: DockMenu) => ({
-    onPointerEnter: (event: React.PointerEvent) => { if (event.pointerType === "mouse") props.onMenuHover(menu); },
-    onPointerLeave: (event: React.PointerEvent) => { if (event.pointerType === "mouse") props.onMenuHover(null); },
+    onPointerEnter: (event: React.PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      window.clearTimeout(openTimer.current);
+      openTimer.current = window.setTimeout(() => { setInner(null); latest.current.onMenuHover(menu); }, MENU_PAUSE);
+    },
+    onPointerLeave: (event: React.PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      window.clearTimeout(openTimer.current);
+      latest.current.onMenuHover(null);
+    },
   });
 
   return (
@@ -152,7 +205,7 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
               aria-expanded={props.workspaceOpen}
               aria-label={t("workspace")}
               onClick={props.onWorkspace}
-              className={cx(viewButton, !props.showingOne ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-[#8e7de0] ring-offset-1 ring-offset-surface")}
+              className={cx(viewButton, !props.showingOne ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-primary/25 ring-offset-2 ring-offset-surface")}
             >
               {level < 1 && <span>{t("workspace")}</span>}
               <span className="font-mono text-[11px] font-medium opacity-70">{props.slotCount}</span>
@@ -198,7 +251,7 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
           navigationSync={props.navigationSync}
           onScrollSyncChange={props.onScrollSyncChange}
           onNavigationSyncChange={props.onNavigationSyncChange}
-          onOpenChange={open => setInnerMenu(current => open ? "sync" : current === "sync" ? null : current)}
+          menu={innerMenu("sync")}
         />
         <DockButton
           buttonRef={props.captureRef}
@@ -221,7 +274,7 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
           active={props.compare} pressed={props.compare} onClick={props.onCompare}>
           <CompareIcon size={16} />
         </DockButton>
-        <IssuesControl {...props} onOpenChange={open => setInnerMenu(current => open ? "issues" : current === "issues" ? null : current)} />
+        <IssuesControl {...props} menu={innerMenu("issues")} />
         <DockButton data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} quiet={quiet} onClick={props.onViewMode}>
           <EyeIcon size={16} />
         </DockButton>
@@ -241,7 +294,7 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
             {...hover("add")}
             className={cx(
               "ms-1 flex h-[34px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary pe-[13px] ps-[11px] text-[12.5px] font-semibold text-on-primary outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent",
-              props.addOpen && "ring-[3px] ring-[#8e7de0]/60",
+              props.addOpen && "ring-2 ring-primary/25 ring-offset-2 ring-offset-surface",
             )}
           >
             <PlusIcon size={14} strokeWidth={2.6} />
@@ -313,31 +366,11 @@ function Marks({ badge, dot }: { badge?: number; dot?: string }) {
   </>;
 }
 
-// A small menu that opens while the pointer rests on its item, or while focus
-// is inside it, and stays open while the pointer is over it.
-function useRestingMenu(onOpenChange?: (open: boolean) => void) {
-  const [open, setOpen] = useState(false);
-  const report = useRef(onOpenChange);
-  report.current = onOpenChange;
-  useEffect(() => { report.current?.(open); }, [open]);
-  const timer = useRef<number | undefined>(undefined);
-  const show = () => { window.clearTimeout(timer.current); setOpen(true); };
-  const hide = (delay: number) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setOpen(false), delay); };
-  const handlers = {
-    onPointerEnter: (event: React.PointerEvent) => { if (event.pointerType === "mouse") show(); },
-    onPointerLeave: (event: React.PointerEvent) => { if (event.pointerType === "mouse") hide(250); },
-    onFocus: show,
-    onBlur: (event: React.FocusEvent) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) hide(0); },
-    onKeyDown: (event: React.KeyboardEvent) => { if (event.key === "Escape" && open) { event.stopPropagation(); hide(0); } },
-  };
-  return { open, setOpen, hide, handlers };
-}
-
 // A menu under its item, titled with the item's name (the item has no tooltip).
 function DockMenuPanel({ label, hint, width, children }: { label: string; hint?: string; width: string; children: ReactNode }) {
   return (
     <div className="absolute left-1/2 top-full z-[60] -translate-x-1/2 pt-3">
-      <div role="group" aria-label={label} className={cx("flex flex-col gap-0.5 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover", width)}>
+      <div role="group" aria-label={label} className={cx("flex flex-col gap-0.5 rounded-2xl bg-surface p-1.5 text-ink shadow-popover", width)}>
         <div className="grid gap-px px-2.5 pb-1.5 pt-1">
           <span className="text-[13px] font-semibold">{label}</span>
           {hint && <span className="text-xs text-muted">{hint}</span>}
@@ -350,15 +383,14 @@ function DockMenuPanel({ label, hint, width, children }: { label: string; hint?:
 
 // Sync: one click turns it on or off for everything; resting on it (or
 // tabbing into it) shows Scroll and Navigation separately.
-function SyncControl({ scrollSync, navigationSync, onScrollSyncChange, onNavigationSyncChange, onOpenChange }: {
+function SyncControl({ scrollSync, navigationSync, onScrollSyncChange, onNavigationSyncChange, menu }: {
   scrollSync: boolean;
   navigationSync: boolean;
   onScrollSyncChange: (enabled: boolean) => void;
   onNavigationSyncChange: (enabled: boolean) => void;
-  onOpenChange: (open: boolean) => void;
+  menu: InnerMenuControl;
 }) {
   const { t } = useI18n();
-  const menu = useRestingMenu(onOpenChange);
   const on = scrollSync || navigationSync;
   return (
     <div data-tour="sync" className="relative shrink-0" {...menu.handlers}>
@@ -389,13 +421,13 @@ function SyncControl({ scrollSync, navigationSync, onScrollSyncChange, onNavigat
 // One kind of sync: its name, what it does, and a switch.
 function SyncRow({ label, hint, checked, onChange }: { label: string; hint: string; checked: boolean; onChange: (checked: boolean) => void }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 hover:bg-sunken has-focus-visible:ring-2 has-focus-visible:ring-accent">
+    <label className="flex cursor-pointer items-center gap-3 rounded-[10px] px-2.5 py-2 hover:bg-sunken has-focus-visible:ring-2 has-focus-visible:ring-accent">
       <span className="grid min-w-0 flex-1 gap-px">
         <span className="text-[13px] font-semibold">{label}</span>
         <span className="text-xs leading-snug text-muted">{hint}</span>
       </span>
       <input type="checkbox" role="switch" aria-label={label} checked={checked} onChange={event => onChange(event.target.checked)}
-        className="relative h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full bg-line outline-none transition-colors before:absolute before:start-0.5 before:top-0.5 before:size-4 before:rounded-full before:bg-surface before:shadow before:transition-transform checked:bg-accent checked:before:translate-x-4 rtl:checked:before:-translate-x-4" />
+        className="relative h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full bg-line outline-none transition-colors before:absolute before:start-0.5 before:top-0.5 before:size-4 before:rounded-full before:bg-white before:shadow before:transition-transform checked:bg-primary checked:before:bg-surface checked:before:translate-x-4 rtl:checked:before:-translate-x-4" />
     </label>
   );
 }
@@ -403,11 +435,11 @@ function SyncRow({ label, hint, checked, onChange }: { label: string; hint: stri
 // Issues: what went wrong on the devices, in one place. Resting on it lists
 // the problems (script errors and failed requests), the layout check and the
 // fix prompt, each one click away; its badge counts both kinds of problem.
-function IssuesControl(props: WorkspaceDockProps & { onOpenChange: (open: boolean) => void }) {
+function IssuesControl(props: WorkspaceDockProps & { menu: InnerMenuControl }) {
   const { t } = useI18n();
-  const menu = useRestingMenu(props.onOpenChange);
+  const { menu } = props;
   const total = props.problemsCount + (FEATURES.layoutCheck ? props.layoutCount : 0);
-  const run = (action: () => void) => () => { menu.hide(0); action(); };
+  const run = (action: () => void) => () => { menu.close(); action(); };
   const active = menu.open || props.problemsOpen || props.layoutOpen || props.fixOpen;
   return (
     <div data-tour="layout-check" className="relative shrink-0" {...menu.handlers}>
@@ -418,7 +450,7 @@ function IssuesControl(props: WorkspaceDockProps & { onOpenChange: (open: boolea
           data-issues-toggle
           aria-label={total > 0 ? `${t("issues")} · ${total}` : t("issues")}
           aria-expanded={menu.open}
-          onClick={() => menu.setOpen(open => !open)}
+          onClick={menu.toggle}
           className={cx(dockItem, active && "bg-sunken")}
         >
           <span className="relative grid place-items-center">
@@ -429,7 +461,7 @@ function IssuesControl(props: WorkspaceDockProps & { onOpenChange: (open: boolea
           </span>
         </button>
       {menu.open && (
-        <DockMenuPanel label={t("issues")} hint={t("problemsTip")} width="w-80">
+        <DockMenuPanel label={t("issues")} width="w-80">
           <IssueRow data-problems-toggle icon={<BugIcon size={15} />} label={t("problemsTitle")} hint={t("problemsTip")} count={props.problemsCount}
             pressed={props.problemsOpen} onClick={run(props.onProblems)} />
           {FEATURES.layoutCheck && (
@@ -454,7 +486,7 @@ function IssueRow({ icon, label, hint, count, pressed, busy, onClick, ...data }:
 } & DataAttributes) {
   return (
     <button type="button" aria-pressed={pressed} aria-label={count ? `${label} · ${count}` : label} title={hint} onClick={onClick} {...data}
-      className={cx("flex w-full items-start gap-2.5 rounded-lg px-2 py-2 text-start outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-accent", pressed && "bg-sunken")}>
+      className={cx("flex w-full items-start gap-2.5 rounded-[10px] px-2.5 py-2 text-start outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-accent", pressed && "bg-sunken")}>
       <span className="mt-px grid w-4 shrink-0 place-items-center text-ink-2">{icon}</span>
       <span className="grid min-w-0 flex-1 gap-0.5">
         <span className="text-[13px] font-semibold">{label}</span>

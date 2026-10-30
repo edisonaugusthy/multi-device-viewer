@@ -131,7 +131,7 @@ export function Segmented<T extends string>({ label, value, options, onChange, s
   className?: string;
 }) {
   return (
-    <div role="group" aria-label={label} className={cx("flex shrink-0 rounded-[9px] bg-sunken p-[3px]", className)}>
+    <div role="group" aria-label={label} className={cx("flex shrink-0 rounded-full bg-sunken p-[3px]", className)}>
       {options.map(option => {
         const active = option.value === value;
         const button = (
@@ -142,9 +142,9 @@ export function Segmented<T extends string>({ label, value, options, onChange, s
             title={option.tooltip === undefined ? option.title : undefined}
             onClick={() => onChange(option.value)}
             className={cx(
-              "flex items-center gap-1.5 whitespace-nowrap rounded-[7px] font-semibold text-ink transition-colors",
+              "flex items-center gap-1.5 whitespace-nowrap rounded-full font-semibold text-ink transition-colors",
               size === "sm" ? "h-6 px-2 text-xs" : "h-7 px-2.5 text-[12.5px]",
-              active ? "bg-surface shadow-lift dark:bg-white/15" : "text-ink-2 hover:text-ink",
+              active ? "bg-primary text-on-primary" : "text-ink-2 hover:text-ink",
               focusRing,
             )}
           >
@@ -254,7 +254,7 @@ export function Dropdown<T extends string>({ label, value, options, onChange, cl
           tabIndex={-1}
           aria-activedescendant={`${listId}-${active}`}
           onKeyDown={onListKeyDown}
-          className="absolute end-0 top-full z-20 mt-1 max-h-72 w-max min-w-full overflow-y-auto rounded-xl border border-line bg-surface p-1 shadow-popover outline-none"
+          className="absolute end-0 top-full z-20 mt-1 max-h-72 w-max min-w-full overflow-y-auto rounded-xl bg-surface p-1 shadow-popover outline-none"
         >
           {options.map((option, index) => {
             const selected = option.value === value;
@@ -300,12 +300,13 @@ export function Switch({ checked, onChange, label, size = "md" }: {
       className={cx(
         "relative shrink-0 rounded-full transition-colors",
         size === "sm" ? "h-4 w-7" : "h-[22px] w-9",
-        checked ? "bg-accent" : "bg-faint/50",
+        checked ? "bg-primary" : "bg-faint/50",
         focusRing,
       )}
     >
       <span className={cx(
-        "absolute top-0.5 rounded-full bg-white shadow-lift transition-[left]",
+        "absolute top-0.5 rounded-full shadow-lift transition-[left]",
+        checked ? "bg-surface" : "bg-white",
         size === "sm" ? "size-3" : "size-[18px]",
         checked ? (size === "sm" ? "left-[14px]" : "left-[16px]") : "left-0.5",
       )} />
@@ -321,7 +322,7 @@ export function SectionLabel({ children, className }: { children: ReactNode; cla
   return <div className={cx("text-[11px] font-bold uppercase tracking-[0.06em] text-faint", className)}>{children}</div>;
 }
 
-export const popoverPanel = "z-[60] flex flex-col overflow-hidden rounded-xl border border-line bg-surface text-ink shadow-popover";
+export const popoverPanel = "z-[60] flex flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover";
 
 // Closes a popover on Escape or on a pointer press outside every given element.
 export function useDismiss(open: boolean, refs: Array<RefObject<HTMLElement | null>>, onDismiss: () => void) {
@@ -374,6 +375,9 @@ export interface AnchoredPosition {
 
 // Places a fixed popover next to its anchor and keeps it inside the window:
 // under it, or above it when the anchor sits in the lower half (the dock).
+// Between a control and the menu it opens.
+const MENU_GAP = 12;
+
 export function useAnchoredPosition(anchorRef: RefObject<HTMLElement | null>, open: boolean, preferredWidth: number, align: "start" | "end" | "center" = "start", maxHeightLimit = 680) {
   const [position, setPosition] = useState<AnchoredPosition>({ top: 56, left: 8, width: preferredWidth, maxHeight: maxHeightLimit });
   useLayoutEffect(() => {
@@ -389,13 +393,13 @@ export function useAnchoredPosition(anchorRef: RefObject<HTMLElement | null>, op
         : anchor.left;
       const clamp = (value: number) => Math.max(8, Math.min(viewportWidth - width - 8, value));
       const left = clamp(desiredLeft);
-      // Opening upward from the dock, the menu is centred over its item.
+      // Opening upward from a control near the bottom, the menu is centred over it.
       if (anchor && anchor.top + anchor.height / 2 > viewportHeight / 2) {
-        const bottom = viewportHeight - anchor.top + 8;
+        const bottom = viewportHeight - anchor.top + MENU_GAP;
         setPosition({ top: 0, bottom, width, left: clamp(anchor.left + anchor.width / 2 - width / 2), maxHeight: Math.max(160, Math.min(maxHeightLimit, anchor.top - 16)) });
         return;
       }
-      const top = (anchor?.bottom ?? 48) + 6;
+      const top = (anchor?.bottom ?? 48) + MENU_GAP;
       setPosition({ top, width, left, maxHeight: Math.max(160, Math.min(maxHeightLimit, viewportHeight - top - 8)) });
     };
     update();

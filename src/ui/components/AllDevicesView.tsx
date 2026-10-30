@@ -766,7 +766,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
             <IconButton ref={optionsButtonRef} size="sm" label={t("viewportOptions")} aria-expanded={optionsOpen} pressed={optionsOpen} onClick={() => setOptionsOpen(value => !value)}><MoreIcon size={16} /></IconButton>
             {optionsOpen && <div ref={optionsMenuRef} role="group" aria-label={t("viewportOptions")} onKeyDown={event => {
               if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closeOptions(); }
-            }} className="absolute end-0 top-full z-30 mt-1 flex w-64 flex-col gap-1 whitespace-normal rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
+            }} className="absolute end-0 top-full z-30 mt-1 flex w-64 flex-col gap-1 whitespace-normal rounded-2xl bg-surface p-1.5 text-ink shadow-popover">
               <button type="button" onClick={() => { setOptionsOpen(false); onOpen(); }} className={menuItem}>{t("openDeviceInWorkspace", { name: shortName(device.name) })}</button>
               {FEATURES.visualChecks && visualChecks.menuItems}
               <button type="button" onClick={() => { setOptionsOpen(false); simulator.current.setSlotZoomMode(slot.id, "fit"); }} className={cx(menuItem, "hidden @max-[720px]/popup:flex")}>{t("resetFit")}</button>

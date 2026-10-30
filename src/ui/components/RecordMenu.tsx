@@ -118,7 +118,7 @@ function MenuRow({ icon, label, hint, detail, active = false, disabled = false, 
       aria-pressed={active || undefined}
       onClick={onClick}
       className={cx(
-        "flex w-full gap-2.5 rounded-[9px] px-2.5 text-start text-[13px] disabled:cursor-not-allowed disabled:opacity-40",
+        "flex w-full gap-2.5 rounded-[10px] px-2.5 text-start text-[13px] disabled:cursor-not-allowed disabled:opacity-40",
         hint ? "items-start py-2" : "h-9 items-center",
         active ? "bg-record/10 text-record" : "text-ink hover:bg-sunken",
         focusRing,

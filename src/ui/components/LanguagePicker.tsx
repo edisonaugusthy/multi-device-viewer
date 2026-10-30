@@ -46,7 +46,7 @@ export function LanguagePicker({ deviceName, language, sendDensity, density, onL
   return (
     <div role="dialog" aria-label={t("languageFor", { name: deviceName })} data-language-picker
       onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); onClose(); } }}
-      className="absolute start-1/2 top-full z-[60] mt-2 flex w-[320px] -translate-x-1/2 flex-col whitespace-normal rounded-xl border border-line bg-surface text-ink shadow-popover rtl:translate-x-1/2">
+      className="absolute start-1/2 top-full z-[60] mt-3 flex w-[320px] -translate-x-1/2 flex-col whitespace-normal rounded-2xl bg-surface text-ink shadow-popover rtl:translate-x-1/2">
       <div className="flex items-center py-2 pe-2 ps-3.5">
         <span className="flex-1 truncate text-sm font-semibold">{t("language")}</span>
         <button type="button" onClick={onClose} aria-label={t("close")} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}><CloseIcon size={15} strokeWidth={2.2} /></button>

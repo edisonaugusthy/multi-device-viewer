@@ -24,7 +24,7 @@ export function SettingsPopover({
 }) {
   const { locale, setLocale, t } = useI18n();
   const panelRef = useRef<HTMLDivElement>(null);
-  const position = useAnchoredPosition(anchorRef, open, 340, "end");
+  const position = useAnchoredPosition(anchorRef, open, 340, "center");
   const dismiss = useCallback(() => onClose(), [onClose]);
   useDismiss(open, [panelRef, anchorRef], dismiss);
   if (!open) return null;
@@ -33,13 +33,13 @@ export function SettingsPopover({
 
   return (
     <div ref={panelRef} role="dialog" aria-label={t("settings")} className={cx(popoverPanel, "fixed")} style={positionStyle(position)}>
-      <div className="flex shrink-0 items-center py-2.5 pe-2 ps-3.5">
-        <span className="flex-1 text-sm font-semibold">{t("settings")}</span>
+      <div className="flex shrink-0 items-center pb-1 pe-2 ps-4 pt-2">
+        <span className="flex-1 text-[13px] font-semibold">{t("settings")}</span>
         <button type="button" onClick={onClose} aria-label={t("close")} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}>
           <CloseIcon size={15} strokeWidth={2.2} />
         </button>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto px-3.5 pb-2.5">
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-2">
         {onFreeViewChange && (
           <SettingRow label={t("previewStyle")}>
             <Segmented
@@ -86,7 +86,7 @@ export function SettingsPopover({
           </select>
         </SettingRow>
       </div>
-      <div className="grid shrink-0 grid-cols-2 gap-0.5 border-t border-line bg-surface-2 p-1.5">
+      <div className="grid shrink-0 grid-cols-2 gap-0.5 border-t border-line-soft bg-surface-2 p-1.5">
         <FooterAction icon={<HelpIcon size={15} />} label={t("helpAndFeedback")} onClick={run(onHelp)} />
         <FooterAction icon={<TourIcon size={15} />} label={t("featureTour")} onClick={run(onTour)} />
         <FooterAction icon={<WhatsNewIcon size={15} />} label={t("whatsNew")} onClick={run(onWhatsNew)} />
@@ -107,7 +107,7 @@ function SettingRow({ label, children, last = false }: { label: ReactNode; child
 
 function FooterAction({ icon, label, onClick }: { icon: ReactNode; label: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className={cx("flex h-[34px] items-center gap-2 rounded-[7px] px-2 text-start text-[12.5px] font-medium text-ink hover:bg-sunken [&>svg]:text-muted", focusRing)}>
+    <button type="button" onClick={onClick} className={cx("flex h-[34px] items-center gap-2 rounded-[10px] px-2.5 text-start text-[12.5px] font-medium text-ink hover:bg-surface [&>svg]:text-muted", focusRing)}>
       {icon}{label}
     </button>
   );

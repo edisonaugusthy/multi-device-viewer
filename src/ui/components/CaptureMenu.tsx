@@ -7,7 +7,7 @@ import { cx, focusRing, popoverPanel, positionStyle, SectionLabel, Switch, useAn
 function Item({ icon, label, hint, onClick, attr }: { icon: ReactNode; label: string; hint: string; onClick: () => void; attr: string }) {
   return (
     <button type="button" {...{ [attr]: "" }} onClick={onClick}
-      className={cx("flex w-full items-start gap-2.5 rounded-[9px] px-2.5 py-2 text-start text-ink hover:bg-sunken", focusRing)}>
+      className={cx("flex w-full items-start gap-2.5 rounded-[10px] px-2.5 py-2 text-start text-ink hover:bg-sunken", focusRing)}>
       <span className="mt-px grid w-4 shrink-0 place-items-center text-ink-2">{icon}</span>
       <span className="grid min-w-0 flex-1 gap-px">
         <span className="truncate text-[13px] font-semibold">{label}</span>

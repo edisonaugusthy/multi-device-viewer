@@ -611,6 +611,16 @@ export function SimulatorApp() {
       setPopover(null);
     }, 300);
   }, []);
+  // Sync or Issues opening its menu takes over from a menu the pointer opened;
+  // a menu opened with a click stays unless that is a click too.
+  const yieldDockMenu = useStableCallback((force: boolean) => {
+    if (popover === null) return true;
+    if (!force && !hoverMenu.current.opened) return false;
+    window.clearTimeout(hoverMenu.current.timer);
+    hoverMenu.current.opened = null;
+    setPopover(null);
+    return true;
+  });
   function hoverDockMenu(menu: DockMenu | null) {
     if (menu === null) { leaveHoverMenu(); return; }
     const state = hoverMenu.current;
@@ -901,6 +911,7 @@ export function SimulatorApp() {
             onSettings={() => clickDockMenu("settings", () => togglePopover("settings"))}
             onMenuHover={hoverDockMenu}
             menuOpen={popover !== null}
+            onInnerMenuOpen={yieldDockMenu}
             focusPosition={focusNavigation?.position}
             canStepFocus={focusNavigation?.canStep}
             onFocusPrevious={focusPrevious}

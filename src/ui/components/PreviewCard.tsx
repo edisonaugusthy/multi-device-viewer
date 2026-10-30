@@ -1124,7 +1124,7 @@ export const PreviewCard = memo(function PreviewCard({
             menu={
               <div data-viewport-actions
                 onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); setControlsOpen(false); setBrowserSettingsOpen(false); } }}
-                className="absolute end-0 top-full z-[60] mt-2 flex max-h-[calc(100dvh-120px)] w-72 flex-col gap-0.5 overflow-y-auto overflow-x-hidden whitespace-normal rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
+                className="absolute end-0 top-full z-[60] mt-3 flex max-h-[calc(100dvh-120px)] w-72 flex-col gap-0.5 overflow-y-auto overflow-x-hidden whitespace-normal rounded-2xl bg-surface p-1.5 text-ink shadow-popover">
                 {browserSettingsOpen ? (
                   <div role="group" aria-label={t("browserAppearance")} className="p-1.5">
                     <BrowserAppearanceSettings device={device} slot={slot} geometry={browserGeometry} onClose={() => setBrowserSettingsOpen(false)}/>
@@ -1310,7 +1310,7 @@ function MenuItem({ label, hint, onClick, disabled = false, children }: { label:
       type="button"
       disabled={disabled}
       onClick={event => { event.stopPropagation(); onClick(); }}
-      className={`flex w-full gap-2.5 rounded-[9px] px-2.5 text-start text-[13px] text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40 ${hint ? "items-start py-2" : "h-9 items-center font-medium"}`}
+      className={`flex w-full gap-2.5 rounded-[10px] px-2.5 text-start text-[13px] text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40 ${hint ? "items-start py-2" : "h-9 items-center font-medium"}`}
     >
       <span className={`grid w-4 shrink-0 place-items-center text-ink-2 ${hint ? "mt-px" : ""}`}>{children}</span>
       {hint ? (

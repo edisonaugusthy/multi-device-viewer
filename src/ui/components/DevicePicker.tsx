@@ -61,7 +61,7 @@ export function DevicePicker({
   const listRef = useRef<HTMLDivElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
   // Two columns, wide enough for most names on one line.
-  const position = useAnchoredPosition(anchorRef, open, target.kind === "add" ? 600 : 520, "start", 560);
+  const position = useAnchoredPosition(anchorRef, open, target.kind === "add" ? 600 : 520, target.kind === "add" ? "center" : "start", 560);
   // Opened upward from the dock, the picker is mirrored so its search, tabs and
   // presets sit next to the dock where the pointer comes from, and keeps one
   // height so hovering across the tabs never moves them. Opened downward, the
@@ -257,7 +257,7 @@ export function DevicePicker({
                   title={set.deviceIds.map(id => findDevice(id).name).join(" · ")}
                   onClick={() => onApplySet(set.deviceIds)}
                   className={cx("flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 text-xs font-semibold",
-                    same ? "border-design-line bg-design-soft text-design-ink" : "border-line bg-surface text-ink hover:bg-sunken", focusRing)}>
+                    same ? "border-primary bg-primary text-on-primary" : "border-line bg-surface text-ink hover:bg-sunken", focusRing)}>
                   <span aria-hidden="true" className="flex h-3.5 items-end gap-px opacity-70">
                     {set.deviceIds.map((id, index) => <DeviceGlyph key={`${id}-${index}`} kind={glyphKindFor(findDevice(id))} small />)}
                   </span>
@@ -447,7 +447,7 @@ function rowFrame(state: RowState, replacing: boolean) {
   const selected = isSelected(state, replacing);
   return cx(
     "my-px flex items-center rounded-lg border transition-colors",
-    selected ? "border-transparent bg-design-soft" : "border-transparent",
+    selected ? "border-transparent bg-sunken" : "border-transparent",
   );
 }
 
@@ -480,7 +480,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
   return (
     <div className={cx(
       "group relative flex min-w-0 items-center rounded-lg transition-colors",
-      ticked && "bg-design-soft",
+      ticked && "bg-sunken",
       !ticked && !state.disabled && "hover:bg-sunken",
     )}>
       <button
@@ -500,14 +500,14 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
           focusRing,
         )}
       >
-        <span aria-hidden="true" className={cx("grid w-5 shrink-0 place-items-center", ticked ? "text-design" : state.disabled ? "text-faint" : "text-ink-2")}>
+        <span aria-hidden="true" className={cx("grid w-5 shrink-0 place-items-center", ticked ? "text-ink" : state.disabled ? "text-faint" : "text-ink-2")}>
           <DeviceGlyph kind={glyphKindFor(device)} />
         </span>
         {/* A long name wraps onto a second line instead of being cut off. */}
         <span className="line-clamp-2 min-w-0 break-words leading-tight">{shortName(device.name)}</span>
         {device.tags.includes("new") && <span className="shrink-0 rounded-full bg-design-tint px-1.5 py-px text-[9.5px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
         <span className="flex-1" />
-        {ticked && <CheckIcon size={14} strokeWidth={2.6} className="shrink-0 text-design" />}
+        {ticked && <CheckIcon size={14} strokeWidth={2.6} className="shrink-0 text-ink" />}
         <span dir="ltr" aria-hidden="true" className={cx("shrink-0 font-mono text-[11.5px] font-medium text-muted", !favorite && "group-hover:opacity-0")}>{device.cssViewport.width}</span>
       </button>
       <button

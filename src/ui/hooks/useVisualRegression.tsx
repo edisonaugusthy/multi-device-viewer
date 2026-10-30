@@ -81,7 +81,7 @@ function MenuButton({ icon, label, hint, onClick, disabled = false, danger = fal
 }) {
   return (
     <button type="button" disabled={disabled} onClick={event => { event.stopPropagation(); onClick(); }}
-      className={cx("flex w-full gap-2.5 rounded-[9px] px-2.5 text-start text-[13px] hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40",
+      className={cx("flex w-full gap-2.5 rounded-[10px] px-2.5 text-start text-[13px] hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40",
         hint ? "items-start py-2" : "h-9 items-center",
         danger ? "text-danger" : "text-ink", strong || hint ? "font-semibold" : "font-medium")}>
       <span className={cx("grid w-4 shrink-0 place-items-center", hint && "mt-px", danger ? "text-danger" : strong ? "text-accent" : "text-ink-2")}>{icon}</span>

@@ -68,8 +68,15 @@ try {
   const errors = [];
   const page = await context.newPage();
   page.on("pageerror", error => errors.push(error.message));
+  // A release's "NEW" badge stays on pages the extension has synced: a tab's
+  // own blank badge would hide it.
+  await worker.evaluate(() => chrome.action.setBadgeText({ text: "NEW" }));
   await page.goto(pageUrl);
   await page.waitForFunction(() => window.fetchProbe && window.xhrProbe);
+  await page.waitForTimeout(500);
+  const badge = await worker.evaluate(async url => { const [tab] = await chrome.tabs.query({ url }); return chrome.action.getBadgeText({ tabId: tab.id }); }, pageUrl);
+  assert.equal(badge, "NEW", "the release badge shows on a synced page");
+  await worker.evaluate(() => chrome.action.setBadgeText({ text: "" }));
   const browserAgent = await page.evaluate(() => navigator.userAgent);
   const devices = [["phone", "apple-iphone-18-pro-2026", /iPhone/], ["pixel", "google-pixel-8", /Android.*Mobile/], ["mac", "apple-macbook-pro-14-m5-2025", /Macintosh.*Version\/.*Safari/]];
   await worker.evaluate(async ({ url, devices }) => {
@@ -288,8 +295,19 @@ try {
   assert.match(panelText, /TypeError: smoke boom/, "script error listed");
   assert.match(panelText, /GET \/missing-api/, "failed request listed");
   assert.match(panelText, /404/);
-  const [toggle] = await viewerNodes(node => attr(node, "data-problems-toggle") !== undefined);
-  await clickNode(toggle);
+  // Problems and Check layout live in the dock's Issues menu.
+  const issue = async name => {
+    let [node] = await viewerNodes(n => attr(n, name) !== undefined);
+    if (!node) {
+      const [menu] = await viewerNodes(n => attr(n, "data-issues-toggle") !== undefined);
+      assert(menu, "Issues menu");
+      await clickNode(menu);
+      for (let i = 0; i < 20 && !node; i++) { await page.waitForTimeout(50); [node] = await viewerNodes(n => attr(n, name) !== undefined); }
+    }
+    assert(node, name);
+    return node;
+  };
+  await clickNode(await issue("data-problems-toggle"));
   await visit(() => phone.evaluate(() => location.assign("/")));
   for (let i = 0; i < 30 && (await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length; i++) await page.waitForTimeout(100);
   assert.equal((await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length, 0, "a new page starts without problems");
@@ -336,7 +354,7 @@ try {
   assert.notEqual((await phone.evaluate(() => window.documentProbe)).language, "de-DE,de;q=0.9", "back to the browser's language");
   // Layout check: the CSS rule behind the overflow, with its file and line, goes into the fix prompt.
   await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/wide"))]);
-  await clickNode(await one("data-layout-check-toggle"));
+  await clickNode(await issue("data-layout-check-toggle"));
   let causeText = "";
   for (let i = 0; i < 80 && !causeText; i++) { await page.waitForTimeout(100); const [cause] = await viewerNodes(node => attr(node, "data-layout-cause") !== undefined); causeText = cause ? await textOf(cause) : ""; }
   assert.match(causeText, /Caused by/); assert.match(causeText, /\.wide \{ width: 900px; \}/, "the rule that sets the width");
@@ -351,7 +369,7 @@ try {
   for (let i = 0; i < 20 && !promptText.includes("Caused by"); i++) { await page.waitForTimeout(100); const [pre] = await viewerNodes(node => node.nodeName === "PRE"); promptText = pre ? await textOf(pre) : ""; }
   assert.match(promptText, /Caused by \.wide \{ width: 900px; \}/, "fix prompt names the rule");
   await page.keyboard.press("Escape");
-  await clickNode(await one("data-layout-check-toggle"));
+  await clickNode(await issue("data-layout-check-toggle"));
   // Camera menu: the active device or the workspace, for annotating, and the Track changes switch.
   await clickNode(await one("data-capture-toggle"));
   await page.waitForTimeout(150);
@@ -408,7 +426,7 @@ try {
   await simulator.locator("[data-preview-slot-id]").first().waitFor();
   assert.equal(await simulator.locator("[data-header-coverage]").count(), 0);
   assert.deepEqual(errors.filter(message => message !== "smoke boom"), [], "no page errors besides the one thrown on purpose");
-  console.log("Extension smoke passed: 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers with full client hints, the device in page scripts (kept through links, forms, history, script navigation and redirects), Request bodies/clones/multipart/credentials, SPA/cancellation, uncovered foreign Requests/assets/workers, cross-site previews, problems, per-device language, identity table, layout cause, camera menu, Track changes paused without a click, no coverage labels, cleanup, standalone fallback; no debugger permission.");
+  console.log("Extension smoke passed: release badge, 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers with full client hints, the device in page scripts (kept through links, forms, history, script navigation and redirects), Request bodies/clones/multipart/credentials, SPA/cancellation, uncovered foreign Requests/assets/workers, cross-site previews, problems, per-device language, identity table, layout cause, camera menu, Track changes paused without a click, no coverage labels, cleanup, standalone fallback; no debugger permission.");
 } finally {
   await context?.close();
   await Promise.all([new Promise(resolve => server.close(resolve)), new Promise(resolve => apiServer.close(resolve))]);

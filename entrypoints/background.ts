@@ -10,6 +10,9 @@ import { CHROME_STORE_URL, createReviewCoordinator, isReviewCommand, LEGACY_REVI
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
 const UPDATE_BADGE_TEXT = "NEW";
+// Set when an update lands and cleared by the next click, so the "NEW" badge
+// comes back after Chrome restarts (Chrome forgets badges on restart).
+const UPDATE_BADGE_KEY = "mdvUpdateBadge";
 const OFFSCREEN_RECORDING_PATH = "/offscreen.html";
 const UNSUPPORTED_PAGE_PATH = "/unsupported.html";
 
@@ -89,7 +92,7 @@ export default defineBackground(() => {
       return;
     }
     if (details.reason === "update") {
-      void chrome.storage.local.set({ [PENDING_RELEASE_VERSION_KEY]: version });
+      void chrome.storage.local.set({ [PENDING_RELEASE_VERSION_KEY]: version, [UPDATE_BADGE_KEY]: true });
       syncUpdateIndicator();
     }
   });
@@ -97,6 +100,9 @@ export default defineBackground(() => {
   chrome.runtime.onStartup.addListener(() => {
     createContextMenu();
     syncAllActionStates();
+    void chrome.storage.local.get(UPDATE_BADGE_KEY).then(stored => {
+      if (stored[UPDATE_BADGE_KEY] === true) syncUpdateIndicator();
+    });
   });
 
   chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
@@ -207,7 +213,7 @@ export default defineBackground(() => {
       popup: previewable ? "" : UNSUPPORTED_PAGE_PATH,
     });
     if (!previewable) {
-      chrome.action.setBadgeText({ tabId: tab.id, text: "" });
+      clearTabBadge(tab.id);
       chrome.action.setTitle({ tabId: tab.id, title: message("unsupportedActionTitle", "Open a website first") });
       return;
     }
@@ -225,11 +231,22 @@ export default defineBackground(() => {
 
   function clearUpdateIndicator() {
     chrome.action.setBadgeText({ text: "" });
+    void chrome.storage.local.remove(UPDATE_BADGE_KEY);
+  }
+
+  // A tab's own badge text, even an empty one, hides the global "NEW" badge,
+  // so a tab without "ON" leaves its text unset instead of blank.
+  function clearTabBadge(tabId: number) {
+    chrome.action.setBadgeText({ tabId });
   }
 
   function setActiveIndicator(tabId: number, active: boolean) {
-    chrome.action.setBadgeBackgroundColor({ color: "#0f9f8f", tabId });
-    chrome.action.setBadgeText({ text: active ? "ON" : "", tabId });
+    if (active) {
+      chrome.action.setBadgeBackgroundColor({ color: "#0f9f8f", tabId });
+      chrome.action.setBadgeText({ text: "ON", tabId });
+    } else {
+      clearTabBadge(tabId);
+    }
     chrome.action.setTitle({
       title: active
         ? message(

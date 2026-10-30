@@ -133,6 +133,8 @@ test("passes night mode to the preview without applying a color filter", async (
 
 test("shows the simplified navigation controls", async ({ page }) => {
   const toolbar = page.locator("[data-main-toolbar]");
+  // Scroll and Navigation show while the pointer rests on Sync in the dock.
+  await toolbar.getByRole("button", { name: "Sync between devices" }).hover();
   await expect(toolbar.getByRole("checkbox", { name: "Scroll", exact: true })).toBeVisible();
   await expect(toolbar.getByRole("checkbox", { name: "Navigation", exact: true })).toBeVisible();
   await toolbar.getByRole("checkbox", { name: "Navigation", exact: true }).check();
@@ -956,6 +958,7 @@ test("does not report standalone previews as blocked when no extension bridge is
       if (event.source === window.parent && typeof event.data?.type === "string") registered.previewMessages!.push(event.data.type);
     });
   });
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Sync between devices" }).hover();
   await page.locator("[data-main-toolbar]").getByRole("checkbox", { name: "Scroll", exact: true }).check();
   const slot = page.locator("[data-preview-slot-id]").first();
   const original = await (await slot.locator("iframe").elementHandle())!.contentFrame();
@@ -1255,10 +1258,14 @@ test("opens the Add device picker from the Workspace button as well as Add devic
   await workspace.click();
   await expect(panel).toBeVisible();
   await expect(workspace).toHaveAttribute("aria-expanded", "true");
-  // The picker opens under the Workspace button.
+  // The picker opens above the Workspace button in the dock, over it (centred
+  // unless that would cross the window's edge).
   const [anchor, popup] = await Promise.all([workspace.boundingBox(), panel.boundingBox()]);
-  expect(Math.abs(popup!.x - anchor!.x)).toBeLessThan(2);
-  expect(popup!.y).toBeGreaterThan(anchor!.y + anchor!.height);
+  const anchorCentre = anchor!.x + anchor!.width / 2;
+  expect(popup!.x).toBeLessThanOrEqual(anchorCentre);
+  expect(popup!.x + popup!.width).toBeGreaterThanOrEqual(anchorCentre);
+  expect(popup!.x).toBeGreaterThanOrEqual(8);
+  expect(popup!.y + popup!.height).toBeLessThan(anchor!.y);
 
   const before = await page.locator("[data-preview-slot-id]").count();
   await panel.locator("[data-device-pick]:not([data-added]):not(:disabled)").first().click();

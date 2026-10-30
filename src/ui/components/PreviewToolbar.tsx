@@ -2,6 +2,7 @@ import { forwardRef, type ReactNode } from "react";
 import { useI18n } from "../../app/i18n";
 import {
   ChangeDeviceIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
@@ -31,6 +32,8 @@ export interface FocusNavigation {
 
 export interface PreviewToolbarProps {
   deviceName: string;
+  /** The short name shown on the change-device button. */
+  deviceLabel?: string;
   zoomLabel: string;
   canRotate: boolean;
   removable: boolean;
@@ -111,9 +114,18 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
             testId="previous-device-button" disabled={!props.onPreviousDevice} onClick={() => props.onPreviousDevice?.()}>
             <ChevronLeftIcon size={15} className="rtl:rotate-180" />
           </ToolButton>
-          <ToolButton label={t("changeDevice")} testId="device-switcher-button" onClick={props.onChangeDevice}>
-            <ChangeDeviceIcon size={16} />
-          </ToolButton>
+          {props.deviceLabel ? (
+            <button type="button" data-testid="device-switcher-button" onClick={props.onChangeDevice}
+              title={t("changeDevice")} aria-label={`${t("changeDevice")} · ${props.deviceLabel}`}
+              className={cx("flex h-7 max-w-[11rem] items-center gap-1 rounded-[7px] pe-1 ps-2 text-[12.5px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+              <span className="truncate">{props.deviceLabel}</span>
+              <ChevronDownIcon size={13} className="shrink-0 text-muted" />
+            </button>
+          ) : (
+            <ToolButton label={t("changeDevice")} testId="device-switcher-button" onClick={props.onChangeDevice}>
+              <ChangeDeviceIcon size={16} />
+            </ToolButton>
+          )}
           <ToolButton
             label={props.nextDeviceName ? `${t("nextInCategory")}: ${props.nextDeviceName}` : t("nextInCategory")}
             testId="next-device-button" disabled={!props.onNextDevice} onClick={() => props.onNextDevice?.()}>

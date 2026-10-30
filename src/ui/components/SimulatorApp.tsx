@@ -59,10 +59,10 @@ import type { PreviewSlot } from "../../domain/simulator/simulator.types";
 import { ReleaseNotesModal } from "./ReleaseNotesModal";
 import { ReviewPromptModal } from "./ReviewPromptModal";
 import { SettingsPopover, type BrowserBarPosition } from "./SettingsPopover";
-import { cx } from "./ui";
+import { cx, HoverZone } from "./ui";
 import { useStableCallback } from "../hooks/useStableCallback";
 import { ViewModeBar } from "./ViewModeBar";
-import { WorkspaceHeader } from "./WorkspaceHeader";
+import { WorkspaceDock, type DockMenu } from "./WorkspaceDock";
 import { ProblemsPanel } from "./ProblemsPanel";
 import { useProblems } from "../hooks/useProblems";
 import { CaptureMenu } from "./CaptureMenu";
@@ -598,6 +598,53 @@ export function SimulatorApp() {
 
   const closePopover = useCallback(() => setPopover(null), []);
 
+  // Dock menus open while the pointer rests on their item and close shortly
+  // after it leaves both the item and the menu. A click on the item, or any
+  // press or key inside the menu, keeps it open like a clicked one. A menu
+  // opened on purpose is never replaced by hovering another item.
+  const hoverMenu = useRef<{ opened: Popover; timer?: number }>({ opened: null });
+  useEffect(() => {
+    if (popover !== hoverMenu.current.opened) hoverMenu.current.opened = null;
+  }, [popover]);
+  useEffect(() => () => window.clearTimeout(hoverMenu.current.timer), []);
+  const keepHoverMenu = useCallback(() => window.clearTimeout(hoverMenu.current.timer), []);
+  const pinHoverMenu = useCallback(() => {
+    window.clearTimeout(hoverMenu.current.timer);
+    hoverMenu.current.opened = null;
+  }, []);
+  const leaveHoverMenu = useCallback(() => {
+    const state = hoverMenu.current;
+    window.clearTimeout(state.timer);
+    if (!state.opened) return;
+    state.timer = window.setTimeout(() => {
+      if (!hoverMenu.current.opened) return;
+      hoverMenu.current.opened = null;
+      setPopover(null);
+    }, 300);
+  }, []);
+  function hoverDockMenu(menu: DockMenu | null) {
+    if (menu === null) { leaveHoverMenu(); return; }
+    const state = hoverMenu.current;
+    window.clearTimeout(state.timer);
+    const next: Exclude<Popover, null> = menu === "add" ? "picker" : menu;
+    const showing = popover === next && (menu !== "add" || (pickerTarget.kind === "add" && pickerAnchor === "add"));
+    if (showing) return;
+    if (popover !== null && !state.opened) return;
+    state.opened = next;
+    if (menu === "add") { setPickerAnchor("add"); openPicker({ kind: "add" }); }
+    else if (menu === "fix") openFixPrompt();
+    else setPopover(next);
+  }
+  /**
+   * A click on a dock item: keeps a hover-opened menu, otherwise toggles it.
+   * The ref, not `popover`, decides: the pointer arriving and clicking at once
+   * can land the click before the hover's render.
+   */
+  function clickDockMenu(menu: Exclude<Popover, null>, toggle: () => void) {
+    if (hoverMenu.current.opened === menu) { pinHoverMenu(); setPopover(menu); return; }
+    toggle();
+  }
+
   // Return focus to the control that opened the picker.
   const closePicker = useCallback(() => {
     setPopover(null);
@@ -718,7 +765,12 @@ export function SimulatorApp() {
   // workspace re-renders for column resizing, popovers or another card's scale.
   const workspaceDisplay = useMemo(() => allDevicesUrl !== null ? { ...display, scrollSync: false, navigationSync: false } : display, [allDevicesUrl, display]);
   const captureSlot = useStableCallback((slotId: string) => void takeScopedScreenshot(slotId));
-  const changeSlotDevice = useStableCallback((slotId: string) => openPicker({ kind: "replace", slotId }));
+  // Changing a device opens the picker beside that device's own name button.
+  const replaceAnchorRef = useRef<HTMLElement | null>(null);
+  const changeSlotDevice = useStableCallback((slotId: string) => {
+    replaceAnchorRef.current = getViewerRoot().querySelector<HTMLElement>(`[data-preview-slot-id="${CSS.escape(slotId)}"] [data-testid="device-switcher-button"]`);
+    openPicker({ kind: "replace", slotId });
+  });
   const switchSlotDevice = useCallback((slotId: string, deviceId: string) => setSlotDevice(slotId, deviceId), [setSlotDevice]);
   const neighbours = useMemo(() => new Map(slots.map(slot => [slot.id, adjacentPickerDevices(devices, slot.deviceId)])), [devices, slots]);
   const focusSlot = useStableCallback((slotId: string) => { setFocusedSlotId(slotId); setActiveSlot(slotId); });
@@ -801,54 +853,7 @@ export function SimulatorApp() {
       className={cx("relative flex h-screen flex-col overflow-hidden bg-stage font-sans text-ink outline-none transition-colors", dark && "dark")}
     >
       <div className={cx("flex min-h-0 flex-1 flex-col", allDevicesUrl !== null && "invisible")} inert={allDevicesUrl !== null} aria-hidden={allDevicesUrl !== null || undefined}>
-        {/* One header at a time: compare brings its own in place of this one. */}
-        {!viewMode && !compare && (
-          <WorkspaceHeader
-            slotCount={slots.length}
-            catalogCount={devices.length}
-            canAdd={slots.length < maxPreviewSlots}
-            addRef={addRef}
-            addOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "add"}
-            workspaceRef={workspaceRef}
-            workspaceOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "workspace"}
-            scrollSync={display.scrollSync}
-            navigationSync={display.navigationSync}
-            freeView={display.previewStyle === "free"}
-            compare={compare}
-            capturing={capturing}
-            recordRef={recordRef}
-            recordOpen={popover === "record"}
-            recordingActive={recording || flowRecording}
-            fixRef={fixRef}
-            fixOpen={popover === "fix"}
-            layoutOpen={layoutCheck.view.open}
-            layoutChecking={layoutCheck.view.checking}
-            layoutCount={layoutCheck.view.totals.problems}
-            onLayoutCheck={() => { if (layoutCheck.view.open) layoutCheck.close(); else { problems.close(); layoutCheck.run(); } }}
-            problemsOpen={problemsShown}
-            problemsCount={problems.total}
-            onProblems={toggleProblems}
-            tracking={tracking}
-            captureRef={captureRef}
-            captureOpen={popover === "capture"}
-            settingsRef={settingsRef}
-            settingsOpen={popover === "settings"}
-            onAllDevices={openAllDevices}
-            onAdd={() => toggleAddPicker("add")}
-            onWorkspace={() => toggleAddPicker("workspace")}
-            onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
-            onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
-            onFreeViewChange={(free) => updateDisplay((current) => ({ ...current, previewStyle: free ? "free" : "device" }))}
-            onReloadAll={reloadAllSlots}
-            onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
-            onCapture={() => togglePopover("capture")}
-            onFixPrompt={() => popover === "fix" ? setPopover(null) : openFixPrompt()}
-            onRecord={() => togglePopover("record")}
-            onViewMode={enterViewMode}
-            onSettings={() => togglePopover("settings")}
-            onClose={closeViewer}
-          />
-        )}
+        {/* The workspace's controls sit in the dock under the devices; compare brings its own bar here. */}
         {compare && !viewMode && (
           <CompareBar
             tabs={slots.map((slot) => ({ slotId: slot.id, label: shortName(findDevice(slot.deviceId).name), hasDesign: Boolean(designReferences[slot.id]) }))}
@@ -1047,11 +1052,64 @@ export function SimulatorApp() {
             />
           )}
         </main>
+
+        {!viewMode && !compare && (
+          <WorkspaceDock
+            slotCount={slots.length}
+            catalogCount={devices.length}
+            canAdd={slots.length < maxPreviewSlots}
+            addRef={addRef}
+            addOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "add"}
+            workspaceRef={workspaceRef}
+            workspaceOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "workspace"}
+            showingOne={focusMode}
+            scrollSync={display.scrollSync}
+            navigationSync={display.navigationSync}
+            compare={compare}
+            capturing={capturing}
+            recordRef={recordRef}
+            recordOpen={popover === "record"}
+            recordingActive={recording || flowRecording}
+            fixRef={fixRef}
+            fixOpen={popover === "fix"}
+            layoutOpen={layoutCheck.view.open}
+            layoutChecking={layoutCheck.view.checking}
+            layoutCount={layoutCheck.view.totals.problems}
+            onLayoutCheck={() => { if (layoutCheck.view.open) layoutCheck.close(); else { problems.close(); layoutCheck.run(); } }}
+            problemsOpen={problemsShown}
+            problemsCount={problems.total}
+            onProblems={toggleProblems}
+            tracking={tracking}
+            captureRef={captureRef}
+            captureOpen={popover === "capture"}
+            settingsRef={settingsRef}
+            settingsOpen={popover === "settings"}
+            onAllDevices={openAllDevices}
+            onAdd={() => {
+              if (hoverMenu.current.opened === "picker") { pinHoverMenu(); setPickerAnchor("add"); openPicker({ kind: "add" }); return; }
+              toggleAddPicker("add");
+            }}
+            onWorkspace={() => focusMode ? exitFocus() : toggleAddPicker("workspace")}
+            onShowOne={() => { if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
+            onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
+            onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
+            onReloadAll={reloadAllSlots}
+            onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
+            onCapture={() => clickDockMenu("capture", () => togglePopover("capture"))}
+            onFixPrompt={() => clickDockMenu("fix", () => popover === "fix" ? setPopover(null) : openFixPrompt())}
+            onRecord={() => clickDockMenu("record", () => togglePopover("record"))}
+            onViewMode={enterViewMode}
+            onSettings={() => clickDockMenu("settings", () => togglePopover("settings"))}
+            onClose={closeViewer}
+            onMenuHover={hoverDockMenu}
+          />
+        )}
       </div>
 
+      <HoverZone onEnter={keepHoverMenu} onLeave={leaveHoverMenu} onUse={pinHoverMenu}>
       <DevicePicker
         open={popover === "picker"}
-        anchorRef={pickerTarget.kind === "add" && pickerAnchor === "workspace" ? workspaceRef : addRef}
+        anchorRef={pickerTarget.kind === "replace" && replaceAnchorRef.current ? replaceAnchorRef : pickerTarget.kind === "add" && pickerAnchor === "workspace" ? workspaceRef : addRef}
         target={pickerTarget}
         slots={slots}
         maxSlots={maxPreviewSlots}
@@ -1068,9 +1126,11 @@ export function SimulatorApp() {
         anchorRef={settingsRef}
         dark={dark}
         browserBar={browserBar}
+        freeView={display.previewStyle === "free"}
         onClose={closePopover}
         onThemeChange={(nextDark) => updateDisplay((current) => ({ ...current, darkMode: nextDark }))}
         onBrowserBarChange={changeBrowserBar}
+        onFreeViewChange={(free) => updateDisplay((current) => ({ ...current, previewStyle: free ? "free" : "device" }))}
         onHelp={() => setShowHelp(true)}
         onTour={() => { setTourSince(null); setShowFirstRun(true); }}
         onWhatsNew={() => setReleaseNotes(CURRENT_RELEASE_NOTES)}
@@ -1123,6 +1183,7 @@ export function SimulatorApp() {
         canResumeFlow={Object.values(flowResults).some((result) => result.status === "paused")}
         onResumeFlow={resumePausedFlow}
       />
+      </HoverZone>
 
       {allDevicesUrl !== null && (
         <AllDevicesView

@@ -5,15 +5,18 @@ import { cx, focusRing, positionStyle, popoverPanel, Segmented, useAnchoredPosit
 
 export type BrowserBarPosition = "bottom" | "top";
 export function SettingsPopover({
-  open, anchorRef, dark, browserBar, onClose, onThemeChange, onBrowserBarChange, onHelp, onTour, onWhatsNew, onPermissions,
+  open, anchorRef, dark, browserBar, freeView, onClose, onThemeChange, onBrowserBarChange, onFreeViewChange, onHelp, onTour, onWhatsNew, onPermissions,
 }: {
   open: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   dark: boolean;
   browserBar: BrowserBarPosition;
+  /** Device frames (Device) or bare pages (Free); absent where the switch lives elsewhere. */
+  freeView?: boolean;
   onClose: () => void;
   onThemeChange: (dark: boolean) => void;
   onBrowserBarChange: (position: BrowserBarPosition) => void;
+  onFreeViewChange?: (free: boolean) => void;
   onHelp: () => void;
   onTour: () => void;
   onWhatsNew: () => void;
@@ -37,6 +40,19 @@ export function SettingsPopover({
         </button>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto px-3.5 pb-2.5">
+        {onFreeViewChange && (
+          <SettingRow label={t("previewStyle")}>
+            <Segmented
+              label={t("previewStyle")}
+              value={freeView ? "free" : "device"}
+              onChange={value => onFreeViewChange(value === "free")}
+              options={[
+                { value: "device", label: t("deviceView"), title: t("tipDeviceView") },
+                { value: "free", label: t("freeView"), title: t("tipFreeView") },
+              ]}
+            />
+          </SettingRow>
+        )}
         <SettingRow label={t("theme")}>
           <Segmented
             label={t("theme")}

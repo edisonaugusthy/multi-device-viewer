@@ -945,6 +945,7 @@ export const PreviewCard = memo(function PreviewCard({
           style={{ top: pinnedToolbar?.top ?? toolbarTop, transform: `translateX(${pinnedToolbar?.shift ?? toolbarShift}px)` }}>
           <PreviewToolbar
             deviceName={device.name}
+            deviceLabel={shortName(device.name)}
             zoomLabel={`${Math.round(scale * 100)}%`}
             canRotate={canRotate}
             removable={removable}

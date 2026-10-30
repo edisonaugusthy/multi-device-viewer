@@ -22,14 +22,17 @@ export function cx(...classes: Array<string | false | null | undefined>) {
 export const focusRing = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 focus-visible:ring-offset-surface";
 
 export type TooltipAlign = "start" | "center" | "end";
+export type TooltipSide = "top" | "bottom";
 
-// A short explanation under a control. It appears after a pause on hover or at
-// once on keyboard focus, never takes pointer events, hides when the control is
-// pressed, and stays hidden while the control's own popover is open.
-export function Tooltip({ title, description, align = "center", children }: {
+// A short explanation under (or, for controls near the bottom edge, above) a
+// control. It appears after a pause on hover or at once on keyboard focus,
+// never takes pointer events, hides when the control is pressed, and stays
+// hidden while the control's own popover is open.
+export function Tooltip({ title, description, align = "center", side = "bottom", children }: {
   title: string;
   description?: string;
   align?: TooltipAlign;
+  side?: TooltipSide;
   children: ReactElement<{ "aria-describedby"?: string }>;
 }) {
   const [open, setOpen] = useState(false);
@@ -64,7 +67,8 @@ export function Tooltip({ title, description, align = "center", children }: {
       <span
         role="tooltip"
         className={cx(
-          "pointer-events-none absolute top-full z-[70] mt-2 w-max max-w-64 rounded-lg bg-primary px-2.5 py-1.5 text-start text-on-primary shadow-popover transition-opacity duration-150",
+          "pointer-events-none absolute z-[70] w-max max-w-64 rounded-lg bg-primary px-2.5 py-1.5 text-start text-on-primary shadow-popover transition-opacity duration-150",
+          side === "top" ? "bottom-full mb-2" : "top-full mt-2",
           align === "start" ? "start-0" : align === "end" ? "end-0" : "left-1/2 -translate-x-1/2",
           open ? "visible opacity-100" : "invisible opacity-0",
         )}
@@ -86,7 +90,8 @@ export const IconButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTM
   /** Explains the control in a tooltip instead of the browser's plain title. */
   tooltip?: string;
   tooltipAlign?: TooltipAlign;
-}>(function IconButton({ label, size = "md", tone = "ghost", pressed, tooltip, tooltipAlign, className, children, ...props }, ref) {
+  tooltipSide?: TooltipSide;
+}>(function IconButton({ label, size = "md", tone = "ghost", pressed, tooltip, tooltipAlign, tooltipSide, className, children, ...props }, ref) {
   const button = (
     <button
       ref={ref}
@@ -109,7 +114,7 @@ export const IconButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTM
       {children}
     </button>
   );
-  return tooltip === undefined ? button : <Tooltip title={label} description={tooltip} align={tooltipAlign}>{button}</Tooltip>;
+  return tooltip === undefined ? button : <Tooltip title={label} description={tooltip} align={tooltipAlign} side={tooltipSide}>{button}</Tooltip>;
 });
 
 export function Segmented<T extends string>({ label, value, options, onChange, size = "md", className }: {
@@ -338,15 +343,33 @@ export function useDismiss(open: boolean, refs: Array<RefObject<HTMLElement | nu
   }, [open, onDismiss, ...refs]);
 }
 
+// Reports the pointer entering and leaving a popover rendered elsewhere in the
+// tree (a dock menu), and any press or key inside it, without adding a box.
+export function HoverZone({ onEnter, onLeave, onUse, children }: {
+  onEnter: () => void;
+  onLeave: () => void;
+  onUse: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="contents" onPointerEnter={onEnter} onPointerLeave={onLeave} onPointerDownCapture={onUse} onKeyDownCapture={onUse}>
+      {children}
+    </div>
+  );
+}
+
 export interface AnchoredPosition {
   top: number;
+  /** Set instead of `top` when the popover opens upward from an anchor near the bottom edge. */
+  bottom?: number;
   left: number;
   width: number;
   maxHeight: number;
 }
 
-// Places a fixed popover under its anchor and keeps it inside the window.
-export function useAnchoredPosition(anchorRef: RefObject<HTMLElement | null>, open: boolean, preferredWidth: number, align: "start" | "end" = "start", maxHeightLimit = 680) {
+// Places a fixed popover next to its anchor and keeps it inside the window:
+// under it, or above it when the anchor sits in the lower half (the dock).
+export function useAnchoredPosition(anchorRef: RefObject<HTMLElement | null>, open: boolean, preferredWidth: number, align: "start" | "end" | "center" = "start", maxHeightLimit = 680) {
   const [position, setPosition] = useState<AnchoredPosition>({ top: 56, left: 8, width: preferredWidth, maxHeight: maxHeightLimit });
   useLayoutEffect(() => {
     if (!open) return;
@@ -355,24 +378,38 @@ export function useAnchoredPosition(anchorRef: RefObject<HTMLElement | null>, op
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const width = Math.min(preferredWidth, viewportWidth - 16);
+      const desiredLeft = !anchor ? 8
+        : align === "end" ? anchor.right - width
+        : align === "center" ? anchor.left + anchor.width / 2 - width / 2
+        : anchor.left;
+      const clamp = (value: number) => Math.max(8, Math.min(viewportWidth - width - 8, value));
+      const left = clamp(desiredLeft);
+      // Opening upward from the dock, the menu is centred over its item.
+      if (anchor && anchor.top + anchor.height / 2 > viewportHeight / 2) {
+        const bottom = viewportHeight - anchor.top + 8;
+        setPosition({ top: 0, bottom, width, left: clamp(anchor.left + anchor.width / 2 - width / 2), maxHeight: Math.max(160, Math.min(maxHeightLimit, anchor.top - 16)) });
+        return;
+      }
       const top = (anchor?.bottom ?? 48) + 6;
-      const desiredLeft = anchor ? (align === "end" ? anchor.right - width : anchor.left) : 8;
-      setPosition({
-        top,
-        width,
-        left: Math.max(8, Math.min(viewportWidth - width - 8, desiredLeft)),
-        maxHeight: Math.max(160, Math.min(maxHeightLimit, viewportHeight - top - 8)),
-      });
+      setPosition({ top, width, left, maxHeight: Math.max(160, Math.min(maxHeightLimit, viewportHeight - top - 8)) });
     };
     update();
     window.addEventListener("resize", update);
-    const observer = anchorRef.current ? new ResizeObserver(update) : undefined;
-    if (anchorRef.current) observer?.observe(anchorRef.current);
-    return () => { window.removeEventListener("resize", update); observer?.disconnect(); };
+    // The anchor moves when its row reflows (a font arriving, a label
+    // appearing), so watch the row as well as the anchor.
+    const anchor = anchorRef.current;
+    const observer = anchor ? new ResizeObserver(update) : undefined;
+    if (anchor) observer?.observe(anchor);
+    const row = anchor?.closest("nav, header, [role=toolbar]");
+    if (row) observer?.observe(row);
+    let live = true;
+    void document.fonts?.ready.then(() => { if (live) update(); });
+    return () => { live = false; window.removeEventListener("resize", update); observer?.disconnect(); };
   }, [anchorRef, open, preferredWidth, align, maxHeightLimit]);
   return position;
 }
 
 export function positionStyle(position: AnchoredPosition) {
-  return { top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight };
+  const vertical = position.bottom === undefined ? { top: position.top } : { bottom: position.bottom };
+  return { ...vertical, left: position.left, width: position.width, maxHeight: position.maxHeight };
 }

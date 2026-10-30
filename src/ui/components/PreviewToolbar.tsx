@@ -56,6 +56,8 @@ export interface PreviewToolbarProps {
   onReload: () => void;
   onOpenInTab: () => void;
   onExpand?: () => void;
+  /** How far the device's centre is from the bar's, when the bar is kept on screen. */
+  arrowOffset?: number;
   /** A screenshot of this device, opened in the annotation editor. */
   onScreenshot?: () => void;
   screenshotPending?: boolean;
@@ -100,104 +102,122 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
       )}
     >
       <div role="toolbar" aria-label={t("deviceControls", { name: props.deviceName })} data-tour={props.tourTarget}
-        className={cx("flex items-center gap-0.5 whitespace-nowrap rounded-xl border border-line bg-surface px-1.5 shadow-[0_10px_28px_rgb(20_23_26/0.12)]", focus ? "h-11" : "h-10")}>
-        {focus && <>
-          <ToolButton label={t("previousDevice")} onClick={focus.onPrevious} disabled={!focus.canStep}><ChevronLeftIcon size={15} /></ToolButton>
-          <span className="min-w-10 text-center font-mono text-xs text-ink-2">{focus.position}</span>
-          <ToolButton label={t("nextDevice")} onClick={focus.onNext} disabled={!focus.canStep}><ChevronRightIcon size={15} /></ToolButton>
-          <Separator />
-        </>}
-        {props.onMoveStart && (
-          <button type="button" data-move-handle aria-label={t("moveDevice")} title={t("moveDevice")} onPointerDown={props.onMoveStart}
-            className={cx("grid h-8 w-5 cursor-grab touch-none place-items-center rounded-lg text-faint hover:bg-sunken hover:text-ink active:cursor-grabbing", focusRing)}>
-            <GripIcon />
-          </button>
+        className="flex h-[46px] items-center gap-1.5 whitespace-nowrap rounded-[14px] border-[1.5px] border-ink bg-surface px-1.5 shadow-[0_14px_34px_rgb(20_23_26/0.16)]">
+        {focus && (
+          <Group>
+            <ToolButton label={t("previousDevice")} onClick={focus.onPrevious} disabled={!focus.canStep}><ChevronLeftIcon size={15} /></ToolButton>
+            <span className="min-w-10 text-center font-mono text-xs text-ink-2">{focus.position}</span>
+            <ToolButton label={t("nextDevice")} onClick={focus.onNext} disabled={!focus.canStep}><ChevronRightIcon size={15} /></ToolButton>
+          </Group>
         )}
-        {props.onChangeDevice && <>
-          <ToolButton
-            label={props.previousDeviceName ? `${t("previousInCategory")}: ${props.previousDeviceName}` : t("previousInCategory")}
-            testId="previous-device-button" disabled={!props.onPreviousDevice} onClick={() => props.onPreviousDevice?.()}>
-            <ChevronLeftIcon size={15} className="rtl:rotate-180" />
-          </ToolButton>
-          {props.deviceLabel ? (
-            <button type="button" data-testid="device-switcher-button" onClick={props.onChangeDevice}
-              title={t("changeDevice")} aria-label={`${t("changeDevice")} · ${props.deviceLabel}`}
-              className={cx("flex h-8 max-w-[12rem] items-center gap-1 rounded-lg pe-1.5 ps-2.5 text-[13px] font-semibold text-ink hover:bg-sunken", focusRing)}>
-              <span className="truncate">{props.deviceLabel}</span>
-              <ChevronDownIcon size={13} className="shrink-0 text-muted" />
-            </button>
-          ) : (
-            <ToolButton label={t("changeDevice")} testId="device-switcher-button" onClick={props.onChangeDevice}>
-              <ChangeDeviceIcon size={16} />
+        {(props.onMoveStart || props.onChangeDevice) && (
+          <Group tinted>
+            {props.onMoveStart && (
+              <button type="button" data-move-handle aria-label={t("moveDevice")} title={t("moveDevice")} onPointerDown={props.onMoveStart}
+                className={cx("grid h-[30px] w-5 cursor-grab touch-none place-items-center rounded-lg text-faint hover:text-ink active:cursor-grabbing", focusRing)}>
+                <GripIcon />
+              </button>
+            )}
+            {props.onChangeDevice && <>
+              <ToolButton
+                label={props.previousDeviceName ? `${t("previousInCategory")}: ${props.previousDeviceName}` : t("previousInCategory")}
+                testId="previous-device-button" disabled={!props.onPreviousDevice} onClick={() => props.onPreviousDevice?.()}>
+                <ChevronLeftIcon size={15} className="rtl:rotate-180" />
+              </ToolButton>
+              {props.deviceLabel ? (
+                <button type="button" data-testid="device-switcher-button" onClick={props.onChangeDevice}
+                  title={t("changeDevice")} aria-label={`${t("changeDevice")} · ${props.deviceLabel}`}
+                  className={cx("flex h-[30px] max-w-[12rem] items-center gap-1.5 rounded-lg pe-1.5 ps-2 text-[13px] font-semibold text-ink hover:bg-surface", focusRing)}>
+                  <span className="truncate">{props.deviceLabel}</span>
+                  <ChevronDownIcon size={12} className="shrink-0 text-muted" />
+                </button>
+              ) : (
+                <ToolButton label={t("changeDevice")} testId="device-switcher-button" onClick={props.onChangeDevice}>
+                  <ChangeDeviceIcon size={16} />
+                </ToolButton>
+              )}
+              <ToolButton
+                label={props.nextDeviceName ? `${t("nextInCategory")}: ${props.nextDeviceName}` : t("nextInCategory")}
+                testId="next-device-button" disabled={!props.onNextDevice} onClick={() => props.onNextDevice?.()}>
+                <ChevronRightIcon size={15} className="rtl:rotate-180" />
+              </ToolButton>
+            </>}
+          </Group>
+        )}
+        <Group>
+          {/* Devices that cannot rotate keep the space, so switching devices
+              never shifts the buttons under the pointer. */}
+          {props.canRotate
+            ? <ToolButton label={t("rotate")} onClick={props.onRotate}><RotateIcon size={15} /></ToolButton>
+            : <span aria-hidden="true" className="size-[30px] shrink-0" />}
+          <ToolButton label={t("zoomOut")} onClick={props.onZoomOut}><MinusIcon size={14} /></ToolButton>
+          <button type="button" title={t("resetFit")} aria-label={`${t("resetFit")} · ${props.zoomLabel}`} onClick={props.onResetZoom}
+            className={cx("h-[30px] min-w-11 rounded-lg px-1 font-mono text-[11.5px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+            {props.zoomLabel}
+          </button>
+          <ToolButton label={t("zoomIn")} onClick={props.onZoomIn}><PlusIcon size={14} strokeWidth={2.4} /></ToolButton>
+        </Group>
+        <Group>
+          <ToolButton label={t("reloadPreview")} onClick={props.onReload}><ReloadIcon size={15} className={props.reloading ? "animate-spin" : undefined} /></ToolButton>
+          {props.onScreenshot && <ToolButton label={t("captureAndAnnotate")} disabled={props.screenshotPending} onClick={props.onScreenshot}><CameraIcon size={15} /></ToolButton>}
+          {props.onLanguage && (
+            <div className="relative">
+              <button type="button" data-language-toggle onClick={props.onLanguage} aria-expanded={props.languageOpen} aria-haspopup="dialog"
+                title={props.languageLabel} aria-label={props.languageLabel}
+                className={cx("flex h-[30px] items-center gap-1 rounded-lg px-[7px] font-mono text-[11px] font-bold", props.languageCode ? "text-accent-strong" : "text-ink", props.languageOpen ? "bg-sunken" : "hover:bg-sunken", focusRing)}>
+                <GlobeIcon size={15} />{props.languageCode}
+              </button>
+              {props.languageOpen && props.languagePicker}
+            </div>
+          )}
+          {focus && <ToolButton label={t("openInTab")} onClick={props.onOpenInTab}><OpenInTabIcon size={15} /></ToolButton>}
+          {!focus && props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
+          {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
+          {props.onCompareBefore && (
+            <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>
+              {/* The dot says a "before" picture is waiting to be compared. */}
+              <span className="relative grid size-7 place-items-center">
+                <SideBySideIcon size={15} />
+                <span aria-hidden="true" className="absolute right-[3px] top-[3px] size-1.5 rounded-full bg-accent" />
+              </span>
             </ToolButton>
           )}
-          <ToolButton
-            label={props.nextDeviceName ? `${t("nextInCategory")}: ${props.nextDeviceName}` : t("nextInCategory")}
-            testId="next-device-button" disabled={!props.onNextDevice} onClick={() => props.onNextDevice?.()}>
-            <ChevronRightIcon size={15} className="rtl:rotate-180" />
-          </ToolButton>
-        </>}
-        {/* Devices that cannot rotate keep the space, so switching devices
-            never shifts the buttons under the pointer. */}
-        {props.canRotate
-          ? <ToolButton label={t("rotate")} onClick={props.onRotate}><RotateIcon size={16} /></ToolButton>
-          : <span aria-hidden="true" className="size-8 shrink-0" />}
-        <Separator />
-        <ToolButton label={t("zoomOut")} onClick={props.onZoomOut}><MinusIcon size={14} /></ToolButton>
-        <button type="button" title={t("resetFit")} aria-label={`${t("resetFit")} · ${props.zoomLabel}`} onClick={props.onResetZoom}
-          className={cx("h-7 min-w-12 rounded-lg bg-sunken px-1.5 font-mono text-[11.5px] font-medium text-ink hover:bg-line-soft", focusRing)}>
-          {props.zoomLabel}
-        </button>
-        <ToolButton label={t("zoomIn")} onClick={props.onZoomIn}><PlusIcon size={14} strokeWidth={2.4} /></ToolButton>
-        <Separator />
-        <ToolButton label={t("reloadPreview")} onClick={props.onReload}><ReloadIcon size={15} className={props.reloading ? "animate-spin" : undefined} /></ToolButton>
-        {focus && <ToolButton label={t("openInTab")} onClick={props.onOpenInTab}><OpenInTabIcon size={15} /></ToolButton>}
-        {!focus && props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
-        {props.onScreenshot && <ToolButton label={t("captureAndAnnotate")} disabled={props.screenshotPending} onClick={props.onScreenshot}><CameraIcon size={16} /></ToolButton>}
-        {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
-        {props.onCompareBefore && (
-          <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>
-            {/* The dot says a "before" picture is waiting to be compared. */}
-            <span className="relative grid size-7 place-items-center">
-              <SideBySideIcon size={16} />
-              <span aria-hidden="true" className="absolute right-[3px] top-[3px] size-1.5 rounded-full bg-accent" />
-            </span>
-          </ToolButton>
-        )}
-        {props.onLayoutProblems && (
-          <ToolButton label={t("layoutShowProblems")} accent onClick={props.onLayoutProblems}>
-            <span className="relative grid place-items-center">
-              <LayoutCheckIcon size={15} />
-              {props.layoutProblemCount ? <span aria-hidden="true" className="absolute -end-2 -top-2 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-red-500 px-[3px] font-mono text-[9px] font-bold text-white">{props.layoutProblemCount}</span> : null}
-            </span>
-          </ToolButton>
-        )}
-        {props.onLanguage && (
+          {props.onLayoutProblems && (
+            <ToolButton label={t("layoutShowProblems")} accent onClick={props.onLayoutProblems}>
+              <span className="relative grid place-items-center">
+                <LayoutCheckIcon size={15} />
+                {props.layoutProblemCount ? <span aria-hidden="true" className="absolute -end-2 -top-2 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-red-500 px-[3px] font-mono text-[9px] font-bold text-white">{props.layoutProblemCount}</span> : null}
+              </span>
+            </ToolButton>
+          )}
+        </Group>
+        <Group>
           <div className="relative">
-            <button type="button" data-language-toggle onClick={props.onLanguage} aria-expanded={props.languageOpen} aria-haspopup="dialog"
-              title={props.languageLabel} aria-label={props.languageLabel}
-              className={cx("flex h-8 items-center gap-1 rounded-lg px-1.5 font-mono text-[11px] font-bold", props.languageCode ? "text-accent-strong" : "text-ink", props.languageOpen ? "bg-sunken" : "hover:bg-sunken", focusRing)}>
-              <GlobeIcon size={15} />{props.languageCode}
-            </button>
-            {props.languageOpen && props.languagePicker}
+            <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu} menuToggle><MoreIcon size={16} /></ToolButton>
+            {props.menuOpen && props.menu}
           </div>
-        )}
-        <div className="relative">
-          <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu} menuToggle><MoreIcon size={16} /></ToolButton>
-          {props.menuOpen && props.menu}
-        </div>
-        {focus ? (
-          <button type="button" onClick={focus.onExit} title={t("showAllDevices")}
-            className={cx("ms-1 flex h-[30px] items-center gap-1.5 rounded-lg bg-primary px-2.5 text-[12.5px] font-semibold text-on-primary", focusRing)}>
-            <CollapseIcon size={14} />{t("showAll")}
-          </button>
-        ) : props.removable && (
-          <ToolButton label={t("removeDevice")} danger onClick={props.onRemove} dataRemove><CloseIcon size={15} strokeWidth={2.2} /></ToolButton>
-        )}
+          {focus ? (
+            <button type="button" onClick={focus.onExit} title={t("showAllDevices")}
+              className={cx("ms-1 flex h-[30px] items-center gap-1.5 rounded-lg bg-primary px-2.5 text-[12.5px] font-semibold text-on-primary", focusRing)}>
+              <CollapseIcon size={14} />{t("showAll")}
+            </button>
+          ) : props.removable && (
+            <ToolButton label={t("removeDevice")} danger onClick={props.onRemove} dataRemove><CloseIcon size={15} strokeWidth={2.2} /></ToolButton>
+          )}
+        </Group>
       </div>
+      {/* Points down at the device this bar belongs to. */}
+      <span aria-hidden="true" data-toolbar-arrow
+        className="absolute top-full -mt-[7px] size-3 rotate-45 border-b-[1.5px] border-r-[1.5px] border-ink bg-surface"
+        style={{ left: `calc(50% + ${props.arrowOffset ?? 0}px - 6px)` }} />
     </div>
   );
 });
+
+// One set of related buttons; the device's own group sits on a tint.
+function Group({ tinted = false, children }: { tinted?: boolean; children: ReactNode }) {
+  return <div className={cx("flex h-[34px] items-center gap-px rounded-[10px] px-0.5", tinted && "bg-sunken")}>{children}</div>;
+}
 
 function ToolButton({ label, onClick, children, disabled, danger, accent, expanded, testId, dataRemove, menuToggle }: {
   label: string;
@@ -223,7 +243,7 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
       data-device-menu-toggle={menuToggle || undefined}
       onClick={onClick}
       className={cx(
-        "grid size-8 place-items-center rounded-lg disabled:opacity-30",
+        "grid size-[30px] place-items-center rounded-lg disabled:opacity-30",
         danger ? "text-danger hover:bg-danger/10" : accent ? "bg-accent-soft text-accent hover:bg-accent-soft/70" : "text-ink hover:bg-sunken",
         expanded && "bg-sunken",
         focusRing,
@@ -232,8 +252,4 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
       {children}
     </button>
   );
-}
-
-function Separator() {
-  return <span aria-hidden="true" className="mx-1 h-5 w-px bg-line-soft" />;
 }

@@ -843,7 +843,7 @@ export function SimulatorApp() {
       className={cx("relative flex h-screen flex-col overflow-hidden bg-stage font-sans text-ink outline-none transition-colors", dark && "dark")}
     >
       <div className={cx("flex min-h-0 flex-1 flex-col", allDevicesUrl !== null && "invisible")} inert={allDevicesUrl !== null} aria-hidden={allDevicesUrl !== null || undefined}>
-        {/* The workspace's controls sit in the dock under the devices; compare brings its own bar here. */}
+        {/* The workspace's controls sit in the pill above the devices; compare brings its own bar here. */}
         {compare && !viewMode && (
           <CompareBar
             tabs={slots.map((slot) => ({ slotId: slot.id, label: shortName(findDevice(slot.deviceId).name), hasDesign: Boolean(designReferences[slot.id]) }))}
@@ -855,13 +855,61 @@ export function SimulatorApp() {
           />
         )}
 
+        {!viewMode && !compare && (
+          <WorkspaceDock
+            slotCount={slots.length}
+            catalogCount={devices.length}
+            canAdd={slots.length < maxPreviewSlots}
+            addRef={addRef}
+            addOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "add"}
+            workspaceRef={workspaceRef}
+            workspaceOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "workspace"}
+            showingOne={focusMode}
+            scrollSync={display.scrollSync}
+            navigationSync={display.navigationSync}
+            compare={compare}
+            capturing={capturing}
+            recordingActive={recording || flowRecording}
+            fixRef={fixRef}
+            fixOpen={popover === "fix"}
+            layoutOpen={layoutCheck.view.open}
+            layoutChecking={layoutCheck.view.checking}
+            layoutCount={layoutCheck.view.totals.problems}
+            onLayoutCheck={() => { if (layoutCheck.view.open) layoutCheck.close(); else { problems.close(); layoutCheck.run(); } }}
+            problemsOpen={problemsShown}
+            problemsCount={problems.total}
+            onProblems={toggleProblems}
+            tracking={tracking}
+            captureRef={captureRef}
+            captureOpen={popover === "capture"}
+            settingsRef={settingsRef}
+            settingsOpen={popover === "settings"}
+            onAllDevices={openAllDevices}
+            onAdd={() => {
+              if (hoverMenu.current.opened === "picker") { pinHoverMenu(); setPickerAnchor("add"); openPicker({ kind: "add" }); return; }
+              toggleAddPicker("add");
+            }}
+            onWorkspace={() => focusMode ? exitFocus() : toggleAddPicker("workspace")}
+            onShowOne={() => { if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
+            onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
+            onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
+            onReloadAll={reloadAllSlots}
+            onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
+            onCapture={() => clickDockMenu("capture", () => togglePopover("capture"))}
+            onFixPrompt={() => popover === "fix" ? setPopover(null) : openFixPrompt()}
+            onViewMode={enterViewMode}
+            onSettings={() => clickDockMenu("settings", () => togglePopover("settings"))}
+            onMenuHover={hoverDockMenu}
+            end={
+              <button type="button" aria-label={t("closeViewer")} title={t("closeViewer")} onClick={closeViewer}
+                className="absolute end-3 top-4 grid size-11 place-items-center rounded-full bg-surface text-ink-2 shadow-[0_0_0_1px_var(--color-line-soft),0_10px_28px_rgb(20_23_26/0.08)] outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent">
+                <CloseIcon size={16} />
+              </button>
+            }
+          />
+        )}
+
         <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
-          {showChrome && (
-            <button type="button" aria-label={t("closeViewer")} title={t("closeViewer")} onClick={closeViewer}
-              className="absolute end-3 top-3 z-[45] grid size-9 place-items-center rounded-full border border-line bg-surface text-ink-2 shadow-float outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent">
-              <CloseIcon size={16} />
-            </button>
-          )}
           <div className="flex min-h-0 flex-1">
           <div
             ref={boardRef}
@@ -869,7 +917,7 @@ export function SimulatorApp() {
             className={cx(
               "isolate flex min-h-0 min-w-0 flex-1",
               narrowLayout && "flex-col",
-              viewMode ? "px-6 pb-[100px] pt-6" : compare ? "gap-16 px-6 pb-[88px] pt-3" : "px-3 pb-1 pt-1",
+              viewMode ? "px-6 pb-[100px] pt-6" : compare ? "gap-16 px-6 pb-[88px] pt-3" : "px-3 pb-6 pt-2",
             )}
           >
             {ready && slots.map((slot, index) => {
@@ -1045,53 +1093,6 @@ export function SimulatorApp() {
           )}
         </main>
 
-        {!viewMode && !compare && (
-          <WorkspaceDock
-            slotCount={slots.length}
-            catalogCount={devices.length}
-            canAdd={slots.length < maxPreviewSlots}
-            addRef={addRef}
-            addOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "add"}
-            workspaceRef={workspaceRef}
-            workspaceOpen={popover === "picker" && pickerTarget.kind === "add" && pickerAnchor === "workspace"}
-            showingOne={focusMode}
-            scrollSync={display.scrollSync}
-            navigationSync={display.navigationSync}
-            compare={compare}
-            capturing={capturing}
-            recordingActive={recording || flowRecording}
-            fixRef={fixRef}
-            fixOpen={popover === "fix"}
-            layoutOpen={layoutCheck.view.open}
-            layoutChecking={layoutCheck.view.checking}
-            layoutCount={layoutCheck.view.totals.problems}
-            onLayoutCheck={() => { if (layoutCheck.view.open) layoutCheck.close(); else { problems.close(); layoutCheck.run(); } }}
-            problemsOpen={problemsShown}
-            problemsCount={problems.total}
-            onProblems={toggleProblems}
-            tracking={tracking}
-            captureRef={captureRef}
-            captureOpen={popover === "capture"}
-            settingsRef={settingsRef}
-            settingsOpen={popover === "settings"}
-            onAllDevices={openAllDevices}
-            onAdd={() => {
-              if (hoverMenu.current.opened === "picker") { pinHoverMenu(); setPickerAnchor("add"); openPicker({ kind: "add" }); return; }
-              toggleAddPicker("add");
-            }}
-            onWorkspace={() => focusMode ? exitFocus() : toggleAddPicker("workspace")}
-            onShowOne={() => { if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
-            onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
-            onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
-            onReloadAll={reloadAllSlots}
-            onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
-            onCapture={() => clickDockMenu("capture", () => togglePopover("capture"))}
-            onFixPrompt={() => popover === "fix" ? setPopover(null) : openFixPrompt()}
-            onViewMode={enterViewMode}
-            onSettings={() => clickDockMenu("settings", () => togglePopover("settings"))}
-            onMenuHover={hoverDockMenu}
-          />
-        )}
       </div>
 
       <HoverZone onEnter={keepHoverMenu} onLeave={leaveHoverMenu} onUse={pinHoverMenu}>

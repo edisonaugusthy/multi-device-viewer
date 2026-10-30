@@ -46,10 +46,10 @@ import {
 
 const CARD_PAD = 16;
 // Room above the device for its floating toolbar.
-const TOOLBAR_SPACE = 56;
+const TOOLBAR_SPACE = 64;
 // Between a device and its toolbar: close enough to read as one, and to cross
 // before the toolbar hides.
-const TOOLBAR_GAP = 8;
+const TOOLBAR_GAP = 12;
 
 interface ScrollSyncPayload {
   slotId: string;
@@ -941,7 +941,7 @@ export const PreviewCard = memo(function PreviewCard({
     : 0;
   // The toolbar follows a dragged device, just above it, and always stays
   // fully on screen.
-  const [toolbarPlace, setToolbarPlace] = useState<{ top: number; shift: number }>({ top: 6, shift: 0 });
+  const [toolbarPlace, setToolbarPlace] = useState<{ top: number; shift: number; arrow: number }>({ top: 6, shift: 0, arrow: 0 });
   // Measured after layout changes and again just before the toolbar appears,
   // since column widths may still be animating when the layout first settles.
   const placeToolbar = useStableCallback(() => {
@@ -957,17 +957,20 @@ export const PreviewCard = memo(function PreviewCard({
     const cardCenter = card.left + card.width / 2;
     const min = bounds.left + 8 + half;
     const max = bounds.right - 8 - half;
-    const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, deviceBox.left + deviceBox.width / 2));
+    const deviceCenter = deviceBox.left + deviceBox.width / 2;
+    const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, deviceCenter));
+    // The arrow under the bar still points at the device when the bar is kept on screen.
+    const arrow = Math.round(Math.max(-(half - 20), Math.min(half - 20, deviceCenter - center)));
     const top = Math.max(bounds.top + 6, deviceBox.top - TOOLBAR_GAP - (bar.offsetHeight || 40));
     setToolbarPlace(current => {
-      const next = { top: Math.round(top - card.top), shift: Math.round(center - cardCenter) };
-      return current.top === next.top && current.shift === next.shift ? current : next;
+      const next = { top: Math.round(top - card.top), shift: Math.round(center - cardCenter), arrow };
+      return current.top === next.top && current.shift === next.shift && current.arrow === next.arrow ? current : next;
     });
   });
   useLayoutEffect(placeToolbar, [placeToolbar, offset.x, offset.y, scale, containerSize.width, containerSize.height, device.id, showToolbar, capturePending, focusNavigation]);
   // While the pointer is on the toolbar it stays put, so repeated clicks on
   // previous/next keep hitting the same button as the device changes size.
-  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number } | null>(null);
+  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number; arrow: number } | null>(null);
   // Hiding the toolbar for a capture removes it from under the pointer without
   // a pointerleave; a pin kept from then would make it jump away on return.
   const toolbarShown = showToolbar && !capturePending && !visualChecks.capturing;
@@ -992,7 +995,7 @@ export const PreviewCard = memo(function PreviewCard({
     >
       {/* Clip enlarged previews here. The toolbar sits outside this clip box,
           over its top inset, so a narrow column never cuts it off. */}
-      <div className={`relative min-h-0 flex-1 ${canvas ? "overflow-visible" : "overflow-hidden"} ${showToolbar ? "pt-14" : ""}`}>
+      <div className={`relative min-h-0 flex-1 ${canvas ? "overflow-visible" : "overflow-hidden"} ${showToolbar ? "pt-16" : ""}`}>
         <div
           ref={containerRef}
           data-design-overlay-surface
@@ -1071,6 +1074,7 @@ export const PreviewCard = memo(function PreviewCard({
           <PreviewToolbar
             deviceName={device.name}
             deviceLabel={shortName(device.name)}
+            arrowOffset={toolbarAt.arrow}
             zoomLabel={`${Math.round(scale * 100)}%`}
             canRotate={canRotate}
             removable={removable}
@@ -1120,14 +1124,14 @@ export const PreviewCard = memo(function PreviewCard({
             menu={
               <div data-viewport-actions
                 onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); setControlsOpen(false); setBrowserSettingsOpen(false); } }}
-                className="absolute end-0 top-full z-[60] mt-2 flex max-h-[calc(100dvh-120px)] w-64 flex-col gap-0.5 overflow-y-auto overflow-x-hidden whitespace-normal rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
+                className="absolute end-0 top-full z-[60] mt-2 flex max-h-[calc(100dvh-120px)] w-72 flex-col gap-0.5 overflow-y-auto overflow-x-hidden whitespace-normal rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover">
                 {browserSettingsOpen ? (
                   <div role="group" aria-label={t("browserAppearance")} className="p-1.5">
                     <BrowserAppearanceSettings device={device} slot={slot} geometry={browserGeometry} onClose={() => setBrowserSettingsOpen(false)}/>
                   </div>
                 ) : <>
-                  <MenuItem label={t("openInTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
-                  {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
+                  <MenuItem label={t("openInTab")} hint={t("openInTabHint")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
+                  {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} hint={t("tipFixPrompt")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
                   {FEATURES.visualChecks && visualChecks.menuItems}
                   {onLayoutCheck && (
                     <div className="mb-1 grid gap-px border-b border-line-soft pb-1.5" role="group" aria-label={t("layoutCheck")}>
@@ -1136,7 +1140,7 @@ export const PreviewCard = memo(function PreviewCard({
                       <p className="px-2 pt-1 text-[11.5px] leading-snug text-muted">{t("layoutCheckMenuHelp")}</p>
                     </div>
                   )}
-                  {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
+                  {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} hint={t("browserAppearanceHint")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
                   {!focused && !first && <MenuItem label={t("moveViewportLeft")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "left"); }}><ChevronLeftIcon size={15}/></MenuItem>}
                   {!focused && !last && <MenuItem label={t("moveViewportRight")} onClick={() => { setControlsOpen(false); simulator.current.moveSlot(slot.id, "right"); }}><ChevronRightIcon size={15}/></MenuItem>}
                 </>}
@@ -1149,11 +1153,11 @@ export const PreviewCard = memo(function PreviewCard({
       {showCaption && (
         <div className={`flex h-11 shrink-0 items-center justify-center px-2 ${canvas ? "pointer-events-none [&>*]:pointer-events-auto" : ""}`}
           style={canvas ? { ...layerStyle, transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined}>
-          <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
+          {/* Just the name; the size is in its tooltip and the device's bar. */}
+          <button type="button" data-device-caption title={`${device.name} · ${viewportLabel}`} onClick={() => simulator.current.setActiveSlot(slot.id)}
             onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
-            className={`flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent ${isActive ? "font-semibold text-ink" : "font-medium text-ink-2"}`}>
+            className="flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent">
             <span className="truncate text-[13px]">{shortName(device.name)}</span>
-            <span dir="ltr" className="shrink-0 font-mono text-xs font-medium text-muted">{viewportLabel}</span>
             {layoutStatus && <LayoutChip status={layoutStatus} />}
           </button>
           {slot.language && identity && onCompareIdentities && (
@@ -1291,16 +1295,22 @@ function LayoutChip({ status }: { status: LayoutSlotStatus }) {
   );
 }
 
-function MenuItem({ label, onClick, disabled = false, children }: { label: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
+// A menu row; with a hint, a second line says what it does.
+function MenuItem({ label, hint, onClick, disabled = false, children }: { label: string; hint?: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
   return (
     <button
       type="button"
       disabled={disabled}
       onClick={event => { event.stopPropagation(); onClick(); }}
-      className="flex h-9 w-full items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40"
+      className={`flex w-full gap-2.5 rounded-[9px] px-2.5 text-start text-[13px] text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40 ${hint ? "items-start py-2" : "h-9 items-center font-medium"}`}
     >
-      <span className="grid w-4 shrink-0 place-items-center text-ink-2">{children}</span>
-      <span className="min-w-0 truncate">{label}</span>
+      <span className={`grid w-4 shrink-0 place-items-center text-ink-2 ${hint ? "mt-px" : ""}`}>{children}</span>
+      {hint ? (
+        <span className="grid min-w-0 gap-px">
+          <span className="font-semibold">{label}</span>
+          <span className="text-[11.5px] leading-snug text-muted">{hint}</span>
+        </span>
+      ) : <span className="min-w-0 truncate">{label}</span>}
     </button>
   );
 }

@@ -95,7 +95,7 @@ test("resets orientation when switching between phones and wide unfolded devices
   for (const [name, id, width, height, rotatable] of cases) {
     await switchDevice(page, name, `button[title="${name}"]`);
     const screen = slot.locator(`[data-device-screen="${id}"]`);
-    await expect(slot.getByText(`${width}×${height}`, { exact: true })).toBeVisible();
+    await expect(slot.locator("[data-device-caption]")).toHaveAttribute("title", `${name} · ${width}×${height}`);
     await expect.poll(() => screen.evaluate(el => parseFloat(getComputedStyle(el).width) > parseFloat(getComputedStyle(el).height))).toBe(width > height);
     await revealControls(page);
     if (!rotatable) {
@@ -103,7 +103,7 @@ test("resets orientation when switching between phones and wide unfolded devices
       continue;
     }
     await slot.getByRole("button", { name: "Rotate", exact: true }).click();
-    await expect(slot.getByText(`${height}×${width}`, { exact: true })).toBeVisible();
+    await expect(slot.locator("[data-device-caption]")).toHaveAttribute("title", `${name} · ${height}×${width}`);
     await expect.poll(() => screen.evaluate(el => parseFloat(getComputedStyle(el).width) > parseFloat(getComputedStyle(el).height))).toBe(height > width);
   }
   await page.reload();
@@ -484,7 +484,7 @@ test("renders every reported problem device with its verified viewport inside th
     const screen = slot.locator(`[data-device-screen="${id}"]`);
     await expect(frame, `${name} frame`).toBeVisible();
     await expect(screen, `${name} screen`).toBeVisible();
-    await expect(slot).toContainText(`${width}×${height}`);
+    await expect(slot.locator("[data-device-caption]")).toHaveAttribute("title", new RegExp(`${width}×${height}$`));
     await expectScreenSize(screen, width, height);
 
     const frameBox = await frame.boundingBox();
@@ -536,7 +536,7 @@ test("keeps the Galaxy Z Flip7 camera hole inside the display in both orientatio
   await expectScreenInsideFrame();
   await revealControls(page);
   await page.getByRole("button", { name: "Rotate" }).first().click();
-  await expect(slot).toContainText("840×360");
+  await expect(slot.locator("[data-device-caption]")).toHaveAttribute("title", /840×360$/);
   await expect(screen).toHaveCSS("clip-path", /path\(/);
   await expectScreenInsideFrame();
 });
@@ -1146,6 +1146,19 @@ test("moves a device over another and draws the one moved on top", async ({ page
   expect(await layer(1)).toBeGreaterThan(await layer(0));
 });
 
+test("puts the workspace bar above the devices and points each device bar at its device", async ({ page }) => {
+  const bar = (await page.locator("[data-main-toolbar]").boundingBox())!;
+  const slot = page.locator("[data-preview-slot-id]").nth(1);
+  const device = (await slot.locator("[data-device-capture]").boundingBox())!;
+  expect(bar.y + bar.height).toBeLessThan(device.y);
+  await revealControls(page, 1);
+  const arrow = (await slot.locator("[data-toolbar-arrow]").boundingBox())!;
+  expect(Math.abs(arrow.x + arrow.width / 2 - (device.x + device.width / 2))).toBeLessThan(3);
+  expect(arrow.y).toBeLessThan(device.y);
+  // The caption is just the name; the size is in its tooltip.
+  await expect(slot.locator("[data-device-caption]")).not.toContainText("×");
+});
+
 test("shows one device toolbar at a time, always above its device", async ({ page }) => {
   const slots = page.locator("[data-preview-slot-id]");
   const toolbar = (index: number) => slots.nth(index).locator("[data-device-toolbar]");
@@ -1356,14 +1369,13 @@ test("opens the Add device picker from the Workspace button as well as Add devic
   await workspace.click();
   await expect(panel).toBeVisible();
   await expect(workspace).toHaveAttribute("aria-expanded", "true");
-  // The picker opens above the Workspace button in the dock, over it (centred
-  // unless that would cross the window's edge).
+  // The picker opens under the Workspace button in the top bar, starting at it.
   const [anchor, popup] = await Promise.all([workspace.boundingBox(), panel.boundingBox()]);
   const anchorCentre = anchor!.x + anchor!.width / 2;
   expect(popup!.x).toBeLessThanOrEqual(anchorCentre);
   expect(popup!.x + popup!.width).toBeGreaterThanOrEqual(anchorCentre);
   expect(popup!.x).toBeGreaterThanOrEqual(8);
-  expect(popup!.y + popup!.height).toBeLessThan(anchor!.y);
+  expect(popup!.y).toBeGreaterThan(anchor!.y + anchor!.height);
 
   const before = await page.locator("[data-preview-slot-id]").count();
   await panel.locator("[data-device-pick]:not([data-added]):not(:disabled)").first().click();
@@ -1377,18 +1389,17 @@ test("opens the Add device picker from the Workspace button as well as Add devic
   await expect(workspace).toHaveAttribute("aria-expanded", "false");
 });
 
-test("keeps the dock's device picker one size on every tab, with its tabs next to the dock", async ({ page }) => {
+test("keeps the device picker's tabs under the pointer while hovering across them", async ({ page }) => {
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
   const panel = page.getByTestId("device-switcher-panel");
-  const first = (await panel.boundingBox())!;
-  // Opened upward, the search and tabs sit below the list, nearest the dock.
+  // Opened downward from the top bar, the search and tabs sit at its top, nearest the pointer.
   const [tabs, list, search] = await Promise.all([panel.getByRole("tablist").boundingBox(), panel.locator("[data-device-pick]").first().boundingBox(), panel.getByRole("textbox").boundingBox()]);
-  expect(tabs!.y).toBeGreaterThan(list!.y);
-  expect(search!.y).toBeGreaterThan(tabs!.y);
+  expect(tabs!.y).toBeLessThan(list!.y);
+  expect(search!.y).toBeLessThan(tabs!.y);
   for (const tab of await panel.getByRole("tab").all()) {
     await tab.hover();
     await expect(tab).toHaveAttribute("aria-selected", "true");
-    expect(await panel.boundingBox()).toEqual(first);
+    expect((await panel.getByRole("tablist").boundingBox())!.y).toBe(tabs!.y);
   }
 });
 

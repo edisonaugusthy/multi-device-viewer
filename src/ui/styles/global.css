@@ -7,7 +7,7 @@
     sans-serif;
 
   /* Viewer surface tokens (light). Components use the Tailwind colors below. */
-  --mdv-stage: #e9ecef;
+  --mdv-stage: #f5f5f2;
   --mdv-surface: #ffffff;
   --mdv-surface-2: #f7f8fa;
   --mdv-sunken: #eef0f2;

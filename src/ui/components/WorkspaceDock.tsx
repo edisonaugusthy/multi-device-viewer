@@ -107,13 +107,12 @@ function useDockCompaction(locale: string) {
   return { ref, level };
 }
 
-// The one control surface of the workspace: a compact dark dock under the
-// devices. Its groups read left to right as where (reload), what you see (the
-// views, Add device), what you do with it (sync, capture, compare, issues) and
-// the viewer itself (focus mode, settings). Menus open while the pointer rests
-// on an item and act on one click; a click also opens them, so the keyboard and
-// touch work the same way.
-export function WorkspaceDock(props: WorkspaceDockProps) {
+// The one control surface of the workspace: a light pill above the devices.
+// Its groups read left to right as what you see (the views), what you do with
+// it (reload, sync, capture, compare, issues), the viewer itself (focus mode,
+// settings) and Add. Menus open while the pointer rests on an item and act on
+// one click; a click also opens them, so the keyboard and touch work the same way.
+export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
   const { t, locale } = useI18n();
   const { ref, level } = useDockCompaction(locale);
   const hover = (menu: DockMenu) => ({
@@ -122,23 +121,17 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
   });
 
   return (
-    <div className="relative z-30 flex shrink-0 justify-center px-3 pb-3 pt-1.5">
+    <div className="relative z-30 flex shrink-0 justify-center px-14 pt-4">
       <nav
         ref={ref}
         data-main-toolbar
         data-compact={level || undefined}
         aria-label={PRODUCT_SHORT_NAME}
-        className="flex h-[52px] max-w-full items-center gap-0.5 rounded-[18px] bg-[#1a1c20] px-1.5 text-[#e6e8eb] shadow-[0_16px_40px_rgb(20_23_26/0.26),inset_0_0_0_1px_rgb(255_255_255/0.06)] dark:bg-[#20242b] dark:shadow-[0_16px_40px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.1)]"
+        className="flex h-11 max-w-full items-center gap-1 rounded-full bg-surface px-[5px] text-ink shadow-[0_0_0_1px_var(--color-line-soft),0_10px_28px_rgb(20_23_26/0.08)] dark:shadow-[0_0_0_1px_var(--color-line),0_10px_28px_rgb(0_0_0/0.4)]"
       >
-        <IconOnly label={t("reloadAll")} tooltip={t("tipReloadAll")} onClick={props.onReloadAll} align="start">
-          <ReloadIcon size={17} />
-        </IconOnly>
-
-        <DockDivider />
-
-        <div role="group" aria-label={t("views")} className="flex h-10 shrink-0 items-center gap-0.5 rounded-xl bg-white/[0.08] p-1">
+        <div role="group" aria-label={t("views")} className="flex shrink-0 items-center gap-1">
           {/* The current view; clicking it again opens the Add device picker here too. */}
-          <Tooltip title={t("workspace")} description={t("tipAddDevice")} align="start" side="top">
+          <Tooltip title={t("workspace")} description={t("tipAddDevice")} align="start">
             <button
               ref={props.workspaceRef}
               type="button"
@@ -148,48 +141,32 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
               aria-expanded={props.workspaceOpen}
               aria-label={t("workspace")}
               onClick={props.onWorkspace}
-              className={cx(viewButton, !props.showingOne ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-[#8e7de0]")}
+              className={cx(viewButton, !props.showingOne ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-[#8e7de0] ring-offset-1 ring-offset-surface")}
             >
               {level < 1 && <span>{t("workspace")}</span>}
-              <span className={cx("font-mono text-[11.5px] font-medium", !props.showingOne ? "text-[#575e66]" : "text-[#a3a9b1]")}>{props.slotCount}</span>
+              <span className="font-mono text-[11px] font-medium opacity-70">{props.slotCount}</span>
             </button>
           </Tooltip>
-          <Tooltip title={t("focusDevice")} align="center" side="top">
+          <Tooltip title={t("focusDevice")} align="center">
             <button type="button" aria-pressed={props.showingOne} aria-label={t("focusDevice")} onClick={props.onShowOne}
               className={cx(viewButton, props.showingOne ? viewOn : viewOff)}>
               {t("viewOne")}
             </button>
           </Tooltip>
-          <Tooltip title={t("allDevices")} description={t("tipAllDevices")} align="center" side="top">
+          <Tooltip title={t("allDevices")} description={t("tipAllDevices")} align="center">
             <button type="button" data-all-devices-toggle onClick={props.onAllDevices} disabled={props.capturing} aria-label={t("allDevices")}
               className={cx(viewButton, viewOff, "disabled:opacity-40")}>
               {level < 1 && <span>{t("viewAll")}</span>}
-              <span className="font-mono text-[11.5px] font-medium text-[#a3a9b1]">{props.catalogCount}</span>
+              <span className="font-mono text-[11px] font-medium opacity-70">{props.catalogCount}</span>
             </button>
           </Tooltip>
         </div>
 
-        <Tooltip title={t("addDevice")} description={props.canAdd ? t("tipAddDevice") : t("slotsFull", { count: 4 })} align="center" side="top">
-          <button
-            ref={props.addRef}
-            type="button"
-            data-tour="add-viewport"
-            aria-expanded={props.addOpen}
-            aria-label={t("addDevice")}
-            onClick={props.onAdd}
-            {...hover("add")}
-            className={cx(
-              "mx-1 flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3 text-[13px] font-semibold text-[#14171a] outline-none hover:bg-[#f1f2f4] focus-visible:ring-2 focus-visible:ring-accent",
-              props.addOpen && "ring-[3px] ring-[#8e7de0]/60",
-            )}
-          >
-            <PlusIcon size={16} strokeWidth={2.5} />
-            {level < 2 && <span>{t("addDevice")}</span>}
-          </button>
-        </Tooltip>
-
         <DockDivider />
 
+        <DockButton label={t("reloadAll")} tooltip={t("tipReloadAll")} onClick={props.onReloadAll}>
+          <ReloadIcon size={16} />
+        </DockButton>
         <SyncControl
           scrollSync={props.scrollSync}
           navigationSync={props.navigationSync}
@@ -210,33 +187,50 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
           dot={props.recordingActive ? "var(--color-record)" : props.tracking ? "#8e7de0" : undefined}
           hoverHandlers={hover("capture")}
         >
-          <CameraIcon size={18} />
+          <CameraIcon size={16} />
         </DockButton>
         <DockButton label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")}
           active={props.compare} pressed={props.compare} onClick={props.onCompare}>
-          <CompareIcon size={18} />
+          <CompareIcon size={16} />
         </DockButton>
         <IssuesControl {...props} />
-
-        <DockDivider />
-
-        <IconOnly data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} onClick={props.onViewMode} align="end">
-          <EyeIcon size={17} />
-        </IconOnly>
-        <IconOnly buttonRef={props.settingsRef} label={t("settings")} tooltip={t("tipSettings")} active={props.settingsOpen} expanded={props.settingsOpen}
+        <DockButton data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} onClick={props.onViewMode}>
+          <EyeIcon size={16} />
+        </DockButton>
+        <DockButton buttonRef={props.settingsRef} label={t("settings")} tooltip={t("tipSettings")} active={props.settingsOpen} expanded={props.settingsOpen}
           onClick={props.onSettings} hoverHandlers={hover("settings")} align="end">
-          <SettingsIcon size={17} />
-        </IconOnly>
+          <SettingsIcon size={16} />
+        </DockButton>
+
+        <Tooltip title={t("addDevice")} description={props.canAdd ? t("tipAddDevice") : t("slotsFull", { count: 4 })} align="end">
+          <button
+            ref={props.addRef}
+            type="button"
+            data-tour="add-viewport"
+            aria-expanded={props.addOpen}
+            aria-label={t("addDevice")}
+            onClick={props.onAdd}
+            {...hover("add")}
+            className={cx(
+              "ms-1 flex h-[34px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary pe-[13px] ps-[11px] text-[12.5px] font-semibold text-on-primary outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent",
+              props.addOpen && "ring-[3px] ring-[#8e7de0]/60",
+            )}
+          >
+            <PlusIcon size={14} strokeWidth={2.6} />
+            {level < 2 && <span>{t("add")}</span>}
+          </button>
+        </Tooltip>
       </nav>
+      {props.end}
     </div>
   );
 }
 
-const viewButton = "flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 text-[13px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
-const viewOn = "bg-white text-[#14171a]";
-const viewOff = "text-[#e6e8eb] hover:bg-white/10";
-// The tools are icons, named in their tooltips; only the views and Add device carry text.
-const dockItem = "relative grid shrink-0 place-items-center rounded-xl outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40";
+const viewButton = "flex h-[34px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-[12.5px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
+const viewOn = "bg-primary text-on-primary";
+const viewOff = "text-ink hover:bg-sunken";
+// The tools are icons, named in their tooltips; only the views and Add carry text.
+const dockItem = "relative grid size-[34px] shrink-0 place-items-center rounded-full text-ink outline-none transition-colors hover:bg-sunken focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40";
 
 type DataAttributes = { [key: `data-${string}`]: string | boolean | undefined };
 type HoverHandlers = { onPointerEnter: (event: React.PointerEvent) => void; onPointerLeave: (event: React.PointerEvent) => void };
@@ -258,7 +252,7 @@ function DockButton({ label, ariaLabel, tooltip, active, pressed, expanded, disa
   children: ReactNode;
 } & DataAttributes) {
   return (
-    <Tooltip title={ariaLabel ?? label} description={tooltip} align={align} side="top">
+    <Tooltip title={ariaLabel ?? label} description={tooltip} align={align}>
       <button
         ref={buttonRef}
         type="button"
@@ -269,7 +263,7 @@ function DockButton({ label, ariaLabel, tooltip, active, pressed, expanded, disa
         onClick={onClick}
         {...hoverHandlers}
         {...data}
-        className={cx(dockItem, "size-10 text-[#f3f4f6]", active && "bg-white/[0.14]")}
+        className={cx(dockItem, active && "bg-sunken")}
       >
         <span className="relative grid place-items-center">
           {children}
@@ -280,34 +274,12 @@ function DockButton({ label, ariaLabel, tooltip, active, pressed, expanded, disa
   );
 }
 
-/** The viewer's own controls: icons only, named in their tooltip. */
-function IconOnly({ label, tooltip, active, expanded, align = "center", buttonRef, hoverHandlers, onClick, children, ...data }: {
-  label: string;
-  tooltip?: string;
-  active?: boolean;
-  expanded?: boolean;
-  align?: "start" | "center" | "end";
-  buttonRef?: RefObject<HTMLButtonElement | null>;
-  hoverHandlers?: HoverHandlers;
-  onClick: () => void;
-  children: ReactNode;
-} & DataAttributes) {
-  return (
-    <Tooltip title={label} description={tooltip} align={align} side="top">
-      <button ref={buttonRef} type="button" aria-label={label} aria-expanded={expanded} onClick={onClick} {...hoverHandlers} {...data}
-        className={cx(dockItem, "size-10 text-[#c3c8cf] hover:text-white", active && "bg-white/[0.14] text-white")}>
-        {children}
-      </button>
-    </Tooltip>
-  );
-}
-
 function Marks({ badge, dot }: { badge?: number; dot?: string }) {
   return <>
     {badge ? (
-      <span aria-hidden="true" className="pointer-events-none absolute -end-2.5 -top-2 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 font-mono text-[10px] font-bold text-white ring-2 ring-[#1a1c20]">{badge}</span>
+      <span aria-hidden="true" className="pointer-events-none absolute -end-2.5 -top-2 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 font-mono text-[10px] font-bold text-white ring-2 ring-surface">{badge}</span>
     ) : null}
-    {dot && <span aria-hidden="true" data-track-dot className="pointer-events-none absolute -end-1 -top-1 size-[7px] rounded-full ring-2 ring-[#1a1c20]" style={{ background: dot }} />}
+    {dot && <span aria-hidden="true" data-track-dot className="pointer-events-none absolute -end-1 -top-1 size-[7px] rounded-full ring-2 ring-surface" style={{ background: dot }} />}
   </>;
 }
 
@@ -330,7 +302,7 @@ function useRestingMenu() {
 
 function DockMenuPanel({ label, width, children }: { label: string; width: string; children: ReactNode }) {
   return (
-    <div className="absolute bottom-full left-1/2 z-[60] -translate-x-1/2 pb-3">
+    <div className="absolute left-1/2 top-full z-[60] -translate-x-1/2 pt-3">
       <div role="group" aria-label={label} className={cx("flex flex-col gap-0.5 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-popover", width)}>
         {children}
       </div>
@@ -357,12 +329,12 @@ function SyncControl({ scrollSync, navigationSync, onScrollSyncChange, onNavigat
         aria-pressed={on}
         title={t("syncBetweenDevicesHint")}
         onClick={() => { onScrollSyncChange(!on); onNavigationSyncChange(!on); }}
-        className={cx(dockItem, "size-10 text-[#f3f4f6]", menu.open && "bg-white/[0.14]")}
+        className={cx(dockItem, menu.open && "bg-sunken")}
       >
         {/* Off reads as an ordinary control; on adds a green light. */}
         <span className="relative grid place-items-center">
-          <LinkIcon size={18} />
-          {on && <span aria-hidden="true" data-sync-on className="pointer-events-none absolute -end-1 -top-1 size-[7px] rounded-full bg-[#7bd88f] ring-2 ring-[#1a1c20]" />}
+          <LinkIcon size={16} />
+          {on && <span aria-hidden="true" data-sync-on className="pointer-events-none absolute -end-1 -top-1 size-1.5 rounded-full bg-[#16a34a] ring-2 ring-surface" />}
         </span>
       </button>
       {menu.open && (
@@ -396,7 +368,7 @@ function IssuesControl(props: WorkspaceDockProps) {
   const active = menu.open || props.problemsOpen || props.layoutOpen || props.fixOpen;
   return (
     <div data-tour="layout-check" className="relative shrink-0" {...menu.handlers}>
-      <Tooltip title={t("issues")} side="top" align="center">
+      <Tooltip title={t("issues")} align="center">
         <button
           ref={props.fixRef}
           type="button"
@@ -405,12 +377,12 @@ function IssuesControl(props: WorkspaceDockProps) {
           aria-label={total > 0 ? `${t("issues")} · ${total}` : t("issues")}
           aria-expanded={menu.open}
           onClick={() => menu.setOpen(open => !open)}
-          className={cx(dockItem, "size-10 text-[#f3f4f6]", active && "bg-white/[0.14]")}
+          className={cx(dockItem, active && "bg-sunken")}
         >
           <span className="relative grid place-items-center">
             {props.layoutChecking
-              ? <span aria-hidden="true" className="size-[18px] animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none" />
-              : <AlertIcon size={18} />}
+              ? <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-line border-t-ink motion-reduce:animate-none" />
+              : <AlertIcon size={16} />}
             <Marks badge={total} />
           </span>
         </button>
@@ -455,5 +427,5 @@ function IssueRow({ icon, label, hint, count, pressed, busy, onClick, ...data }:
 }
 
 function DockDivider() {
-  return <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-white/[0.12]" />;
+  return <span aria-hidden="true" className="mx-1 h-5 w-px shrink-0 bg-line-soft" />;
 }

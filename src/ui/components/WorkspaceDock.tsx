@@ -130,7 +130,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
         data-main-toolbar
         data-compact={level || undefined}
         aria-label={PRODUCT_SHORT_NAME}
-        className="flex h-14 max-w-full items-center gap-0.5 rounded-[18px] bg-[#1a1c20] px-1.5 text-[#e6e8eb] shadow-[0_16px_40px_rgb(20_23_26/0.26),inset_0_0_0_1px_rgb(255_255_255/0.06)] dark:bg-[#20242b] dark:shadow-[0_16px_40px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.1)]"
+        className="flex h-[60px] max-w-full items-center gap-1 rounded-[20px] bg-[#1a1c20] px-2 text-[#e6e8eb] shadow-[0_16px_40px_rgb(20_23_26/0.26),inset_0_0_0_1px_rgb(255_255_255/0.06)] dark:bg-[#20242b] dark:shadow-[0_16px_40px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.1)]"
       >
         <IconOnly label={t("reloadAll")} tooltip={t("tipReloadAll")} onClick={props.onReloadAll} align="start">
           <ReloadIcon size={17} />
@@ -138,7 +138,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
 
         <DockDivider />
 
-        <div role="group" aria-label={t("views")} className="flex h-11 shrink-0 items-center gap-0.5 rounded-[13px] bg-white/[0.08] p-1">
+        <div role="group" aria-label={t("views")} className="flex h-11 shrink-0 items-center gap-0.5 rounded-[14px] bg-white/[0.08] p-1">
           {/* The current view; clicking it again opens the Add device picker here too. */}
           <Tooltip title={t("workspace")} description={t("tipAddDevice")} align="start" side="top">
             <button
@@ -181,7 +181,7 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
             onClick={props.onAdd}
             {...hover("add")}
             className={cx(
-              "mx-1 flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3 text-[13px] font-semibold text-[#14171a] outline-none hover:bg-[#f1f2f4] focus-visible:ring-2 focus-visible:ring-accent",
+              "mx-0.5 flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[14px] bg-white px-3.5 text-[13px] font-semibold text-[#14171a] outline-none hover:bg-[#f1f2f4] focus-visible:ring-2 focus-visible:ring-accent",
               props.addOpen && "ring-[3px] ring-[#8e7de0]/60",
             )}
           >
@@ -236,10 +236,11 @@ export function WorkspaceDock(props: WorkspaceDockProps) {
   );
 }
 
-const viewButton = "flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[9px] px-2.5 text-[13px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
+const viewButton = "flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[10px] px-3 text-[13px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent";
 const viewOn = "bg-white text-[#14171a]";
 const viewOff = "text-[#e6e8eb] hover:bg-white/10";
-const dockItem = "relative flex shrink-0 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-semibold leading-none outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40";
+// Every item shares one height and one line: icon and label side by side.
+const dockItem = "relative flex shrink-0 items-center justify-center gap-1.5 rounded-[14px] text-[13px] font-semibold leading-none outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-40";
 
 type DataAttributes = { [key: `data-${string}`]: string | boolean | undefined };
 type HoverHandlers = { onPointerEnter: (event: React.PointerEvent) => void; onPointerLeave: (event: React.PointerEvent) => void };
@@ -273,11 +274,13 @@ function DockButton({ label, ariaLabel, tooltip, iconsOnly, active, pressed, exp
         onClick={onClick}
         {...hoverHandlers}
         {...data}
-        className={cx(dockItem, "text-[#f3f4f6]", iconsOnly ? "size-10" : "h-11 min-w-[54px] px-1.5", active && "bg-white/[0.14]")}
+        className={cx(dockItem, "text-[#f3f4f6]", iconsOnly ? "size-11" : "h-11 px-2.5", active && "bg-white/[0.14]")}
       >
-        {children}
+        <span className="relative grid place-items-center">
+          {children}
+          <Marks badge={badge} dot={dot} />
+        </span>
         {!iconsOnly && <span className="whitespace-nowrap">{label}</span>}
-        <Marks badge={badge} dot={dot} />
       </button>
     </Tooltip>
   );
@@ -298,7 +301,7 @@ function IconOnly({ label, tooltip, active, expanded, align = "center", buttonRe
   return (
     <Tooltip title={label} description={tooltip} align={align} side="top">
       <button ref={buttonRef} type="button" aria-label={label} aria-expanded={expanded} onClick={onClick} {...hoverHandlers} {...data}
-        className={cx(dockItem, "size-10 text-[#c3c8cf] hover:text-white", active && "bg-white/[0.14] text-white")}>
+        className={cx(dockItem, "size-11 text-[#c3c8cf] hover:text-white", active && "bg-white/[0.14] text-white")}>
         {children}
       </button>
     </Tooltip>
@@ -308,9 +311,9 @@ function IconOnly({ label, tooltip, active, expanded, align = "center", buttonRe
 function Marks({ badge, dot }: { badge?: number; dot?: string }) {
   return <>
     {badge ? (
-      <span aria-hidden="true" className="pointer-events-none absolute end-1 top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 font-mono text-[10px] font-bold text-white ring-2 ring-[#1a1c20]">{badge}</span>
+      <span aria-hidden="true" className="pointer-events-none absolute -end-2.5 -top-2 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 font-mono text-[10px] font-bold text-white ring-2 ring-[#1a1c20]">{badge}</span>
     ) : null}
-    {dot && <span aria-hidden="true" data-track-dot className="pointer-events-none absolute end-3 top-1.5 size-[7px] rounded-full ring-2 ring-[#1a1c20]" style={{ background: dot }} />}
+    {dot && <span aria-hidden="true" data-track-dot className="pointer-events-none absolute -end-1 -top-1 size-[7px] rounded-full ring-2 ring-[#1a1c20]" style={{ background: dot }} />}
   </>;
 }
 
@@ -361,11 +364,14 @@ function SyncControl({ iconsOnly, scrollSync, navigationSync, onScrollSyncChange
         aria-pressed={on}
         title={t("syncBetweenDevicesHint")}
         onClick={() => { onScrollSyncChange(!on); onNavigationSyncChange(!on); }}
-        className={cx(dockItem, on ? "text-[#f3f4f6]" : "text-[#a3a9b1]", iconsOnly ? "size-10" : "h-11 min-w-[54px] px-1.5", menu.open && "bg-white/[0.14]")}
+        className={cx(dockItem, "text-[#f3f4f6]", iconsOnly ? "size-11" : "h-11 px-2.5", menu.open && "bg-white/[0.14]")}
       >
-        <LinkIcon size={18} />
+        {/* Off reads as an ordinary control; on adds a green light. */}
+        <span className="relative grid place-items-center">
+          <LinkIcon size={18} />
+          {on && <span aria-hidden="true" data-sync-on className="pointer-events-none absolute -end-1 -top-1 size-[7px] rounded-full bg-[#7bd88f] ring-2 ring-[#1a1c20]" />}
+        </span>
         {!iconsOnly && <span className="whitespace-nowrap">{t("sync")}</span>}
-        <span aria-hidden="true" className={cx("pointer-events-none absolute end-3 top-1.5 size-[7px] rounded-full ring-2 ring-[#1a1c20]", on ? "bg-[#7bd88f]" : "bg-[#6b7178]")} />
       </button>
       {menu.open && (
         <DockMenuPanel label={t("syncBetweenDevices")} width="w-60">
@@ -407,13 +413,15 @@ function IssuesControl(props: WorkspaceDockProps & { iconsOnly: boolean }) {
           aria-label={total > 0 ? `${t("issues")} · ${total}` : t("issues")}
           aria-expanded={menu.open}
           onClick={() => menu.setOpen(open => !open)}
-          className={cx(dockItem, "text-[#f3f4f6]", props.iconsOnly ? "size-10" : "h-11 min-w-[54px] px-1.5", active && "bg-white/[0.14]")}
+          className={cx(dockItem, "text-[#f3f4f6]", props.iconsOnly ? "size-11" : "h-11 px-2.5", active && "bg-white/[0.14]")}
         >
-          {props.layoutChecking
-            ? <span aria-hidden="true" className="size-[18px] animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none" />
-            : <AlertIcon size={18} />}
+          <span className="relative grid place-items-center">
+            {props.layoutChecking
+              ? <span aria-hidden="true" className="size-[18px] animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none" />
+              : <AlertIcon size={18} />}
+            <Marks badge={total} />
+          </span>
           {!props.iconsOnly && <span className="whitespace-nowrap">{t("issues")}</span>}
-          <Marks badge={total} />
         </button>
       </Tooltip>
       {menu.open && (
@@ -456,5 +464,5 @@ function IssueRow({ icon, label, hint, count, pressed, busy, onClick, ...data }:
 }
 
 function DockDivider() {
-  return <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-white/[0.12]" />;
+  return <span aria-hidden="true" className="mx-1.5 h-7 w-px shrink-0 bg-white/[0.12]" />;
 }

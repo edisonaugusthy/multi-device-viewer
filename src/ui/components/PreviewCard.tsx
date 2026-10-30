@@ -47,6 +47,9 @@ import {
 const CARD_PAD = 16;
 // Room above the device for its floating toolbar.
 const TOOLBAR_SPACE = 56;
+// Between a device and its toolbar: close enough to read as one, and to cross
+// before the toolbar hides.
+const TOOLBAR_GAP = 8;
 
 interface ScrollSyncPayload {
   slotId: string;
@@ -130,6 +133,14 @@ interface PreviewCardProps {
    * another's empty space stays reachable.
    */
   canvas?: boolean;
+  /** The device's place in the canvas's front-to-back order (1 is furthest back). */
+  layer?: number;
+  /**
+   * The parent decides which device's toolbar shows, so only one shows at a
+   * time. Without it, each card follows its own pointer.
+   */
+  toolbarHovered?: boolean;
+  onToolbarHover?: (slotId: string, hovered: boolean) => void;
   onExpand?: (slotId: string) => void;
   onFixPrompt?: (slotId: string) => void;
   onPageScroll?: (scrollTop: number) => void;
@@ -199,6 +210,9 @@ export const PreviewCard = memo(function PreviewCard({
   onSwitchDevice,
   positionKey,
   canvas = false,
+  layer,
+  toolbarHovered,
+  onToolbarHover,
   onExpand,
   onFixPrompt,
   onPageScroll,
@@ -220,12 +234,18 @@ export const PreviewCard = memo(function PreviewCard({
   // The toolbar shows while the pointer is on the device itself (or its caption
   // or the toolbar), not anywhere in the column. It lingers briefly after the
   // pointer leaves so it can be reached across the gap above the device.
-  const [deviceHovered, setDeviceHovered] = useState(false);
+  const [ownHover, setOwnHover] = useState(false);
+  const deviceHovered = onToolbarHover ? Boolean(toolbarHovered) : ownHover;
   const hoverTimer = useRef<number | undefined>(undefined);
-  const holdToolbar = useStableCallback(() => { window.clearTimeout(hoverTimer.current); setDeviceHovered(true); });
-  const releaseToolbar = useStableCallback(() => {
+  const holdToolbar = useStableCallback(() => {
+    if (onToolbarHover) return onToolbarHover(slot.id, true);
     window.clearTimeout(hoverTimer.current);
-    hoverTimer.current = window.setTimeout(() => setDeviceHovered(false), 300);
+    setOwnHover(true);
+  });
+  const releaseToolbar = useStableCallback(() => {
+    if (onToolbarHover) return onToolbarHover(slot.id, false);
+    window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => setOwnHover(false), 300);
   });
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
   const bridgeStatusTimer = useRef<number | undefined>(undefined);
@@ -907,35 +927,50 @@ export const PreviewCard = memo(function PreviewCard({
   const deviceTop = containerSize.height > 0
     ? align === "bottom" ? containerSize.height - scaledHeight : (containerSize.height - scaledHeight) / 2
     : 0;
-  const toolbarTop = Math.max(6, TOOLBAR_SPACE + deviceTop + offset.y - 48);
-  // The toolbar follows a dragged device sideways but always stays fully on
-  // screen; a toolbar wider than its column is centred and may overlap
-  // neighbours (the hovered column is raised above them).
-  const [toolbarShift, setToolbarShift] = useState(0);
+  // The toolbar follows a dragged device but always stays fully on screen,
+  // and never over the device's own screen: it sits just above the device,
+  // or just below it (over its caption) when there is no room above.
+  const [toolbarPlace, setToolbarPlace] = useState<{ top: number; shift: number; below: boolean }>({ top: 6, shift: 0, below: false });
   // Measured after layout changes and again just before the toolbar appears,
   // since column widths may still be animating when the layout first settles.
   const placeToolbar = useStableCallback(() => {
     const wrapper = toolbarRef.current;
     const bar = wrapper?.querySelector<HTMLElement>("[data-device-toolbar]");
-    if (!wrapper || !bar) return;
+    const box = containerRef.current?.querySelector<HTMLElement>("[data-device-capture]");
+    if (!wrapper || !bar || !box) return;
     // The section, not the shifted wrapper, gives the card's own position.
     const card = (wrapper.parentElement ?? wrapper).getBoundingClientRect();
     const bounds = (wrapper.closest("main, [data-all-devices-view]") ?? document.documentElement).getBoundingClientRect();
+    const deviceBox = box.getBoundingClientRect();
     const half = bar.offsetWidth / 2;
     const cardCenter = card.left + card.width / 2;
     const min = bounds.left + 8 + half;
     const max = bounds.right - 8 - half;
-    const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, cardCenter + offset.x));
-    setToolbarShift(Math.round(center - cardCenter));
+    const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, deviceBox.left + deviceBox.width / 2));
+    const height = bar.offsetHeight || 40;
+    const above = deviceBox.top - TOOLBAR_GAP - height;
+    const below = deviceBox.bottom + TOOLBAR_GAP;
+    const place = above >= bounds.top + 6 ? { top: above, below: false }
+      : below + height <= bounds.bottom - 6 ? { top: below, below: true }
+      : { top: bounds.top + 6, below: false };
+    setToolbarPlace(current => {
+      const next = { top: Math.round(place.top - card.top), shift: Math.round(center - cardCenter), below: place.below };
+      return current.top === next.top && current.shift === next.shift && current.below === next.below ? current : next;
+    });
   });
-  useLayoutEffect(placeToolbar, [placeToolbar, offset.x, containerSize.width, device.id, showToolbar, capturePending, focusNavigation]);
+  useLayoutEffect(placeToolbar, [placeToolbar, offset.x, offset.y, scale, containerSize.width, containerSize.height, device.id, showToolbar, capturePending, focusNavigation]);
   // While the pointer is on the toolbar it stays put, so repeated clicks on
   // previous/next keep hitting the same button as the device changes size.
-  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number } | null>(null);
+  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number; below: boolean } | null>(null);
   // Hiding the toolbar for a capture removes it from under the pointer without
   // a pointerleave; a pin kept from then would make it jump away on return.
   const toolbarShown = showToolbar && !capturePending && !visualChecks.capturing;
   useEffect(() => { if (!toolbarShown) setPinnedToolbar(null); }, [toolbarShown]);
+  const toolbarAt = pinnedToolbar ?? toolbarPlace;
+  const toolbarVisible = toolbarShown && (revealToolbar || deviceHovered || controlsOpen || languageOpen);
+  // Without a stacking context per column, each part of a device is layered by
+  // its place in the canvas, and a showing toolbar is drawn above every device.
+  const layerStyle = layer === undefined ? undefined : { zIndex: 10 + layer };
   const statusTop = Math.max(6, TOOLBAR_SPACE * (showToolbar ? 1 : 0) + deviceTop + offset.y + 8);
   const openInTab = () => window.open(currentPageUrlRef.current || slot.url, "_blank", "noopener,noreferrer");
   const viewportLabel = `${viewportSize.width}×${viewportSize.height}`;
@@ -970,6 +1005,7 @@ export const PreviewCard = memo(function PreviewCard({
               onPointerDown={startMove}
               onDoubleClick={event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) { setOffset({ x: 0, y: 0 }); savePosition({ x: 0, y: 0 }); } }}
               style={{
+                ...layerStyle,
                 width: frameSize.width,
                 height: frameSize.height,
                 transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
@@ -998,6 +1034,7 @@ export const PreviewCard = memo(function PreviewCard({
               onDoubleClick={resetView}
               className="pointer-events-auto absolute z-10 grid size-6 cursor-nwse-resize place-items-center rounded-full border border-line bg-surface text-muted opacity-0 shadow-float transition-opacity hover:text-ink focus-visible:opacity-100 group-hover/device:opacity-100 outline-none focus-visible:ring-2 focus-visible:ring-accent"
               style={{
+                ...(layer !== undefined && { zIndex: 10 + layer }),
                 left: (containerSize.width - frameSize.width * scale) / 2 + offset.x + frameSize.width * scale - 12,
                 top: deviceTop + offset.y + scaledHeight - 12,
               }}
@@ -1011,7 +1048,7 @@ export const PreviewCard = memo(function PreviewCard({
 
         {loadIssue && !blocked && !capturePending && <div role="status" data-preview-load-issue={loadIssue}
           className="pointer-events-none absolute inset-x-0 z-30 flex justify-center px-3"
-          style={{ top: statusTop }}>
+          style={{ ...layerStyle, top: statusTop }}>
           <div className="pointer-events-auto flex max-w-full items-center gap-1.5 rounded-lg border border-warn-line bg-warn-soft py-1 pe-1 ps-2.5 text-xs font-semibold text-warn shadow-float">
             <AlertIcon size={13} className="shrink-0"/>
             <span className="min-w-0 truncate">{t(loadIssue === "resources" ? "previewResourceError" : "previewLoadUnverified")}</span>
@@ -1022,9 +1059,9 @@ export const PreviewCard = memo(function PreviewCard({
 
       {toolbarShown && (
         <div ref={toolbarRef} className="pointer-events-none absolute inset-x-0 z-40"
-          onPointerEnter={() => { holdToolbar(); setPinnedToolbar({ top: toolbarTop, shift: toolbarShift }); }}
+          onPointerEnter={() => { holdToolbar(); setPinnedToolbar(toolbarPlace); }}
           onPointerLeave={() => { releaseToolbar(); setPinnedToolbar(null); }}
-          style={{ top: pinnedToolbar?.top ?? toolbarTop, transform: `translateX(${pinnedToolbar?.shift ?? toolbarShift}px)` }}>
+          style={{ top: toolbarAt.top, transform: `translateX(${toolbarAt.shift}px)`, ...(layer !== undefined && { zIndex: toolbarVisible ? 1000 : 10 + layer }) }}>
           <PreviewToolbar
             deviceName={device.name}
             deviceLabel={shortName(device.name)}
@@ -1104,8 +1141,8 @@ export const PreviewCard = memo(function PreviewCard({
       )}
 
       {showCaption && (
-        <div className={`flex h-11 shrink-0 items-center justify-center px-2 ${canvas ? "pointer-events-none [&>*]:pointer-events-auto" : ""}`}
-          style={canvas ? { transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined}>
+        <div className={`flex h-11 shrink-0 items-center justify-center px-2 transition-opacity duration-150 ${canvas ? "pointer-events-none [&>*]:pointer-events-auto" : ""} ${toolbarVisible && toolbarAt.below ? "opacity-0" : ""}`}
+          style={canvas ? { ...layerStyle, transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined}>
           <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
             onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
             className={`flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent ${isActive ? "font-semibold text-ink" : "font-medium text-ink-2"}`}>

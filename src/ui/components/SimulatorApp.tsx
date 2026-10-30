@@ -171,6 +171,19 @@ export function SimulatorApp() {
   const bringToFront = useCallback((slotId: string) => {
     setStack((current) => current[current.length - 1] === slotId ? current : [...current.filter((id) => id !== slotId), slotId]);
   }, []);
+  // One device toolbar at a time. A short pause on a device shows its toolbar,
+  // so passing over devices on the way elsewhere doesn't flash theirs, and
+  // moving onto another device hands the toolbar over instead of showing two.
+  const [toolbarSlotId, setToolbarSlotId] = useState<string | null>(null);
+  const toolbarSlotRef = useRef<string | null>(null);
+  toolbarSlotRef.current = toolbarSlotId;
+  const toolbarTimer = useRef<number | undefined>(undefined);
+  const hoverToolbar = useCallback((slotId: string, hovered: boolean) => {
+    window.clearTimeout(toolbarTimer.current);
+    if (!hovered) toolbarTimer.current = window.setTimeout(() => setToolbarSlotId(null), 300);
+    else if (toolbarSlotRef.current !== slotId) toolbarTimer.current = window.setTimeout(() => setToolbarSlotId(slotId), 120);
+  }, []);
+  useEffect(() => () => window.clearTimeout(toolbarTimer.current), []);
   const [focusedSlotId, setFocusedSlotId] = useState<string | null>(null);
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const lastSuccessfulFlowRun = useRef<string | null>(null);
@@ -854,7 +867,7 @@ export function SimulatorApp() {
             ref={boardRef}
             data-capture-board
             className={cx(
-              "flex min-h-0 min-w-0 flex-1",
+              "isolate flex min-h-0 min-w-0 flex-1",
               narrowLayout && "flex-col",
               viewMode ? "px-6 pb-[100px] pt-6" : compare ? "gap-16 px-6 pb-[88px] pt-3" : "px-3 pb-1 pt-1",
             )}
@@ -872,7 +885,7 @@ export function SimulatorApp() {
                   onFocusCapture={canvas ? () => bringToFront(slot.id) : undefined}
                   className={cx("relative flex h-full min-w-0 shrink-0 flex-col", canvas ? "pointer-events-none" : "hover:z-30 focus-within:z-30", !shown && "hidden", singleSlotId !== null && "flex-1")}
                   style={singleSlotId === null
-                    ? { ...(narrowLayout ? { height: `${100 / slots.length}%`, width: "100%" } : { width: `${100 / slots.length}%` }), zIndex: canvas ? 10 + layer : undefined }
+                    ? (narrowLayout ? { height: `${100 / slots.length}%`, width: "100%" } : { width: `${100 / slots.length}%` })
                     : undefined}
                 >
                   {comparing && (compareMode === "side-by-side"
@@ -898,7 +911,7 @@ export function SimulatorApp() {
                     focused={focusMode}
                     first={index === 0}
                     last={index === slots.length - 1}
-                    revealToolbar={showFirstRun}
+                    revealToolbar={showFirstRun && index === 0}
                     flowRecording={flowRecording && (flowSourceSlotId === null || flowSourceSlotId === slot.id)}
                     flowReplay={flowReplay}
                     onFlowStep={recordFlowStep}
@@ -909,6 +922,9 @@ export function SimulatorApp() {
                     onSwitchDevice={switchSlotDevice}
                     positionKey={singleSlotId === null ? "all" : "one"}
                     canvas={canvas}
+                    layer={canvas ? layer : undefined}
+                    toolbarHovered={toolbarSlotId === slot.id}
+                    onToolbarHover={hoverToolbar}
                     onExpand={focusSlot}
                     onFixPrompt={fixPromptForSlot}
                     layoutStatus={FEATURES.layoutCheck ? layoutCheck.statusBySlot.get(slot.id) : undefined}

@@ -13,9 +13,12 @@ async function dismissFirstRunGuide(page: Page) {
   if (await skipTour.isVisible().catch(() => false)) await skipTour.click();
 }
 
-// Device controls fade in while a device is hovered, so tests hover its caption first.
+// Device controls fade in after a short pause on a device, so tests hover its
+// caption and wait for them.
 async function revealControls(page: Page, index = 0) {
-  await page.locator("[data-preview-slot-id]").nth(index).locator("[data-device-caption]").hover();
+  const slot = page.locator("[data-preview-slot-id]").nth(index);
+  await slot.locator("[data-device-caption]").hover();
+  await expect(slot.locator("[data-device-toolbar]")).toHaveCSS("opacity", "1");
 }
 
 async function openViewportActions(page: Page, index = 0) {
@@ -1141,6 +1144,28 @@ test("moves a device over another and draws the one moved on top", async ({ page
   // Touching the other device brings that one forward instead.
   await slots.nth(1).locator("[data-device-caption]").click();
   expect(await layer(1)).toBeGreaterThan(await layer(0));
+});
+
+test("shows one device toolbar at a time and never over the device's own screen", async ({ page }) => {
+  const slots = page.locator("[data-preview-slot-id]");
+  const toolbar = (index: number) => slots.nth(index).locator("[data-device-toolbar]");
+  await revealControls(page, 0);
+  // Moving onto the next device hands the toolbar over instead of showing two.
+  await revealControls(page, 1);
+  await expect(toolbar(0)).toHaveCSS("opacity", "0");
+  // A device dragged to the top edge has no room above, so its toolbar goes under it.
+  await revealControls(page, 0);
+  const grip = (await slots.nth(0).locator("[data-move-handle]").boundingBox())!;
+  const device = (await slots.nth(0).locator("[data-device-capture]").boundingBox())!;
+  await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2 - device.y + 4, { steps: 8 });
+  await page.mouse.up();
+  await revealControls(page, 0);
+  const moved = (await slots.nth(0).locator("[data-device-capture]").boundingBox())!;
+  const bar = (await toolbar(0).boundingBox())!;
+  expect(moved.y).toBeLessThan(40);
+  expect(bar.y).toBeGreaterThanOrEqual(moved.y + moved.height);
 });
 
 test("keeps a moved device where it was left after a reload", async ({ page }) => {

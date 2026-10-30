@@ -1146,26 +1146,27 @@ test("moves a device over another and draws the one moved on top", async ({ page
   expect(await layer(1)).toBeGreaterThan(await layer(0));
 });
 
-test("shows one device toolbar at a time and never over the device's own screen", async ({ page }) => {
+test("shows one device toolbar at a time, always above its device", async ({ page }) => {
   const slots = page.locator("[data-preview-slot-id]");
   const toolbar = (index: number) => slots.nth(index).locator("[data-device-toolbar]");
   await revealControls(page, 0);
   // Moving onto the next device hands the toolbar over instead of showing two.
   await revealControls(page, 1);
   await expect(toolbar(0)).toHaveCSS("opacity", "0");
-  // A device dragged to the top edge has no room above, so its toolbar goes under it.
+  // A device dragged against the top edge stops below its toolbar's row.
   await revealControls(page, 0);
   const grip = (await slots.nth(0).locator("[data-move-handle]").boundingBox())!;
   const device = (await slots.nth(0).locator("[data-device-capture]").boundingBox())!;
   await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
   await page.mouse.down();
-  await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2 - device.y + 4, { steps: 8 });
+  await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2 - device.y - 200, { steps: 8 });
   await page.mouse.up();
   await revealControls(page, 0);
   const moved = (await slots.nth(0).locator("[data-device-capture]").boundingBox())!;
   const bar = (await toolbar(0).boundingBox())!;
-  expect(moved.y).toBeLessThan(40);
-  expect(bar.y).toBeGreaterThanOrEqual(moved.y + moved.height);
+  expect(moved.y).toBeLessThan(device.y);
+  expect(bar.y).toBeGreaterThanOrEqual(0);
+  expect(bar.y + bar.height).toBeLessThanOrEqual(moved.y);
 });
 
 test("keeps a moved device where it was left after a reload", async ({ page }) => {

@@ -421,6 +421,18 @@ export const PreviewCard = memo(function PreviewCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [effectiveOrientation, freeView, positionKey]);
 
+  // On the canvas a device stops short of the row above it where its toolbar
+  // shows, so the toolbar always has room above the device.
+  const minOffsetY = (atScale: number) => {
+    if (!canvas || !showToolbar || containerSize.height <= 0) return -Infinity;
+    const free = containerSize.height - frameSize.height * atScale;
+    return -(align === "bottom" ? free : free / 2);
+  };
+  useLayoutEffect(() => {
+    const min = minOffsetY(scale);
+    if (offset.y < min) setOffset(current => ({ ...current, y: min }));
+  });
+
   function startMove(event: React.PointerEvent) {
     if (event.button !== 0) return;
     if ((event.target as Element).closest("button, a, input, textarea, select, [data-mobile-keyboard]") && event.currentTarget !== event.target && !(event.currentTarget as Element).matches("[data-move-handle]")) return;
@@ -428,7 +440,7 @@ export const PreviewCard = memo(function PreviewCard({
     let moved = origin;
     event.stopPropagation();
     startDrag(event, (deltaX, deltaY) => {
-      moved = { x: origin.x + deltaX, y: origin.y + deltaY };
+      moved = { x: origin.x + deltaX, y: Math.max(minOffsetY(scale), origin.y + deltaY) };
       setOffset(moved);
     }, () => { if (moved !== origin) savePosition(moved); });
   }
@@ -452,7 +464,7 @@ export const PreviewCard = memo(function PreviewCard({
       const grownWidth = frameSize.width * nextScale - width;
       const grownHeight = frameSize.height * nextScale - height;
       setLiveZoom(zoom);
-      moved = { x: origin.x + grownWidth / 2, y: origin.y + (align === "bottom" ? grownHeight : grownHeight / 2) };
+      moved = { x: origin.x + grownWidth / 2, y: Math.max(minOffsetY(nextScale), origin.y + (align === "bottom" ? grownHeight : grownHeight / 2)) };
       setOffset(moved);
     }, () => {
       simulator.current.setSlotZoom(slot.id, zoom);
@@ -927,10 +939,9 @@ export const PreviewCard = memo(function PreviewCard({
   const deviceTop = containerSize.height > 0
     ? align === "bottom" ? containerSize.height - scaledHeight : (containerSize.height - scaledHeight) / 2
     : 0;
-  // The toolbar follows a dragged device but always stays fully on screen,
-  // and never over the device's own screen: it sits just above the device,
-  // or just below it (over its caption) when there is no room above.
-  const [toolbarPlace, setToolbarPlace] = useState<{ top: number; shift: number; below: boolean }>({ top: 6, shift: 0, below: false });
+  // The toolbar follows a dragged device, just above it, and always stays
+  // fully on screen.
+  const [toolbarPlace, setToolbarPlace] = useState<{ top: number; shift: number }>({ top: 6, shift: 0 });
   // Measured after layout changes and again just before the toolbar appears,
   // since column widths may still be animating when the layout first settles.
   const placeToolbar = useStableCallback(() => {
@@ -947,21 +958,16 @@ export const PreviewCard = memo(function PreviewCard({
     const min = bounds.left + 8 + half;
     const max = bounds.right - 8 - half;
     const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, deviceBox.left + deviceBox.width / 2));
-    const height = bar.offsetHeight || 40;
-    const above = deviceBox.top - TOOLBAR_GAP - height;
-    const below = deviceBox.bottom + TOOLBAR_GAP;
-    const place = above >= bounds.top + 6 ? { top: above, below: false }
-      : below + height <= bounds.bottom - 6 ? { top: below, below: true }
-      : { top: bounds.top + 6, below: false };
+    const top = Math.max(bounds.top + 6, deviceBox.top - TOOLBAR_GAP - (bar.offsetHeight || 40));
     setToolbarPlace(current => {
-      const next = { top: Math.round(place.top - card.top), shift: Math.round(center - cardCenter), below: place.below };
-      return current.top === next.top && current.shift === next.shift && current.below === next.below ? current : next;
+      const next = { top: Math.round(top - card.top), shift: Math.round(center - cardCenter) };
+      return current.top === next.top && current.shift === next.shift ? current : next;
     });
   });
   useLayoutEffect(placeToolbar, [placeToolbar, offset.x, offset.y, scale, containerSize.width, containerSize.height, device.id, showToolbar, capturePending, focusNavigation]);
   // While the pointer is on the toolbar it stays put, so repeated clicks on
   // previous/next keep hitting the same button as the device changes size.
-  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number; below: boolean } | null>(null);
+  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number } | null>(null);
   // Hiding the toolbar for a capture removes it from under the pointer without
   // a pointerleave; a pin kept from then would make it jump away on return.
   const toolbarShown = showToolbar && !capturePending && !visualChecks.capturing;
@@ -1141,7 +1147,7 @@ export const PreviewCard = memo(function PreviewCard({
       )}
 
       {showCaption && (
-        <div className={`flex h-11 shrink-0 items-center justify-center px-2 transition-opacity duration-150 ${canvas ? "pointer-events-none [&>*]:pointer-events-auto" : ""} ${toolbarVisible && toolbarAt.below ? "opacity-0" : ""}`}
+        <div className={`flex h-11 shrink-0 items-center justify-center px-2 ${canvas ? "pointer-events-none [&>*]:pointer-events-auto" : ""}`}
           style={canvas ? { ...layerStyle, transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined}>
           <button type="button" data-device-caption onClick={() => simulator.current.setActiveSlot(slot.id)}
             onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}

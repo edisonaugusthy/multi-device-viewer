@@ -1556,7 +1556,7 @@ test("unchecks the last device in the Add device picker and replaces it with the
   await expect(panel.locator(`[data-device-pick][data-added][title="${lastName}"]`)).toHaveCount(0);
 });
 
-test("shows one header in Compare and All devices, whose close returns to the workspace", async ({ page }) => {
+test("shows its own header in Compare and keeps the workspace bar in All devices, whose close returns to the workspace", async ({ page }) => {
   const mainHeader = page.locator("[data-main-toolbar]");
   await mainHeader.getByRole("button", { name: "Compare with design" }).click();
   const compareHeader = page.locator("[data-compare-toolbar]");
@@ -1569,12 +1569,19 @@ test("shows one header in Compare and All devices, whose close returns to the wo
   await expect(compareHeader).toHaveCount(0);
   await expect(mainHeader).toBeVisible();
 
+  const barBox = await mainHeader.boundingBox();
   await page.locator("[data-all-devices-toggle]").click();
   const gallery = page.locator("[data-all-devices-view]");
-  await expect(gallery.getByRole("button", { name: "Close viewer" })).toHaveCount(0);
-  await gallery.getByRole("button", { name: "Back to workspace" }).last().click();
+  await expect(gallery).toBeVisible();
+  // The same bar, in the same place and size, with All as the current view.
+  await expect(mainHeader.locator("[data-all-devices-toggle]")).toHaveAttribute("aria-current", "page");
+  await expect(mainHeader.locator("[data-workspace-toggle]")).not.toHaveAttribute("aria-current", "page");
+  await expect(mainHeader.locator("[data-gallery-load-progress]")).toBeVisible();
+  expect(await mainHeader.boundingBox()).toEqual(barBox);
+  await expect(page.getByRole("button", { name: "Close viewer" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Back to workspace" }).click();
   await expect(gallery).toHaveCount(0);
-  await expect(mainHeader).toBeVisible();
+  await expect(mainHeader.locator("[data-workspace-toggle]")).toHaveAttribute("aria-current", "page");
 });
 
 // A solid design image drawn in the page, so no fixture file is needed.

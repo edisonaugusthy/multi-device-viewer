@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useI18n, type TranslationKey } from "../../app/i18n";
 import { FEATURES } from "../../app/feature-flags";
@@ -14,29 +14,22 @@ import { nextZoom } from "../../domain/simulator/simulator-service";
 import type { DisplaySettings, PreviewSlot } from "../../domain/simulator/simulator.types";
 import {
   AlertIcon,
-  BackIcon,
   CameraIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
-  EyeIcon,
   MinusIcon,
   MoreIcon,
-  NavigationSyncIcon,
   OpenInTabIcon,
-  PauseIcon,
-  PlayIcon,
   PlusIcon,
   ReloadIcon,
   RotateIcon,
-  ScrollSyncIcon,
-  SettingsIcon,
 } from "../icons";
 import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
+import type { GalleryBar } from "./WorkspaceDock";
 import { estimateDeviceFrameSize } from "./DeviceFrame";
 import { PreviewCard, shortName } from "./PreviewCard";
-import { SettingsPopover, type BrowserBarPosition } from "./SettingsPopover";
-import { barButton, barChip, barClose, barOff, barOn, barPill, barRow, cx, focusRing, IconButton, Segmented, Tooltip } from "./ui";
+import { barButton, barOff, barOn, cx, focusRing, IconButton } from "./ui";
 import { ViewModeBar } from "./ViewModeBar";
 import { useVisualRegression } from "../hooks/useVisualRegression";
 import { readStore, writeStore } from "../../infrastructure/storage/local-store";
@@ -69,14 +62,8 @@ const tabLabels: Record<DeviceGalleryGroupId, TranslationKey | "Android"> = {
   ...groupLabels, android: "Android", custom: "custom",
 };
 
-export interface GallerySettings {
-  browserBar: BrowserBarPosition;
-  onBrowserBarChange: (position: BrowserBarPosition) => void;
-  onHelp: () => void;
-  onTour: () => void;
-  onWhatsNew: () => void;
-  onPermissions: () => void;
-}
+/** What the workspace bar needs to act on the gallery, and whether focus mode hides that bar. */
+export type GalleryBarState = GalleryBar & { viewMode: boolean };
 
 interface AllDevicesViewProps {
   url: string;
@@ -85,7 +72,10 @@ interface AllDevicesViewProps {
   onAddDevice: (deviceId: string, url: string) => void;
   /** Screenshot of one device, cut out of the page; resolves when the capture is done. */
   onCaptureDevice: (target: HTMLElement, device: Device, url: string, slot: PreviewSlot, size: { width: number; height: number }) => Promise<void>;
-  settings: GallerySettings;
+  /** The gallery's loading and tools, for the workspace bar above it; `null` once it closes. */
+  onBarChange?: (bar: GalleryBarState | null) => void;
+  /** A menu from the workspace bar is open: Escape closes that, not the gallery. */
+  menuOpen?: boolean;
   /** After the page reloaded with the gallery open: where to return to. */
   restore?: { category: string; scrollTop: number };
   onStateChange?: (state: { category: DeviceGalleryGroupId; scrollTop: number }) => void;
@@ -122,7 +112,7 @@ export function AllDevicesView(props: AllDevicesViewProps) {
     onToggleLoading={() => setLoadingPaused(current => !current)}/>;
 }
 
-function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice, settings, group, groups, onSelectGroup, focusCategory,
+function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice, onBarChange, menuOpen = false, group, groups, onSelectGroup, focusCategory,
   loadingMode, changeLoadingMode, loadingPaused, onToggleLoading, restore, onStateChange }: AllDevicesViewProps & {
   focusCategory: boolean;
   group: DeviceGalleryGroup;
@@ -137,7 +127,6 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const devices = group.devices;
   const simulator = useSimulator();
   const [refreshVersion, setRefreshVersion] = useState(0);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [viewMode, setViewMode] = useState(false);
   const local = useMemo(() => isLocalDevelopmentUrl(url), [url]);
   const loadPolicy = useRef(loadingPolicy(loadingMode, loadingPaused, local));
@@ -159,8 +148,6 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const observedUrls = useRef(new Map<string, string>());
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const backRef = useRef<HTMLButtonElement>(null);
-  const settingsRef = useRef<HTMLButtonElement>(null);
   const categoryNavRef = useRef<HTMLElement>(null);
   // Category tabs show only when every tab fits; otherwise the dropdown does.
   const [categoryTabsFit, setCategoryTabsFit] = useState(true);
@@ -369,16 +356,18 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
     return () => window.removeEventListener("MDV_NAVIGATION_EVENT", followNavigation);
   }, [baseSlots, display.navigationSync, queueNavigation]);
 
+  // Opening the gallery or changing category puts focus on the current category.
   useLayoutEffect(() => {
-    if (!focusCategory) { backRef.current?.focus({ preventScroll: true }); return; }
     const category = rootRef.current?.querySelector<HTMLElement>('[aria-current="page"]');
     const target = category?.getClientRects().length ? category : rootRef.current?.querySelector("select");
     target?.focus({ preventScroll: true });
   }, [focusCategory]);
+  const menuOpenRef = useRef(menuOpen);
+  menuOpenRef.current = menuOpen;
   useEffect(() => {
     const close = () => viewMode ? setViewMode(false) : expandedDeviceId ? closePopup() : onClose();
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !event.defaultPrevented) { event.preventDefault(); close(); return; }
+      if (event.key === "Escape" && !event.defaultPrevented && !menuOpenRef.current) { event.preventDefault(); close(); return; }
       if (!expandedDeviceId || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
       const target = event.composedPath()[0];
@@ -412,7 +401,20 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const jumpToGroup = (id: DeviceGalleryGroupId) => {
     if (id !== selectedGroup) onSelectGroup(id, display.navigationSync ? getSlotUrl(syncSourceId) : url);
   };
-  const toggleSync = (key: "scrollSync" | "navigationSync") => simulator.updateDisplay(current => ({ ...current, [key]: !current[key] }));
+  // The workspace bar above the gallery shows its loading and runs its tools.
+  const barActions = useRef({ onTogglePause: onToggleLoading, onSpeedChange: changeLoadingMode, onRetry: () => {}, onReload: refreshAll });
+  barActions.current = { onTogglePause: onToggleLoading, onSpeedChange: changeLoadingMode, onRetry: () => incompleteIds.forEach(reloadSlot), onReload: refreshAll };
+  useEffect(() => {
+    onBarChange?.({
+      loaded: loadedCount, total: count, incomplete: incompleteIds.length, paused: loadingPaused, speed: loadingMode ?? "fast", viewMode,
+      onTogglePause: () => barActions.current.onTogglePause(),
+      onSpeedChange: speed => barActions.current.onSpeedChange(speed),
+      onRetry: () => barActions.current.onRetry(),
+      onReload: () => barActions.current.onReload(),
+      onViewMode: () => setViewMode(true),
+    });
+  }, [count, incompleteIds.length, loadedCount, loadingMode, loadingPaused, onBarChange, viewMode]);
+  useEffect(() => () => onBarChange?.(null), [onBarChange]);
   // Groups are sorted newest first, so the narrowest and widest can be anywhere.
   const groupWidths = group.devices.map(device => device.cssViewport.width);
   const [narrowest, widest] = [Math.min(...groupWidths), Math.max(...groupWidths)];
@@ -420,87 +422,39 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
 
   return (
     <SimulatorScopeProvider value={scope}>
-      <div ref={rootRef} data-all-devices-view data-gallery-page={selectedGroup} role={expandedDeviceId ? undefined : "dialog"} aria-modal={expandedDeviceId ? undefined : true} aria-label={expandedDeviceId ? undefined : t("allDevices")}
-        className="group/focusmode @container/gallery absolute inset-0 z-40 flex min-h-0 flex-col bg-stage text-ink">
-        {!viewMode && <header inert={expandedDeviceId !== null} aria-hidden={expandedDeviceId !== null || undefined}
-          className={cx(barRow, "z-10 min-w-0 flex-col items-stretch")}>
-          <div className="flex min-w-0 items-center gap-2">
-          <button ref={backRef} type="button" onClick={onClose} aria-label={t("backToWorkspace")} title={t("backToWorkspace")} className={barChip}>
-            <BackIcon size={15} />{t("workspace")}
-          </button>
-
-          <div className={cx(barPill, "relative min-w-[90px] flex-1")}>
-            {!categoryTabsFit && <>
-              <label className="sr-only" htmlFor="mdv-gallery-category">{t("deviceCategories")}</label>
-              <select id="mdv-gallery-category" aria-label={t("deviceCategories")} value={selectedGroup ?? ""} onChange={event => jumpToGroup(event.target.value as DeviceGalleryGroupId)}
-                className={cx("h-[34px] w-full max-w-48 rounded-full bg-sunken px-3 text-[12.5px] font-semibold text-ink", focusRing)}>
-                {groups.map(item => <option key={item.id} value={item.id}>{t(groupLabels[item.id])} · {item.devices.length}</option>)}
-              </select>
-            </>}
-            <nav ref={categoryNavRef} aria-label={t("deviceCategories")} aria-hidden={!categoryTabsFit || undefined}
-              className={cx("flex min-w-0 items-center gap-0.5 overflow-hidden", !categoryTabsFit && "invisible absolute inset-x-0 top-1/2 -translate-y-1/2")}>
-              {groups.map(item => {
-                const current = selectedGroup === item.id;
-                return (
-                  <button type="button" key={item.id} aria-current={current ? "page" : undefined} onClick={() => jumpToGroup(item.id)}
-                    className={cx(barButton, current ? barOn : barOff)}>
-                    {tabLabels[item.id] === "Android" ? "Android" : t(tabLabels[item.id] as TranslationKey)}
-                    <span className={cx("font-mono text-[11.5px]", current ? "opacity-75" : "text-muted")}>{item.devices.length}</span>
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* Only the workspace closes the viewer; here × goes back to it. */}
-          <button type="button" aria-label={t("backToWorkspace")} title={t("tipBackToWorkspace")} onClick={onClose} className={barClose}><CloseIcon size={16} /></button>
-          </div>
-          <div className={cx(barPill, "self-center")}>
-            <div data-gallery-load-progress title={t("galleryLoadedPreviews", { loaded: loadedCount, count })}
-              className="flex h-[34px] items-center gap-2 rounded-full bg-sunken pe-1 ps-3">
-              <span aria-hidden="true" className="flex h-[5px] w-16 overflow-hidden rounded-full bg-line-soft">
-                <span className="bg-accent transition-[width]" style={{ width: `${count ? (loadedCount / count) * 100 : 0}%` }} />
-                <span className="bg-warn transition-[width]" style={{ width: `${count ? (incompleteIds.length / count) * 100 : 0}%` }} />
-              </span>
-              <span className="font-mono text-xs">{loadedCount}/{count}</span>
-              {loadingPaused && <span className="text-xs text-muted">{t("galleryLoadingPaused")}</span>}
-              <button type="button" onClick={onToggleLoading} aria-label={t(loadingPaused ? "resumeLoading" : "pauseLoading")} title={t(loadingPaused ? "galleryResumeLoading" : "galleryPauseLoading")}
-                className={cx("grid size-7 place-items-center rounded-full bg-surface text-ink", focusRing)}>
-                {loadingPaused ? <PlayIcon size={13} /> : <PauseIcon size={13} />}
-              </button>
-            </div>
-            {incompleteIds.length > 0 && (
-              <button type="button" title={t("retryIncompletePreviews")} onClick={() => incompleteIds.forEach(reloadSlot)}
-                className={cx("h-[34px] rounded-full bg-warn-soft px-3 text-[12.5px] font-semibold text-warn", focusRing)}>
-                {t("retryCount", { count: incompleteIds.length })}
-              </button>
-            )}
-            <Segmented label={t("previewLoadingSpeed")} value={loadingMode ?? "fast"} onChange={changeLoadingMode}
-              options={[{ value: "fast", label: t("fast"), title: t("galleryFastLoading") }, { value: "gentle", label: t("gentle"), title: t("galleryGentleLoading") }]} />
-            <Segmented label={t("previewStyle")} value={display.previewStyle === "free" ? "free" : "device"}
-              onChange={value => simulator.updateDisplay(current => ({ ...current, previewStyle: value === "free" ? "free" : "device" }))}
-              options={[
-                { value: "device", label: t("deviceView"), tooltip: t("tipDeviceView") },
-                { value: "free", label: t("freeView"), tooltip: t("tipFreeView") },
-              ]} />
-            <div role="group" aria-label={t("syncBetweenDevices")} className="flex h-[34px] items-center gap-0.5 rounded-full bg-sunken px-[3px]">
-              <SyncToggle label={t("scrollSync")} description={t("scrollSyncHint")} pressed={display.scrollSync} onClick={() => toggleSync("scrollSync")}><ScrollSyncIcon size={14} /></SyncToggle>
-              <SyncToggle label={t("navigationSync")} description={t("navigationSyncHint")} pressed={display.navigationSync} onClick={() => toggleSync("navigationSync")}><NavigationSyncIcon size={14} /></SyncToggle>
-            </div>
-            <IconButton label={t("reloadAll")} tooltip={t("resetGalleryPreviews")} onClick={refreshAll}><ReloadIcon size={16} /></IconButton>
-            <IconButton label={t("viewMode")} tooltip={t("tipFocusMode")} tooltipAlign="end" tone="primary" onClick={() => setViewMode(true)}><EyeIcon size={16} /></IconButton>
-            <IconButton ref={settingsRef} label={t("settings")} tooltip={t("tipSettings")} tooltipAlign="end" pressed={settingsOpen} aria-expanded={settingsOpen} onClick={() => setSettingsOpen(value => !value)}><SettingsIcon size={16} /></IconButton>
-          </div>
-        </header>}
+      {/* Below the workspace bar, which stays in place with All as its view. */}
+      <div ref={rootRef} data-all-devices-view data-gallery-page={selectedGroup} aria-label={t("allDevices")}
+        className="group/focusmode @container/gallery absolute inset-0 flex min-h-0 flex-col bg-stage text-ink">
+        {!viewMode && <div inert={expandedDeviceId !== null} aria-hidden={expandedDeviceId !== null || undefined}
+          className="relative flex min-w-0 shrink-0 justify-center px-6 pt-3">
+          {!categoryTabsFit && <>
+            <label className="sr-only" htmlFor="mdv-gallery-category">{t("deviceCategories")}</label>
+            <select id="mdv-gallery-category" aria-label={t("deviceCategories")} value={selectedGroup ?? ""} onChange={event => jumpToGroup(event.target.value as DeviceGalleryGroupId)}
+              className={cx("h-8 max-w-56 rounded-full bg-surface px-3 text-[12.5px] font-semibold text-ink shadow-[0_0_0_1px_var(--color-line-soft)]", focusRing)}>
+              {groups.map(item => <option key={item.id} value={item.id}>{t(groupLabels[item.id])} · {item.devices.length}</option>)}
+            </select>
+          </>}
+          <nav ref={categoryNavRef} aria-label={t("deviceCategories")} aria-hidden={!categoryTabsFit || undefined}
+            className={cx("flex min-w-0 max-w-full items-center justify-center gap-0.5 overflow-hidden", !categoryTabsFit && "invisible absolute inset-x-6 top-3")}>
+            {groups.map(item => {
+              const current = selectedGroup === item.id;
+              return (
+                <button type="button" key={item.id} aria-current={current ? "page" : undefined} onClick={() => jumpToGroup(item.id)}
+                  title={current ? `${t(groupLabels[item.id])} · ${t("galleryWidthRange", { range: widthRange })}` : t(groupLabels[item.id])}
+                  className={cx(barButton, "h-8", current ? barOn : barOff)}>
+                  {tabLabels[item.id] === "Android" ? "Android" : t(tabLabels[item.id] as TranslationKey)}
+                  <span className={cx("font-mono text-[11.5px]", current ? "opacity-75" : "text-muted")}>{item.devices.length}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>}
 
         <div ref={scrollRef} data-gallery-scroll tabIndex={expandedDeviceId ? -1 : 0} aria-label={t("allDevices")}
-          className={cx("min-h-0 flex-1 overscroll-contain outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent", expandedDeviceId ? "overflow-hidden" : "overflow-y-auto")}>
+          className={cx("isolate min-h-0 flex-1 overscroll-contain outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent", expandedDeviceId ? "overflow-hidden" : "overflow-y-auto")}>
           <section key={group.id} data-gallery-group={group.id} aria-labelledby={expandedDeviceId ? undefined : `gallery-heading-${group.id}`}
-            className={cx("flex flex-col gap-4 px-6 pb-8", viewMode ? "pt-6" : "pt-[18px]")}>
-            {!viewMode && <div inert={expandedDeviceId !== null} className="flex flex-wrap items-baseline gap-2.5">
-              <h1 id={`gallery-heading-${group.id}`} className="text-lg font-semibold tracking-tight">{t(groupLabels[group.id])}</h1>
-              <span className="font-mono text-xs text-muted">{t("galleryWidthRange", { range: widthRange })}</span>
-            </div>}
+            className={cx("flex flex-col gap-4 px-6 pb-8", viewMode ? "pt-6" : "pt-2")}>
+            <h1 id={`gallery-heading-${group.id}`} className="sr-only">{t(groupLabels[group.id])} · {t("galleryWidthRange", { range: widthRange })}</h1>
             <div data-gallery-grid className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] items-end gap-x-6 gap-y-10">
               {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
@@ -510,7 +464,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
           </section>
         </div>
         {popup && <>
-          <div aria-hidden="true" data-gallery-backdrop onClick={closePopup} className="absolute inset-0 z-40 bg-black/45 backdrop-blur-[2px]"/>
+          <div aria-hidden="true" data-gallery-backdrop onClick={closePopup} className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px]"/>
           <GalleryPopup device={devices[expandedIndex]} slot={popup} display={display} index={expandedIndex} count={count} stepFocus={stepFocus}
             onStep={stepExpanded} onClose={closePopup} onReload={() => reloadSlot(POPUP_SLOT_ID)}
             onOpenTab={() => window.open(getSlotUrl(POPUP_SLOT_ID), "_blank", "noopener,noreferrer")}
@@ -519,35 +473,10 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
             onCapture={(target, size) => onCaptureDevice(target, devices[expandedIndex], getSlotUrl(POPUP_SLOT_ID), popup, size)}/>
         </>}
         {viewMode && <ViewModeBar showModes={false} single={false} position="" canStep={false} onShowAll={() => {}} onShowOne={() => {}} onPrevious={() => {}} onNext={() => {}} onExit={() => setViewMode(false)} />}
-        <SettingsPopover
-          open={settingsOpen}
-          anchorRef={settingsRef}
-          dark={display.darkMode}
-          browserBar={settings.browserBar}
-          onClose={() => setSettingsOpen(false)}
-          onThemeChange={dark => simulator.updateDisplay(current => ({ ...current, darkMode: dark }))}
-          onBrowserBarChange={settings.onBrowserBarChange}
-          onHelp={settings.onHelp}
-          onTour={settings.onTour}
-          onWhatsNew={settings.onWhatsNew}
-          onPermissions={settings.onPermissions}
-        />
       </div>
     </SimulatorScopeProvider>
   );
 }
-
-function SyncToggle({ label, description, pressed, onClick, children }: { label: string; description: string; pressed: boolean; onClick: () => void; children: ReactNode }) {
-  return (
-    <Tooltip title={label} description={description}>
-      <button type="button" aria-label={label} aria-pressed={pressed} onClick={onClick}
-        className={cx("grid h-7 w-[30px] place-items-center rounded-full", pressed ? "bg-primary text-on-primary" : "text-ink-2 hover:text-ink", focusRing)}>
-        {children}
-      </button>
-    </Tooltip>
-  );
-}
-
 
 const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange, onNearChange }: {
   device: Device; slot: PreviewSlot; display: DisplaySettings; scrollRef: RefObject<HTMLDivElement | null>;
@@ -737,7 +666,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
       <span tabIndex={0} aria-hidden="true" className="sr-only" onFocus={() => cycleFocus(true)}/>
       <header className="relative flex h-[52px] shrink-0 items-center gap-1 border-b border-line-soft bg-surface px-2.5">
         <div role="group" aria-label={t("galleryPosition", { index: index + 1, count })}
-          className="me-1.5 flex shrink-0 items-center gap-0.5 rounded-[9px] bg-sunken p-[3px]">
+          className="me-1.5 flex shrink-0 items-center gap-0.5 rounded-full bg-sunken p-[3px]">
           <IconButton ref={previousRef} size="sm" data-gallery-step="previous" disabled={index <= 0}
             label={t("previousInCategory")} onClick={() => onStep("previous")}><ChevronLeftIcon size={15} className="rtl:rotate-180" /></IconButton>
           <span aria-hidden="true" className="min-w-11 text-center font-mono text-xs tabular-nums text-ink-2">{index + 1}/{count}</span>

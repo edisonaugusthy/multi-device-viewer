@@ -14,6 +14,8 @@ import {
   LayoutCheckIcon,
   LinkIcon,
   NavigationSyncIcon,
+  PauseIcon,
+  PlayIcon,
   PlusIcon,
   ReloadIcon,
   ScrollSyncIcon,
@@ -23,6 +25,21 @@ import { cx, Tooltip } from "./ui";
 
 /** Dock items whose menu opens while the pointer rests on them. */
 export type DockMenu = "add" | "capture" | "settings";
+
+/** All devices is showing: the bar's tools act on its previews. */
+export interface GalleryBar {
+  loaded: number;
+  total: number;
+  /** Previews that did not finish loading and can be tried again. */
+  incomplete: number;
+  paused: boolean;
+  speed: "fast" | "gentle";
+  onTogglePause: () => void;
+  onSpeedChange: (speed: "fast" | "gentle") => void;
+  onRetry: () => void;
+  onReload: () => void;
+  onViewMode: () => void;
+}
 
 export interface WorkspaceDockProps {
   slotCount: number;
@@ -83,9 +100,16 @@ export interface WorkspaceDockProps {
   canStepFocus?: boolean;
   onFocusPrevious?: () => void;
   onFocusNext?: () => void;
+  /**
+   * All devices is showing (with its previews' controls once they report):
+   * All is the current view, and in place of Capture, Design and Issues, which
+   * act on the workspace, the bar shows how far the previews have loaded.
+   */
+  allOpen?: boolean;
+  gallery?: GalleryBar | null;
 }
 
-type InnerMenu = "sync" | "issues";
+type InnerMenu = "sync" | "issues" | "loading";
 /** Sent when a menu from the top bar opens. */
 export const BAR_MENU_EVENT = "mdv-bar-menu";
 // How long the pointer rests on an item before its menu opens.
@@ -206,12 +230,12 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
               ref={props.workspaceRef}
               type="button"
               data-workspace-toggle
-              aria-current={props.showingOne ? undefined : "page"}
+              aria-current={props.showingOne || props.allOpen ? undefined : "page"}
               aria-haspopup="dialog"
               aria-expanded={props.workspaceOpen}
               aria-label={t("workspace")}
               onClick={props.onWorkspace}
-              className={cx(viewButton, !props.showingOne ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-primary/25 ring-offset-2 ring-offset-surface")}
+              className={cx(viewButton, !props.showingOne && !props.allOpen ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-primary/25 ring-offset-2 ring-offset-surface")}
             >
               {level < 1 && <span>{t("workspace")}</span>}
               <span className="font-mono text-[11px] font-medium opacity-70">{props.slotCount}</span>
@@ -240,7 +264,8 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
           )}
           <Tooltip title={t("allDevices")} description={t("tipAllDevices")} align="center" quiet={quiet}>
             <button type="button" data-all-devices-toggle onClick={props.onAllDevices} disabled={props.capturing} aria-label={t("allDevices")}
-              className={cx(viewButton, viewOff, "disabled:opacity-40")}>
+              aria-current={props.allOpen ? "page" : undefined}
+              className={cx(viewButton, props.allOpen ? viewOn : viewOff, "disabled:opacity-40")}>
               {level < 1 && <span>{t("viewAll")}</span>}
               <span className="font-mono text-[11px] font-medium opacity-70">{props.catalogCount}</span>
             </button>
@@ -249,7 +274,8 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
 
         <DockDivider />
 
-        <DockButton label={t("reloadAll")} tooltip={t("tipReloadAll")} quiet={quiet} onClick={props.onReloadAll}>
+        <DockButton label={t("reloadAll")} tooltip={t(props.allOpen ? "resetGalleryPreviews" : "tipReloadAll")} quiet={quiet}
+          onClick={props.allOpen ? () => props.gallery?.onReload() : props.onReloadAll}>
           <ReloadIcon size={16} />
         </DockButton>
         <SyncControl
@@ -259,29 +285,32 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
           onNavigationSyncChange={props.onNavigationSyncChange}
           menu={innerMenu("sync")}
         />
-        <DockButton
-          buttonRef={props.captureRef}
-          data-tour="screenshot"
-          data-capture-toggle
-          label={t("captureMenu")}
-          ariaLabel={props.tracking ? `${t("captureMenu")} · ${t("trackChanges")}` : t("captureAndAnnotate")}
-          tooltip={props.tracking ? t("trackTip") : `${t("tipScreenshot")} ${t("tipRecord")}`}
-          active={props.captureOpen}
-          expanded={props.captureOpen}
-          disabled={props.capturing}
-          onClick={props.onCapture}
-          dot={props.recordingActive ? "var(--color-record)" : props.tracking ? "#8e7de0" : undefined}
-          hoverHandlers={hover("capture")}
-          noTooltip
-        >
-          <CameraIcon size={16} />
-        </DockButton>
-        <DockButton label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")} quiet={quiet}
-          active={props.compare} pressed={props.compare} onClick={props.onCompare}>
-          <CompareIcon size={16} />
-        </DockButton>
-        <IssuesControl {...props} menu={innerMenu("issues")} />
-        <DockButton data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} quiet={quiet} onClick={props.onViewMode}>
+        {props.allOpen ? <LoadingControl gallery={props.gallery ?? null} menu={innerMenu("loading")} /> : <>
+          <DockButton
+            buttonRef={props.captureRef}
+            data-tour="screenshot"
+            data-capture-toggle
+            label={t("captureMenu")}
+            ariaLabel={props.tracking ? `${t("captureMenu")} · ${t("trackChanges")}` : t("captureAndAnnotate")}
+            tooltip={props.tracking ? t("trackTip") : `${t("tipScreenshot")} ${t("tipRecord")}`}
+            active={props.captureOpen}
+            expanded={props.captureOpen}
+            disabled={props.capturing}
+            onClick={props.onCapture}
+            dot={props.recordingActive ? "var(--color-record)" : props.tracking ? "#8e7de0" : undefined}
+            hoverHandlers={hover("capture")}
+            noTooltip
+          >
+            <CameraIcon size={16} />
+          </DockButton>
+          <DockButton label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")} quiet={quiet}
+            active={props.compare} pressed={props.compare} onClick={props.onCompare}>
+            <CompareIcon size={16} />
+          </DockButton>
+          <IssuesControl {...props} menu={innerMenu("issues")} />
+        </>}
+        <DockButton data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} quiet={quiet}
+          onClick={props.allOpen ? () => props.gallery?.onViewMode() : props.onViewMode}>
           <EyeIcon size={16} />
         </DockButton>
         <DockButton buttonRef={props.settingsRef} label={t("settings")} tooltip={t("tipSettings")} active={props.settingsOpen} expanded={props.settingsOpen}
@@ -415,6 +444,56 @@ function SyncControl({ scrollSync, navigationSync, onScrollSyncChange, onNavigat
         <DockMenuPanel label={t("sync")} width="w-[280px]">
           <SyncRow icon={<ScrollSyncIcon size={16} />} label={t("syncTogether")} checked={scrollSync} onChange={onScrollSyncChange} />
           <SyncRow icon={<NavigationSyncIcon size={16} />} label={t("syncPages")} checked={navigationSync} onChange={onNavigationSyncChange} />
+        </DockMenuPanel>
+      )}
+    </div>
+  );
+}
+
+// All devices: how far its previews have loaded, as wide as the three tools it
+// stands in for, so the bar keeps its size. One click pauses or resumes the
+// loading; resting on it shows the speed and retries what did not load.
+function LoadingControl({ gallery, menu }: { gallery: GalleryBar | null; menu: InnerMenuControl }) {
+  const { t } = useI18n();
+  const loaded = gallery?.loaded ?? 0;
+  const total = gallery?.total ?? 0;
+  const incomplete = gallery?.incomplete ?? 0;
+  const paused = gallery?.paused ?? false;
+  const share = (count: number) => `${total ? (count / total) * 100 : 0}%`;
+  return (
+    <div className="relative shrink-0" {...menu.handlers}>
+      <button
+        type="button"
+        data-gallery-load-progress
+        aria-label={`${t("galleryLoadedPreviews", { loaded, count: total })} · ${t(paused ? "resumeLoading" : "pauseLoading")}`}
+        aria-expanded={menu.open}
+        disabled={!gallery}
+        onClick={() => gallery?.onTogglePause()}
+        className={cx("flex h-[34px] w-[110px] shrink-0 items-center gap-2 rounded-full px-2.5 text-ink outline-none transition-colors hover:bg-sunken focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-40", menu.open && "bg-sunken")}
+      >
+        <span aria-hidden="true" className="flex h-[5px] min-w-0 flex-1 overflow-hidden rounded-full bg-line-soft">
+          <span className="bg-ink transition-[width]" style={{ width: share(loaded) }} />
+          <span className="bg-warn transition-[width]" style={{ width: share(incomplete) }} />
+        </span>
+        <span dir="ltr" className="font-mono text-[11.5px] font-medium">{loaded}/{total}</span>
+        <span aria-hidden="true" className="grid w-3 place-items-center text-ink-2">{paused ? <PlayIcon size={12} /> : <PauseIcon size={12} />}</span>
+      </button>
+      {menu.open && gallery && (
+        <DockMenuPanel label={t("galleryLoadedPreviews", { loaded, count: total })} width="w-[260px]">
+          <div role="radiogroup" aria-label={t("previewLoadingSpeed")} className="mx-1 mb-1 flex rounded-full bg-sunken p-[3px]">
+            {(["fast", "gentle"] as const).map(speed => (
+              <button key={speed} type="button" role="radio" aria-checked={gallery.speed === speed} title={t(speed === "fast" ? "galleryFastLoading" : "galleryGentleLoading")}
+                onClick={() => gallery.onSpeedChange(speed)}
+                className={cx("h-7 flex-1 rounded-full text-[12.5px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent", gallery.speed === speed ? "bg-primary text-on-primary" : "text-ink")}>
+                {t(speed)}
+              </button>
+            ))}
+          </div>
+          <IssueRow icon={paused ? <PlayIcon size={14} /> : <PauseIcon size={14} />} label={t(paused ? "resumeLoading" : "pauseLoading")}
+            hint={t(paused ? "galleryResumeLoading" : "galleryPauseLoading")} onClick={gallery.onTogglePause} />
+          {incomplete > 0 && (
+            <IssueRow icon={<ReloadIcon size={14} />} label={t("retryCount", { count: incomplete })} hint={t("retryIncompletePreviews")} onClick={() => { menu.close(); gallery.onRetry(); }} />
+          )}
         </DockMenuPanel>
       )}
     </div>

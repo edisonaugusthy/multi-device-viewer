@@ -40,7 +40,7 @@ import { appendRecordedStep } from "../../domain/flow/flow-service";
 import type { FlowReplayRequest, FlowReplayResult, FlowStep } from "../../domain/flow/flow.types";
 import { readStore, writeStore } from "../../infrastructure/storage/local-store";
 import { CloseIcon } from "../icons";
-import { AllDevicesView } from "./AllDevicesView";
+import { AllDevicesView, type GalleryBarState } from "./AllDevicesView";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { CompareBar, CompareControls, CompareLabel, DesignAdjustPanel, DesignPane, readDesignFile, type CompareBlend, type CompareMode } from "./CompareMode";
 import { designFrameKey, fitDesign, type DesignFrame } from "../interactions/design-frame";
@@ -139,6 +139,8 @@ export function SimulatorApp() {
   // After the page reloaded with the gallery open, open it again on the same page.
   const [galleryRestore] = useState(() => getViewerContext()?.restore?.allDevices ?? undefined);
   const [allDevicesUrl, setAllDevicesUrl] = useState<string | null>(() => galleryRestore ? getViewerContext()?.url ?? null : null);
+  const [galleryBar, setGalleryBar] = useState<GalleryBarState | null>(null);
+  const galleryOpen = allDevicesUrl !== null;
   const [narrowLayout, setNarrowLayout] = useState(
     () => typeof window !== "undefined" && window.innerWidth <= 760,
   );
@@ -852,8 +854,9 @@ export function SimulatorApp() {
       tabIndex={-1}
       className={cx("relative flex h-screen flex-col overflow-hidden bg-stage font-sans text-ink outline-none transition-colors", dark && "dark")}
     >
-      <div className={cx("flex min-h-0 flex-1 flex-col", allDevicesUrl !== null && "invisible")} inert={allDevicesUrl !== null} aria-hidden={allDevicesUrl !== null || undefined}>
-        {/* The workspace's controls sit in the pill above the devices; compare brings its own bar here. */}
+      <div className="flex min-h-0 flex-1 flex-col">
+        {/* The workspace's controls sit in the pill above the devices; compare brings its own bar here.
+            All devices keeps the same bar, with All as its view, and shows in place of the devices. */}
         {compare && !viewMode && (
           <CompareBar
             tabs={slots.map((slot) => ({ slotId: slot.id, label: shortName(findDevice(slot.deviceId).name), hasDesign: Boolean(designReferences[slot.id]) }))}
@@ -865,8 +868,10 @@ export function SimulatorApp() {
           />
         )}
 
-        {!viewMode && !compare && (
+        {!viewMode && !compare && !galleryBar?.viewMode && (
           <WorkspaceDock
+            allOpen={galleryOpen}
+            gallery={galleryOpen ? galleryBar : null}
             slotCount={slots.length}
             catalogCount={devices.length}
             canAdd={slots.length < maxPreviewSlots}
@@ -894,13 +899,13 @@ export function SimulatorApp() {
             captureOpen={popover === "capture"}
             settingsRef={settingsRef}
             settingsOpen={popover === "settings"}
-            onAllDevices={openAllDevices}
+            onAllDevices={() => { if (!galleryOpen) openAllDevices(); }}
             onAdd={() => {
               if (hoverMenu.current.opened === "picker") { pinHoverMenu(); setPickerAnchor("add"); openPicker({ kind: "add" }); return; }
               toggleAddPicker("add");
             }}
-            onWorkspace={() => focusMode ? exitFocus() : toggleAddPicker("workspace")}
-            onShowOne={() => { if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
+            onWorkspace={() => galleryOpen ? closeAllDevices() : focusMode ? exitFocus() : toggleAddPicker("workspace")}
+            onShowOne={() => { if (galleryOpen) closeAllDevices(); if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
             onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
             onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
             onReloadAll={reloadAllSlots}
@@ -917,7 +922,9 @@ export function SimulatorApp() {
             onFocusPrevious={focusPrevious}
             onFocusNext={focusNext}
             end={
-              <button type="button" aria-label={t("closeViewer")} title={t("closeViewer")} onClick={closeViewer}
+              // In All devices it goes back to the workspace; only the workspace closes the viewer.
+              <button type="button" aria-label={t(galleryOpen ? "backToWorkspace" : "closeViewer")} title={t(galleryOpen ? "tipBackToWorkspace" : "closeViewer")}
+                onClick={galleryOpen ? closeAllDevices : closeViewer}
                 className="absolute end-3 top-4 grid size-11 place-items-center rounded-full bg-surface text-ink-2 shadow-[0_0_0_1px_var(--color-line-soft),0_10px_28px_rgb(20_23_26/0.08)] outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent">
                 <CloseIcon size={16} />
               </button>
@@ -925,7 +932,8 @@ export function SimulatorApp() {
           />
         )}
 
-        <main className="group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="relative flex min-h-0 flex-1 flex-col">
+        <main className={cx("group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden", galleryOpen && "invisible")} inert={galleryOpen} aria-hidden={galleryOpen || undefined}>
           <div className="flex min-h-0 flex-1">
           <div
             ref={boardRef}
@@ -1108,6 +1116,21 @@ export function SimulatorApp() {
             />
           )}
         </main>
+        {galleryOpen && (
+          <AllDevicesView
+            key={allDevicesUrl}
+            url={allDevicesUrl}
+            onClose={closeAllDevices}
+            onOpenDevice={openGalleryDevice}
+            onAddDevice={addGalleryDevice}
+            onCaptureDevice={captureGalleryDevice}
+            restore={galleryRestore}
+            onStateChange={reportGalleryState}
+            onBarChange={setGalleryBar}
+            menuOpen={popover !== null}
+          />
+        )}
+        </div>
 
       </div>
 
@@ -1137,7 +1160,7 @@ export function SimulatorApp() {
         onBrowserBarChange={changeBrowserBar}
         onFreeViewChange={(free) => updateDisplay((current) => ({ ...current, previewStyle: free ? "free" : "device" }))}
         onHelp={() => setShowHelp(true)}
-        onTour={() => { setTourSince(null); setShowFirstRun(true); }}
+        onTour={() => { if (galleryOpen) closeAllDevices(); setTourSince(null); setShowFirstRun(true); }}
         onWhatsNew={() => setReleaseNotes(CURRENT_RELEASE_NOTES)}
         onPermissions={() => setShowPermissions(true)}
       />
@@ -1188,26 +1211,6 @@ export function SimulatorApp() {
       />
       </HoverZone>
 
-      {allDevicesUrl !== null && (
-        <AllDevicesView
-          key={allDevicesUrl}
-          url={allDevicesUrl}
-          onClose={closeAllDevices}
-          onOpenDevice={openGalleryDevice}
-          onAddDevice={addGalleryDevice}
-          onCaptureDevice={captureGalleryDevice}
-          restore={galleryRestore}
-          onStateChange={reportGalleryState}
-          settings={{
-            browserBar,
-            onBrowserBarChange: changeBrowserBar,
-            onHelp: () => setShowHelp(true),
-            onTour: () => { closeAllDevices(); setTourSince(null); setShowFirstRun(true); },
-            onWhatsNew: () => setReleaseNotes(CURRENT_RELEASE_NOTES),
-            onPermissions: () => setShowPermissions(true),
-          }}
-        />
-      )}
 
       {annotationOpen && (
         <AnnotationOverlay

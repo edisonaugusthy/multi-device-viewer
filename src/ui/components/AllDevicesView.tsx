@@ -467,7 +467,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
           <section key={group.id} data-gallery-group={group.id} aria-labelledby={expandedDeviceId ? undefined : `gallery-heading-${group.id}`}
             className={cx("flex flex-col gap-4 px-6 pb-8", viewMode ? "pt-6" : "pt-2")}>
             <h1 id={`gallery-heading-${group.id}`} className="sr-only">{t(groupLabels[group.id])} · {t("galleryWidthRange", { range: widthRange })}</h1>
-            <div data-gallery-grid className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] items-end gap-x-6 gap-y-10">
+            <div data-gallery-grid data-canvas-top className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] items-end gap-x-6 gap-y-10">
               {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}

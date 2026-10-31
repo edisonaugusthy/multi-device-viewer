@@ -1359,6 +1359,28 @@ test("moves and resizes All devices previews like workspace devices, each named 
   expect(Math.abs(resized.x - after.x)).toBeLessThan(3);
 });
 
+test("moves a short All devices preview up past its taller neighbours to the top of the gallery", async ({ page }) => {
+  await page.locator("[data-all-devices-toggle]").click();
+  const cards = page.locator("[data-gallery-device-id]");
+  const tall = cards.first().locator("[data-device-capture]");
+  const card = page.locator('[data-gallery-device-id="apple-iphone-duo-folded-2026"]');
+  const device = card.locator("[data-device-capture]");
+  await expect(device).toBeVisible();
+  await device.hover();
+  const grip = (await card.locator("[data-move-handle]").boundingBox())!;
+  const before = (await device.boundingBox())!;
+  await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(grip.x + grip.width / 2, grip.y - 600, { steps: 10 });
+  await page.mouse.up();
+  const after = (await device.boundingBox())!;
+  // Higher than the tallest device in the row, stopping where its toolbar still fits above it.
+  expect(after.y).toBeLessThan(before.y - 100);
+  expect(after.y).toBeLessThanOrEqual((await tall.boundingBox())!.y);
+  const grid = (await page.locator("[data-gallery-grid]").boundingBox())!;
+  expect(after.y).toBeGreaterThanOrEqual(grid.y + 50);
+});
+
 test("steps through the category from the enlarged All devices preview", async ({ page }) => {
   await page.locator("[data-all-devices-toggle]").click();
   const cards = page.locator("[data-gallery-device-id]");

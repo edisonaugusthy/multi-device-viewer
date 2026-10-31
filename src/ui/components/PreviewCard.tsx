@@ -428,12 +428,18 @@ export const PreviewCard = memo(function PreviewCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [effectiveOrientation, freeView, positionKey]);
 
-  // On the canvas a device stops short of the row above it where its toolbar
-  // shows, so the toolbar always has room above the device.
+  // On the canvas a device stops short of the top where its toolbar shows, so
+  // the toolbar always has room above the device. That top is its own card's,
+  // or a shared one ([data-canvas-top]) when cards sit in rows, so a device can
+  // move up past shorter neighbours and into the rows above.
   const minOffsetY = (atScale: number) => {
     if (!canvas || !showToolbar || containerSize.height <= 0) return -Infinity;
     const free = containerSize.height - frameSize.height * atScale;
-    return -(align === "bottom" ? free : free / 2);
+    const own = -(align === "bottom" ? free : free / 2);
+    const container = containerRef.current;
+    const top = container?.closest("[data-canvas-top]");
+    if (!container || !top) return own;
+    return own - Math.max(0, container.getBoundingClientRect().top - top.getBoundingClientRect().top - TOOLBAR_SPACE);
   };
   useLayoutEffect(() => {
     const min = minOffsetY(scale);
@@ -958,7 +964,7 @@ export const PreviewCard = memo(function PreviewCard({
     if (!wrapper || !bar || !box) return;
     // The section, not the shifted wrapper, gives the card's own position.
     const card = (wrapper.parentElement ?? wrapper).getBoundingClientRect();
-    const bounds = (wrapper.closest("main, [data-all-devices-view]") ?? document.documentElement).getBoundingClientRect();
+    const bounds = (wrapper.closest("main, [data-gallery-scroll], [data-all-devices-view]") ?? document.documentElement).getBoundingClientRect();
     const deviceBox = box.getBoundingClientRect();
     const half = bar.offsetWidth / 2;
     const cardCenter = card.left + card.width / 2;

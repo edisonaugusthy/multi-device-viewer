@@ -184,10 +184,14 @@ test("opens the latest devices from startup and quick presets", async ({ page })
   await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="samsung-galaxy-s26-ultra-2026"]')).toBeVisible();
 
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
+  await page.getByTestId("device-switcher-panel").getByRole("button", { name: "Presets", exact: true }).click();
   await page.getByRole("button", { name: "Phone + tablet", exact: true }).click();
   await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
 
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
+  await page.getByTestId("device-switcher-panel").getByRole("button", { name: "Presets", exact: true }).click();
   await page.getByRole("button", { name: "Mobile + tablet + laptop", exact: true }).click();
   await expect(page.locator('[data-device-frame="apple-iphone-18-pro-2026"]')).toBeVisible();
   await expect(page.locator('[data-device-frame="apple-ipad-pro-13-m4-2024"]')).toBeVisible();
@@ -245,6 +249,7 @@ test("opens toolbar and device screenshots without duplicate Tools actions", asy
   await page.getByRole("button", { name: "Close", exact: true }).click();
   await expect(page.getByRole("complementary")).toHaveCount(0);
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Screenshot and annotate" }).click();
+  await page.getByRole("dialog", { name: "Capture", exact: true }).getByRole("button", { name: "Screenshot all devices", exact: true }).click();
   await expect(page.getByRole("button", { name: "Download" })).toBeVisible();
   await expect(page.locator("canvas")).toBeVisible();
 });

@@ -541,6 +541,8 @@ export function SimulatorApp() {
     if (flowRecording) toggleFlowRecording();
     setFlowReplay(null);
     setPopover(null);
+    // Workspace, One and All are one choice: All replaces One, so closing it lands on the workspace.
+    setFocusedSlotId(null);
     setAllDevicesUrl(getSlotUrl(activeSlotId));
   }
 
@@ -904,8 +906,8 @@ export function SimulatorApp() {
               if (hoverMenu.current.opened === "picker") { pinHoverMenu(); setPickerAnchor("add"); openPicker({ kind: "add" }); return; }
               toggleAddPicker("add");
             }}
-            onWorkspace={() => galleryOpen ? closeAllDevices() : focusMode ? exitFocus() : toggleAddPicker("workspace")}
-            onShowOne={() => { if (galleryOpen) closeAllDevices(); if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
+            onWorkspace={() => { if (galleryOpen) { closeAllDevices(); exitFocus(); } else if (focusMode) exitFocus(); else toggleAddPicker("workspace"); }}
+            onShowOne={() => { if (galleryOpen) { closeAllDevices(); focusSlot(activeSlotId); } else if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
             onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
             onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
             onReloadAll={reloadAllSlots}

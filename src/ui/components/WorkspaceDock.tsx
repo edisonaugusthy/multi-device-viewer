@@ -173,6 +173,8 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
   const closeTimer = useRef<number | undefined>(undefined);
   useEffect(() => () => { window.clearTimeout(openTimer.current); window.clearTimeout(closeTimer.current); }, []);
   const quiet = props.menuOpen || inner !== null;
+  // Exactly one of Workspace, One and All is current; All wins over a One left underneath.
+  const view = props.allOpen ? "all" : props.showingOne ? "one" : "workspace";
   // A menu from the bar closes any menu open on a device, so only one shows.
   useEffect(() => { if (quiet) window.dispatchEvent(new Event(BAR_MENU_EVENT)); }, [quiet]);
   const openInner = (menu: InnerMenu, force = false) => {
@@ -230,19 +232,19 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
               ref={props.workspaceRef}
               type="button"
               data-workspace-toggle
-              aria-current={props.showingOne || props.allOpen ? undefined : "page"}
+              aria-current={view === "workspace" ? "page" : undefined}
               aria-haspopup="dialog"
               aria-expanded={props.workspaceOpen}
               aria-label={t("workspace")}
               onClick={props.onWorkspace}
-              className={cx(viewButton, !props.showingOne && !props.allOpen ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-primary/25 ring-offset-2 ring-offset-surface")}
+              className={cx(viewButton, view === "workspace" ? viewOn : viewOff, props.workspaceOpen && "ring-2 ring-primary/25 ring-offset-2 ring-offset-surface")}
             >
               {level < 1 && <span>{t("workspace")}</span>}
               <span className="font-mono text-[11px] font-medium opacity-70">{props.slotCount}</span>
             </button>
           </Tooltip>
           {/* One keeps its width: showing one device, it steps through the set. */}
-          {props.showingOne && props.focusPosition ? (
+          {view === "one" && props.focusPosition ? (
             <div role="group" aria-label={t("focusDevice")} className={cx(viewButton, viewOn, "w-[88px] justify-between gap-0 px-0.5")}>
               <button type="button" aria-label={t("previousDevice")} title={t("previousDevice")} disabled={!props.canStepFocus} onClick={props.onFocusPrevious}
                 className="grid size-5 place-items-center rounded-full outline-none hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-40">
@@ -256,16 +258,16 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
             </div>
           ) : (
             <Tooltip title={t("focusDevice")} align="center" quiet={quiet}>
-              <button type="button" aria-pressed={props.showingOne} aria-label={t("focusDevice")} onClick={props.onShowOne}
-                className={cx(viewButton, "w-[88px] justify-center", props.showingOne ? viewOn : viewOff)}>
+              <button type="button" aria-pressed={view === "one"} aria-label={t("focusDevice")} onClick={props.onShowOne}
+                className={cx(viewButton, "w-[88px] justify-center", view === "one" ? viewOn : viewOff)}>
                 {t("viewOne")}
               </button>
             </Tooltip>
           )}
           <Tooltip title={t("allDevices")} description={t("tipAllDevices")} align="center" quiet={quiet}>
             <button type="button" data-all-devices-toggle onClick={props.onAllDevices} disabled={props.capturing} aria-label={t("allDevices")}
-              aria-current={props.allOpen ? "page" : undefined}
-              className={cx(viewButton, props.allOpen ? viewOn : viewOff, "disabled:opacity-40")}>
+              aria-current={view === "all" ? "page" : undefined}
+              className={cx(viewButton, view === "all" ? viewOn : viewOff, "disabled:opacity-40")}>
               {level < 1 && <span>{t("viewAll")}</span>}
               <span className="font-mono text-[11px] font-medium opacity-70">{props.catalogCount}</span>
             </button>

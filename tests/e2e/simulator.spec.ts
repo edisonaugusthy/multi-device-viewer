@@ -1584,6 +1584,51 @@ test("shows its own header in Compare and keeps the workspace bar in All devices
   await expect(mainHeader.locator("[data-workspace-toggle]")).toHaveAttribute("aria-current", "page");
 });
 
+test("keeps exactly one of Workspace, One and All current while switching between them", async ({ page }) => {
+  const nav = page.locator("[data-main-toolbar]");
+  const workspace = nav.locator("[data-workspace-toggle]");
+  const all = nav.locator("[data-all-devices-toggle]");
+  const one = nav.getByRole("button", { name: "Expand this device", exact: true });
+  const position = nav.locator("[data-focus-position]");
+  const gallery = page.locator("[data-all-devices-view]");
+
+  await one.click();
+  await expect(position).toHaveText("1 / 3");
+  await expect(workspace).not.toHaveAttribute("aria-current", "page");
+  await expect(all).not.toHaveAttribute("aria-current", "page");
+
+  // All replaces One: the stepper goes back to a plain, unpressed One.
+  await all.click();
+  await expect(gallery).toBeVisible();
+  await expect(all).toHaveAttribute("aria-current", "page");
+  await expect(position).toHaveCount(0);
+  await expect(one).toHaveAttribute("aria-pressed", "false");
+  await expect(workspace).not.toHaveAttribute("aria-current", "page");
+
+  // One from All shows one device again.
+  await one.click();
+  await expect(gallery).toHaveCount(0);
+  await expect(position).toHaveText("1 / 3");
+  await expect(all).not.toHaveAttribute("aria-current", "page");
+
+  // Workspace from All shows the whole workspace, not the One left before it.
+  await all.click();
+  await expect(gallery).toBeVisible();
+  await workspace.click();
+  await expect(gallery).toHaveCount(0);
+  await expect(workspace).toHaveAttribute("aria-current", "page");
+  await expect(position).toHaveCount(0);
+  await expect(one).toHaveAttribute("aria-pressed", "false");
+
+  // Closing All also lands on the workspace.
+  await one.click();
+  await all.click();
+  await page.getByRole("button", { name: "Back to workspace" }).click();
+  await expect(gallery).toHaveCount(0);
+  await expect(workspace).toHaveAttribute("aria-current", "page");
+  await expect(position).toHaveCount(0);
+});
+
 // A solid design image drawn in the page, so no fixture file is needed.
 async function designPng(page: Page, width: number, height: number) {
   const base64 = await page.evaluate(([width, height]) => {

@@ -371,8 +371,8 @@ export function useVisualRegression(options: Options) {
       <MenuButton strong icon={<SideBySideIcon size={15}/>} label={t("compareLatest")} disabled={busy} onClick={() => void run("compare")}/>
       <MenuButton icon={<ReloadIcon size={15}/>} label={t("replaceBaseline")} disabled={busy} onClick={() => void run("save")}/>
       <MenuButton icon={<TrashIcon size={15}/>} label={t("deleteBaseline")} disabled={busy} danger onClick={() => void remove()}/>
-    </> : <MenuButton icon={<SnapshotIcon size={15}/>} label={t("saveBaseline")} hint={t("visualSavedHint")} disabled={busy || baseline === undefined} onClick={() => void run("save")}/>}
-    <MenuButton icon={<ListIcon size={15}/>} label={t("manageBaselines")} onClick={() => { current.current.dismissMenu(); setDialog({ kind: "manage" }); }}/>
+    </> : <MenuButton icon={<SnapshotIcon size={15}/>} label={t("saveBaseline")} disabled={busy || baseline === undefined} onClick={() => void run("save")}/>}
+    <MenuButton icon={<ListIcon size={15}/>} label={t("savedPictures")} onClick={() => { current.current.dismissMenu(); setDialog({ kind: "manage" }); }}/>
     {/* Help sits after the actions it explains. */}
     {baseline ? (
       <div className="mx-1 mb-0.5 mt-1 flex items-center gap-2.5 rounded-[9px] bg-accent-soft px-2 py-[7px]">

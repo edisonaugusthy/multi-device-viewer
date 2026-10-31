@@ -17,6 +17,9 @@ import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
 import { AlertIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, FixPromptIcon, GlobeIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
 import type { LayoutSlotStatus } from "../hooks/useLayoutCheck";
+import { glyphKindFor } from "./DeviceGlyph";
+import { SectionLabel } from "./ui";
+import { BAR_MENU_EVENT } from "./WorkspaceDock";
 import { PreviewToolbar, type FocusNavigation } from "./PreviewToolbar";
 import { memo, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -46,10 +49,10 @@ import {
 
 const CARD_PAD = 16;
 // Room above the device for its floating toolbar.
-const TOOLBAR_SPACE = 64;
+const TOOLBAR_SPACE = 56;
 // Between a device and its toolbar: close enough to read as one, and to cross
 // before the toolbar hides.
-const TOOLBAR_GAP = 12;
+const TOOLBAR_GAP = 10;
 
 interface ScrollSyncPayload {
   slotId: string;
@@ -230,6 +233,12 @@ export const PreviewCard = memo(function PreviewCard({
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
   const [controlsOpen, setControlsOpen] = useState(false);
+  // A menu opening from the top bar closes this device's menus.
+  useEffect(() => {
+    const close = () => { setControlsOpen(false); setLanguageOpen(false); };
+    window.addEventListener(BAR_MENU_EVENT, close);
+    return () => window.removeEventListener(BAR_MENU_EVENT, close);
+  }, []);
   const [languageOpen, setLanguageOpen] = useState(false);
   // The toolbar shows while the pointer is on the device itself (or its caption
   // or the toolbar), not anywhere in the column. It lingers briefly after the
@@ -941,7 +950,7 @@ export const PreviewCard = memo(function PreviewCard({
     : 0;
   // The toolbar follows a dragged device, just above it, and always stays
   // fully on screen.
-  const [toolbarPlace, setToolbarPlace] = useState<{ top: number; shift: number; arrow: number }>({ top: 6, shift: 0, arrow: 0 });
+  const [toolbarPlace, setToolbarPlace] = useState<{ top: number; shift: number }>({ top: 6, shift: 0 });
   // Measured after layout changes and again just before the toolbar appears,
   // since column widths may still be animating when the layout first settles.
   const placeToolbar = useStableCallback(() => {
@@ -957,20 +966,17 @@ export const PreviewCard = memo(function PreviewCard({
     const cardCenter = card.left + card.width / 2;
     const min = bounds.left + 8 + half;
     const max = bounds.right - 8 - half;
-    const deviceCenter = deviceBox.left + deviceBox.width / 2;
-    const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, deviceCenter));
-    // The arrow under the bar still points at the device when the bar is kept on screen.
-    const arrow = Math.round(Math.max(-(half - 20), Math.min(half - 20, deviceCenter - center)));
+    const center = min > max ? (bounds.left + bounds.right) / 2 : Math.min(max, Math.max(min, deviceBox.left + deviceBox.width / 2));
     const top = Math.max(bounds.top + 6, deviceBox.top - TOOLBAR_GAP - (bar.offsetHeight || 40));
     setToolbarPlace(current => {
-      const next = { top: Math.round(top - card.top), shift: Math.round(center - cardCenter), arrow };
-      return current.top === next.top && current.shift === next.shift && current.arrow === next.arrow ? current : next;
+      const next = { top: Math.round(top - card.top), shift: Math.round(center - cardCenter) };
+      return current.top === next.top && current.shift === next.shift ? current : next;
     });
   });
   useLayoutEffect(placeToolbar, [placeToolbar, offset.x, offset.y, scale, containerSize.width, containerSize.height, device.id, showToolbar, capturePending, focusNavigation]);
   // While the pointer is on the toolbar it stays put, so repeated clicks on
   // previous/next keep hitting the same button as the device changes size.
-  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number; arrow: number } | null>(null);
+  const [pinnedToolbar, setPinnedToolbar] = useState<{ top: number; shift: number } | null>(null);
   // Hiding the toolbar for a capture removes it from under the pointer without
   // a pointerleave; a pin kept from then would make it jump away on return.
   const toolbarShown = showToolbar && !capturePending && !visualChecks.capturing;
@@ -995,7 +1001,7 @@ export const PreviewCard = memo(function PreviewCard({
     >
       {/* Clip enlarged previews here. The toolbar sits outside this clip box,
           over its top inset, so a narrow column never cuts it off. */}
-      <div className={`relative min-h-0 flex-1 ${canvas ? "overflow-visible" : "overflow-hidden"} ${showToolbar ? "pt-16" : ""}`}>
+      <div className={`relative min-h-0 flex-1 ${canvas ? "overflow-visible" : "overflow-hidden"} ${showToolbar ? "pt-14" : ""}`}>
         <div
           ref={containerRef}
           data-design-overlay-surface
@@ -1074,7 +1080,8 @@ export const PreviewCard = memo(function PreviewCard({
           <PreviewToolbar
             deviceName={device.name}
             deviceLabel={shortName(device.name)}
-            arrowOffset={toolbarAt.arrow}
+            deviceGlyph={glyphKindFor(device)}
+            deviceWidth={viewportSize.width}
             zoomLabel={`${Math.round(scale * 100)}%`}
             canRotate={canRotate}
             removable={removable}
@@ -1124,31 +1131,31 @@ export const PreviewCard = memo(function PreviewCard({
             menu={
               <div data-viewport-actions
                 onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); setControlsOpen(false); setBrowserSettingsOpen(false); } }}
-                className="absolute end-0 top-full z-[60] mt-3 flex max-h-[calc(100dvh-120px)] w-72 flex-col gap-0.5 overflow-y-auto overflow-x-hidden whitespace-normal rounded-2xl bg-surface p-1.5 text-ink shadow-popover">
+                className="absolute end-0 top-full z-[60] mt-3 flex max-h-[calc(100dvh-120px)] w-[260px] flex-col gap-0.5 overflow-y-auto overflow-x-hidden whitespace-normal rounded-2xl bg-surface p-1.5 text-ink shadow-popover">
                 {browserSettingsOpen ? (
                   <div role="group" aria-label={t("browserAppearance")} className="p-1.5">
                     <BrowserAppearanceSettings device={device} slot={slot} geometry={browserGeometry} onClose={() => setBrowserSettingsOpen(false)}/>
                   </div>
                 ) : <>
-                  <MenuItem label={t("openInTab")} hint={t("openInTabHint")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
-                  {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} hint={t("fixPromptDeviceHint")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
+                  <MenuItem label={t("openInNewTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
+                  {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
                   {FEATURES.visualChecks && visualChecks.menuItems}
-                  {onLayoutCheck && <MenuItem label={t("checkLayoutOnDevice")} hint={t("checkLayoutDeviceHint")} onClick={() => { setControlsOpen(false); onLayoutCheck(slot.id); }}><LayoutCheckIcon size={15}/></MenuItem>}
-                  {frameProfile.platform === "ios" && <MenuItem label={t("browserAppearance")} hint={t("browserAppearanceHint")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
+                  {(onLayoutCheck || frameProfile.platform === "ios") && <SectionLabel className="px-2.5 pb-1 pt-1.5">{t("menuPage")}</SectionLabel>}
+                  {onLayoutCheck && <MenuItem label={t("checkSideways")} onClick={() => { setControlsOpen(false); onLayoutCheck(slot.id); }}><LayoutCheckIcon size={15}/></MenuItem>}
+                  {frameProfile.platform === "ios" && <MenuItem label={t("safariBarToolbar")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
                   {!focused && (!first || !last) && (
                     // The order devices take in One view and in screenshots.
-                    <div role="group" aria-label={t("moveOrderHint")} className="mt-1 grid gap-1 border-t border-line-soft px-1 pb-0.5 pt-2">
+                    <div role="group" aria-label={t("moveOrderHint")} title={t("moveOrderHint")} className="mt-1 border-t border-line-soft px-1 pb-0.5 pt-2">
                       <div className="flex gap-1">
                         <button type="button" disabled={first} onClick={event => { event.stopPropagation(); setControlsOpen(false); simulator.current.moveSlot(slot.id, "left"); }}
-                          className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg bg-sunken text-[12.5px] font-semibold text-ink hover:bg-line-soft disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent">
+                          className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-full bg-sunken text-[12.5px] font-semibold text-ink hover:bg-line-soft disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent">
                           <ChevronLeftIcon size={14} className="rtl:rotate-180"/>{t("moveEarlier")}
                         </button>
                         <button type="button" disabled={last} onClick={event => { event.stopPropagation(); setControlsOpen(false); simulator.current.moveSlot(slot.id, "right"); }}
-                          className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg bg-sunken text-[12.5px] font-semibold text-ink hover:bg-line-soft disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent">
+                          className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-full bg-sunken text-[12.5px] font-semibold text-ink hover:bg-line-soft disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent">
                           {t("moveLater")}<ChevronRightIcon size={14} className="rtl:rotate-180"/>
                         </button>
                       </div>
-                      <p className="px-1 text-[11.5px] leading-snug text-muted">{t("moveOrderHint")}</p>
                     </div>
                   )}
                 </>}

@@ -13,8 +13,10 @@ import {
   FixPromptIcon,
   LayoutCheckIcon,
   LinkIcon,
+  NavigationSyncIcon,
   PlusIcon,
   ReloadIcon,
+  ScrollSyncIcon,
   SettingsIcon,
 } from "../icons";
 import { cx, Tooltip } from "./ui";
@@ -84,6 +86,8 @@ export interface WorkspaceDockProps {
 }
 
 type InnerMenu = "sync" | "issues";
+/** Sent when a menu from the top bar opens. */
+export const BAR_MENU_EVENT = "mdv-bar-menu";
 // How long the pointer rests on an item before its menu opens.
 const MENU_PAUSE = 140;
 type InnerMenuControl = { open: boolean; toggle: () => void; close: () => void; handlers: Record<string, (event: never) => void> };
@@ -145,6 +149,8 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
   const closeTimer = useRef<number | undefined>(undefined);
   useEffect(() => () => { window.clearTimeout(openTimer.current); window.clearTimeout(closeTimer.current); }, []);
   const quiet = props.menuOpen || inner !== null;
+  // A menu from the bar closes any menu open on a device, so only one shows.
+  useEffect(() => { if (quiet) window.dispatchEvent(new Event(BAR_MENU_EVENT)); }, [quiet]);
   const openInner = (menu: InnerMenu, force = false) => {
     window.clearTimeout(closeTimer.current);
     if (latest.current.onInnerMenuOpen(force)) setInner(menu);
@@ -367,14 +373,11 @@ function Marks({ badge, dot }: { badge?: number; dot?: string }) {
 }
 
 // A menu under its item, titled with the item's name (the item has no tooltip).
-function DockMenuPanel({ label, hint, width, children }: { label: string; hint?: string; width: string; children: ReactNode }) {
+function DockMenuPanel({ label, width, children }: { label: string; width: string; children: ReactNode }) {
   return (
     <div className="absolute left-1/2 top-full z-[60] -translate-x-1/2 pt-3">
       <div role="group" aria-label={label} className={cx("flex flex-col gap-0.5 rounded-2xl bg-surface p-1.5 text-ink shadow-popover", width)}>
-        <div className="grid gap-px px-2.5 pb-1.5 pt-1">
-          <span className="text-[13px] font-semibold">{label}</span>
-          {hint && <span className="text-xs text-muted">{hint}</span>}
-        </div>
+        <div className="flex h-8 items-center px-2.5 text-[13px] font-semibold">{label}</div>
         {children}
       </div>
     </div>
@@ -409,23 +412,21 @@ function SyncControl({ scrollSync, navigationSync, onScrollSyncChange, onNavigat
         </span>
       </button>
       {menu.open && (
-        <DockMenuPanel label={t("syncBetweenDevices")} hint={t("syncBetweenDevicesHint")} width="w-72">
-          <SyncRow label={t("scroll")} hint={t("scrollSyncHint")} checked={scrollSync} onChange={onScrollSyncChange} />
-          <SyncRow label={t("navigation")} hint={t("navigationSyncHint")} checked={navigationSync} onChange={onNavigationSyncChange} />
+        <DockMenuPanel label={t("sync")} width="w-[280px]">
+          <SyncRow icon={<ScrollSyncIcon size={16} />} label={t("syncTogether")} checked={scrollSync} onChange={onScrollSyncChange} />
+          <SyncRow icon={<NavigationSyncIcon size={16} />} label={t("syncPages")} checked={navigationSync} onChange={onNavigationSyncChange} />
         </DockMenuPanel>
       )}
     </div>
   );
 }
 
-// One kind of sync: its name, what it does, and a switch.
-function SyncRow({ label, hint, checked, onChange }: { label: string; hint: string; checked: boolean; onChange: (checked: boolean) => void }) {
+// One kind of sync, named for what it does, with a switch.
+function SyncRow({ icon, label, checked, onChange }: { icon: ReactNode; label: string; checked: boolean; onChange: (checked: boolean) => void }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 rounded-[10px] px-2.5 py-2 hover:bg-sunken has-focus-visible:ring-2 has-focus-visible:ring-accent">
-      <span className="grid min-w-0 flex-1 gap-px">
-        <span className="text-[13px] font-semibold">{label}</span>
-        <span className="text-xs leading-snug text-muted">{hint}</span>
-      </span>
+    <label className="flex h-9 cursor-pointer items-center gap-2.5 rounded-[10px] px-2.5 hover:bg-sunken has-focus-visible:ring-2 has-focus-visible:ring-accent">
+      <span aria-hidden="true" className="grid w-4 shrink-0 place-items-center text-ink-2">{icon}</span>
+      <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{label}</span>
       <input type="checkbox" role="switch" aria-label={label} checked={checked} onChange={event => onChange(event.target.checked)}
         className="relative h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full bg-line outline-none transition-colors before:absolute before:start-0.5 before:top-0.5 before:size-4 before:rounded-full before:bg-white before:shadow before:transition-transform checked:bg-primary checked:before:bg-surface checked:before:translate-x-4 rtl:checked:before:-translate-x-4" />
     </label>
@@ -461,14 +462,14 @@ function IssuesControl(props: WorkspaceDockProps & { menu: InnerMenuControl }) {
           </span>
         </button>
       {menu.open && (
-        <DockMenuPanel label={t("issues")} width="w-80">
-          <IssueRow data-problems-toggle icon={<BugIcon size={15} />} label={t("problemsTitle")} hint={t("problemsTip")} count={props.problemsCount}
+        <DockMenuPanel label={t("issues")} width="w-[280px]">
+          <IssueRow data-problems-toggle icon={<BugIcon size={15} />} label={t("issuesErrors")} hint={t("problemsTip")} count={props.problemsCount}
             pressed={props.problemsOpen} onClick={run(props.onProblems)} />
           {FEATURES.layoutCheck && (
-            <IssueRow data-layout-check-toggle icon={<LayoutCheckIcon size={15} />} label={t("checkLayout")} hint={t("tipCheckLayout")} count={props.layoutCount}
+            <IssueRow data-layout-check-toggle icon={<LayoutCheckIcon size={15} />} label={t("checkSideways")} hint={t("tipCheckLayout")} count={props.layoutCount}
               pressed={props.layoutOpen} busy={props.layoutChecking} onClick={run(props.onLayoutCheck)} />
           )}
-          <IssueRow icon={<FixPromptIcon size={15} />} label={t("fixPrompt")} hint={t("tipFixPrompt")} pressed={props.fixOpen} onClick={run(props.onFixPrompt)} />
+          <IssueRow icon={<FixPromptIcon size={15} />} label={t("writeFixPrompt")} hint={t("tipFixPrompt")} pressed={props.fixOpen} onClick={run(props.onFixPrompt)} />
         </DockMenuPanel>
       )}
     </div>
@@ -486,15 +487,12 @@ function IssueRow({ icon, label, hint, count, pressed, busy, onClick, ...data }:
 } & DataAttributes) {
   return (
     <button type="button" aria-pressed={pressed} aria-label={count ? `${label} · ${count}` : label} title={hint} onClick={onClick} {...data}
-      className={cx("flex w-full items-start gap-2.5 rounded-[10px] px-2.5 py-2 text-start outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-accent", pressed && "bg-sunken")}>
-      <span className="mt-px grid w-4 shrink-0 place-items-center text-ink-2">{icon}</span>
-      <span className="grid min-w-0 flex-1 gap-0.5">
-        <span className="text-[13px] font-semibold">{label}</span>
-        <span className="text-xs leading-snug text-muted">{hint}</span>
-      </span>
+      className={cx("flex h-9 w-full items-center gap-2.5 rounded-[10px] px-2.5 text-start outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-accent", pressed && "bg-sunken")}>
+      <span className="grid w-4 shrink-0 place-items-center text-ink-2">{icon}</span>
+      <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{label}</span>
       {busy
-        ? <span aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 animate-spin rounded-full border-2 border-accent-line border-t-accent motion-reduce:animate-none" />
-        : count ? <span className="mt-px grid h-5 min-w-5 shrink-0 place-items-center rounded-full bg-red-500/10 px-1.5 font-mono text-[11px] font-bold text-danger">{count}</span> : null}
+        ? <span aria-hidden="true" className="size-3.5 shrink-0 animate-spin rounded-full border-2 border-line border-t-ink motion-reduce:animate-none" />
+        : count ? <span className="grid h-5 min-w-5 shrink-0 place-items-center rounded-full bg-red-500/10 px-1.5 font-mono text-[11px] font-bold text-danger">{count}</span> : null}
     </button>
   );
 }

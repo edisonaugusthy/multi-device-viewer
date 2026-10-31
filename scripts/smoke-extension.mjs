@@ -331,7 +331,7 @@ try {
     for (const node of nodes) if ((await textOf(node)).includes(text)) return node;
   };
   await clickNode(await inSlot("phone", "data-language-toggle"));
-  assert.match(await textOf(await one("data-language-hint")), /browser’s language[^]*cookie/, "the picker says which sites change");
+  assert.match(await textOf(await one("data-language-picker")), /Language on iPhone 18 Pro/, "the picker names the device");
   await mkdir("output/playwright", { recursive: true });
   await page.screenshot({ path: "output/playwright/language-picker.png" });
   await Promise.all([phone.waitForNavigation(), clickNode(await radio("Deutsch"))]);
@@ -349,7 +349,7 @@ try {
   assert.match(identityText, /Safari \d+/); assert.match(identityText, /de-DE/); assert.match(identityText, /Pixel 8/);
   await page.keyboard.press("Escape");
   await clickNode(await inSlot("phone", "data-language-toggle"));
-  await Promise.all([phone.waitForNavigation(), clickNode(await radio("Browser"))]);
+  await Promise.all([phone.waitForNavigation(), clickNode(await radio("Same as browser"))]);
   await phone.waitForFunction(() => window.fetchProbe && window.xhrProbe);
   assert.notEqual((await phone.evaluate(() => window.documentProbe)).language, "de-DE,de;q=0.9", "back to the browser's language");
   // Layout check: the CSS rule behind the overflow, with its file and line, goes into the fix prompt.

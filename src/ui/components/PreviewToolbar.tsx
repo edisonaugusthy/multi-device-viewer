@@ -20,6 +20,7 @@ import {
   RotateIcon,
   SideBySideIcon,
 } from "../icons";
+import { DeviceGlyph, type GlyphKind } from "./DeviceGlyph";
 import { cx, focusRing } from "./ui";
 
 export interface FocusNavigation {
@@ -55,8 +56,9 @@ export interface PreviewToolbarProps {
   onReload: () => void;
   onOpenInTab: () => void;
   onExpand?: () => void;
-  /** How far the device's centre is from the bar's, when the bar is kept on screen. */
-  arrowOffset?: number;
+  /** The device's outline and CSS width, shown with its name. */
+  deviceGlyph?: GlyphKind;
+  deviceWidth?: number;
   /** A screenshot of this device, opened in the annotation editor. */
   onScreenshot?: () => void;
   screenshotPending?: boolean;
@@ -101,113 +103,109 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
       )}
     >
       <div role="toolbar" aria-label={t("deviceControls", { name: props.deviceName })} data-tour={props.tourTarget}
-        className="flex h-[46px] items-center gap-1.5 whitespace-nowrap rounded-[14px] border-[1.5px] border-ink bg-surface px-1.5 shadow-[0_14px_34px_rgb(20_23_26/0.16)]">
-        {(props.onMoveStart || props.onChangeDevice) && (
-          <Group tinted>
-            {props.onMoveStart && (
-              <button type="button" data-move-handle aria-label={t("moveDevice")} title={t("moveDevice")} onPointerDown={props.onMoveStart}
-                className={cx("grid h-[30px] w-5 cursor-grab touch-none place-items-center rounded-lg text-faint hover:text-ink active:cursor-grabbing", focusRing)}>
-                <GripIcon />
-              </button>
-            )}
-            {props.onChangeDevice && <>
-              <ToolButton
-                label={props.previousDeviceName ? `${t("previousInCategory")}: ${props.previousDeviceName}` : t("previousInCategory")}
-                testId="previous-device-button" disabled={!props.onPreviousDevice} onClick={() => props.onPreviousDevice?.()}>
-                <ChevronLeftIcon size={15} className="rtl:rotate-180" />
-              </ToolButton>
-              {props.deviceLabel ? (
-                <button type="button" data-testid="device-switcher-button" onClick={props.onChangeDevice}
-                  title={t("changeDevice")} aria-label={`${t("changeDevice")} · ${props.deviceLabel}`}
-                  className={cx("flex h-[30px] w-44 items-center justify-between gap-1.5 rounded-lg pe-1.5 ps-2 text-[13px] font-semibold text-ink hover:bg-surface", focusRing)}>
-                  {/* One width for every device, so the bar never changes size. */}
-                  <span className="truncate">{props.deviceLabel}</span>
-                  <ChevronDownIcon size={12} className="shrink-0 text-muted" />
-                </button>
-              ) : (
-                <ToolButton label={t("changeDevice")} testId="device-switcher-button" onClick={props.onChangeDevice}>
-                  <ChangeDeviceIcon size={16} />
-                </ToolButton>
-              )}
-              <ToolButton
-                label={props.nextDeviceName ? `${t("nextInCategory")}: ${props.nextDeviceName}` : t("nextInCategory")}
-                testId="next-device-button" disabled={!props.onNextDevice} onClick={() => props.onNextDevice?.()}>
-                <ChevronRightIcon size={15} className="rtl:rotate-180" />
-              </ToolButton>
-            </>}
-          </Group>
+        className="flex h-9 items-center gap-px whitespace-nowrap rounded-full bg-surface px-1 shadow-popover">
+        {props.onMoveStart && (
+          <button type="button" data-move-handle aria-label={t("moveDevice")} title={t("moveDevice")} onPointerDown={props.onMoveStart}
+            className={cx("grid h-7 w-3.5 cursor-grab touch-none place-items-center rounded-full text-grip hover:text-ink active:cursor-grabbing", focusRing)}>
+            <GripIcon />
+          </button>
         )}
-        <Group>
-          {/* Devices that cannot rotate keep the space, so switching devices
-              never shifts the buttons under the pointer. */}
-          {props.canRotate
-            ? <ToolButton label={t("rotate")} onClick={props.onRotate}><RotateIcon size={15} /></ToolButton>
-            : <span aria-hidden="true" className="size-[30px] shrink-0" />}
-          <ToolButton label={t("zoomOut")} onClick={props.onZoomOut}><MinusIcon size={14} /></ToolButton>
+        {props.onChangeDevice && (
+          // Which device: step to the previous or next of its type, or click the name to change it.
+          <div className="flex h-7 items-center rounded-full bg-sunken px-px">
+            <ToolButton narrow
+              label={props.previousDeviceName ? `${t("previousInCategory")}: ${props.previousDeviceName}` : t("previousInCategory")}
+              testId="previous-device-button" disabled={!props.onPreviousDevice} onClick={() => props.onPreviousDevice?.()}>
+              <ChevronLeftIcon size={13} strokeWidth={2.5} className="rtl:rotate-180" />
+            </ToolButton>
+            {props.deviceLabel ? (
+              <button type="button" data-testid="device-switcher-button" onClick={props.onChangeDevice}
+                title={t("changeDevice")} aria-label={`${t("changeDevice")} · ${props.deviceLabel}`}
+                className={cx("flex h-6 w-[168px] items-center gap-1.5 rounded-full px-[7px] text-[12.5px] font-semibold text-ink hover:bg-surface", focusRing)}>
+                {/* One width for every device, so the bar never changes size. */}
+                {props.deviceGlyph && <span aria-hidden="true" className="grid w-3.5 shrink-0 place-items-center text-ink-2"><DeviceGlyph kind={props.deviceGlyph} small /></span>}
+                <span className="min-w-0 flex-1 truncate text-start">{props.deviceLabel}</span>
+                {props.deviceWidth !== undefined && <span dir="ltr" className="shrink-0 font-mono text-[10.5px] font-medium text-muted">{props.deviceWidth}</span>}
+                <ChevronDownIcon size={11} strokeWidth={2.6} className="shrink-0 text-muted" />
+              </button>
+            ) : (
+              <ToolButton label={t("changeDevice")} testId="device-switcher-button" onClick={props.onChangeDevice}>
+                <ChangeDeviceIcon size={15} />
+              </ToolButton>
+            )}
+            <ToolButton narrow
+              label={props.nextDeviceName ? `${t("nextInCategory")}: ${props.nextDeviceName}` : t("nextInCategory")}
+              testId="next-device-button" disabled={!props.onNextDevice} onClick={() => props.onNextDevice?.()}>
+              <ChevronRightIcon size={13} strokeWidth={2.5} className="rtl:rotate-180" />
+            </ToolButton>
+          </div>
+        )}
+        <Divider />
+        {/* Devices that cannot rotate keep the space, so switching devices
+            never shifts the buttons under the pointer. */}
+        {props.canRotate
+          ? <ToolButton label={t("rotate")} onClick={props.onRotate}><RotateIcon size={14} /></ToolButton>
+          : <span aria-hidden="true" className="size-7 shrink-0" />}
+        <div className="flex h-7 items-center rounded-full bg-sunken/70 px-px">
+          <ToolButton small label={t("zoomOut")} onClick={props.onZoomOut}><MinusIcon size={12} strokeWidth={2.6} /></ToolButton>
           <button type="button" title={t("resetFit")} aria-label={`${t("resetFit")} · ${props.zoomLabel}`} onClick={props.onResetZoom}
-            className={cx("h-[30px] min-w-11 rounded-lg px-1 font-mono text-[11.5px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+            className={cx("h-6 min-w-[34px] rounded-full px-0.5 font-mono text-[11.5px] font-semibold text-ink hover:bg-surface", focusRing)}>
             {props.zoomLabel}
           </button>
-          <ToolButton label={t("zoomIn")} onClick={props.onZoomIn}><PlusIcon size={14} strokeWidth={2.4} /></ToolButton>
-        </Group>
-        <Group>
-          <ToolButton label={t("reloadPreview")} onClick={props.onReload}><ReloadIcon size={15} className={props.reloading ? "animate-spin" : undefined} /></ToolButton>
-          {props.onScreenshot && <ToolButton label={t("captureAndAnnotate")} disabled={props.screenshotPending} onClick={props.onScreenshot}><CameraIcon size={15} /></ToolButton>}
-          {props.onLanguage && (
-            <div className="relative">
-              <button type="button" data-language-toggle onClick={props.onLanguage} aria-expanded={props.languageOpen} aria-haspopup="dialog"
-                title={props.languageLabel} aria-label={props.languageLabel}
-                className={cx("flex h-[30px] items-center gap-1 rounded-lg px-[7px] font-mono text-[11px] font-bold", props.languageCode ? "text-accent-strong" : "text-ink", props.languageOpen ? "bg-sunken" : "hover:bg-sunken", focusRing)}>
-                <GlobeIcon size={15} />{props.languageCode}
-              </button>
-              {props.languageOpen && props.languagePicker}
-            </div>
-          )}
-          {/* Showing one device, the same button goes back to all of them. */}
-          {focus
-            ? <ToolButton label={t("showAllDevices")} onClick={focus.onExit}><CollapseIcon size={15} /></ToolButton>
-            : props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={15} /></ToolButton>}
-          {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={15} /></ToolButton>}
-          {props.onCompareBefore && (
-            <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>
-              {/* The dot says a "before" picture is waiting to be compared. */}
-              <span className="relative grid size-7 place-items-center">
-                <SideBySideIcon size={15} />
-                <span aria-hidden="true" className="absolute right-[3px] top-[3px] size-1.5 rounded-full bg-accent" />
-              </span>
-            </ToolButton>
-          )}
-          {props.onLayoutProblems && (
-            <ToolButton label={t("layoutShowProblems")} accent onClick={props.onLayoutProblems}>
-              <span className="relative grid place-items-center">
-                <LayoutCheckIcon size={15} />
-                {props.layoutProblemCount ? <span aria-hidden="true" className="absolute -end-2 -top-2 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-red-500 px-[3px] font-mono text-[9px] font-bold text-white">{props.layoutProblemCount}</span> : null}
-              </span>
-            </ToolButton>
-          )}
-        </Group>
-        <Group>
+          <ToolButton small label={t("zoomIn")} onClick={props.onZoomIn}><PlusIcon size={12} strokeWidth={2.6} /></ToolButton>
+        </div>
+        <Divider />
+        <ToolButton label={t("reloadPreview")} onClick={props.onReload}><ReloadIcon size={14} className={props.reloading ? "animate-spin" : undefined} /></ToolButton>
+        {props.onScreenshot && <ToolButton label={t("captureAndAnnotate")} disabled={props.screenshotPending} onClick={props.onScreenshot}><CameraIcon size={14} /></ToolButton>}
+        {props.onLanguage && (
           <div className="relative">
-            <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu} menuToggle><MoreIcon size={16} /></ToolButton>
-            {props.menuOpen && props.menu}
+            <button type="button" data-language-toggle onClick={props.onLanguage} aria-expanded={props.languageOpen} aria-haspopup="dialog"
+              title={props.languageLabel} aria-label={props.languageLabel}
+              className={cx("flex h-7 min-w-7 items-center justify-center gap-1 rounded-full px-[7px] font-mono text-[11px] font-bold", props.languageCode ? "text-accent-strong" : "text-ink", props.languageOpen ? "bg-sunken" : "hover:bg-sunken", focusRing)}>
+              <GlobeIcon size={14} />{props.languageCode}
+            </button>
+            {props.languageOpen && props.languagePicker}
           </div>
-          {props.removable && <ToolButton label={t("removeDevice")} danger onClick={props.onRemove} dataRemove><CloseIcon size={15} strokeWidth={2.2} /></ToolButton>}
-        </Group>
+        )}
+        {/* Showing one device, the same button goes back to all of them. */}
+        {focus
+          ? <ToolButton label={t("showAllDevices")} onClick={focus.onExit}><CollapseIcon size={14} /></ToolButton>
+          : props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={14} /></ToolButton>}
+        {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={14} /></ToolButton>}
+        {props.onCompareBefore && (
+          <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>
+            {/* The dot says a "before" picture is waiting to be compared. */}
+            <span className="relative grid size-6 place-items-center">
+              <SideBySideIcon size={14} />
+              <span aria-hidden="true" className="absolute right-[2px] top-[2px] size-1.5 rounded-full bg-accent" />
+            </span>
+          </ToolButton>
+        )}
+        {props.onLayoutProblems && (
+          <ToolButton label={t("layoutShowProblems")} accent onClick={props.onLayoutProblems}>
+            <span className="relative grid place-items-center">
+              <LayoutCheckIcon size={14} />
+              {props.layoutProblemCount ? <span aria-hidden="true" className="absolute -end-2 -top-2 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-red-500 px-[3px] font-mono text-[9px] font-bold text-white">{props.layoutProblemCount}</span> : null}
+            </span>
+          </ToolButton>
+        )}
+        <Divider />
+        <div className="relative">
+          <ToolButton label={t("viewportOptions")} expanded={props.menuOpen} onClick={props.onMenu} menuToggle><MoreIcon size={15} /></ToolButton>
+          {props.menuOpen && props.menu}
+        </div>
+        {props.removable && <ToolButton label={t("removeDevice")} danger onClick={props.onRemove} dataRemove><CloseIcon size={14} strokeWidth={2.2} /></ToolButton>}
       </div>
-      {/* Points down at the device this bar belongs to. */}
-      <span aria-hidden="true" data-toolbar-arrow
-        className="absolute top-full -mt-[7px] size-3 rotate-45 border-b-[1.5px] border-r-[1.5px] border-ink bg-surface"
-        style={{ left: `calc(50% + ${props.arrowOffset ?? 0}px - 6px)` }} />
     </div>
   );
 });
 
-// One set of related buttons; the device's own group sits on a tint.
-function Group({ tinted = false, children }: { tinted?: boolean; children: ReactNode }) {
-  return <div className={cx("flex h-[34px] items-center gap-px rounded-[10px] px-0.5", tinted && "bg-sunken")}>{children}</div>;
+// Between the bar's groups: which device, how it is shown, the page, more.
+function Divider() {
+  return <span aria-hidden="true" className="mx-[3px] h-4 w-px shrink-0 bg-line-soft" />;
 }
 
-function ToolButton({ label, onClick, children, disabled, danger, accent, expanded, testId, dataRemove, menuToggle }: {
+function ToolButton({ label, onClick, children, disabled, danger, accent, expanded, testId, dataRemove, menuToggle, narrow, small }: {
   label: string;
   onClick: () => void;
   children: ReactNode;
@@ -218,6 +216,10 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
   testId?: string;
   dataRemove?: boolean;
   menuToggle?: boolean;
+  /** Inside the device capsule: the arrows either side of the name. */
+  narrow?: boolean;
+  /** Inside the zoom stepper. */
+  small?: boolean;
 }) {
   return (
     <button
@@ -231,8 +233,10 @@ function ToolButton({ label, onClick, children, disabled, danger, accent, expand
       data-device-menu-toggle={menuToggle || undefined}
       onClick={onClick}
       className={cx(
-        "grid size-[30px] place-items-center rounded-lg disabled:opacity-30",
-        danger ? "text-danger hover:bg-danger/10" : accent ? "bg-accent-soft text-accent hover:bg-accent-soft/70" : "text-ink hover:bg-sunken",
+        "grid shrink-0 place-items-center rounded-full disabled:opacity-30",
+        narrow ? "h-[26px] w-[22px] text-muted hover:text-ink" : small ? "size-6 text-ink hover:bg-surface" : "size-7",
+        // Remove stays quiet until the pointer is on it.
+        danger ? "text-faint hover:bg-danger/10 hover:text-danger" : accent ? "bg-accent-soft text-accent hover:bg-accent-soft/70" : !narrow && !small && "text-ink hover:bg-sunken",
         expanded && "bg-sunken",
         focusRing,
       )}

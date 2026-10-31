@@ -1156,7 +1156,7 @@ export function SimulatorApp() {
         open={popover === "capture"}
         anchorRef={captureRef}
         onClose={closePopover}
-        deviceName={findDevice((slots.find(slot => slot.id === activeSlotId) ?? slots[0]).deviceId).name}
+        deviceName={shortName(findDevice((slots.find(slot => slot.id === activeSlotId) ?? slots[0]).deviceId).name)}
         onDevice={() => void takeScopedScreenshot(activeSlotId)}
         onWorkspace={() => void takeScopedScreenshot()}
         tracking={tracking}

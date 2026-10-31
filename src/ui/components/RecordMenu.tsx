@@ -31,11 +31,10 @@ export function RecordControls({
   const { t } = useI18n();
   return (
     <>
-      <SectionLabel className="px-2.5 pb-0.5 pt-1.5">{t("recordHeading")}</SectionLabel>
+      <SectionLabel className="px-2.5 pb-1 pt-1.5">{t("recordHeading")}</SectionLabel>
       <MenuRow
         icon={tabRecording ? <StopIcon size={14} className="text-record" /> : <RecordIcon size={15} />}
-        label={tabRecording ? t("stopAndSaveVideo") : t("recordTabVideo")}
-        hint={tabRecording ? undefined : t("recordTabHint")}
+        label={tabRecording ? t("stopAndSaveVideo") : t("recordTabAsVideo")}
         detail={tabRecording ? tabRecordingTime : undefined}
         active={tabRecording}
         disabled={!canRecordTab}
@@ -44,8 +43,7 @@ export function RecordControls({
       <div data-tour="record-user-flow">
         <MenuRow
           icon={flowRecording ? <StopIcon size={14} className="text-record" /> : <NavigationSyncIcon size={15} />}
-          label={flowRecording ? t("stopAndSaveFlow", { count: flowStepCount }) : t("recordAFlow")}
-          hint={flowRecording ? undefined : t("recordFlowHint")}
+          label={flowRecording ? t("stopAndSaveFlow", { count: flowStepCount }) : t("recordClicks")}
           active={flowRecording}
           onClick={onToggleFlowRecording}
         />

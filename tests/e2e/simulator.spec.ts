@@ -139,10 +139,10 @@ test("shows the simplified navigation controls", async ({ page }) => {
   const toolbar = page.locator("[data-main-toolbar]");
   // Scroll and Navigation show while the pointer rests on Sync in the dock.
   await toolbar.getByRole("button", { name: "Sync between devices" }).hover();
-  await expect(toolbar.getByRole("switch", { name: "Scroll", exact: true })).toBeVisible();
-  await expect(toolbar.getByRole("switch", { name: "Navigation", exact: true })).toBeVisible();
-  await toolbar.getByRole("switch", { name: "Navigation", exact: true }).check();
-  await expect(toolbar.getByRole("switch", { name: "Navigation", exact: true })).toBeChecked();
+  await expect(toolbar.getByRole("switch", { name: "Scroll and type together", exact: true })).toBeVisible();
+  await expect(toolbar.getByRole("switch", { name: "Open pages on every device", exact: true })).toBeVisible();
+  await toolbar.getByRole("switch", { name: "Open pages on every device", exact: true }).check();
+  await expect(toolbar.getByRole("switch", { name: "Open pages on every device", exact: true })).toBeChecked();
   await expect(page.getByLabel("Page direction")).toHaveCount(0);
   await expect(page.getByLabel("Page color scheme")).toHaveCount(0);
   await expect(page.getByText("Responsive review", { exact: true })).toHaveCount(0);
@@ -963,7 +963,7 @@ test("does not report standalone previews as blocked when no extension bridge is
     });
   });
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Sync between devices" }).hover();
-  await page.locator("[data-main-toolbar]").getByRole("switch", { name: "Scroll", exact: true }).check();
+  await page.locator("[data-main-toolbar]").getByRole("switch", { name: "Scroll and type together", exact: true }).check();
   const slot = page.locator("[data-preview-slot-id]").first();
   const original = await (await slot.locator("iframe").elementHandle())!.contentFrame();
   await original!.evaluate(() => window.parent.postMessage({
@@ -1021,7 +1021,7 @@ test("uses focus mode as a clean canvas without reloading previews", async ({ pa
 test("builds an actionable AI fix prompt with optional context", async ({ page }) => {
   // The fix prompt is one of the Issues in the dock.
   await page.locator("[data-main-toolbar]").getByRole("button", { name: /^Issues/ }).hover();
-  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Fix prompt", exact: true }).click();
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: "Write a fix prompt", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Fix prompt" });
   await expect(dialog.getByRole("heading", { name: "Fix prompt" })).toBeVisible();
 
@@ -1077,7 +1077,7 @@ test("shows a persistent source-tab recording indicator", async ({ page }) => {
 
 test("shows that a user flow is recording and how to stop it", async ({ page }) => {
   await openRecordMenu(page);
-  await page.getByRole("button", { name: "Record user flow" }).click();
+  await page.getByRole("button", { name: "Record clicks to replay" }).click();
   await expect(page.getByRole("dialog", { name: "Capture" })).toHaveCount(0);
   // Until the first step, any device can be used.
   const bar = page.getByRole("group", { name: /^Recording clicks and typing/ });
@@ -1146,15 +1146,16 @@ test("moves a device over another and draws the one moved on top", async ({ page
   expect(await layer(1)).toBeGreaterThan(await layer(0));
 });
 
-test("puts the workspace bar above the devices and points each device bar at its device", async ({ page }) => {
+test("puts the workspace bar above the devices and each device bar just above its device", async ({ page }) => {
   const bar = (await page.locator("[data-main-toolbar]").boundingBox())!;
   const slot = page.locator("[data-preview-slot-id]").nth(1);
   const device = (await slot.locator("[data-device-capture]").boundingBox())!;
   expect(bar.y + bar.height).toBeLessThan(device.y);
   await revealControls(page, 1);
-  const arrow = (await slot.locator("[data-toolbar-arrow]").boundingBox())!;
-  expect(Math.abs(arrow.x + arrow.width / 2 - (device.x + device.width / 2))).toBeLessThan(3);
-  expect(arrow.y).toBeLessThan(device.y);
+  // The device's bar sits just above it, centred on it.
+  const deviceBar = (await slot.locator("[role=toolbar]").boundingBox())!;
+  expect(Math.abs(deviceBar.x + deviceBar.width / 2 - (device.x + device.width / 2))).toBeLessThan(3);
+  expect(deviceBar.y + deviceBar.height).toBeLessThan(device.y);
   // The caption is just the name; the size is in its tooltip.
   await expect(slot.locator("[data-device-caption]")).not.toContainText("×");
 });
@@ -1444,7 +1445,7 @@ test("keeps the browser appearance panel inside its menu", async ({ page }) => {
   const slot = page.locator("[data-preview-slot-id]").first();
   await revealControls(page);
   await slot.getByRole("button", { name: "Viewport options", exact: true }).click();
-  await page.locator("[data-viewport-actions]").getByRole("button", { name: "Safari settings" }).click();
+  await page.locator("[data-viewport-actions]").getByRole("button", { name: "Safari bar and toolbar" }).click();
   const menu = page.locator("[data-viewport-actions]");
   await expect(menu.getByText("Browser layout")).toBeVisible();
   // The note wraps instead of widening the menu with a sideways scrollbar.

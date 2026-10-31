@@ -35,7 +35,7 @@ export function SettingsPopover({
     <div ref={panelRef} role="dialog" aria-label={t("settings")} className={cx(popoverPanel, "fixed")} style={positionStyle(position)}>
       <div className="flex shrink-0 items-center pb-1 pe-2 ps-4 pt-2">
         <span className="flex-1 text-[13px] font-semibold">{t("settings")}</span>
-        <button type="button" onClick={onClose} aria-label={t("close")} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}>
+        <button type="button" onClick={onClose} aria-label={t("close")} className={cx("grid size-[30px] place-items-center rounded-full text-ink-2 hover:bg-sunken", focusRing)}>
           <CloseIcon size={15} strokeWidth={2.2} />
         </button>
       </div>
@@ -80,7 +80,7 @@ export function SettingsPopover({
             id="mdv-language"
             value={locale}
             onChange={event => setLocale(event.target.value as AppLocale)}
-            className={cx("h-8 cursor-pointer rounded-lg border border-line bg-surface px-2 text-[12.5px] font-semibold text-ink", focusRing)}
+            className={cx("h-8 cursor-pointer rounded-full bg-sunken px-2 text-[12.5px] font-semibold text-ink", focusRing)}
           >
             {SUPPORTED_LOCALES.map(option => <option key={option.code} value={option.code}>{option.name}</option>)}
           </select>

@@ -68,16 +68,15 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, initialIssue
     setCopied(true);
   }
 
-  const field = "w-full rounded-[9px] border border-line bg-surface px-3 text-[13px] text-ink outline-none placeholder:text-faint focus:border-accent";
+  const field = "w-full bg-sunken px-3.5 text-[13px] text-ink outline-none placeholder:text-faint focus:ring-2 focus:ring-line";
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex shrink-0 items-start gap-2.5 pb-2.5 pe-2 ps-3.5 pt-3">
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <h2 className="text-sm font-semibold">{t("fixPrompt")}</h2>
-          <p className="text-xs text-muted">{t("fixPromptHelp")}</p>
+          <h2 className="text-[13px] font-semibold" title={t("fixPromptHelp")}>{t("fixPrompt")}</h2>
         </div>
-        {onClose && <button type="button" onClick={onClose} aria-label={t("closeFixPrompt")} title={t("closeFixPrompt")} className={cx("grid size-[30px] shrink-0 place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}>
+        {onClose && <button type="button" onClick={onClose} aria-label={t("closeFixPrompt")} title={t("closeFixPrompt")} className={cx("grid size-7 shrink-0 place-items-center rounded-full text-ink-2 hover:bg-sunken", focusRing)}>
           <CloseIcon size={15} strokeWidth={2.2} />
         </button>}
       </div>
@@ -97,12 +96,12 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, initialIssue
             value={wrong}
             onChange={event => setWrong(event.target.value)}
             placeholder={t("whatsWrongPlaceholder")}
-            className={cx(field, "resize-y py-2 leading-relaxed")}
+            className={cx(field, "resize-y rounded-2xl py-2.5 leading-relaxed")}
           />
         </label>
         <label className="flex flex-col gap-1.5">
           <span className="text-[12.5px] font-semibold">{t("whatShouldHappen")} <span className="font-medium text-faint">{t("optional")}</span></span>
-          <input value={expected} onChange={event => setExpected(event.target.value)} placeholder={t("whatShouldHappenPlaceholder")} className={cx(field, "h-[34px]")} />
+          <input value={expected} onChange={event => setExpected(event.target.value)} placeholder={t("whatShouldHappenPlaceholder")} className={cx(field, "h-[34px] rounded-full")} />
         </label>
 
         {!compact && devices.length > 0 && (
@@ -123,7 +122,7 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, initialIssue
                     })}
                     className={cx(
                       "flex h-7 items-center gap-1.5 whitespace-nowrap rounded-full border pe-2.5 ps-1.5 text-xs font-semibold",
-                      on ? "border-accent-line bg-accent-soft text-accent-strong" : "border-line bg-surface text-muted",
+                      on ? "border-transparent bg-sunken text-ink" : "border-line bg-surface text-muted",
                       focusRing,
                     )}
                   >
@@ -151,14 +150,14 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, initialIssue
         </button>
         {moreOpen && (
           <div className="-mt-1 flex flex-col gap-2 border-s-2 border-sunken ps-2.5">
-            <input aria-label={t("reproductionSteps")} value={steps} onChange={event => setSteps(event.target.value)} placeholder={t("reproductionSteps")} className={cx(field, "h-8 px-2.5")} />
-            <input aria-label={t("cssSelector")} value={selector} onChange={event => setSelector(event.target.value)} placeholder={t("selectorPlaceholder")} className={cx(field, "h-8 px-2.5 font-mono")} />
-            <input aria-label={t("constraintsContext")} value={notes} onChange={event => setNotes(event.target.value)} placeholder={t("constraintsShortPlaceholder")} className={cx(field, "h-8 px-2.5")} />
+            <input aria-label={t("reproductionSteps")} value={steps} onChange={event => setSteps(event.target.value)} placeholder={t("reproductionSteps")} className={cx(field, "h-8 rounded-full")} />
+            <input aria-label={t("cssSelector")} value={selector} onChange={event => setSelector(event.target.value)} placeholder={t("selectorPlaceholder")} className={cx(field, "h-8 rounded-full font-mono")} />
+            <input aria-label={t("constraintsContext")} value={notes} onChange={event => setNotes(event.target.value)} placeholder={t("constraintsShortPlaceholder")} className={cx(field, "h-8 rounded-full")} />
           </div>
         )}
 
         {previewOpen && (
-          <pre aria-label={t("promptPreview")} className="m-0 max-h-[170px] overflow-auto whitespace-pre-wrap break-words rounded-[9px] border border-line-soft bg-surface-2 px-3 py-2.5 font-mono text-[11.5px] leading-relaxed text-ink-2">
+          <pre aria-label={t("promptPreview")} className="m-0 max-h-[170px] overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface-2 px-3.5 py-2.5 font-mono text-[11.5px] leading-relaxed text-ink-2">
             {prompt}
           </pre>
         )}
@@ -166,12 +165,12 @@ export function FixPromptForm({ pageUrl, devices, initialDeviceIds, initialIssue
 
       <div className="flex shrink-0 items-center gap-2 border-t border-line-soft px-3.5 py-2.5">
         <button type="button" aria-expanded={previewOpen} onClick={() => setPreviewOpen(value => !value)}
-          className={cx("h-[34px] rounded-[9px] px-2.5 text-[12.5px] font-semibold text-ink-2 hover:bg-sunken", focusRing)}>
+          className={cx("h-[34px] rounded-full px-3 text-[12.5px] font-semibold text-ink-2 hover:bg-sunken", focusRing)}>
           {previewOpen ? t("hidePreview") : t("preview")}
         </button>
         <span className="flex-1" />
         <button type="button" onClick={() => void copy()}
-          className={cx("flex h-9 items-center gap-1.5 rounded-[9px] px-4 text-[13px] font-semibold text-on-accent", copied ? "bg-accent-strong" : "bg-accent", focusRing)}>
+          className={cx("flex h-9 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold text-on-accent", copied ? "bg-accent-strong" : "bg-accent", focusRing)}>
           {copied ? <CheckIcon size={14} strokeWidth={2.4} /> : <CopyIcon size={14} />}
           {copied ? t("copied") : t("copyPrompt")}
         </button>

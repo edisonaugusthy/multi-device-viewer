@@ -1,3 +1,4 @@
+import { barButton, barChip, barClose, barDivider, barOff, barOn, barPill, barRow, cx } from "./ui";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { downloadDataUrl, screenshotFilename } from "../../domain/capture/capture-service";
 import { useI18n } from "../../app/i18n";
@@ -336,19 +337,19 @@ export function AnnotationOverlay({ imageUrl, meta, fixPrompt, onClose }: {
     <div className="fixed inset-0 z-[70] flex flex-col bg-stage text-ink">
 
       {/* ── Toolbar ── */}
-      <div className="flex min-h-[52px] shrink-0 flex-wrap items-center gap-2 border-b border-line bg-surface px-3 py-2">
-        <button type="button" onClick={onClose} className="flex h-[34px] items-center gap-1.5 rounded-[9px] border border-line pe-2.5 ps-2 text-[13px] font-semibold text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent">
+      <div className={cx(barRow, "justify-between")}>
+        <button type="button" onClick={onClose} className={barChip}>
           <BackIcon size={15} />{t("workspace")}
         </button>
 
         <div className="flex min-w-0 flex-1 justify-center">
-          <div role="toolbar" aria-label={t("annotate")} className="flex h-10 items-center gap-0.5 rounded-[11px] border border-line-soft bg-field px-1.5">
+          <div role="toolbar" aria-label={t("annotate")} className={cx(barPill, "gap-0.5")}>
             <ToolBtn active={tool === "pen"}   title={t("pen")}   onClick={() => { setTool("pen");   cancelCrop(); }}><PencilIcon size={17} /></ToolBtn>
             <ToolBtn active={tool === "rect"}  title={t("box")}   onClick={() => { setTool("rect");  cancelCrop(); }}><RectangleIcon size={17} /></ToolBtn>
             <ToolBtn active={tool === "arrow"} title={t("arrow")} onClick={() => { setTool("arrow"); cancelCrop(); }}><ArrowToolIcon size={17} /></ToolBtn>
             <ToolBtn active={tool === "text"}  title={t("text")}  onClick={() => { setTool("text");  cancelCrop(); }}><TextToolIcon size={17} /></ToolBtn>
             <ToolBtn active={tool === "crop"}  title={t("crop")}  onClick={() => { setTool("crop");  setCropRect(null); }}><CropIcon size={17} /></ToolBtn>
-            <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+            <span aria-hidden="true" className={barDivider} />
             {COLORS.map((c) => (
               <button
                 key={c}
@@ -357,11 +358,11 @@ export function AnnotationOverlay({ imageUrl, meta, fixPrompt, onClose }: {
                 aria-label={c}
                 aria-pressed={color === c}
                 onClick={() => setColor(c)}
-                className={`mx-[3px] size-5 shrink-0 rounded-full transition-transform hover:scale-110 ${color === c ? "ring-2 ring-offset-2 ring-offset-field" : ""} ${c === "#ffffff" ? "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)]" : ""}`}
+                className={`mx-[3px] size-5 shrink-0 rounded-full transition-transform hover:scale-110 ${color === c ? "ring-2 ring-offset-2 ring-offset-surface" : ""} ${c === "#ffffff" ? "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)]" : ""}`}
                 style={{ background: c, ["--tw-ring-color" as string]: c === "#ffffff" ? "#9aa1aa" : c }}
               />
             ))}
-            <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+            <span aria-hidden="true" className={barDivider} />
             {WIDTHS.map((w) => (
               <button
                 key={w}
@@ -369,13 +370,13 @@ export function AnnotationOverlay({ imageUrl, meta, fixPrompt, onClose }: {
                 title={t("size", { size: w })}
                 aria-pressed={lineWidth === w}
                 onClick={() => setLineWidth(w)}
-                className={`grid size-8 place-items-center rounded-lg transition ${lineWidth === w ? "bg-primary text-on-primary" : "text-ink-2 hover:bg-sunken"}`}
+                className={`grid size-8 place-items-center rounded-full transition ${lineWidth === w ? "bg-primary text-on-primary" : "text-ink-2 hover:bg-sunken"}`}
               >
                 <span className={`block rounded-full bg-current ${w === 2 ? "size-1" : w === 4 ? "size-2" : "size-3"}`} />
               </button>
             ))}
             {tool === "text" && <>
-              <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+              <span aria-hidden="true" className={barDivider} />
               {FONT_SIZES.map((size) => (
                 <button
                   key={size}
@@ -383,54 +384,48 @@ export function AnnotationOverlay({ imageUrl, meta, fixPrompt, onClose }: {
                   title={t("fontSize", { size })}
                   aria-pressed={fontSize === size}
                   onClick={() => setFontSize(size)}
-                  className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-1 text-xs font-semibold transition ${fontSize === size ? "bg-primary text-on-primary" : "text-ink-2 hover:bg-sunken"}`}
+                  className={`flex h-8 min-w-8 items-center justify-center rounded-full px-1.5 text-xs font-semibold transition ${fontSize === size ? "bg-primary text-on-primary" : "text-ink-2 hover:bg-sunken"}`}
                 >
                   {size}
                 </button>
               ))}
             </>}
-            <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-line" />
+            <span aria-hidden="true" className={barDivider} />
             <ToolBtn active={false} title={t("undo")} onClick={undo} disabled={marks.length === 0 && !textPos}><UndoIcon size={17} /></ToolBtn>
           </div>
         </div>
 
-        {fixPrompt && (
-          <button type="button" aria-pressed={showFix} onClick={() => setShowFix((value) => !value)} title={t("fixPrompt")}
-            className={`flex h-[34px] items-center gap-1.5 rounded-[9px] border px-3 text-[13px] font-semibold ${showFix ? "border-ink bg-sunken text-ink" : "border-line bg-surface text-ink hover:bg-sunken"}`}>
-            <FixPromptIcon size={15} />{t("fixPrompt")}
+        <div className="flex items-center gap-2">
+          <div className={barPill}>
+            {fixPrompt && (
+              <button type="button" aria-pressed={showFix} onClick={() => setShowFix((value) => !value)} title={t("fixPrompt")}
+                className={cx(barButton, showFix ? "bg-sunken text-ink" : barOff)}>
+                <FixPromptIcon size={15} />{t("fixPrompt")}
+              </button>
+            )}
+            <button type="button" onClick={() => void copyImage()} disabled={!imgReady} className={cx(barButton, barOff)}>
+              {copied ? <CheckIcon size={14} className="text-accent" /> : <CopyIcon size={14} />}
+              {copied ? t("copiedBang") : t("copy")}
+            </button>
+            <button type="button" onClick={() => void downloadImage()} disabled={!imgReady} className={cx(barButton, barOn)}>
+              <DownloadIcon size={15} />
+              {t("download")}
+            </button>
+          </div>
+          <button type="button" onClick={onClose} title={t("close")} aria-label={t("close")} className={barClose}>
+            <CloseIcon size={16} />
           </button>
-        )}
-        <button
-          type="button"
-          onClick={() => void copyImage()}
-          disabled={!imgReady}
-          className="flex h-[34px] items-center gap-1.5 rounded-[9px] border border-line bg-surface px-3 text-[13px] font-semibold text-ink hover:bg-sunken disabled:opacity-40"
-        >
-          {copied ? <CheckIcon size={14} className="text-accent" /> : <CopyIcon size={14} />}
-          {copied ? t("copiedBang") : t("copy")}
-        </button>
-        <button
-          type="button"
-          onClick={() => void downloadImage()}
-          disabled={!imgReady}
-          className="flex h-[34px] items-center gap-1.5 rounded-[9px] bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90 disabled:opacity-40"
-        >
-          <DownloadIcon size={15} />
-          {t("download")}
-        </button>
-        <button type="button" onClick={onClose} title={t("close")} aria-label={t("close")} className="grid size-[34px] place-items-center rounded-[9px] text-ink hover:bg-sunken">
-          <CloseIcon size={18} />
-        </button>
+        </div>
       </div>
 
       {/* ── Crop confirm bar ── */}
       {tool === "crop" && cropRect && (
         <div className="flex h-10 shrink-0 items-center justify-center gap-2 border-b border-warn-line bg-warn-soft">
           <span className="text-xs font-medium text-warn">{t("cropSelection")}</span>
-          <button type="button" onClick={applyCrop} className="flex h-7 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-on-primary">
+          <button type="button" onClick={applyCrop} className="flex h-7 items-center gap-1.5 rounded-full bg-primary px-3 text-xs font-semibold text-on-primary">
             <CheckIcon size={12} /> {t("applyCrop")}
           </button>
-          <button type="button" onClick={cancelCrop} className="flex h-7 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-xs font-semibold text-ink-2">
+          <button type="button" onClick={cancelCrop} className="flex h-7 items-center gap-1.5 rounded-full bg-surface px-3 text-xs font-semibold text-ink-2">
             <CloseIcon size={12} /> {t("cancel")}
           </button>
         </div>
@@ -476,7 +471,7 @@ export function AnnotationOverlay({ imageUrl, meta, fixPrompt, onClose }: {
         </div>
 
         {fixPrompt && showFix && (
-          <aside aria-label={t("fixPrompt")} className="flex w-[360px] max-w-[45%] shrink-0 flex-col border-s border-line bg-surface">
+          <aside aria-label={t("fixPrompt")} className="mb-3 me-3 mt-1 flex w-[360px] max-w-[45%] shrink-0 flex-col overflow-hidden rounded-2xl bg-surface shadow-popover">
             <FixPromptForm pageUrl={fixPrompt.pageUrl} devices={fixPrompt.devices} initialDeviceIds={fixPrompt.devices.map((device) => device.id)} onClose={() => setShowFix(false)} />
           </aside>
         )}
@@ -496,7 +491,7 @@ function ToolBtn({ active, title, onClick, disabled = false, children }: { activ
       aria-pressed={active}
       disabled={disabled}
       onClick={onClick}
-      className={`grid size-8 place-items-center rounded-lg transition disabled:opacity-30 ${active ? "bg-primary text-on-primary" : "text-ink hover:bg-sunken"}`}
+      className={`grid size-8 place-items-center rounded-full transition disabled:opacity-30 ${active ? "bg-primary text-on-primary" : "text-ink hover:bg-sunken"}`}
     >
       {children}
     </button>

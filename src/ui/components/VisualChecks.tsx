@@ -16,10 +16,10 @@ export const SENSITIVITY_PRESETS = [
 ] as const satisfies ReadonlyArray<{ value: number; label: TranslationKey; help: TranslationKey }>;
 // Matches the 14% red fill of the change boxes, so cells read as part of them.
 const MASK_COLOR = [229, 72, 77, 36];
-const outline = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border bg-surface px-3 text-[12.5px] font-semibold hover:bg-sunken disabled:opacity-50", focusRing);
-const button = cx(outline, "border-line text-ink");
-const danger = cx(outline, "border-line text-danger");
-const primary = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-3 text-[12.5px] font-semibold text-on-accent hover:bg-accent-strong disabled:opacity-50", focusRing);
+const outline = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-transparent bg-sunken px-3.5 text-[12.5px] font-semibold hover:bg-line-soft disabled:opacity-50", focusRing);
+const button = cx(outline, "text-ink");
+const danger = cx(outline, "text-danger");
+const primary = cx("inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-3.5 text-[12.5px] font-semibold text-on-accent hover:bg-accent-strong disabled:opacity-50", focusRing);
 const sectionTitle = "text-[11px] font-semibold uppercase tracking-wide text-muted";
 
 const UNITS: Array<[Intl.RelativeTimeFormatUnit, number]> = [["year", 31536000], ["month", 2592000], ["week", 604800], ["day", 86400], ["hour", 3600], ["minute", 60]];
@@ -56,7 +56,7 @@ export function VisualDialog({ title, subtitle, onClose, closeRef, children, foo
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/45 p-4" onPointerDown={event => event.stopPropagation()}>
       <div ref={ref} role="dialog" aria-modal="true" aria-labelledby="mdv-visual-title" data-visual-regression-result
-        className={cx("flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface text-ink shadow-popover", DIALOG_WIDTH[size])}
+        className={cx("flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover", DIALOG_WIDTH[size])}
         onKeyDown={event => {
           if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); onClose(); return; }
           if (event.key === "Tab") {

@@ -80,7 +80,7 @@ export function ReleaseNotesModal({ release, onClose }: { release: VersionReleas
       footer={<>
         <span className="flex-1" />
         <button type="button" onClick={onClose}
-          className={cx("h-9 rounded-lg bg-primary px-4 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}>{t("startTesting")}</button>
+          className={cx("h-9 rounded-full bg-primary px-4 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}>{t("startTesting")}</button>
       </>}
     >
       <div className="grid gap-5">
@@ -99,7 +99,7 @@ export function ReleaseNotesModal({ release, onClose }: { release: VersionReleas
             <ul className={cx("grid gap-x-5 gap-y-3.5", noteCount > 6 && "sm:grid-cols-2")}>
               {section.notes.map(note => (
                 <li key={note.title} className={cx("flex min-w-0 gap-3", note.description ? "items-start" : "items-center")}>
-                  <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-accent-soft text-accent-strong">{icons[note.icon]}</span>
+                  <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent-soft text-accent-strong">{icons[note.icon]}</span>
                   {note.description ? (
                     <div className="min-w-0">
                       <h4 className="text-[13.5px] font-semibold leading-5">{t(note.title)}</h4>

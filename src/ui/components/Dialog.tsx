@@ -70,7 +70,7 @@ export function Dialog({ title, titleAddon, icon, hero, description, size = "md"
             else if (event.shiftKey && (active === first || active === dialog)) { event.preventDefault(); last?.focus(); }
             else if (!event.shiftKey && active === last) { event.preventDefault(); first.focus(); }
           }}
-          className={cx("flex max-h-[calc(100dvh-24px)] w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-line bg-surface text-start text-ink shadow-popover outline-none sm:max-h-[calc(100dvh-48px)]",
+          className={cx("flex max-h-[calc(100dvh-24px)] w-full min-w-0 flex-col overflow-hidden rounded-2xl bg-surface text-start text-ink shadow-popover outline-none sm:max-h-[calc(100dvh-48px)]",
             hero !== undefined && "animate-pop-in motion-reduce:animate-none")}
         >
           {hero ? (

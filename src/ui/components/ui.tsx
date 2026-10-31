@@ -105,12 +105,12 @@ export const IconButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTM
       title={tooltip === undefined ? label : undefined}
       aria-pressed={pressed}
       className={cx(
-        "grid shrink-0 place-items-center rounded-[8px] border transition-colors disabled:cursor-not-allowed disabled:opacity-40",
-        size === "sm" ? "size-7" : "size-[34px] rounded-[9px]",
+        "grid shrink-0 place-items-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+        size === "sm" ? "size-7" : "size-[34px]",
         tone === "primary" && "border-transparent bg-primary text-on-primary hover:opacity-90",
         tone === "danger" && "border-transparent text-danger hover:bg-danger/10",
-        tone === "outline" && "border-line bg-surface text-ink hover:bg-sunken",
-        tone === "ghost" && (pressed ? "border-ink bg-sunken text-ink" : "border-transparent text-ink hover:bg-sunken"),
+        tone === "outline" && "border-transparent bg-sunken text-ink hover:bg-line-soft",
+        tone === "ghost" && (pressed ? "border-transparent bg-sunken text-ink" : "border-transparent text-ink hover:bg-sunken"),
         focusRing,
         className,
       )}
@@ -321,6 +321,26 @@ export function Kbd({ children }: { children: ReactNode }) {
 export function SectionLabel({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cx("text-[11px] font-bold uppercase tracking-[0.06em] text-faint", className)}>{children}</div>;
 }
+
+/** The bar look, shared by the top bar and the headers of compare, All devices and the editor. */
+const barEdge = "shadow-[0_0_0_1px_var(--color-line-soft),0_10px_28px_rgb(20_23_26/0.08)] dark:shadow-[0_0_0_1px_var(--color-line),0_10px_28px_rgb(0_0_0/0.4)]";
+/** A row of bar pieces floating above the content. */
+export const barRow = "relative z-30 flex shrink-0 flex-wrap items-center justify-center gap-2 px-3 pb-2 pt-4";
+/** A light pill holding controls. */
+export const barPill = cx("flex h-11 max-w-full shrink-0 items-center gap-1 rounded-full bg-surface px-[5px] text-ink", barEdge);
+/** A labelled control inside a bar pill; add `barOn` or `barOff`. */
+export const barButton = cx("flex h-[34px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-[12.5px] font-semibold disabled:opacity-40", focusRing);
+export const barOn = "bg-primary text-on-primary hover:opacity-90";
+export const barOff = "text-ink hover:bg-sunken";
+export const barDivider = "mx-1 h-5 w-px shrink-0 bg-line-soft";
+/** A pill button standing on its own, like the way back. */
+export const barChip = cx("flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-surface pe-4 ps-3 text-[13px] font-semibold text-ink hover:bg-sunken", barEdge, focusRing);
+/** The round close button at the end of a bar row. */
+export const barClose = cx("grid size-11 shrink-0 place-items-center rounded-full bg-surface text-ink-2 hover:text-ink", barEdge, focusRing);
+/** A quiet secondary button: a soft grey pill. */
+export const softButton = cx("inline-flex h-8 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-sunken px-3 text-[12.5px] font-semibold text-ink hover:bg-line-soft disabled:opacity-50", focusRing);
+/** A one-line text field. */
+export const softField = "rounded-full bg-sunken px-3 text-[13px] text-ink outline-none placeholder:text-faint focus:ring-2 focus:ring-line";
 
 export const popoverPanel = "z-[60] flex flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover";
 

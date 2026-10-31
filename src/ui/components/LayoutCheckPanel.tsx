@@ -9,7 +9,7 @@ import { shortName } from "./PreviewCard";
 import { cx, focusRing, Switch } from "./ui";
 import { useFormatters } from "./VisualChecks";
 
-const button = cx("inline-flex h-7 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-2.5 text-xs font-semibold text-ink hover:bg-sunken", focusRing);
+const button = cx("inline-flex h-7 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-sunken px-2.5 text-xs font-semibold text-ink hover:bg-line-soft", focusRing);
 
 /** The docked list of elements that make the page scroll sideways, one culprit per row with the devices it fails on. */
 export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixPrompt, onFixAll, onAfterReloadChange }: {
@@ -43,15 +43,15 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
         : t("layoutCleanSummary", { count: checkedDevices.length, when });
 
   return (
-    <aside data-layout-check-panel aria-label={t("layoutCheck")} className="flex w-[360px] shrink-0 flex-col border-s border-line bg-surface text-ink">
+    <aside data-layout-check-panel aria-label={t("layoutCheck")} className="mb-3 me-3 mt-2 flex w-[360px] shrink-0 flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover">
       <div className="flex items-start gap-2 pb-3 pe-2.5 ps-4 pt-3.5">
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <h2 className="text-sm font-semibold">{t("layoutCheck")}</h2>
+          <h2 className="text-[13px] font-semibold">{t("layoutCheck")}</h2>
           <p role="status" className="text-xs text-muted">{subtitle}</p>
         </div>
         {!checking && groups.length > 1 && (
           <button type="button" data-layout-fix-all onClick={onFixAll}
-            className={cx("inline-flex h-7 items-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-2.5 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
+            className={cx("inline-flex h-7 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-2.5 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
             <FixPromptIcon size={13} />{t("problemsFixAll", { count: groups.length })}
           </button>
         )}
@@ -61,7 +61,7 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
           </button>
         )}
         <button type="button" onClick={onClose} aria-label={t("closeLayoutCheck")} title={t("closeLayoutCheck")}
-          className={cx("grid size-[30px] shrink-0 place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}>
+          className={cx("grid size-7 shrink-0 place-items-center rounded-full text-ink-2 hover:bg-sunken", focusRing)}>
           <CloseIcon size={15} strokeWidth={2.2} />
         </button>
       </div>
@@ -93,7 +93,7 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
               return (
                 <li key={group.key} className="relative">
                   <button type="button" data-layout-fix onClick={() => onFixPrompt(group)} aria-label={t("problemsFixFor", { title: group.selector })}
-                    className={cx("absolute end-2 top-2 z-[1] inline-flex h-[26px] items-center gap-1 rounded-[7px] border border-line bg-surface px-2 text-xs font-semibold text-ink hover:bg-sunken", focusRing)}>
+                    className={cx("absolute end-2 top-2 z-[1] inline-flex h-[26px] items-center gap-1 rounded-full bg-sunken px-2.5 text-xs font-semibold text-ink hover:bg-line-soft", focusRing)}>
                     <FixPromptIcon size={12} />{t("problemsFix")}
                   </button>
                   <div
@@ -172,12 +172,11 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
         )}
       </div>
 
-      <div className="grid gap-2.5 border-t border-line bg-surface-2 px-4 pb-3.5 pt-3">
-        <label className="flex items-center justify-between gap-3 text-[12.5px] font-semibold">
+      <div className="border-t border-line-soft bg-surface-2 px-4 py-2.5" title={t("layoutCheckHelp")}>
+        <label className="flex h-7 items-center justify-between gap-3 text-[12.5px] font-semibold">
           {t("layoutAfterReload")}
           <Switch size="sm" checked={view.afterReload} onChange={onAfterReloadChange} label={t("layoutAfterReload")} />
         </label>
-        <p className="text-[11.5px] leading-snug text-muted">{t("layoutCheckHelp")}</p>
       </div>
     </aside>
   );

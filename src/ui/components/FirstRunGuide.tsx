@@ -143,7 +143,7 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
       )}
 
       <section
-        className="fixed flex max-h-[calc(100vh-24px)] w-[calc(100vw-24px)] max-w-[320px] flex-col overflow-y-auto rounded-2xl border border-line bg-surface p-4 text-ink shadow-popover transition-[left,top] duration-200"
+        className="fixed flex max-h-[calc(100vh-24px)] w-[calc(100vw-24px)] max-w-[320px] flex-col overflow-y-auto rounded-2xl bg-surface p-4 text-ink shadow-popover transition-[left,top] duration-200"
         style={cardStyle}
       >
         <div className="flex items-start gap-2">
@@ -180,7 +180,7 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
             <button
               type="button"
               onClick={() => finalStep ? onClose() : setStepIndex(current => current + 1)}
-              className={cx("flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-[9px] bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}
+              className={cx("flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}
             >
               {finalStep
                 ? <><CheckIcon size={14} />{t("startTesting")}</>

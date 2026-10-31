@@ -375,7 +375,7 @@ export function useVisualRegression(options: Options) {
     <MenuButton icon={<ListIcon size={15}/>} label={t("savedPictures")} onClick={() => { current.current.dismissMenu(); setDialog({ kind: "manage" }); }}/>
     {/* Help sits after the actions it explains. */}
     {baseline ? (
-      <div className="mx-1 mb-0.5 mt-1 flex items-center gap-2.5 rounded-[9px] bg-accent-soft px-2 py-[7px]">
+      <div className="mx-1 mb-0.5 mt-1 flex items-center gap-2.5 rounded-xl bg-accent-soft px-2.5 py-[7px]">
         <PageGlyph/>
         <p className="grid gap-px">
           <span className="text-xs font-[650] text-accent" title={format.date(baseline.savedAt)}>{t("baselineSavedAt", { when: format.ago(baseline.savedAt) })}</span>

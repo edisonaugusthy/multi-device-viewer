@@ -1,6 +1,6 @@
 import { useI18n } from "../../app/i18n";
 import { ChevronLeftIcon, ChevronRightIcon, MinusIcon, PlusIcon } from "../icons";
-import { cx, focusRing, Kbd } from "./ui";
+import { Kbd, barDivider, barPill, cx, focusRing } from "./ui";
 
 // Focus mode keeps only the devices on screen. Its controls appear while the
 // pointer is over a device or near the bottom edge (or keyboard focus is
@@ -30,7 +30,7 @@ export function ViewModeBar({ single, position, canStep, onShowAll, onShowOne, o
         role="toolbar"
         aria-label={t("viewModeControls")}
         className={cx(
-          "flex items-center gap-1 whitespace-nowrap rounded-[14px] border border-line bg-surface p-[5px] shadow-bar",
+          barPill, "whitespace-nowrap",
           // Hidden: wait 1.5 s after the pointer leaves, then fade slowly, so
           // there is time to reach the bar. It stays clickable and focusable
           // throughout; its hover zone reveals it before any click lands.
@@ -40,31 +40,31 @@ export function ViewModeBar({ single, position, canStep, onShowAll, onShowOne, o
           "group-has-[[data-device-capture]:hover]/focusmode:translate-y-0 group-has-[[data-device-capture]:hover]/focusmode:opacity-100 group-has-[[data-device-capture]:hover]/focusmode:delay-0 group-has-[[data-device-capture]:hover]/focusmode:duration-200",
         )}
       >
-        {showModes && <div role="group" aria-label={t("show")} className="flex rounded-[10px] bg-sunken p-[3px]">
+        {showModes && <div role="group" aria-label={t("show")} className="flex rounded-full bg-sunken p-[3px]">
           <ModeButton pressed={!single} onClick={onShowAll} label={t("viewAll")} icon={<AllGlyph />} />
           <ModeButton pressed={single} onClick={onShowOne} label={t("viewOne")} icon={<OneGlyph />} />
         </div>}
         {single && canStep && <>
-          <button type="button" onClick={onPrevious} aria-label={t("previousDevice")} title={t("previousDevice")} className={cx("grid h-[34px] w-[30px] place-items-center rounded-[9px] text-ink hover:bg-sunken", focusRing)}>
+          <button type="button" onClick={onPrevious} aria-label={t("previousDevice")} title={t("previousDevice")} className={cx("grid h-[34px] w-[30px] place-items-center rounded-full text-ink hover:bg-sunken", focusRing)}>
             <ChevronLeftIcon size={15} />
           </button>
           <span className="min-w-[34px] text-center font-mono text-xs text-ink-2">{position}</span>
-          <button type="button" onClick={onNext} aria-label={t("nextDevice")} title={t("nextDevice")} className={cx("grid h-[34px] w-[30px] place-items-center rounded-[9px] text-ink hover:bg-sunken", focusRing)}>
+          <button type="button" onClick={onNext} aria-label={t("nextDevice")} title={t("nextDevice")} className={cx("grid h-[34px] w-[30px] place-items-center rounded-full text-ink hover:bg-sunken", focusRing)}>
             <ChevronRightIcon size={15} />
           </button>
         </>}
         {single && onZoomOut && onZoomIn && <>
-          <span aria-hidden="true" className="mx-0.5 h-[22px] w-px bg-line" />
-          <button type="button" onClick={onZoomOut} aria-label={t("zoomOut")} title={t("zoomOut")} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink hover:bg-sunken", focusRing)}>
+          <span aria-hidden="true" className={barDivider} />
+          <button type="button" onClick={onZoomOut} aria-label={t("zoomOut")} title={t("zoomOut")} className={cx("grid size-[30px] place-items-center rounded-full text-ink hover:bg-sunken", focusRing)}>
             <MinusIcon size={14} />
           </button>
-          <button type="button" onClick={onZoomReset} title={t("resetFit")} className={cx("h-7 min-w-12 rounded-[7px] bg-sunken px-1 font-mono text-xs text-ink", focusRing)}>{zoomLabel}</button>
-          <button type="button" onClick={onZoomIn} aria-label={t("zoomIn")} title={t("zoomIn")} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink hover:bg-sunken", focusRing)}>
+          <button type="button" onClick={onZoomReset} title={t("resetFit")} className={cx("h-7 min-w-12 rounded-full bg-sunken px-1 font-mono text-xs text-ink", focusRing)}>{zoomLabel}</button>
+          <button type="button" onClick={onZoomIn} aria-label={t("zoomIn")} title={t("zoomIn")} className={cx("grid size-[30px] place-items-center rounded-full text-ink hover:bg-sunken", focusRing)}>
             <PlusIcon size={14} strokeWidth={2.4} />
           </button>
-          <span aria-hidden="true" className="mx-0.5 h-[22px] w-px bg-line" />
+          <span aria-hidden="true" className={barDivider} />
         </>}
-        <button type="button" data-exit-view-only onClick={onExit} className={cx("ms-0.5 flex h-[34px] items-center gap-2 rounded-[9px] bg-primary pe-2 ps-3 text-[13px] font-semibold text-on-primary", focusRing)}>
+        <button type="button" data-exit-view-only onClick={onExit} className={cx("ms-0.5 flex h-[34px] items-center gap-2 rounded-full bg-primary pe-2 ps-3 text-[13px] font-semibold text-on-primary", focusRing)}>
           {t("exit")}<Kbd>Esc</Kbd>
         </button>
       </div>
@@ -75,7 +75,7 @@ export function ViewModeBar({ single, position, canStep, onShowAll, onShowOne, o
 function ModeButton({ pressed, onClick, label, icon }: { pressed: boolean; onClick: () => void; label: string; icon: React.ReactNode }) {
   return (
     <button type="button" aria-pressed={pressed} onClick={onClick}
-      className={cx("flex h-7 items-center gap-1.5 rounded-[7px] px-3 text-[12.5px] font-semibold text-ink", pressed && "bg-surface shadow-lift", focusRing)}>
+      className={cx("flex h-7 items-center gap-1.5 rounded-full px-3 text-[12.5px] font-semibold", pressed ? "bg-primary text-on-primary" : "text-ink", focusRing)}>
       {icon}{label}
     </button>
   );

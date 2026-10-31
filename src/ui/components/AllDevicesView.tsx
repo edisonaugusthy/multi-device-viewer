@@ -36,7 +36,7 @@ import { BrowserAppearanceSettings } from "./BrowserAppearanceSettings";
 import { estimateDeviceFrameSize } from "./DeviceFrame";
 import { PreviewCard, shortName } from "./PreviewCard";
 import { SettingsPopover, type BrowserBarPosition } from "./SettingsPopover";
-import { cx, focusRing, IconButton, Segmented, Tooltip } from "./ui";
+import { barButton, barChip, barClose, barOff, barOn, barPill, barRow, cx, focusRing, IconButton, Segmented, Tooltip } from "./ui";
 import { ViewModeBar } from "./ViewModeBar";
 import { useVisualRegression } from "../hooks/useVisualRegression";
 import { readStore, writeStore } from "../../infrastructure/storage/local-store";
@@ -423,17 +423,17 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
       <div ref={rootRef} data-all-devices-view data-gallery-page={selectedGroup} role={expandedDeviceId ? undefined : "dialog"} aria-modal={expandedDeviceId ? undefined : true} aria-label={expandedDeviceId ? undefined : t("allDevices")}
         className="group/focusmode @container/gallery absolute inset-0 z-40 flex min-h-0 flex-col bg-stage text-ink">
         {!viewMode && <header inert={expandedDeviceId !== null} aria-hidden={expandedDeviceId !== null || undefined}
-          className="relative z-10 flex min-h-[52px] min-w-0 shrink-0 flex-wrap items-center gap-2 border-b border-line bg-surface px-3 py-2">
-          <button ref={backRef} type="button" onClick={onClose} aria-label={t("backToWorkspace")} title={t("backToWorkspace")}
-            className={cx("flex h-[34px] shrink-0 items-center gap-1.5 rounded-[9px] border border-line pe-2.5 ps-2 text-[13px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+          className={cx(barRow, "z-10 min-w-0 flex-col items-stretch")}>
+          <div className="flex min-w-0 items-center gap-2">
+          <button ref={backRef} type="button" onClick={onClose} aria-label={t("backToWorkspace")} title={t("backToWorkspace")} className={barChip}>
             <BackIcon size={15} />{t("workspace")}
           </button>
 
-          <div className="relative min-w-[90px] flex-1">
+          <div className={cx(barPill, "relative min-w-[90px] flex-1")}>
             {!categoryTabsFit && <>
               <label className="sr-only" htmlFor="mdv-gallery-category">{t("deviceCategories")}</label>
               <select id="mdv-gallery-category" aria-label={t("deviceCategories")} value={selectedGroup ?? ""} onChange={event => jumpToGroup(event.target.value as DeviceGalleryGroupId)}
-                className={cx("h-8 w-full max-w-48 rounded-lg border border-line bg-surface px-2 text-[12.5px] font-semibold text-ink", focusRing)}>
+                className={cx("h-[34px] w-full max-w-48 rounded-full bg-sunken px-3 text-[12.5px] font-semibold text-ink", focusRing)}>
                 {groups.map(item => <option key={item.id} value={item.id}>{t(groupLabels[item.id])} · {item.devices.length}</option>)}
               </select>
             </>}
@@ -443,8 +443,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
                 const current = selectedGroup === item.id;
                 return (
                   <button type="button" key={item.id} aria-current={current ? "page" : undefined} onClick={() => jumpToGroup(item.id)}
-                    className={cx("flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-2 text-[13px]",
-                      current ? "bg-primary font-semibold text-on-primary" : "font-medium text-ink-2 hover:bg-sunken hover:text-ink", focusRing)}>
+                    className={cx(barButton, current ? barOn : barOff)}>
                     {tabLabels[item.id] === "Android" ? "Android" : t(tabLabels[item.id] as TranslationKey)}
                     <span className={cx("font-mono text-[11.5px]", current ? "opacity-75" : "text-muted")}>{item.devices.length}</span>
                   </button>
@@ -453,9 +452,12 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
             </nav>
           </div>
 
-          <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+          {/* Only the workspace closes the viewer; here × goes back to it. */}
+          <button type="button" aria-label={t("backToWorkspace")} title={t("tipBackToWorkspace")} onClick={onClose} className={barClose}><CloseIcon size={16} /></button>
+          </div>
+          <div className={cx(barPill, "self-center")}>
             <div data-gallery-load-progress title={t("galleryLoadedPreviews", { loaded: loadedCount, count })}
-              className="flex h-[34px] items-center gap-2 rounded-[9px] border border-line pe-1 ps-2.5">
+              className="flex h-[34px] items-center gap-2 rounded-full bg-sunken pe-1 ps-3">
               <span aria-hidden="true" className="flex h-[5px] w-16 overflow-hidden rounded-full bg-line-soft">
                 <span className="bg-accent transition-[width]" style={{ width: `${count ? (loadedCount / count) * 100 : 0}%` }} />
                 <span className="bg-warn transition-[width]" style={{ width: `${count ? (incompleteIds.length / count) * 100 : 0}%` }} />
@@ -463,13 +465,13 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
               <span className="font-mono text-xs">{loadedCount}/{count}</span>
               {loadingPaused && <span className="text-xs text-muted">{t("galleryLoadingPaused")}</span>}
               <button type="button" onClick={onToggleLoading} aria-label={t(loadingPaused ? "resumeLoading" : "pauseLoading")} title={t(loadingPaused ? "galleryResumeLoading" : "galleryPauseLoading")}
-                className={cx("grid size-7 place-items-center rounded-[7px] bg-sunken text-ink", focusRing)}>
+                className={cx("grid size-7 place-items-center rounded-full bg-surface text-ink", focusRing)}>
                 {loadingPaused ? <PlayIcon size={13} /> : <PauseIcon size={13} />}
               </button>
             </div>
             {incompleteIds.length > 0 && (
               <button type="button" title={t("retryIncompletePreviews")} onClick={() => incompleteIds.forEach(reloadSlot)}
-                className={cx("h-[34px] rounded-[9px] border border-warn-line bg-warn-soft px-2.5 text-[13px] font-semibold text-warn", focusRing)}>
+                className={cx("h-[34px] rounded-full bg-warn-soft px-3 text-[12.5px] font-semibold text-warn", focusRing)}>
                 {t("retryCount", { count: incompleteIds.length })}
               </button>
             )}
@@ -481,15 +483,13 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
                 { value: "device", label: t("deviceView"), tooltip: t("tipDeviceView") },
                 { value: "free", label: t("freeView"), tooltip: t("tipFreeView") },
               ]} />
-            <div role="group" aria-label={t("syncBetweenDevices")} className="flex h-[34px] items-center gap-0.5 rounded-[9px] bg-sunken px-[3px]">
+            <div role="group" aria-label={t("syncBetweenDevices")} className="flex h-[34px] items-center gap-0.5 rounded-full bg-sunken px-[3px]">
               <SyncToggle label={t("scrollSync")} description={t("scrollSyncHint")} pressed={display.scrollSync} onClick={() => toggleSync("scrollSync")}><ScrollSyncIcon size={14} /></SyncToggle>
               <SyncToggle label={t("navigationSync")} description={t("navigationSyncHint")} pressed={display.navigationSync} onClick={() => toggleSync("navigationSync")}><NavigationSyncIcon size={14} /></SyncToggle>
             </div>
             <IconButton label={t("reloadAll")} tooltip={t("resetGalleryPreviews")} onClick={refreshAll}><ReloadIcon size={16} /></IconButton>
             <IconButton label={t("viewMode")} tooltip={t("tipFocusMode")} tooltipAlign="end" tone="primary" onClick={() => setViewMode(true)}><EyeIcon size={16} /></IconButton>
             <IconButton ref={settingsRef} label={t("settings")} tooltip={t("tipSettings")} tooltipAlign="end" pressed={settingsOpen} aria-expanded={settingsOpen} onClick={() => setSettingsOpen(value => !value)}><SettingsIcon size={16} /></IconButton>
-            {/* Only the workspace closes the viewer; here × goes back to it. */}
-            <IconButton label={t("backToWorkspace")} tooltip={t("tipBackToWorkspace")} tooltipAlign="end" onClick={onClose}><CloseIcon size={18} /></IconButton>
           </div>
         </header>}
 
@@ -541,7 +541,7 @@ function SyncToggle({ label, description, pressed, onClick, children }: { label:
   return (
     <Tooltip title={label} description={description}>
       <button type="button" aria-label={label} aria-pressed={pressed} onClick={onClick}
-        className={cx("grid h-7 w-[30px] place-items-center rounded-[7px]", pressed ? "bg-accent-soft text-accent-strong" : "text-ink-2 hover:text-ink", focusRing)}>
+        className={cx("grid h-7 w-[30px] place-items-center rounded-full", pressed ? "bg-primary text-on-primary" : "text-ink-2 hover:text-ink", focusRing)}>
         {children}
       </button>
     </Tooltip>
@@ -721,7 +721,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
     const controls = popupRef.current?.querySelectorAll<HTMLElement>("button:not([disabled]), select, iframe");
     controls?.[last ? controls.length - 1 : 0]?.focus({ preventScroll: true });
   };
-  const menuItem = cx("flex h-9 items-center rounded-[7px] px-2 text-start text-[13px] font-medium hover:bg-sunken", focusRing);
+  const menuItem = cx("flex h-9 items-center rounded-full px-2 text-start text-[13px] font-medium hover:bg-sunken", focusRing);
   const capture = () => {
     const target = popupRef.current?.querySelector<HTMLElement>("[data-device-capture]");
     if (!target || capturing) return;
@@ -755,7 +755,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
           <IconButton size="sm" data-gallery-capture label={t("captureAndAnnotate")} disabled={capturing} onClick={capture}><CameraIcon size={15} /></IconButton>
           <div className="flex items-center gap-1 @max-[720px]/popup:hidden">
             <IconButton size="sm" label={t("zoomOut")} disabled={slot.zoom <= 0.2} onClick={() => simulator.current.zoomSlot(slot.id, "out")}><MinusIcon size={14} /></IconButton>
-            <button type="button" title={t("resetFit")} onClick={() => simulator.current.setSlotZoomMode(slot.id, "fit")} className={cx("h-7 min-w-12 rounded-[7px] bg-sunken px-1 font-mono text-xs text-ink", focusRing)}>{scale === null ? "–" : `${Math.round(scale * 100)}%`}</button>
+            <button type="button" title={t("resetFit")} onClick={() => simulator.current.setSlotZoomMode(slot.id, "fit")} className={cx("h-7 min-w-12 rounded-full bg-sunken px-1 font-mono text-xs text-ink", focusRing)}>{scale === null ? "–" : `${Math.round(scale * 100)}%`}</button>
             <IconButton size="sm" label={t("zoomIn")} disabled={slot.zoom >= 1.6} onClick={() => simulator.current.zoomSlot(slot.id, "in")}><PlusIcon size={14} strokeWidth={2.4} /></IconButton>
           </div>
           <div className="flex items-center gap-1 @max-[620px]/popup:hidden">
@@ -775,7 +775,7 @@ function GalleryPopup({ device, slot, display, index, count, stepFocus, onStep, 
               {ios && <div className="border-t border-line-soft p-1.5"><BrowserAppearanceSettings device={device} slot={slot} geometry={geometry} onClose={closeOptions}/></div>}
             </div>}
           </div>
-          <button type="button" onClick={onAdd} className={cx("h-8 shrink-0 whitespace-nowrap rounded-lg bg-accent px-3 text-[12.5px] font-semibold text-on-accent", focusRing)}>{t("addToWorkspace")}</button>
+          <button type="button" onClick={onAdd} className={cx("h-8 shrink-0 whitespace-nowrap rounded-full bg-accent px-3 text-[12.5px] font-semibold text-on-accent", focusRing)}>{t("addToWorkspace")}</button>
           <IconButton ref={closeRef} size="sm" label={t("backToGallery")} onClick={onClose}><CloseIcon size={16} /></IconButton>
         </div>
       </header>

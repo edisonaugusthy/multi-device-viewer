@@ -18,11 +18,13 @@
   --mdv-ink-2: #3b4148;
   --mdv-muted: #575e66;
   --mdv-faint: #8a9099;
-  --mdv-accent: #0f766e;
+  /* The highlight follows the top bar: black on light, so every "on" state,
+     tick and focus ring matches it. */
+  --mdv-accent: #14171a;
   --mdv-on-accent: #ffffff;
-  --mdv-accent-soft: #e6f4f1;
-  --mdv-accent-strong: #0b5a54;
-  --mdv-accent-line: #9ed8cf;
+  --mdv-accent-soft: #eef0f2;
+  --mdv-accent-strong: #14171a;
+  --mdv-accent-line: #c9ced4;
   --mdv-primary: #14171a;
   --mdv-on-primary: #ffffff;
   --mdv-danger: #b42318;
@@ -52,11 +54,11 @@
   --mdv-ink-2: #c3c8cf;
   --mdv-muted: #9aa1aa;
   --mdv-faint: #6f7680;
-  --mdv-accent: #2dd4bf;
-  --mdv-on-accent: #04201c;
-  --mdv-accent-soft: rgb(45 212 191 / 0.13);
-  --mdv-accent-strong: #5eead4;
-  --mdv-accent-line: rgb(45 212 191 / 0.4);
+  --mdv-accent: #e8eaed;
+  --mdv-on-accent: #14171a;
+  --mdv-accent-soft: rgb(255 255 255 / 0.08);
+  --mdv-accent-strong: #f3f4f6;
+  --mdv-accent-line: rgb(255 255 255 / 0.22);
   --mdv-primary: #e8eaed;
   --mdv-on-primary: #14171a;
   --mdv-danger: #f87171;

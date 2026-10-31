@@ -1038,7 +1038,7 @@ test("builds an actionable AI fix prompt with optional context", async ({ page }
   await expect(preview).toContainText("Run the relevant type, unit, and browser checks");
   await expect(preview).toContainText("Navigation overlaps the hero");
   await expect(preview).toContainText("Open the page and use Pixel 10.");
-  await expect(dialog).toContainText("Nothing is sent from here");
+  await expect(dialog.getByRole("heading", { name: "Fix prompt" })).toHaveAttribute("title", /Nothing is sent from here/);
 
   const dialogBox = await dialog.boundingBox();
   const previewBox = await preview.boundingBox();
@@ -1702,7 +1702,8 @@ test("keeps a design's adjustment per screen size, so a turned device starts fro
 test("forgets a removed device's design instead of keeping it in the saved workspace", async ({ page }) => {
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Compare with design" }).click();
   await page.locator('input[type="file"]').first().setInputFiles(await designPng(page, 402, 520));
-  await expect(page.locator("[data-compare-toolbar]").getByRole("tab", { name: /iPhone 18 Pro/ })).toContainText("Design");
+  // A device with a design gets a purple dot, named in its tooltip.
+  await expect(page.locator("[data-compare-toolbar]").getByRole("tab", { name: /iPhone 18 Pro/ })).toHaveAttribute("title", "Design");
   const savedDesigns = () => page.evaluate(() => {
     const view = JSON.parse(localStorage.getItem("mdvWorkspaceView") ?? "{}");
     return [view.designReferences, view.designNames].map((map) => Object.keys(map ?? {}).length);

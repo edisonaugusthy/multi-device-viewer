@@ -7,7 +7,7 @@ import { shortName } from "./PreviewCard";
 import { cx, focusRing } from "./ui";
 
 const KIND_FILTERS: Array<[ProblemKind, TranslationKey]> = [["error", "problemsErrors"], ["request", "problemsRequests"], ["warning", "problemsWarnings"]];
-const smallButton = cx("inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-2.5 text-xs font-semibold text-ink hover:bg-sunken", focusRing);
+const smallButton = cx("inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-sunken px-2.5 text-xs font-semibold text-ink hover:bg-line-soft", focusRing);
 
 /** The docked Problems panel: errors and failed requests per device. */
 export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
@@ -31,14 +31,14 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
   const deviceName = view.device ? view.groups.flatMap(group => group.devices).find(item => item.slotId === view.device)?.name ?? view.clean.find(item => item.slotId === view.device)?.name : undefined;
 
   return (
-    <aside data-problems-panel aria-label={t("problemsTitle")} className="flex w-[384px] shrink-0 flex-col border-s border-line bg-surface text-ink">
+    <aside data-problems-panel aria-label={t("problemsTitle")} className="mb-3 me-3 mt-2 flex w-[384px] shrink-0 flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover">
       <div className="flex items-center gap-2 pb-2.5 pe-2.5 ps-3 pt-3">
-        <h2 className="flex flex-1 items-center gap-2 ps-1 text-sm font-semibold">
+        <h2 className="flex flex-1 items-center gap-2 ps-1 text-[13px] font-semibold">
           {t("problemsTitle")}
-          {view.total > 0 && <span className="rounded-[5px] bg-red-500 px-1.5 font-mono text-[10.5px] font-bold text-white">{view.total}</span>}
+          {view.total > 0 && <span className="rounded-full bg-red-500 px-1.5 font-mono text-[10.5px] font-bold text-white">{view.total}</span>}
         </h2>
         <button type="button" onClick={onClose} aria-label={t("problemsClose")} title={t("problemsClose")}
-          className={cx("grid size-[30px] shrink-0 place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}>
+          className={cx("grid size-7 shrink-0 place-items-center rounded-full text-ink-2 hover:bg-sunken", focusRing)}>
           <CloseIcon size={15} strokeWidth={2.2} />
         </button>
       </div>
@@ -56,7 +56,7 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
             <span className="flex-1" />
             {view.groups.length > 0 && (
               <button type="button" onClick={onFixAll}
-                className={cx("inline-flex h-[30px] items-center gap-1.5 rounded-lg bg-accent px-3 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
+                className={cx("inline-flex h-[30px] items-center gap-1.5 rounded-full bg-accent px-3 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
                 <FixPromptIcon size={13} />{t("problemsFixAll", { count: view.groups.length })}
               </button>
             )}
@@ -66,7 +66,7 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
               const on = view.kinds.has(kind);
               return (
                 <button key={kind} type="button" aria-pressed={on} onClick={() => view.toggleKind(kind)}
-                  className={cx("inline-flex h-7 items-center gap-1.5 rounded-full border pe-2.5 ps-1.5 text-xs font-semibold", on ? "border-accent-line bg-accent-soft text-accent-strong" : "border-line bg-surface text-muted", focusRing)}>
+                  className={cx("inline-flex h-7 items-center gap-1.5 rounded-full border pe-2.5 ps-1.5 text-xs font-semibold", on ? "border-transparent bg-sunken text-ink" : "border-line bg-surface text-muted", focusRing)}>
                   <span className={cx("grid size-3.5 place-items-center rounded-full", on ? "bg-accent text-on-accent" : "bg-line")}>{on && <CheckIcon size={9} strokeWidth={4.5} />}</span>
                   {t(label)}{kind === "warning" && view.warnings > 0 && <span className="font-mono text-[11px] text-faint">{view.warnings}</span>}
                 </button>
@@ -81,7 +81,7 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
             return (
               <li key={group.key} className={cx("relative rounded-[10px]", expanded && "bg-surface shadow-[0_1px_2px_rgb(20_23_26/0.18),0_0_0_1px_var(--color-line-soft)]")}>
                 <button type="button" onClick={() => onFix(group)} aria-label={t("problemsFixFor", { title: group.title })}
-                  className={cx("absolute end-2 top-2 z-[1] inline-flex h-[26px] items-center gap-1 rounded-[7px] border border-line bg-surface px-2 text-xs font-semibold text-ink hover:bg-sunken", focusRing)}>
+                  className={cx("absolute end-2 top-2 z-[1] inline-flex h-[26px] items-center gap-1 rounded-full bg-sunken px-2.5 text-xs font-semibold text-ink hover:bg-line-soft", focusRing)}>
                   <FixPromptIcon size={12} />{t("problemsFix")}
                 </button>
                 <button type="button" aria-expanded={hasDetail ? expanded : undefined} disabled={!hasDetail}

@@ -269,7 +269,7 @@ export function DevicePicker({
         )}
 
         {(swapping || (!replacing && full)) && (
-          <p role="status" className={cx("mx-2 mt-1.5 shrink-0 rounded-lg px-2.5 py-1 text-xs font-medium", swapping ? "bg-accent-soft text-accent-strong" : "bg-warn-soft text-warn")}>
+          <p role="status" className={cx("mx-2 mt-1.5 shrink-0 rounded-full px-3 py-1 text-xs font-medium", swapping ? "bg-accent-soft text-accent-strong" : "bg-warn-soft text-warn")}>
             {swapping ? t("replacingNamed", { name: swapping.name }) : t("maxDevicesReached", { count: maxSlots })}
           </p>
         )}
@@ -345,7 +345,7 @@ export function DevicePicker({
                         type="button"
                         title={set.deviceIds.map(id => findDevice(id).name).join(" · ")}
                         onClick={() => onApplySet(set.deviceIds)}
-                        className={cx("flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium text-ink", same ? "bg-accent-soft" : "hover:bg-sunken", focusRing)}
+                        className={cx("flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-full px-2 text-start text-[13px] font-medium text-ink", same ? "bg-accent-soft" : "hover:bg-sunken", focusRing)}
                       >
                         <span className="flex h-4 shrink-0 items-end gap-0.5 text-ink-2">
                           {set.deviceIds.map((id, index) => <DeviceGlyph key={`${id}-${index}`} kind={glyphKindFor(findDevice(id))} small />)}
@@ -379,9 +379,9 @@ export function DevicePicker({
             value={setName}
             onChange={event => setSetName(event.target.value)}
             placeholder={t("saveSetAs", { count: slots.length })}
-            className="h-8 min-w-0 flex-1 rounded-lg border border-line bg-surface px-2.5 text-[13px] text-ink outline-none placeholder:text-faint focus:border-accent"
+            className="h-8 min-w-0 flex-1 rounded-full bg-sunken px-2.5 text-[13px] text-ink outline-none placeholder:text-faint focus:border-accent"
           />
-          <button type="submit" className={cx("h-8 shrink-0 rounded-lg bg-primary px-3 text-[12.5px] font-semibold text-on-primary", focusRing)}>{t("save")}</button>
+          <button type="submit" className={cx("h-8 shrink-0 rounded-full bg-primary px-3 text-[12.5px] font-semibold text-on-primary", focusRing)}>{t("save")}</button>
         </form>
       </>}
 
@@ -390,13 +390,13 @@ export function DevicePicker({
         <form className="flex shrink-0 items-center gap-1.5 px-2 pb-2" onSubmit={event => { event.preventDefault(); createCustomSize(); }}>
           <label className="sr-only" htmlFor="mdv-custom-width">{t("customWidth")}</label>
           <input id="mdv-custom-width" inputMode="numeric" value={customWidth} onChange={event => setCustomWidth(event.target.value)}
-            className="h-8 w-[70px] rounded-lg border border-line bg-surface px-2 text-center font-mono text-[13px] text-ink outline-none focus:border-accent" />
+            className="h-8 w-[70px] rounded-full bg-sunken px-2 text-center font-mono text-[13px] text-ink outline-none focus:border-accent" />
           <span className="text-faint">×</span>
           <label className="sr-only" htmlFor="mdv-custom-height">{t("customHeight")}</label>
           <input id="mdv-custom-height" inputMode="numeric" value={customHeight} onChange={event => setCustomHeight(event.target.value)}
-            className="h-8 w-[70px] rounded-lg border border-line bg-surface px-2 text-center font-mono text-[13px] text-ink outline-none focus:border-accent" />
+            className="h-8 w-[70px] rounded-full bg-sunken px-2 text-center font-mono text-[13px] text-ink outline-none focus:border-accent" />
           <span className="flex-1" />
-          <button type="submit" disabled={!replaceSlot && full} className={cx("h-8 rounded-lg bg-primary px-3 text-[12.5px] font-semibold text-on-primary disabled:opacity-40", focusRing)}>{t("add")}</button>
+          <button type="submit" disabled={!replaceSlot && full} className={cx("h-8 rounded-full bg-primary px-3 text-[12.5px] font-semibold text-on-primary disabled:opacity-40", focusRing)}>{t("add")}</button>
         </form>
         {customError && <p role="alert" className="mx-2 mb-2 rounded-lg bg-danger/10 px-2.5 py-1.5 text-xs font-medium text-danger">{customError}</p>}
         <div className="min-h-0 flex-1 overflow-y-auto border-t border-line-soft px-1 pb-1.5">
@@ -446,14 +446,14 @@ const isSelected = (state: RowState, replacing: boolean) => replacing ? state.cu
 function rowFrame(state: RowState, replacing: boolean) {
   const selected = isSelected(state, replacing);
   return cx(
-    "my-px flex items-center rounded-lg border transition-colors",
+    "my-px flex items-center rounded-[10px] border transition-colors",
     selected ? "border-transparent bg-sunken" : "border-transparent",
   );
 }
 
 function rowButton(state: RowState, replacing: boolean) {
   return cx(
-    "flex min-h-[34px] min-w-0 flex-1 items-center gap-2.5 rounded-[7px] px-2 text-start text-[13px] font-medium",
+    "flex min-h-9 min-w-0 flex-1 items-center gap-2.5 rounded-[10px] px-2.5 text-start text-[13px] font-medium",
     isSelected(state, replacing) ? "text-ink"
       : state.disabled ? "cursor-default text-faint"
       : "text-ink hover:bg-sunken",
@@ -479,7 +479,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
   const size = `${device.cssViewport.width}×${device.cssViewport.height}`;
   return (
     <div className={cx(
-      "group relative flex min-w-0 items-center rounded-lg transition-colors",
+      "group relative flex min-w-0 items-center rounded-[10px] transition-colors",
       ticked && "bg-sunken",
       !ticked && !state.disabled && "hover:bg-sunken",
     )}>
@@ -494,7 +494,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         disabled={state.disabled}
         onClick={onPick}
         className={cx(
-          "flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg py-1 ps-2.5 text-start text-[13px] font-medium",
+          "flex min-h-9 min-w-0 flex-1 items-center gap-2.5 rounded-[10px] py-1 ps-2.5 text-start text-[13px] font-medium",
           favorite ? "pe-9" : "pe-2.5",
           state.disabled && !ticked ? "cursor-default text-faint" : "text-ink",
           focusRing,
@@ -531,7 +531,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
 
 function FooterLink({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className={cx("flex h-8 items-center gap-1.5 rounded-[7px] px-2.5 text-[12.5px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+    <button type="button" onClick={onClick} className={cx("flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[12.5px] font-semibold text-ink hover:bg-sunken", focusRing)}>
       {icon}{label}
     </button>
   );
@@ -540,7 +540,7 @@ function FooterLink({ icon, label, onClick }: { icon: React.ReactNode; label: st
 function SubviewHeader({ title, backLabel, onBack, children }: { title: string; backLabel: string; onBack: () => void; children?: React.ReactNode }) {
   return (
     <div className="flex shrink-0 items-center gap-1 p-1.5">
-      <button type="button" aria-label={backLabel} title={backLabel} onClick={onBack} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink hover:bg-sunken", focusRing)}>
+      <button type="button" aria-label={backLabel} title={backLabel} onClick={onBack} className={cx("grid size-[30px] place-items-center rounded-full text-ink hover:bg-sunken", focusRing)}>
         <ChevronLeftIcon size={16} />
       </button>
       <span className="text-[13px] font-semibold">{title}</span>
@@ -553,7 +553,7 @@ function SubviewHeader({ title, backLabel, onBack, children }: { title: string; 
 function TextButton({ accent = false, disabled = false, onClick, children }: { accent?: boolean; disabled?: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button type="button" disabled={disabled} onClick={onClick}
-      className={cx("h-7 rounded-[7px] px-2 text-xs font-semibold hover:bg-sunken disabled:opacity-40", accent ? "text-accent" : "text-ink-2", focusRing)}>
+      className={cx("h-7 rounded-full px-2.5 text-xs font-semibold hover:bg-sunken disabled:opacity-40", accent ? "text-accent" : "text-ink-2", focusRing)}>
       {children}
     </button>
   );

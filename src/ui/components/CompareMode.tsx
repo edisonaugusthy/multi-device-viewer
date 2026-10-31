@@ -3,8 +3,7 @@ import { useI18n } from "../../app/i18n";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { AdjustIcon, BackIcon, LinkIcon, MinusIcon, OverlayIcon, PencilIcon, PlusIcon, SideBySideIcon, UploadIcon, CloseIcon } from "../icons";
 import { placeDesign, sizeDesign, type DesignFit, type DesignFrame, type DesignSize } from "../interactions/design-frame";
-import { BrandMark } from "./BrandMark";
-import { cx, focusRing, IconButton, Segmented, Switch, Tooltip } from "./ui";
+import { barButton, barClose, barDivider, barOff, barOn, barPill, barRow, cx, focusRing, IconButton, Segmented, softButton, Switch, Tooltip } from "./ui";
 
 export type CompareMode = "side-by-side" | "overlay";
 export type CompareBlend = "normal" | "difference";
@@ -33,16 +32,13 @@ export function CompareBar({ tabs, activeSlotId, mode, onSelect, onModeChange, o
 }) {
   const { t } = useI18n();
   return (
-    <header data-compare-toolbar className="relative z-30 flex h-[52px] shrink-0 items-center gap-2.5 border-b border-line bg-surface px-2.5">
-      <BrandMark size={28} />
-      <button type="button" onClick={onBack} aria-label={t("backToWorkspace")} title={t("backToWorkspace")}
-        className={cx("flex h-[34px] shrink-0 items-center gap-1.5 rounded-[9px] border border-line pe-2.5 ps-2 text-[13px] font-semibold text-ink hover:bg-sunken", focusRing)}>
+    <header data-compare-toolbar className={cx(barRow, "px-14")}>
+      <div className={barPill}>
+      <button type="button" onClick={onBack} aria-label={t("backToWorkspace")} title={t("backToWorkspace")} className={cx(barButton, barOff, "ps-2.5")}>
         <BackIcon size={15} className="rtl:rotate-180" />{t("workspace")}
       </button>
-      <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />
-      <span className="whitespace-nowrap text-[13px] font-semibold">{t("compareWithDesign")}</span>
-      <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />
-      <div role="tablist" aria-label={t("deviceToCompare")} className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
+      <span aria-hidden="true" className={barDivider} />
+      <div role="tablist" aria-label={t("deviceToCompare")} className="flex min-w-0 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
         {tabs.map(tab => {
           const active = tab.slotId === activeSlotId;
           return (
@@ -52,33 +48,28 @@ export function CompareBar({ tabs, activeSlotId, mode, onSelect, onModeChange, o
               role="tab"
               aria-selected={active}
               onClick={() => onSelect(tab.slotId)}
-              className={cx(
-                "flex h-[34px] shrink-0 items-center gap-2 whitespace-nowrap rounded-[9px] border px-3 text-[13px] text-ink",
-                active ? "border-ink bg-surface font-semibold" : "border-transparent font-medium hover:bg-sunken",
-                focusRing,
-              )}
+              title={tab.hasDesign ? t("hasDesign") : t("noDesign")}
+              className={cx(barButton, active ? barOn : barOff)}
             >
               {tab.label}
-              <span className={cx(
-                "rounded-full px-[7px] py-0.5 text-[11.5px] font-semibold",
-                tab.hasDesign ? "bg-design-soft text-design-ink" : "bg-sunken text-muted",
-              )}>
-                {tab.hasDesign ? t("hasDesign") : t("noDesign")}
-              </span>
+              {/* A purple dot once the device has a design to compare with. */}
+              <span aria-hidden="true" className={cx("size-1.5 rounded-full", tab.hasDesign ? "bg-design" : active ? "bg-on-primary/35" : "bg-line")} />
             </button>
           );
         })}
       </div>
+      <span aria-hidden="true" className={barDivider} />
       <Segmented
         label={t("comparisonMode")}
         value={mode}
         onChange={onModeChange}
         options={[
-          { value: "side-by-side", label: t("sideBySide"), icon: <SideBySideIcon size={16} /> },
-          { value: "overlay", label: t("overlay"), icon: <OverlayIcon size={16} /> },
+          { value: "side-by-side", label: t("sideBySide"), icon: <SideBySideIcon size={15} /> },
+          { value: "overlay", label: t("overlay"), icon: <OverlayIcon size={15} /> },
         ]}
       />
-      <IconButton label={t("backToWorkspace")} tooltip={t("tipBackToWorkspace")} tooltipAlign="end" onClick={onBack}><CloseIcon size={18} /></IconButton>
+      </div>
+      <button type="button" aria-label={t("backToWorkspace")} title={t("backToWorkspace")} onClick={onBack} className={cx(barClose, "absolute end-3 top-4")}><CloseIcon size={16} /></button>
     </header>
   );
 }
@@ -136,9 +127,9 @@ export function DesignPane({ image, fileName, deviceName, width, height, scrollT
     <div className="flex min-h-0 min-w-0 flex-1 flex-col items-center gap-3">
       <CompareLabel tone="design" title={t("design")} detail={image ? fileName : undefined}>
         {image && <>
-          <button type="button" onClick={() => fileInput.current?.click()} className={cx("h-[26px] rounded-[7px] border border-line bg-surface px-2.5 text-xs font-semibold text-ink hover:bg-sunken", focusRing)}>{t("replaceDesign")}</button>
-          <button type="button" onClick={() => onMarkUp(image)} aria-label={t("markFeedback")} title={t("markFeedback")} className={cx("grid size-[26px] place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}><PencilIcon size={14} /></button>
-          <button type="button" onClick={onRemove} aria-label={t("removeDesign")} title={t("removeDesign")} className={cx("grid size-[26px] place-items-center rounded-[7px] text-ink-2 hover:bg-sunken", focusRing)}><CloseIcon size={13} strokeWidth={2.4} /></button>
+          <button type="button" onClick={() => fileInput.current?.click()} className={cx(softButton, "h-[26px] px-2.5 text-xs")}>{t("replaceDesign")}</button>
+          <button type="button" onClick={() => onMarkUp(image)} aria-label={t("markFeedback")} title={t("markFeedback")} className={cx("grid size-[26px] place-items-center rounded-full text-ink-2 hover:bg-sunken", focusRing)}><PencilIcon size={14} /></button>
+          <button type="button" onClick={onRemove} aria-label={t("removeDesign")} title={t("removeDesign")} className={cx("grid size-[26px] place-items-center rounded-full text-ink-2 hover:bg-sunken", focusRing)}><CloseIcon size={13} strokeWidth={2.4} /></button>
         </>}
       </CompareLabel>
       <input ref={fileInput} type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="sr-only" tabIndex={-1}
@@ -198,7 +189,7 @@ export function CompareControls({ mode, opacity, blend, adjusting, scrollLinked,
   const { t } = useI18n();
   return (
     <div role="toolbar" aria-label={t("comparisonControls")}
-      className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-[14px] border border-line bg-surface px-1.5 py-[5px] shadow-bar">
+      className={cx(barPill, "absolute bottom-5 left-1/2 z-30 -translate-x-1/2 whitespace-nowrap")}>
       {mode === "overlay" && (hasDesign ? <>
         <label className="flex items-center gap-2 ps-2 text-[12.5px] font-semibold">
           {t("opacity")}
@@ -212,33 +203,32 @@ export function CompareControls({ mode, opacity, blend, adjusting, scrollLinked,
         <Divider />
         <Tooltip title={t("adjustDesign")} description={t("adjustDesignHint")}>
           <button type="button" aria-pressed={adjusting} onClick={() => onAdjustingChange(!adjusting)}
-            className={cx("flex h-[34px] items-center gap-1.5 rounded-[9px] border px-2.5 text-[12.5px] font-semibold",
-              adjusting ? "border-design-line bg-design-soft text-design-ink" : "border-line bg-surface text-ink", focusRing)}>
+            className={cx(barButton, adjusting ? barOn : barOff)}>
             <AdjustIcon size={15} />
             {t("adjustDesign")}
           </button>
         </Tooltip>
         <Divider />
       </> : <>
-        <button type="button" onClick={onAddDesign} className={cx("h-[34px] rounded-[9px] border-[1.5px] border-dashed border-faint px-3.5 text-[13px] font-semibold text-ink", focusRing)}>{t("addDesignToOverlay")}</button>
+        <button type="button" onClick={onAddDesign} className={cx(barButton, barOn)}>{t("addDesignToOverlay")}</button>
         <Divider />
       </>)}
       {mode === "side-by-side" && <>
-        <label className="flex h-[34px] cursor-pointer items-center gap-2 rounded-[9px] px-2.5 text-[12.5px] font-semibold">
+        <label className="flex h-[34px] cursor-pointer items-center gap-2 rounded-full px-3 text-[12.5px] font-semibold hover:bg-sunken">
           {t("scrollDesignWithPage")}
           <Switch size="sm" checked={scrollLinked} onChange={onScrollLinkedChange} label={t("scrollDesignWithPage")} />
         </label>
         <Divider />
       </>}
-      <button type="button" aria-label={t("zoomOut")} title={t("zoomOut")} onClick={onZoomOut} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink hover:bg-sunken", focusRing)}><MinusIcon size={14} /></button>
-      <button type="button" title={t("resetFit")} onClick={onZoomReset} className={cx("h-7 min-w-12 rounded-[7px] bg-sunken font-mono text-xs text-ink", focusRing)}>{zoomLabel}</button>
-      <button type="button" aria-label={t("zoomIn")} title={t("zoomIn")} onClick={onZoomIn} className={cx("grid size-[30px] place-items-center rounded-[7px] text-ink hover:bg-sunken", focusRing)}><PlusIcon size={14} strokeWidth={2.4} /></button>
+      <button type="button" aria-label={t("zoomOut")} title={t("zoomOut")} onClick={onZoomOut} className={cx("grid size-[30px] place-items-center rounded-full text-ink hover:bg-sunken", focusRing)}><MinusIcon size={14} /></button>
+      <button type="button" title={t("resetFit")} onClick={onZoomReset} className={cx("h-7 min-w-12 rounded-full bg-sunken font-mono text-xs text-ink", focusRing)}>{zoomLabel}</button>
+      <button type="button" aria-label={t("zoomIn")} title={t("zoomIn")} onClick={onZoomIn} className={cx("grid size-[30px] place-items-center rounded-full text-ink hover:bg-sunken", focusRing)}><PlusIcon size={14} strokeWidth={2.4} /></button>
     </div>
   );
 }
 
 function Divider() {
-  return <span aria-hidden="true" className="h-[22px] w-px shrink-0 bg-line" />;
+  return <span aria-hidden="true" className={barDivider} />;
 }
 
 /**
@@ -263,8 +253,8 @@ export function DesignAdjustPanel({ frame, screen, canReset, onFrameChange, onFi
     { fit: "stretch", label: t("stretchToScreen"), hint: t("stretchToScreenHint") },
   ];
   return (
-    <section role="group" aria-label={t("adjustDesign")} data-design-adjust-panel
-      className="absolute end-5 top-10 z-30 w-[280px] max-w-[calc(100%-40px)] rounded-[14px] border border-line bg-surface p-3.5 shadow-bar">
+    <section role="group" aria-label={t("adjustDesign")} title={t("designDragHint")} data-design-adjust-panel
+      className="absolute end-5 top-10 z-30 w-[280px] max-w-[calc(100%-40px)] rounded-2xl bg-surface p-3.5 shadow-popover">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-[13px] font-semibold">{t("adjustDesign")}</h2>
         <IconButton size="sm" label={t("done")} onClick={onClose}><CloseIcon size={14} /></IconButton>
@@ -272,12 +262,12 @@ export function DesignAdjustPanel({ frame, screen, canReset, onFrameChange, onFi
       <div className="grid grid-cols-3 gap-1.5">
         {fits.map(({ fit, label, hint }) => (
           <button key={fit} type="button" data-design-fit={fit} title={hint} onClick={() => onFit(fit)}
-            className={cx("h-[30px] rounded-[8px] border border-line bg-surface px-1 text-xs font-semibold text-ink hover:bg-sunken", focusRing)}>
+            className={cx(softButton, "h-[30px] px-1 text-xs")}>
             {label}
           </button>
         ))}
       </div>
-      <div className="mt-3 grid grid-cols-[56px_1fr_1fr_28px] items-center gap-x-1.5 gap-y-2">
+      <div title={t("designFrameUnits")} className="mt-3 grid grid-cols-[56px_1fr_1fr_28px] items-center gap-x-1.5 gap-y-2">
         <span className="text-xs font-semibold text-ink-2">{t("designPosition")}</span>
         <NumberField name={`${t("designPosition")} X`} prefix="X" value={frame.x} onChange={x => onFrameChange(placeDesign(frame, { x }, screen))} />
         <NumberField name={`${t("designPosition")} Y`} prefix="Y" value={frame.y} onChange={y => onFrameChange(placeDesign(frame, { y }, screen))} />
@@ -287,14 +277,12 @@ export function DesignAdjustPanel({ frame, screen, canReset, onFrameChange, onFi
         <NumberField name={`${t("designSize")} H`} prefix="H" value={frame.height} onChange={height => onFrameChange(sizeDesign(frame, { height }, keepRatio))} />
         <IconButton size="sm" label={t("keepProportions")} pressed={keepRatio} onClick={() => setKeepRatio(value => !value)}><LinkIcon size={13} /></IconButton>
       </div>
-      <p className="mt-2.5 text-[11.5px] leading-snug text-muted">{t("designFrameUnits")}</p>
-      <p className="mt-1.5 text-[11.5px] leading-snug text-muted">{t("designDragHint")}</p>
       <div className="mt-3 flex items-center justify-between">
         <button type="button" onClick={onReset} disabled={!canReset} title={t("resetOverlayHint")}
-          className={cx("h-[30px] rounded-[8px] px-2.5 text-xs font-semibold text-ink hover:bg-sunken disabled:cursor-not-allowed disabled:opacity-40", focusRing)}>
+          className={cx("h-[30px] rounded-full px-3 text-xs font-semibold text-ink hover:bg-sunken disabled:cursor-not-allowed disabled:opacity-40", focusRing)}>
           {t("reset")}
         </button>
-        <button type="button" onClick={onClose} className={cx("h-[30px] rounded-[8px] bg-primary px-3 text-xs font-semibold text-on-primary hover:opacity-90", focusRing)}>{t("done")}</button>
+        <button type="button" onClick={onClose} className={cx("h-[30px] rounded-full bg-primary px-3.5 text-xs font-semibold text-on-primary hover:opacity-90", focusRing)}>{t("done")}</button>
       </div>
     </section>
   );
@@ -304,7 +292,7 @@ export function DesignAdjustPanel({ frame, screen, canReset, onFrameChange, onFi
 function NumberField({ name, prefix, value, onChange }: { name: string; prefix: string; value: number; onChange: (value: number) => void }) {
   const [draft, setDraft] = useState<string | null>(null);
   return (
-    <label className="flex h-[30px] min-w-0 items-center gap-1 rounded-[8px] border border-line bg-surface px-1.5 focus-within:border-ink">
+    <label className="flex h-[30px] min-w-0 items-center gap-1 rounded-full bg-sunken px-2.5 focus-within:ring-2 focus-within:ring-line">
       <span aria-hidden="true" className="font-mono text-[11px] text-muted">{prefix}</span>
       <input
         type="number"

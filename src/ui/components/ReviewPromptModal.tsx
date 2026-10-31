@@ -45,7 +45,7 @@ export function ReviewPromptModal({ storageError = false, onReview, onNotNow, on
           className={cx("h-8 rounded-lg px-2 text-xs font-medium text-muted underline-offset-4 hover:text-ink hover:underline disabled:opacity-50", focusRing)}>{t("reviewNever")}</button>
         <span className="flex-1" />
         <button type="button" onClick={onNotNow} disabled={opening}
-          className={cx("h-8 rounded-lg border border-line bg-surface px-3 text-xs font-semibold text-ink hover:bg-sunken disabled:opacity-50", focusRing)}>{t("reviewNotNow")}</button>
+          className={cx("h-8 rounded-full bg-sunken px-3 text-xs font-semibold text-ink hover:bg-line-soft disabled:opacity-50", focusRing)}>{t("reviewNotNow")}</button>
       </>}
     >
       <button type="button" onClick={openReview} disabled={opening} aria-busy={opening}

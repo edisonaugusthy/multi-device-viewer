@@ -409,6 +409,16 @@ test("discovers expanded current and rugged device families", async ({ page }) =
   const rowLefts = await page.locator("[data-device-pick]").evaluateAll(elements => elements.slice(0, 4).map(element => Math.round(element.getBoundingClientRect().left)));
   expect(new Set(rowLefts).size).toBe(2);
 
+  // Every name reads in full on one line; new devices are marked on their outline.
+  await chooseType("All");
+  const clipped = await page.locator("[data-device-pick]").evaluateAll(rows => rows.flatMap(row => {
+    const name = row.querySelector<HTMLElement>(".truncate");
+    return name && (name.scrollWidth > name.clientWidth + 0.5 || row.getBoundingClientRect().height > 40) ? [name.textContent] : [];
+  }));
+  expect(clipped).toEqual([]);
+  await chooseType("New");
+  await expect(page.locator("[data-device-pick]").first().locator("[data-device-new]")).toBeVisible();
+
   // Arrow keys move between types.
   await tabs.filter({ hasText: "Android" }).first().focus();
   await page.keyboard.press("ArrowRight");

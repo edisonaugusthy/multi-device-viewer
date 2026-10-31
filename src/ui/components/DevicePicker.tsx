@@ -60,8 +60,8 @@ export function DevicePicker({
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
-  // Two columns, wide enough for most names on one line.
-  const position = useAnchoredPosition(anchorRef, open, target.kind === "add" ? 600 : 520, target.kind === "add" ? "center" : "start", 560);
+  // Two columns, wide enough for every name on one line; the same width whether adding or replacing.
+  const position = useAnchoredPosition(anchorRef, open, 640, target.kind === "add" ? "center" : "start", 560);
   // Opened upward from the dock, the picker is mirrored so its search, tabs and
   // presets sit next to the dock where the pointer comes from, and keeps one
   // height so hovering across the tabs never moves them. Opened downward, the
@@ -461,8 +461,13 @@ function rowButton(state: RowState, replacing: boolean) {
   );
 }
 
-// One row per device: an outline of the device, its name and CSS width (the
-// full name and size in its tooltip). A device on screen (while changing one
+/** A name short enough for one row: no maker for well-known lines, and inches as ″. */
+export function pickerName(name: string) {
+  return shortName(name).replace(/^Microsoft\s+/i, "").replace(/(\d+(?:\.\d+)?)(?:-| )inch\b/gi, "$1″");
+}
+
+// One row per device, on one line: an outline of the device (dotted when the
+// device is new), its name and CSS width (the full name and size in its tooltip). A device on screen (while changing one
 // device, only that device) is tinted and ticked. The star takes the width's
 // place on hover, and stays beside it once the device is starred.
 function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorite }: {
@@ -477,6 +482,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
   const ticked = isSelected(state, replacing);
   const favoriteLabel = favorite ? t("removeFavorite", { name: device.name }) : t("addFavorite", { name: device.name });
   const size = `${device.cssViewport.width}×${device.cssViewport.height}`;
+  const isNew = device.tags.includes("new");
   return (
     <div className={cx(
       "group relative flex min-w-0 items-center rounded-[10px] transition-colors",
@@ -488,7 +494,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         data-device-pick={device.id}
         data-added={state.added || undefined}
         title={device.name}
-        aria-label={`${device.name} · ${size} · ${state.hint}`}
+        aria-label={[device.name, size, state.hint, isNew && t("newLabel")].filter(Boolean).join(" · ")}
         aria-current={state.current || undefined}
         aria-pressed={replacing ? undefined : state.added}
         disabled={state.disabled}
@@ -500,12 +506,11 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
           focusRing,
         )}
       >
-        <span aria-hidden="true" className={cx("grid w-5 shrink-0 place-items-center", ticked ? "text-ink" : state.disabled ? "text-faint" : "text-ink-2")}>
+        <span aria-hidden="true" className={cx("relative grid w-5 shrink-0 place-items-center", ticked ? "text-ink" : state.disabled ? "text-faint" : "text-ink-2")}>
           <DeviceGlyph kind={glyphKindFor(device)} />
+          {isNew && <span data-device-new className="absolute -end-0.5 -top-0.5 size-[7px] rounded-full bg-design ring-2 ring-surface" />}
         </span>
-        {/* A long name wraps onto a second line instead of being cut off. */}
-        <span className="line-clamp-2 min-w-0 break-words leading-tight">{shortName(device.name)}</span>
-        {device.tags.includes("new") && <span className="shrink-0 rounded-full bg-design-tint px-1.5 py-px text-[9.5px] font-bold tracking-wide text-design-ink">{t("newLabel")}</span>}
+        <span className="min-w-0 truncate">{pickerName(device.name)}</span>
         <span className="flex-1" />
         {ticked && <CheckIcon size={14} strokeWidth={2.6} className="shrink-0 text-ink" />}
         <span dir="ltr" aria-hidden="true" className={cx("shrink-0 font-mono text-[11.5px] font-medium text-muted", !favorite && "group-hover:opacity-0")}>{device.cssViewport.width}</span>

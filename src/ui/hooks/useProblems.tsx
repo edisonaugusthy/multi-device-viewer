@@ -43,6 +43,8 @@ export function useProblems({ slots, deviceName }: { slots: PreviewSlot[]; devic
   const shown = groups.filter(group => kinds.has(group.kind) && (!device || group.devices.some(item => item.slotId === device)));
   const total = groups.filter(counted).length;
   const clean = slots.filter(slot => bySlot.has(slot.id) && countFor(slot.id) === 0).map(slot => ({ slotId: slot.id, name: deviceName(slot) }));
+  /** Devices with problems, in workspace order: the panel filters by one of them. */
+  const devices = slots.filter(slot => countFor(slot.id) > 0).map(slot => ({ slotId: slot.id, name: deviceName(slot), count: countFor(slot.id) }));
 
   const toggleKind = useCallback((kind: ProblemKind) => setKinds(current => {
     const next = new Set(current);
@@ -72,7 +74,7 @@ export function useProblems({ slots, deviceName }: { slots: PreviewSlot[]; devic
   }, []);
 
   return {
-    open, device, kinds, groups: shown, total, warnings, clean,
+    open, device, devices, kinds, groups: shown, total, warnings, clean,
     countFor, setDevice, toggleKind, show, close, fixPromptFor,
   };
 }

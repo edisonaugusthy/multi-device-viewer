@@ -152,9 +152,8 @@ interface PreviewCardProps {
   layoutStatus?: LayoutSlotStatus;
   onLayoutCheck?: (slotId: string) => void;
   onLayoutProblems?: (slotId: string) => void;
-  /** Errors and failed requests seen in this preview; the chip opens them. */
-  problemCount?: number;
-  onProblems?: (slotId: string) => void;
+  /** Replaces the name under the device; it moves with the device on the canvas. */
+  caption?: ReactNode;
   /** Opens "What each device sends" for the whole workspace. */
   onCompareIdentities?: () => void;
   /** Track changes is on: each reload is compared with the one before. */
@@ -223,8 +222,7 @@ export const PreviewCard = memo(function PreviewCard({
   layoutStatus,
   onLayoutCheck,
   onLayoutProblems,
-  problemCount = 0,
-  onProblems,
+  caption,
   onCompareIdentities,
   tracking = false,
 }: PreviewCardProps) {
@@ -1169,12 +1167,14 @@ export const PreviewCard = memo(function PreviewCard({
         <div className={`flex h-11 shrink-0 items-center justify-center px-2 ${canvas ? "pointer-events-none [&>*]:pointer-events-auto" : ""}`}
           style={canvas ? { ...layerStyle, transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined}>
           {/* Just the name; the size is in its tooltip and the device's bar. */}
-          <button type="button" data-device-caption title={`${device.name} · ${viewportLabel}`} onClick={() => simulator.current.setActiveSlot(slot.id)}
-            onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
-            className="flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent">
-            <span className="truncate text-[13px]">{shortName(device.name)}</span>
-            {layoutStatus && <LayoutChip status={layoutStatus} />}
-          </button>
+          {caption ?? (
+            <button type="button" data-device-caption title={`${device.name} · ${viewportLabel}`} onClick={() => simulator.current.setActiveSlot(slot.id)}
+              onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
+              className="flex min-w-0 max-w-full items-baseline gap-2 rounded-[7px] px-2 py-1 font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent">
+              <span className="truncate text-[13px]">{shortName(device.name)}</span>
+              {layoutStatus && <LayoutChip status={layoutStatus} />}
+            </button>
+          )}
           {slot.language && identity && onCompareIdentities && (
             <button type="button" data-language-chip onClick={() => { setControlsOpen(false); setLanguageOpen(true); }} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
               aria-label={t("languageButton", { language: languageName(slot.language) })}
@@ -1188,12 +1188,6 @@ export const PreviewCard = memo(function PreviewCard({
               className={`inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full pe-2 ps-1.5 text-[11px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-accent ${visualChecks.tracked.count && !visualChecks.tracked.paused ? "bg-amber-500/15 text-warn hover:bg-amber-500/20" : "bg-sunken text-muted hover:text-ink-2"}`}>
               <span aria-hidden="true" className={`size-1.5 rounded-full ${visualChecks.tracked.paused ? "bg-faint" : visualChecks.tracked.count ? "bg-amber-500" : "bg-accent"}`} />
               {visualChecks.tracked.paused ? t("trackPaused") : visualChecks.tracked.count === 0 ? t("trackWatching") : visualChecks.tracked.count === 1 ? t("trackChangesOne") : t("trackChangesMany", { count: visualChecks.tracked.count })}
-            </button>
-          )}
-          {problemCount > 0 && onProblems && (
-            <button type="button" data-problems-chip onClick={() => onProblems(slot.id)} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
-              className="inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-red-500/10 pe-2 ps-1.5 text-[11px] font-semibold text-danger outline-none hover:bg-red-500/15 focus-visible:ring-2 focus-visible:ring-accent">
-              <AlertIcon size={10} strokeWidth={3} />{problemCount === 1 ? t("problemsOne") : t("problemsMany", { count: problemCount })}
             </button>
           )}
         </div>

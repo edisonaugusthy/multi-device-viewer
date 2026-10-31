@@ -812,7 +812,6 @@ export function SimulatorApp() {
   const problems = useProblems({ slots, deviceName: deviceNameOf });
   // One docked panel at a time.
   const toggleProblems = useStableCallback(() => { if (problems.open) problems.close(); else { layoutCheck.close(); problems.show(); } });
-  const showSlotProblems = useStableCallback((slotId: string) => { layoutCheck.close(); problems.show(slotId); });
   const problemsShown = problems.open && !viewMode && !compare;
   const tracking = useTracking();
   const [identitiesOpen, setIdentitiesOpen] = useState(false);
@@ -1005,8 +1004,6 @@ export function SimulatorApp() {
                     onLayoutCheck={FEATURES.layoutCheck ? layoutCheckSlot : undefined}
                     onLayoutProblems={FEATURES.layoutCheck ? showLayoutProblems : undefined}
                     onPageReady={FEATURES.layoutCheck ? layoutCheck.onPageReady : undefined}
-                    problemCount={problems.countFor(slot.id)}
-                    onProblems={showSlotProblems}
                     onCompareIdentities={inViewer ? openIdentities : undefined}
                     tracking={tracking}
                     focusNavigation={focusNavigation}

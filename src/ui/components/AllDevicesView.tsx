@@ -10,10 +10,9 @@ import { getDefaultOrientation, nextOrientation, supportsOrientation, toLandscap
 import { getBrowserGeometry, type BrowserPreferences } from "../../domain/device/browser-geometry";
 import { getFrameProfile } from "../../domain/device/frame-profiles";
 import type { Device } from "../../domain/device/device.types";
-import { nextZoom } from "../../domain/simulator/simulator-service";
+import { clampZoom, nextZoom } from "../../domain/simulator/simulator-service";
 import type { DisplaySettings, PreviewSlot } from "../../domain/simulator/simulator.types";
 import {
-  AlertIcon,
   CameraIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -39,7 +38,7 @@ const POPUP_SLOT_ID = "gallery-popup";
 // Gallery cards: the tallest preview area, and the name and size underneath.
 const GALLERY_PREVIEW_MAX = 568;
 const GALLERY_WATCH_PREVIEW_MAX = 348;
-const GALLERY_CAPTION_HEIGHT = 52;
+const GALLERY_CAPTION_HEIGHT = 44;
 const GALLERY_TOOLBAR_SPACE = 56;
 // Cards this far outside the viewport keep their page; further away they give
 // it back to the queue, so a category never runs every page at once.
@@ -281,11 +280,18 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
     pendingNavigation.current.set(id, getSlotUrl(id));
     loadQueueRef.current?.queue.retry(id);
   }, [getSlotUrl]);
+  // The device touched last is drawn in front, so a moved device never hides behind its neighbours.
+  const [layers, setLayers] = useState<Record<string, number>>({});
+  const raise = useCallback((id: string) => setLayers(current => {
+    const top = Math.max(0, ...Object.values(current));
+    return current[id] === top && top > 0 ? current : { ...current, [id]: top + 1 };
+  }), []);
   const refreshAll = useCallback(() => {
     loadQueueRef.current?.queue.dispose();
     pendingNavigation.current.clear();
     observedUrls.current.clear();
     setChanges({});
+    setLayers({});
     setActiveSlot("");
     // Remount every preview to clear page scroll, drafts, and bridge state,
     // and restart using the selected loading mode (remaining paused if requested).
@@ -301,10 +307,16 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
     ...slot, browserPreferences: { ...slot.browserPreferences, ...preferences },
   })), [updateSlot]);
   const rotateSlot = useCallback((id: string) => updateSlot(id, slot => ({ ...slot, orientation: nextOrientation(slot.orientation) })), [updateSlot]);
+  // Devices are moved and resized as on the workspace canvas, for as long as All devices stays open.
+  const setSlotZoom = useCallback((id: string, zoom: number) => updateSlot(id, slot => ({ ...slot, zoom: clampZoom(zoom), zoomMode: "custom" })), [updateSlot]);
+  const setSlotCanvasPosition = useCallback((id: string, position: { x: number; y: number } | null) => updateSlot(id, slot => {
+    const { canvasPosition: _previous, ...rest } = slot;
+    return position ? { ...rest, canvasPosition: position } : rest;
+  }), [updateSlot]);
   const scope = useMemo(() => ({
     slots: liveSlots, activeSlotId: syncSourceId, display, setActiveSlot, observeSlotUrl, getSlotUrl, reloadSlot, zoomSlot, setSlotZoomMode, setSlotBrowserPreferences, rotateSlot,
-    setSlotUrl: queueNavigation,
-  }), [liveSlots, syncSourceId, display, observeSlotUrl, getSlotUrl, reloadSlot, zoomSlot, setSlotZoomMode, setSlotBrowserPreferences, rotateSlot, queueNavigation]);
+    setSlotZoom, setSlotCanvasPosition, setSlotUrl: queueNavigation,
+  }), [liveSlots, syncSourceId, display, observeSlotUrl, getSlotUrl, reloadSlot, zoomSlot, setSlotZoomMode, setSlotBrowserPreferences, rotateSlot, setSlotZoom, setSlotCanvasPosition, queueNavigation]);
   // The popup steps through this category in gallery order, keeping the page
   // it is showing. The button that was used keeps focus on the next device.
   const stepFocus = useRef<"previous" | "next" | null>(null);
@@ -459,7 +471,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
               {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}
-                onPreviewLoad={previewLoaded} onPreviewReady={previewReady} onReload={reloadSlot} onEnlarge={enlarge} onLiveChange={setSlotLive} onNearChange={setSlotNear}/>)}
+                onPreviewLoad={previewLoaded} onPreviewReady={previewReady} layer={layers[slotsByDevice.get(device.id)!.id]} onRaise={raise} onEnlarge={enlarge} onLiveChange={setSlotLive} onNearChange={setSlotNear}/>)}
             </div>
           </section>
         </div>
@@ -478,14 +490,16 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   );
 }
 
-const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, inactive, captions, loadRequest, loadStatus, onPreviewLoad, onPreviewReady, onReload, onEnlarge, onLiveChange, onNearChange }: {
+const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, inactive, captions, loadRequest, loadStatus, layer, onRaise, onPreviewLoad, onPreviewReady, onEnlarge, onLiveChange, onNearChange }: {
   device: Device; slot: PreviewSlot; display: DisplaySettings; scrollRef: RefObject<HTMLDivElement | null>;
   /** True while the enlarged popup is open: the card stays in place but goes quiet. */
   inactive: boolean; captions: boolean;
   loadRequest?: number; loadStatus: GalleryLoadStatus;
   onPreviewLoad: (id: string, request: number, status: GalleryLoadResult) => void;
   onPreviewReady: (id: string, request: number) => void;
-  onReload: (id: string) => void; onEnlarge: (id: string) => void;
+  onEnlarge: (id: string) => void;
+  /** Its place front to back among the devices touched so far; untouched ones keep page order. */
+  layer?: number; onRaise: (id: string) => void;
   onLiveChange: (id: string, live: boolean) => void;
   /** Within the keep zone around the viewport: the card may keep its page. */
   onNearChange: (id: string, near: boolean) => void;
@@ -494,7 +508,6 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [near, setNear] = useState(false);
-  const [scale, setScale] = useState<number | null>(null);
   const simulator = useSimulatorRef();
   const live = !inactive && visible;
   const previewDisplay = useMemo(() => live ? display : { ...display, scrollSync: false, navigationSync: false }, [display, live]);
@@ -548,51 +561,38 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
   const incomplete = loadStatus === "incomplete" || loadStatus === "error";
   const settled = incomplete || loadStatus === "loaded";
   const deferredNavigation = loadStatus === "queued" && loadRequest !== undefined;
-  const statusDot = loadStatus === "loaded" ? "bg-accent" : incomplete ? "bg-warn" : loadStatus === "queued" ? "border-[1.5px] border-faint" : "bg-sky-500";
-  const statusText = loadStatus === "loaded" ? (scale === null ? "" : `${Math.round(scale * 100)}%`)
-    : incomplete ? t("incomplete") : loadStatus === "queued" ? t("queuedPosition") : t("loading");
+  // Just the name, which opens the enlarged preview; the size is in its tooltip.
+  const caption = (
+    <button type="button" data-gallery-enlarge onClick={enlarge} title={`${device.name} · ${size.width}×${size.height}`}
+      className={cx("max-w-full truncate rounded-[7px] px-2 py-1 text-[13px] font-semibold text-ink", focusRing)}>
+      {shortName(device.name)}
+    </button>
+  );
 
   // The card never leaves the grid: enlarging opens a separate popup above the
-  // backdrop, so the gallery behind it keeps every device in place.
+  // backdrop, so the gallery behind it keeps every device in place. As on the
+  // workspace canvas, a device and its name can be dragged over the other
+  // cards and its corner resizes it, so only those parts take the pointer.
   return <div ref={ref} data-gallery-device-id={device.id} data-gallery-width={size.width} data-gallery-height={size.height} data-gallery-load-state={loadStatus}
-    inert={inactive} aria-hidden={inactive || undefined} style={{ height: cardHeight }} className={cx("group/device relative min-w-0",
-      !inactive && "hover:z-20 focus-within:z-20",
+    inert={inactive} aria-hidden={inactive || undefined} style={{ height: cardHeight, zIndex: layer }} className={cx("group/device pointer-events-none relative min-w-0",
+      !inactive && "hover:!z-[100000] focus-within:!z-[100000]",
       // Far-offscreen cards whose page has settled skip style, layout and paint
       // (and their pages' rendering) while keeping each document and its state.
       // Retained documents awaiting navigation also stay quiet; pages still
       // loading keep rendering so they can report completion.
       !visible && (settled || deferredNavigation) && "[content-visibility:hidden]")}>
-    <article onPointerDownCapture={() => simulator.current.setActiveSlot(slot.id)} onFocusCapture={() => simulator.current.setActiveSlot(slot.id)}
+    <article onPointerDownCapture={() => { onRaise(slot.id); simulator.current.setActiveSlot(slot.id); }} onFocusCapture={() => simulator.current.setActiveSlot(slot.id)}
       className="group/card flex h-full min-h-0 min-w-0 flex-col">
-      {captions && incomplete && (
-        <div role="alert" className="mx-auto mb-2.5 flex shrink-0 items-center gap-1.5 rounded-lg border border-warn-line bg-warn-soft py-1 pe-1 ps-2.5 text-xs font-semibold text-warn">
-          <AlertIcon size={13} />
-          {t("scriptErrors")}
-          <button type="button" onClick={() => onReload(slot.id)} className={cx("h-6 rounded-md bg-surface px-2 text-xs font-semibold text-warn", focusRing)}>{t("retry")}</button>
-        </div>
-      )}
-
-      <div className="relative min-h-0 flex-1">
-        {loadRequest !== undefined
-          ? <PreviewCard slot={slot} device={device} display={previewDisplay} visualsActive={live} onLoadStateChange={loaded} onPageReady={ready} onScaleChange={setScale}
-              showToolbar={captions} onExpand={enlarge} expandLabel={t("enlargePreview")}
-              align="bottom" removable={false} focused={false} first last/>
-          : <div className="flex h-full flex-col items-center justify-end gap-2 pb-8 text-muted">
+      {loadRequest !== undefined
+        ? <PreviewCard slot={slot} device={device} display={previewDisplay} visualsActive={live} onLoadStateChange={loaded} onPageReady={ready}
+            showToolbar={captions} showCaption={captions} caption={caption} onExpand={enlarge} expandLabel={t("enlargePreview")}
+            canvas align="bottom" removable={false} focused={false} first last/>
+        : <>
+            <div className="flex min-h-0 flex-1 flex-col items-center justify-end gap-2 pb-8 text-muted">
               <span className="text-[11px]">{t("queuedPosition")}</span>
-            </div>}
-      </div>
-
-      {captions && (
-        <button type="button" data-gallery-enlarge onClick={enlarge}
-          className={cx("mx-auto mt-2.5 flex max-w-full shrink-0 flex-col items-center gap-0.5 rounded-lg px-2 py-0.5 text-center", focusRing)}>
-          <span className="max-w-full truncate text-[13px] font-semibold">{shortName(device.name)}</span>
-          <span className="flex items-center gap-1.5 font-mono text-xs text-muted">
-            <span aria-hidden="true" className={cx("size-[7px] rounded-full", statusDot)} />
-            {/* Sizes stay width×height in right-to-left languages too. */}
-            <span dir="ltr">{size.width}×{size.height}</span>{statusText && ` · ${statusText}`}
-          </span>
-        </button>
-      )}
+            </div>
+            {captions && <div className="pointer-events-auto flex h-11 shrink-0 items-center justify-center px-2">{caption}</div>}
+          </>}
     </article>
   </div>;
 });

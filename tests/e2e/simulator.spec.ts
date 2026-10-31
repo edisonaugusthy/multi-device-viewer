@@ -1320,6 +1320,45 @@ test("shows an enlarged All devices preview above the backdrop", async ({ page }
   await expect(popup).toHaveCount(0);
 });
 
+test("moves and resizes All devices previews like workspace devices, each named without its size", async ({ page }) => {
+  await page.locator("[data-all-devices-toggle]").click();
+  const cards = page.locator("[data-gallery-device-id]");
+  const card = cards.first();
+  const device = card.locator("[data-device-capture]");
+  const caption = card.locator("[data-gallery-enlarge]");
+  await expect(device).toBeVisible();
+  // Just the name; the size is in its tooltip.
+  await expect(caption).not.toContainText("×");
+  await expect(caption).toHaveAttribute("title", /\d+×\d+$/);
+
+  await device.hover();
+  const grip = card.locator("[data-move-handle]");
+  const box = (await grip.boundingBox())!;
+  const before = (await device.boundingBox())!;
+  const captionBefore = (await caption.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 260, box.y + box.height / 2 + 20, { steps: 8 });
+  await page.mouse.up();
+  const after = (await device.boundingBox())!;
+  expect(after.x - before.x).toBeGreaterThan(200);
+  // Its name moves with it, and it stays in front of the device it now covers.
+  expect((await caption.boundingBox())!.x - captionBefore.x).toBeGreaterThan(200);
+  await page.mouse.move(0, 0);
+  expect(await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest("[data-gallery-device-id]")?.getAttribute("data-gallery-device-id"),
+    [after.x + after.width - 8, after.y + after.height / 2])).toBe(await card.getAttribute("data-gallery-device-id"));
+
+  await device.hover();
+  const corner = (await card.locator("[data-resize-handle]").boundingBox())!;
+  await page.mouse.move(corner.x + corner.width / 2, corner.y + corner.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(corner.x + 40, corner.y + 80, { steps: 8 });
+  await page.mouse.up();
+  const resized = (await device.boundingBox())!;
+  expect(resized.height).toBeGreaterThan(after.height + 40);
+  expect(Math.abs(resized.x - after.x)).toBeLessThan(3);
+});
+
 test("steps through the category from the enlarged All devices preview", async ({ page }) => {
   await page.locator("[data-all-devices-toggle]").click();
   const cards = page.locator("[data-gallery-device-id]");

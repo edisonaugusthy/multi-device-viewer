@@ -14,6 +14,7 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
   view: {
     device: string | null; kinds: ReadonlySet<ProblemKind>; groups: ProblemGroup[]; total: number; warnings: number;
     clean: Array<{ slotId: string; name: string }>;
+    devices: Array<{ slotId: string; name: string; count: number }>;
     setDevice: (slotId: string | null) => void; toggleKind: (kind: ProblemKind) => void;
   };
   onClose: () => void;
@@ -46,12 +47,26 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
       <>
         <div className="grid gap-2.5 px-3 pb-2.5">
           <div className="flex min-h-[30px] items-center gap-2">
-            {deviceName && (
-              <span className="inline-flex h-7 items-center gap-1 rounded-full bg-ink pe-1 ps-2.5 text-xs font-semibold text-surface">
-                {shortName(deviceName)}
-                <button type="button" onClick={() => view.setDevice(null)} aria-label={t("problemsShowAll")} title={t("problemsShowAll")}
-                  className={cx("grid size-[22px] place-items-center rounded-full hover:bg-white/15", focusRing)}><CloseIcon size={11} strokeWidth={2.8} /></button>
-              </span>
+            {/* Each device with problems; one click shows only its problems, again shows every device's. */}
+            {(view.devices.length > 1 || deviceName) && (
+              <div role="group" aria-label={t("devices")} className="flex min-w-0 flex-wrap gap-1.5">
+                {view.devices.map(device => {
+                  const on = view.device === device.slotId;
+                  return (
+                    <button key={device.slotId} type="button" aria-pressed={on} onClick={() => view.setDevice(on ? null : device.slotId)}
+                      title={on ? t("problemsShowAll") : device.name}
+                      className={cx("inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold", on ? "bg-ink text-surface" : "bg-sunken text-ink hover:bg-line-soft", focusRing)}>
+                      {shortName(device.name)}<span className={cx("font-mono text-[11px]", on ? "opacity-70" : "text-faint")}>{device.count}</span>
+                    </button>
+                  );
+                })}
+                {deviceName && !view.devices.some(device => device.slotId === view.device) && (
+                  <button type="button" aria-pressed onClick={() => view.setDevice(null)} title={t("problemsShowAll")}
+                    className={cx("inline-flex h-7 items-center gap-1 rounded-full bg-ink px-2.5 text-xs font-semibold text-surface", focusRing)}>
+                    {shortName(deviceName)}<CloseIcon size={11} strokeWidth={2.8} />
+                  </button>
+                )}
+              </div>
             )}
             <span className="flex-1" />
             {view.groups.length > 0 && (

@@ -39,12 +39,20 @@ const POPUP_SLOT_ID = "gallery-popup";
 // allows, within these bounds; watches stay smaller), and the name underneath.
 const GALLERY_PREVIEW_MIN = 360;
 const GALLERY_PREVIEW_MAX = 760;
-const GALLERY_WATCH_SHARE = 0.6;
-// Three or four devices to a row, large enough to read their pages: wide
-// screens (laptops, desktops, TVs) three at most, everything else four.
-const WIDE_GROUPS: ReadonlySet<DeviceGalleryGroupId> = new Set(["laptop", "desktop", "tv"]);
-const GRID_COLUMNS = "grid-cols-1 @min-[480px]/gallery:grid-cols-2 @min-[880px]/gallery:grid-cols-3 @min-[1280px]/gallery:grid-cols-4";
-const WIDE_GRID_COLUMNS = "grid-cols-1 @min-[640px]/gallery:grid-cols-2 @min-[1100px]/gallery:grid-cols-3";
+const GALLERY_WATCH_SHARE = 0.8;
+// Few enough devices to a row that each page can be read: the wider the
+// screen, the fewer to a row. Narrower galleries step down from these.
+const GRID_COLUMNS: Record<DeviceGalleryGroupId, string> = {
+  ios: "grid-cols-1 @min-[480px]/gallery:grid-cols-2 @min-[880px]/gallery:grid-cols-3 @min-[1280px]/gallery:grid-cols-4",
+  android: "grid-cols-1 @min-[480px]/gallery:grid-cols-2 @min-[880px]/gallery:grid-cols-3 @min-[1280px]/gallery:grid-cols-4",
+  phone: "grid-cols-1 @min-[480px]/gallery:grid-cols-2 @min-[880px]/gallery:grid-cols-3 @min-[1280px]/gallery:grid-cols-4",
+  tablet: "grid-cols-1 @min-[600px]/gallery:grid-cols-2 @min-[1040px]/gallery:grid-cols-3",
+  custom: "grid-cols-1 @min-[600px]/gallery:grid-cols-2 @min-[1040px]/gallery:grid-cols-3",
+  watch: "grid-cols-1 @min-[480px]/gallery:grid-cols-2 @min-[800px]/gallery:grid-cols-3",
+  laptop: "grid-cols-1 @min-[800px]/gallery:grid-cols-2",
+  desktop: "grid-cols-1 @min-[800px]/gallery:grid-cols-2",
+  tv: "grid-cols-1",
+};
 const GALLERY_CAPTION_HEIGHT = 44;
 const GALLERY_TOOLBAR_SPACE = 56;
 // Cards this far outside the viewport keep their page; further away they give
@@ -485,7 +493,7 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
           <section key={group.id} data-gallery-group={group.id} aria-labelledby={expandedDeviceId ? undefined : `gallery-heading-${group.id}`}
             className={cx("flex flex-col gap-4 px-6 pb-8", viewMode ? "pt-6" : "pt-2")}>
             <h1 id={`gallery-heading-${group.id}`} className="sr-only">{t(groupLabels[group.id])} · {t("galleryWidthRange", { range: widthRange })}</h1>
-            <div data-gallery-grid data-canvas-top className={cx("grid items-end gap-x-8 gap-y-10", WIDE_GROUPS.has(group.id) ? WIDE_GRID_COLUMNS : GRID_COLUMNS)}>
+            <div data-gallery-grid data-canvas-top className={cx("grid items-end gap-x-8 gap-y-10", GRID_COLUMNS[group.id])}>
               {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef} previewMax={previewMax} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}

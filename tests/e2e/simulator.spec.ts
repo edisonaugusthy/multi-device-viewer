@@ -1314,22 +1314,28 @@ test("keeps the All devices grid scrollbar for mouse users", async ({ page }) =>
   expect(scrollbarWidth).not.toBe("none");
 });
 
-test("shows All devices large enough to read, four to a row and three for wide screens, each whole on screen", async ({ page }) => {
+test("shows All devices large enough to read, fewer to a row the wider the screen, each whole on screen", async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 });
   await page.locator("[data-all-devices-toggle]").click();
   const grid = page.locator("[data-gallery-grid]");
   const columns = () => grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.split(" ").length);
   const card = page.locator("[data-gallery-device-id]").first();
-  await expect(card.locator("[data-device-capture]")).toBeVisible();
+  const device = card.locator("[data-device-capture]");
+  await expect(device).toBeVisible();
   expect(await columns()).toBe(4);
   const visible = (await page.locator("[data-gallery-scroll]").boundingBox())!.height;
   expect((await card.boundingBox())!.height).toBeLessThanOrEqual(visible);
-  expect((await card.locator("[data-device-capture]").boundingBox())!.height).toBeGreaterThan(520);
+  expect((await device.boundingBox())!.height).toBeGreaterThan(520);
 
-  await page.locator("[data-all-devices-view] nav").getByRole("button", { name: /^Laptops/ }).click();
-  await expect(card.locator("[data-device-capture]")).toBeVisible();
-  expect(await columns()).toBe(3);
-  expect((await card.locator("[data-device-capture]").boundingBox())!.width).toBeGreaterThan(420);
+  // Phones four to a row; tablets, custom sizes and watches three; laptops and desktops two; the TV alone.
+  const nav = page.locator("[data-all-devices-view] nav");
+  for (const [category, count] of [["Tablets", 3], ["Custom", 3], ["Watches", 3], ["Laptops", 2], ["Desktops", 2], ["TVs", 1]] as const) {
+    await nav.getByRole("button", { name: new RegExp(`^${category}`) }).click();
+    await expect.poll(columns).toBe(count);
+  }
+  await nav.getByRole("button", { name: /^Laptops/ }).click();
+  await expect(device).toBeVisible();
+  expect((await device.boundingBox())!.width).toBeGreaterThan(600);
 });
 
 test("shows an enlarged All devices preview above the backdrop", async ({ page }) => {

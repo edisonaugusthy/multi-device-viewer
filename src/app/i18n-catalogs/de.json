@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Weniger Geräte pro Reihe, passend groß für jede Geräteart. Verschieben und skalieren Sie sie wie im Arbeitsbereich.",
   "releaseProblemsPanelTitle": "Ein aufgeräumteres Problemfenster",
   "releaseProblemsPanelDescription": "Es schwebt über Ihren Geräten, statt sie zur Seite zu schieben. Wählen Sie ein Gerät aus dem Menü und beheben Sie alles mit einer Schaltfläche.",
+  "releaseMoveResizeTitle": "Jedes Gerät verschieben und skalieren",
+  "releaseMoveResizeDescription": "Ziehen Sie ein Gerät an jede Stelle, auch über andere, und ziehen Sie an seiner Ecke, bis es genau die gewünschte Größe hat.",
   "releaseCameraMenuTitle": "Die Kamera öffnet ein kurzes Menü: Screenshot dieses Geräts oder des ganzen Arbeitsbereichs.",
   "releaseRealPagesTitle": "Vorschauen laden jetzt für jedes Gerät die echte Mobil- oder Desktopseite.",
   "releaseDuoSafariTitle": "Das aufgeklappte iPhone Duo zeigt jetzt Safaris echte obere Leiste.",

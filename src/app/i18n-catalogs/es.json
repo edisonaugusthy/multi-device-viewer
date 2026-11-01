@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Menos dispositivos por fila, con un tamaño adecuado a cada tipo. Arrástralos y cambia su tamaño como en el espacio de trabajo.",
   "releaseProblemsPanelTitle": "Un panel de problemas más ordenado",
   "releaseProblemsPanelDescription": "Flota sobre tus dispositivos en lugar de apartarlos. Elige un dispositivo en su menú y corrige todo con un solo botón.",
+  "releaseMoveResizeTitle": "Mueve y cambia el tamaño de cada dispositivo",
+  "releaseMoveResizeDescription": "Arrastra un dispositivo a cualquier sitio, incluso sobre los demás, y tira de su esquina para darle justo el tamaño que quieres.",
   "releaseCameraMenuTitle": "La cámara abre un menú breve: captura de este dispositivo o de todo el espacio de trabajo.",
   "releaseRealPagesTitle": "Las vistas previas ahora cargan la página real para móvil o escritorio de cada dispositivo.",
   "releaseDuoSafariTitle": "El iPhone Duo desplegado ahora muestra la barra superior real de Safari.",

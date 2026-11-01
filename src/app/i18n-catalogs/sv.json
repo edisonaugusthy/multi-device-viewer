@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Färre enheter per rad, i en storlek som passar varje sorts enhet. Dra och ändra storlek precis som på arbetsytan.",
   "releaseProblemsPanelTitle": "En prydligare problempanel",
   "releaseProblemsPanelDescription": "Den svävar över dina enheter i stället för att skjuta undan dem. Välj en enhet i dess meny och åtgärda allt med en knapp.",
+  "releaseMoveResizeTitle": "Flytta och ändra storlek på varje enhet",
+  "releaseMoveResizeDescription": "Dra en enhet vart du vill, även över de andra, och dra i hörnet för att ge den precis den storlek du vill ha.",
   "releaseCameraMenuTitle": "Kameran öppnar en kort meny: skärmbild av den här enheten eller hela arbetsytan.",
   "releaseRealPagesTitle": "Förhandsvisningar laddar nu den riktiga mobil- eller datorsidan för varje enhet.",
   "releaseDuoSafariTitle": "Den uppfällda iPhone Duo visar nu Safaris riktiga övre fält.",

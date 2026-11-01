@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Ít thiết bị hơn trên mỗi hàng, với kích thước hợp với từng loại thiết bị. Kéo và đổi kích thước giống như trong không gian làm việc.",
   "releaseProblemsPanelTitle": "Bảng Sự cố gọn gàng hơn",
   "releaseProblemsPanelDescription": "Bảng nổi trên các thiết bị thay vì đẩy chúng sang một bên. Chọn thiết bị trong menu và sửa tất cả bằng một nút.",
+  "releaseMoveResizeTitle": "Di chuyển và đổi kích thước mọi thiết bị",
+  "releaseMoveResizeDescription": "Kéo thiết bị đến bất cứ đâu, kể cả đè lên thiết bị khác, và kéo góc để có đúng kích thước bạn muốn.",
   "releaseCameraMenuTitle": "Máy ảnh mở một menu ngắn: chụp màn hình thiết bị này hoặc toàn bộ không gian làm việc.",
   "releaseRealPagesTitle": "Bản xem trước giờ tải đúng trang di động hoặc máy tính thật cho từng thiết bị.",
   "releaseDuoSafariTitle": "iPhone Duo khi mở giờ hiển thị thanh trên cùng thật của Safari.",

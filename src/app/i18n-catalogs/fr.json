@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Moins d’appareils par ligne, à une taille adaptée à chaque type. Déplacez-les et redimensionnez-les comme dans l’espace de travail.",
   "releaseProblemsPanelTitle": "Un panneau Problèmes plus clair",
   "releaseProblemsPanelDescription": "Il flotte au-dessus de vos appareils au lieu de les pousser de côté. Choisissez un appareil dans son menu et corrigez tout d’un seul bouton.",
+  "releaseMoveResizeTitle": "Déplacez et redimensionnez chaque appareil",
+  "releaseMoveResizeDescription": "Faites glisser un appareil où vous voulez, même par-dessus les autres, et tirez son coin pour lui donner exactement la taille voulue.",
   "releaseCameraMenuTitle": "L’appareil photo ouvre un petit menu : capture de cet appareil ou de tout l’espace de travail.",
   "releaseRealPagesTitle": "Les aperçus chargent désormais la vraie page mobile ou ordinateur de chaque appareil.",
   "releaseDuoSafariTitle": "L'iPhone Duo déplié affiche désormais la vraie barre supérieure de Safari.",

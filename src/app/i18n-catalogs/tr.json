@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Her satırda daha az cihaz, her cihaz türüne uygun boyutta. Onları çalışma alanındaki gibi sürükleyip yeniden boyutlandırın.",
   "releaseProblemsPanelTitle": "Daha düzenli bir Sorunlar paneli",
   "releaseProblemsPanelDescription": "Cihazlarınızı kenara itmek yerine üzerlerinde süzülür. Menüsünden bir cihaz seçin ve hepsini tek düğmeyle düzeltin.",
+  "releaseMoveResizeTitle": "Her cihazı taşıyın ve boyutlandırın",
+  "releaseMoveResizeDescription": "Bir cihazı istediğiniz yere, diğerlerinin üzerine bile sürükleyin ve köşesinden çekerek tam istediğiniz boyuta getirin.",
   "releaseCameraMenuTitle": "Kamera kısa bir menü açar: bu cihazın ya da tüm çalışma alanının ekran görüntüsü.",
   "releaseRealPagesTitle": "Önizlemeler artık her cihaz için gerçek mobil veya masaüstü sayfayı yüklüyor.",
   "releaseDuoSafariTitle": "Açık iPhone Duo artık Safari'nin gerçek üst çubuğunu gösteriyor.",

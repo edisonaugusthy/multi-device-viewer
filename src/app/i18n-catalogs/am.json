@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "በአንድ ረድፍ ያነሱ መሣሪያዎች፣ ለእያንዳንዱ የመሣሪያ ዓይነት በሚስማማ መጠን። ልክ በሥራ ቦታው እንዳለ ይጎትቷቸው እና መጠናቸውን ይቀይሩ።",
   "releaseProblemsPanelTitle": "የተስተካከለ የችግሮች ፓነል",
   "releaseProblemsPanelDescription": "መሣሪያዎችዎን ወደ ጎን ከመግፋት ይልቅ ከላያቸው ይንሳፈፋል። ከምናሌው መሣሪያ ይምረጡ እና ሁሉንም በአንድ አዝራር ያስተካክሉ።",
+  "releaseMoveResizeTitle": "እያንዳንዱን መሣሪያ ያንቀሳቅሱ እና መጠኑን ይቀይሩ",
+  "releaseMoveResizeDescription": "መሣሪያን በሌሎቹ ላይም ቢሆን ወደፈለጉበት ይጎትቱ፣ እና የሚፈልጉትን መጠን እንዲይዝ ጥጉን ይጎትቱ።",
   "releaseCameraMenuTitle": "ካሜራው አጭር ምናሌ ይከፍታል፦ የዚህን መሣሪያ ወይም የመላውን የሥራ ቦታ ስክሪንሾት ያንሱ።",
   "releaseRealPagesTitle": "ቅድመ-እይታዎች አሁን ለእያንዳንዱ መሣሪያ እውነተኛውን የሞባይል ወይም የዴስክቶፕ ገጽ ይጭናሉ።",
   "releaseDuoSafariTitle": "የተዘረጋው iPhone Duo አሁን የSafari እውነተኛ የላይኛው አሞሌ ያሳያል።",

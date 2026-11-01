@@ -352,6 +352,8 @@ const en = {
   releaseAllDevicesReadableDescription: "Fewer devices to a row, sized for each kind of device. Drag and resize them just like on the workspace.",
   releaseProblemsPanelTitle: "A tidier Problems panel",
   releaseProblemsPanelDescription: "It floats over your devices instead of pushing them aside. Pick a device from its menu and fix everything with one button.",
+  releaseMoveResizeTitle: "Move and resize every device",
+  releaseMoveResizeDescription: "Drag a device anywhere, even over the others, and pull its corner to make it exactly the size you want.",
   releaseCameraMenuTitle: "The camera opens a short menu: screenshot this device or the whole workspace.",
   releaseRealPagesTitle: "Previews now load the real mobile or desktop page for each device.",
   releaseDuoSafariTitle: "iPhone Duo unfolded now shows Safari's real top bar.",

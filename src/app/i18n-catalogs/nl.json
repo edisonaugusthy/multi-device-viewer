@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Minder apparaten per rij, op een maat die bij elk soort apparaat past. Sleep ze en wijzig hun formaat net als in de werkruimte.",
   "releaseProblemsPanelTitle": "Een overzichtelijker Problemen-paneel",
   "releaseProblemsPanelDescription": "Het zweeft boven je apparaten in plaats van ze opzij te duwen. Kies een apparaat in het menu en los alles op met één knop.",
+  "releaseMoveResizeTitle": "Verplaats elk apparaat en wijzig het formaat",
+  "releaseMoveResizeDescription": "Sleep een apparaat waarheen je wilt, zelfs over andere heen, en trek aan de hoek om het precies zo groot te maken als je wilt.",
   "releaseCameraMenuTitle": "De camera opent een kort menu: een screenshot van dit apparaat of de hele werkruimte.",
   "releaseRealPagesTitle": "Voorvertoningen laden nu voor elk apparaat de echte mobiele of desktoppagina.",
   "releaseDuoSafariTitle": "De opengevouwen iPhone Duo toont nu de echte bovenbalk van Safari.",

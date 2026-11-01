@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "1 行のデバイス数を減らし、種類ごとに合ったサイズで表示します。ワークスペースと同じようにドラッグやサイズ変更ができます。",
   "releaseProblemsPanelTitle": "すっきりした問題パネル",
   "releaseProblemsPanelDescription": "デバイスを横に押しのけず、その上に浮かんで表示されます。メニューからデバイスを選び、ボタン 1 つですべて修正できます。",
+  "releaseMoveResizeTitle": "どのデバイスも移動・サイズ変更",
+  "releaseMoveResizeDescription": "デバイスはほかのデバイスの上も含めて好きな場所にドラッグでき、角をドラッグすれば思いどおりのサイズにできます。",
   "releaseCameraMenuTitle": "カメラボタンで短いメニューが開き、このデバイスまたはワークスペース全体のスクリーンショットを撮れます。",
   "releaseRealPagesTitle": "プレビューがデバイスごとに実際のモバイル版またはデスクトップ版のページを読み込むようになりました。",
   "releaseDuoSafariTitle": "開いた iPhone Duo に、実際の Safari の上部バーが表示されるようになりました。",

@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "한 줄에 기기 수를 줄이고, 기기 종류마다 알맞은 크기로 보여 줍니다. 작업 공간에서처럼 끌어서 옮기고 크기를 조절하세요.",
   "releaseProblemsPanelTitle": "더 깔끔해진 문제 패널",
   "releaseProblemsPanelDescription": "기기를 옆으로 밀어내지 않고 그 위에 떠 있습니다. 메뉴에서 기기를 고르고 버튼 하나로 모두 수정하세요.",
+  "releaseMoveResizeTitle": "모든 기기를 옮기고 크기 조절",
+  "releaseMoveResizeDescription": "기기를 다른 기기 위를 포함해 원하는 곳으로 끌어 놓고, 모서리를 끌어 원하는 크기로 정확히 맞추세요.",
   "releaseCameraMenuTitle": "카메라를 누르면 짧은 메뉴가 열립니다. 이 기기나 전체 작업 공간의 스크린샷을 찍으세요.",
   "releaseRealPagesTitle": "이제 미리보기가 기기마다 실제 모바일 또는 데스크톱 페이지를 불러옵니다.",
   "releaseDuoSafariTitle": "펼친 iPhone Duo에 실제 Safari 상단 막대가 표시됩니다.",

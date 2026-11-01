@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Mniej urządzeń w rzędzie, w rozmiarze dopasowanym do każdego rodzaju. Przeciągaj je i zmieniaj ich rozmiar tak jak w obszarze roboczym.",
   "releaseProblemsPanelTitle": "Bardziej uporządkowany panel Problemy",
   "releaseProblemsPanelDescription": "Unosi się nad urządzeniami zamiast spychać je na bok. Wybierz urządzenie z jego menu i napraw wszystko jednym przyciskiem.",
+  "releaseMoveResizeTitle": "Przesuwaj każde urządzenie i zmieniaj jego rozmiar",
+  "releaseMoveResizeDescription": "Przeciągnij urządzenie w dowolne miejsce, nawet nad inne, i pociągnij za róg, by nadać mu dokładnie taki rozmiar, jaki chcesz.",
   "releaseCameraMenuTitle": "Aparat otwiera krótkie menu: zrzut ekranu tego urządzenia lub całego obszaru roboczego.",
   "releaseRealPagesTitle": "Podglądy wczytują teraz prawdziwą stronę mobilną lub desktopową dla każdego urządzenia.",
   "releaseDuoSafariTitle": "Rozłożony iPhone Duo pokazuje teraz prawdziwy górny pasek Safari.",

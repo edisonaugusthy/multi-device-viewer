@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "Lebih sedikit perangkat per baris, dengan ukuran yang sesuai untuk tiap jenis perangkat. Seret dan ubah ukurannya seperti di ruang kerja.",
   "releaseProblemsPanelTitle": "Panel Masalah yang lebih rapi",
   "releaseProblemsPanelDescription": "Panel ini melayang di atas perangkat Anda alih-alih menggesernya. Pilih perangkat dari menunya dan perbaiki semuanya dengan satu tombol.",
+  "releaseMoveResizeTitle": "Pindahkan dan ubah ukuran setiap perangkat",
+  "releaseMoveResizeDescription": "Seret perangkat ke mana saja, bahkan di atas perangkat lain, lalu tarik sudutnya agar ukurannya pas seperti yang Anda mau.",
   "releaseCameraMenuTitle": "Kamera membuka menu singkat: screenshot perangkat ini atau seluruh ruang kerja.",
   "releaseRealPagesTitle": "Pratinjau kini memuat halaman seluler atau desktop yang asli untuk setiap perangkat.",
   "releaseDuoSafariTitle": "iPhone Duo yang terbuka kini menampilkan bilah atas Safari yang asli.",

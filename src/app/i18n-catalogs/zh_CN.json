@@ -282,6 +282,8 @@
   "releaseAllDevicesReadableDescription": "每行设备更少，并按设备类型调整到合适大小。可以像在工作区一样拖动和调整大小。",
   "releaseProblemsPanelTitle": "更整洁的问题面板",
   "releaseProblemsPanelDescription": "它浮在设备上方，不再把设备挤到一边。从菜单中选择设备，一个按钮即可全部修复。",
+  "releaseMoveResizeTitle": "随意移动和调整每台设备",
+  "releaseMoveResizeDescription": "把设备拖到任意位置，甚至叠在其他设备上，再拖动它的角，就能调到你想要的大小。",
   "releaseCameraMenuTitle": "相机按钮会打开一个简短菜单：截取此设备或整个工作区。",
   "releaseRealPagesTitle": "预览现在会为每台设备加载真实的移动版或桌面版页面。",
   "releaseDuoSafariTitle": "展开的 iPhone Duo 现在显示 Safari 真实的顶部栏。",

@@ -1656,29 +1656,38 @@ test("unchecks the last device in the Add device picker and replaces it with the
   await expect(panel.locator(`[data-device-pick][data-added][title="${lastName}"]`)).toHaveCount(0);
 });
 
-test("floats the Problems panel over the devices with Fix all on one line beside its title", async ({ page }) => {
+test("floats a tidy Problems panel over the devices: long addresses wrap in their rows, one device at a time, Fix all at its foot", async ({ page }) => {
   const devices = page.locator("[data-preview-slot-id] [data-device-capture]");
   await expect(devices.first()).toBeVisible();
   const before = await devices.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().x));
-  // Each preview reports a problem or more, as its page's script would.
+  // Each preview reports problems, as its page's script would; the first a very long address.
   await page.evaluate(() => {
     document.querySelectorAll<HTMLIFrameElement>("[data-preview-slot-id] iframe").forEach((frame, index) => {
       const slotId = frame.closest<HTMLElement>("[data-preview-slot-id]")!.dataset.previewSlotId;
       const send = (data: object) => window.dispatchEvent(new MessageEvent("message", { data: { slotId, documentId: "test", ...data }, source: frame.contentWindow }));
       send({ type: "MDV_PAGE_PROBLEMS_START" });
-      for (let n = 0; n <= index; n++) send({ type: "MDV_PAGE_PROBLEM", problem: { key: `${index}-${n}`, kind: "error", title: `TypeError ${index}-${n}`, where: "app.js:1" } });
+      if (index === 0) send({ type: "MDV_PAGE_PROBLEM", problem: { key: "long", kind: "request", title: `GET tracker.example/action/0?${"sid=58add9c0d57911f1b2e3197&".repeat(8)}`, where: "Failed to load" } });
+      for (let n = 0; n < index; n++) send({ type: "MDV_PAGE_PROBLEM", problem: { key: `${index}-${n}`, kind: "error", title: `TypeError ${index}-${n}`, where: "app.js:1" } });
     });
   });
   await page.locator("[data-main-toolbar]").getByRole("button", { name: /^Issues/ }).click();
   await page.getByRole("button", { name: /^Errors and failed requests/ }).click();
   const panel = page.locator("[data-problems-panel]");
   await expect(panel).toBeVisible();
-  const fixAll = panel.getByRole("button", { name: /^Fix all/ });
-  const title = panel.getByRole("heading", { name: /Problems/ });
-  expect((await fixAll.boundingBox())!.height).toBeLessThanOrEqual(32);
-  expect(Math.abs((await fixAll.boundingBox())!.y - (await title.boundingBox())!.y)).toBeLessThan(12);
-  // The devices stay where they were; the panel sits over them.
+  // The devices stay where they were; the panel sits over them, only as tall as it needs.
   expect(await devices.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().x))).toEqual(before);
+  expect((await panel.boundingBox())!.height).toBeLessThan(page.viewportSize()!.height - 200);
+  // Nothing runs past the panel's edge, and Fix all is one line at the foot.
+  expect(await panel.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+  const fixAll = panel.getByRole("button", { name: /^Fix all/ });
+  await expect(fixAll).toHaveText("Fix all · 4");
+  expect((await fixAll.boundingBox())!.height).toBeLessThanOrEqual(40);
+  expect((await fixAll.boundingBox())!.y).toBeGreaterThan((await panel.getByRole("listitem").last().boundingBox())!.y);
+
+  // One device's problems from the header.
+  await panel.getByRole("combobox", { name: "Devices" }).selectOption({ label: "MacBook Pro 14-inch (M5) · 2" });
+  await expect(panel.getByRole("listitem")).toHaveCount(2);
+  await expect(fixAll).toHaveText("Fix all · 2");
 });
 
 test("shows its own header in Compare and keeps the workspace bar in All devices, whose close returns to the workspace", async ({ page }) => {

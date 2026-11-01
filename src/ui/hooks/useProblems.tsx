@@ -39,8 +39,12 @@ export function useProblems({ slots, deviceName }: { slots: PreviewSlot[]; devic
 
   const counted = (problem: { kind: ProblemKind }) => COUNTED.includes(problem.kind);
   const countFor = useCallback((slotId: string) => (bySlot.get(slotId)?.problems ?? []).filter(counted).length, [bySlot]);
+  const onDevice = groups.filter(group => !device || group.devices.some(item => item.slotId === device));
+  /** How many of each kind the panel's filters would show for the chosen device. */
+  const counts: Record<ProblemKind, number> = { error: 0, request: 0, warning: 0 };
+  for (const group of onDevice) counts[group.kind] += 1;
   const warnings = groups.filter(group => group.kind === "warning").length;
-  const shown = groups.filter(group => kinds.has(group.kind) && (!device || group.devices.some(item => item.slotId === device)));
+  const shown = onDevice.filter(group => kinds.has(group.kind));
   const total = groups.filter(counted).length;
   const clean = slots.filter(slot => bySlot.has(slot.id) && countFor(slot.id) === 0).map(slot => ({ slotId: slot.id, name: deviceName(slot) }));
   /** Devices with problems, in workspace order: the panel filters by one of them. */
@@ -74,7 +78,7 @@ export function useProblems({ slots, deviceName }: { slots: PreviewSlot[]; devic
   }, []);
 
   return {
-    open, device, devices, kinds, groups: shown, total, warnings, clean,
+    open, device, devices, kinds, counts, groups: shown, total, warnings, clean,
     countFor, setDevice, toggleKind, show, close, fixPromptFor,
   };
 }

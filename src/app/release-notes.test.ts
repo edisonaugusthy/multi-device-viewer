@@ -38,9 +38,11 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with the new MacBook Pro and adds only the language for each device", () => {
-    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseNewMacsTitle", description: "releaseNewMacsDescription", icon: "frames" });
-    expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual(["releaseSectionDevices"]);
-    expect(CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes).map(note => note.title)).toEqual(["releaseDeviceLanguageTitle"]);
+  it("leads with the one bar, then the views, then the new MacBook Pro and the language for each device", () => {
+    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseOneBarTitle", description: "releaseOneBarDescription", icon: "workspace" });
+    expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual(["releaseSectionViews", "releaseSectionDevices"]);
+    expect(CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes).map(note => note.title)).toEqual([
+      "releaseAllDevicesReadableTitle", "releaseProblemsPanelTitle", "releaseNewMacsTitle", "releaseDeviceLanguageTitle",
+    ]);
   });
 });

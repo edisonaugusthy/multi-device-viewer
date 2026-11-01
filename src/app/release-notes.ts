@@ -32,7 +32,7 @@ export const LAST_SEEN_TOUR_KEY = "mdvLastSeenTour";
 // Raise this when the feature tour gains steps that existing users should see.
 // Updated users see the steps added since their last tour once, right after
 // the release notes; a fresh install sees every step.
-export const FEATURE_TOUR_REVISION = "0.5.0";
+export const FEATURE_TOUR_REVISION = "0.5.1";
 
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {

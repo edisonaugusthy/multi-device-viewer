@@ -282,19 +282,6 @@ try {
   const attr = (node, name) => { const a = node.attributes ?? []; const i = a.indexOf(name); return i >= 0 ? a[i + 1] : undefined; };
   const textOf = async node => (await cdp.send("Runtime.callFunctionOn", { objectId: (await cdp.send("DOM.resolveNode", { backendNodeId: node.backendNodeId })).object.objectId, functionDeclaration: "function () { return this.textContent; }", returnByValue: true })).result.value;
   const clickNode = async node => cdp.send("Runtime.callFunctionOn", { objectId: (await cdp.send("DOM.resolveNode", { backendNodeId: node.backendNodeId })).object.objectId, functionDeclaration: "function () { this.click(); }" });
-  await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/problems"))]);
-  let chips = [];
-  for (let i = 0; i < 50 && chips.length === 0; i++) { await page.waitForTimeout(100); chips = await viewerNodes(node => attr(node, "data-problems-chip") !== undefined); }
-  assert.equal(chips.length, 1, "only the phone shows a problems chip");
-  // The error and the failed request can arrive one after the other.
-  for (let i = 0; i < 30 && !/2 problems/.test(await textOf(chips[0])); i++) await page.waitForTimeout(100);
-  assert.match(await textOf(chips[0]), /2 problems/);
-  await clickNode(chips[0]);
-  let panelText = "";
-  for (let i = 0; i < 30 && !panelText.includes("smoke boom"); i++) { await page.waitForTimeout(100); const [panel] = await viewerNodes(node => attr(node, "data-problems-panel") !== undefined); panelText = panel ? await textOf(panel) : ""; }
-  assert.match(panelText, /TypeError: smoke boom/, "script error listed");
-  assert.match(panelText, /GET \/missing-api/, "failed request listed");
-  assert.match(panelText, /404/);
   // Problems and Check layout live in the dock's Issues menu.
   const issue = async name => {
     let [node] = await viewerNodes(n => attr(n, name) !== undefined);
@@ -307,10 +294,25 @@ try {
     assert(node, name);
     return node;
   };
+  await Promise.all([phone.waitForNavigation(), phone.evaluate(() => location.assign("/problems"))]);
   await clickNode(await issue("data-problems-toggle"));
+  const problemsText = async () => {
+    const [panel] = await viewerNodes(node => attr(node, "data-problems-panel") !== undefined);
+    return panel ? await textOf(panel) : "";
+  };
+  let panelText = "";
+  // The error and the failed request can arrive one after the other.
+  for (let i = 0; i < 50 && (!panelText.includes("smoke boom") || !panelText.includes("/missing-api")); i++) { await page.waitForTimeout(100); panelText = await problemsText(); }
+  assert.match(panelText, /TypeError: smoke boom/, "script error listed");
+  assert.match(panelText, /GET \/missing-api/, "failed request listed");
+  assert.match(panelText, /404/);
+  assert.match(panelText, /iPhone 18 Pro/, "the panel identifies the device with problems");
+  assert.equal((await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length, 0, "device captions stay free of problem badges");
   await visit(() => phone.evaluate(() => location.assign("/")));
-  for (let i = 0; i < 30 && (await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length; i++) await page.waitForTimeout(100);
-  assert.equal((await viewerNodes(node => attr(node, "data-problems-chip") !== undefined)).length, 0, "a new page starts without problems");
+  for (let i = 0; i < 30 && /smoke boom|\/missing-api/.test(panelText); i++) { await page.waitForTimeout(100); panelText = await problemsText(); }
+  assert(panelText, "the Problems panel stays open after navigation");
+  assert.doesNotMatch(panelText, /smoke boom|\/missing-api/, "a new page clears the previous problems");
+  await clickNode(await issue("data-problems-toggle"));
   const one = async (name, value) => { const [node] = await viewerNodes(n => attr(n, name) !== undefined && (value === undefined || attr(n, name) === value)); assert(node, `${name} ${value ?? ""}`); return node; };
   // Language: one device asks for German and states its screen density; its scripts read the language too.
   const inSlot = async (slotId, name, text) => {

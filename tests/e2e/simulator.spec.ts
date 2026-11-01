@@ -1314,6 +1314,24 @@ test("keeps the All devices grid scrollbar for mouse users", async ({ page }) =>
   expect(scrollbarWidth).not.toBe("none");
 });
 
+test("shows All devices large enough to read, four to a row and three for wide screens, each whole on screen", async ({ page }) => {
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.locator("[data-all-devices-toggle]").click();
+  const grid = page.locator("[data-gallery-grid]");
+  const columns = () => grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.split(" ").length);
+  const card = page.locator("[data-gallery-device-id]").first();
+  await expect(card.locator("[data-device-capture]")).toBeVisible();
+  expect(await columns()).toBe(4);
+  const visible = (await page.locator("[data-gallery-scroll]").boundingBox())!.height;
+  expect((await card.boundingBox())!.height).toBeLessThanOrEqual(visible);
+  expect((await card.locator("[data-device-capture]").boundingBox())!.height).toBeGreaterThan(520);
+
+  await page.locator("[data-all-devices-view] nav").getByRole("button", { name: /^Laptops/ }).click();
+  await expect(card.locator("[data-device-capture]")).toBeVisible();
+  expect(await columns()).toBe(3);
+  expect((await card.locator("[data-device-capture]").boundingBox())!.width).toBeGreaterThan(420);
+});
+
 test("shows an enlarged All devices preview above the backdrop", async ({ page }) => {
   await page.locator("[data-all-devices-toggle]").click();
   const card = page.locator("[data-gallery-device-id]").nth(1);

@@ -35,9 +35,16 @@ import { readStore, writeStore } from "../../infrastructure/storage/local-store"
 
 type GalleryLoadingMode = "fast" | "gentle";
 const POPUP_SLOT_ID = "gallery-popup";
-// Gallery cards: the tallest preview area, and the name and size underneath.
-const GALLERY_PREVIEW_MAX = 568;
-const GALLERY_WATCH_PREVIEW_MAX = 348;
+// Gallery cards: the tallest preview area (as tall as the visible gallery
+// allows, within these bounds; watches stay smaller), and the name underneath.
+const GALLERY_PREVIEW_MIN = 360;
+const GALLERY_PREVIEW_MAX = 760;
+const GALLERY_WATCH_SHARE = 0.6;
+// Three or four devices to a row, large enough to read their pages: wide
+// screens (laptops, desktops, TVs) three at most, everything else four.
+const WIDE_GROUPS: ReadonlySet<DeviceGalleryGroupId> = new Set(["laptop", "desktop", "tv"]);
+const GRID_COLUMNS = "grid-cols-1 @min-[480px]/gallery:grid-cols-2 @min-[880px]/gallery:grid-cols-3 @min-[1280px]/gallery:grid-cols-4";
+const WIDE_GRID_COLUMNS = "grid-cols-1 @min-[640px]/gallery:grid-cols-2 @min-[1100px]/gallery:grid-cols-3";
 const GALLERY_CAPTION_HEIGHT = 44;
 const GALLERY_TOOLBAR_SPACE = 56;
 // Cards this far outside the viewport keep their page; further away they give
@@ -147,6 +154,17 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   const observedUrls = useRef(new Map<string, string>());
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // A whole device, its toolbar and its name fit in the visible gallery.
+  const [previewMax, setPreviewMax] = useState(GALLERY_PREVIEW_MAX);
+  useLayoutEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+    const measure = () => setPreviewMax(Math.round(Math.min(GALLERY_PREVIEW_MAX, Math.max(GALLERY_PREVIEW_MIN, element.clientHeight - GALLERY_CAPTION_HEIGHT - 24))));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
   const categoryNavRef = useRef<HTMLElement>(null);
   // Category tabs show only when every tab fits; otherwise the dropdown does.
   const [categoryTabsFit, setCategoryTabsFit] = useState(true);
@@ -467,8 +485,8 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
           <section key={group.id} data-gallery-group={group.id} aria-labelledby={expandedDeviceId ? undefined : `gallery-heading-${group.id}`}
             className={cx("flex flex-col gap-4 px-6 pb-8", viewMode ? "pt-6" : "pt-2")}>
             <h1 id={`gallery-heading-${group.id}`} className="sr-only">{t(groupLabels[group.id])} · {t("galleryWidthRange", { range: widthRange })}</h1>
-            <div data-gallery-grid data-canvas-top className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] items-end gap-x-6 gap-y-10">
-              {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef} inactive={expandedDeviceId !== null}
+            <div data-gallery-grid data-canvas-top className={cx("grid items-end gap-x-8 gap-y-10", WIDE_GROUPS.has(group.id) ? WIDE_GRID_COLUMNS : GRID_COLUMNS)}>
+              {group.devices.map(device => <GalleryCard key={`${device.id}-${refreshVersion}`} device={device} slot={slotsByDevice.get(device.id)!} display={display} scrollRef={scrollRef} previewMax={previewMax} inactive={expandedDeviceId !== null}
                 captions={!viewMode}
                 loadRequest={currentLoads?.requests.get(`gallery-${device.id}`)} loadStatus={currentLoads?.states.get(`gallery-${device.id}`) ?? "queued"}
                 onPreviewLoad={previewLoaded} onPreviewReady={previewReady} layer={layers[slotsByDevice.get(device.id)!.id]} onRaise={raise} onEnlarge={enlarge} onLiveChange={setSlotLive} onNearChange={setSlotNear}/>)}
@@ -490,8 +508,8 @@ function GalleryPage({ url, onClose, onOpenDevice, onAddDevice, onCaptureDevice,
   );
 }
 
-const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, inactive, captions, loadRequest, loadStatus, layer, onRaise, onPreviewLoad, onPreviewReady, onEnlarge, onLiveChange, onNearChange }: {
-  device: Device; slot: PreviewSlot; display: DisplaySettings; scrollRef: RefObject<HTMLDivElement | null>;
+const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef, previewMax, inactive, captions, loadRequest, loadStatus, layer, onRaise, onPreviewLoad, onPreviewReady, onEnlarge, onLiveChange, onNearChange }: {
+  device: Device; slot: PreviewSlot; display: DisplaySettings; scrollRef: RefObject<HTMLDivElement | null>; previewMax: number;
   /** True while the enlarged popup is open: the card stays in place but goes quiet. */
   inactive: boolean; captions: boolean;
   loadRequest?: number; loadStatus: GalleryLoadStatus;
@@ -542,7 +560,7 @@ const GalleryCard = memo(function GalleryCard({ device, slot, display, scrollRef
   }, []);
   const frame = display.previewStyle === "free" ? size
     : estimateDeviceFrameSize({ device, showFrame: slot.showFrame, showStatusBar: true, showUrlBar: true, viewportSize: size });
-  const previewCap = device.type === "watch" ? GALLERY_WATCH_PREVIEW_MAX : GALLERY_PREVIEW_MAX;
+  const previewCap = device.type === "watch" ? Math.round(previewMax * GALLERY_WATCH_SHARE) : previewMax;
   const sidePad = device.type === "laptop" || device.type === "desktop" ? 40 : 16;
   // The preview keeps room above the device for its hover toolbar.
   const toolbarSpace = captions ? GALLERY_TOOLBAR_SPACE : 0;

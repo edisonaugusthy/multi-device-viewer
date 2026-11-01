@@ -180,9 +180,10 @@ export function SimulatorApp() {
   const toolbarSlotRef = useRef<string | null>(null);
   toolbarSlotRef.current = toolbarSlotId;
   const toolbarTimer = useRef<number | undefined>(undefined);
-  const hoverToolbar = useCallback((slotId: string, hovered: boolean) => {
+  const hoverToolbar = useCallback((slotId: string, hovered: boolean, immediate = false) => {
     window.clearTimeout(toolbarTimer.current);
     if (!hovered) toolbarTimer.current = window.setTimeout(() => setToolbarSlotId(null), 300);
+    else if (immediate) setToolbarSlotId(slotId);
     else if (toolbarSlotRef.current !== slotId) toolbarTimer.current = window.setTimeout(() => setToolbarSlotId(slotId), 120);
   }, []);
   useEffect(() => () => window.clearTimeout(toolbarTimer.current), []);

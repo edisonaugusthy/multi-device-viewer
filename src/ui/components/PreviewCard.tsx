@@ -143,7 +143,7 @@ interface PreviewCardProps {
    * time. Without it, each card follows its own pointer.
    */
   toolbarHovered?: boolean;
-  onToolbarHover?: (slotId: string, hovered: boolean) => void;
+  onToolbarHover?: (slotId: string, hovered: boolean, immediate?: boolean) => void;
   onExpand?: (slotId: string) => void;
   onFixPrompt?: (slotId: string) => void;
   onPageScroll?: (scrollTop: number) => void;
@@ -248,6 +248,12 @@ export const PreviewCard = memo(function PreviewCard({
     if (onToolbarHover) return onToolbarHover(slot.id, true);
     window.clearTimeout(hoverTimer.current);
     setOwnHover(true);
+  });
+  // A focus-visible toolbar can be reached before the device hover delay.
+  // Keep it present when a mouse press removes that keyboard-focus styling.
+  const holdToolbarImmediately = useStableCallback(() => {
+    if (onToolbarHover) return onToolbarHover(slot.id, true, true);
+    holdToolbar();
   });
   const releaseToolbar = useStableCallback(() => {
     if (onToolbarHover) return onToolbarHover(slot.id, false);
@@ -1078,7 +1084,8 @@ export const PreviewCard = memo(function PreviewCard({
 
       {toolbarShown && (
         <div ref={toolbarRef} className="pointer-events-none absolute inset-x-0 z-40"
-          onPointerEnter={() => { holdToolbar(); setPinnedToolbar(toolbarPlace); }}
+          onPointerEnter={() => { holdToolbarImmediately(); setPinnedToolbar(toolbarPlace); }}
+          onPointerDownCapture={holdToolbarImmediately}
           onPointerLeave={() => { releaseToolbar(); setPinnedToolbar(null); }}
           style={{ top: toolbarAt.top, transform: `translateX(${toolbarAt.shift}px)`, ...(layer !== undefined && { zIndex: toolbarVisible ? 1000 : 10 + layer }) }}>
           <PreviewToolbar

@@ -19,6 +19,9 @@ async function revealControls(page: Page, index = 0) {
   const slot = page.locator("[data-preview-slot-id]").nth(index);
   await slot.locator("[data-device-caption]").hover();
   await expect(slot.locator("[data-device-toolbar]")).toHaveCSS("opacity", "1");
+  // Entering the toolbar pins its position after a device-size change. Let
+  // that hover settle before an action's mouse-down/mouse-up on slower hosts.
+  await slot.locator("[data-device-toolbar]").hover();
 }
 
 async function openViewportActions(page: Page, index = 0) {

@@ -935,7 +935,8 @@ export function SimulatorApp() {
 
         <div className="relative flex min-h-0 flex-1 flex-col">
         <main className={cx("group/focusmode relative flex min-h-0 flex-1 flex-col overflow-hidden", galleryOpen && "invisible")} inert={galleryOpen} aria-hidden={galleryOpen || undefined}>
-          <div className="flex min-h-0 flex-1">
+          {/* The Problems and Layout check panels float over the devices instead of pushing them aside. */}
+          <div className="relative flex min-h-0 flex-1">
           <div
             ref={boardRef}
             data-capture-board

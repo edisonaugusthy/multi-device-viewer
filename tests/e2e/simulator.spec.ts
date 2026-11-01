@@ -1656,6 +1656,31 @@ test("unchecks the last device in the Add device picker and replaces it with the
   await expect(panel.locator(`[data-device-pick][data-added][title="${lastName}"]`)).toHaveCount(0);
 });
 
+test("floats the Problems panel over the devices with Fix all on one line beside its title", async ({ page }) => {
+  const devices = page.locator("[data-preview-slot-id] [data-device-capture]");
+  await expect(devices.first()).toBeVisible();
+  const before = await devices.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().x));
+  // Each preview reports a problem or more, as its page's script would.
+  await page.evaluate(() => {
+    document.querySelectorAll<HTMLIFrameElement>("[data-preview-slot-id] iframe").forEach((frame, index) => {
+      const slotId = frame.closest<HTMLElement>("[data-preview-slot-id]")!.dataset.previewSlotId;
+      const send = (data: object) => window.dispatchEvent(new MessageEvent("message", { data: { slotId, documentId: "test", ...data }, source: frame.contentWindow }));
+      send({ type: "MDV_PAGE_PROBLEMS_START" });
+      for (let n = 0; n <= index; n++) send({ type: "MDV_PAGE_PROBLEM", problem: { key: `${index}-${n}`, kind: "error", title: `TypeError ${index}-${n}`, where: "app.js:1" } });
+    });
+  });
+  await page.locator("[data-main-toolbar]").getByRole("button", { name: /^Issues/ }).click();
+  await page.getByRole("button", { name: /^Errors and failed requests/ }).click();
+  const panel = page.locator("[data-problems-panel]");
+  await expect(panel).toBeVisible();
+  const fixAll = panel.getByRole("button", { name: /^Fix all/ });
+  const title = panel.getByRole("heading", { name: /Problems/ });
+  expect((await fixAll.boundingBox())!.height).toBeLessThanOrEqual(32);
+  expect(Math.abs((await fixAll.boundingBox())!.y - (await title.boundingBox())!.y)).toBeLessThan(12);
+  // The devices stay where they were; the panel sits over them.
+  expect(await devices.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().x))).toEqual(before);
+});
+
 test("shows its own header in Compare and keeps the workspace bar in All devices, whose close returns to the workspace", async ({ page }) => {
   const mainHeader = page.locator("[data-main-toolbar]");
   await mainHeader.getByRole("button", { name: "Compare with design" }).click();

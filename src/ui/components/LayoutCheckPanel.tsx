@@ -43,7 +43,7 @@ export function LayoutCheckPanel({ view, onClose, onCheckAgain, onSelect, onFixP
         : t("layoutCleanSummary", { count: checkedDevices.length, when });
 
   return (
-    <aside data-layout-check-panel aria-label={t("layoutCheck")} className="mb-3 me-3 mt-2 flex w-[360px] shrink-0 flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover">
+    <aside data-layout-check-panel aria-label={t("layoutCheck")} className="absolute bottom-3 end-3 top-2 z-40 flex w-[360px] max-w-[calc(100%-24px)] flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover">
       <div className="flex items-start gap-2 pb-3 pe-2.5 ps-4 pt-3.5">
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <h2 className="text-[13px] font-semibold">{t("layoutCheck")}</h2>

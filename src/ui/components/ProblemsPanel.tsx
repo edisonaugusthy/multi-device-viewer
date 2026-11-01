@@ -32,12 +32,19 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
   const deviceName = view.device ? view.groups.flatMap(group => group.devices).find(item => item.slotId === view.device)?.name ?? view.clean.find(item => item.slotId === view.device)?.name : undefined;
 
   return (
-    <aside data-problems-panel aria-label={t("problemsTitle")} className="mb-3 me-3 mt-2 flex w-[384px] shrink-0 flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover">
+    <aside data-problems-panel aria-label={t("problemsTitle")} className="absolute bottom-3 end-3 top-2 z-40 flex w-[384px] max-w-[calc(100%-24px)] flex-col overflow-hidden rounded-2xl bg-surface text-ink shadow-popover">
       <div className="flex items-center gap-2 pb-2.5 pe-2.5 ps-3 pt-3">
         <h2 className="flex flex-1 items-center gap-2 ps-1 text-[13px] font-semibold">
           {t("problemsTitle")}
           {view.total > 0 && <span className="rounded-full bg-red-500 px-1.5 font-mono text-[10.5px] font-bold text-white">{view.total}</span>}
         </h2>
+        {/* Beside the title, so device filters below never squeeze it. */}
+        {view.groups.length > 0 && (
+          <button type="button" onClick={onFixAll}
+            className={cx("inline-flex h-[30px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-3 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
+            <FixPromptIcon size={13} />{t("problemsFixAll", { count: view.groups.length })}
+          </button>
+        )}
         <button type="button" onClick={onClose} aria-label={t("problemsClose")} title={t("problemsClose")}
           className={cx("grid size-7 shrink-0 place-items-center rounded-full text-ink-2 hover:bg-sunken", focusRing)}>
           <CloseIcon size={15} strokeWidth={2.2} />
@@ -46,36 +53,27 @@ export function ProblemsPanel({ view, onClose, onFix, onFixAll }: {
 
       <>
         <div className="grid gap-2.5 px-3 pb-2.5">
-          <div className="flex min-h-[30px] items-center gap-2">
-            {/* Each device with problems; one click shows only its problems, again shows every device's. */}
-            {(view.devices.length > 1 || deviceName) && (
-              <div role="group" aria-label={t("devices")} className="flex min-w-0 flex-wrap gap-1.5">
-                {view.devices.map(device => {
-                  const on = view.device === device.slotId;
-                  return (
-                    <button key={device.slotId} type="button" aria-pressed={on} onClick={() => view.setDevice(on ? null : device.slotId)}
-                      title={on ? t("problemsShowAll") : device.name}
-                      className={cx("inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold", on ? "bg-ink text-surface" : "bg-sunken text-ink hover:bg-line-soft", focusRing)}>
-                      {shortName(device.name)}<span className={cx("font-mono text-[11px]", on ? "opacity-70" : "text-faint")}>{device.count}</span>
-                    </button>
-                  );
-                })}
-                {deviceName && !view.devices.some(device => device.slotId === view.device) && (
-                  <button type="button" aria-pressed onClick={() => view.setDevice(null)} title={t("problemsShowAll")}
-                    className={cx("inline-flex h-7 items-center gap-1 rounded-full bg-ink px-2.5 text-xs font-semibold text-surface", focusRing)}>
-                    {shortName(deviceName)}<CloseIcon size={11} strokeWidth={2.8} />
+          {/* Each device with problems; one click shows only its problems, again shows every device's. */}
+          {(view.devices.length > 1 || deviceName) && (
+            <div role="group" aria-label={t("devices")} className="flex min-w-0 flex-wrap gap-1.5">
+              {view.devices.map(device => {
+                const on = view.device === device.slotId;
+                return (
+                  <button key={device.slotId} type="button" aria-pressed={on} onClick={() => view.setDevice(on ? null : device.slotId)}
+                    title={on ? t("problemsShowAll") : device.name}
+                    className={cx("inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold", on ? "bg-ink text-surface" : "bg-sunken text-ink hover:bg-line-soft", focusRing)}>
+                    {shortName(device.name)}<span className={cx("font-mono text-[11px]", on ? "opacity-70" : "text-faint")}>{device.count}</span>
                   </button>
-                )}
-              </div>
-            )}
-            <span className="flex-1" />
-            {view.groups.length > 0 && (
-              <button type="button" onClick={onFixAll}
-                className={cx("inline-flex h-[30px] items-center gap-1.5 rounded-full bg-accent px-3 text-xs font-semibold text-on-accent hover:bg-accent-strong", focusRing)}>
-                <FixPromptIcon size={13} />{t("problemsFixAll", { count: view.groups.length })}
-              </button>
-            )}
-          </div>
+                );
+              })}
+              {deviceName && !view.devices.some(device => device.slotId === view.device) && (
+                <button type="button" aria-pressed onClick={() => view.setDevice(null)} title={t("problemsShowAll")}
+                  className={cx("inline-flex h-7 items-center gap-1 rounded-full bg-ink px-2.5 text-xs font-semibold text-surface", focusRing)}>
+                  {shortName(deviceName)}<CloseIcon size={11} strokeWidth={2.8} />
+                </button>
+              )}
+            </div>
+          )}
           <div role="group" aria-label={t("problemsShow")} className="flex flex-wrap gap-1.5">
             {KIND_FILTERS.map(([kind, label]) => {
               const on = view.kinds.has(kind);

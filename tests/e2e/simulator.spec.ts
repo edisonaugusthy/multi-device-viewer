@@ -1902,3 +1902,36 @@ test("forgets a removed device's design instead of keeping it in the saved works
   await expect(page.locator("[data-preview-slot-id]")).toHaveCount(2);
   await expect.poll(savedDesigns).toEqual([0, 0]);
 });
+
+test("walks the feature tour along the top bar from left to right, then a device, never covering the bar", async ({ page }) => {
+  const bar = page.locator("[data-main-toolbar]");
+  await bar.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByRole("dialog", { name: "Settings" }).getByRole("button", { name: "Feature tour" }).click();
+  const tour = page.getByRole("dialog", { name: "Workspace, One and All" });
+  await expect(tour).toBeVisible();
+  const card = page.locator("[role=dialog][aria-labelledby=first-run-title] section");
+  const highlight = page.getByTestId("tour-highlight");
+  const barBox = (await bar.boundingBox())!;
+  const titles = ["Workspace, One and All", "Sync between devices", "Capture", "Compare with design", "Issues", "Focus mode", "Add device", "Move and change devices", "Before & after"];
+  let lastLeft = -Infinity;
+  for (const [index, title] of titles.entries()) {
+    await expect(card.getByRole("heading", { name: title })).toBeVisible();
+    await page.waitForTimeout(300);
+    const spot = (await highlight.boundingBox())!;
+    const box = (await card.boundingBox())!;
+    // The card never covers the top bar.
+    expect(box.y).toBeGreaterThanOrEqual(barBox.y + barBox.height);
+    if (index < 7) {
+      // The bar's controls, in order from left to right.
+      expect(spot.y).toBeLessThan(barBox.y + barBox.height);
+      expect(spot.x).toBeGreaterThan(lastLeft);
+      lastLeft = spot.x;
+    } else {
+      // Then the first device's bar, below the top bar.
+      expect(spot.y).toBeGreaterThan(barBox.y + barBox.height);
+    }
+    if (index < titles.length - 1) await card.getByRole("button", { name: index === 0 ? "Show me" : "Next" }).click();
+  }
+  await card.getByRole("button", { name: "Start testing" }).click();
+  await expect(card).toHaveCount(0);
+});

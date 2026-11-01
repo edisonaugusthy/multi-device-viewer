@@ -17,17 +17,18 @@ export interface HighlightRect {
 
 export type TargetRect = HighlightRect;
 
+// The top bar from left to right, then a device: one step for each control,
+// saying everything it holds.
 export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
-  { title: "Add device", text: "Add up to four devices to compare side by side.", target: '[data-tour="add-viewport"]' },
-  { title: "All devices", text: "Preview your page on every device in one click.", target: "[data-all-devices-toggle]" },
-  { title: "Focus mode", text: "Hide all controls for clean reviews. Press Esc to exit.", target: "[data-view-only-toggle]" },
-  { title: "Move and change devices", text: "Drag the grip to move a device, or use the arrows to switch it.", target: '[data-tour="device-controls"]' },
+  { title: "Workspace, One and All", text: "See your devices together, one at a time, or every device at once.", target: '[data-tour="views"]', since: "0.5.0" },
   { title: "Sync between devices", text: "Scroll or open a page once, and every device follows.", target: '[data-tour="sync"]' },
-  { title: "Fix prompt", text: "Describe a bug and copy a prompt for your AI coding tool.", target: '[data-tour="fix-prompt"]' },
-  { title: "Check layout", text: "Find what makes the page scroll sideways.", target: '[data-tour="layout-check"]', since: "0.4.0" },
+  { title: "Capture", text: "Screenshots, video, recorded flows and tracked changes, all here.", target: '[data-tour="screenshot"]', since: "0.5.0" },
+  { title: "Compare with design", text: "Check a device against a design image, side by side or overlaid.", target: '[data-tour="design"]', since: "0.5.0" },
+  { title: "Issues", text: "Errors, sideways scrolling and a fix prompt for your AI coding tool.", target: '[data-tour="issues"]', since: "0.5.0" },
+  { title: "Focus mode", text: "Hide all controls for clean reviews. Press Esc to exit.", target: "[data-view-only-toggle]" },
+  { title: "Add device", text: "Add up to four devices to compare side by side.", target: '[data-tour="add-viewport"]' },
+  { title: "Move and change devices", text: "Drag a device anywhere, resize it from its corner, or switch it.", target: '[data-tour="device-controls"]', since: "0.5.0" },
   { title: "Before & after", text: "Save a “before” picture in the device menu, then see what changed.", target: '[data-tour="device-controls"] [data-device-menu-toggle]', since: "0.4.0" },
-  { title: "Screenshot and annotate", text: "Capture your devices and mark them up.", target: '[data-tour="screenshot"]' },
-  { title: "Record", text: "Record a video, or a user flow to replay on every device.", target: '[data-tour="screenshot"]' },
 ];
 
 const versionParts = (version: string) => version.split(".").map(part => Number.parseInt(part, 10) || 0);
@@ -55,6 +56,7 @@ const EDGE_GAP = 12;
 const TARGET_GAP = 16;
 const HIGHLIGHT_EDGE_GAP = 3;
 const HIGHLIGHT_PADDING = 6;
+const SHORT_TARGET = 64;
 
 export function highlightRectForTarget(
   target: TargetRect,
@@ -99,6 +101,15 @@ export function positionCard(
     return {
       left: Math.max(EDGE_GAP, (viewportWidth - width) / 2),
       top: Math.max(EDGE_GAP, (viewportHeight - height) / 2),
+    };
+  }
+
+  // A short control, such as a button in the top bar, gets the card just
+  // below it, centred, so the card never covers the rest of the bar.
+  if (highlight.height <= SHORT_TARGET && highlight.top + highlight.height + TARGET_GAP + height <= viewportHeight - EDGE_GAP) {
+    return {
+      left: Math.max(EDGE_GAP, Math.min(viewportWidth - width - EDGE_GAP, highlight.left + highlight.width / 2 - width / 2)),
+      top: highlight.top + highlight.height + TARGET_GAP,
     };
   }
 

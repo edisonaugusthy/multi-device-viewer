@@ -19,22 +19,21 @@ import {
 } from "./first-run-tour";
 
 const TOUR_TRANSLATION_KEYS: Array<{ title: TranslationKey; text: TranslationKey }> = [
-  { title: "addDevice", text: "tourAddDeviceText" },
-  { title: "allDevices", text: "tourAllDevicesText" },
-  { title: "viewMode", text: "tourFocusText" },
-  { title: "tourMoveTitle", text: "tourMoveText" },
+  { title: "tourViewsTitle", text: "tourViewsText" },
   { title: "syncBetweenDevices", text: "tourSyncText" },
-  { title: "fixPrompt", text: "tourFixPromptText" },
-  { title: "checkLayout", text: "tourLayoutCheckText" },
+  { title: "captureMenu", text: "tourCaptureText" },
+  { title: "compareWithDesign", text: "tipCompare" },
+  { title: "issues", text: "tourIssuesText" },
+  { title: "viewMode", text: "tourFocusText" },
+  { title: "addDevice", text: "tourAddDeviceText" },
+  { title: "tourMoveTitle", text: "tourMoveResizeText" },
   { title: "visualChecks", text: "tourBeforeAfterText" },
-  { title: "captureAndAnnotate", text: "tourScreenshotText" },
-  { title: "record", text: "tourRecordText" },
 ];
 
 // Steps whose feature is held back are left out, with their translation keys.
 const ALL_TOUR_STEPS = FIRST_RUN_TOUR_STEPS
   .map((step, index) => ({ ...step, keys: TOUR_TRANSLATION_KEYS[index] }))
-  .filter(step => (FEATURES.layoutCheck || step.keys.title !== "checkLayout") && (FEATURES.visualChecks || step.keys.title !== "visualChecks"));
+  .filter(step => FEATURES.visualChecks || step.keys.title !== "visualChecks");
 
 /** `seenTour` is the tour revision this person saw last: an update shows only the steps added since. */
 export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => void; seenTour?: string | null }) {

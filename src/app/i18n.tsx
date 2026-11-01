@@ -640,6 +640,11 @@ const en = {
   layoutTruncated: "Only the first {count} are listed per device.",
   tourBeforeAfterText: "Save a “before” picture in the device menu, then see what changed.",
   tourLayoutCheckText: "Find what makes the page scroll sideways.",
+  tourViewsTitle: "Workspace, One and All",
+  tourViewsText: "See your devices together, one at a time, or every device at once.",
+  tourCaptureText: "Screenshots, video, recorded flows and tracked changes, all here.",
+  tourIssuesText: "Errors, sideways scrolling and a fix prompt for your AI coding tool.",
+  tourMoveResizeText: "Drag a device anywhere, resize it from its corner, or switch it.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

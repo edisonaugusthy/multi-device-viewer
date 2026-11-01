@@ -225,7 +225,7 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
         aria-label={PRODUCT_SHORT_NAME}
         className="flex h-11 max-w-full items-center gap-1 rounded-full bg-surface px-[5px] text-ink shadow-[0_0_0_1px_var(--color-line-soft),0_10px_28px_rgb(20_23_26/0.08)] dark:shadow-[0_0_0_1px_var(--color-line),0_10px_28px_rgb(0_0_0/0.4)]"
       >
-        <div role="group" aria-label={t("views")} className="flex shrink-0 items-center gap-1">
+        <div role="group" aria-label={t("views")} data-tour="views" className="flex shrink-0 items-center gap-1">
           {/* The current view; clicking it again opens the Add device picker here too. */}
           <Tooltip title={t("workspace")} description={t("tipAddDevice")} align="start" quiet={quiet}>
             <button
@@ -305,7 +305,7 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
           >
             <CameraIcon size={16} />
           </DockButton>
-          <DockButton label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")} quiet={quiet}
+          <DockButton data-tour="design" label={t("design")} ariaLabel={t("compareWithDesign")} tooltip={t("tipCompare")} quiet={quiet}
             active={props.compare} pressed={props.compare} onClick={props.onCompare}>
             <CompareIcon size={16} />
           </DockButton>
@@ -524,11 +524,11 @@ function IssuesControl(props: WorkspaceDockProps & { menu: InnerMenuControl }) {
   const run = (action: () => void) => () => { menu.close(); action(); };
   const active = menu.open || props.problemsOpen || props.layoutOpen || props.fixOpen;
   return (
-    <div data-tour="layout-check" className="relative shrink-0" {...menu.handlers}>
+    <div className="relative shrink-0" {...menu.handlers}>
       <button
           ref={props.fixRef}
           type="button"
-          data-tour="fix-prompt"
+          data-tour="issues"
           data-issues-toggle
           aria-label={total > 0 ? `${t("issues")} · ${total}` : t("issues")}
           aria-expanded={menu.open}

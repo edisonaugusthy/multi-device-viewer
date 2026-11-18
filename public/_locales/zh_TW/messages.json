@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "在 Mobile View 中開啟此分頁"
   },
+  "addDeviceToPage": {
+    "message": "在這個頁面上新增裝置"
+  },
   "activeActionTitle": {
     "message": "Mobile View 已啟用 — 點擊關閉"
   },

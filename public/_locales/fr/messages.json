@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Ouvrir cet onglet dans Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Ajouter un appareil à cette page"
+  },
   "activeActionTitle": {
     "message": "Mobile View est actif — cliquer pour fermer"
   },

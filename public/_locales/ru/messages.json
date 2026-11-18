@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Открыть эту вкладку в Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Добавить устройство на эту страницу"
+  },
   "activeActionTitle": {
     "message": "Mobile View активен — нажмите, чтобы закрыть"
   },

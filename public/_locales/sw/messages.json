@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Fungua kichupo hiki katika Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Ongeza kifaa kwenye ukurasa huu"
+  },
   "activeActionTitle": {
     "message": "Mobile View inatumika — bofya ili kufunga"
   },

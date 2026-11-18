@@ -5,20 +5,26 @@ import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { AppProviders } from "./AppProviders";
 import { SimulatorApp } from "../ui/components/SimulatorApp";
-import { setViewerContext, type ViewerRestoreState } from "./viewer-context";
+import { FloatingDevices, FLOATING_PICKER_EVENT } from "../ui/components/FloatingDevices";
+import { getViewerContext, setViewerContext, type ViewerMode, type ViewerRestoreState } from "./viewer-context";
 import viewerCss from "../ui/styles/global.css?inline";
 import { registerViewerFonts } from "../ui/fonts";
 
 const OVERLAY_ID = "multi-device-viewer-overlay";
 
 /** Mounts the viewer over the current page and returns its cleanup. */
-export function mountViewer({ url: pageUrl, sourceTabId, restore, close }: { url: string; sourceTabId?: number; restore?: ViewerRestoreState; close: () => void }) {
+export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "workspace", close }: { url: string; sourceTabId?: number; restore?: ViewerRestoreState; mode?: ViewerMode; close: () => void }) {
+  const floating = mode === "floating";
   const overlay = document.createElement("div");
   overlay.id = OVERLAY_ID;
   overlay.style.cssText = "all:initial!important;position:fixed!important;inset:0!important;width:100%!important;height:100%!important;z-index:2147483647!important;display:block!important;isolation:isolate!important;";
+  if (floating) overlay.style.setProperty("pointer-events", "none", "important");
   const shadow = overlay.attachShadow({ mode: __MDV_OPEN_SHADOW_QA__ ? "open" : "closed" });
   // Keep ordinary site listeners outside viewer form interactions.
   for (const type of ["keydown", "keyup", "keypress", "input", "change", "paste", "drop"]) shadow.addEventListener(type, event => event.stopPropagation());
+  if (floating) {
+    for (const type of ["click", "dblclick", "pointerdown", "pointerup", "contextmenu"]) shadow.addEventListener(type, event => event.stopPropagation());
+  }
   registerViewerFonts((path) => chrome.runtime.getURL(`/${path}`));
   const sheet = new CSSStyleSheet();
   // rem normally follows the host website's root font size, even across a shadow root.
@@ -53,18 +59,23 @@ export function mountViewer({ url: pageUrl, sourceTabId, restore, close }: { url
     removalObserver.disconnect();
     overlay.remove();
     setViewerContext(undefined);
-    if (document.documentElement.style.getPropertyValue("overflow") === "hidden") {
+    if (!floating && document.documentElement.style.getPropertyValue("overflow") === "hidden") {
       if (overflow) document.documentElement.style.setProperty("overflow", overflow, overflowPriority);
       else document.documentElement.style.removeProperty("overflow");
     }
     window.removeEventListener("pagehide", close);
     root.unmount();
   };
-  setViewerContext({ root: container, url: pageUrl, sourceTabId, restore, close });
-  (document.body ?? document.documentElement).appendChild(overlay);
-  removalObserver.observe(document.body ?? document.documentElement, { childList: true });
-  document.documentElement.style.setProperty("overflow", "hidden", "important");
-  root.render(createElement(AppProviders, null, createElement(SimulatorApp)));
+  setViewerContext({ root: container, url: pageUrl, sourceTabId, restore, mode, close });
+  const parent = floating ? document.documentElement : document.body ?? document.documentElement;
+  parent.appendChild(overlay);
+  removalObserver.observe(parent, { childList: true });
+  if (!floating) document.documentElement.style.setProperty("overflow", "hidden", "important");
+  root.render(createElement(AppProviders, null, floating ? createElement(FloatingDevices) : createElement(SimulatorApp)));
   window.addEventListener("pagehide", close, { once: true });
   return dispose;
+}
+
+export function openFloatingPicker() {
+  getViewerContext()?.root.dispatchEvent(new Event(FLOATING_PICKER_EVENT));
 }

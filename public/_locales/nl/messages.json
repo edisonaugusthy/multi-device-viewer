@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Dit tabblad openen in Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Apparaat toevoegen aan deze pagina"
+  },
   "activeActionTitle": {
     "message": "Mobile View is actief — klik om te sluiten"
   },

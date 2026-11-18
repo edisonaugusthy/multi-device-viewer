@@ -11,6 +11,8 @@ __pycache__/
 
 # Internal notes, store operations and research (kept local, never published)
 internal/
+/.agents/runs/
+/.agents/notion-pending/
 
 # Editable artwork inputs belong under ignored internal/artwork/.
 /scripts/device-frames/device-art.mjs

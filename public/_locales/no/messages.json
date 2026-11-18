@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Åpne denne fanen i Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Legg til en enhet på denne siden"
+  },
   "activeActionTitle": {
     "message": "Mobile View er aktiv — klikk for å lukke"
   },

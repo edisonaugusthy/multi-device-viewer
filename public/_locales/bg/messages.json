@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Отваряне на този раздел в Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Добавяне на устройство към тази страница"
+  },
   "activeActionTitle": {
     "message": "Mobile View е активно — щракнете за затваряне"
   },

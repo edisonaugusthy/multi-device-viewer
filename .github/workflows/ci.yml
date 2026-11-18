@@ -18,6 +18,19 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Check private documentation links
+        shell: bash
+        run: |
+          if git grep -qiIE 'https?://([[:alnum:]-]+\.)*notion\.(so|site)([/:?#]|$)'; then
+            echo 'Remove private documentation links from tracked files.' >&2
+            exit 1
+          else
+            status=$?
+            if [ "$status" -ne 1 ]; then
+              exit "$status"
+            fi
+          fi
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:

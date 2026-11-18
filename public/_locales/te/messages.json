@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "ఈ ట్యాబ్‌ను Mobile Viewలో తెరవండి"
   },
+  "addDeviceToPage": {
+    "message": "ఈ పేజీకి పరికరాన్ని జోడించండి"
+  },
   "activeActionTitle": {
     "message": "Mobile View సక్రియంగా ఉంది — మూసేందుకు క్లిక్ చేయండి"
   },

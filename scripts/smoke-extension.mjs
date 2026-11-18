@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
+import { checkFloatingDevices } from "./check-floating-devices.mjs";
 
 const extension = fileURLToPath(new URL("../.output/chrome-mv3", import.meta.url));
 const manifest = JSON.parse(await readFile(join(extension, "manifest.json"), "utf8"));
@@ -422,6 +423,7 @@ try {
   await page.locator("#multi-device-viewer-overlay").waitFor({ state: "detached" });
   const remaining = await worker.evaluate(async url => { const [tab] = await chrome.tabs.query({ url }); return (await chrome.declarativeNetRequest.getSessionRules()).filter(rule => rule.condition.tabIds?.includes(tab.id)); }, pageUrl);
   assert.deepEqual(remaining, [], "closing viewer removes its rules");
+  await checkFloatingDevices({ page, worker, pageUrl });
   // Standalone simulator is still usable, but cannot promise the website tab's session.
   const simulator = await context.newPage();
   await simulator.goto(`${extensionOrigin}/simulator.html?url=${encodeURIComponent(pageUrl)}`);

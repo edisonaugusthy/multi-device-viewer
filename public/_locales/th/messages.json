@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "เปิดแท็บนี้ใน Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "เพิ่มอุปกรณ์ในหน้านี้"
+  },
   "activeActionTitle": {
     "message": "Mobile View ทำงานอยู่ — คลิกเพื่อปิด"
   },

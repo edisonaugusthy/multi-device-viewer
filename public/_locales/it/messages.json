@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Apri questa scheda in Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Aggiungi un dispositivo a questa pagina"
+  },
   "activeActionTitle": {
     "message": "Mobile View è attivo — fai clic per chiudere"
   },

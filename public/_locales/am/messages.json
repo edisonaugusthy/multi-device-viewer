@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "ይህን ትር በMobile View ክፈት"
   },
+  "addDeviceToPage": {
+    "message": "በዚህ ገጽ ላይ መሣሪያ አክል"
+  },
   "activeActionTitle": {
     "message": "Mobile View ንቁ ነው — ለመዝጋት ጠቅ ያድርጉ"
   },

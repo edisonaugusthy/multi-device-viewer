@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "ಈ ಟ್ಯಾಬ್ ಅನ್ನು Mobile Viewನಲ್ಲಿ ತೆರೆಯಿರಿ"
   },
+  "addDeviceToPage": {
+    "message": "ಈ ಪುಟಕ್ಕೆ ಸಾಧನವನ್ನು ಸೇರಿಸಿ"
+  },
   "activeActionTitle": {
     "message": "Mobile View ಸಕ್ರಿಯವಾಗಿದೆ — ಮುಚ್ಚಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
   },

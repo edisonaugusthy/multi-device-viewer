@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Otvori ovu karticu u Mobile Viewu"
   },
+  "addDeviceToPage": {
+    "message": "Dodaj uređaj na ovu stranicu"
+  },
   "activeActionTitle": {
     "message": "Mobile View je aktivan — kliknite za zatvaranje"
   },

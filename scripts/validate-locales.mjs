@@ -68,6 +68,7 @@ const requiredKeys = [
   "extensionDescription",
   "actionTitle",
   "contextMenuTitle",
+  "addDeviceToPage",
   "activeActionTitle",
   "unsupportedActionTitle",
   "unsupportedUrlHint",

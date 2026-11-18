@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "ഈ ടാബ് Mobile Viewൽ തുറക്കുക"
   },
+  "addDeviceToPage": {
+    "message": "ഈ പേജിലേക്ക് ഒരു ഉപകരണം ചേർക്കുക"
+  },
   "activeActionTitle": {
     "message": "Mobile View സജീവമാണ് — അടയ്ക്കാൻ ക്ലിക്ക് ചെയ്യുക"
   },

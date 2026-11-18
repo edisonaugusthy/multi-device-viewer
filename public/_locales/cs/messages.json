@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Otevřít tuto kartu v Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Přidat zařízení na tuto stránku"
+  },
   "activeActionTitle": {
     "message": "Mobile View je aktivní — kliknutím zavřete"
   },

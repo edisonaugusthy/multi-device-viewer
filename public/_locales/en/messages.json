@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Open this tab in Mobile View & Responsive Tester"
   },
+  "addDeviceToPage": {
+    "message": "Add device to this page"
+  },
   "activeActionTitle": {
     "message": "Mobile View & Responsive Tester is active — click to close"
   },

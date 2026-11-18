@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Bu sekmeyi Mobile View’da aç"
   },
+  "addDeviceToPage": {
+    "message": "Bu sayfaya cihaz ekle"
+  },
   "activeActionTitle": {
     "message": "Mobile View etkin — kapatmak için tıklayın"
   },

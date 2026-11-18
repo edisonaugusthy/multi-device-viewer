@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Ava see vahekaart Mobile View’s"
   },
+  "addDeviceToPage": {
+    "message": "Lisa sellele lehele seade"
+  },
   "activeActionTitle": {
     "message": "Mobile View on aktiivne — sulgemiseks klõpsa"
   },

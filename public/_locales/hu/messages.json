@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Lap megnyitása a Mobile Viewban"
   },
+  "addDeviceToPage": {
+    "message": "Eszköz hozzáadása ehhez az oldalhoz"
+  },
   "activeActionTitle": {
     "message": "A Mobile View aktív — kattintson a bezáráshoz"
   },

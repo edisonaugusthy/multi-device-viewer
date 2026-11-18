@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "فتح علامة التبويب هذه في Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "إضافة جهاز إلى هذه الصفحة"
+  },
   "activeActionTitle": {
     "message": "Mobile View نشط — انقر للإغلاق"
   },

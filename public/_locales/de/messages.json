@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Diesen Tab in Mobile View öffnen"
   },
+  "addDeviceToPage": {
+    "message": "Gerät zu dieser Seite hinzufügen"
+  },
   "activeActionTitle": {
     "message": "Mobile View ist aktiv — zum Schließen klicken"
   },

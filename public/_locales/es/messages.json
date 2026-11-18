@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Abrir esta pestaña en Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Añadir un dispositivo a esta página"
+  },
   "activeActionTitle": {
     "message": "Mobile View está activo — haz clic para cerrar"
   },

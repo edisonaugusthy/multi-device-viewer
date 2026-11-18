@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Avaa tämä välilehti Mobile View’ssa"
   },
+  "addDeviceToPage": {
+    "message": "Lisää laite tälle sivulle"
+  },
   "activeActionTitle": {
     "message": "Mobile View on käytössä — sulje napsauttamalla"
   },

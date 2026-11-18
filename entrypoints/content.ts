@@ -1,5 +1,5 @@
 import { createOverlayLifecycle } from "../src/app/overlay-lifecycle";
-import type { ViewerRestoreState } from "../src/app/viewer-context";
+import type { ViewerMode, ViewerRestoreState } from "../src/app/viewer-context";
 import { defineContentScript } from "wxt/utils/define-content-script";
 
 type ViewerModule = typeof import("../src/app/viewer-mount");
@@ -11,6 +11,7 @@ const loadViewer = () => viewer ??= (import.meta.env.DEV
   : import(/* @vite-ignore */ chrome.runtime.getURL("/viewer.js")) as Promise<ViewerModule>)
   .catch((error) => { viewer = undefined; throw error; });
 let mountViewer: ViewerModule["mountViewer"] | undefined;
+let activeMode: ViewerMode = "workspace";
 // Set while the page is going away, so the background can tell a reload
 // (bring the viewer back afterwards) from the user closing the viewer.
 let unloading = false;
@@ -38,11 +39,22 @@ export default defineContentScript({
             // Bringing the viewer back after a reload must never close one
             // that is already open.
             if (message.restore && overlayLifecycle.active) { sendResponse({ ok: true, active: true }); return; }
-            void overlayLifecycle.toggle({
-              url: typeof message.url === "string" ? message.url : window.location.href,
-              sourceTabId: typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,
-              restore: message.restore && typeof message.restore === "object" ? message.restore as ViewerRestoreState : undefined,
-            }).then(() => sendResponse({ ok: true, active: overlayLifecycle.active }))
+            const mode = message.mode === "floating" ? "floating" : "workspace";
+            void (async () => {
+              if (overlayLifecycle.active && activeMode === "floating" && mode === "floating") {
+                (await loadViewer()).openFloatingPicker();
+                return;
+              }
+              if (overlayLifecycle.active && message.mode && activeMode !== mode) {
+                await overlayLifecycle.close();
+              }
+              await overlayLifecycle.toggle({
+                mode,
+                url: typeof message.url === "string" ? message.url : window.location.href,
+                sourceTabId: typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,
+                restore: message.restore && typeof message.restore === "object" ? message.restore as ViewerRestoreState : undefined,
+              });
+            })().then(() => sendResponse({ ok: true, active: overlayLifecycle.active }))
               .catch(error => sendResponse({ ok: false, error: String(error) }));
             return true;
           }
@@ -55,17 +67,20 @@ export default defineContentScript({
 });
 
 
-const overlayLifecycle = createOverlayLifecycle<{ url: string; sourceTabId?: number; restore?: ViewerRestoreState }>({
+const overlayLifecycle = createOverlayLifecycle<{ url: string; mode: ViewerMode; sourceTabId?: number; restore?: ViewerRestoreState }>({
   prepare: async ({ url }) => {
     const [prepared, module] = await Promise.all([chrome.runtime.sendMessage({ type: "MDV_PREVIEW_HOST", url }), loadViewer()]);
     mountViewer = module.mountViewer;
     if (!prepared?.ok) throw new Error(prepared?.error ?? "Could not prepare preview.");
   },
-  mount: (launch) => mountViewer!({ ...launch, close: () => { void overlayLifecycle.close().catch(console.error); } }),
+  mount: (launch) => {
+    activeMode = launch.mode;
+    return mountViewer!({ ...launch, close: () => { void overlayLifecycle.close().catch(console.error); } });
+  },
   release: async () => { await chrome.runtime.sendMessage({ type: "MDV_PREVIEW_CLOSE" }); },
   onState: notifyOverlayState,
 });
 
 function notifyOverlayState(active: boolean) {
-  void chrome.runtime.sendMessage({ type: "MDV_OVERLAY_STATE", active, unloading }).catch(() => undefined);
+  void chrome.runtime.sendMessage({ type: "MDV_OVERLAY_STATE", active, mode: activeMode, unloading }).catch(() => undefined);
 }

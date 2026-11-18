@@ -4,11 +4,12 @@ import { previewIdentitiesFrom } from "../src/domain/simulator/preview-identity"
 import { VisualRegressionError } from "../src/domain/visual-regression/visual-regression.types";
 import { defineBackground } from "wxt/utils/define-background";
 import { isPreviewableUrl, openSimulator } from "../src/app/extension-routes";
-import type { ViewerRestoreState } from "../src/app/viewer-context";
+import type { ViewerMode, ViewerRestoreState } from "../src/app/viewer-context";
 import { LAST_SEEN_RELEASE_VERSION_KEY, PENDING_RELEASE_VERSION_KEY } from "../src/app/release-notes";
 import { CHROME_STORE_URL, createReviewCoordinator, isReviewCommand, LEGACY_REVIEW_DISMISSED_KEY, REVIEW_PROMPT_STORAGE_KEY, SUPPORT_URL } from "../src/domain/review/review-coordinator";
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
+const FLOAT_DEVICE_MENU_ID = "add-device-to-page";
 const UPDATE_BADGE_TEXT = "NEW";
 // Set when an update lands and cleared by the next click, so the "NEW" badge
 // comes back after Chrome restarts (Chrome forgets badges on restart).
@@ -21,7 +22,7 @@ const message = (key: string, fallback: string) =>
 // Tabs showing the in-page viewer, kept across service-worker restarts so the
 // viewer comes back after the page reloads (a dev server's reload or F5).
 const OPEN_VIEWERS_KEY = "mdvOpenViewers";
-interface OpenViewer { origin: string; restore?: ViewerRestoreState; unloaded?: boolean }
+interface OpenViewer { origin: string; mode?: ViewerMode; restore?: ViewerRestoreState; unloaded?: boolean }
 const originOf = (url?: string) => { try { return url ? new URL(url).origin : undefined; } catch { return undefined; } };
 
 export default defineBackground(() => {
@@ -69,7 +70,7 @@ export default defineBackground(() => {
     if (message.type !== "MDV_OVERLAY_STATE") return;
     setActiveIndicator(tabId, Boolean(message.active));
     const origin = originOf(sender.tab.url);
-    if (message.active && origin) void updateOpenViewer(tabId, entry => ({ origin, restore: entry?.restore }));
+    if (message.active && origin) void updateOpenViewer(tabId, entry => ({ origin, mode: message.mode, restore: entry?.mode === message.mode ? entry?.restore : undefined }));
     // A page that is unloading keeps its entry: the viewer returns when the
     // same site has loaded again. Closing the viewer forgets it.
     else if (message.unloading) void updateOpenViewer(tabId, entry => entry && { ...entry, unloaded: true });
@@ -119,7 +120,7 @@ export default defineBackground(() => {
         const entry = (await openViewers())[_tabId];
         if (!entry?.unloaded) return;
         if (state?.active) return updateOpenViewer(_tabId, current => current && { ...current, unloaded: false });
-        if (isPreviewableUrl(tab.url) && originOf(tab.url) === entry.origin) openSimulatorForTab(tab, entry.restore);
+        if (isPreviewableUrl(tab.url) && originOf(tab.url) === entry.origin) openSimulatorForTab(tab, entry.restore ?? {}, entry.mode);
         else return updateOpenViewer(_tabId, () => undefined);
       })().catch(console.error);
     }
@@ -132,32 +133,25 @@ export default defineBackground(() => {
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId !== OPEN_SIMULATOR_MENU_ID || !tab) return;
-    openSimulatorForTab(tab);
+    if (!tab) return;
+    if (info.menuItemId === FLOAT_DEVICE_MENU_ID) openSimulatorForTab(tab, undefined, "floating");
+    else if (info.menuItemId === OPEN_SIMULATOR_MENU_ID) openSimulatorForTab(tab, undefined, "workspace");
   });
 
   function createContextMenu() {
-    const title = message(
-      "contextMenuTitle",
-      "Open this tab in Mobile View & Responsive Tester",
-    );
-    chrome.contextMenus.create({
-      id: OPEN_SIMULATOR_MENU_ID,
-      title,
-      contexts: ["page", "action"],
-    }, () => {
-      if (!chrome.runtime.lastError) return;
-
-      chrome.contextMenus.update(OPEN_SIMULATOR_MENU_ID, {
-        title,
-        contexts: ["page", "action"],
-      }, () => {
-        void chrome.runtime.lastError;
+    const menus = [
+      { id: OPEN_SIMULATOR_MENU_ID, title: message("contextMenuTitle", "Open this tab in Mobile View & Responsive Tester") },
+      { id: FLOAT_DEVICE_MENU_ID, title: message("addDeviceToPage", "Add device to this page"), documentUrlPatterns: ["http://*/*", "https://*/*"] },
+    ];
+    for (const { id, ...properties } of menus) {
+      const options: Omit<chrome.contextMenus.CreateProperties, "id"> = { ...properties, contexts: ["page", "action"] };
+      chrome.contextMenus.create({ id, ...options }, () => {
+        if (chrome.runtime.lastError) chrome.contextMenus.update(id, options, () => { void chrome.runtime.lastError; });
       });
-    });
+    }
   }
 
-  function openSimulatorForTab(tab: chrome.tabs.Tab, restore?: ViewerRestoreState) {
+  function openSimulatorForTab(tab: chrome.tabs.Tab, restore?: ViewerRestoreState, mode?: ViewerMode) {
     clearUpdateIndicator();
 
     if (!isPreviewableUrl(tab.url)) {
@@ -175,10 +169,9 @@ export default defineBackground(() => {
       return;
     }
 
-    // Keep the viewer on the current page. The content script owns the
-    // full-screen overlay, so the source page remains underneath it.
+    // The toolbar toggles the current viewer. Context menus can request a specific mode.
     const tabId = tab.id;
-    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId, restore };
+    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId, restore, mode };
     // Acknowledge each toggle before processing the next click, including the
     // first launch into a tab that needs content-script injection.
     const work = (launches.get(tabId) ?? Promise.resolve()).then(async () => {

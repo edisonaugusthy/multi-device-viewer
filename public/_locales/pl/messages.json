@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Otwórz tę kartę w Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Dodaj urządzenie do tej strony"
+  },
   "activeActionTitle": {
     "message": "Mobile View jest aktywny — kliknij, aby zamknąć"
   },

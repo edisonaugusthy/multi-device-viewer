@@ -98,6 +98,8 @@ interface PreviewCardProps {
   device: Device;
   display: DisplaySettings;
   showToolbar?: boolean;
+  /** A floating window moves by its own title bar. */
+  externalDragHandle?: boolean;
   visualsActive?: boolean;
   onScaleChange?: (scale: number, slotId: string) => void;
   onLoadStateChange?: (id: string, status: GalleryLoadResult) => void;
@@ -187,6 +189,7 @@ export const PreviewCard = memo(function PreviewCard({
   device,
   display,
   showToolbar = true,
+  externalDragHandle = false,
   visualsActive = true,
   onScaleChange,
   onLoadStateChange,
@@ -1022,13 +1025,13 @@ export const PreviewCard = memo(function PreviewCard({
               // A device screenshot briefly paints known backdrops behind the
               // device, spread well past its edges even at small zoom, to cut it
               // out of the workspace (see captureDeviceCutout).
-              className={`pointer-events-auto shrink-0 origin-center cursor-grab touch-none active:cursor-grabbing data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
+              className={`pointer-events-auto shrink-0 origin-center ${externalDragHandle ? "" : "cursor-grab touch-none active:cursor-grabbing"} data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
               data-device-capture
               data-free-device-view={freeView ? "" : undefined}
               onPointerEnter={holdToolbar}
               onPointerLeave={releaseToolbar}
-              onPointerDown={startMove}
-              onDoubleClick={event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) { setOffset({ x: 0, y: 0 }); savePosition({ x: 0, y: 0 }); } }}
+              onPointerDown={externalDragHandle ? undefined : startMove}
+              onDoubleClick={externalDragHandle ? undefined : event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) { setOffset({ x: 0, y: 0 }); savePosition({ x: 0, y: 0 }); } }}
               style={{
                 ...layerStyle,
                 width: frameSize.width,

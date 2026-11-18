@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "このタブを Mobile View で開く"
   },
+  "addDeviceToPage": {
+    "message": "このページにデバイスを追加"
+  },
   "activeActionTitle": {
     "message": "Mobile View は有効です — クリックして閉じる"
   },

@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Buksan ang tab na ito sa Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Magdagdag ng device sa page na ito"
+  },
   "activeActionTitle": {
     "message": "Aktibo ang Mobile View — i-click para isara"
   },

@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "باز کردن این برگه در Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "افزودن دستگاه به این صفحه"
+  },
   "activeActionTitle": {
     "message": "Mobile View فعال است — برای بستن کلیک کنید"
   },

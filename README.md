@@ -12,6 +12,8 @@ Open the current website or local development server in up to four live device v
 4. Focus a viewport or compare all selected screens in resizable columns.
 5. Capture the active viewport or complete workspace, annotate it, and copy or download it for sharing.
 
+To keep using the original page, right-click the page or the extension icon and choose **Add device to this page**. Select a device, then drag its title bar anywhere over the page. Focus the title bar and use the arrow keys for small moves or Shift + arrow for larger moves. **Add device** opens the picker again. Each preview starts at the current tab URL and can be scrolled and navigated independently. Closing the last device returns to the plain page.
+
 ## Devices
 
 119 built-in devices, each with its CSS viewport, pixel ratio and an original device frame:

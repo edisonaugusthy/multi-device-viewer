@@ -14,6 +14,9 @@
   "contextMenuTitle": {
     "message": "Deschide această filă în Mobile View"
   },
+  "addDeviceToPage": {
+    "message": "Adaugă un dispozitiv pe această pagină"
+  },
   "activeActionTitle": {
     "message": "Mobile View este activ — clic pentru închidere"
   },

@@ -82,8 +82,12 @@ function initialUrlFromSearch() {
 
 export function SimulatorProvider({ children }: { children: ReactNode }) {
   const { devices } = useDeviceCatalog();
+  const floating = getViewerContext()?.mode === "floating";
   const [slots, setSlots] = useState<PreviewSlot[]>(() => {
     const url = initialUrlFromSearch();
+    if (floating) return (getViewerContext()?.restore?.floatingDevices ?? []).slice(0, maxPreviewSlots).map(({ deviceId, canvasPosition }, i) => ({
+      ...createPreviewSlot(deviceId, url, i), canvasPosition,
+    }));
     return defaultDeviceIds.map((deviceId, i) => createPreviewSlot(deviceId, url, i));
   });
   // Observations must not change iframe src or recreate the live document.
@@ -94,7 +98,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     const ids = new Set(slots.map(slot => slot.id));
     for (const id of observedUrls.current.keys()) if (!ids.has(id)) observedUrls.current.delete(id);
   }, [slots]);
-  const [activeSlotId, setActiveSlotId] = useState(slots[0].id);
+  const [activeSlotId, setActiveSlotId] = useState(slots[0]?.id ?? "");
   const [display, setDisplay] = useState(() => ({
     ...defaultDisplay,
     darkMode: typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches,
@@ -106,6 +110,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
   // Load + increment use count on mount
   useEffect(() => {
+    if (floating) { setHydrated(true); return; }
     const launchUrl = launchUrlFromSearch();
     void Promise.all([
       readStore<number>("mdvUseCount", 0),
@@ -158,14 +163,14 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || floating) return;
     const session: SavedSimulatorSession = {
       slots,
       activeSlotId,
       display,
     };
     void writeStore("mdvSimulatorSession", session);
-  }, [activeSlotId, display, hydrated, slots]);
+  }, [activeSlotId, display, floating, hydrated, slots]);
 
   const updateSlot = useCallback(
     (slotId: string, updater: (slot: PreviewSlot) => PreviewSlot) => {
@@ -255,7 +260,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   const addSlot = useCallback((deviceId = defaultDeviceIds[0], orientation?: PreviewSlot["orientation"]) => {
     setSlots((current) => {
       if (current.length >= maxPreviewSlots) return current;
-      const slot = createPreviewSlot(deviceId, observedUrls.current.get(current[0]?.id) ?? current[0]?.url ?? initialUrlFromSearch(), current.length);
+      const url = floating ? window.location.href : observedUrls.current.get(current[0]?.id) ?? current[0]?.url ?? initialUrlFromSearch();
+      const slot = createPreviewSlot(deviceId, url, current.length);
       const device = devices.find((item) => item.id === deviceId);
       if (orientation) slot.orientation = orientation;
       else slot.orientation = getDefaultOrientation(device);
@@ -263,16 +269,16 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setActiveSlotId(next[next.length - 1].id);
       return next;
     });
-  }, [devices]);
+  }, [devices, floating]);
 
   const applyDevicePreset = useCallback((deviceIds: string[]) => {
     setSlots((current) => {
-      const url = observedUrls.current.get(current[0]?.id) ?? current[0]?.url ?? initialUrlFromSearch();
+      const url = floating ? window.location.href : observedUrls.current.get(current[0]?.id) ?? current[0]?.url ?? initialUrlFromSearch();
       const next = deviceIds.slice(0, 4).map((deviceId, index) => createPreviewSlot(deviceId, url, index));
       setActiveSlotId(next[0]?.id ?? activeSlotId);
       return next.length > 0 ? next : current;
     });
-  }, [activeSlotId]);
+  }, [activeSlotId, floating]);
 
   const removeSlot = useCallback((slotId: string) => {
     setSlots((current) => {

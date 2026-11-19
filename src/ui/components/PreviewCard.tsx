@@ -11,11 +11,11 @@ import { NavigationSyncState } from "../../domain/simulator/navigation-sync";
 import { chromeMajor, identityToken, slotIdentity } from "../../domain/simulator/preview-identity";
 import { tagPreviewRequest } from "../../domain/simulator/preview-request";
 import { clampZoom } from "../../domain/simulator/simulator-service";
-import { PREVIEW_SANDBOX, previewFrameName } from "../../app/preview-frame";
+import { PREVIEW_SANDBOX, postToPreview, previewFrameName } from "../../app/preview-frame";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
-import { AlertIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, FixPromptIcon, GlobeIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, ResizeGripIcon, SettingsIcon } from "../icons";
+import { AlertIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, FixPromptIcon, GlobeIcon, GuestIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, ResizeGripIcon, SettingsIcon } from "../icons";
 import type { LayoutSlotStatus } from "../hooks/useLayoutCheck";
 import { glyphKindFor } from "./DeviceGlyph";
 import { SectionLabel } from "./ui";
@@ -162,6 +162,11 @@ interface PreviewCardProps {
   onCompareIdentities?: () => void;
   /** Track changes is on: each reload is compared with the one before. */
   tracking?: boolean;
+  /** A workspace device: it can use a guest session. */
+  sessionControls?: boolean;
+  /** Open this device as a floating preview over the page, or in its own window above other apps. */
+  onFloat?: (slotId: string) => void;
+  onPopOut?: (slotId: string) => void;
 }
 
 type BridgeStatus = "checking" | "ready" | "unavailable" | "blocked";
@@ -230,8 +235,12 @@ export const PreviewCard = memo(function PreviewCard({
   caption,
   onCompareIdentities,
   tracking = false,
+  sessionControls = false,
+  onFloat,
+  onPopOut,
 }: PreviewCardProps) {
   const { t } = useI18n();
+  const canGuest = sessionControls && "credentialless" in HTMLIFrameElement.prototype;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
@@ -536,7 +545,7 @@ export const PreviewCard = memo(function PreviewCard({
     }
     const requestId = crypto.randomUUID();
     healthRequest.current = requestId;
-    frame.contentWindow?.postMessage({ type: "MDV_PREVIEW_HEALTH_REQUEST", slotId: slot.id, requestId }, "*");
+    postToPreview(frame, { type: "MDV_PREVIEW_HEALTH_REQUEST", slotId: slot.id, requestId });
     healthTimer.current = setTimeout(() => {
       if (healthRequest.current !== requestId) return;
       setLoadIssue("unverified");
@@ -545,48 +554,41 @@ export const PreviewCard = memo(function PreviewCard({
   }
 
   const syncScrollBridge = (iframe: HTMLIFrameElement | null) => {
-    if (!iframe?.contentWindow) return;
-    iframe.contentWindow.postMessage(
-      {
-        type: syncSettingsRef.current.scroll ? "MDV_SCROLL_SYNC_ENABLE" : "MDV_SCROLL_SYNC_DISABLE",
-        slotId: slot.id,
-      },
-      "*",
-    );
+    postToPreview(iframe, {
+      type: syncSettingsRef.current.scroll ? "MDV_SCROLL_SYNC_ENABLE" : "MDV_SCROLL_SYNC_DISABLE",
+      slotId: slot.id,
+    });
   };
 
   const syncFlowRecordingBridge = (iframe: HTMLIFrameElement | null) => {
-    iframe?.contentWindow?.postMessage({
+    postToPreview(iframe, {
       type: syncSettingsRef.current.flow ? "MDV_FLOW_RECORDING_ENABLE" : "MDV_FLOW_RECORDING_DISABLE",
       slotId: slot.id,
-    }, "*");
+    });
   };
 
   const syncVisualBridge = (iframe: HTMLIFrameElement | null) => {
-    iframe?.contentWindow?.postMessage({
+    postToPreview(iframe, {
       type: "MDV_PREVIEW_ACTIVITY", slotId: slot.id,
       active: syncSettingsRef.current.visuals,
       sampleRightSurface: device.id === "apple-iphone-duo-folded-2026",
-    }, "*");
+    });
   };
   useEffect(() => { syncVisualBridge(iframeRef.current); }, [sampleVisuals, slot.id, device.id]);
 
   const sendFlowReplay = (startIndex = 0) => {
     if (!flowReplay) return;
-    iframeRef.current?.contentWindow?.postMessage({
+    postToPreview(iframeRef.current, {
       type: "MDV_REPLAY_FLOW",
       slotId: slot.id,
       runId: flowReplay.runId,
       startIndex,
       steps: flowReplay.steps,
-    }, "*");
+    });
   };
 
   const sendKeyboardAction = (action: MobileKeyboardAction) => {
-    iframeRef.current?.contentWindow?.postMessage(
-      { type: "MDV_KEYBOARD_ACTION", slotId: slot.id, ...action },
-      "*",
-    );
+    postToPreview(iframeRef.current, { type: "MDV_KEYBOARD_ACTION", slotId: slot.id, ...action });
     if (action.action === "dismiss") setKeyboard(undefined);
   };
 
@@ -594,7 +596,8 @@ export const PreviewCard = memo(function PreviewCard({
     const el = containerRef.current;
     if (!el) return;
     // Use the browser's measured box instead of forcing a layout per card.
-    const ro = new ResizeObserver(([entry]) => {
+    // The element's own window measures it: in the always-on-top window that is not this one.
+    const ro = new (el.ownerDocument.defaultView ?? window).ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
       // A hidden preview reports 0×0. Keep its last size so the document stays mounted.
       if (width === 0 && height === 0) return;
@@ -639,19 +642,21 @@ export const PreviewCard = memo(function PreviewCard({
     const iframe = iframeRef.current;
     if (!iframe?.contentWindow) return;
     if (!keyboard) {
-      iframe.contentWindow.postMessage({ type: "MDV_KEYBOARD_VIEWPORT_RESET", slotId: slot.id }, "*");
+      postToPreview(iframe, { type: "MDV_KEYBOARD_VIEWPORT_RESET", slotId: slot.id });
       return;
     }
-    const animationFrame = window.requestAnimationFrame(() => {
-      iframe.contentWindow?.postMessage({
+    // The frame's own window paints even while the website tab is hidden behind another app.
+    const host = iframe.ownerDocument.defaultView ?? window;
+    const animationFrame = host.requestAnimationFrame(() => {
+      postToPreview(iframe, {
         type: "MDV_KEYBOARD_VIEWPORT",
         slotId: slot.id,
         platform: keyboardPlatform,
         keyboardHeight,
         occludedBottom: keyboardOcclusion,
-      }, "*");
+      });
     });
-    return () => window.cancelAnimationFrame(animationFrame);
+    return () => host.cancelAnimationFrame(animationFrame);
   }, [keyboard, keyboardHeight, keyboardOcclusion, keyboardPlatform, slot.id]);
 
   useEffect(() => {
@@ -676,16 +681,13 @@ export const PreviewCard = memo(function PreviewCard({
       } else {
         setBridgeStatus("checking");
       }
-      iframe.contentWindow?.postMessage(
-        {
-          type: "MDV_PREVIEW_REGISTER",
-          slotId: slot.id,
-          hideScrollbars: hidesPageScrollbars(device),
-          sampleRightSurface: device.id === "apple-iphone-duo-folded-2026",
-          visualsActive: syncSettingsRef.current.visuals,
-        },
-        "*",
-      );
+      postToPreview(iframe, {
+        type: "MDV_PREVIEW_REGISTER",
+        slotId: slot.id,
+        hideScrollbars: hidesPageScrollbars(device),
+        sampleRightSurface: device.id === "apple-iphone-duo-folded-2026",
+        visualsActive: syncSettingsRef.current.visuals,
+      });
       syncScrollBridge(iframe);
       syncFlowRecordingBridge(iframe);
 
@@ -719,7 +721,7 @@ export const PreviewCard = memo(function PreviewCard({
       // again, so the pages it opens next carry the device for their scripts.
       if (data.type === "MDV_IDENTITY_TOKEN_REQUEST") {
         const current = identityRef.current;
-        if (current) iframeRef.current?.contentWindow?.postMessage({ type: "MDV_IDENTITY_TOKEN", slotId: slot.id, token: identityToken(current) }, "*");
+        if (current) postToPreview(iframeRef.current, { type: "MDV_IDENTITY_TOKEN", slotId: slot.id, token: identityToken(current) });
         return;
       }
       if (data.type === "MDV_PREVIEW_HEALTH") {
@@ -856,19 +858,16 @@ export const PreviewCard = memo(function PreviewCard({
     const onSync = (event: Event) => {
       const detail = (event as CustomEvent<ScrollSyncPayload>).detail;
       if (!detail || detail.slotId === slot.id || (detail.targetSlotId && detail.targetSlotId !== slot.id)) return;
-      iframeRef.current?.contentWindow?.postMessage(
-        {
-          type: "MDV_APPLY_SCROLL_SYNC",
-          slotId: slot.id,
-          url: detail.url,
-          scrollLeft: detail.scrollLeft,
-          scrollTop: detail.scrollTop,
-          deltaLeft: detail.deltaLeft,
-          deltaTop: detail.deltaTop,
-          scrollTargetSelector: detail.scrollTargetSelector,
-        },
-        "*",
-      );
+      postToPreview(iframeRef.current, {
+        type: "MDV_APPLY_SCROLL_SYNC",
+        slotId: slot.id,
+        url: detail.url,
+        scrollLeft: detail.scrollLeft,
+        scrollTop: detail.scrollTop,
+        deltaLeft: detail.deltaLeft,
+        deltaTop: detail.deltaTop,
+        scrollTargetSelector: detail.scrollTargetSelector,
+      });
     };
 
     window.addEventListener("MDV_SCROLL_SYNC_EVENT", onSync);
@@ -882,7 +881,7 @@ export const PreviewCard = memo(function PreviewCard({
       const { activeSlotId, slots } = simulator.current;
       const sourceId = activeSlotId !== targetSlotId ? activeSlotId : slots.find(candidate => candidate.id !== targetSlotId)?.id;
       if (sourceId !== slot.id) return;
-      iframeRef.current?.contentWindow?.postMessage({ type: "MDV_SCROLL_SYNC_SNAPSHOT", slotId: slot.id, targetSlotId }, "*");
+      postToPreview(iframeRef.current, { type: "MDV_SCROLL_SYNC_SNAPSHOT", slotId: slot.id, targetSlotId });
     };
     window.addEventListener("MDV_SCROLL_SYNC_REQUEST", onRequest);
     return () => window.removeEventListener("MDV_SCROLL_SYNC_REQUEST", onRequest);
@@ -898,14 +897,7 @@ export const PreviewCard = memo(function PreviewCard({
       // follower twice and makes the navigation switch ineffective when off.
       if (detail.kind === "click" && (detail.tagName === "a" || detail.ctrlKey || detail.metaKey || detail.shiftKey || detail.button)) return;
       const { slotId: _sourceSlotId, ...payload } = detail;
-      iframeRef.current?.contentWindow?.postMessage(
-        {
-          ...payload,
-          type: "MDV_APPLY_INTERACTION",
-          slotId: slot.id,
-        },
-        "*",
-      );
+      postToPreview(iframeRef.current, { ...payload, type: "MDV_APPLY_INTERACTION", slotId: slot.id });
     };
 
     window.addEventListener("MDV_INTERACTION_EVENT", onSync);
@@ -916,10 +908,7 @@ export const PreviewCard = memo(function PreviewCard({
     syncScrollBridge(iframeRef.current);
     const enabling = display.scrollSync && !previousScrollSyncRef.current;
     if (enabling && simulator.current.activeSlotId === slot.id) {
-      iframeRef.current?.contentWindow?.postMessage({
-        type: "MDV_SCROLL_SYNC_SNAPSHOT",
-        slotId: slot.id,
-      }, "*");
+      postToPreview(iframeRef.current, { type: "MDV_SCROLL_SYNC_SNAPSHOT", slotId: slot.id });
     }
     previousScrollSyncRef.current = display.scrollSync;
   }, [display.scrollSync, slot.id]);
@@ -1106,6 +1095,8 @@ export const PreviewCard = memo(function PreviewCard({
             canRotate={canRotate}
             removable={removable}
             reloading={bridgeStatus === "checking"}
+            onFloat={onFloat && (() => onFloat(slot.id))}
+            onPopOut={onPopOut && (() => onPopOut(slot.id))}
             revealed={revealToolbar || deviceHovered}
             menuOpen={controlsOpen}
             tourTarget={first ? "device-controls" : undefined}
@@ -1160,8 +1151,10 @@ export const PreviewCard = memo(function PreviewCard({
                   <MenuItem label={t("openInNewTab")} onClick={() => { setControlsOpen(false); openInTab(); }}><OpenInTabIcon size={15}/></MenuItem>
                   {onFixPrompt && <MenuItem label={t("fixPromptForDevice")} onClick={() => { setControlsOpen(false); onFixPrompt(slot.id); }}><FixPromptIcon size={15}/></MenuItem>}
                   {FEATURES.visualChecks && visualChecks.menuItems}
-                  {(onLayoutCheck || frameProfile.platform === "ios") && <SectionLabel className="px-2.5 pb-1 pt-1.5">{t("menuPage")}</SectionLabel>}
+                  {(onLayoutCheck || canGuest || frameProfile.platform === "ios") && <SectionLabel className="px-2.5 pb-1 pt-1.5">{t("menuPage")}</SectionLabel>}
                   {onLayoutCheck && <MenuItem label={t("checkSideways")} onClick={() => { setControlsOpen(false); onLayoutCheck(slot.id); }}><LayoutCheckIcon size={15}/></MenuItem>}
+                  {canGuest && <MenuItem label={t("guestSession")} hint={t("guestSessionHint")} checked={Boolean(slot.guest)}
+                    onClick={() => { setControlsOpen(false); simulator.current.setSlotGuest(slot.id, !slot.guest); }}><GuestIcon size={15}/></MenuItem>}
                   {frameProfile.platform === "ios" && <MenuItem label={t("safariBarToolbar")} onClick={() => setBrowserSettingsOpen(true)}><SettingsIcon size={15}/></MenuItem>}
                   {!focused && (!first || !last) && (
                     // The order devices take in One view and in screenshots.
@@ -1202,6 +1195,12 @@ export const PreviewCard = memo(function PreviewCard({
               aria-label={t("languageButton", { language: languageName(slot.language) })}
               className="inline-flex h-[22px] max-w-[45%] shrink items-center gap-1 whitespace-nowrap rounded-full bg-accent-soft pe-2 ps-1.5 text-[11px] font-semibold text-accent-strong outline-none focus-visible:ring-2 focus-visible:ring-accent">
               <GlobeIcon size={11} /><span lang={slot.language} className="truncate">{languageName(slot.language)}</span>
+            </button>
+          )}
+          {slot.guest && (
+            <button type="button" data-guest-chip title={t("guestSessionHint")} onClick={() => { setLanguageOpen(false); setControlsOpen(true); }} onPointerEnter={holdToolbar} onPointerLeave={releaseToolbar}
+              className="inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-sunken pe-2 ps-1.5 text-[11px] font-semibold text-ink-2 outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent">
+              <GuestIcon size={11} />{t("guestChip")}
             </button>
           )}
           {tracking && visualChecks.tracked && (
@@ -1262,6 +1261,8 @@ export const PreviewCard = memo(function PreviewCard({
               style={pageSurfaces?.top ? { backgroundColor: pageSurfaces.top } : undefined}
               scrolling="auto"
               sandbox={PREVIEW_SANDBOX}
+              // A guest device starts from an empty session: no cookies or storage from the tab.
+              {...(slot.guest ? { credentialless: "" } : {})}
               onLoad={event => frameLoaded(event.currentTarget)}
               onError={() => { setBlocked(true); onLoadStateChange?.(slot.id, "error"); }}
             />
@@ -1327,10 +1328,13 @@ function LayoutChip({ status }: { status: LayoutSlotStatus }) {
 }
 
 // A menu row; with a hint, a second line says what it does.
-function MenuItem({ label, hint, onClick, disabled = false, children }: { label: string; hint?: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
+function MenuItem({ label, hint, onClick, disabled = false, checked, testId, children }: { label: string; hint?: string; onClick: () => void; disabled?: boolean; /** A switch that is on or off. */ checked?: boolean; testId?: string; children: ReactNode }) {
   return (
     <button
       type="button"
+      data-testid={testId}
+      role={checked === undefined ? undefined : "menuitemcheckbox"}
+      aria-checked={checked}
       disabled={disabled}
       onClick={event => { event.stopPropagation(); onClick(); }}
       className={`flex w-full gap-2.5 rounded-[10px] px-2.5 text-start text-[13px] text-ink hover:bg-sunken focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40 ${hint ? "items-start py-2" : "h-9 items-center font-medium"}`}
@@ -1342,6 +1346,7 @@ function MenuItem({ label, hint, onClick, disabled = false, children }: { label:
           <span className="text-[11.5px] leading-snug text-muted">{hint}</span>
         </span>
       ) : <span className="min-w-0 truncate">{label}</span>}
+      {checked && <CheckIcon size={13} strokeWidth={3} className="ms-auto mt-0.5 shrink-0 text-accent" />}
     </button>
   );
 }

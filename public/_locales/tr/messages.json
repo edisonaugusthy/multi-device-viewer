@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Bu sayfaya cihaz ekle"
   },
+  "addDeviceOnTop": {
+    "message": "Diğer uygulamaların üstüne cihaz ekle"
+  },
   "activeActionTitle": {
     "message": "Mobile View etkin — kapatmak için tıklayın"
   },

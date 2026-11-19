@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Lisää laite tälle sivulle"
   },
+  "addDeviceOnTop": {
+    "message": "Lisää laite muiden sovellusten päälle"
+  },
   "activeActionTitle": {
     "message": "Mobile View on käytössä — sulje napsauttamalla"
   },

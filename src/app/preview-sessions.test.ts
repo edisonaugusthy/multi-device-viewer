@@ -63,6 +63,28 @@ describe("preview session rules", () => {
     await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone }, brands);
     expect(browser.headers(7, "mdv-preview-a")).toEqual(identityHeaders(iphone, brands));
   });
+  it("extends every rule to a pop-out window's tab and takes it back when the window is gone", async () => {
+    const sessions = createPreviewSessions();
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone, "mdv-preview-b": mac }, brands);
+    // Only device a prepares again when it moves to the window; b's rule moves with it.
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone }, brands, [12]);
+    expect(browser.rules()).toHaveLength(3);
+    expect(browser.rules().every(rule => rule.condition.tabIds?.join() === "7,12")).toBe(true);
+    expect(browser.headers(12, "mdv-preview-a")).toEqual(identityHeaders(iphone, brands));
+    expect(browser.headers(12, "mdv-preview-b")).toEqual(identityHeaders(mac, brands));
+    // Unchanged tabs and identities write nothing.
+    const writes = browser.updateSessionRules.mock.calls.length;
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone }, brands, [12]);
+    expect(browser.updateSessionRules).toHaveBeenCalledTimes(writes);
+    // The window's own tab closing removes nothing: the website tab owns the rules.
+    await sessions.close(12);
+    expect(browser.rules()).toHaveLength(3);
+    await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone }, brands);
+    expect(browser.rules().every(rule => rule.condition.tabIds?.join() === "7")).toBe(true);
+    expect(browser.ofTab(12)).toEqual([]);
+    await sessions.close(7);
+    expect(browser.rules()).toEqual([]);
+  });
   it("cleans up only the closing tab and prunes missing tabs", async () => {
     const sessions = createPreviewSessions();
     await sessions.prepare(7, "https://example.com", { "mdv-preview-a": iphone }, brands);

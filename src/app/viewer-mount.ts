@@ -13,7 +13,7 @@ import { registerViewerFonts } from "../ui/fonts";
 const OVERLAY_ID = "multi-device-viewer-overlay";
 
 /** Mounts the viewer over the current page and returns its cleanup. */
-export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "workspace", close, openFloating }: Omit<ViewerContext, "root"> & { openFloating: (deviceId: string) => Promise<void> }) {
+export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "workspace", placement, close, openFloating }: Omit<ViewerContext, "root" | "styles"> & { openFloating: (deviceId: string) => Promise<void> }) {
   const floating = mode === "floating";
   const overlay = document.createElement("div");
   overlay.id = OVERLAY_ID;
@@ -44,9 +44,10 @@ export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "worksp
       return `${name}:${value};`;
     })
     .join("");
-  sheet.replaceSync(isolatedCss
+  const styles = isolatedCss
     + `\n@layer properties{*,::before,::after,::backdrop{${propertyDefaults}}}`
-    + "\n#root{width:100%;height:100%;isolation:isolate;color-scheme:light;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif} ");
+    + "\n#root{width:100%;height:100%;isolation:isolate;color-scheme:light;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif} ";
+  sheet.replaceSync(styles);
   shadow.adoptedStyleSheets = [sheet];
   const container = document.createElement("div");
   container.id = "root";
@@ -66,7 +67,7 @@ export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "worksp
     window.removeEventListener("pagehide", close);
     root.unmount();
   };
-  setViewerContext({ root: container, url: pageUrl, sourceTabId, restore, mode, close });
+  setViewerContext({ root: container, url: pageUrl, sourceTabId, restore, mode, placement, styles, close });
   const parent = floating ? document.documentElement : document.body ?? document.documentElement;
   parent.appendChild(overlay);
   removalObserver.observe(parent, { childList: true });
@@ -76,6 +77,6 @@ export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "worksp
   return dispose;
 }
 
-export function openFloatingPicker(deviceId?: string) {
-  getViewerContext()?.root.dispatchEvent(new CustomEvent(FLOATING_PICKER_EVENT, { detail: deviceId }));
+export function openFloatingPicker(deviceId?: string, placement?: "page" | "top") {
+  getViewerContext()?.root.dispatchEvent(new CustomEvent(FLOATING_PICKER_EVENT, { detail: { deviceId, placement } }));
 }

@@ -157,25 +157,48 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* The controls sit just outside the device. They stay for a moment after the
+   pointer leaves it, still taking the pointer, so they can be reached from any
+   side. Hidden controls keep their place in the keyboard's tab order. */
 .mdv-floating-control {
   opacity: 0;
   pointer-events: none;
+  /* allow-discrete lets pointer-events wait too; it has to be inside the shorthand to survive minifying. */
+  transition: opacity 120ms ease 400ms, pointer-events 0s linear 520ms allow-discrete;
 }
 
-[data-floating-device]:not([data-pointer-focus]):is(:focus-visible, :has(> .mdv-floating-control:focus-visible)) > .mdv-floating-control {
+/* Room around the tab, down to the device, that counts as being on it. It
+   sits behind the tab's own buttons. */
+[data-floating-tab]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -10px -28px -8px;
+}
+
+[data-floating-device]:not([data-pointer-focus]):is(:focus-visible, :has(> :focus-visible), :has(> .mdv-floating-control :focus-visible)) > .mdv-floating-control {
   opacity: 1;
   pointer-events: auto;
+  transition-delay: 0s;
 }
 
-[data-floating-device]:not([data-pointer-focus]) > .mdv-floating-control:focus-visible > span {
+@media (prefers-reduced-motion: reduce) {
+  .mdv-floating-control { transition: pointer-events 0s linear 520ms allow-discrete; }
+}
+
+[data-floating-device]:not([data-pointer-focus]) > .mdv-floating-control:focus-visible > svg,
+[data-floating-device]:not([data-pointer-focus]) [data-floating-popout]:focus-visible > span,
+[data-floating-device]:not([data-pointer-focus]) [data-floating-close]:focus-visible > span {
   outline: 2px solid var(--mdv-accent);
   outline-offset: 1px;
+  border-radius: 4px;
 }
 
 @media (any-hover: hover) {
   [data-floating-device]:hover > .mdv-floating-control {
     opacity: 1;
     pointer-events: auto;
+    transition-delay: 0s;
   }
 }
 
@@ -184,6 +207,7 @@ button:disabled {
   [data-floating-device]:focus-within > .mdv-floating-control {
     opacity: 1;
     pointer-events: auto;
+    transition-delay: 0s;
   }
 }
 

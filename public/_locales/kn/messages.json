@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "ಈ ಪುಟಕ್ಕೆ ಸಾಧನವನ್ನು ಸೇರಿಸಿ"
   },
+  "addDeviceOnTop": {
+    "message": "ಇತರ ಆ್ಯಪ್‌ಗಳ ಮೇಲೆ ಸಾಧನವನ್ನು ಸೇರಿಸಿ"
+  },
   "activeActionTitle": {
     "message": "Mobile View ಸಕ್ರಿಯವಾಗಿದೆ — ಮುಚ್ಚಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
   },

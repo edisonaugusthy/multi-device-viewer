@@ -36,6 +36,14 @@ export async function checkFloatingDevices({ page, worker, pageUrl }) {
     return [r.x + r.width / 2, r.y + r.height / 2];
   }
   const click = async selector => page.mouse.click(...await center(selector));
+  async function dragBy(selector, dx, dy) {
+    const [x, y] = await center(selector);
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + dx, y + dy, { steps: 10 });
+    await page.mouse.up();
+  }
+  const near = (a, b) => assert(Math.abs(a - b) <= 1, `Expected ${a} within 1px of ${b}`);
   async function choose(search, id) {
     await click('[role="dialog"] input[placeholder]');
     await page.keyboard.type(search);
@@ -43,17 +51,18 @@ export async function checkFloatingDevices({ page, worker, pageUrl }) {
   }
   const pixel = '[data-floating-device="google-pixel-8"]';
   const iphone = '[data-floating-device="apple-iphone-18-pro-2026"]';
-  const resize = pixel + " [data-floating-resize]";
+  const grip = pixel + " [data-floating-resize]";
   const controlState = () => worker.evaluate(async ({ tabId, pixel }) => {
     const [frame] = await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, args: [pixel], func: pixel => {
       const root = chrome.dom.openOrClosedShadowRoot(document.querySelector("#multi-device-viewer-overlay"));
-      return Array.from(root.querySelector(pixel).querySelectorAll(":scope > button"), button => {
-        const { opacity, pointerEvents } = getComputedStyle(button);
+      return Array.from(root.querySelector(pixel).querySelectorAll(":scope > .mdv-floating-control"), control => {
+        const { opacity, pointerEvents } = getComputedStyle(control);
         return [Number(opacity), pointerEvents];
       });
     } });
     return frame.result;
   }, { tabId, pixel });
+  // Controls linger briefly after the pointer leaves the device, so these are polled.
   const shown = [[1, "auto"], [1, "auto"]];
   const hidden = [[0, "none"], [0, "none"]];
   async function hoverDevice(selector) {
@@ -105,26 +114,39 @@ export async function checkFloatingDevices({ page, worker, pageUrl }) {
   await expect.poll(() => bounds(pixel)).toEqual({ ...dragged, x: dragged.x - 8 });
   await page.mouse.move(20, 20);
   await expect.poll(controlState).toEqual(shown);
+  assert.equal(await bounds(pixel + " [data-floating-edge]"), null, "only the corner resizes");
   await hoverDevice(pixel);
-  const [rx, ry] = await center(resize);
-  await page.mouse.move(rx, ry);
-  await page.mouse.down();
-  await page.mouse.move(rx - 50, ry + 80, { steps: 10 });
-  await page.mouse.up();
+  await click(grip);
+  assert.equal((await bounds(pixel)).width, dragged.width, "clicking the bracket leaves the size alone");
+  // The bracket grows the device down and left; its upper-right corner stays put.
+  await hoverDevice(pixel);
+  await dragBy(grip, -50, 60);
   const moved = await bounds(pixel);
-  assert(moved.width > dragged.width && moved.height > dragged.height);
-  assert.equal(moved.x + moved.width, dragged.x - 8 + dragged.width);
+  assert(moved.width > dragged.width + 30 && moved.height > dragged.height);
+  near(moved.x + moved.width, dragged.x - 8 + dragged.width);
+  near(moved.y, dragged.y);
+  await hoverDevice(pixel);
+  await dragBy(grip, 30, -36);
+  const shrunk = await bounds(pixel);
+  assert(shrunk.width < moved.width);
+  near(shrunk.x + shrunk.width, moved.x + moved.width);
+  await hoverDevice(pixel);
+  await dragBy(grip, -30, 36);
+  near((await bounds(pixel)).width, moved.width);
   assert.equal(await phone.evaluate(() => innerWidth), 412);
+  await hoverDevice(pixel);
   await expect.poll(controlState).toEqual(shown);
-  await page.screenshot({ path: "output/playwright/floating-device-resized.png", clip: moved, scale: "css" });
+  const clip = { x: moved.x - 16, y: moved.y - 16, width: moved.width + 32, height: moved.height + 32 };
+  await page.screenshot({ path: "output/playwright/floating-device-resized.png", clip, scale: "css" });
   await page.mouse.move(20, 20);
   await expect.poll(controlState).toEqual(hidden);
-  await page.screenshot({ path: "output/playwright/floating-device-idle.png", clip: moved, scale: "css" });
+  await page.screenshot({ path: "output/playwright/floating-device-idle.png", clip, scale: "css" });
   await page.keyboard.press("ArrowUp");
   await expect.poll(controlState).toEqual(shown);
   await expect.poll(async () => (await bounds(pixel)).width).toBeGreaterThan(moved.width);
   await page.keyboard.press("ArrowDown");
-  await expect.poll(() => bounds(pixel)).toEqual(moved);
+  near((await bounds(pixel)).width, moved.width);
+  const saved = await bounds(pixel);
   assert.match(phone.url(), /\/linked/);
   await openPicker();
   await choose("iPhone 18 Pro", "apple-iphone-18-pro-2026");
@@ -140,16 +162,22 @@ export async function checkFloatingDevices({ page, worker, pageUrl }) {
   await expect.poll(() => bounds('[role="dialog"]')).toBeNull();
 
   await page.reload();
-  await expect.poll(() => bounds(pixel)).toEqual(moved);
+  await expect.poll(() => bounds(pixel)).toEqual(saved);
   await expect.poll(() => frames().filter(f => f.url().startsWith(pageUrl)).length).toBe(1);
   const touch = await page.context().newCDPSession(page);
   try {
     await touch.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 1 });
     assert(await page.evaluate(() => matchMedia("(hover: none)").matches));
     await expect.poll(controlState).toEqual(hidden);
-    await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: moved.x + moved.width / 2, y: moved.y + 4 }] });
+    await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: saved.x + saved.width / 2, y: saved.y + 4 }] });
     await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
     await expect.poll(controlState).toEqual(shown);
+    const [gx, gy] = await center(pixel + " [data-floating-resize]");
+    await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: gx, y: gy }] });
+    await touch.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: gx + 16, y: gy - 32 }] });
+    await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    const afterGrip = await bounds(pixel);
+    assert(afterGrip.width < saved.width && afterGrip.height < saved.height, "the corner bracket resizes by touch");
   } finally {
     await touch.send("Emulation.setTouchEmulationEnabled", { enabled: false });
     await touch.detach();
@@ -186,6 +214,18 @@ export async function checkFloatingDevices({ page, worker, pageUrl }) {
   await click("[data-open-floating]");
   const launchDialog = '[role="dialog"][aria-label="Choose a device for floating preview"]';
   await expect.poll(() => bounds(launchDialog)).toBeTruthy();
+  const allTab = launchDialog + ' [data-picker-type="all"]';
+  const otherTab = launchDialog + ' [data-picker-type="other"]';
+  const allBox = await bounds(launchDialog);
+  await page.mouse.move(...await center(otherTab));
+  assert(await bounds(allTab + '[aria-selected="true"]'), "moving across the launch picker keeps its category");
+  assert.deepEqual(await bounds(launchDialog), allBox);
+  await click(otherTab);
+  await expect.poll(() => bounds(otherTab + '[aria-selected="true"]')).toBeTruthy();
+  const otherBox = await bounds(launchDialog);
+  await page.mouse.move(...await center(allTab));
+  assert.deepEqual(await bounds(launchDialog), otherBox);
+  assert(await bounds(otherTab + '[aria-selected="true"]'));
   assert.equal(await bounds("[data-floating-device]"), null);
   assert.equal(await bounds("[data-preset-chip]"), null);
   await page.keyboard.press("Escape");
@@ -209,34 +249,44 @@ export async function checkFloatingDevices({ page, worker, pageUrl }) {
   await choose("Neo QLED", "samsung-neo-qled-4k-55");
   const tvScreen = tv + " [data-device-screen]";
   await expect.poll(() => bounds(tvScreen)).toBeTruthy();
-  async function checkTvCorners() {
+  const tvGrip = tv + " [data-floating-resize]";
+  const tvTab = tv + " [data-floating-tab]";
+  async function checkTvControls() {
     const screen = await bounds(tvScreen);
-    const [closeX, closeY] = await center(tv + " [data-floating-close]");
-    const [gripX, gripY] = await center(tv + " [data-floating-resize]");
-    for (const gap of [closeX - screen.x - screen.width, screen.y - closeY, screen.x - gripX, gripY - screen.y - screen.height]) {
-      assert(Math.abs(gap - 8) < 1, `TV control should stay 8 CSS pixels outside the display, got ${gap}`);
-    }
+    await expect.poll(() => bounds(tvTab)).toBeTruthy();
+    const tab = await bounds(tvTab), grip = await bounds(tvGrip);
+    near(tab.x + tab.width / 2, screen.x + screen.width / 2);
+    near(tab.y + tab.height, screen.y - 6);
+    near(grip.x, screen.x - 8);
+    near(grip.y + grip.height, screen.y + screen.height + 8);
     return screen.width;
   }
-  const tvStartWidth = await checkTvCorners();
+  const tvStartWidth = await checkTvControls();
   await hoverDevice(tv);
-  await click(tv + " [data-floating-resize]");
-  await expect.poll(async () => (await bounds(tvScreen)).width).toBeGreaterThan(tvStartWidth);
-  const enlargedWidth = await checkTvCorners();
-  const [gripX, gripY] = await center(tv + " [data-floating-resize]");
-  const viewport = await page.evaluate(() => ({ width: innerWidth, height: innerHeight }));
-  await page.mouse.move(gripX, gripY);
+  // The tab stays small while the × keeps a 24 px target.
+  assert.equal((await bounds(tvTab)).height, 16);
+  const closeTarget = await bounds(tv + " [data-floating-close]");
+  assert(closeTarget.width >= 24 && closeTarget.height >= 24);
+  assert.equal((await bounds(tv + " [data-floating-close] svg")).width, 6);
+  const [gx, gy] = await center(tvGrip);
+  await page.mouse.move(gx, gy);
   await page.mouse.down();
-  await page.mouse.move(1, viewport.height - 1, { steps: 10 });
+  await page.mouse.move(gx - 120, gy + 68, { steps: 8 });
   await page.mouse.up();
+  assert(await checkTvControls() > tvStartWidth + 100);
+  const enlargedWidth = (await bounds(tvScreen)).width;
+  const [edgeX] = await center(tvGrip);
+  const viewport = await page.evaluate(() => ({ width: innerWidth, height: innerHeight }));
+  await hoverDevice(tv);
+  await dragBy(tvGrip, 1 - edgeX, viewport.height);
   await expect.poll(async () => (await bounds(tvScreen)).width).toBeGreaterThan(enlargedWidth);
-  await checkTvCorners();
-  for (const selector of ["[data-floating-close]", "[data-floating-resize]"]) {
-    const button = await bounds(tv + " " + selector);
+  await checkTvControls();
+  for (const selector of [tvTab, tvGrip]) {
+    const button = await bounds(selector);
     assert(button.x >= 0 && button.y >= 0 && button.x + button.width <= viewport.width && button.y + button.height <= viewport.height);
   }
   await hoverDevice(tv);
   await click(tv + " [data-floating-close]");
   await page.locator("#multi-device-viewer-overlay").waitFor({ state: "detached" });
-  console.log("Floating devices passed: picker, hover and keyboard controls, frame drag and resize, TV corner controls at multiple scales, fixed viewport, independent navigation, desktop input and scroll, multiple devices, reload placement and cleanup.");
+  console.log("Floating devices passed: picker, move-and-close tab and corner bracket, frame movement, corner-only resizing, touch and keyboard resizing, TV alignment at multiple scales, fixed viewport, independent navigation, desktop input and scroll, multiple devices, reload placement and cleanup.");
 }

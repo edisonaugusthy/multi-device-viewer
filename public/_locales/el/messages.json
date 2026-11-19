@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Προσθήκη συσκευής σε αυτή τη σελίδα"
   },
+  "addDeviceOnTop": {
+    "message": "Προσθήκη συσκευής πάνω από άλλες εφαρμογές"
+  },
   "activeActionTitle": {
     "message": "Το Mobile View είναι ενεργό — κλικ για κλείσιμο"
   },

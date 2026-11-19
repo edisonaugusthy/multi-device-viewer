@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Magdagdag ng device sa page na ito"
   },
+  "addDeviceOnTop": {
+    "message": "Magdagdag ng device sa ibabaw ng ibang app"
+  },
   "activeActionTitle": {
     "message": "Aktibo ang Mobile View — i-click para isara"
   },

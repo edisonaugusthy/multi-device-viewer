@@ -10,6 +10,9 @@ import { CHROME_STORE_URL, createReviewCoordinator, isReviewCommand, LEGACY_REVI
 
 const OPEN_SIMULATOR_MENU_ID = "open-tab-in-device-simulator";
 const FLOAT_DEVICE_MENU_ID = "add-device-to-page";
+const TOP_DEVICE_MENU_ID = "add-device-on-top";
+// Chrome opens an always-on-top window only for secure pages.
+const SECURE_PAGES = ["https://*/*", "http://localhost/*", "http://127.0.0.1/*", "http://*.localhost/*"];
 const UPDATE_BADGE_TEXT = "NEW";
 // Set when an update lands and cleared by the next click, so the "NEW" badge
 // comes back after Chrome restarts (Chrome forgets badges on restart).
@@ -32,6 +35,13 @@ export default defineBackground(() => {
   // The viewer's own Chrome, whose brands a Chrome device identity keeps in its client hints.
   const browserBrands = readBrowserBrands(navigator as Parameters<typeof readBrowserBrands>[0]);
   const closePreviews = (tabId: number) => previews.close(tabId);
+  /** Always-on-top windows this tab opened to show a device above other apps.
+   * Chrome gives such a window its own tab, so its frames need the tab's rules too. */
+  async function popOutTabs(tabId: number): Promise<number[]> {
+    const opened = (await chrome.tabs.query({}).catch(() => [])).filter(tab => tab.openerTabId === tabId && typeof tab.id === "number");
+    const onTop = await Promise.all(opened.map(tab => chrome.windows.get(tab.windowId).then(win => win.alwaysOnTop, () => false)));
+    return opened.filter((_, i) => onTop[i]).map(tab => tab.id!);
+  }
   chrome.tabs.onRemoved.addListener(tabId => { void closePreviews(tabId).catch(console.error); });
   const review = createReviewCoordinator({
     read: async () => {
@@ -134,7 +144,10 @@ export default defineBackground(() => {
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (!tab) return;
-    if (info.menuItemId === FLOAT_DEVICE_MENU_ID) openSimulatorForTab(tab, undefined, "floating");
+    // Both open the page's device picker; a menu click cannot open the
+    // window itself, so "on top" sets the picker to it and the pick opens it.
+    if (info.menuItemId === FLOAT_DEVICE_MENU_ID) openSimulatorForTab(tab, undefined, "floating", undefined, "page");
+    else if (info.menuItemId === TOP_DEVICE_MENU_ID) openSimulatorForTab(tab, undefined, "floating", undefined, "top");
     else if (info.menuItemId === OPEN_SIMULATOR_MENU_ID) openSimulatorForTab(tab, undefined, "workspace");
   });
 
@@ -142,6 +155,7 @@ export default defineBackground(() => {
     const menus = [
       { id: OPEN_SIMULATOR_MENU_ID, title: message("contextMenuTitle", "Open this tab in Mobile View & Responsive Tester") },
       { id: FLOAT_DEVICE_MENU_ID, title: message("addDeviceToPage", "Add device to this page"), documentUrlPatterns: ["http://*/*", "https://*/*"] },
+      { id: TOP_DEVICE_MENU_ID, title: message("addDeviceOnTop", "Add device on top of other apps"), documentUrlPatterns: SECURE_PAGES },
     ];
     for (const { id, ...properties } of menus) {
       const options: Omit<chrome.contextMenus.CreateProperties, "id"> = { ...properties, contexts: ["page", "action"] };
@@ -151,7 +165,7 @@ export default defineBackground(() => {
     }
   }
 
-  function openSimulatorForTab(tab: chrome.tabs.Tab, restore?: ViewerRestoreState, mode?: ViewerMode, deviceId?: string) {
+  function openSimulatorForTab(tab: chrome.tabs.Tab, restore?: ViewerRestoreState, mode?: ViewerMode, deviceId?: string, placement?: "page" | "top") {
     clearUpdateIndicator();
 
     if (!isPreviewableUrl(tab.url)) {
@@ -171,7 +185,7 @@ export default defineBackground(() => {
 
     // The toolbar toggles the current viewer. Context menus can request a specific mode.
     const tabId = tab.id;
-    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId, restore, mode, deviceId };
+    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId, restore, mode, deviceId, placement };
     // Acknowledge each toggle before processing the next click, including the
     // first launch into a tab that needs content-script injection.
     const work = (launches.get(tabId) ?? Promise.resolve()).then(async () => {
@@ -344,7 +358,7 @@ export default defineBackground(() => {
       const tabId = sender.tab.id;
       const work = (async () => {
         if (message.type === "MDV_PREVIEW_CLOSE") return closePreviews(tabId);
-        await previews.prepare(tabId, message.url, previewIdentitiesFrom(message.identities), await browserBrands);
+        await previews.prepare(tabId, message.url, previewIdentitiesFrom(message.identities), await browserBrands, await popOutTabs(tabId));
       })();
       void work.then(() => sendResponse({ ok: true, headers: message.type === "MDV_PREVIEW_HOST" })).catch(error => sendResponse({ ok: false, error: String(error) }));
       return true;

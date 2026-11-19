@@ -53,6 +53,9 @@ export const FloatingPreviewIcon = icon(<><rect x="2.5" y="4" width="17" height=
 export const ExpandIcon = icon(<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />);
 export const ResizeGripIcon = icon(<path d="M9 3 3 9M9 6.5 6.5 9" />, { viewBox: "0 0 10 10", strokeWidth: 1.6 });
 export const CollapseIcon = icon(<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />);
+// A small window sitting over a larger one: the device kept on top of other apps.
+export const PopOutIcon = icon(<><path d="M11 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4" /><rect x="13" y="13" width="8" height="6" rx="1.2" fill="currentColor" stroke="none" /></>);
+export const GuestIcon = icon(<><circle cx="12" cy="8" r="3.6" /><path d="M4.5 20c.6-3.6 3.7-6 7.5-6s6.9 2.4 7.5 6" strokeDasharray="2.6 2.6" /></>);
 export const OpenInTabIcon = icon(<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6" />);
 export const ChevronDownIcon = icon(<path d="m6 9 6 6 6-6" />, { strokeWidth: 2.2 });
 export const ChevronLeftIcon = icon(<path d="m15 18-6-6 6-6" />, { strokeWidth: 2.2 });

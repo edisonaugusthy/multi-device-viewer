@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Thêm thiết bị vào trang này"
   },
+  "addDeviceOnTop": {
+    "message": "Thêm thiết bị lên trên các ứng dụng khác"
+  },
   "activeActionTitle": {
     "message": "Mobile View đang hoạt động — nhấp để đóng"
   },

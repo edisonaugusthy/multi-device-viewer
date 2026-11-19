@@ -10,12 +10,14 @@ import {
   CollapseIcon,
   ExpandIcon,
   FixPromptIcon,
+  FloatingPreviewIcon,
   GlobeIcon,
   GripIcon,
   LayoutCheckIcon,
   MinusIcon,
   MoreIcon,
   PlusIcon,
+  PopOutIcon,
   ReloadIcon,
   RotateIcon,
   SideBySideIcon,
@@ -56,6 +58,10 @@ export interface PreviewToolbarProps {
   onReload: () => void;
   onOpenInTab: () => void;
   onExpand?: () => void;
+  /** Opens this device as a floating preview over the page, in place of the workspace. */
+  onFloat?: () => void;
+  /** Opens this device in its own window on top of other apps. */
+  onPopOut?: () => void;
   /** The device's outline and CSS width, shown with its name. */
   deviceGlyph?: GlyphKind;
   deviceWidth?: number;
@@ -171,6 +177,9 @@ export const PreviewToolbar = forwardRef<HTMLDivElement, PreviewToolbarProps>(fu
         {focus
           ? <ToolButton label={t("showAllDevices")} onClick={focus.onExit}><CollapseIcon size={14} /></ToolButton>
           : props.onExpand && <ToolButton label={props.expandLabel ?? t("focusDevice")} onClick={props.onExpand}><ExpandIcon size={14} /></ToolButton>}
+        {/* One click takes this device out of the workspace: onto the page, or above every app. */}
+        {props.onFloat && <ToolButton label={t("openFloatingPreview")} testId="float-button" onClick={props.onFloat}><FloatingPreviewIcon size={14} /></ToolButton>}
+        {props.onPopOut && <ToolButton label={t("popOut")} testId="pop-out-button" onClick={props.onPopOut}><PopOutIcon size={14} /></ToolButton>}
         {props.onFixPrompt && <ToolButton label={t("fixPromptForDevice")} onClick={props.onFixPrompt}><FixPromptIcon size={14} /></ToolButton>}
         {props.onCompareBefore && (
           <ToolButton label={props.compareBeforeLabel ?? ""} accent onClick={props.onCompareBefore}>

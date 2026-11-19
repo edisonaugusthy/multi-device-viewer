@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "या पेजवर डिव्हाइस जोडा"
   },
+  "addDeviceOnTop": {
+    "message": "इतर अ‍ॅप्सच्या वर डिव्हाइस जोडा"
+  },
   "activeActionTitle": {
     "message": "Mobile View सक्रिय आहे — बंद करण्यासाठी क्लिक करा"
   },

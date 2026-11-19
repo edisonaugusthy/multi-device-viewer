@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Dodaj napravo na to stran"
   },
+  "addDeviceOnTop": {
+    "message": "Dodaj napravo nad druge aplikacije"
+  },
   "activeActionTitle": {
     "message": "Mobile View je aktiven — kliknite za zapiranje"
   },

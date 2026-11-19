@@ -61,6 +61,8 @@ import { ReviewPromptModal } from "./ReviewPromptModal";
 import { SettingsPopover, type BrowserBarPosition } from "./SettingsPopover";
 import { cx, HoverZone } from "./ui";
 import { useStableCallback } from "../hooks/useStableCallback";
+import { useFloatingPlacement } from "../hooks/useFloatingPlacement";
+import { usePopOut } from "../../app/popout";
 import { ViewModeBar } from "./ViewModeBar";
 import { WorkspaceDock, type DockMenu } from "./WorkspaceDock";
 import { ProblemsPanel } from "./ProblemsPanel";
@@ -826,6 +828,27 @@ export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: strin
       window.setTimeout(() => setCaptureError(null), 4000);
     }
   }
+  // The floating picker's choice: over this page, or in a window above every
+  // app. The window has to open in the click itself; the floating view that
+  // replaces the workspace then shows the device in it.
+  const popOut = usePopOut();
+  const floatingPlacement = useFloatingPlacement();
+  const openFloatingDevice = useStableCallback((deviceId: string) => {
+    if (floatingPlacement?.value === "top") popOut.openDevice(deviceId);
+    void openSelectedFloating(deviceId);
+  });
+  // The same two places from a device's own bar, for the device it belongs to.
+  const canFloat = Boolean(openFloating || (typeof chrome !== "undefined" && chrome.runtime?.id));
+  const floatSlot = useStableCallback((slotId: string) => {
+    const slot = slots.find(candidate => candidate.id === slotId);
+    if (slot) void openSelectedFloating(slot.deviceId);
+  });
+  const popOutSlot = useStableCallback((slotId: string) => {
+    const slot = slots.find(candidate => candidate.id === slotId);
+    if (!slot) return;
+    popOut.openDevice(slot.deviceId);
+    void openSelectedFloating(slot.deviceId);
+  });
   const deviceNameOf = useCallback((slot: PreviewSlot) => findDevice(slot.deviceId).name, [findDevice]);
   const problems = useProblems({ slots, deviceName: deviceNameOf });
   // One docked panel at a time.
@@ -932,7 +955,7 @@ export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: strin
             onOpenFloating={slots.length && (openFloating || (typeof chrome !== "undefined" && chrome.runtime?.id)) ? () => {
               pinHoverMenu();
               if (popover === "picker" && pickerTarget.kind === "floating") closePicker();
-              else openPicker({ kind: "floating", onSelect: openSelectedFloating });
+              else openPicker({ kind: "floating", onSelect: openFloatingDevice });
             } : undefined}
             onReloadAll={reloadAllSlots}
             onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
@@ -1003,6 +1026,9 @@ export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: strin
                     showToolbar={showChrome || focusMode}
                     showCaption={showChrome || focusMode}
                     align="bottom"
+                    sessionControls
+                    onFloat={canFloat ? floatSlot : undefined}
+                    onPopOut={canFloat && popOut.supported ? popOutSlot : undefined}
                     visualsActive={allDevicesUrl === null}
                     removable={slots.length > 1}
                     onCapture={captureSlot}
@@ -1164,6 +1190,7 @@ export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: strin
         open={popover === "picker"}
         anchorRef={pickerTarget.kind === "replace" && replaceAnchorRef.current ? replaceAnchorRef : dockPickerRef}
         target={pickerTarget}
+        placement={pickerTarget.kind === "floating" ? floatingPlacement : undefined}
         slots={slots}
         maxSlots={maxPreviewSlots}
         sets={deviceSets}

@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Pridať zariadenie na túto stránku"
   },
+  "addDeviceOnTop": {
+    "message": "Pridať zariadenie nad ostatné aplikácie"
+  },
   "activeActionTitle": {
     "message": "Mobile View je aktívny — kliknutím zavriete"
   },

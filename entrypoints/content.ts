@@ -3,7 +3,7 @@ import type { ViewerMode, ViewerRestoreState } from "../src/app/viewer-context";
 import { defineContentScript } from "wxt/utils/define-content-script";
 
 type ViewerModule = typeof import("../src/app/viewer-mount");
-type ViewerLaunch = { url: string; mode?: ViewerMode; sourceTabId?: number; restore?: ViewerRestoreState };
+type ViewerLaunch = { url: string; mode?: ViewerMode; sourceTabId?: number; restore?: ViewerRestoreState; placement?: "page" | "top" };
 let viewer: Promise<ViewerModule> | undefined;
 // The viewer (React, catalogs, styles) ships once as viewer.js and is shared
 // with the simulator page; development builds bundle it directly.
@@ -42,6 +42,7 @@ export default defineContentScript({
               url: typeof message.url === "string" ? message.url : window.location.href,
               sourceTabId: typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,
               restore: message.restore && typeof message.restore === "object" ? message.restore : undefined,
+              placement: message.placement === "page" || message.placement === "top" ? message.placement : undefined,
             }, typeof message.deviceId === "string" ? message.deviceId : undefined)
               .then(() => sendResponse({ ok: true, active: overlayLifecycle.active }))
               .catch(error => sendResponse({ ok: false, error: String(error) }));
@@ -62,7 +63,7 @@ async function openViewer(launch: ViewerLaunch, deviceId?: string): Promise<void
     // A reload can request restoration after the viewer is already back.
     if (launch.restore) return;
     if (activeMode === "floating" && mode === "floating") {
-      (await loadViewer()).openFloatingPicker(deviceId);
+      (await loadViewer()).openFloatingPicker(deviceId, launch.placement);
       return;
     }
     if (launch.mode && activeMode !== mode) await overlayLifecycle.close();

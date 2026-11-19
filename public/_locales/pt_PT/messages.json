@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Adicionar um dispositivo a esta página"
   },
+  "addDeviceOnTop": {
+    "message": "Adicionar dispositivo por cima de outras apps"
+  },
   "activeActionTitle": {
     "message": "O Mobile View está ativo — clique para fechar"
   },

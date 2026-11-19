@@ -13,6 +13,10 @@ export interface ViewerContext {
   sourceTabId?: number;
   restore?: ViewerRestoreState;
   mode?: ViewerMode;
+  /** For a floating view opened from the right-click menu: where its picker puts the next device. */
+  placement?: "page" | "top";
+  /** The viewer's stylesheet text, for a pop-out window to use the same styles. */
+  styles?: string;
   close: () => void;
 }
 let context: ViewerContext | undefined;

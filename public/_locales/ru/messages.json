@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Добавить устройство на эту страницу"
   },
+  "addDeviceOnTop": {
+    "message": "Добавить устройство поверх других приложений"
+  },
   "activeActionTitle": {
     "message": "Mobile View активен — нажмите, чтобы закрыть"
   },

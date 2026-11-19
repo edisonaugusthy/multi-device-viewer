@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Ongeza kifaa kwenye ukurasa huu"
   },
+  "addDeviceOnTop": {
+    "message": "Ongeza kifaa juu ya programu zingine"
+  },
   "activeActionTitle": {
     "message": "Mobile View inatumika — bofya ili kufunga"
   },

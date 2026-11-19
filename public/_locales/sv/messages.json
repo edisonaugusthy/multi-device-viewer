@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Lägg till en enhet på den här sidan"
   },
+  "addDeviceOnTop": {
+    "message": "Lägg till enhet ovanpå andra appar"
+  },
   "activeActionTitle": {
     "message": "Mobile View är aktivt — klicka för att stänga"
   },

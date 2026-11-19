@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "이 페이지에 기기 추가"
   },
+  "addDeviceOnTop": {
+    "message": "다른 앱 위에 기기 추가"
+  },
   "activeActionTitle": {
     "message": "Mobile View가 활성화됨 — 클릭하여 닫기"
   },

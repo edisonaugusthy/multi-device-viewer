@@ -27,11 +27,16 @@ export function describeHeaders(changes: HeaderChange[] | undefined): string {
   return (changes ?? []).map(change => `${change.header}:${change.operation}:${change.value ?? ""}`).join("\n");
 }
 
+/** The website tab comes first; a pop-out window showing one of its devices follows. */
+export function ruleTabs(tabId: number | number[]): number[] {
+  return [...new Set([tabId].flat())];
+}
+
 /** Embedding exceptions stay limited to the active preview hosts and iframe responses. */
-export function previewRule(id: number, tabId: number, domains: string[]): chrome.declarativeNetRequest.Rule {
+export function previewRule(id: number, tabId: number | number[], domains: string[]): chrome.declarativeNetRequest.Rule {
   return {
     id, priority: 1,
-    condition: { tabIds: [tabId], requestDomains: [...new Set(domains)].sort(), resourceTypes: ["sub_frame" as chrome.declarativeNetRequest.ResourceType] },
+    condition: { tabIds: ruleTabs(tabId), requestDomains: [...new Set(domains)].sort(), resourceTypes: ["sub_frame" as chrome.declarativeNetRequest.ResourceType] },
     action: {
       type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType,
       responseHeaders: ["x-frame-options", "content-security-policy"].map(remove),
@@ -42,10 +47,10 @@ export function previewRule(id: number, tabId: number, domains: string[]): chrom
 /** Only tagged document and fetch/XHR requests in this tab get this device's headers.
  * API hosts may differ from the document host. Untagged assets are deliberately untouched.
  */
-export function previewHeaderRule(id: number, tabId: number, name: string, identity: PreviewIdentity, browser: BrowserBrands): chrome.declarativeNetRequest.Rule {
+export function previewHeaderRule(id: number, tabId: number | number[], name: string, identity: PreviewIdentity, browser: BrowserBrands): chrome.declarativeNetRequest.Rule {
   return {
     id, priority: 2,
-    condition: { tabIds: [tabId], urlFilter: previewRequestFilter(name), isUrlFilterCaseSensitive: true,
+    condition: { tabIds: ruleTabs(tabId), urlFilter: previewRequestFilter(name), isUrlFilterCaseSensitive: true,
       resourceTypes: ["sub_frame", "xmlhttprequest"] as chrome.declarativeNetRequest.ResourceType[] },
     action: { type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType, requestHeaders: identityHeaders(identity, browser) },
   };

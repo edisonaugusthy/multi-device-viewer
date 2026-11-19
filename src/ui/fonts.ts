@@ -18,11 +18,13 @@ const FAMILIES = [
   ["Geist Mono", "geist-mono"],
 ] as const;
 
-let registered = false;
+const registered = new WeakSet<Document>();
 
-export function registerViewerFonts(resolveUrl: (path: string) => string) {
-  if (registered || typeof FontFace === "undefined" || !document.fonts) return;
-  registered = true;
+/** Registers the viewer's fonts on a window's document: the page's own, or the pop-out window's. */
+export function registerViewerFonts(resolveUrl: (path: string) => string, target: Window & typeof globalThis = window) {
+  const { document, FontFace } = target;
+  if (registered.has(document) || typeof FontFace === "undefined" || !document.fonts) return;
+  registered.add(document);
   for (const [family, file] of FAMILIES) {
     for (const [subset, unicodeRange] of SUBSETS) {
       const face = new FontFace(family, `url("${resolveUrl(`fonts/${file}-${subset}-wght-normal.woff2`)}") format("woff2")`, {

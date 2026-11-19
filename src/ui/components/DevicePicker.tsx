@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } fro
 import { useDeviceCatalog } from "../../app/DeviceCatalogProvider";
 import { useI18n } from "../../app/i18n";
 import type { useDeviceSets } from "../../app/useDeviceSets";
+import type { FloatingPlacement } from "../../app/popout";
 import { createCustomDevice } from "../../domain/device/device-service";
 import { availablePickerTabs, buildPickerSections, type PickerSectionKey, type PickerTab } from "../../domain/device/device-picker";
 import type { Device, DeviceType } from "../../domain/device/device.types";
@@ -13,10 +14,12 @@ import {
   SearchIcon,
   SetsIcon,
   StarIcon,
+  FloatingPreviewIcon,
+  PopOutIcon,
 } from "../icons";
 import { DeviceGlyph, glyphKindFor } from "./DeviceGlyph";
 import { shortName } from "./PreviewCard";
-import { cx, focusRing, positionStyle, popoverPanel, SectionLabel, useAnchoredPosition, useDismiss } from "./ui";
+import { cx, focusRing, positionStyle, popoverPanel, SectionLabel, Segmented, useAnchoredPosition, useDismiss } from "./ui";
 
 export type PickerTarget = { kind: "add" } | { kind: "replace"; slotId: string } | { kind: "floating"; onSelect: (deviceId: string) => void };
 
@@ -31,9 +34,11 @@ function customDeviceType(width: number): DeviceType {
 interface Slot { id: string; deviceId: string }
 
 export function DevicePicker({
-  open, anchorRef, target, slots, maxSlots, sets,
+  open, anchorRef, target, slots, maxSlots, sets, placement,
   onClose, onAdd, onRemove, onReplace, onApplySet, onDeleteCustom,
 }: {
+  /** For a floating preview: whether the chosen device opens over this page or in its own window above every app. */
+  placement?: { value: FloatingPlacement; onChange: (value: FloatingPlacement) => void };
   open: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   target: PickerTarget;
@@ -65,7 +70,7 @@ export function DevicePicker({
   const floating = target.kind === "floating";
   // Opened upward from the dock, the picker is mirrored so its search, tabs and
   // presets sit next to the dock where the pointer comes from, and keeps one
-  // height so hovering across the tabs never moves them. Opened downward, the
+  // height so choosing a category keeps the tabs in place. Opened downward, the
   // tabs are already next to the pointer and the picker fits its list.
   const upward = position.bottom !== undefined;
   const dismiss = useCallback(() => onClose(), [onClose]);
@@ -194,6 +199,14 @@ export function DevicePicker({
           <span className="text-[13px] font-semibold text-ink">{title}</span>
           <button type="button" aria-label={t("close")} onClick={onClose} className={cx("grid size-7 place-items-center rounded-full text-muted hover:bg-sunken hover:text-ink", focusRing)}><CloseIcon size={14}/></button>
         </div>}
+        {/* Where the next device opens. The choice is kept, so a device is one click either way. */}
+        {placement && <div data-floating-placement={placement.value} className="flex shrink-0 px-3 pt-2">
+          <Segmented size="sm" label={t("openFloatingPreview")} value={placement.value} onChange={placement.onChange} className="w-full [&>button]:flex-1 [&>button]:justify-center"
+            options={[
+              { value: "page", label: t("placementPage"), icon: <FloatingPreviewIcon size={13}/> },
+              { value: "top", label: t("placementTop"), icon: <PopOutIcon size={13}/> },
+            ]}/>
+        </div>}
         {/* Typing filters straight away; the line stays quiet until then. */}
         <div className="flex shrink-0 items-center px-3.5">
           <label className="flex h-11 min-w-0 flex-1 items-center gap-2">
@@ -243,8 +256,6 @@ export function DevicePicker({
                 aria-selected={selected}
                 tabIndex={selected ? 0 : -1}
                 onClick={() => chooseTab(id)}
-                // Resting on a tab shows its devices, so a type is one hover away.
-                onPointerEnter={event => { if (event.pointerType === "mouse" && id !== tab) chooseTab(id); }}
                 className={cx(
                   "-mb-px h-9 shrink-0 whitespace-nowrap border-b-2 px-2.5 text-[13px] transition-colors",
                   selected ? "border-ink font-semibold text-ink" : "border-transparent font-medium text-muted hover:text-ink",

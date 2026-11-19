@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Lisa sellele lehele seade"
   },
+  "addDeviceOnTop": {
+    "message": "Lisa seade teiste rakenduste peale"
+  },
   "activeActionTitle": {
     "message": "Mobile View on aktiivne — sulgemiseks klõpsa"
   },

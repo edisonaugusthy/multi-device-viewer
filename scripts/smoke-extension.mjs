@@ -457,7 +457,8 @@ try {
       return Promise.resolve(undefined);
     };
   });
-  const openFloating = simulator.getByRole("button", { name: "Open floating preview" });
+  // The top bar's button; each device's own bar has one for that device too.
+  const openFloating = simulator.locator("[data-open-floating]");
   const pagesBeforePicker = context.pages().length;
   await openFloating.click();
   await expect(floatingPicker).toBeVisible();

@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Add device to this page"
   },
+  "addDeviceOnTop": {
+    "message": "Add device on top of other apps"
+  },
   "activeActionTitle": {
     "message": "Mobile View & Responsive Tester is active — click to close"
   },

@@ -54,7 +54,7 @@ export default defineConfig({
       {
         // viewer.js and its shared chunks are loaded by the content script on
         // demand; direct page frames preserve the website’s session context.
-        resources: ["viewer.js", "chunks/*", "mockups/*", "icons/*", "fonts/*", `${UI_LOCALES_DIR}/*`],
+        resources: ["viewer.js", "popout-relay.js", "chunks/*", "mockups/*", "icons/*", "fonts/*", `${UI_LOCALES_DIR}/*`],
         matches: ["http://*/*", "https://*/*"]
       }
     ],

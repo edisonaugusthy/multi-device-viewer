@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Додати пристрій на цю сторінку"
   },
+  "addDeviceOnTop": {
+    "message": "Додати пристрій поверх інших програм"
+  },
   "activeActionTitle": {
     "message": "Mobile View активний — натисніть, щоб закрити"
   },

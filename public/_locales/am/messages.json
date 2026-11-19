@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "በዚህ ገጽ ላይ መሣሪያ አክል"
   },
+  "addDeviceOnTop": {
+    "message": "መሣሪያን ከሌሎች መተግበሪያዎች በላይ አክል"
+  },
   "activeActionTitle": {
     "message": "Mobile View ንቁ ነው — ለመዝጋት ጠቅ ያድርጉ"
   },

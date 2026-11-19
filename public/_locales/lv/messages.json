@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Pievienot ierīci šai lapai"
   },
+  "addDeviceOnTop": {
+    "message": "Pievienot ierīci virs citām lietotnēm"
+  },
   "activeActionTitle": {
     "message": "Mobile View ir aktīvs — noklikšķiniet, lai aizvērtu"
   },

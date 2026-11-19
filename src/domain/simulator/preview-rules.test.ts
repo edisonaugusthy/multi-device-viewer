@@ -19,6 +19,10 @@ describe("temporary preview rules", () => {
     expect(rule.condition).toEqual({ tabIds: [7], urlFilter: "#*:~:mdv-device=mdv-preview-a&", isUrlFilterCaseSensitive: true, resourceTypes: ["sub_frame", "xmlhttprequest"] });
     expect(rule.action.responseHeaders).toBeUndefined();
   });
+  it("covers a pop-out window's tab with the same rule, website tab first", () => {
+    expect(previewRule(1000000, [7, 12, 7], ["example.com"]).condition.tabIds).toEqual([7, 12]);
+    expect(previewHeaderRule(1000001, [7, 12], "mdv-preview-a", { userAgent: "iPhone Safari", platform: "iOS", mobile: true, hints: false }, brands).condition.tabIds).toEqual([7, 12]);
+  });
   it("sends an iPhone as Safari with no client hints at all", () => {
     const headers = identityHeaders({ userAgent: "iPhone Safari", platform: "iOS", mobile: true, hints: false }, brands);
     expect(headers[0]).toEqual({ header: "user-agent", operation: "set", value: "iPhone Safari" });

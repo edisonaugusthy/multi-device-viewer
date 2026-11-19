@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Pridėti įrenginį prie šio puslapio"
   },
+  "addDeviceOnTop": {
+    "message": "Pridėti įrenginį virš kitų programų"
+  },
   "activeActionTitle": {
     "message": "Mobile View aktyvus — spustelėkite, kad uždarytumėte"
   },

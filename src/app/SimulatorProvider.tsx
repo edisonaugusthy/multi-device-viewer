@@ -21,6 +21,8 @@ interface SimulatorContextValue extends SimulatorState {
   setSlotBrowserPreferences: (slotId: string, preferences: BrowserPreferences) => void;
   /** A device's language (null for the browser's own) and whether it sends its screen density. */
   setSlotLocale: (slotId: string, change: { language?: string | null; sendDensity?: boolean }) => void;
+  /** Reloads a device with a clean, signed-out session, or with the tab's own login again. */
+  setSlotGuest: (slotId: string, guest: boolean) => void;
   setSlotUrl: (slotId: string, url: string) => void;
   observeSlotUrl: (slotId: string, url: string) => void;
   getSlotUrl: (slotId: string) => string;
@@ -254,6 +256,12 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     updateSlot(slotId, (slot) => ({ ...slot, url: observedUrls.current.get(slot.id) ?? slot.url, reloadToken: slot.reloadToken + 1 }));
   }, [updateSlot]);
 
+  const setSlotGuest = useCallback((slotId: string, guest: boolean) => {
+    updateSlot(slotId, ({ guest: _previous, ...slot }) => ({
+      ...slot, ...(guest && { guest: true }), url: observedUrls.current.get(slot.id) ?? slot.url, reloadToken: slot.reloadToken + 1,
+    }));
+  }, [updateSlot]);
+
   const reloadAllSlots = useCallback(() => {
     setSlots((current) => current.map((slot) => ({ ...slot, url: observedUrls.current.get(slot.id) ?? slot.url, reloadToken: slot.reloadToken + 1 })));
   }, []);
@@ -322,6 +330,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSlotDevice,
       setSlotBrowserPreferences,
       setSlotLocale,
+      setSlotGuest,
       setSlotUrl,
       observeSlotUrl,
       getSlotUrl,
@@ -353,6 +362,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       setSlotDevice,
       setSlotBrowserPreferences,
       setSlotLocale,
+      setSlotGuest,
       setSlotUrl,
       observeSlotUrl,
       getSlotUrl,

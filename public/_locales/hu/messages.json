@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Eszköz hozzáadása ehhez az oldalhoz"
   },
+  "addDeviceOnTop": {
+    "message": "Eszköz hozzáadása más alkalmazások fölé"
+  },
   "activeActionTitle": {
     "message": "A Mobile View aktív — kattintson a bezáráshoz"
   },

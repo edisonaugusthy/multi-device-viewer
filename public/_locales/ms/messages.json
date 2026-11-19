@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "Tambahkan peranti pada halaman ini"
   },
+  "addDeviceOnTop": {
+    "message": "Tambah peranti di atas apl lain"
+  },
   "activeActionTitle": {
     "message": "Mobile View aktif — klik untuk tutup"
   },

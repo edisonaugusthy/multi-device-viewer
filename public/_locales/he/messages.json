@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "הוספת מכשיר לדף הזה"
   },
+  "addDeviceOnTop": {
+    "message": "הוספת מכשיר מעל אפליקציות אחרות"
+  },
   "activeActionTitle": {
     "message": "Mobile View פעיל — לחיצה לסגירה"
   },

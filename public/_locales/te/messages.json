@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "ఈ పేజీకి పరికరాన్ని జోడించండి"
   },
+  "addDeviceOnTop": {
+    "message": "ఇతర యాప్‌ల పైన పరికరాన్ని జోడించండి"
+  },
   "activeActionTitle": {
     "message": "Mobile View సక్రియంగా ఉంది — మూసేందుకు క్లిక్ చేయండి"
   },

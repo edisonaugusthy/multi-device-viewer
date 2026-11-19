@@ -1517,18 +1517,32 @@ test("opens the Add device picker from the Workspace button as well as Add devic
   await expect(workspace).toHaveAttribute("aria-expanded", "false");
 });
 
-test("keeps the device picker's tabs under the pointer while hovering across them", async ({ page }) => {
+test("keeps the device picker's list and height steady until a category is activated", async ({ page }) => {
   await page.locator("[data-main-toolbar]").getByRole("button", { name: "Add device", exact: true }).click();
   const panel = page.getByTestId("device-switcher-panel");
   // Opened downward from the top bar, the search and tabs sit at its top, nearest the pointer.
   const [tabs, list, search] = await Promise.all([panel.getByRole("tablist").boundingBox(), panel.locator("[data-device-pick]").first().boundingBox(), panel.getByRole("textbox").boundingBox()]);
   expect(tabs!.y).toBeLessThan(list!.y);
   expect(search!.y).toBeLessThan(tabs!.y);
+  const all = panel.getByRole("tab", { name: "All", exact: true });
+  const rows = panel.locator("[data-device-pick]");
+  const count = await rows.count();
+  const box = await panel.boundingBox();
   for (const tab of await panel.getByRole("tab").all()) {
     await tab.hover();
-    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await expect(all).toHaveAttribute("aria-selected", "true");
+    await expect(rows).toHaveCount(count);
+    expect(await panel.boundingBox()).toEqual(box);
     expect((await panel.getByRole("tablist").boundingBox())!.y).toBe(tabs!.y);
   }
+  const other = panel.locator('[data-picker-type="other"]');
+  await other.click();
+  await expect(other).toHaveAttribute("aria-selected", "true");
+  expect(await rows.count()).toBeLessThan(count);
+  const filteredBox = await panel.boundingBox();
+  await all.hover();
+  await expect(other).toHaveAttribute("aria-selected", "true");
+  expect(await panel.boundingBox()).toEqual(filteredBox);
 });
 
 test("applies a preset from the Add device picker in one click", async ({ page }) => {

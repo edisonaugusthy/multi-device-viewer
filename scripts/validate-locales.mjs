@@ -69,6 +69,7 @@ const requiredKeys = [
   "actionTitle",
   "contextMenuTitle",
   "addDeviceToPage",
+  "addDeviceOnTop",
   "activeActionTitle",
   "unsupportedActionTitle",
   "unsupportedUrlHint",

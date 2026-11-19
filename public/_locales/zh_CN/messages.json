@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "在此页面上添加设备"
   },
+  "addDeviceOnTop": {
+    "message": "在其他应用之上添加设备"
+  },
   "activeActionTitle": {
     "message": "Mobile View 已启用 — 点击关闭"
   },

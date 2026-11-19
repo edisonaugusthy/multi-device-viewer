@@ -17,6 +17,9 @@
   "addDeviceToPage": {
     "message": "இந்தப் பக்கத்தில் சாதனத்தைச் சேர்"
   },
+  "addDeviceOnTop": {
+    "message": "பிற ஆப்ஸின் மேல் சாதனத்தைச் சேர்"
+  },
   "activeActionTitle": {
     "message": "Mobile View செயலில் உள்ளது — மூட கிளிக் செய்யவும்"
   },

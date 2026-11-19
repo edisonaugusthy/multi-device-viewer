@@ -12,7 +12,7 @@ Open the current website or local development server in up to four live device v
 4. Focus a viewport or compare all selected screens in resizable columns.
 5. Capture the active viewport or complete workspace, annotate it, and copy or download it for sharing.
 
-To keep using the original page, right-click the page or the extension icon and choose **Add device to this page**. Select a device, then drag its title bar anywhere over the page. Focus the title bar and use the arrow keys for small moves or Shift + arrow for larger moves. **Add device** opens the picker again. Each preview starts at the current tab URL and can be scrolled and navigated independently. Closing the last device returns to the plain page.
+Click **Open floating preview** in the workspace toolbar, then choose a device to place over the original page. You can search the full catalog even when your workspace already has four devices. Press Escape to return to the workspace. You can also right-click the page or extension icon and choose **Add device to this page** to pick a device or add another one. Drag the device frame to move it. Hover over the device to reveal the close button at the upper right and the resize grip at the lower left. Drag the grip to change the displayed size while keeping the device’s CSS viewport. Keyboard focus also reveals the controls. On a touchscreen, tap the frame to reveal them. You can also focus the frame or resize button and use the arrow keys, with Shift for larger steps. Each preview starts at the current tab URL and scrolls and navigates independently.
 
 ## Devices
 
@@ -165,7 +165,7 @@ npm run build
 npm run zip
 npm run test:e2e
 npm run test:extension
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.5.1-chrome.zip
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.5.2-chrome.zip
 ```
 
 The production Chrome extension and zip are written to `.output/`.

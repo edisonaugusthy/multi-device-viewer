@@ -11,6 +11,7 @@ import {
   CompareIcon,
   EyeIcon,
   FixPromptIcon,
+  FloatingPreviewIcon,
   LayoutCheckIcon,
   LinkIcon,
   NavigationSyncIcon,
@@ -71,6 +72,9 @@ export interface WorkspaceDockProps {
   problemsCount: number;
   settingsRef: RefObject<HTMLButtonElement | null>;
   settingsOpen: boolean;
+  floatingRef: RefObject<HTMLButtonElement | null>;
+  floatingOpen: boolean;
+  onOpenFloating?: () => void;
   onReloadAll: () => void;
   onWorkspace: () => void;
   onShowOne: () => void;
@@ -311,6 +315,9 @@ export function WorkspaceDock(props: WorkspaceDockProps & { end?: ReactNode }) {
           </DockButton>
           <IssuesControl {...props} menu={innerMenu("issues")} />
         </>}
+        {props.onOpenFloating && <DockButton data-open-floating buttonRef={props.floatingRef} label={t("openFloatingPreview")} tooltip={t("openFloatingPreview")} quiet={quiet}
+          active={props.floatingOpen} expanded={props.floatingOpen} aria-haspopup="dialog"
+          onClick={props.onOpenFloating}><FloatingPreviewIcon size={17}/></DockButton>}
         <DockButton data-view-only-toggle label={t("viewMode")} tooltip={t("tipFocusMode")} quiet={quiet}
           onClick={props.allOpen ? () => props.gallery?.onViewMode() : props.onViewMode}>
           <EyeIcon size={16} />

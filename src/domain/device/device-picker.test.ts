@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { devices } from "./device-catalog";
+import { createCustomDevice } from "./device-service";
 import { groupGalleryDevices } from "./device-gallery";
 import { adjacentPickerDevices, availablePickerTabs, buildPickerSections, PICKER_RECENT_LIMIT } from "./device-picker";
 
@@ -82,6 +83,13 @@ describe("device picker sections", () => {
     expect(sections.map(section => section.key)).toEqual(["matches"]);
     expect(ids(sections[0].devices)).toContain("apple-ipad-pro-13-m4-2024");
     expect(sections[0].devices.every(device => device.type === "tablet")).toBe(true);
+  });
+
+  it("offers saved custom sizes in the floating picker and keeps the workspace's separate custom view", () => {
+    const custom = createCustomDevice({ name: "Checkout tablet", width: 750, height: 900, pixelRatio: 2, type: "tablet" });
+    const catalog = { devices: [...devices, custom], favorites: [], query: "Checkout tablet" };
+    expect(buildPickerSections(catalog)).toEqual([]);
+    expect(buildPickerSections({ ...catalog, includeCustom: true })).toEqual([{ key: "matches", devices: [custom] }]);
   });
 
   it("keeps saved custom sizes out of the device list", () => {

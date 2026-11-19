@@ -38,11 +38,8 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("leads with the one bar, then the views, then moving and resizing devices", () => {
-    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseOneBarTitle", description: "releaseOneBarDescription", icon: "workspace" });
-    expect(CURRENT_RELEASE_NOTES.sections.map(section => section.title)).toEqual(["releaseSectionViews", "releaseSectionDevices"]);
-    expect(CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes).map(note => note.title)).toEqual([
-      "releaseAllDevicesReadableTitle", "releaseProblemsPanelTitle", "releaseMoveResizeTitle",
-    ]);
+  it("features only floating device previews in What's new", () => {
+    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseFloatingTitle", description: "releaseFloatingDescription", icon: "floating" });
+    expect(CURRENT_RELEASE_NOTES.sections).toEqual([]);
   });
 });

@@ -21,15 +21,15 @@ export const PICKER_RECENT_LIMIT = 4;
 
 // The devices of a tab, one type after another (iOS, Android, tablets,
 // laptops, TVs…) with the newest of each type first. A search ranks names
-// starting with the query first, then newest first, across types. Saved
-// custom sizes have their own view.
-function tabDevices(devices: Device[], tab: PickerTab, query: string) {
+// starting with the query first, then newest first, across types. The workspace
+// manages custom sizes in a separate view; the floating picker lists them inline.
+function tabDevices(devices: Device[], tab: PickerTab, query: string, includeCustom = false) {
   const searching = query.trim() !== "";
   const list = groupGalleryDevices(devices, query)
     .filter(group => tab === "all" || tab === "new" || TAB_GROUPS[tab].includes(group.id))
     .flatMap(group => searching ? group.devices : [...group.devices].sort(newestFirst))
     .filter(device => tab !== "new" || device.tags.includes("new"))
-    .filter(device => device.brand !== "Custom");
+    .filter(device => includeCustom || device.brand !== "Custom");
   return searching
     ? list.sort((left, right) => Number(nameStartsWith(right, query)) - Number(nameStartsWith(left, query)) || newestFirst(left, right))
     : list;
@@ -39,15 +39,16 @@ function tabDevices(devices: Device[], tab: PickerTab, query: string) {
 // nothing starred to show, recent ones), then every device not on screen.
 // Starring keeps the device in place in the full list. A type tab or a search
 // shows one plain list.
-export function buildPickerSections({ devices, favorites, recents = [], onScreen = [], query = "", tab = "all" }: {
+export function buildPickerSections({ devices, favorites, recents = [], onScreen = [], query = "", tab = "all", includeCustom = false }: {
   devices: Device[];
   favorites: string[];
   recents?: string[];
   onScreen?: Device[];
   query?: string;
   tab?: PickerTab;
+  includeCustom?: boolean;
 }): PickerSection[] {
-  const list = tabDevices(devices, tab, query);
+  const list = tabDevices(devices, tab, query, includeCustom);
   if (tab !== "all" || query.trim()) return list.length ? [{ key: "matches", devices: list }] : [];
 
   const shown = [...new Map(onScreen.map(device => [device.id, device])).values()];
@@ -66,8 +67,8 @@ export function buildPickerSections({ devices, favorites, recents = [], onScreen
 }
 
 /** The tabs that have devices, All first. */
-export function availablePickerTabs(devices: Device[]): PickerTab[] {
-  return pickerTabs.filter(tab => tab === "all" || tabDevices(devices, tab, "").length > 0);
+export function availablePickerTabs(devices: Device[], includeCustom = false): PickerTab[] {
+  return pickerTabs.filter(tab => tab === "all" || tabDevices(devices, tab, "", includeCustom).length > 0);
 }
 
 // The devices just before and after this one in its picker type, smallest

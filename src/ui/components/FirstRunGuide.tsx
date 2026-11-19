@@ -1,5 +1,4 @@
-import { getViewerEventTarget } from "../../app/viewer-context";
-import { getViewerRoot } from "../../app/viewer-context";
+import { getViewerEventTarget, getViewerRoot } from "../../app/viewer-context";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, CloseIcon } from "../icons";
 import { cx, focusRing, IconButton } from "./ui";
 import {
@@ -24,6 +23,7 @@ const TOUR_TRANSLATION_KEYS: Array<{ title: TranslationKey; text: TranslationKey
   { title: "captureMenu", text: "tourCaptureText" },
   { title: "compareWithDesign", text: "tipCompare" },
   { title: "issues", text: "tourIssuesText" },
+  { title: "openFloatingPreview", text: "tourFloatingText" },
   { title: "viewMode", text: "tourFocusText" },
   { title: "addDevice", text: "tourAddDeviceText" },
   { title: "tourMoveTitle", text: "tourMoveResizeText" },
@@ -37,8 +37,14 @@ const ALL_TOUR_STEPS = FIRST_RUN_TOUR_STEPS
 
 /** `seenTour` is the tour revision this person saw last: an update shows only the steps added since. */
 export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => void; seenTour?: string | null }) {
+  const [steps] = useState(() => tourStepsSince(ALL_TOUR_STEPS, seenTour)
+    .filter(step => !step.activateTarget || (step.target && getViewerRoot().querySelector(step.target))));
+  useEffect(() => { if (!steps.length) onClose(); }, [steps, onClose]);
+  return steps.length ? <TourCards steps={steps} onClose={onClose} /> : null;
+}
+
+function TourCards({ steps: TOUR_STEPS, onClose }: { steps: typeof ALL_TOUR_STEPS; onClose: () => void }) {
   const { locale, t } = useI18n();
-  const [TOUR_STEPS] = useState(() => tourStepsSince(ALL_TOUR_STEPS, seenTour));
   const [stepIndex, setStepIndex] = useState(0);
   const [highlight, setHighlight] = useState<HighlightRect | null>(null);
   const baseStep = TOUR_STEPS[stepIndex];
@@ -128,6 +134,16 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
   }, [finalStep, onClose]);
 
   const cardStyle = positionCard(highlight);
+  function tryControl() {
+    const control = findTarget();
+    onClose();
+    control?.click();
+  }
+  function advance() {
+    if (!finalStep) setStepIndex(current => current + 1);
+    else if (step.activateTarget) tryControl();
+    else onClose();
+  }
 
   return (
     <div className="fixed inset-0 z-[80]" role="dialog" aria-modal="true" aria-labelledby="first-run-title">
@@ -139,6 +155,10 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
           style={highlight}
           aria-hidden="true"
         />
+      )}
+      {highlight && step.activateTarget && (
+        <button type="button" aria-label={step.title} className={cx("fixed cursor-pointer rounded-xl bg-transparent", focusRing)}
+          style={highlight} onClick={tryControl} />
       )}
 
       <section
@@ -178,11 +198,11 @@ export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => voi
             )}
             <button
               type="button"
-              onClick={() => finalStep ? onClose() : setStepIndex(current => current + 1)}
+              onClick={advance}
               className={cx("flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-3.5 text-[13px] font-semibold text-on-primary hover:opacity-90", focusRing)}
             >
               {finalStep
-                ? <><CheckIcon size={14} />{t("startTesting")}</>
+                ? step.activateTarget ? t("chooseFloatingDevice") : <><CheckIcon size={14} />{t("startTesting")}</>
                 : stepIndex === 0
                   ? t("showMe")
                   : <>{t("next")}<ChevronRightIcon size={14} className="rtl:rotate-180" /></>}

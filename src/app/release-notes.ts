@@ -3,7 +3,7 @@ import type { TranslationKey } from "./i18n";
 
 // Icon names map to UI icons in ReleaseNotesModal, keeping this module UI-free.
 export type ReleaseNoteIcon =
-  | "workspace" | "drag" | "frames" | "step" | "picker" | "focus" | "expand" | "gallery" | "camera"
+  | "workspace" | "floating" | "drag" | "frames" | "step" | "picker" | "focus" | "expand" | "gallery" | "camera"
   | "compare" | "fixPrompt" | "flow" | "record" | "languages" | "speed" | "headers"
   | "homeview" | "scrollbars" | "hover" | "adjust" | "reload" | "menus" | "layout" | "globe";
 
@@ -32,27 +32,13 @@ export const LAST_SEEN_TOUR_KEY = "mdvLastSeenTour";
 // Raise this when the feature tour gains steps that existing users should see.
 // Updated users see the steps added since their last tour once, right after
 // the release notes; a fresh install sees every step.
-export const FEATURE_TOUR_REVISION = "0.5.1";
+export const FEATURE_TOUR_REVISION = "0.5.2";
 
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
   version,
-  featured: { title: "releaseOneBarTitle", description: "releaseOneBarDescription", icon: "workspace" },
-  sections: [
-    {
-      title: "releaseSectionViews",
-      notes: [
-        { title: "releaseAllDevicesReadableTitle", description: "releaseAllDevicesReadableDescription", icon: "gallery" },
-        { title: "releaseProblemsPanelTitle", description: "releaseProblemsPanelDescription", icon: "fixPrompt" },
-      ],
-    },
-    {
-      title: "releaseSectionDevices",
-      notes: [
-        { title: "releaseMoveResizeTitle", description: "releaseMoveResizeDescription", icon: "drag" },
-      ],
-    },
-  ],
+  featured: { title: "releaseFloatingTitle", description: "releaseFloatingDescription", icon: "floating" },
+  sections: [],
 };
 
 export type StartupNotice =

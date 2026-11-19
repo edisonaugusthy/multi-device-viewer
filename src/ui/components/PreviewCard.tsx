@@ -15,7 +15,7 @@ import { PREVIEW_SANDBOX, previewFrameName } from "../../app/preview-frame";
 import { usesTabletKeyboard } from "../../domain/device/mobile-keyboard";
 import { getViewerEventTarget } from "../../app/viewer-context";
 import { preparePreview } from "../../app/viewer-context";
-import { AlertIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, FixPromptIcon, GlobeIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, SettingsIcon } from "../icons";
+import { AlertIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, FixPromptIcon, GlobeIcon, LayoutCheckIcon, OpenInTabIcon, ReloadIcon, ResizeGripIcon, SettingsIcon } from "../icons";
 import type { LayoutSlotStatus } from "../hooks/useLayoutCheck";
 import { glyphKindFor } from "./DeviceGlyph";
 import { SectionLabel } from "./ui";
@@ -41,6 +41,8 @@ import { FEATURES } from "../../app/feature-flags";
 import {
   DeviceFrame,
   estimateDeviceFrameSize,
+  framedDisplayRect,
+  displayControlGap,
   getMobileKeyboardHeight,
   type BrowserSurfaceColors,
   type MobileKeyboardAction,
@@ -98,8 +100,8 @@ interface PreviewCardProps {
   device: Device;
   display: DisplaySettings;
   showToolbar?: boolean;
-  /** A floating window moves by its own title bar. */
-  externalDragHandle?: boolean;
+  /** Floating frames get their exact on-page scale and gestures from the parent. */
+  floatingScale?: number;
   visualsActive?: boolean;
   onScaleChange?: (scale: number, slotId: string) => void;
   onLoadStateChange?: (id: string, status: GalleryLoadResult) => void;
@@ -189,7 +191,7 @@ export const PreviewCard = memo(function PreviewCard({
   device,
   display,
   showToolbar = true,
-  externalDragHandle = false,
+  floatingScale,
   visualsActive = true,
   onScaleChange,
   onLoadStateChange,
@@ -389,6 +391,10 @@ export const PreviewCard = memo(function PreviewCard({
     viewportSize,
   });
 
+  const controlScreen = !freeView && slot.showFrame ? framedDisplayRect(device, frameSize, viewportSize, effectiveOrientation) : undefined;
+  const gripRight = controlScreen ? controlScreen.left + controlScreen.width : frameSize.width;
+  const gripBottom = controlScreen ? controlScreen.top + controlScreen.height : frameSize.height;
+  const gripGap = controlScreen ? displayControlGap : 0;
   const horizontalPad = device.type === "laptop" || device.type === "desktop" ? 40 : CARD_PAD;
   const availW = Math.max(80, containerSize.width - horizontalPad);
   const availH = Math.max(80, containerSize.height - CARD_PAD);
@@ -409,7 +415,7 @@ export const PreviewCard = memo(function PreviewCard({
           ? fitScale
           : fitScale * (slot.zoom / 0.58);
   layoutScaleRef.current = layoutScale;
-  const scale = captureScale ?? layoutScale;
+  const scale = captureScale ?? floatingScale ?? layoutScale;
 
   useLayoutEffect(() => { onScaleChange?.(scale, slot.id); }, [onScaleChange, scale, slot.id]);
 
@@ -475,16 +481,16 @@ export const PreviewCard = memo(function PreviewCard({
     event.stopPropagation();
     const origin = offset;
     const startScale = scale;
-    const width = frameSize.width * startScale;
-    const height = frameSize.height * startScale;
+    const width = gripRight * startScale;
+    const height = gripBottom * startScale;
     let zoom = slot.zoomMode === "custom" ? slot.zoom : startScale / fitScale * 0.58;
     let moved = origin;
     startDrag(event, (deltaX, deltaY) => {
       const factor = Math.max((width + deltaX) / width, (height + deltaY) / height);
       zoom = clampZoom(startScale * factor / fitScale * 0.58);
       const nextScale = fitScale * (zoom / 0.58);
-      const grownWidth = frameSize.width * nextScale - width;
-      const grownHeight = frameSize.height * nextScale - height;
+      const grownWidth = frameSize.width * (nextScale - startScale);
+      const grownHeight = frameSize.height * (nextScale - startScale);
       setLiveZoom(zoom);
       moved = { x: origin.x + grownWidth / 2, y: Math.max(minOffsetY(nextScale), origin.y + (align === "bottom" ? grownHeight : grownHeight / 2)) };
       setOffset(moved);
@@ -1025,13 +1031,13 @@ export const PreviewCard = memo(function PreviewCard({
               // A device screenshot briefly paints known backdrops behind the
               // device, spread well past its edges even at small zoom, to cut it
               // out of the workspace (see captureDeviceCutout).
-              className={`pointer-events-auto shrink-0 origin-center ${externalDragHandle ? "" : "cursor-grab touch-none active:cursor-grabbing"} data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
+              className={`pointer-events-auto shrink-0 origin-center ${floatingScale !== undefined ? "" : "cursor-grab touch-none active:cursor-grabbing"} data-[capture-matte=black]:bg-black data-[capture-matte=black]:shadow-[0_0_0_32px_black] data-[capture-matte=white]:bg-white data-[capture-matte=white]:shadow-[0_0_0_32px_white] ${freeView ? "relative overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line),0_8px_28px_rgb(15_23_42/0.08)]" : ""}`}
               data-device-capture
               data-free-device-view={freeView ? "" : undefined}
               onPointerEnter={holdToolbar}
               onPointerLeave={releaseToolbar}
-              onPointerDown={externalDragHandle ? undefined : startMove}
-              onDoubleClick={externalDragHandle ? undefined : event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) { setOffset({ x: 0, y: 0 }); savePosition({ x: 0, y: 0 }); } }}
+              onPointerDown={floatingScale !== undefined ? undefined : startMove}
+              onDoubleClick={floatingScale !== undefined ? undefined : event => { if (event.target === event.currentTarget || !(event.target as Element).closest("button")) { setOffset({ x: 0, y: 0 }); savePosition({ x: 0, y: 0 }); } }}
               style={{
                 ...layerStyle,
                 width: frameSize.width,
@@ -1063,11 +1069,11 @@ export const PreviewCard = memo(function PreviewCard({
               className="pointer-events-auto absolute z-10 grid size-6 cursor-nwse-resize place-items-center rounded-full border border-line bg-surface text-muted opacity-0 shadow-float transition-opacity hover:text-ink focus-visible:opacity-100 group-hover/device:opacity-100 outline-none focus-visible:ring-2 focus-visible:ring-accent"
               style={{
                 ...(layer !== undefined && { zIndex: 10 + layer }),
-                left: (containerSize.width - frameSize.width * scale) / 2 + offset.x + frameSize.width * scale - 12,
-                top: deviceTop + offset.y + scaledHeight - 12,
+                left: (containerSize.width - frameSize.width * scale) / 2 + offset.x + gripRight * scale + gripGap - 12,
+                top: deviceTop + offset.y + gripBottom * scale + gripGap - 12,
               }}
             >
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M9 3 3 9M9 6.5 6.5 9" /></svg>
+              <ResizeGripIcon size={10}/>
             </button>
           )}
           {designOverlay && screenBox && <DesignOverlay {...designOverlay} screen={viewportSize} screenBox={screenBox} />}

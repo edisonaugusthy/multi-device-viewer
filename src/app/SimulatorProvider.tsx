@@ -85,8 +85,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   const floating = getViewerContext()?.mode === "floating";
   const [slots, setSlots] = useState<PreviewSlot[]>(() => {
     const url = initialUrlFromSearch();
-    if (floating) return (getViewerContext()?.restore?.floatingDevices ?? []).slice(0, maxPreviewSlots).map(({ deviceId, canvasPosition }, i) => ({
+    if (floating) return (getViewerContext()?.restore?.floatingDevices ?? []).slice(0, maxPreviewSlots).map(({ deviceId, canvasPosition, scale }, i) => ({
       ...createPreviewSlot(deviceId, url, i), canvasPosition,
+      ...(typeof scale === "number" && Number.isFinite(scale) && { zoomMode: "custom" as const, zoom: clampZoom(scale) }),
     }));
     return defaultDeviceIds.map((deviceId, i) => createPreviewSlot(deviceId, url, i));
   });

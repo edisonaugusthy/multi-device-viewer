@@ -14,6 +14,7 @@ describe("first-run feature tour", () => {
       '[data-tour="screenshot"]',
       '[data-tour="design"]',
       '[data-tour="issues"]',
+      "[data-open-floating]",
       "[data-view-only-toggle]",
       '[data-tour="add-viewport"]',
       '[data-tour="device-controls"]',
@@ -25,6 +26,7 @@ describe("first-run feature tour", () => {
       "Capture",
       "Compare with design",
       "Issues",
+      "Open floating preview",
       "Focus mode",
       "Add device",
       "Move and change devices",
@@ -37,13 +39,14 @@ describe("first-run feature tour", () => {
 
   it("shows an updated user only the steps added since their last tour", () => {
     // Saw the 0.4.0 tour: the bar's new steps and moving devices are new.
-    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.4.0").map(step => step.title)).toEqual(["Workspace, One and All", "Capture", "Compare with design", "Issues", "Move and change devices"]);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.4.0").map(step => step.title)).toEqual(["Workspace, One and All", "Capture", "Compare with design", "Issues", "Open floating preview", "Move and change devices"]);
     // Saw the 0.3.0 tour: Before & after is new too.
-    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.3.0").map(step => step.title)).toEqual(["Workspace, One and All", "Capture", "Compare with design", "Issues", "Move and change devices", "Before & after"]);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.3.0").map(step => step.title)).toEqual(["Workspace, One and All", "Capture", "Compare with design", "Issues", "Open floating preview", "Move and change devices", "Before & after"]);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.1").map(step => step.target)).toEqual(["[data-open-floating]"]);
     // Never saw a tour, or a fresh install: every step.
     expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, null)).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
     // Nothing newer than the tour already seen falls back to the whole tour, for a manual replay.
-    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.0")).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.2")).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
   });
 
   it("puts the card below a button in the top bar, so the bar stays visible", () => {

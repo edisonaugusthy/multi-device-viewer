@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { ReleaseNoteIcon, VersionReleaseNotes } from "../../app/release-notes";
 import { useI18n } from "../../app/i18n";
 import {
-  AdjustIcon, BugIcon, CameraIcon, ChevronRightIcon, CustomSizeIcon, ExpandIcon, EyeIcon, FixPromptIcon, GlobeIcon, GridIcon, GripIcon,
+  AdjustIcon, BugIcon, CameraIcon, ChevronRightIcon, CustomSizeIcon, ExpandIcon, EyeIcon, FixPromptIcon, FloatingPreviewIcon, GlobeIcon, GridIcon, GripIcon,
   LayoutCheckIcon, ListIcon, NavigationSyncIcon, PlayIcon, PointerIcon, RecordIcon, ReloadIcon, ScrollSyncIcon, SearchIcon, SideBySideIcon,
   TextToolIcon, WhatsNewIcon, WorkspaceIcon,
 } from "../icons";
@@ -11,6 +11,7 @@ import { cx, focusRing } from "./ui";
 
 const icons: Record<ReleaseNoteIcon, ReactNode> = {
   workspace: <WorkspaceIcon size={18} />,
+  floating: <FloatingPreviewIcon size={18} />,
   drag: <GripIcon />,
   frames: <WorkspaceIcon size={15} />,
   step: <ChevronRightIcon size={15} />,
@@ -69,7 +70,10 @@ function BeforeAfterSketch() {
   );
 }
 
-const sketches: Partial<Record<ReleaseNoteIcon, () => ReactNode>> = { compare: BeforeAfterSketch };
+const sketches: Partial<Record<ReleaseNoteIcon, () => ReactNode>> = {
+  compare: BeforeAfterSketch,
+  floating: () => <FloatingPreviewIcon size={64} strokeWidth={1.1} />,
+};
 
 export function ReleaseNotesModal({ release, onClose }: { release: VersionReleaseNotes; onClose: () => void }) {
   const { t } = useI18n();

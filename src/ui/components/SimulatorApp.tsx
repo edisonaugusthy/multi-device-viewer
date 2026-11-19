@@ -89,7 +89,7 @@ interface SavedWorkspaceView {
   designScrollLinked?: boolean;
 }
 
-export function SimulatorApp() {
+export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: string) => Promise<void> }) {
   const { t } = useI18n();
   const { devices, findDevice, removeCustomDevice } = useDeviceCatalog();
   const {
@@ -193,8 +193,10 @@ export function SimulatorApp() {
   const boardRef = useRef<HTMLDivElement>(null);
   const addRef = useRef<HTMLButtonElement>(null);
   const workspaceRef = useRef<HTMLButtonElement>(null);
+  const floatingRef = useRef<HTMLButtonElement>(null);
   // The add picker opens under whichever toolbar control was used.
   const [pickerAnchor, setPickerAnchor] = useState<"add" | "workspace">("add");
+  const dockPickerRef = pickerTarget.kind === "floating" ? floatingRef : pickerTarget.kind === "add" && pickerAnchor === "workspace" ? workspaceRef : addRef;
   const fixRef = useRef<HTMLButtonElement>(null);
   const captureRef = useRef<HTMLButtonElement>(null);
   const settingsRef = useRef<HTMLButtonElement>(null);
@@ -654,10 +656,10 @@ export function SimulatorApp() {
     requestAnimationFrame(() => {
       const trigger = pickerTarget.kind === "replace"
         ? getViewerRoot().querySelector<HTMLButtonElement>(`[data-preview-slot-id="${CSS.escape(pickerTarget.slotId)}"] [data-testid="device-switcher-button"]`)
-        : pickerAnchor === "workspace" ? workspaceRef.current : addRef.current;
+        : dockPickerRef.current;
       trigger?.focus({ preventScroll: true });
     });
-  }, [pickerAnchor, pickerTarget]);
+  }, [dockPickerRef, pickerTarget]);
 
   function slotSize(slotId: string) {
     const slot = slots.find((item) => item.id === slotId);
@@ -809,6 +811,21 @@ export function SimulatorApp() {
   const layoutCheck = useLayoutCheck({ slots, findDevice, slotSize: slotSizeStable });
   // Device headers and languages are set by the extension for the viewer inside a website tab.
   const inViewer = Boolean(getViewerContext());
+  async function openSelectedFloating(deviceId: string) {
+    const slot = slots[focusMode ? focusIndex : activeIndex];
+    closePopover();
+    try {
+      if (openFloating) {
+        await openFloating(deviceId);
+        return;
+      }
+      const reply = await chrome.runtime.sendMessage({ type: "MDV_OPEN_FLOATING", deviceId, sourceTabId, url: getSlotUrl(slot.id) }).catch(() => undefined);
+      if (!reply?.ok) throw new Error(reply?.error || t("floatingPreviewOpenError"));
+    } catch (error) {
+      setCaptureError(error instanceof Error ? error.message : t("floatingPreviewOpenError"));
+      window.setTimeout(() => setCaptureError(null), 4000);
+    }
+  }
   const deviceNameOf = useCallback((slot: PreviewSlot) => findDevice(slot.deviceId).name, [findDevice]);
   const problems = useProblems({ slots, deviceName: deviceNameOf });
   // One docked panel at a time.
@@ -910,6 +927,13 @@ export function SimulatorApp() {
             onShowOne={() => { if (galleryOpen) { closeAllDevices(); focusSlot(activeSlotId); } else if (focusMode) exitFocus(); else focusSlot(activeSlotId); }}
             onScrollSyncChange={(enabled) => updateDisplay((current) => ({ ...current, scrollSync: enabled }))}
             onNavigationSyncChange={(enabled) => updateDisplay((current) => ({ ...current, navigationSync: enabled }))}
+            floatingRef={floatingRef}
+            floatingOpen={popover === "picker" && pickerTarget.kind === "floating"}
+            onOpenFloating={slots.length && (openFloating || (typeof chrome !== "undefined" && chrome.runtime?.id)) ? () => {
+              pinHoverMenu();
+              if (popover === "picker" && pickerTarget.kind === "floating") closePicker();
+              else openPicker({ kind: "floating", onSelect: openSelectedFloating });
+            } : undefined}
             onReloadAll={reloadAllSlots}
             onCompare={() => { setPopover(null); setFocusedSlotId(null); setCompare((value) => !value); if (!compare) setCompareSlotId(activeSlotId); }}
             onCapture={() => clickDockMenu("capture", () => togglePopover("capture"))}
@@ -1138,7 +1162,7 @@ export function SimulatorApp() {
       <HoverZone onEnter={keepHoverMenu} onLeave={leaveHoverMenu} onUse={pinHoverMenu}>
       <DevicePicker
         open={popover === "picker"}
-        anchorRef={pickerTarget.kind === "replace" && replaceAnchorRef.current ? replaceAnchorRef : pickerTarget.kind === "add" && pickerAnchor === "workspace" ? workspaceRef : addRef}
+        anchorRef={pickerTarget.kind === "replace" && replaceAnchorRef.current ? replaceAnchorRef : dockPickerRef}
         target={pickerTarget}
         slots={slots}
         maxSlots={maxPreviewSlots}

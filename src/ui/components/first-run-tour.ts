@@ -4,6 +4,8 @@ export interface ProductTourStep {
   title: string;
   text: string;
   target?: string;
+  /** Let the user try this control directly from its highlight. */
+  activateTarget?: boolean;
   /** The tour revision that introduced this step; the first tour's steps have none. */
   since?: string;
 }
@@ -25,6 +27,7 @@ export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
   { title: "Capture", text: "Screenshots, video, recorded flows and tracked changes, all here.", target: '[data-tour="screenshot"]', since: "0.5.0" },
   { title: "Compare with design", text: "Check a device against a design image, side by side or overlaid.", target: '[data-tour="design"]', since: "0.5.0" },
   { title: "Issues", text: "Errors, sideways scrolling and a fix prompt for your AI coding tool.", target: '[data-tour="issues"]', since: "0.5.0" },
+  { title: "Open floating preview", text: "Click this icon to choose a device and float it over your page.", target: "[data-open-floating]", since: "0.5.2", activateTarget: true },
   { title: "Focus mode", text: "Hide all controls for clean reviews. Press Esc to exit.", target: "[data-view-only-toggle]" },
   { title: "Add device", text: "Add up to four devices to compare side by side.", target: '[data-tour="add-viewport"]' },
   { title: "Move and change devices", text: "Drag a device anywhere, resize it from its corner, or switch it.", target: '[data-tour="device-controls"]', since: "0.5.0" },

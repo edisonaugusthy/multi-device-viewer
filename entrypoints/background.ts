@@ -151,7 +151,7 @@ export default defineBackground(() => {
     }
   }
 
-  function openSimulatorForTab(tab: chrome.tabs.Tab, restore?: ViewerRestoreState, mode?: ViewerMode) {
+  function openSimulatorForTab(tab: chrome.tabs.Tab, restore?: ViewerRestoreState, mode?: ViewerMode, deviceId?: string) {
     clearUpdateIndicator();
 
     if (!isPreviewableUrl(tab.url)) {
@@ -171,7 +171,7 @@ export default defineBackground(() => {
 
     // The toolbar toggles the current viewer. Context menus can request a specific mode.
     const tabId = tab.id;
-    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId, restore, mode };
+    const request = { type: "OPEN_SIMULATOR", url, sourceTabId: tabId, restore, mode, deviceId };
     // Acknowledge each toggle before processing the next click, including the
     // first launch into a tab that needs content-script injection.
     const work = (launches.get(tabId) ?? Promise.resolve()).then(async () => {
@@ -186,9 +186,11 @@ export default defineBackground(() => {
         response = await chrome.tabs.sendMessage(tabId, request, { frameId: 0 });
       }
       if (response?.ok === false) throw new Error(response.error);
-    }).catch(console.error);
-    launches.set(tabId, work);
-    void work.finally(() => { if (launches.get(tabId) === work) launches.delete(tabId); });
+    });
+    const settled = work.catch(console.error);
+    launches.set(tabId, settled);
+    void settled.then(() => { if (launches.get(tabId) === settled) launches.delete(tabId); });
+    return work;
   }
 
   function syncAllActionStates() {
@@ -305,6 +307,30 @@ export default defineBackground(() => {
   }
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message?.type === "MDV_OPEN_FLOATING") {
+      if (sender.id !== chrome.runtime.id || sender.frameId !== 0 || typeof message.deviceId !== "string") return;
+      const standalone = sender.url?.split("?")[0] === chrome.runtime.getURL("simulator.html");
+      void (async () => {
+        let target = sender.tab;
+        if (standalone) {
+          target = typeof message.sourceTabId === "number" ? await chrome.tabs.get(message.sourceTabId).catch(() => undefined) : undefined;
+          if (!target?.id || !isPreviewableUrl(target.url)) {
+            if (!isPreviewableUrl(message.url)) throw new Error("Open a website first.");
+            const tab = await chrome.tabs.create({ url: message.url });
+            if (tab.id === undefined) throw new Error("Could not open the website tab.");
+            const restore = { floatingDevices: [{ deviceId: message.deviceId }] };
+            await updateOpenViewer(tab.id, () => ({ origin: originOf(message.url)!, mode: "floating", unloaded: true, restore }));
+            const current = await chrome.tabs.get(tab.id);
+            if (current.status === "complete" && isPreviewableUrl(current.url)) await openSimulatorForTab(current, restore, "floating");
+            return;
+          }
+          await chrome.tabs.update(target.id, { active: true });
+        }
+        if (!target || !isPreviewableUrl(target.url)) throw new Error("Open a website first.");
+        await openSimulatorForTab(target, undefined, "floating", message.deviceId);
+      })().then(() => sendResponse({ ok: true }), error => sendResponse({ ok: false, error: error instanceof Error ? error.message : String(error) }));
+      return true;
+    }
     if (message?.type === "MDV_VISUAL_REGRESSION") {
       if (sender.id !== chrome.runtime.id || (sender.frameId ?? 0) !== 0) return;
       // Capture the tab showing the viewer, never a tab the page names.

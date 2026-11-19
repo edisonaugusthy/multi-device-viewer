@@ -157,6 +157,36 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.mdv-floating-control {
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-floating-device]:not([data-pointer-focus]):is(:focus-visible, :has(> .mdv-floating-control:focus-visible)) > .mdv-floating-control {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+[data-floating-device]:not([data-pointer-focus]) > .mdv-floating-control:focus-visible > span {
+  outline: 2px solid var(--mdv-accent);
+  outline-offset: 1px;
+}
+
+@media (any-hover: hover) {
+  [data-floating-device]:hover > .mdv-floating-control {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Tapping the bezel focuses the frame on touch-only screens. */
+@media (hover: none) {
+  [data-floating-device]:focus-within > .mdv-floating-control {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

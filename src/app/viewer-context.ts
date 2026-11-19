@@ -3,7 +3,7 @@ import type { PreviewIdentities } from "../domain/simulator/preview-identity";
 /** What a reopened viewer shows again after its page reloaded with it open. */
 export interface ViewerRestoreState {
   allDevices?: { category: string; scrollTop: number } | null;
-  floatingDevices?: { deviceId: string; canvasPosition?: { x: number; y: number } }[];
+  floatingDevices?: { deviceId: string; scale?: number; canvasPosition?: { x: number; y: number } }[];
 }
 export type ViewerMode = "workspace" | "floating";
 /** Explicit launch data prevents a website's query parameters from configuring the extension. */

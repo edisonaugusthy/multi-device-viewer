@@ -628,7 +628,7 @@ export function estimateDeviceFrameSize({ device, showFrame, viewportSize }: Fra
   if (!showFrame) return viewportSize;
 
   // Custom sizes and any device without a drawn frame use the neutral shell.
-  const imageFrame = device.brand === "Custom" ? undefined : device.mockupAssets.find((asset) => asset.width && asset.height);
+  const imageFrame = device.brand === "Custom" ? undefined : device.mockupAssets.find((asset) => asset.localPath && asset.width && asset.height);
   if (imageFrame?.width && imageFrame.height) {
     const assetWidth = imageFrame.width;
     const assetHeight = imageFrame.height;
@@ -644,6 +644,20 @@ export function estimateDeviceFrameSize({ device, showFrame, viewportSize }: Fra
 
   return { width: viewportSize.width + 16, height: viewportSize.height + 16 };
 }
+
+/** A TV stand, monitor foot or laptop base extends beyond the display corners. */
+export function framedDisplayRect(device: Device, frame: Size, viewport: Size, orientation: Orientation): ScreenRect | undefined {
+  if (device.type !== "tv" && device.type !== "desktop" && device.type !== "laptop") return;
+  const asset = device.mockupAssets.find(item => item.localPath && item.width && item.height);
+  if (!asset) return;
+  const config = getMockupViewport(asset, orientation);
+  const rect = screenRectFor(viewport, frame.width, frame.height, config);
+  const menuHeight = config?.menuBar?.height ?? 0;
+  return { ...rect, top: rect.top - menuHeight, height: rect.height + menuHeight };
+}
+
+// Offset the centre of a corner control just outside the live display, in CSS pixels.
+export const displayControlGap = 8;
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 

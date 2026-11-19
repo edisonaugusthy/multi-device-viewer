@@ -10,7 +10,7 @@ import { mkdtemp, readFile, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "@playwright/test";
+import { chromium, expect } from "@playwright/test";
 import { checkFloatingDevices } from "./check-floating-devices.mjs";
 
 const extension = fileURLToPath(new URL("../.output/chrome-mv3", import.meta.url));
@@ -425,10 +425,56 @@ try {
   assert.deepEqual(remaining, [], "closing viewer removes its rules");
   await checkFloatingDevices({ page, worker, pageUrl });
   // Standalone simulator is still usable, but cannot promise the website tab's session.
+  await worker.evaluate(() => chrome.storage.local.set({
+    responsiveTesterFirstRunComplete: true, mdvLastSeenTour: "0.5.1", mdvLastSeenReleaseVersion: "0.5.1",
+    mdvPendingReleaseVersion: chrome.runtime.getManifest().version,
+  }));
   const simulator = await context.newPage();
   await simulator.goto(`${extensionOrigin}/simulator.html?url=${encodeURIComponent(pageUrl)}`);
   await simulator.locator("[data-preview-slot-id]").first().waitFor();
   assert.equal(await simulator.locator("[data-header-coverage]").count(), 0);
+  const notes = simulator.getByRole("dialog").filter({ has: simulator.getByRole("heading", { name: "Floating device previews" }) });
+  await notes.getByRole("button", { name: "Start testing" }).click();
+  const tour = simulator.getByRole("dialog", { name: "Open floating preview" });
+  await expect(tour.getByTestId("tour-highlight")).toBeVisible();
+  const pickerTitle = "Choose a device for floating preview";
+  const floatingPicker = simulator.getByRole("dialog", { name: pickerTitle });
+  const icon = await simulator.locator("[data-open-floating]").boundingBox();
+  await simulator.mouse.click(icon.x + icon.width / 2, icon.y + icon.height / 2);
+  await expect(floatingPicker).toBeVisible();
+  await expect(tour).toHaveCount(0);
+  await simulator.keyboard.press("Escape");
+  await simulator.reload();
+  await expect(simulator.locator("[data-open-floating]")).toBeVisible();
+  await expect(tour).toHaveCount(0);
+  assert.equal(await worker.evaluate(async () => (await chrome.storage.local.get("mdvLastSeenTour")).mdvLastSeenTour), manifest.version);
+  // Only the standalone launch needs a worker to find or create a website tab.
+  await simulator.evaluate(() => {
+    const send = chrome.runtime.sendMessage.bind(chrome.runtime);
+    chrome.runtime.sendMessage = (...args) => {
+      if (args[0]?.type !== "MDV_OPEN_FLOATING") return send(...args);
+      chrome.runtime.sendMessage = send;
+      return Promise.resolve(undefined);
+    };
+  });
+  const openFloating = simulator.getByRole("button", { name: "Open floating preview" });
+  const pagesBeforePicker = context.pages().length;
+  await openFloating.click();
+  await expect(floatingPicker).toBeVisible();
+  assert.equal(context.pages().length, pagesBeforePicker);
+  await floatingPicker.getByRole("textbox").fill("Pixel 8");
+  await floatingPicker.locator('[data-device-pick="google-pixel-8"]').click();
+  await expect(simulator.getByText("Could not open the floating preview. Reload the extension and try again.", { exact: true })).toBeVisible();
+  const nextWebsite = context.waitForEvent("page");
+  await openFloating.click();
+  await floatingPicker.getByRole("textbox").fill("Pixel 8");
+  await floatingPicker.locator('[data-device-pick="google-pixel-8"]').press("Enter");
+  const floated = await nextWebsite;
+  await floated.waitForURL(pageUrl);
+  await expect.poll(() => floated.frames().some(frame => frame.parentFrame() && frame.url().startsWith(pageUrl))).toBe(true);
+  const chosenFrame = floated.frames().find(frame => frame.parentFrame() && frame.url().startsWith(pageUrl));
+  assert.equal(await chosenFrame.evaluate(() => innerWidth), 412, "standalone opens the chosen Pixel 8");
+  await floated.close();
   assert.deepEqual(errors.filter(message => message !== "smoke boom"), [], "no page errors besides the one thrown on purpose");
   console.log("Extension smoke passed: release badge, 3 direct devices, shared Strict/Lax/partitioned login + storage, distinct document/fetch/XHR/cross-origin API headers with full client hints, the device in page scripts (kept through links, forms, history, script navigation and redirects), Request bodies/clones/multipart/credentials, SPA/cancellation, uncovered foreign Requests/assets/workers, cross-site previews, problems, per-device language, identity table, layout cause, camera menu, Track changes paused without a click, no coverage labels, cleanup, standalone fallback; no debugger permission.");
 } finally {

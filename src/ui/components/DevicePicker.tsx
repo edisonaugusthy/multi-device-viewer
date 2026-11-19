@@ -18,7 +18,7 @@ import { DeviceGlyph, glyphKindFor } from "./DeviceGlyph";
 import { shortName } from "./PreviewCard";
 import { cx, focusRing, positionStyle, popoverPanel, SectionLabel, useAnchoredPosition, useDismiss } from "./ui";
 
-export type PickerTarget = { kind: "add" } | { kind: "replace"; slotId: string };
+export type PickerTarget = { kind: "add" } | { kind: "replace"; slotId: string } | { kind: "floating"; onSelect: (deviceId: string) => void };
 
 type PickerView = "devices" | "sets" | "custom";
 
@@ -61,7 +61,8 @@ export function DevicePicker({
   const listRef = useRef<HTMLDivElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
   // Two columns, wide enough for every name on one line; the same width whether adding or replacing.
-  const position = useAnchoredPosition(anchorRef, open, 640, target.kind === "add" ? "center" : "start", 560);
+  const position = useAnchoredPosition(anchorRef, open, 640, target.kind === "replace" ? "start" : "center", 560);
+  const floating = target.kind === "floating";
   // Opened upward from the dock, the picker is mirrored so its search, tabs and
   // presets sit next to the dock where the pointer comes from, and keeps one
   // height so hovering across the tabs never moves them. Opened downward, the
@@ -78,7 +79,7 @@ export function DevicePicker({
   const swapSlot = !replaceSlot ? slots.find(slot => slot.id === swapSlotId) : undefined;
   const swapping = swapSlot ? findDevice(swapSlot.deviceId) : undefined;
   const usedIds = useMemo(() => new Set(slots.filter(slot => slot.id !== swapSlotId).map(slot => slot.deviceId)), [slots, swapSlotId]);
-  const full = slots.length >= maxSlots;
+  const full = !floating && slots.length >= maxSlots;
 
   useEffect(() => {
     if (!open) return;
@@ -91,7 +92,7 @@ export function DevicePicker({
     return () => cancelAnimationFrame(frame);
   }, [open, target]);
 
-  const tabs = useMemo(() => availablePickerTabs(devices), [devices]);
+  const tabs = useMemo(() => availablePickerTabs(devices, floating), [devices, floating]);
   const tabLabel = (id: PickerTab) => ({
     all: t("allShort"), ios: "iOS", android: "Android", tablet: t("tablets"), computer: t("computers"), other: t("otherDevices"), new: t("newDevicesTab"),
   })[id];
@@ -101,13 +102,18 @@ export function DevicePicker({
   };
   const onScreen = useMemo(() => slots.map(slot => findDevice(slot.deviceId)), [findDevice, slots]);
   const sections = useMemo(
-    () => buildPickerSections({ devices, favorites, recents, onScreen, query, tab }),
-    [devices, favorites, onScreen, query, recents, tab],
+    () => buildPickerSections({ devices, favorites, recents, onScreen, query, tab, includeCustom: floating }),
+    [devices, favorites, floating, onScreen, query, recents, tab],
   );
   const sectionTitle = (key: PickerSectionKey) =>
     key === "onScreen" ? t("onScreen") : key === "starred" ? t("starred") : key === "recent" ? t("recent") : key === "all" ? t("allDevices") : null;
 
   function pick(device: Device) {
+    if (target.kind === "floating") {
+      addRecent(device.id);
+      target.onSelect(device.id);
+      return;
+    }
     if (swapSlot?.deviceId === device.id) {
       setSwapSlotId(null);
       return;
@@ -129,6 +135,7 @@ export function DevicePicker({
   }
 
   function rowState(device: Device) {
+    if (floating) return { added: false, current: false, disabled: false, hint: t("openFloatingPreview") };
     const added = usedIds.has(device.id);
     if (replaceSlot) {
       // Switching may reuse a device shown in another column, e.g. to compare orientations.
@@ -171,7 +178,7 @@ export function DevicePicker({
 
   if (!open) return null;
 
-  const title = replacing ? t("replaceNamed", { name: replacing.name }) : t("addADevice");
+  const title = floating ? t("chooseFloatingDevice") : replacing ? t("replaceNamed", { name: replacing.name }) : t("addADevice");
 
   return (
     <div
@@ -183,6 +190,10 @@ export function DevicePicker({
       style={{ ...positionStyle(position), height: upward ? position.maxHeight : undefined }}
     >
       {view === "devices" && <>
+        {floating && <div className="flex shrink-0 items-center justify-between px-3.5 pt-2">
+          <span className="text-[13px] font-semibold text-ink">{title}</span>
+          <button type="button" aria-label={t("close")} onClick={onClose} className={cx("grid size-7 place-items-center rounded-full text-muted hover:bg-sunken hover:text-ink", focusRing)}><CloseIcon size={14}/></button>
+        </div>}
         {/* Typing filters straight away; the line stays quiet until then. */}
         <div className="flex shrink-0 items-center px-3.5">
           <label className="flex h-11 min-w-0 flex-1 items-center gap-2">
@@ -246,7 +257,7 @@ export function DevicePicker({
           })}
         </div>
 
-        {!replacing && sets.allSets.length > 0 && (
+        {!floating && !replacing && sets.allSets.length > 0 && (
           // Presets apply in one click; the footer opens them for saving and editing.
           <div className={cx("flex shrink-0 items-center gap-1.5 overflow-x-auto border-line-soft px-3.5 py-2 [scrollbar-width:none]", upward ? "border-t" : "border-b")}>
             <SectionLabel className="me-1 shrink-0">{t("sets")}</SectionLabel>
@@ -294,7 +305,7 @@ export function DevicePicker({
                 {title && (
                   <div className="flex items-baseline gap-1.5 px-2.5 pb-1 pt-3">
                     <SectionLabel>{title}</SectionLabel>
-                    {section.key === "onScreen" && <span dir="ltr" className="font-mono text-[11px] text-faint">{slots.length}/{maxSlots}</span>}
+                    {section.key === "onScreen" && !floating && <span dir="ltr" className="font-mono text-[11px] text-faint">{slots.length}/{maxSlots}</span>}
                   </div>
                 )}
                 <div className="grid grid-cols-2 gap-0.5">
@@ -303,7 +314,7 @@ export function DevicePicker({
                       key={device.id}
                       device={device}
                       state={rowState(device)}
-                      replacing={Boolean(replaceSlot)}
+                      singlePick={floating || Boolean(replaceSlot)}
                       favorite={favorites.includes(device.id)}
                       onPick={() => pick(device)}
                       onToggleFavorite={() => toggleFavorite(device.id)}
@@ -316,11 +327,11 @@ export function DevicePicker({
           {sections.length === 0 && <p className="px-4 py-6 text-center text-[12.5px] text-muted">{t("noDevicesMatch", { query })}</p>}
         </div>
 
-        <div className={cx("flex shrink-0 items-center gap-0.5 border-line-soft bg-surface-2 px-1.5 py-1", upward ? "border-b" : "border-t")}>
+        {!floating && <div className={cx("flex shrink-0 items-center gap-0.5 border-line-soft bg-surface-2 px-1.5 py-1", upward ? "border-b" : "border-t")}>
           <FooterLink icon={<SetsIcon size={15} />} label={t("sets")} onClick={() => setView("sets")} />
           <span className="flex-1" />
           <FooterLink icon={<CustomSizeIcon size={15} />} label={t("customSize")} onClick={() => setView("custom")} />
-        </div>
+        </div>}
       </>}
 
       {view === "sets" && <>
@@ -470,16 +481,16 @@ export function pickerName(name: string) {
 // device is new), its name and CSS width (the full name and size in its tooltip). A device on screen (while changing one
 // device, only that device) is tinted and ticked. The star takes the width's
 // place on hover, and stays beside it once the device is starred.
-function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorite }: {
+function DeviceRow({ device, state, singlePick, favorite, onPick, onToggleFavorite }: {
   device: Device;
   state: RowState & { hint: string };
-  replacing: boolean;
+  singlePick: boolean;
   favorite: boolean;
   onPick: () => void;
   onToggleFavorite: () => void;
 }) {
   const { t } = useI18n();
-  const ticked = isSelected(state, replacing);
+  const ticked = isSelected(state, singlePick);
   const favoriteLabel = favorite ? t("removeFavorite", { name: device.name }) : t("addFavorite", { name: device.name });
   const size = `${device.cssViewport.width}×${device.cssViewport.height}`;
   const isNew = device.tags.includes("new");
@@ -496,7 +507,7 @@ function DeviceRow({ device, state, replacing, favorite, onPick, onToggleFavorit
         title={device.name}
         aria-label={[device.name, size, state.hint, isNew && t("newLabel")].filter(Boolean).join(" · ")}
         aria-current={state.current || undefined}
-        aria-pressed={replacing ? undefined : state.added}
+        aria-pressed={singlePick ? undefined : state.added}
         disabled={state.disabled}
         onClick={onPick}
         className={cx(

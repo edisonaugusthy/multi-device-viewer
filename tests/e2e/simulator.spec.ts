@@ -1905,6 +1905,30 @@ test("forgets a removed device's design instead of keeping it in the saved works
   await expect.poll(savedDesigns).toEqual([0, 0]);
 });
 
+test("keeps the TV resize grip at the display corner as the screen grows above its stand", async ({ page }) => {
+  await switchDevice(page, "Neo QLED", '[data-device-pick="samsung-neo-qled-4k-55"]');
+  const slot = page.locator("[data-preview-slot-id]").first();
+  const screen = slot.locator("[data-device-screen]");
+  const grip = slot.locator("[data-resize-handle]");
+  async function checkCorner() {
+    const box = (await screen.boundingBox())!;
+    const handle = (await grip.boundingBox())!;
+    expect(Math.abs(handle.x + handle.width / 2 - box.x - box.width - 8)).toBeLessThan(1);
+    expect(Math.abs(handle.y + handle.height / 2 - box.y - box.height - 8)).toBeLessThan(1);
+    return box.width;
+  }
+  await expect(screen).toBeVisible();
+  const before = await checkCorner();
+  const handle = (await grip.boundingBox())!;
+  const x = handle.x + handle.width / 2, y = handle.y + handle.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + 70, y + 40, { steps: 8 });
+  await page.mouse.up();
+  await expect.poll(async () => (await screen.boundingBox())!.width).toBeGreaterThan(before + 30);
+  await checkCorner();
+});
+
 test("walks the feature tour along the top bar from left to right, then a device, never covering the bar", async ({ page }) => {
   const bar = page.locator("[data-main-toolbar]");
   await bar.getByRole("button", { name: "Settings", exact: true }).click();

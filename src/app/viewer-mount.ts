@@ -6,14 +6,14 @@ import { createRoot } from "react-dom/client";
 import { AppProviders } from "./AppProviders";
 import { SimulatorApp } from "../ui/components/SimulatorApp";
 import { FloatingDevices, FLOATING_PICKER_EVENT } from "../ui/components/FloatingDevices";
-import { getViewerContext, setViewerContext, type ViewerMode, type ViewerRestoreState } from "./viewer-context";
+import { getViewerContext, setViewerContext, type ViewerContext } from "./viewer-context";
 import viewerCss from "../ui/styles/global.css?inline";
 import { registerViewerFonts } from "../ui/fonts";
 
 const OVERLAY_ID = "multi-device-viewer-overlay";
 
 /** Mounts the viewer over the current page and returns its cleanup. */
-export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "workspace", close }: { url: string; sourceTabId?: number; restore?: ViewerRestoreState; mode?: ViewerMode; close: () => void }) {
+export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "workspace", close, openFloating }: Omit<ViewerContext, "root"> & { openFloating: (deviceId: string) => Promise<void> }) {
   const floating = mode === "floating";
   const overlay = document.createElement("div");
   overlay.id = OVERLAY_ID;
@@ -71,11 +71,11 @@ export function mountViewer({ url: pageUrl, sourceTabId, restore, mode = "worksp
   parent.appendChild(overlay);
   removalObserver.observe(parent, { childList: true });
   if (!floating) document.documentElement.style.setProperty("overflow", "hidden", "important");
-  root.render(createElement(AppProviders, null, floating ? createElement(FloatingDevices) : createElement(SimulatorApp)));
+  root.render(createElement(AppProviders, null, floating ? createElement(FloatingDevices) : createElement(SimulatorApp, { openFloating })));
   window.addEventListener("pagehide", close, { once: true });
   return dispose;
 }
 
-export function openFloatingPicker() {
-  getViewerContext()?.root.dispatchEvent(new Event(FLOATING_PICKER_EVENT));
+export function openFloatingPicker(deviceId?: string) {
+  getViewerContext()?.root.dispatchEvent(new CustomEvent(FLOATING_PICKER_EVENT, { detail: deviceId }));
 }

@@ -3,6 +3,7 @@ import type { ViewerMode, ViewerRestoreState } from "../src/app/viewer-context";
 import { defineContentScript } from "wxt/utils/define-content-script";
 
 type ViewerModule = typeof import("../src/app/viewer-mount");
+type ViewerLaunch = { url: string; mode?: ViewerMode; sourceTabId?: number; restore?: ViewerRestoreState };
 let viewer: Promise<ViewerModule> | undefined;
 // The viewer (React, catalogs, styles) ships once as viewer.js and is shared
 // with the simulator page; development builds bundle it directly.
@@ -36,25 +37,13 @@ export default defineContentScript({
             return;
           }
           if (message.type === "OPEN_SIMULATOR") {
-            // Bringing the viewer back after a reload must never close one
-            // that is already open.
-            if (message.restore && overlayLifecycle.active) { sendResponse({ ok: true, active: true }); return; }
-            const mode = message.mode === "floating" ? "floating" : "workspace";
-            void (async () => {
-              if (overlayLifecycle.active && activeMode === "floating" && mode === "floating") {
-                (await loadViewer()).openFloatingPicker();
-                return;
-              }
-              if (overlayLifecycle.active && message.mode && activeMode !== mode) {
-                await overlayLifecycle.close();
-              }
-              await overlayLifecycle.toggle({
-                mode,
-                url: typeof message.url === "string" ? message.url : window.location.href,
-                sourceTabId: typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,
-                restore: message.restore && typeof message.restore === "object" ? message.restore as ViewerRestoreState : undefined,
-              });
-            })().then(() => sendResponse({ ok: true, active: overlayLifecycle.active }))
+            void openViewer({
+              mode: message.mode === "floating" || message.mode === "workspace" ? message.mode : undefined,
+              url: typeof message.url === "string" ? message.url : window.location.href,
+              sourceTabId: typeof message.sourceTabId === "number" ? message.sourceTabId : undefined,
+              restore: message.restore && typeof message.restore === "object" ? message.restore : undefined,
+            }, typeof message.deviceId === "string" ? message.deviceId : undefined)
+              .then(() => sendResponse({ ok: true, active: overlayLifecycle.active }))
               .catch(error => sendResponse({ ok: false, error: String(error) }));
             return true;
           }
@@ -67,7 +56,22 @@ export default defineContentScript({
 });
 
 
-const overlayLifecycle = createOverlayLifecycle<{ url: string; mode: ViewerMode; sourceTabId?: number; restore?: ViewerRestoreState }>({
+async function openViewer(launch: ViewerLaunch, deviceId?: string): Promise<void> {
+  const mode = launch.mode ?? "workspace";
+  if (overlayLifecycle.active) {
+    // A reload can request restoration after the viewer is already back.
+    if (launch.restore) return;
+    if (activeMode === "floating" && mode === "floating") {
+      (await loadViewer()).openFloatingPicker(deviceId);
+      return;
+    }
+    if (launch.mode && activeMode !== mode) await overlayLifecycle.close();
+  }
+  const restore = mode === "floating" && deviceId ? { floatingDevices: [{ deviceId }] } : launch.restore;
+  await overlayLifecycle.toggle({ ...launch, mode, restore });
+}
+
+const overlayLifecycle = createOverlayLifecycle<ViewerLaunch & { mode: ViewerMode }>({
   prepare: async ({ url }) => {
     const [prepared, module] = await Promise.all([chrome.runtime.sendMessage({ type: "MDV_PREVIEW_HOST", url }), loadViewer()]);
     mountViewer = module.mountViewer;
@@ -75,7 +79,11 @@ const overlayLifecycle = createOverlayLifecycle<{ url: string; mode: ViewerMode;
   },
   mount: (launch) => {
     activeMode = launch.mode;
-    return mountViewer!({ ...launch, close: () => { void overlayLifecycle.close().catch(console.error); } });
+    return mountViewer!({
+      ...launch,
+      openFloating: deviceId => openViewer({ mode: "floating", url: window.location.href, sourceTabId: launch.sourceTabId }, deviceId),
+      close: () => { void overlayLifecycle.close().catch(console.error); },
+    });
   },
   release: async () => { await chrome.runtime.sendMessage({ type: "MDV_PREVIEW_CLOSE" }); },
   onState: notifyOverlayState,

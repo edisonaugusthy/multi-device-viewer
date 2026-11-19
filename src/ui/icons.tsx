@@ -49,7 +49,9 @@ export const EyeIcon = icon(<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 1
 export const SettingsIcon = icon(<><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1" /><circle cx="15" cy="6" r="2" /><circle cx="9" cy="12" r="2" /><circle cx="17" cy="18" r="2" /></>);
 export const ChangeDeviceIcon = icon(<><rect x="2" y="4" width="8" height="15" rx="2" /><path d="M14 8h7M18 5l3 3-3 3M21 16h-7M17 13l-3 3 3 3" /></>);
 export const RotateIcon = icon(<><rect x="3" y="11" width="13" height="9" rx="2" /><path d="M8 3h5a5 5 0 0 1 5 5v1" /><path d="m15 7 3 3 3-3" /></>);
+export const FloatingPreviewIcon = icon(<><rect x="2.5" y="4" width="17" height="14" rx="2.5"/><rect x="13" y="9" width="8.5" height="12" rx="2" fill="var(--color-surface)"/></>);
 export const ExpandIcon = icon(<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />);
+export const ResizeGripIcon = icon(<path d="M9 3 3 9M9 6.5 6.5 9" />, { viewBox: "0 0 10 10", strokeWidth: 1.6 });
 export const CollapseIcon = icon(<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />);
 export const OpenInTabIcon = icon(<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6" />);
 export const ChevronDownIcon = icon(<path d="m6 9 6 6 6-6" />, { strokeWidth: 2.2 });

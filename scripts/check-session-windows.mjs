@@ -51,7 +51,8 @@ try {
   const tabId = await worker.evaluate(async url => {
     const slot = ([id, deviceId]) => ({ id, deviceId, url, orientation: "portrait", zoom: 0.58, zoomMode: "fit", reloadToken: 0, showFrame: true });
     await chrome.storage.local.set({
-      responsiveTesterFirstRunComplete: true, mdvLastSeenTour: chrome.runtime.getManifest().version, mdvLastSeenReleaseVersion: chrome.runtime.getManifest().version,
+      mdvUseCount: 4, responsiveTesterFirstRunComplete: true, mdvLastSeenTour: "0.5.1", mdvLastSeenReleaseVersion: "0.5.1",
+      mdvPendingReleaseVersion: chrome.runtime.getManifest().version,
       mdvSimulatorSession: { slots: [["phone", "apple-iphone-18-pro-2026"], ["pixel", "google-pixel-8"]].map(slot), activeSlotId: "phone", display: { scrollSync: true, navigationSync: false, darkMode: false } },
     });
     const [tab] = await chrome.tabs.query({ url });
@@ -101,6 +102,43 @@ try {
   };
   const click = async selector => page.mouse.click(...await center(selector));
   const card = id => `[data-preview-slot-id="${id}"]`;
+  const tourTitle = "#first-run-title";
+  const highlight = '[data-testid="tour-highlight"]';
+  const showTourStep = async (title, target) => {
+    await expect.poll(() => inViewer(tourTitle, "text")).toBe(title);
+    await expect.poll(async () => {
+      const [outline, control] = await Promise.all([bounds(highlight), bounds(`${card("phone")} ${target}`)]);
+      if (!outline || !control) return false;
+      const x = control.x + control.width / 2, y = control.y + control.height / 2;
+      return x > outline.x && x < outline.x + outline.width && y > outline.y && y < outline.y + outline.height;
+    }, { message: `the ${title} tour highlights its toolbar button` }).toBe(true);
+  };
+  const popOutStep = () => showTourStep("Pop Out", '[data-testid="float-button"]');
+  const pictureInPictureStep = () => showTourStep("Picture-in-Picture", '[data-testid="pop-out-button"]');
+  const goToStep = title => click(`[aria-label^="Go to step "][aria-label$=": ${title}"]`);
+  const dismissTour = () => click('[aria-label="Skip feature tour"]');
+
+  // On update, the notes hand over to the new callouts on a supported website.
+  await click('[aria-label="Close release notes"]');
+  await popOutStep();
+  await goToStep("Picture-in-Picture");
+  await pictureInPictureStep();
+  await dismissTour();
+
+  // The same two callouts are part of the full first-run tour.
+  await click('[aria-label="Close viewer"]');
+  await page.locator("#multi-device-viewer-overlay").waitFor({ state: "detached" });
+  await worker.evaluate(async ({ tabId, url }) => {
+    await chrome.storage.local.set({ mdvUseCount: 0, responsiveTesterFirstRunComplete: false, mdvLastSeenTour: null });
+    await chrome.tabs.sendMessage(tabId, { type: "OPEN_SIMULATOR", url, sourceTabId: tabId }, { frameId: 0 });
+  }, { tabId, url: pageUrl });
+  await expect.poll(() => inViewer(tourTitle, "text")).toBe("Workspace, One and All");
+  await goToStep("Pop Out");
+  await popOutStep();
+  await goToStep("Picture-in-Picture");
+  await pictureInPictureStep();
+  await dismissTour();
+
   const frameIn = (owner, id) => owner.frames().find(frame => frame !== owner.mainFrame() && frame.name().endsWith(`-${id}`));
   const probe = async (owner, id) => {
     await expect.poll(() => frameIn(owner, id)?.url() ?? "", { message: `${id} frame` }).toContain(origin);

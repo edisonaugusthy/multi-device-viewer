@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { englishCatalog } from "../../app/i18n";
 import {
   FIRST_RUN_TOUR_STEPS,
   highlightRectForTarget,
@@ -7,25 +8,29 @@ import {
 } from "./first-run-tour";
 
 describe("first-run feature tour", () => {
-  it("walks the top bar from left to right, then a device", () => {
+  it("covers the workspace toolbar and the two device placement buttons", () => {
     expect(FIRST_RUN_TOUR_STEPS.map((step) => step.target)).toEqual([
       '[data-tour="views"]',
       '[data-tour="sync"]',
       '[data-tour="screenshot"]',
       '[data-tour="design"]',
       '[data-tour="issues"]',
+      '[data-testid="float-button"]',
+      '[data-testid="pop-out-button"]',
       "[data-open-floating]",
       "[data-view-only-toggle]",
       '[data-tour="add-viewport"]',
       '[data-tour="device-controls"]',
       '[data-tour="device-controls"] [data-device-menu-toggle]',
     ]);
-    expect(FIRST_RUN_TOUR_STEPS.map((step) => step.title)).toEqual([
+    expect(FIRST_RUN_TOUR_STEPS.map((step) => englishCatalog[step.title])).toEqual([
       "Workspace, One and All",
       "Sync between devices",
       "Capture",
       "Compare with design",
       "Issues",
+      "Pop Out",
+      "Picture-in-Picture",
       "Open floating preview",
       "Focus mode",
       "Add device",
@@ -34,19 +39,21 @@ describe("first-run feature tour", () => {
     ]);
     // One step for each control, so no two steps point at the same one.
     expect(new Set(FIRST_RUN_TOUR_STEPS.map((step) => step.target)).size).toBe(FIRST_RUN_TOUR_STEPS.length);
-    expect(FIRST_RUN_TOUR_STEPS.every((step) => step.text.length <= 70)).toBe(true);
+    expect(FIRST_RUN_TOUR_STEPS.every((step) => englishCatalog[step.text].length <= 132)).toBe(true);
   });
 
   it("shows an updated user only the steps added since their last tour", () => {
-    // Saw the 0.4.0 tour: the bar's new steps and moving devices are new.
-    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.4.0").map(step => step.title)).toEqual(["Workspace, One and All", "Capture", "Compare with design", "Issues", "Open floating preview", "Move and change devices"]);
+    const windowSteps = ["popOutTitle", "pictureInPictureTitle"];
+    const since04 = ["tourViewsTitle", "captureMenu", "compareWithDesign", "issues", ...windowSteps, "openFloatingPreview", "tourMoveTitle"];
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.4.0").map(step => step.title)).toEqual(since04);
     // Saw the 0.3.0 tour: Before & after is new too.
-    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.3.0").map(step => step.title)).toEqual(["Workspace, One and All", "Capture", "Compare with design", "Issues", "Open floating preview", "Move and change devices", "Before & after"]);
-    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.1").map(step => step.target)).toEqual(["[data-open-floating]"]);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.3.0").map(step => step.title)).toEqual([...since04, "visualChecks"]);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.1").map(step => step.title)).toEqual([...windowSteps, "openFloatingPreview"]);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.2").map(step => step.title)).toEqual(windowSteps);
     // Never saw a tour, or a fresh install: every step.
     expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, null)).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
     // Nothing newer than the tour already seen falls back to the whole tour, for a manual replay.
-    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.2")).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
+    expect(tourStepsSince(FIRST_RUN_TOUR_STEPS, "0.5.2.1")).toHaveLength(FIRST_RUN_TOUR_STEPS.length);
   });
 
   it("puts the card below a button in the top bar, so the bar stays visible", () => {

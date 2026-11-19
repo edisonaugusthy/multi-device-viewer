@@ -3,7 +3,7 @@ import type { ReleaseNoteIcon, VersionReleaseNotes } from "../../app/release-not
 import { useI18n } from "../../app/i18n";
 import {
   AdjustIcon, BugIcon, CameraIcon, ChevronRightIcon, CustomSizeIcon, ExpandIcon, EyeIcon, FixPromptIcon, FloatingPreviewIcon, GlobeIcon, GridIcon, GripIcon,
-  LayoutCheckIcon, ListIcon, NavigationSyncIcon, PlayIcon, PointerIcon, RecordIcon, ReloadIcon, ScrollSyncIcon, SearchIcon, SideBySideIcon,
+  LayoutCheckIcon, ListIcon, NavigationSyncIcon, PlayIcon, PointerIcon, PopOutIcon, RecordIcon, ReloadIcon, ScrollSyncIcon, SearchIcon, SideBySideIcon,
   TextToolIcon, WhatsNewIcon, WorkspaceIcon,
 } from "../icons";
 import { Dialog } from "./Dialog";
@@ -12,6 +12,7 @@ import { cx, focusRing } from "./ui";
 const icons: Record<ReleaseNoteIcon, ReactNode> = {
   workspace: <WorkspaceIcon size={18} />,
   floating: <FloatingPreviewIcon size={18} />,
+  pictureInPicture: <PopOutIcon size={18} />,
   drag: <GripIcon />,
   frames: <WorkspaceIcon size={15} />,
   step: <ChevronRightIcon size={15} />,

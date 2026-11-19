@@ -7,7 +7,7 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
-import { useI18n, type TranslationKey } from "../../app/i18n";
+import { useI18n } from "../../app/i18n";
 import { FEATURES } from "../../app/feature-flags";
 import {
   FIRST_RUN_TOUR_STEPS,
@@ -15,45 +15,31 @@ import {
   tourStepsSince,
   positionCard,
   type HighlightRect,
+  type ProductTourStep,
 } from "./first-run-tour";
 
-const TOUR_TRANSLATION_KEYS: Array<{ title: TranslationKey; text: TranslationKey }> = [
-  { title: "tourViewsTitle", text: "tourViewsText" },
-  { title: "syncBetweenDevices", text: "tourSyncText" },
-  { title: "captureMenu", text: "tourCaptureText" },
-  { title: "compareWithDesign", text: "tipCompare" },
-  { title: "issues", text: "tourIssuesText" },
-  { title: "openFloatingPreview", text: "tourFloatingText" },
-  { title: "viewMode", text: "tourFocusText" },
-  { title: "addDevice", text: "tourAddDeviceText" },
-  { title: "tourMoveTitle", text: "tourMoveResizeText" },
-  { title: "visualChecks", text: "tourBeforeAfterText" },
-];
-
-// Steps whose feature is held back are left out, with their translation keys.
-const ALL_TOUR_STEPS = FIRST_RUN_TOUR_STEPS
-  .map((step, index) => ({ ...step, keys: TOUR_TRANSLATION_KEYS[index] }))
-  .filter(step => FEATURES.visualChecks || step.keys.title !== "visualChecks");
+const ALL_TOUR_STEPS = FIRST_RUN_TOUR_STEPS.filter(step => FEATURES.visualChecks || step.title !== "visualChecks");
 
 /** `seenTour` is the tour revision this person saw last: an update shows only the steps added since. */
-export function FirstRunGuide({ onClose, seenTour = null }: { onClose: () => void; seenTour?: string | null }) {
+export function FirstRunGuide({ onClose, seenTour = null, floating, pictureInPicture }: {
+  onClose: () => void;
+  seenTour?: string | null;
+  floating: boolean;
+  pictureInPicture: boolean;
+}) {
+  const availability = { floating, pictureInPicture };
   const [steps] = useState(() => tourStepsSince(ALL_TOUR_STEPS, seenTour)
+    .filter(step => !step.requires || availability[step.requires])
     .filter(step => !step.activateTarget || (step.target && getViewerRoot().querySelector(step.target))));
   useEffect(() => { if (!steps.length) onClose(); }, [steps, onClose]);
   return steps.length ? <TourCards steps={steps} onClose={onClose} /> : null;
 }
 
-function TourCards({ steps: TOUR_STEPS, onClose }: { steps: typeof ALL_TOUR_STEPS; onClose: () => void }) {
-  const { locale, t } = useI18n();
+function TourCards({ steps: TOUR_STEPS, onClose }: { steps: ProductTourStep[]; onClose: () => void }) {
+  const { t } = useI18n();
   const [stepIndex, setStepIndex] = useState(0);
   const [highlight, setHighlight] = useState<HighlightRect | null>(null);
-  const baseStep = TOUR_STEPS[stepIndex];
-  const stepKeys = baseStep.keys;
-  const step = {
-    ...baseStep,
-    title: locale === "en" ? baseStep.title : t(stepKeys.title),
-    text: locale === "en" ? baseStep.text : t(stepKeys.text),
-  };
+  const step = TOUR_STEPS[stepIndex];
   const finalStep = stepIndex === TOUR_STEPS.length - 1;
 
   const findTarget = useCallback(() => {
@@ -157,7 +143,7 @@ function TourCards({ steps: TOUR_STEPS, onClose }: { steps: typeof ALL_TOUR_STEP
         />
       )}
       {highlight && step.activateTarget && (
-        <button type="button" aria-label={step.title} className={cx("fixed cursor-pointer rounded-xl bg-transparent", focusRing)}
+        <button type="button" aria-label={t(step.title)} className={cx("fixed cursor-pointer rounded-xl bg-transparent", focusRing)}
           style={highlight} onClick={tryControl} />
       )}
 
@@ -166,12 +152,12 @@ function TourCards({ steps: TOUR_STEPS, onClose }: { steps: typeof ALL_TOUR_STEP
         style={cardStyle}
       >
         <div className="flex items-start gap-2">
-          <h2 id="first-run-title" className="min-w-0 flex-1 text-[15px] font-semibold leading-6 tracking-tight">{step.title}</h2>
+          <h2 id="first-run-title" className="min-w-0 flex-1 text-[15px] font-semibold leading-6 tracking-tight">{t(step.title)}</h2>
           <IconButton size="sm" label={t("skipFeatureTour")} onClick={onClose} className="-me-2 -mt-1">
             <CloseIcon size={16} />
           </IconButton>
         </div>
-        <p className="mt-1 text-[13px] leading-relaxed text-ink-2">{step.text}</p>
+        <p className="mt-1 text-[13px] leading-relaxed text-ink-2">{t(step.text)}</p>
 
         {/* A long button label moves the buttons under the dots instead of wrapping. */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-x-2 gap-y-3">
@@ -183,7 +169,7 @@ function TourCards({ steps: TOUR_STEPS, onClose }: { steps: typeof ALL_TOUR_STEP
                 onClick={() => setStepIndex(index)}
                 aria-label={t("goToTourStep", {
                   current: index + 1,
-                  title: locale === "en" ? item.title : t(item.keys.title),
+                  title: t(item.title),
                 })}
                 aria-current={index === stepIndex ? "step" : undefined}
                 className={cx("h-1.5 rounded-full transition-all", index === stepIndex ? "w-5 bg-accent" : "w-1.5 bg-line hover:bg-faint", focusRing)}

@@ -1291,7 +1291,8 @@ export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: strin
       )}
       {showPermissions && <PermissionsInfoModal onClose={() => setShowPermissions(false)} />}
       {showHelp && <HelpModal review={reviewPrompt} onClose={() => setShowHelp(false)} />}
-      {showFirstRun && <FirstRunGuide onClose={finishFirstRun} seenTour={tourSince} />}
+      {showFirstRun && <FirstRunGuide onClose={finishFirstRun} seenTour={tourSince}
+        floating={canFloat} pictureInPicture={canFloat && popOut.supported} />}
       {releaseNotes && <ReleaseNotesModal release={releaseNotes} onClose={closeReleaseNotes} />}
       {(reviewPrompt.visible || reviewPromptPreview) && (
         <ReviewPromptModal

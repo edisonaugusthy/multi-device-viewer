@@ -1,9 +1,11 @@
 import type { CSSProperties } from "react";
+import type { TranslationKey } from "../../app/i18n";
 
 export interface ProductTourStep {
-  title: string;
-  text: string;
+  title: TranslationKey;
+  text: TranslationKey;
   target?: string;
+  requires?: "floating" | "pictureInPicture";
   /** Let the user try this control directly from its highlight. */
   activateTarget?: boolean;
   /** The tour revision that introduced this step; the first tour's steps have none. */
@@ -19,19 +21,19 @@ export interface HighlightRect {
 
 export type TargetRect = HighlightRect;
 
-// The top bar from left to right, then a device: one step for each control,
-// saying everything it holds.
 export const FIRST_RUN_TOUR_STEPS: ProductTourStep[] = [
-  { title: "Workspace, One and All", text: "See your devices together, one at a time, or every device at once.", target: '[data-tour="views"]', since: "0.5.0" },
-  { title: "Sync between devices", text: "Scroll or open a page once, and every device follows.", target: '[data-tour="sync"]' },
-  { title: "Capture", text: "Screenshots, video, recorded flows and tracked changes, all here.", target: '[data-tour="screenshot"]', since: "0.5.0" },
-  { title: "Compare with design", text: "Check a device against a design image, side by side or overlaid.", target: '[data-tour="design"]', since: "0.5.0" },
-  { title: "Issues", text: "Errors, sideways scrolling and a fix prompt for your AI coding tool.", target: '[data-tour="issues"]', since: "0.5.0" },
-  { title: "Open floating preview", text: "Click this icon to choose a device and float it over your page.", target: "[data-open-floating]", since: "0.5.2", activateTarget: true },
-  { title: "Focus mode", text: "Hide all controls for clean reviews. Press Esc to exit.", target: "[data-view-only-toggle]" },
-  { title: "Add device", text: "Add up to four devices to compare side by side.", target: '[data-tour="add-viewport"]' },
-  { title: "Move and change devices", text: "Drag a device anywhere, resize it from its corner, or switch it.", target: '[data-tour="device-controls"]', since: "0.5.0" },
-  { title: "Before & after", text: "Save a “before” picture in the device menu, then see what changed.", target: '[data-tour="device-controls"] [data-device-menu-toggle]', since: "0.4.0" },
+  { title: "tourViewsTitle", text: "tourViewsText", target: '[data-tour="views"]', since: "0.5.0" },
+  { title: "syncBetweenDevices", text: "tourSyncText", target: '[data-tour="sync"]' },
+  { title: "captureMenu", text: "tourCaptureText", target: '[data-tour="screenshot"]', since: "0.5.0" },
+  { title: "compareWithDesign", text: "tipCompare", target: '[data-tour="design"]', since: "0.5.0" },
+  { title: "issues", text: "tourIssuesText", target: '[data-tour="issues"]', since: "0.5.0" },
+  { title: "popOutTitle", text: "popOutDescription", target: '[data-testid="float-button"]', since: "0.5.2.1", requires: "floating" },
+  { title: "pictureInPictureTitle", text: "pictureInPictureDescription", target: '[data-testid="pop-out-button"]', since: "0.5.2.1", requires: "pictureInPicture" },
+  { title: "openFloatingPreview", text: "tourFloatingText", target: "[data-open-floating]", since: "0.5.2", activateTarget: true },
+  { title: "viewMode", text: "tourFocusText", target: "[data-view-only-toggle]" },
+  { title: "addDevice", text: "tourAddDeviceText", target: '[data-tour="add-viewport"]' },
+  { title: "tourMoveTitle", text: "tourMoveResizeText", target: '[data-tour="device-controls"]', since: "0.5.0" },
+  { title: "visualChecks", text: "tourBeforeAfterText", target: '[data-tour="device-controls"] [data-device-menu-toggle]', since: "0.4.0" },
 ];
 
 const versionParts = (version: string) => version.split(".").map(part => Number.parseInt(part, 10) || 0);

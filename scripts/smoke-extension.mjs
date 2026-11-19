@@ -434,7 +434,13 @@ try {
   await simulator.locator("[data-preview-slot-id]").first().waitFor();
   assert.equal(await simulator.locator("[data-header-coverage]").count(), 0);
   const notes = simulator.getByRole("dialog").filter({ has: simulator.getByRole("heading", { name: "Floating device previews" }) });
+  await expect(notes.getByRole("heading", { name: "Pop Out", exact: true })).toBeVisible();
+  await expect(notes.getByRole("heading", { name: "Picture-in-Picture", exact: true })).toBeVisible();
   await notes.getByRole("button", { name: "Start testing" }).click();
+  const popOutTour = simulator.getByRole("dialog", { name: "Pop Out", exact: true });
+  await expect(popOutTour.getByTestId("tour-highlight")).toBeVisible();
+  await expect(popOutTour.getByRole("button", { name: /Go to step .*Picture-in-Picture/ })).toHaveCount(0);
+  await popOutTour.getByRole("button", { name: "Show me" }).click();
   const tour = simulator.getByRole("dialog", { name: "Open floating preview" });
   await expect(tour.getByTestId("tour-highlight")).toBeVisible();
   const pickerTitle = "Choose a device for floating preview";
@@ -446,8 +452,8 @@ try {
   await simulator.keyboard.press("Escape");
   await simulator.reload();
   await expect(simulator.locator("[data-open-floating]")).toBeVisible();
-  await expect(tour).toHaveCount(0);
-  assert.equal(await worker.evaluate(async () => (await chrome.storage.local.get("mdvLastSeenTour")).mdvLastSeenTour), manifest.version);
+  await expect(simulator.locator("#first-run-title")).toHaveCount(0);
+  assert.equal(await worker.evaluate(async () => (await chrome.storage.local.get("mdvLastSeenTour")).mdvLastSeenTour), "0.5.2.1");
   // Only the standalone launch needs a worker to find or create a website tab.
   await simulator.evaluate(() => {
     const send = chrome.runtime.sendMessage.bind(chrome.runtime);

@@ -38,8 +38,12 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice(base)).toEqual({ kind: "none" });
   });
 
-  it("features only floating device previews in What's new", () => {
+  it("shows the revised tour even when the current release notes were already seen", () => {
+    expect(decideStartupNotice({ ...base, lastSeenTour: "0.5.2" })).toEqual({ kind: "tour" });
+  });
+
+  it("features floating device previews and both placements in What's new", () => {
     expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseFloatingTitle", description: "releaseFloatingDescription", icon: "floating" });
-    expect(CURRENT_RELEASE_NOTES.sections).toEqual([]);
+    expect(CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes.map(note => note.title))).toEqual(["popOutTitle", "pictureInPictureTitle"]);
   });
 });

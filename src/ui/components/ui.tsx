@@ -305,10 +305,10 @@ export function Switch({ checked, onChange, label, size = "md" }: {
       )}
     >
       <span className={cx(
-        "absolute top-0.5 rounded-full shadow-lift transition-[left]",
+        "absolute top-0.5 rounded-full shadow-lift transition-[inset-inline-start]",
         checked ? "bg-surface" : "bg-white",
         size === "sm" ? "size-3" : "size-[18px]",
-        checked ? (size === "sm" ? "left-[14px]" : "left-[16px]") : "left-0.5",
+        checked ? (size === "sm" ? "start-[14px]" : "start-[16px]") : "start-0.5",
       )} />
     </button>
   );

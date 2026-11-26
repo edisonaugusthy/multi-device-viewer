@@ -1,6 +1,7 @@
 import type { PreviewIdentities } from "../domain/simulator/preview-identity";
 import type { BrowserBrands } from "../domain/simulator/preview-emulation";
-import { describeHeaders, identityHeaders, PREVIEW_RULE_BASE, previewDocumentHeaders, previewHost, previewRule, previewHeaderRule, ruleTabs } from "../domain/simulator/preview-rules";
+import { describeHeaders, identityHeaders, isPreviewFilesRule, PREVIEW_RULE_BASE, previewDocumentHeaders, previewFilesRule, previewHost, previewRule, previewHeaderRule, ruleTabs } from "../domain/simulator/preview-rules";
+import { isLocalDevelopmentHost } from "../domain/simulator/local-site";
 import { previewRequestFilter } from "../domain/simulator/preview-request";
 
 /** Session rules survive worker suspension; the browser clears them on restart/update. */
@@ -29,13 +30,23 @@ export function createPreviewSessions() {
       const nextId = () => { let id = PREVIEW_RULE_BASE; while (used.has(id)) id++; used.add(id); return id; };
       const removeRuleIds: number[] = [];
       const addRules: chrome.declarativeNetRequest.Rule[] = [];
-      const embedding = own.filter(rule => !rule.condition.urlFilter);
+      const embedding = own.filter(rule => !rule.condition.urlFilter && !isPreviewFilesRule(rule));
       const existingEmbedding = embedding[0];
       // Also replaces legacy split rules when an already-open viewer upgrades.
       const currentEmbedding = describeHeaders(existingEmbedding?.action.requestHeaders) === describeHeaders(previewDocumentHeaders);
       if (!known || embedding.length !== 1 || !currentEmbedding || !sameTabs(existingEmbedding)) {
         removeRuleIds.push(...embedding.map(rule => rule.id));
         addRules.push(previewRule(existingEmbedding?.id ?? nextId(), tabs, [...domains, domain]));
+      }
+      // Local sites also have their files checked again on every load.
+      const files = own.filter(isPreviewFilesRule);
+      const local = [...domains, domain].filter(isLocalDevelopmentHost);
+      const wanted = local.length ? previewFilesRule(files[0]?.id ?? nextId(), tabs, local) : undefined;
+      const describe = (rule: chrome.declarativeNetRequest.Rule | undefined) => rule && [rule.condition.tabIds, rule.condition.requestDomains,
+        describeHeaders(rule.action.requestHeaders), describeHeaders(rule.action.responseHeaders)].join("\n");
+      if (files.length !== (wanted ? 1 : 0) || describe(files[0]) !== describe(wanted)) {
+        removeRuleIds.push(...files.map(rule => rule.id));
+        if (wanted) addRules.push(wanted);
       }
       const named = new Set(Object.keys(identities ?? {}).map(previewRequestFilter));
       for (const [name, identity] of Object.entries(identities ?? {})) {
@@ -50,7 +61,7 @@ export function createPreviewSessions() {
         removeRuleIds.push(rule.id);
         addRules.push({ ...rule, condition: { ...rule.condition, tabIds: tabs } });
       }
-      if (own.length - removeRuleIds.length + addRules.length > 301) throw new Error("Close and reopen Mobile View before adding more preview identities.");
+      if (own.length - removeRuleIds.length + addRules.length > 302) throw new Error("Close and reopen Mobile View before adding more preview identities.");
       if (addRules.length || removeRuleIds.length) await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds, addRules });
     }),
     close: (tabId: number) => serial(async () => {

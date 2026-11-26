@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPreviewSessions } from "./preview-sessions";
-import { identityHeaders, previewDocumentHeaders, previewRule } from "../domain/simulator/preview-rules";
+import { identityHeaders, isPreviewFilesRule, previewDocumentHeaders, previewRule } from "../domain/simulator/preview-rules";
 import { previewRequestFilter } from "../domain/simulator/preview-request";
 import type { PreviewIdentity } from "../domain/simulator/preview-identity";
 import type { BrowserBrands } from "../domain/simulator/preview-emulation";
@@ -63,6 +63,29 @@ describe("preview session rules", () => {
     await createPreviewSessions().prepare(7, "https://example.com", undefined, brands);
     expect(browser.ofTab(7)).toHaveLength(1);
     expect(browser.ofTab(7)[0].action.requestHeaders).toEqual(previewDocumentHeaders);
+  });
+  it("checks a local site's files again on every load, and leaves public sites to Chrome's cache", async () => {
+    const sessions = createPreviewSessions();
+    await sessions.prepare(7, "https://example.com/", { "mdv-preview-a": iphone }, brands);
+    expect(browser.rules().filter(isPreviewFilesRule)).toEqual([]);
+    await sessions.prepare(7, "http://localhost:3000/", { "mdv-preview-a": iphone }, brands);
+    await sessions.prepare(7, "http://192.168.1.20:8080/", { "mdv-preview-a": iphone }, brands);
+    await sessions.prepare(7, "http://[::1]:5173/", { "mdv-preview-a": iphone }, brands);
+    const [files, ...others] = browser.rules().filter(isPreviewFilesRule);
+    expect(others).toEqual([]);
+    expect(files.condition).toEqual({ tabIds: [7], requestDomains: ["192.168.1.20", "[::1]", "localhost"], resourceTypes: ["stylesheet", "script", "image", "font", "media"] });
+    expect(files.action.requestHeaders).toEqual(previewDocumentHeaders);
+    expect(files.action.responseHeaders).toEqual([{ header: "cache-control", operation: "set", value: "no-cache" }]);
+    // The embedding rule still covers every host, and an unchanged preparation writes nothing.
+    expect(browser.rules().find(rule => !rule.condition.urlFilter && !isPreviewFilesRule(rule))?.condition.requestDomains).toEqual(["192.168.1.20", "[::1]", "example.com", "localhost"]);
+    const writes = browser.updateSessionRules.mock.calls.length;
+    await sessions.prepare(7, "http://localhost:3000/other", { "mdv-preview-a": iphone }, brands);
+    expect(browser.updateSessionRules).toHaveBeenCalledTimes(writes);
+    // A pop-out window's tab gets the same rule; closing the website tab removes it.
+    await sessions.prepare(7, "http://localhost:3000/", { "mdv-preview-a": iphone }, brands, [12]);
+    expect(browser.rules().filter(isPreviewFilesRule).map(rule => rule.condition.tabIds)).toEqual([[7, 12]]);
+    await sessions.close(7);
+    expect(browser.rules()).toEqual([]);
   });
   it("surfaces rule installation failure and allows a later retry", async () => {
     browser.updateSessionRules.mockRejectedValueOnce(new Error("quota"));

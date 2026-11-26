@@ -51,6 +51,26 @@ export function previewRule(id: number, tabId: number | number[], domains: strin
   };
 }
 
+/** On a local site, a page's stylesheets, scripts, images, fonts and media are checked
+ * with the server on every load too. Chrome otherwise reuses a copy it guesses
+ * is still good, and a reload after a build shows the old styles. Public sites
+ * keep Chrome's own caching. The response change stops a copy held in memory
+ * from being reused unchecked.
+ */
+const FILE_TYPES = ["stylesheet", "script", "image", "font", "media"] as chrome.declarativeNetRequest.ResourceType[];
+export const isPreviewFilesRule = (rule: chrome.declarativeNetRequest.Rule) => !rule.condition.urlFilter && Boolean(rule.condition.resourceTypes?.includes(FILE_TYPES[0]));
+export function previewFilesRule(id: number, tabId: number | number[], domains: string[]): chrome.declarativeNetRequest.Rule {
+  return {
+    id, priority: 1,
+    condition: { tabIds: ruleTabs(tabId), requestDomains: [...new Set(domains)].sort(), resourceTypes: FILE_TYPES },
+    action: {
+      type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType,
+      requestHeaders: previewDocumentHeaders,
+      responseHeaders: [set("cache-control", "no-cache")],
+    },
+  };
+}
+
 /** Only tagged document and fetch/XHR requests in this tab get this device's headers.
  * API hosts may differ from the document host. Untagged assets are deliberately untouched.
  */

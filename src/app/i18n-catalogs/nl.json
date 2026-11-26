@@ -500,6 +500,8 @@
   "tipDeviceView": "Toont elke pagina in een realistisch apparaatframe.",
   "tipFreeView": "Toont alleen de pagina op exacte grootte, zonder frame.",
   "tipReloadAll": "Laadt elk apparaat opnieuw op de pagina die het toont.",
+  "autoReload": "Automatisch opnieuw laden",
+  "tipAutoReload": "Laadt je apparaten opnieuw wanneer de bestanden van een lokale site veranderen, bijvoorbeeld na een build.",
   "tipCompare": "Vergelijk een apparaat met een ontwerpafbeelding, naast elkaar of als overlay.",
   "tipScreenshot": "Legt alle apparaten vast; markeer, kopieer of download daarna de afbeelding.",
   "tipFixPrompt": "Beschrijf een layoutfout en kopieer een prompt voor je AI-programmeerassistent.",

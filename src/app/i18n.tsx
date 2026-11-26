@@ -576,6 +576,8 @@ const en = {
   tipDeviceView: "Show each page inside a realistic device frame.",
   tipFreeView: "Show only the page at its exact size, without a frame.",
   tipReloadAll: "Reload every device on the page it is showing.",
+  autoReload: "Auto reload",
+  tipAutoReload: "Reload your devices when a local site's files change, such as after a build.",
   tipCompare: "Check a device against a design image, side by side or overlaid.",
   tipScreenshot: "Capture all devices, then mark up, copy or download the image.",
   tipFixPrompt: "Describe a layout bug and copy a prompt for your AI coding assistant.",

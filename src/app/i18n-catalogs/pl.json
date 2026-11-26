@@ -500,6 +500,8 @@
   "tipDeviceView": "Wyświetlaj każdą stronę w realistycznej ramce urządzenia.",
   "tipFreeView": "Wyświetlaj tylko stronę w dokładnym rozmiarze, bez ramki.",
   "tipReloadAll": "Odśwież każde urządzenie na wyświetlanej przez nie stronie.",
+  "autoReload": "Automatyczne odświeżanie",
+  "tipAutoReload": "Odświeża urządzenia, gdy zmienią się pliki lokalnej witryny, na przykład po zbudowaniu projektu.",
   "tipCompare": "Porównaj urządzenie z obrazem projektu – obok siebie lub jako nakładkę.",
   "tipScreenshot": "Przechwyć wszystkie urządzenia, a potem dodaj adnotacje, skopiuj lub pobierz obraz.",
   "tipFixPrompt": "Opisz błąd układu i skopiuj prompt dla swojego asystenta AI do kodowania.",

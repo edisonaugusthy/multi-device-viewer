@@ -500,6 +500,8 @@
   "tipDeviceView": "Mostra cada página dentro de uma moldura de dispositivo realista.",
   "tipFreeView": "Mostra só a página no tamanho exato, sem moldura.",
   "tipReloadAll": "Recarrega cada dispositivo na página que ele mostra.",
+  "autoReload": "Recarregar automaticamente",
+  "tipAutoReload": "Recarrega seus dispositivos quando os arquivos de um site local mudam, como depois de um build.",
   "tipCompare": "Compare um dispositivo com uma imagem de design, lado a lado ou sobreposta.",
   "tipScreenshot": "Captura todos os dispositivos e depois anote, copie ou baixe a imagem.",
   "tipFixPrompt": "Descreva um bug de layout e copie um prompt para seu assistente de programação com IA.",

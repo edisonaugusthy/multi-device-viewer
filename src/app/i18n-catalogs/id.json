@@ -500,6 +500,8 @@
   "tipDeviceView": "Tampilkan setiap halaman di dalam bingkai perangkat yang realistis.",
   "tipFreeView": "Tampilkan halaman saja dengan ukuran persisnya, tanpa bingkai.",
   "tipReloadAll": "Muat ulang setiap perangkat pada halaman yang sedang ditampilkannya.",
+  "autoReload": "Muat ulang otomatis",
+  "tipAutoReload": "Memuat ulang perangkat Anda saat file situs lokal berubah, misalnya setelah build.",
   "tipCompare": "Periksa perangkat terhadap gambar desain, berdampingan atau ditumpuk.",
   "tipScreenshot": "Ambil screenshot semua perangkat, lalu beri tanda, salin, atau download gambarnya.",
   "tipFixPrompt": "Jelaskan bug tata letak dan salin prompt untuk asisten coding AI Anda.",

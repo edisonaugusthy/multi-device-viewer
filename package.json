@@ -19,7 +19,7 @@
     "validate:chrome-zip": "node scripts/validate-chrome-extension-package.mjs",
     "validate:artwork-privacy": "node scripts/check-artwork-privacy.mjs",
     "test:artwork-privacy": "node --test scripts/artwork-privacy.test.mjs",
-    "test:extension": "node scripts/smoke-extension.mjs && node scripts/check-session-windows.mjs",
+    "test:extension": "node scripts/smoke-extension.mjs && node scripts/check-session-windows.mjs && node scripts/check-auto-reload.mjs",
     "stand-in:mockups": "node scripts/stand-in-mockups.mjs",
     "serve:site": "node scripts/site/serve.mjs",
     "fetch:store-data": "node scripts/site/fetch-store.mjs",

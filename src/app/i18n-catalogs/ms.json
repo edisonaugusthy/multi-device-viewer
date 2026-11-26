@@ -500,6 +500,8 @@
   "tipDeviceView": "Tunjukkan setiap halaman di dalam bingkai peranti yang realistik.",
   "tipFreeView": "Tunjukkan halaman sahaja pada saiz tepatnya, tanpa bingkai.",
   "tipReloadAll": "Muat semula setiap peranti pada halaman yang sedang dipaparkannya.",
+  "autoReload": "Muat semula automatik",
+  "tipAutoReload": "Memuat semula peranti anda apabila fail laman tempatan berubah, contohnya selepas build.",
   "tipCompare": "Semak peranti berbanding imej reka bentuk, sebelah-menyebelah atau bertindan.",
   "tipScreenshot": "Tangkap semua peranti, kemudian tanda, salin atau muat turun imej.",
   "tipFixPrompt": "Huraikan pepijat reka letak dan salin gesaan untuk pembantu pengekodan AI anda.",

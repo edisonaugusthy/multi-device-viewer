@@ -5,6 +5,7 @@ import { useI18n } from "../../app/i18n";
 import { useDeviceSets } from "../../app/useDeviceSets";
 import { getViewerContext } from "../../app/viewer-context";
 import { usePopOut } from "../../app/popout";
+import { useAutoReload, useAutoReloadSetting } from "../../app/useAutoReload";
 import { useFloatingPlacement } from "../hooks/useFloatingPlacement";
 import { defaultDeviceIds } from "../../domain/device/device-catalog";
 import { supportsOrientation, toLandscapeAwareSize } from "../../domain/device/device-service";
@@ -31,9 +32,12 @@ export function FloatingDevices() {
   const viewer = getViewerContext()!;
   const { t } = useI18n();
   const { findDevice, removeCustomDevice } = useDeviceCatalog();
-  const { slots, display, activeSlotId, addSlot, removeSlot, setSlotDevice, setActiveSlot, applyDevicePreset } = useSimulator();
+  const { slots, display, activeSlotId, addSlot, removeSlot, setSlotDevice, setActiveSlot, applyDevicePreset, getSlotUrl, reloadAllSlots } = useSimulator();
   const sets = useDeviceSets(t);
   const popOut = usePopOut();
+  // Chosen in the workspace's settings; floating devices have no settings of their own.
+  const [autoReload] = useAutoReloadSetting();
+  useAutoReload({ enabled: autoReload, awake: popOut.slotId !== null, pages: () => slots.map(slot => getSlotUrl(slot.id)), onChange: reloadAllSlots });
   const placement = useFloatingPlacement(viewer.placement);
   const choosePlacement = placement?.onChange;
   const onTop = placement?.value === "top";

@@ -500,6 +500,8 @@
   "tipDeviceView": "Affiche chaque page dans un cadre d’appareil réaliste.",
   "tipFreeView": "Affiche uniquement la page à sa taille exacte, sans cadre.",
   "tipReloadAll": "Recharge chaque appareil sur la page affichée.",
+  "autoReload": "Rechargement automatique",
+  "tipAutoReload": "Recharge vos appareils quand les fichiers d’un site local changent, par exemple après une compilation.",
   "tipCompare": "Compare un appareil à une image de maquette, côte à côte ou en superposition.",
   "tipScreenshot": "Capture tous les appareils, puis annotez, copiez ou téléchargez l’image.",
   "tipFixPrompt": "Décrivez un bug de mise en page et copiez un prompt pour votre assistant de code IA.",

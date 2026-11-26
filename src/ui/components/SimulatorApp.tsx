@@ -63,6 +63,7 @@ import { cx, HoverZone } from "./ui";
 import { useStableCallback } from "../hooks/useStableCallback";
 import { useFloatingPlacement } from "../hooks/useFloatingPlacement";
 import { usePopOut } from "../../app/popout";
+import { useAutoReload, useAutoReloadSetting } from "../../app/useAutoReload";
 import { ViewModeBar } from "./ViewModeBar";
 import { WorkspaceDock, type DockMenu } from "./WorkspaceDock";
 import { ProblemsPanel } from "./ProblemsPanel";
@@ -832,6 +833,13 @@ export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: strin
   // app. The window has to open in the click itself; the floating view that
   // replaces the workspace then shows the device in it.
   const popOut = usePopOut();
+  const [autoReload, setAutoReload] = useAutoReloadSetting();
+  useAutoReload({
+    enabled: autoReload, paused: capturing || recording || flowRecording || flowStatus?.tone === "neutral" || flowStatus?.tone === "warning", awake: popOut.slotId !== null,
+    pages: () => [...slots.map(slot => getSlotUrl(slot.id)), ...(allDevicesUrl ? [allDevicesUrl] : [])],
+    // The workspace's devices stay loaded behind All devices, so both are brought up to date.
+    onChange: () => { reloadAllSlots(); if (galleryOpen) galleryBar?.onReload(); },
+  });
   const floatingPlacement = useFloatingPlacement();
   const openFloatingDevice = useStableCallback((deviceId: string) => {
     if (floatingPlacement?.value === "top") popOut.openDevice(deviceId);
@@ -1207,6 +1215,8 @@ export function SimulatorApp({ openFloating }: { openFloating?: (deviceId: strin
         dark={dark}
         browserBar={browserBar}
         freeView={display.previewStyle === "free"}
+        autoReload={autoReload}
+        onAutoReloadChange={setAutoReload}
         onClose={closePopover}
         onThemeChange={(nextDark) => updateDisplay((current) => ({ ...current, darkMode: nextDark }))}
         onBrowserBarChange={changeBrowserBar}

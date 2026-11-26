@@ -500,6 +500,8 @@
   "tipDeviceView": "Mostra ogni pagina in una cornice realistica del dispositivo.",
   "tipFreeView": "Mostra solo la pagina alla dimensione esatta, senza cornice.",
   "tipReloadAll": "Ricarica ogni dispositivo sulla pagina che mostra.",
+  "autoReload": "Ricarica automatica",
+  "tipAutoReload": "Ricarica i tuoi dispositivi quando cambiano i file di un sito locale, ad esempio dopo una build.",
   "tipCompare": "Confronta un dispositivo con un'immagine di design, affiancata o sovrapposta.",
   "tipScreenshot": "Cattura tutti i dispositivi, poi annota, copia o scarica l'immagine.",
   "tipFixPrompt": "Descrivi un bug di layout e copia un prompt per il tuo assistente di programmazione IA.",

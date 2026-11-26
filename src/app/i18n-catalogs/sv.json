@@ -500,6 +500,8 @@
   "tipDeviceView": "Visa varje sida i en realistisk enhetsram.",
   "tipFreeView": "Visa bara sidan i exakt storlek, utan ram.",
   "tipReloadAll": "Läs in varje enhet igen på sidan som den visar.",
+  "autoReload": "Läs in igen automatiskt",
+  "tipAutoReload": "Läser in dina enheter igen när filerna på en lokal webbplats ändras, till exempel efter ett bygge.",
   "tipCompare": "Jämför en enhet med en designbild, sida vid sida eller som överlägg.",
   "tipScreenshot": "Ta en skärmbild av alla enheter och anteckna, kopiera eller ladda ned bilden.",
   "tipFixPrompt": "Beskriv ett layoutfel och kopiera en prompt till din AI-kodassistent.",

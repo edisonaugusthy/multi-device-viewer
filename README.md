@@ -58,6 +58,9 @@ Phones and tablets rotate where the real device does, and you can add custom vie
 - Each device's toolbar steps to the previous or next device of the same type (for example, iPhone to iPhone) without opening the picker.
 - Resizable device columns (double-click a handle to even them out), light and dark themes, and local session restoration.
 - Reload-all control with clear loading feedback.
+- **Reloads show the files as they are now.** Every preview page is checked with its server on each load. On a local site (`localhost`, `127.x`, private network addresses, and `.localhost`, `.local` and `.test` names) its stylesheets, scripts, images, fonts and media are checked too, so a reload after a build shows the rebuilt files, not a copy Chrome kept. Public sites keep Chrome's normal caching for those files.
+- **Auto reload** (Settings, off until switched on, remembered across tabs): while the viewer is open on a local site, it asks the site about once a second for each previewed page and the same-origin stylesheets and scripts that page names, and reloads every device once the files have stopped changing, so a build written in several steps is shown once. A server that sends `ETag` or `Last-Modified` answers an unchanged file with an empty `304`; a file without them is compared by its content, less often the larger it is. Checks stop while the tab is hidden (unless a device is in its on-top window), during a screenshot, a video or flow recording or a flow replay, and when the viewer closes; a build made meanwhile is shown when they resume. Floating devices follow the same switch. Public sites are never asked, and a redirect is not followed.
+- **What counts as a build:** a page that is a file on disk (it has a `Last-Modified` date) counts by its own content. A page the server writes for each request also changes with a cart, a login or a clock, so it is followed through the stylesheets and scripts it names and whether it answers at all, and is itself asked for only about every ten seconds. A file that differs on every check (a token, a new date on every request) stops counting, and counts again, shown once, when it has stayed the same for ten checks. A version or timestamp in a file's address (`site.css?t=…`) does not make it a different file. A page or file that stops or starts being served (404, 500) is shown; a proxy answering 502, 503 or 504 while its server restarts is waited out, and a server that is not running is asked every three seconds.
 
 ### Linked page review
 
@@ -129,6 +132,7 @@ Phones and tablets rotate where the real device does, and you can add custom vie
 - Screenshots and recordings are created only after an explicit user action, or on each reload while the user has Track changes switched on; they stay on the device.
 - What a preview reports to the viewer (errors, failed requests and the start of their responses, CSS rules) is shown in the viewer only, kept in memory while it is open, and never stored or sent anywhere.
 - Clipboard and download access are used only when the user chooses those actions.
+- Auto reload asks only the local site being previewed, for the files that site already serves to the browser. Nothing it reads is stored or sent anywhere else.
 
 Read the complete [privacy policy](https://edisonaugusthy.github.io/multi-device-viewer/privacy/).
 
@@ -138,6 +142,8 @@ Read the complete [privacy policy](https://edisonaugusthy.github.io/multi-device
 - Header rules allow many sites to load in subframes, but applications can still block embedding through runtime logic or authentication behavior.
 - Responsive viewport simulation is a development aid, not a replacement for final testing on physical devices and target browsers.
 - Linked scrolling works best when responsive layouts retain corresponding page or container structure.
+- Auto reload follows a page and the stylesheets and scripts named in its HTML. Files reached only through those (imported modules, `@import`, images, fonts) are not followed, though any reload loads them fresh on a local site. An edit to a template the server renders for each request is not seen unless a stylesheet or script changes with it. It does not follow a preview that has moved to a different origin than the tab, or a page that redirects. A file that changes by itself now and then (a script with the time in it) reloads the devices each time. Each check requests the previewed page's address again with the tab's login, as a reload would, so it is best switched off on an address that does something when opened.
+- Fresh files on a local site cover stylesheets, scripts, images, fonts and media. Data a page requests itself (`fetch`, XHR) keeps Chrome's normal caching, and a site's own service worker can still serve its saved copies.
 - The always-on-top window needs an HTTPS or localhost page and closes when its tab reloads. A guest session lasts only until the page reloads or closes.
 
 ## Development
@@ -169,7 +175,7 @@ npm test
 npm run build
 npm run zip
 npm run test:e2e
-npm run test:extension   # the extension smoke test, then scripts/check-session-windows.mjs (guest session, always-on-top window)
+npm run test:extension   # the extension smoke test, then scripts/check-session-windows.mjs (guest session, always-on-top window) and scripts/check-auto-reload.mjs (a rebuilt local site)
 npm run validate:chrome-zip -- .output/multi-device-viewer-0.5.2-chrome.zip
 ```
 

@@ -500,6 +500,8 @@
   "tipDeviceView": "Ipakita ang bawat page sa loob ng makatotohanang frame ng device.",
   "tipFreeView": "Ipakita lang ang page sa eksaktong laki nito, walang frame.",
   "tipReloadAll": "I-reload ang bawat device sa page na ipinapakita nito.",
+  "autoReload": "Awtomatikong i-reload",
+  "tipAutoReload": "Nire-reload ang iyong mga device kapag nagbago ang mga file ng lokal na site, gaya pagkatapos ng build.",
   "tipCompare": "Ihambing ang isang device sa design image, magkatabi o naka-overlay.",
   "tipScreenshot": "Kunan ang lahat ng device, pagkatapos ay markahan, kopyahin o i-download ang image.",
   "tipFixPrompt": "Ilarawan ang layout bug at kopyahin ang prompt para sa iyong AI coding assistant.",

@@ -500,6 +500,8 @@
   "tipDeviceView": "Zeigt jede Seite in einem realistischen Geräterahmen.",
   "tipFreeView": "Zeigt nur die Seite in exakter Größe, ohne Rahmen.",
   "tipReloadAll": "Lädt jedes Gerät auf der angezeigten Seite neu.",
+  "autoReload": "Automatisch neu laden",
+  "tipAutoReload": "Lädt deine Geräte neu, wenn sich die Dateien einer lokalen Website ändern, etwa nach einem Build.",
   "tipCompare": "Vergleicht ein Gerät mit einem Designbild, nebeneinander oder überlagert.",
   "tipScreenshot": "Erfasst alle Geräte, dann markieren, kopieren oder herunterladen.",
   "tipFixPrompt": "Beschreibe einen Layoutfehler und kopiere einen Prompt für deinen KI-Coding-Assistenten.",

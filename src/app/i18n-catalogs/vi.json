@@ -500,6 +500,8 @@
   "tipDeviceView": "Hiển thị từng trang trong khung thiết bị chân thực.",
   "tipFreeView": "Chỉ hiển thị trang ở đúng kích thước, không có khung.",
   "tipReloadAll": "Tải lại mọi thiết bị trên trang đang hiển thị.",
+  "autoReload": "Tự động tải lại",
+  "tipAutoReload": "Tải lại các thiết bị khi tệp của trang cục bộ thay đổi, chẳng hạn sau khi build.",
   "tipCompare": "So sánh thiết bị với ảnh thiết kế, đặt cạnh nhau hoặc chồng lên.",
   "tipScreenshot": "Chụp tất cả thiết bị, rồi đánh dấu, sao chép hoặc tải ảnh xuống.",
   "tipFixPrompt": "Mô tả lỗi bố cục và sao chép prompt cho trợ lý lập trình AI của bạn.",

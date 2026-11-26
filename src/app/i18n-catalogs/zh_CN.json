@@ -500,6 +500,8 @@
   "tipDeviceView": "在逼真的设备外框中显示每个页面。",
   "tipFreeView": "仅按精确尺寸显示页面，不带外框。",
   "tipReloadAll": "在当前显示的页面上重新加载每台设备。",
+  "autoReload": "自动重新加载",
+  "tipAutoReload": "本地网站的文件发生变化时（例如构建之后），自动重新加载你的设备。",
   "tipCompare": "将设备与设计图并排或叠加比较。",
   "tipScreenshot": "截取所有设备，然后标注、复制或下载图片。",
   "tipFixPrompt": "描述布局问题，并复制给 AI 编程助手的提示词。",

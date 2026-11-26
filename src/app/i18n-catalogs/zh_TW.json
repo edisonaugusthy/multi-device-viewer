@@ -500,6 +500,8 @@
   "tipDeviceView": "在逼真的裝置外框中顯示每個頁面。",
   "tipFreeView": "僅以精確尺寸顯示頁面，不含外框。",
   "tipReloadAll": "在目前顯示的頁面上重新載入每台裝置。",
+  "autoReload": "自動重新載入",
+  "tipAutoReload": "本機網站的檔案變更時（例如建置之後），自動重新載入你的裝置。",
   "tipCompare": "將裝置與設計圖並排或疊加比較。",
   "tipScreenshot": "擷取所有裝置，然後標註、複製或下載圖片。",
   "tipFixPrompt": "描述版面問題，並複製給 AI 程式設計助理的提示詞。",

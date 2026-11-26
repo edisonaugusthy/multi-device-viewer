@@ -1,11 +1,11 @@
 import { useCallback, useRef, type ReactNode, type RefObject } from "react";
 import { SUPPORTED_LOCALES, useI18n, type AppLocale } from "../../app/i18n";
 import { CloseIcon, HelpIcon, LockIcon, MoonIcon, SunIcon, TourIcon, WhatsNewIcon } from "../icons";
-import { cx, focusRing, positionStyle, popoverPanel, Segmented, useAnchoredPosition, useDismiss } from "./ui";
+import { cx, focusRing, positionStyle, popoverPanel, Segmented, Switch, useAnchoredPosition, useDismiss } from "./ui";
 
 export type BrowserBarPosition = "bottom" | "top";
 export function SettingsPopover({
-  open, anchorRef, dark, browserBar, freeView, onClose, onThemeChange, onBrowserBarChange, onFreeViewChange, onHelp, onTour, onWhatsNew, onPermissions,
+  open, anchorRef, dark, browserBar, freeView, autoReload, onClose, onThemeChange, onBrowserBarChange, onFreeViewChange, onAutoReloadChange, onHelp, onTour, onWhatsNew, onPermissions,
 }: {
   open: boolean;
   anchorRef: RefObject<HTMLElement | null>;
@@ -13,10 +13,13 @@ export function SettingsPopover({
   browserBar: BrowserBarPosition;
   /** Device frames (Device) or bare pages (Free); absent where the switch lives elsewhere. */
   freeView?: boolean;
+  /** Reload the devices when a local site's files change. */
+  autoReload: boolean;
   onClose: () => void;
   onThemeChange: (dark: boolean) => void;
   onBrowserBarChange: (position: BrowserBarPosition) => void;
   onFreeViewChange?: (free: boolean) => void;
+  onAutoReloadChange: (enabled: boolean) => void;
   onHelp: () => void;
   onTour: () => void;
   onWhatsNew: () => void;
@@ -75,6 +78,9 @@ export function SettingsPopover({
             ]}
           />
         </SettingRow>
+        <SettingRow label={t("autoReload")} title={t("tipAutoReload")}>
+          <Switch checked={autoReload} onChange={onAutoReloadChange} label={t("autoReload")} />
+        </SettingRow>
         <SettingRow label={<label htmlFor="mdv-language">{t("language")}</label>} last>
           <select
             id="mdv-language"
@@ -96,9 +102,9 @@ export function SettingsPopover({
   );
 }
 
-function SettingRow({ label, children, last = false }: { label: ReactNode; children: ReactNode; last?: boolean }) {
+function SettingRow({ label, title, children, last = false }: { label: ReactNode; title?: string; children: ReactNode; last?: boolean }) {
   return (
-    <div className={cx("flex h-11 items-center justify-between gap-3", !last && "border-b border-line-soft")}>
+    <div title={title} className={cx("flex h-11 items-center justify-between gap-3", !last && "border-b border-line-soft")}>
       <span className="text-[13px] font-medium">{label}</span>
       {children}
     </div>

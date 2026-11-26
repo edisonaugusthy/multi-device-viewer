@@ -500,6 +500,8 @@
   "tipDeviceView": "Her sayfayı gerçekçi bir cihaz çerçevesi içinde gösterin.",
   "tipFreeView": "Yalnızca sayfayı, çerçeve olmadan tam boyutunda gösterin.",
   "tipReloadAll": "Her cihazı gösterdiği sayfada yeniden yükleyin.",
+  "autoReload": "Otomatik yeniden yükleme",
+  "tipAutoReload": "Yerel bir sitenin dosyaları değiştiğinde, örneğin bir derlemeden sonra cihazlarınızı yeniden yükler.",
   "tipCompare": "Bir cihazı tasarım görseliyle yan yana veya üst üste karşılaştırın.",
   "tipScreenshot": "Tüm cihazların ekran görüntüsünü alın, ardından görseli işaretleyin, kopyalayın veya indirin.",
   "tipFixPrompt": "Bir düzen hatasını açıklayın ve yapay zeka kodlama asistanınız için bir istem kopyalayın.",

@@ -12,7 +12,8 @@ describe("temporary preview rules", () => {
     const rule = previewRule(1000000, 7, ["example.com", "example.com"]);
     expect(rule.condition).toEqual({ tabIds: [7], requestDomains: ["example.com"], resourceTypes: ["sub_frame"] });
     expect(rule.action.responseHeaders?.some(header => /cookie/i.test(header.header))).toBe(false);
-    expect(rule.action.requestHeaders).toBeUndefined();
+    // Only revalidates the preview's document, as F5 does: no identity, cookie or other request changes.
+    expect(rule.action.requestHeaders).toEqual([{ header: "cache-control", operation: "set", value: "max-age=0" }]);
   });
   it("scopes a device header to its exact marker, tab and supported request types", () => {
     const rule = previewHeaderRule(1000001, 7, "mdv-preview-a", { userAgent: "iPhone Safari", platform: "iOS", mobile: true, hints: false }, brands);

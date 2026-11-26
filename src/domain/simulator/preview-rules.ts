@@ -32,6 +32,12 @@ export function ruleTabs(tabId: number | number[]): number[] {
   return [...new Set([tabId].flat())];
 }
 
+/** A preview frame is a new frame each time it loads, so Chrome would show a
+ * page it cached earlier (a local server's files often are) where the user
+ * expects the version they just built. Revalidate the document, as F5 does.
+ */
+export const previewDocumentHeaders: HeaderChange[] = [set("cache-control", "max-age=0")];
+
 /** Embedding exceptions stay limited to the active preview hosts and iframe responses. */
 export function previewRule(id: number, tabId: number | number[], domains: string[]): chrome.declarativeNetRequest.Rule {
   return {
@@ -39,6 +45,7 @@ export function previewRule(id: number, tabId: number | number[], domains: strin
     condition: { tabIds: ruleTabs(tabId), requestDomains: [...new Set(domains)].sort(), resourceTypes: ["sub_frame" as chrome.declarativeNetRequest.ResourceType] },
     action: {
       type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType,
+      requestHeaders: previewDocumentHeaders,
       responseHeaders: ["x-frame-options", "content-security-policy"].map(remove),
     },
   };

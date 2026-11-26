@@ -1,6 +1,6 @@
 import type { PreviewIdentities } from "../domain/simulator/preview-identity";
 import type { BrowserBrands } from "../domain/simulator/preview-emulation";
-import { describeHeaders, identityHeaders, PREVIEW_RULE_BASE, previewHost, previewRule, previewHeaderRule, ruleTabs } from "../domain/simulator/preview-rules";
+import { describeHeaders, identityHeaders, PREVIEW_RULE_BASE, previewDocumentHeaders, previewHost, previewRule, previewHeaderRule, ruleTabs } from "../domain/simulator/preview-rules";
 import { previewRequestFilter } from "../domain/simulator/preview-request";
 
 /** Session rules survive worker suspension; the browser clears them on restart/update. */
@@ -32,7 +32,8 @@ export function createPreviewSessions() {
       const embedding = own.filter(rule => !rule.condition.urlFilter);
       const existingEmbedding = embedding[0];
       // Also replaces legacy split rules when an already-open viewer upgrades.
-      if (!known || embedding.length !== 1 || existingEmbedding?.action.requestHeaders?.length || !sameTabs(existingEmbedding)) {
+      const currentEmbedding = describeHeaders(existingEmbedding?.action.requestHeaders) === describeHeaders(previewDocumentHeaders);
+      if (!known || embedding.length !== 1 || !currentEmbedding || !sameTabs(existingEmbedding)) {
         removeRuleIds.push(...embedding.map(rule => rule.id));
         addRules.push(previewRule(existingEmbedding?.id ?? nextId(), tabs, [...domains, domain]));
       }

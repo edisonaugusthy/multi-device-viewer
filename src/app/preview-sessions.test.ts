@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPreviewSessions } from "./preview-sessions";
-import { identityHeaders } from "../domain/simulator/preview-rules";
+import { identityHeaders, previewDocumentHeaders, previewRule } from "../domain/simulator/preview-rules";
 import { previewRequestFilter } from "../domain/simulator/preview-request";
 import type { PreviewIdentity } from "../domain/simulator/preview-identity";
 import type { BrowserBrands } from "../domain/simulator/preview-emulation";
@@ -55,6 +55,14 @@ describe("preview session rules", () => {
     expect(browser.headers(7, "mdv-preview-a")).toBeUndefined();
     expect(browser.headers(7, "mdv-preview-b")).toEqual(identityHeaders(mac, brands));
     expect(browser.ofTab(7)).toHaveLength(2);
+  });
+  it("upgrades an older embedding rule so preview documents are revalidated", async () => {
+    const older = previewRule(1_000_000, 7, ["example.com"]);
+    delete older.action.requestHeaders;
+    await chrome.declarativeNetRequest.updateSessionRules({ addRules: [older] });
+    await createPreviewSessions().prepare(7, "https://example.com", undefined, brands);
+    expect(browser.ofTab(7)).toHaveLength(1);
+    expect(browser.ofTab(7)[0].action.requestHeaders).toEqual(previewDocumentHeaders);
   });
   it("surfaces rule installation failure and allows a later retry", async () => {
     browser.updateSessionRules.mockRejectedValueOnce(new Error("quota"));

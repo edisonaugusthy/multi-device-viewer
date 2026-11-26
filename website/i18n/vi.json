@@ -106,6 +106,12 @@
     "install": "Thêm vào Chrome, miễn phí",
     "review": "Viết đánh giá"
   },
+  "analytics": {
+    "settings": "Cài đặt phân tích",
+    "description": "Google Analytics sử dụng cookie để đo lường lượt truy cập vào trang web này.",
+    "decline": "Từ chối phân tích",
+    "allow": "Cho phép phân tích"
+  },
   "footer": {
     "blurb": "Công cụ kiểm thử responsive miễn phí, riêng tư cho Chrome. Mã nguồn mở theo giấy phép MIT.",
     "product": "Sản phẩm",

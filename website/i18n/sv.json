@@ -106,6 +106,12 @@
     "install": "Lägg till i Chrome, helt gratis",
     "review": "Lämna ett omdöme"
   },
+  "analytics": {
+    "settings": "Analysinställningar",
+    "description": "Google Analytics använder kakor för att mäta besök på den här webbplatsen.",
+    "decline": "Avvisa analys",
+    "allow": "Tillåt analys"
+  },
   "footer": {
     "blurb": "En gratis och privat responsiv testare för Chrome. Öppen källkod under MIT-licensen.",
     "product": "Produkt",

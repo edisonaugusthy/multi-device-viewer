@@ -1,8 +1,8 @@
 {
   "meta": {
-    "title": "Mobile View: Responsive Website Tester & Device Emulator for Chrome",
-    "description": "Free Chrome extension to test responsive sites on real iPhone, Android, iPad, Mac and Apple Watch frames side by side, with synced scrolling. Works on localhost.",
-    "ogTitle": "Mobile View: see your site on every screen at once",
+    "title": "Mobile View: Mobile Simulator & Responsive Tester for Chrome",
+    "description": "Test a website on up to four phone, tablet, and desktop viewports side by side. Free Chrome extension with synced scrolling, screenshots, and localhost support.",
+    "ogTitle": "Mobile View: test your website on multiple devices at once",
     "ogImageAlt": "Mobile View showing one page on iPhone, a foldable, a MacBook and an Apple Watch side by side"
   },
   "nav": {
@@ -20,8 +20,8 @@
   },
   "hero": {
     "rating": "{rating} on the Chrome Web Store",
-    "title": "See your site on every screen at once.",
-    "lede": "A free Chrome extension that shows any page, even localhost, on real phones, foldables, tablets, laptops and watches. Side by side, in sync.",
+    "title": "Test your website on multiple devices at once.",
+    "lede": "Preview mobile, tablet, and desktop layouts side by side in Chrome. Compare up to four synced viewports, even on localhost, with a free mobile simulator.",
     "install": "Add to Chrome, it's free",
     "review": "Leave a review"
   },
@@ -89,12 +89,12 @@
   },
   "faq": {
     "title": "Questions.",
-    "q1": "Is it free?",
+    "q1": "Is Mobile View free?",
     "a1": "Yes. Free and open source under the MIT license, with no account.",
     "q2": "Does it work on localhost?",
-    "a2": "Yes. Open your local page in Chrome, then open Mobile View. Nothing leaves your computer.",
+    "a2": "Yes. Start your development server, open its localhost URL in Chrome, and launch Mobile View from that tab. You can compare mobile and desktop layouts before deploying.",
     "q3": "How is it different from DevTools device mode?",
-    "a3": "DevTools shows one viewport at a time. Mobile View shows four real devices side by side, kept in sync.",
+    "a3": "Chrome DevTools is useful for debugging one mobile viewport. Mobile View keeps up to four device-sized previews visible side by side and can sync scrolling, clicks, and navigation.",
     "q4": "Why won't some sites load?",
     "a4": "Some sites block being shown inside another page. Mobile View tells you and offers to open them in a tab.",
     "q5": "Does the fix prompt upload my code?",
@@ -105,6 +105,12 @@
     "text": "Free. No account. Works on localhost.",
     "install": "Add to Chrome, it's free",
     "review": "Leave a review"
+  },
+  "analytics": {
+    "settings": "Analytics settings",
+    "description": "Google Analytics uses cookies to measure visits to this website.",
+    "decline": "Decline analytics",
+    "allow": "Allow analytics"
   },
   "footer": {
     "blurb": "A free, private responsive tester for Chrome. Open source under the MIT license.",

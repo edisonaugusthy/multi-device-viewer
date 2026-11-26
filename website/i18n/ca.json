@@ -106,6 +106,12 @@
     "install": "Afegeix a Chrome, és gratis",
     "review": "Deixa una ressenya"
   },
+  "analytics": {
+    "settings": "Configuració d’analítica",
+    "description": "Google Analytics utilitza galetes per mesurar les visites a aquest lloc web.",
+    "decline": "Rebutja l’analítica",
+    "allow": "Permet l’analítica"
+  },
   "footer": {
     "blurb": "Un provador responsiu gratuït i privat per a Chrome. Codi obert amb llicència MIT.",
     "product": "Producte",

@@ -106,6 +106,12 @@
     "install": "Lisää Chromeen – ilmainen",
     "review": "Kirjoita arvio"
   },
+  "analytics": {
+    "settings": "Analytiikka-asetukset",
+    "description": "Google Analytics käyttää evästeitä tämän sivuston käyntien mittaamiseen.",
+    "decline": "Hylkää analytiikka",
+    "allow": "Salli analytiikka"
+  },
   "footer": {
     "blurb": "Ilmainen ja yksityinen responsiivisuustestaaja Chromeen. Avointa lähdekoodia MIT-lisenssillä.",
     "product": "Tuote",

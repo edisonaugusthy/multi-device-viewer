@@ -1,0 +1,41 @@
+<script type="application/json">
+{
+  "slug": "test-localhost-on-mobile",
+  "title": "How to Test Localhost on Mobile in Chrome or on a Phone",
+  "description": "Preview a localhost website at phone widths in desktop Chrome, then open it on an iPhone or Android phone over Wi-Fi or use Android USB port forwarding.",
+  "eyebrow": "Local development",
+  "h1": "How to test localhost on mobile",
+  "lead": "Use desktop Chrome to check a local website at phone and tablet widths. For Safari, a phone keyboard, or real touch behavior, open the same development server on a physical phone.",
+  "headline": "How to test localhost on mobile in Chrome or on a phone",
+  "datePublished": "2026-11-25",
+  "dateModified": "2026-11-25",
+  "cardTitle": "Test localhost on mobile",
+  "cardText": "Compare local layouts in Chrome, connect a physical phone over Wi-Fi, and troubleshoot common connection problems."
+}
+</script>
+<h2>Preview localhost at mobile widths in desktop Chrome</h2>
+<ol>
+  <li>Start your development server and open its actual URL in Chrome, for example <code>http://localhost:5173/checkout</code>.</li>
+  <li>Open Mobile View from that tab. Use phone, tablet, and desktop presets to review the same route side by side.</li>
+  <li>Keep the same cart or test data in each preview. Check that a sticky checkout button stays visible, the address form fits without horizontal scrolling, and errors remain readable at your narrowest supported width.</li>
+  <li>Use your project’s CSS breakpoint for the final check. For a breakpoint at <code>768px</code>, compare <code>767px</code> and <code>768px</code> to see exactly what changes.</li>
+</ol>
+<p>For a single viewport with the CSS inspector open, use <a href="@/guides/mobile-view-device-emulator/">Chrome DevTools Device Mode</a>. Both desktop methods can run while your server listens only on your computer.</p>
+<h2>Open a local website on an iPhone or Android phone</h2>
+<p><code>localhost</code> on a phone points to the phone itself. On a trusted Wi-Fi network, use the development computer’s local IP address and the same port.</p>
+<ol>
+  <li>Connect your phone and computer to the same trusted local network.</li>
+  <li>Use your development server’s host setting to allow local-network connections. Find the network URL it prints, or look up the computer’s local IP address in its network settings.</li>
+  <li>On your phone, open the address with the port and route, for example <code>http://192.168.1.20:5173/checkout</code>. Use your computer’s actual address and server port.</li>
+  <li>Run your real-device checks and return the dev server to local-only listening when you are finished.</li>
+</ol>
+<h2>Use USB port forwarding on Android</h2>
+<p>If the Wi-Fi network blocks devices from reaching each other, use <a href="https://developer.chrome.com/docs/devtools/remote-debugging/local-server/">Chrome DevTools USB port forwarding</a>. Forward an Android port to the computer’s local server, then open that port at <code>localhost</code> in Chrome on Android.</p>
+<h2>Troubleshoot common localhost problems</h2>
+<ul>
+  <li><strong>The phone times out.</strong> Check the IP address, server port, listening interface, and local firewall rules. Guest Wi-Fi can isolate devices even when both show the same network name.</li>
+  <li><strong>The page opens but data or sign-in fails.</strong> On the phone, a hard-coded API URL at <code>localhost</code> points to the phone. A LAN IP also changes the page origin, which can affect development cookies and OAuth redirect URLs. Check your development configuration and test credentials.</li>
+  <li><strong>Camera or other browser APIs fail over HTTP.</strong> Some APIs need a secure context. A plain HTTP LAN address can behave differently from <code>localhost</code>. Use your project’s trusted local HTTPS or staging setup for those checks.</li>
+</ul>
+<!-- related -->
+<p>Use the <a href="@/guides/responsive-website-testing/">multi-device testing workflow</a> to check a complete user journey, or see <a href="@/guides/device-viewport-sizes/">which viewport sizes to cover</a>.</p>

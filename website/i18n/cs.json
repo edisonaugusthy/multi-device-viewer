@@ -106,6 +106,12 @@
     "install": "Přidat do Chrome zdarma",
     "review": "Napsat recenzi"
   },
+  "analytics": {
+    "settings": "Nastavení analytiky",
+    "description": "Google Analytics používá soubory cookie k měření návštěvnosti tohoto webu.",
+    "decline": "Odmítnout analytiku",
+    "allow": "Povolit analytiku"
+  },
   "footer": {
     "blurb": "Bezplatný a soukromý tester responzivity pro Chrome. Open source pod licencí MIT.",
     "product": "Produkt",

@@ -106,6 +106,12 @@
     "install": "Dodaj v Chrome, brezplačno",
     "review": "Oddajte oceno"
   },
+  "analytics": {
+    "settings": "Nastavitve analitike",
+    "description": "Google Analytics uporablja piškotke za merjenje obiskov tega spletnega mesta.",
+    "decline": "Zavrni analitiko",
+    "allow": "Dovoli analitiko"
+  },
   "footer": {
     "blurb": "Brezplačen in zaseben preizkuševalnik odzivnosti za Chrome. Odprta koda pod licenco MIT.",
     "product": "Izdelek",

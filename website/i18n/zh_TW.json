@@ -106,6 +106,12 @@
     "install": "免費加到 Chrome",
     "review": "撰寫評價"
   },
+  "analytics": {
+    "settings": "分析設定",
+    "description": "Google Analytics 使用 Cookie 來統計這個網站的造訪情況。",
+    "decline": "拒絕分析",
+    "allow": "允許分析"
+  },
   "footer": {
     "blurb": "免費、重視隱私的 Chrome 響應式測試工具。採用 MIT 授權開放原始碼。",
     "product": "產品",

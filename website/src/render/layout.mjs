@@ -29,6 +29,7 @@ export function layout(page, assets) {
   const alternates = page.alternates ?? [];
   const jsonLd = page.jsonLd ? `<script type="application/ld+json">${JSON.stringify(page.jsonLd).replace(/</g, "\\u003c")}</script>` : "";
   const ogLocale = locale.lang.replace("-", "_");
+  const analytics = !page.robots && site.analyticsId;
   return `<!doctype html>
 <html lang="${locale.lang}" dir="${locale.dir}" data-script="${wideScripts.has(locale.id) ? "wide" : "latin"}">
 <head>
@@ -68,11 +69,12 @@ ${jsonLd}
 </head>
 <body>
 <a class="skip" href="#main">${t("nav.skip")}</a>
+${analytics ? analyticsPanel(t, canonical) : ""}
 ${header(page, homePath)}
 <main id="main">
 ${page.body}
 </main>
-${footer(page, homePath)}
+${footer(page, homePath, analytics)}
 </body>
 </html>
 `;
@@ -108,7 +110,19 @@ function header({ t, current, locale }, homePath) {
 </header>`;
 }
 
-function footer({ t, locale }, homePath) {
+function analyticsPanel(t, canonical) {
+  return `<section id="analytics-settings" class="analytics-panel" aria-labelledby="analytics-title" hidden
+  data-analytics-id="${esc(site.analyticsId)}" data-site-base="${esc(site.base)}" data-canonical="${esc(canonical)}">
+  <h2 id="analytics-title" tabindex="-1">${t("analytics.settings")}</h2>
+  <p>${t("analytics.description")} <a href="${url("privacy/#analytics")}" hreflang="en">${t("nav.privacy")}</a></p>
+  <div class="analytics-actions">
+    <button class="btn btn-ghost" type="button" data-analytics-choice="denied">${t("analytics.decline")}</button>
+    <button class="btn btn-ghost" type="button" data-analytics-choice="granted">${t("analytics.allow")}</button>
+  </div>
+</section>`;
+}
+
+function footer({ t, locale }, homePath, analytics) {
   const home = url(homePath);
   const year = new Date().getUTCFullYear();
   const languages = locales.map((l) =>
@@ -141,6 +155,7 @@ function footer({ t, locale }, homePath) {
         <a href="${site.issues}">${t("footer.issue")}</a>
         <a href="${url("privacy/")}">${t("footer.privacy")}</a>
         <a href="${url("terms/")}">${t("footer.terms")}</a>
+        ${analytics ? `<button class="analytics-settings" type="button" aria-controls="analytics-settings" aria-expanded="false" hidden>${t("analytics.settings")}</button>` : ""}
       </nav>
     </div>
     <details class="languages">

@@ -106,6 +106,12 @@
     "install": "免费添加到 Chrome",
     "review": "写评价"
   },
+  "analytics": {
+    "settings": "分析设置",
+    "description": "Google Analytics 使用 Cookie 来统计此网站的访问情况。",
+    "decline": "拒绝分析",
+    "allow": "允许分析"
+  },
   "footer": {
     "blurb": "一款免费、注重隐私的 Chrome 响应式测试工具。基于 MIT 许可证开源。",
     "product": "产品",

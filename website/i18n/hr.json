@@ -106,6 +106,12 @@
     "install": "Dodaj u Chrome, besplatno je",
     "review": "Napišite recenziju"
   },
+  "analytics": {
+    "settings": "Postavke analitike",
+    "description": "Google Analytics upotrebljava kolačiće za mjerenje posjeta ovom web-mjestu.",
+    "decline": "Odbij analitiku",
+    "allow": "Dopusti analitiku"
+  },
   "footer": {
     "blurb": "Besplatan i privatan tester responzivnosti za Chrome. Otvoreni kod pod licencom MIT.",
     "product": "Proizvod",

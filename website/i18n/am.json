@@ -106,6 +106,12 @@
     "install": "ወደ Chrome ያክሉ፣ ነፃ ነው",
     "review": "ግምገማ ይጻፉ"
   },
+  "analytics": {
+    "settings": "የትንታኔ ቅንብሮች",
+    "description": "Google Analytics የዚህን ድረ ገጽ ጉብኝቶች ለመለካት ኩኪዎችን ይጠቀማል።",
+    "decline": "ትንታኔን አትፍቀድ",
+    "allow": "ትንታኔን ፍቀድ"
+  },
   "footer": {
     "blurb": "ለChrome ነፃ እና ግላዊ ምላሽ ሰጪ ሞካሪ። በMIT ፈቃድ ስር ክፍት ምንጭ።",
     "product": "ምርት",

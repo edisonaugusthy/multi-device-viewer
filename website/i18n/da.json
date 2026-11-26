@@ -106,6 +106,12 @@
     "install": "Føj til Chrome – det er gratis",
     "review": "Skriv en anmeldelse"
   },
+  "analytics": {
+    "settings": "Indstillinger for analyse",
+    "description": "Google Analytics bruger cookies til at måle besøg på dette websted.",
+    "decline": "Afvis analyse",
+    "allow": "Tillad analyse"
+  },
   "footer": {
     "blurb": "En gratis og privat responsiv tester til Chrome. Open source under MIT-licensen.",
     "product": "Produkt",

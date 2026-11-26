@@ -106,6 +106,12 @@
     "install": "Hozzáadás a Chrome-hoz – ingyenes",
     "review": "Értékelés írása"
   },
+  "analytics": {
+    "settings": "Analitikai beállítások",
+    "description": "A Google Analytics cookie-kat használ a webhely látogatásainak mérésére.",
+    "decline": "Analitika elutasítása",
+    "allow": "Analitika engedélyezése"
+  },
   "footer": {
     "blurb": "Ingyenes, privát reszponzív tesztelő Chrome-hoz. Nyílt forráskódú, MIT licenc alatt.",
     "product": "Termék",

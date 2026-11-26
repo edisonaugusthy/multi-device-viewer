@@ -20,6 +20,7 @@ export const site = {
   storeId,
   storeUrl,
   reviewsUrl: `${storeUrl}/reviews`,
+  analyticsId: "G-FH4XG3M4GV",
   version: JSON.parse(readFileSync("package.json", "utf8")).version,
   // Matches the "All devices" count in the extension's device library.
   deviceCount: 111,

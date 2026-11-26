@@ -106,6 +106,12 @@
     "install": "Idagdag sa Chrome, libre ito",
     "review": "Mag-iwan ng review"
   },
+  "analytics": {
+    "settings": "Mga setting ng analytics",
+    "description": "Gumagamit ang Google Analytics ng cookies para sukatin ang mga pagbisita sa website na ito.",
+    "decline": "Tanggihan ang analytics",
+    "allow": "Payagan ang analytics"
+  },
   "footer": {
     "blurb": "Libre at pribadong responsive tester para sa Chrome. Open source sa ilalim ng MIT license.",
     "product": "Produkto",

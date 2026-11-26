@@ -1,16 +1,16 @@
 <script type="application/json">
 {
   "slug": "responsive-website-testing",
-  "title": "Responsive Website Testing Tool — Complete Workflow",
-  "description": "A practical responsive website testing workflow for comparing phone, tablet, laptop, and desktop viewports, checking breakpoints, and documenting fixes.",
+  "title": "How to Test a Website on Multiple Devices Side by Side",
+  "description": "Compare the same website on phone, tablet, and desktop viewports. Follow a reproducible workflow to isolate a breakpoint bug and verify the fix.",
   "eyebrow": "Responsive website testing",
-  "h1": "Test the layout, not just the screen.",
-  "lead": "A responsive website testing tool is most useful when it turns a range of viewports into one repeatable workflow. Compare the same page and content state, find the breakpoint where the experience fails, and leave enough evidence for someone else to fix it.",
-  "headline": "Responsive website testing: a repeatable workflow",
+  "h1": "How to test a website on multiple devices side by side",
+  "lead": "Open the same page at phone, tablet, and desktop widths. Run one user journey across all three, then narrow down the first width where the layout breaks.",
+  "headline": "How to test a website on multiple devices side by side",
   "datePublished": "2026-08-07",
-  "dateModified": "2026-08-07",
-  "cardTitle": "Responsive website testing tool guide",
-  "cardText": "Build a repeatable responsive website testing workflow across phone, tablet, laptop, and desktop viewports."
+  "dateModified": "2026-11-25",
+  "cardTitle": "Test a website on multiple devices",
+  "cardText": "Compare the same user journey across device sizes and reproduce a layout bug at a specific breakpoint."
 }
 </script>
 <h2>1. Choose representative viewports</h2>
@@ -36,6 +36,9 @@ structure.
 <li>Navigation, dialogs, forms, keyboard focus, and touch target size.</li>
 <li>Breakpoints immediately above and below the expected transition.</li>
 </ul>
+<h2>Example: a navigation menu that disappears at a breakpoint</h2>
+<p>Suppose your menu switches to a desktop layout at <code>768px</code>. Open custom widths of <code>767px</code>, <code>768px</code>, and <code>769px</code> on the same page. At <code>767px</code>, check that the menu button remains visible and reachable by keyboard. At <code>768px</code> and <code>769px</code>, tab to the first navigation link and check that every link is visible.</p>
+<p>If the button disappears at <code>768px</code> while the desktop menu is still hidden, inspect both elements’ CSS rules at that width. Report the exact interval where neither control appears, then repeat the three-width check after the fix.</p>
 <h2>4. Capture an actionable issue</h2>
 <p>
 Record the affected viewport, expected behavior, actual behavior, page
@@ -59,7 +62,7 @@ Mobile View lets you compare up to four phone, tablet, laptop, and
 desktop previews locally, then capture evidence or continue on a
 physical phone.
 </p>
-<a href="@/">Open the Mobile View responsive testing workspace →</a>
+<a href="@/">See the Mobile View responsive tester →</a>
 </div>
 <h2>Related guides</h2>
 <ul>

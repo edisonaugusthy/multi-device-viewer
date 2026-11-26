@@ -106,6 +106,12 @@
     "install": "Toevoegen aan Chrome, gratis",
     "review": "Schrijf een review"
   },
+  "analytics": {
+    "settings": "Analyse-instellingen",
+    "description": "Google Analytics gebruikt cookies om bezoeken aan deze website te meten.",
+    "decline": "Analyse weigeren",
+    "allow": "Analyse toestaan"
+  },
   "footer": {
     "blurb": "Een gratis, privé responsive tester voor Chrome. Open source onder de MIT-licentie.",
     "product": "Product",

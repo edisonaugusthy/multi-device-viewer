@@ -21,6 +21,10 @@ export function homeBody({ t, locale, store, devices }) {
   const rating = hasRating ? number(store.rating, lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : "";
   const reviews = pickReviews(store);
   const deviceCount = number(site.deviceCount, lang);
+  const faqGuides = locale.id === "en" ? {
+    2: ["guides/test-localhost-on-mobile/", "How to test localhost on mobile"],
+    3: ["guides/mobile-view-device-emulator/", "How to view the mobile version of a website in Chrome"],
+  } : {};
 
   const stage = devices.map((d) => `
             <div class="device" data-device style="left:${d.left}px;bottom:${d.bottom}px;z-index:${d.z};width:${d.width}px;height:${d.height}px">
@@ -154,7 +158,11 @@ export function homeBody({ t, locale, store, devices }) {
 <section id="faq" class="faq" aria-labelledby="faq-title">
   <h2 id="faq-title" class="display">${t("faq.title")}</h2>
   <div class="faq-list">
-    ${[1, 2, 3, 4, 5].map((n) => `<details><summary>${t(`faq.q${n}`)}<span aria-hidden="true">+</span></summary><p>${t(`faq.a${n}`)}</p></details>`).join("\n    ")}
+    ${[1, 2, 3, 4, 5].map((n) => {
+      const guide = faqGuides[n];
+      const link = guide ? ` <a href="${url(guide[0])}">${esc(guide[1])}</a>.` : "";
+      return `<details><summary>${t(`faq.q${n}`)}<span aria-hidden="true">+</span></summary><p>${t(`faq.a${n}`)}${link}</p></details>`;
+    }).join("\n    ")}
   </div>
 </section>
 

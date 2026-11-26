@@ -106,6 +106,12 @@
     "install": "Chromeに追加（無料）",
     "review": "レビューを書く"
   },
+  "analytics": {
+    "settings": "アクセス解析の設定",
+    "description": "Google アナリティクスは、このウェブサイトへのアクセスを計測するために Cookie を使用します。",
+    "decline": "アクセス解析を拒否",
+    "allow": "アクセス解析を許可"
+  },
   "footer": {
     "blurb": "Chrome向けの無料でプライベートなレスポンシブテストツール。MITライセンスのオープンソース。",
     "product": "製品",

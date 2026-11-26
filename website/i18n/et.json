@@ -106,6 +106,12 @@
     "install": "Lisa Chrome'i, see on tasuta",
     "review": "Kirjuta arvustus"
   },
+  "analytics": {
+    "settings": "Analüütika seaded",
+    "description": "Google Analytics kasutab selle veebisaidi külastuste mõõtmiseks küpsiseid.",
+    "decline": "Keeldu analüütikast",
+    "allow": "Luba analüütika"
+  },
   "footer": {
     "blurb": "Tasuta ja privaatne kohanduvuse testija Chrome'ile. Avatud lähtekood MIT-litsentsi all.",
     "product": "Toode",

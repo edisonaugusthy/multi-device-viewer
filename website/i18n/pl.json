@@ -106,6 +106,12 @@
     "install": "Dodaj do Chrome, za darmo",
     "review": "Wystaw opinię"
   },
+  "analytics": {
+    "settings": "Ustawienia analityki",
+    "description": "Google Analytics używa plików cookie do pomiaru wizyt w tej witrynie.",
+    "decline": "Odrzuć analitykę",
+    "allow": "Zezwól na analitykę"
+  },
   "footer": {
     "blurb": "Darmowy, prywatny tester responsywności dla Chrome. Otwarte źródło na licencji MIT.",
     "product": "Produkt",

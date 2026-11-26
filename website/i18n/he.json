@@ -106,6 +106,12 @@
     "install": "הוספה ל-Chrome, בחינם",
     "review": "כתבו ביקורת"
   },
+  "analytics": {
+    "settings": "הגדרות ניתוח נתונים",
+    "description": "Google Analytics משתמש בקובצי Cookie כדי למדוד ביקורים באתר הזה.",
+    "decline": "דחיית ניתוח נתונים",
+    "allow": "אישור ניתוח נתונים"
+  },
   "footer": {
     "blurb": "בודק רספונסיביות חינמי ופרטי ל-Chrome. קוד פתוח ברישיון MIT.",
     "product": "מוצר",

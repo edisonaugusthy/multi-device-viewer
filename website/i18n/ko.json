@@ -106,6 +106,12 @@
     "install": "Chrome에 무료로 추가",
     "review": "리뷰 남기기"
   },
+  "analytics": {
+    "settings": "애널리틱스 설정",
+    "description": "Google 애널리틱스는 이 웹사이트의 방문을 측정하기 위해 쿠키를 사용합니다.",
+    "decline": "애널리틱스 거부",
+    "allow": "애널리틱스 허용"
+  },
   "footer": {
     "blurb": "Chrome용 무료 프라이빗 반응형 테스트 도구. MIT 라이선스 오픈 소스.",
     "product": "제품",

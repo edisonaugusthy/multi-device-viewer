@@ -1,4 +1,5 @@
 // Mobile View website: language choice, live device demo and fresh Chrome Web Store numbers.
+import "./analytics.js";
 
 // A language picked from the menu is remembered, so the English homepage stops
 // redirecting to the device language (see the <head> script on that page).

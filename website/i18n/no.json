@@ -106,6 +106,12 @@
     "install": "Legg til i Chrome, helt gratis",
     "review": "Skriv en anmeldelse"
   },
+  "analytics": {
+    "settings": "Analyseinnstillinger",
+    "description": "Google Analytics bruker informasjonskapsler for å måle besøk på dette nettstedet.",
+    "decline": "Avslå analyse",
+    "allow": "Tillat analyse"
+  },
   "footer": {
     "blurb": "En gratis og privat responsiv tester for Chrome. Åpen kildekode under MIT-lisensen.",
     "product": "Produkt",

@@ -106,6 +106,12 @@
     "install": "Pridėti prie Chrome nemokamai",
     "review": "Palikti atsiliepimą"
   },
+  "analytics": {
+    "settings": "Analitikos nustatymai",
+    "description": "„Google Analytics“ naudoja slapukus apsilankymams šioje svetainėje matuoti.",
+    "decline": "Atmesti analitiką",
+    "allow": "Leisti analitiką"
+  },
   "footer": {
     "blurb": "Nemokamas ir privatus adaptyvumo testeris Chrome naršyklei. Atvirasis kodas pagal MIT licenciją.",
     "product": "Produktas",

@@ -106,6 +106,12 @@
     "install": "Aggiungi a Chrome, è gratis",
     "review": "Lascia una recensione"
   },
+  "analytics": {
+    "settings": "Impostazioni di analisi",
+    "description": "Google Analytics usa i cookie per misurare le visite a questo sito web.",
+    "decline": "Rifiuta l’analisi",
+    "allow": "Consenti l’analisi"
+  },
   "footer": {
     "blurb": "Un tester responsive gratuito e privato per Chrome. Open source con licenza MIT.",
     "product": "Prodotto",

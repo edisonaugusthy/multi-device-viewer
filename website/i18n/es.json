@@ -106,6 +106,12 @@
     "install": "Añadir a Chrome, es gratis",
     "review": "Deja una reseña"
   },
+  "analytics": {
+    "settings": "Configuración de analítica",
+    "description": "Google Analytics utiliza cookies para medir las visitas a este sitio web.",
+    "decline": "Rechazar la analítica",
+    "allow": "Permitir la analítica"
+  },
   "footer": {
     "blurb": "Un probador responsive gratuito y privado para Chrome. Código abierto con licencia MIT.",
     "product": "Producto",

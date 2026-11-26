@@ -106,6 +106,12 @@
     "install": "Pievienot Chrome bez maksas",
     "review": "Atstāt atsauksmi"
   },
+  "analytics": {
+    "settings": "Analītikas iestatījumi",
+    "description": "Google Analytics izmanto sīkfailus, lai mērītu šīs vietnes apmeklējumus.",
+    "decline": "Noraidīt analītiku",
+    "allow": "Atļaut analītiku"
+  },
   "footer": {
     "blurb": "Bezmaksas, privāts adaptivitātes testētājs pārlūkam Chrome. Atvērtais pirmkods ar MIT licenci.",
     "product": "Produkts",

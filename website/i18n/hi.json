@@ -106,6 +106,12 @@
     "install": "Chrome में जोड़ें, बिल्कुल मुफ़्त",
     "review": "रिव्यू लिखें"
   },
+  "analytics": {
+    "settings": "Analytics की सेटिंग",
+    "description": "Google Analytics इस वेबसाइट पर आने वाले विज़िट को मापने के लिए कुकी का इस्तेमाल करता है।",
+    "decline": "Analytics अस्वीकार करें",
+    "allow": "Analytics की अनुमति दें"
+  },
   "footer": {
     "blurb": "Chrome के लिए मुफ़्त, प्राइवेट रिस्पॉन्सिव टेस्टर। MIT लाइसेंस के तहत ओपन सोर्स।",
     "product": "प्रोडक्ट",

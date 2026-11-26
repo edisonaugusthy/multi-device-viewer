@@ -106,6 +106,12 @@
     "install": "Adaugă în Chrome, e gratuit",
     "review": "Lasă o recenzie"
   },
+  "analytics": {
+    "settings": "Setări de analiză",
+    "description": "Google Analytics folosește cookie-uri pentru a măsura vizitele pe acest site.",
+    "decline": "Refuză analiza",
+    "allow": "Permite analiza"
+  },
   "footer": {
     "blurb": "Un tester responsive gratuit și privat pentru Chrome. Open source sub licența MIT.",
     "product": "Produs",

@@ -106,6 +106,12 @@
     "install": "Tambahkan ke Chrome, gratis",
     "review": "Tulis ulasan"
   },
+  "analytics": {
+    "settings": "Setelan analitik",
+    "description": "Google Analytics menggunakan cookie untuk mengukur kunjungan ke situs ini.",
+    "decline": "Tolak analitik",
+    "allow": "Izinkan analitik"
+  },
   "footer": {
     "blurb": "Penguji responsif gratis dan privat untuk Chrome. Open source dengan lisensi MIT.",
     "product": "Produk",

@@ -106,6 +106,12 @@
     "install": "Chrome'a ekleyin, ücretsiz",
     "review": "Yorum yazın"
   },
+  "analytics": {
+    "settings": "Analiz ayarları",
+    "description": "Google Analytics, bu web sitesine yapılan ziyaretleri ölçmek için çerez kullanır.",
+    "decline": "Analizi reddet",
+    "allow": "Analize izin ver"
+  },
   "footer": {
     "blurb": "Chrome için ücretsiz ve gizlilik dostu duyarlı tasarım test aracı. MIT lisansıyla açık kaynak.",
     "product": "Ürün",

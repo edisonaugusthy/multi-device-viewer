@@ -106,6 +106,12 @@
     "install": "Zu Chrome hinzufügen – kostenlos",
     "review": "Bewertung schreiben"
   },
+  "analytics": {
+    "settings": "Analytics-Einstellungen",
+    "description": "Google Analytics verwendet Cookies, um Besuche auf dieser Website zu messen.",
+    "decline": "Analytics ablehnen",
+    "allow": "Analytics erlauben"
+  },
   "footer": {
     "blurb": "Ein kostenloser, privater Responsive-Tester für Chrome. Open Source unter der MIT-Lizenz.",
     "product": "Produkt",

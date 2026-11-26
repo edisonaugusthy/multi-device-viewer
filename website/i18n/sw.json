@@ -106,6 +106,12 @@
     "install": "Ongeza kwenye Chrome, ni bure",
     "review": "Toa maoni"
   },
+  "analytics": {
+    "settings": "Mipangilio ya uchanganuzi",
+    "description": "Google Analytics hutumia vidakuzi kupima matembezi kwenye tovuti hii.",
+    "decline": "Kataa uchanganuzi",
+    "allow": "Ruhusu uchanganuzi"
+  },
   "footer": {
     "blurb": "Kipima tovuti sikivu cha bure na cha faragha kwa Chrome. Huria chini ya leseni ya MIT.",
     "product": "Bidhaa",

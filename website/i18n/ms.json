@@ -106,6 +106,12 @@
     "install": "Tambah ke Chrome, percuma",
     "review": "Tulis ulasan"
   },
+  "analytics": {
+    "settings": "Tetapan analitis",
+    "description": "Google Analytics menggunakan kuki untuk mengukur lawatan ke laman web ini.",
+    "decline": "Tolak analitis",
+    "allow": "Benarkan analitis"
+  },
   "footer": {
     "blurb": "Penguji responsif percuma dan peribadi untuk Chrome. Sumber terbuka di bawah lesen MIT.",
     "product": "Produk",

@@ -37,14 +37,8 @@ export const FEATURE_TOUR_REVISION = "0.5.2.1";
 // Only the current release ships with the extension. Git retains past notes.
 export const CURRENT_RELEASE_NOTES: VersionReleaseNotes = {
   version,
-  featured: { title: "releaseFloatingTitle", description: "releaseFloatingDescription", icon: "floating" },
-  sections: [{
-    title: "releaseSectionViews",
-    notes: [
-      { title: "popOutTitle", description: "popOutDescription", icon: "floating" },
-      { title: "pictureInPictureTitle", description: "pictureInPictureDescription", icon: "pictureInPicture" },
-    ],
-  }],
+  featured: { title: "releaseLocalhostRefresh", icon: "reload" },
+  sections: [],
 };
 
 export type StartupNotice =

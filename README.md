@@ -176,7 +176,7 @@ npm run build
 npm run zip
 npm run test:e2e
 npm run test:extension   # the extension smoke test, then scripts/check-session-windows.mjs (guest session, always-on-top window) and scripts/check-auto-reload.mjs (a rebuilt local site)
-npm run validate:chrome-zip -- .output/multi-device-viewer-0.5.2-chrome.zip
+npm run validate:chrome-zip -- .output/multi-device-viewer-0.5.3-chrome.zip
 ```
 
 The production Chrome extension and zip are written to `.output/`.

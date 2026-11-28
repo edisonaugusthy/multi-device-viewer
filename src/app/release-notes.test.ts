@@ -42,8 +42,8 @@ describe("decideStartupNotice", () => {
     expect(decideStartupNotice({ ...base, lastSeenTour: "0.5.2" })).toEqual({ kind: "tour" });
   });
 
-  it("features floating device previews and both placements in What's new", () => {
-    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseFloatingTitle", description: "releaseFloatingDescription", icon: "floating" });
-    expect(CURRENT_RELEASE_NOTES.sections.flatMap(section => section.notes.map(note => note.title))).toEqual(["popOutTitle", "pictureInPictureTitle"]);
+  it("shows one line about refreshing localhost previews in What's new", () => {
+    expect(CURRENT_RELEASE_NOTES.featured).toEqual({ title: "releaseLocalhostRefresh", icon: "reload" });
+    expect(CURRENT_RELEASE_NOTES.sections).toEqual([]);
   });
 });

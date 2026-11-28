@@ -144,13 +144,22 @@ try {
 
   // Closing the viewer stops the checks and removes the tab's rules.
   await worker.evaluate(({ tabId, url }) => chrome.tabs.sendMessage(tabId, { type: "OPEN_SIMULATOR", mode: "workspace", url, sourceTabId: tabId }, { frameId: 0 }), { tabId, url: pageUrl });
-  await worker.evaluate(({ tabId, url }) => chrome.tabs.sendMessage(tabId, { type: "OPEN_SIMULATOR", url, sourceTabId: tabId }, { frameId: 0 }), { tabId, url: pageUrl });
+  await expect.poll(shown).toBe("3/5/4 3/5/4");
+  await click('button[aria-label="Close viewer"]');
   await expect.poll(() => page.locator("#multi-device-viewer-overlay").count()).toBe(0);
   await expect.poll(() => worker.evaluate(async tabId => (await chrome.declarativeNetRequest.getSessionRules()).filter(rule => rule.condition.tabIds?.includes(tabId)).length, tabId), { message: "rules removed with the viewer" }).toBe(0);
   await page.waitForTimeout(1500);
   assert.equal((await quiet())[0], 0, "no checks after the viewer closed");
+
+  // A normal browser reload (F5) restores the open viewer on the new build.
+  await worker.evaluate(() => chrome.storage.local.set({ mdvAutoReload: false }));
+  await open({});
+  await expect.poll(shown).toBe("3/5/4 3/5/4");
+  rebuild("/", "/site.css", "/app.js");
+  await page.reload();
+  await expect.poll(shown, { message: "browser reload restores both previews with the rebuilt page, stylesheet and script" }).toBe("4/6/5 4/6/5");
   assert.deepEqual(errors, [], "no page errors");
-  console.log("Auto reload check passed: off by default with no requests; a reload by hand shows rebuilt files on a local site; the Settings switch is remembered; devices reload once after a stylesheet, script or page changes, and once for a build written in steps; floating devices follow the same choice; checks stop and rules go when the viewer closes.");
+  console.log("Local reload check passed: browser reload and Reload all show rebuilt files; Auto reload is off by default, remembers the switch, reloads all previews once per build, and stops when the viewer closes.");
 } finally {
   await context?.close();
   server.close();

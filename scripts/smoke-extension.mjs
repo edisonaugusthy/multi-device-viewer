@@ -433,9 +433,8 @@ try {
   await simulator.goto(`${extensionOrigin}/simulator.html?url=${encodeURIComponent(pageUrl)}`);
   await simulator.locator("[data-preview-slot-id]").first().waitFor();
   assert.equal(await simulator.locator("[data-header-coverage]").count(), 0);
-  const notes = simulator.getByRole("dialog").filter({ has: simulator.getByRole("heading", { name: "Floating device previews" }) });
-  await expect(notes.getByRole("heading", { name: "Pop Out", exact: true })).toBeVisible();
-  await expect(notes.getByRole("heading", { name: "Picture-in-Picture", exact: true })).toBeVisible();
+  const notes = simulator.getByRole("dialog").filter({ has: simulator.getByRole("heading", { name: "Bug fix: F5 now refreshes device previews on localhost." }) });
+  await expect(notes.getByRole("heading", { level: 3 })).toHaveCount(1);
   await notes.getByRole("button", { name: "Start testing" }).click();
   const popOutTour = simulator.getByRole("dialog", { name: "Pop Out", exact: true });
   await expect(popOutTour.getByTestId("tour-highlight")).toBeVisible();

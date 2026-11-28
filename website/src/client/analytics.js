@@ -1,26 +1,23 @@
-const panel = document.querySelector("[data-analytics-id]");
+const { analyticsId, siteBase } = document.documentElement.dataset;
+const canonical = document.querySelector('link[rel="canonical"]')?.href;
 
 // Avoid measuring previews, embedded demos, and builds served on a different origin.
-if (panel && window.top === window && location.origin === new URL(panel.dataset.canonical).origin) {
-  setupAnalytics(panel);
+if (analyticsId && canonical && window.top === window && location.origin === new URL(canonical).origin) {
+  setupAnalytics();
 }
 
-function setupAnalytics(panel) {
-  const { analyticsId, canonical, siteBase } = panel.dataset;
+function setupAnalytics() {
   const preferenceKey = `mv-analytics:${siteBase}`;
   const disabledKey = `ga-disable-${analyticsId}`;
-  const settings = document.querySelector('button[aria-controls="analytics-settings"]');
-  const heading = panel.querySelector("h2");
+  const settings = document.querySelector("[data-analytics-settings]");
+  const buttons = settings?.querySelectorAll("[data-analytics-choice]") ?? [];
   let started = false;
-  let openedFromSettings = false;
 
   function readPreference() {
-    try { return localStorage.getItem(preferenceKey); } catch { return null; }
-  }
-
-  function showPanel(show) {
-    panel.hidden = !show;
-    settings.setAttribute("aria-expanded", String(show));
+    try {
+      if (localStorage.getItem(preferenceKey) === "denied") return "denied";
+    } catch {}
+    return "granted";
   }
 
   function stopAnalytics() {
@@ -37,14 +34,12 @@ function setupAnalytics(panel) {
 
     window.dataLayer = window.dataLayer || [];
     function gtag() { window.dataLayer.push(arguments); }
-    const denied = {
-      analytics_storage: "denied",
+    gtag("consent", "default", {
+      analytics_storage: "granted",
       ad_storage: "denied",
       ad_user_data: "denied",
       ad_personalization: "denied",
-    };
-    gtag("consent", "default", denied);
-    gtag("consent", "update", { analytics_storage: "granted" });
+    });
     gtag("js", new Date());
     gtag("config", analyticsId, {
       page_location: canonical,
@@ -63,32 +58,21 @@ function setupAnalytics(panel) {
   }
 
   function applyPreference(choice) {
-    if (choice === "granted") startAnalytics();
-    else stopAnalytics();
-    showPanel(choice !== "granted" && choice !== "denied");
+    if (choice === "denied") stopAnalytics();
+    else startAnalytics();
+    for (const button of buttons) {
+      button.setAttribute("aria-pressed", String(button.dataset.analyticsChoice === choice));
+    }
   }
 
-  settings.hidden = false;
-  settings.addEventListener("click", () => {
-    openedFromSettings = true;
-    showPanel(true);
-    heading.focus();
-  });
-
-  panel.addEventListener("click", (event) => {
-    const choice = event.target.closest("[data-analytics-choice]")?.dataset.analyticsChoice;
-    if (!choice) return;
-    try { localStorage.setItem(preferenceKey, choice); } catch {}
-    applyPreference(choice);
-    if (openedFromSettings) settings.focus();
-    openedFromSettings = false;
-  });
-  panel.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || !openedFromSettings) return;
-    showPanel(false);
-    settings.focus();
-    openedFromSettings = false;
-  });
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      const { analyticsChoice } = button.dataset;
+      try { localStorage.setItem(preferenceKey, analyticsChoice); } catch {}
+      applyPreference(analyticsChoice);
+    });
+  }
+  if (settings) settings.hidden = false;
   window.addEventListener("storage", (event) => {
     if (event.storageArea === localStorage && (event.key === preferenceKey || event.key === null)) {
       applyPreference(readPreference());

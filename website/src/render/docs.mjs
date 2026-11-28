@@ -112,8 +112,8 @@ const docSection = (id, title, paragraphs) => `<section id="${id}"><h2>${title}<
 export const privacy = {
   path: "privacy/",
   title: "Privacy Policy | Mobile View",
-  description: "Mobile View extension data stays on your device. You can choose whether to share website visit data through Google Analytics.",
-  updated: "2026-11-23",
+  description: "Mobile View extension data stays on your device. You can turn off website analytics in the site footer.",
+  updated: "2026-11-26",
   body() {
     const sections = [
       ["local", "What stays on your device", ["Workspace settings and preferences are kept in the browser's local extension storage. Screenshots, recordings and prompts are created only when you ask for them. Data leaves the extension only when you copy, download, open or share it yourself."]],
@@ -124,8 +124,8 @@ export const privacy = {
         "Pages shown in previews make their normal network requests to the sites and services they already use. Those requests are covered by those sites' own privacy policies.",
       ]],
       ["analytics", "Website analytics", [
-        "You can choose to allow Google Analytics on this website. If you allow it, we use Google Analytics to count visits and understand how visitors find the site. Google receives information such as the page visited, the referring website, approximate location, device and browser information, and cookie identifiers. Analytics cookies are scoped to this site and expire after 90 days of inactivity. Advertising features are disabled.",
-        'Use Analytics settings in the website footer to change your choice. Declining stops website analytics in your browser and clears the site’s analytics cookies. For information about how Google processes this data, see <a href="https://policies.google.com/technologies/partner-sites">How Google uses information from sites that use its services</a>.',
+        "By default, this website uses Google Analytics to count visits and understand how visitors find the site. Google receives information such as the page visited, the referring website, approximate location, device and browser information, and cookie identifiers. Analytics cookies are scoped to this site and expire after 90 days of inactivity. Advertising features are disabled.",
+        'To turn off website analytics in your browser, open Analytics settings in the footer and choose Decline analytics. This also clears the site’s analytics cookies. For information about how Google processes this data, see <a href="https://policies.google.com/technologies/partner-sites">How Google uses information from sites that use its services</a>.',
       ]],
       ["third", "Third-party services", ["The extension has no analytics, advertising, session recording or hosted AI SDK. The fix-prompt feature writes text locally and copies it only when you press the copy button. The rating and reviews shown on this website are read from the public Chrome Web Store listing when the site is built and served from this website."]],
       ["verify", "Check it yourself", [`You don't have to take this on trust. The extension's code, permissions and storage behavior are all in the <a href="${site.repo}">public source repository</a>.`]],
@@ -137,7 +137,7 @@ export const privacy = {
     <span class="eyebrow">Privacy policy</span>
     <h1>Privacy, without the fine-print fog.</h1>
     <p class="doc-meta">Last updated <time datetime="${this.updated}">${dateLabel(this.updated, "en")}</time></p>
-    <p class="doc-lede">The Mobile View extension works locally. It has no accounts, advertising, telemetry, remote application backend or session recording. Analytics on this website is optional.</p>
+    <p class="doc-lede">The Mobile View extension works locally. It has no accounts, advertising, telemetry, remote application backend or session recording. You can turn off website analytics in the footer.</p>
     <section id="short" class="summary-box"><h2>The short version</h2><p class="prose-p">Your page URLs, workspace, screenshots, recordings, annotations, saved device sets, design references and fix prompts stay on your device. Nothing is uploaded to us automatically.</p></section>
     <div class="prose">${sections.map(([id, title, ps]) => docSection(id, title, ps)).join("\n")}</div>
   </article>

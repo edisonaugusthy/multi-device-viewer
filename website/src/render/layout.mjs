@@ -31,7 +31,7 @@ export function layout(page, assets) {
   const ogLocale = locale.lang.replace("-", "_");
   const analytics = !page.robots && site.analyticsId;
   return `<!doctype html>
-<html lang="${locale.lang}" dir="${locale.dir}" data-script="${wideScripts.has(locale.id) ? "wide" : "latin"}">
+<html lang="${locale.lang}" dir="${locale.dir}" data-script="${wideScripts.has(locale.id) ? "wide" : "latin"}"${analytics ? ` data-analytics-id="${esc(site.analyticsId)}" data-site-base="${esc(site.base)}"` : ""}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -69,7 +69,6 @@ ${jsonLd}
 </head>
 <body>
 <a class="skip" href="#main">${t("nav.skip")}</a>
-${analytics ? analyticsPanel(t, canonical) : ""}
 ${header(page, homePath)}
 <main id="main">
 ${page.body}
@@ -110,16 +109,15 @@ function header({ t, current, locale }, homePath) {
 </header>`;
 }
 
-function analyticsPanel(t, canonical) {
-  return `<section id="analytics-settings" class="analytics-panel" aria-labelledby="analytics-title" hidden
-  data-analytics-id="${esc(site.analyticsId)}" data-site-base="${esc(site.base)}" data-canonical="${esc(canonical)}">
-  <h2 id="analytics-title" tabindex="-1">${t("analytics.settings")}</h2>
-  <p>${t("analytics.description")} <a href="${url("privacy/#analytics")}" hreflang="en">${t("nav.privacy")}</a></p>
-  <div class="analytics-actions">
-    <button class="btn btn-ghost" type="button" data-analytics-choice="denied">${t("analytics.decline")}</button>
-    <button class="btn btn-ghost" type="button" data-analytics-choice="granted">${t("analytics.allow")}</button>
-  </div>
-</section>`;
+function analyticsSettings(t) {
+  return `<details class="analytics-settings" data-analytics-settings hidden>
+          <summary>${t("analytics.settings")}</summary>
+          <p>${t("analytics.description")}</p>
+          <div class="analytics-actions">
+            <button class="btn btn-ghost" type="button" data-analytics-choice="denied" aria-pressed="false">${t("analytics.decline")}</button>
+            <button class="btn btn-ghost" type="button" data-analytics-choice="granted" aria-pressed="false">${t("analytics.allow")}</button>
+          </div>
+        </details>`;
 }
 
 function footer({ t, locale }, homePath, analytics) {
@@ -155,7 +153,7 @@ function footer({ t, locale }, homePath, analytics) {
         <a href="${site.issues}">${t("footer.issue")}</a>
         <a href="${url("privacy/")}">${t("footer.privacy")}</a>
         <a href="${url("terms/")}">${t("footer.terms")}</a>
-        ${analytics ? `<button class="analytics-settings" type="button" aria-controls="analytics-settings" aria-expanded="false" hidden>${t("analytics.settings")}</button>` : ""}
+        ${analytics ? analyticsSettings(t) : ""}
       </nav>
     </div>
     <details class="languages">
